@@ -7,7 +7,7 @@
                 <template v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
                     <AuditHandle v-if="detail.status === STATUS.APPLY"
                         btnType='primary' :api-list="['Aftersales', 'audit']" :id="detail.id" @submit="getOrderDetail"
-                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_REFUSE"><i class="icon i_audit"/>{{ $t('n.audit') }}
+                        :s-pass="STATUS.AUDIT_PASS" :s-refuse="STATUS.AUDIT_FAIL"><i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                     <template v-if="detail.status === STATUS.AUDIT_PASS">
                         <a-button type="primary" @click="handleApplyRefund()" ghost v-if="detail.refund_status === 0 && detail.refund_money"><i class="icon i_settle"/>{{ $t('af.refund') }}</a-button>
@@ -85,20 +85,20 @@
                         </a-col>
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="refund.id">
                             <div class="info-item" v-if="sameOrg(detail.supply_org_id, detail.supply_org_type)">
-                                <div class="key">退款单</div>
+                                <div class="key">{{ $t('af.refund_order') }}</div>
                                 <div class="value"><a-button type="link" @click="routerChange('refund')"
                                     style="font-size: 12px;line-height: 17px;height: 17px;">{{ $t('def.detail') }}</a-button></div>
                             </div>
                             <div class="info-item">
-                                <div class="key">退款状态</div>
-                                <div class="value">{{AFTERSALES.REFUND_STATUS_MAP[detail.refund_status] || '-'}}</div>
+                                <div class="key">{{ $t('af.refund_status')}}</div>
+                                <div class="value">{{$Util.refundOrderStatusFilter(detail.refund_status, $i18n.locale) || '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">退款单创建时间</div>
+                                <div class="key">{{ $t('af.create_time')}}</div>
                                 <div class="value">{{$Util.timeFilter(refund.create_time) || '-'}}</div>
                             </div>
                             <div class="info-item">
-                                <div class="key">退款单完成时间</div>
+                                <div class="key">{{ $t('af.finish_time')}}</div>
                                 <div class="value">{{$Util.timeFilter(refund.finish_time) || '-'}}</div>
                             </div>
                         </a-col>
@@ -200,7 +200,7 @@
                             </a-table>
                         </div>
                     </a-collapse-panel>
-                    <a-collapse-panel key="WaybillOutInfo" :header="$Util.aftersalesTypeFilter(detail.type) + '商品物流信息'" class="gray-collapse-panel" v-if="showWaybill">
+                    <a-collapse-panel key="WaybillOutInfo" :header="$Util.aftersalesTypeFilter(detail.type, $i18n.locale) + $t('af.commodity_logistics')" class="gray-collapse-panel" v-if="showWaybill">
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
@@ -541,9 +541,9 @@ export default {
         handleApplyRefund() {
             let _this = this
             this.$confirm({
-                title: '确认要生成退款单吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('af.confirm_order'),
+                okText: _this.$t('def.ok'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Aftersales.applyRefund({
                         id: _this.id
@@ -566,17 +566,17 @@ export default {
         handleDeliver() {
             let form = Core.Util.deepCopy(this.form)
             if (!form.company_uid) {
-                return this.$message.warning('请选择快递公司')
+                return this.$message.warning($t('af.choose_courier'))
             }
             if (!form.waybill_uid) {
-                return this.$message.warning('请输入快递单号')
+                return this.$message.warning($t('af.enter_courier_number'))
             }
             Core.Api.Aftersales.deliver({
                 id: this.id,
                 company_uid: form.company_uid,
                 waybill_uid: form.waybill_uid,
             }).then(res => {
-                this.$message.success('发货成功')
+                this.$message.success(this.$t('af.shipped'))
                 this.deliverShow = false
                 this.getOrderDetail()
                 this.getWaybillDetail();
@@ -590,14 +590,14 @@ export default {
         handleReceived() {
             let _this = this
             this.$confirm({
-                title: '确认已收到货物吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('af.confirm_receive'),
+                okText: _this.$t('def.ok'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Aftersales.receive({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('收货成功')
+                        _this.$message.success($t('af.received'))
                         _this.getOrderDetail()
                     }).catch(err => {
                         console.log('handleReceived err', err)
@@ -609,14 +609,14 @@ export default {
         handleCancel() {
             let _this = this
             this.$confirm({
-                title: '确认要取消本次售后吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('af.confirm_cancel'),
+                okText: _this.$t('def.ok'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Aftersales.cancel({
                         id: _this.id
                     }).then(res => {
-                        _this.$message.success('取消成功')
+                        _this.$message.success(_this.$('pop_up.canceled'))
                         _this.routerChange('list')
                     }).catch(err => {
                         console.log('handleCancel err', err)

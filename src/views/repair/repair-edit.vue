@@ -1,24 +1,40 @@
 <template>
 <div id="RepairEdit" class="edit-container">
     <div class="title-container">
-        <div class="title-area">{{ form.id ? $t('r.repair.edit') : $t('r.repair_create') }}</div>
+        <div class="title-area">{{ form.id ? $t('r.repair_edit') : $t('r.repair_create') }}</div>
     </div>
     <div class="form-block"> <!-- 工单内容 -->
         <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
+                <div class="key">{{ $t('r.device_classify') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.device_type" :disabled="!!form.id" @change="handleTypeChange">
+                        <a-radio v-for="item of deviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required">
                 <div class="key">{{ $t('r.repair_classify') }}</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="!!form.id">
+                    <a-radio-group v-model:value="form.type" :disabled="!!form.id" @change="handleTypeChange">
                         <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required" v-if="form.type == 1">
+            <div class="form-item required" v-if="form.device_type == 1">
                 <div class="key">{{ $t('r.category') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.category">
                         <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+             <div class="form-item required" v-if="form.device_type == 2">
+                <div class="key">{{ $t('r.category') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.category">
+                        <a-radio v-for="item of partsList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -33,7 +49,7 @@
             <div class="form-item required">
                 <div class="key">{{ $t('r.warranty') }}</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id">
+                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
                         <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
                     </a-radio-group>
                 </div>
@@ -56,7 +72,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block"> <!-- 车辆信息 -->
+    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车辆信息 -->
         <div class="form-title">
             <div class="title">{{ $t('r.vehicle_information') }}</div>
         </div>
@@ -91,16 +107,16 @@
                     {{ $Util.timeFilter(arrival_time) }}
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('r.miles_driven') }}</div>
                 <div class="value">
-                    <a-input-number v-model:value="form.travel_distance" :min="0" :precision="3"/>
+                    <a-input-number v-model:value="form.mileage" :min="0" :precision="3"/>
                     <span class="unit">{{ $t('r.km') }}</span>
                 </div>
             </div>
         </div>
     </div>
-    <div class="form-block"> <!-- 车主信息 -->
+    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车主信息 -->
         <div class="form-title">
             <div class="title">{{ $t('r.customer') }}</div>
         </div>
@@ -190,8 +206,10 @@ export default {
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
 
+            deviceList: REPAIR.DEVICE_LIST, // 工单类型
             typeList: REPAIR.TYPE_LIST, // 工单分类
             categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
+            partsList: REPAIR.PARTS_LIST, // 零配件类别
             methodList: REPAIR.METHOD_LIST, // 维修类别
             serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
             channelList: REPAIR.CHANNEL_LIST, // 维修方式
@@ -201,12 +219,13 @@ export default {
             form: {
                 id: '',
 
+                device_type: 1,  // 工单类型
                 type: 1,  // 工单分类
                 category: 1, // 维修工单类别
                 name: '', // 工单名称
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
-                travel_distance: '',//行程公里数
+                mileage: '',//行程公里数
 
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
@@ -258,7 +277,7 @@ export default {
                     break;
                 case 'customer':  // 新建客户
                     routeUrl = this.$router.resolve({
-                        path: "/customer/customer-edit",
+                        path: "/eos-customer/eos-customer-edit",
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -313,21 +332,27 @@ export default {
             let area = Core.Util.deepCopy(this.area)
 
 
-          if (this.areaMap.city) {
-            area.city = this.areaMap.city.name
-            area.city_en = this.areaMap.city.name_en
-          }
-            if (this.areaMap.country) {
+            if (!Core.Util.isEmptyObj(this.areaMap)) {
+                console.log('areaMap2222',this.areaMap)
                 area.country = this.areaMap.country.name
                 area.country_en = this.areaMap.country.name_en
-            }
-            if (this.areaMap.province) {
-                area.province = this.areaMap.province.name
-                area.province_en = this.areaMap.province.name_en
-            }
-            if (this.areaMap.county) {
-                area.county = this.areaMap.county.name
-                area.county_en = this.areaMap.county.name_en
+                area.city = this.areaMap.city.name
+                area.city_en = this.areaMap.city.name_en
+                if (this.areaMap.province) {
+                    area.province = this.areaMap.province.name
+                    area.province_en = this.areaMap.province.name_en
+                } else {
+                    area.province = ""
+                    area.province_en = ""
+
+                }
+                if (this.areaMap.county) {
+                    area.county = this.areaMap.county.name
+                    area.county_en = this.areaMap.county.county_en
+                }else {
+                    area.county = ""
+                    area.county_en = ""
+                }
             }
             console.log('handleSubmit area:', area)
             console.log('handleSubmit areaMap:', this.areaMap)
@@ -383,10 +408,10 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            /* if (!form.travel_distance) {
-                this.$message.warning('请输入行程公里数')
+             if (!form.mileage && form.mileage !== 0 && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+                this.$message.warning(this.$t('def.enter'))
                 return 0
-            }*/
+            }
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
@@ -395,19 +420,19 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.channel) {
+            if (!form.channel && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.repair_method) {
+            if (!form.repair_method && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (!form.vehicle_no) {
+            if (!form.vehicle_no && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (this.isExist === false) {
+            if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (form.id) {
@@ -461,6 +486,18 @@ export default {
             // this.defAddr = [item.country,item.province, item.city, item.county]
             console.log('this.addr', this.defAddr)
 
+        },
+        handleTypeChange(){
+            switch (this.form.type){
+                case REPAIR.TYPE.TYPE_COMMON: {
+                    this.form.service_type = '';
+                    break;
+                }
+                case REPAIR.TYPE.TYPE_SPECIAL: {
+                    this.form.service_type = REPAIR.SERVICE_TYPE.IN_REPAIR_TIME;
+                    break;
+                }
+            }
         },
 
        /* handleAddressSelect(address) {

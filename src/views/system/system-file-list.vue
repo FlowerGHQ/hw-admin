@@ -201,9 +201,9 @@ export default {
         handleDownload(record) { // 文件下载
             let _this = this;
             this.$confirm({
-                title: '确认要下载吗？',
-                okText: '确定',
-                cancelText: '取消',
+                title: _this.$t('f.sure_download'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     const path = record.path
                     let fileUrl = Core.Const.NET.FILE_URL_PREFIX + path + ''

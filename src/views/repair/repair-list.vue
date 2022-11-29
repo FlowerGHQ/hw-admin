@@ -11,7 +11,7 @@
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
                 <a-tab-pane :key="item.key" v-for="item of statusList">
                     <template #tab>
-                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{item.value}}</span></div>
+                        <div class="tabs-title">{{item[$i18n.locale]}}<span :class="item.color">{{' '}}{{item.value}}</span></div>
                     </template>
                 </a-tab-pane>
             </a-tabs>
@@ -88,8 +88,12 @@
                             </a-tooltip>
                         </div>
                     </template>
+
+                    <template v-if="column.dataIndex === 'device_type'">
+                        {{$Util.deviceTypeFilter(text, $i18n.locale)}}
+                    </template>
                     <template v-if="column.dataIndex === 'type'">
-                        {{$Util.repairTypeFilter(text)}}
+                        {{$Util.repairTypeFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">
@@ -151,7 +155,7 @@
     </div>
     <!-- 审核 -->
     <template class="modal-container">
-        <a-modal v-model:visible="modalShow" :title="$t('audit')" :after-close='handleModalClose'>
+        <a-modal v-model:visible="modalShow" :title="$t('n.audit')" :after-close='handleModalClose'>
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('n.result_a') }}:</div>
@@ -261,7 +265,7 @@ export default {
             modalType: '',
             editForm: {
                 id: '',
-                audit_result: 1,
+                audit_result: '',
                 audit_message: '',
             },
             warehouseList: [],
@@ -298,6 +302,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
+                { title: this.$t('r.device_classify'), dataIndex: 'device_type',key: 'device_type'},
                 { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
                 { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
                 { title: this.$t('r.urgency'), dataIndex: 'priority' },
@@ -334,15 +339,17 @@ export default {
                 {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
                 {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
                 {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {zh: '待结算', en: 'Pending settlement',value: '0', color: 'blue',    key: STATUS.REPAIR_END },
                 {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
-                {zh: '分销商审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
-                {zh: '平台方审核通过',en: 'Passed audit', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '分销商已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
-                {zh: '平台方已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
-                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
-                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
+                {zh: '分销商审核通过',en: 'Distributor approved', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
+                {zh: '平台方审核通过',en: 'Platform approved', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '分销商已入库', en: 'Distributor has stocked in warehouse', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
+                {zh: '平台方审核故障件', en: 'Platform audits the faulty parts', value: '0', color: 'blue',  key: STATUS.FAULT_ENTITY_AUDIT},
+                {zh: '平台方已入库', en: 'Platform has stocked in warehouse', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
                 {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
+                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
+                {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
+                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ]
            /* if (this.$auth('ADMIN')) {
@@ -356,9 +363,19 @@ export default {
 
     },
     mounted() {
+        this.getTableData();
         this.getWarehouseList();
-    },
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+                this.getWarehouseList();
+            }, 0);
+        }, 5*1000);
 
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
+    },
     methods: {
         routerChange(type, item = {}) {
             console.log('routerChange item:', item)
@@ -554,6 +571,9 @@ export default {
         },
         handleModalSubmit() { // 审核提交
             this.loading = true;
+            if (this.editForm.audit_result === '') {
+                return this.$message.warning(this.$t('r.audit_result'))
+            }
             Core.Api.Repair[this.modalType](this.editForm).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
@@ -565,14 +585,14 @@ export default {
       handleInvoice(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要结算吗？',
-                okText: '确定',
+                title: _this.$t('r.sure_settlement'),
+                okText: _this.$t('def.sure'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Repair.pay({id})
                         .then(() => {
-                            _this.$message.success('结算完成');
+                            _this.$message.success(this.$t('r.settlement'));
                             _this.getTableData();
                         }).catch((err) => {
                         console.log('handleInvoice err', err);
@@ -590,15 +610,15 @@ export default {
             console.log('id',id)
             let faultForm = Core.Util.deepCopy(this.faultForm)
             if (!faultForm.warehouse_id) {
-                return this.$message.warning('请选择仓库')
+                return this.$message.warning(this.$t('wa.choose_warehouse'))
             }
             if (!faultForm.fault_entity_uid) {
-                return this.$message.warning('请输入故障件编号')
+                return this.$message.warning(this.$t('r.input_fault_number'))
             }
             Core.Api.Repair.stock({
                 ...faultForm
             }).then(() => {
-                this.$message.success('入库完成');
+                this.$message.success(this.$t('n.stock_in_completed'));
                 this.handleModalClose()
                 this.getTableData();
             }).catch((err) => {

@@ -265,7 +265,7 @@ export default {
                 return this.$message.warning('请输入供应商地址')
             }
             Core.Api.Supplier.save(form).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

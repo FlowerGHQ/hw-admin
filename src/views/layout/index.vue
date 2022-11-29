@@ -1,34 +1,59 @@
 <template>
-<a-config-provider :locale="lang == 'zh' ? zhCN : enUS" :autoInsertSpaceInButton='false'>
-    <a-layout id="Layout">
+<a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
+    <a-layout id="Layout" :class="lang">
         <a-layout-header class="layout-header">
-            <div class="header-left" @click="collapsed = !collapsed" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo.png" class="logo" alt="浩万"/>
-                <a-divider type="vertical"/>
-                <a-tag color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+            <div class="header-left" :class="{'collapsed': collapsed}">
+                <img src="@images/header-logo3.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
+            </div>
+            <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
+                <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
+                        <div class="router-type">
+                            <img src="@images/router_type_3.png" alt="浩万"/>{{ $t('n.sales') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
+                        <div class="router-type">
+                            <img src="@images/router_type_2.png" alt="浩万"/>{{ $t('n.after') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
+                        <div class="router-type">
+                            <img src="@images/router_type_4.png" alt="浩万"/>{{ $t('n.production') }}
+                        </div>
+                    </a-radio-button>
+                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
+                        <div class="router-type">
+                            <img src="@images/router_type_1.png" alt="浩万"/>{{ $t('n.crm') }}
+                        </div>
+                    </a-radio-button>
+                </a-radio-group>
             </div>
             <div class="header-right">
+                <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
                 <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                     <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                 </a-button>
                 <a-divider type="vertical"/>
-                <a-button class="notice" type="link">
+                <a-button class="notice PC" type="link">
                     <a-badge :count="unread.org + unread.master"  @click="routerChange('notice')">
                         <i class="icon i_notify" />
                     </a-badge>
                 </a-button>
-                <a-divider type="vertical"/>
+                <a-divider class="PC" type="vertical"/>
+                <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+                <!-- <a-divider type="vertical"/>-->
                 <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                     <a-button class="user-info" type="link">
-                        <a-avatar class="user-avatar" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
+                        <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
                             <template #icon><i  class="icon i_user"/></template>
                         </a-avatar>
                         <span class="user-name">{{ user.name }}</span>
                     </a-button>
                     <template #overlay>
                         <a-menu style="text-align: center;">
-                            <a-menu-item>
-                                <a-button type="link" @click="handleEditShow" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                            <a-menu-item @click="handleEditShow">
+                                <a-button type="link"  class="menu-item-btn">{{ $t('n.password') }}</a-button>
                                 <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal" :after-close="handleEditClose">
                                     <div class="form-title">
                                         <div class="form-item required">
@@ -56,8 +81,8 @@
                                     </template>
                                 </a-modal>
                             </a-menu-item>
-                            <a-menu-item>
-                                <a-button type="link" @click="handleLogout" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
+                            <a-menu-item  @click="handleLogout">
+                                <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                             </a-menu-item>
                         </a-menu>
                     </template>
@@ -65,7 +90,7 @@
             </div>
         </a-layout-header>
         <a-layout class="layout-container">
-            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="144" :collapsedWidth='64' theme='light'>
+            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64' theme='light'>
                 <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                     :inlineCollapsed='collapsed' :inlineIndent='8'>
                     <template v-for="item of showList">
@@ -114,17 +139,18 @@ export default {
     },
     data() {
         return {
+            Core,
             zhCN,
             enUS,
             breadcrumbList: [],
 
             loginType: Core.Data.getLoginType(),
             USER_TYPE: Core.Const.USER.TYPE_MAP,
+            ROUTER_TYPE: Core.Const.LOGIN.ROUTER_TYPE,
             collapsed: false,
             openKeys: [],
             selectedKeys: [],
             passShow: false,
-
             user: Core.Data.getUser() || {},
             form: {
                 id: '',
@@ -135,7 +161,8 @@ export default {
             unread: {
                 master: '',
                 org: '',
-            }
+            },
+            tabPosition: 1
         };
     },
     computed: {
@@ -156,6 +183,16 @@ export default {
                     return i
                 })
             })
+            // 选择模块进行路由过滤
+            if (this.loginType === LOGIN_TYPE.ADMIN){
+                let newShowList = []
+                SIDER.ADMIN.forEach(item => {
+                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1: true){
+                        newShowList.push(item)
+                    }
+                })
+                showList = newShowList;
+            }
             console.log('computed showList:', showList)
             return showList
         },
@@ -210,6 +247,15 @@ export default {
     mounted() {
         this.loginType = Core.Data.getLoginType()
         this.getUnreadCount();
+        this.$i18n.locale = Core.Data.getLang()
+        this.$store.state.lang = Core.Data.getLang()
+        this.tabPosition = Core.Data.getTabPosition() || 1
+        this.handleRouterSwitch();
+
+        window.onresize = this.handleWindowResize
+        if (window.innerWidth <= 830) {
+            this.collapsed = true
+        }
     },
     methods: {
         routerChange(type) {
@@ -221,6 +267,13 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'shop_cart':
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-collect",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+
             }
         },
         getUnreadCount() {    // 获取 未读消息数 数据
@@ -300,6 +353,36 @@ export default {
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
+        handleRouterSwitch() {
+
+            if (Core.Data.getTabPosition() === this.tabPosition){
+                return
+            }
+            Core.Data.setTabPosition(this.tabPosition)
+            console.log("tabPosition",this.tabPosition)
+
+            if (this.tabPosition === this.ROUTER_TYPE.CRM){
+                this.$router.replace('/crm-dashboard');
+            } else {
+                if (this.loginType === Core.Const.USER.TYPE.ADMIN){
+                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                } else {
+                    this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                }
+            }
+
+
+        },
+
+
+        handleWindowResize(e) {
+            console.log('handleWindowResize e:', e)
+
+            console.log('window.innerWidth:', window.innerWidth)
+            if (window.innerWidth <= 830) {
+                this.collapsed = true
+            }
+        }
     }
 };
 </script>
@@ -322,7 +405,7 @@ export default {
     height: 100vh;
 
     .layout-header {
-        height: 50px;
+        height: 64px;
         background: #FFFFFF;
         border-bottom: 1px solid rgba(82, 91, 103, 0.2);
         padding: 0 20px;
@@ -331,8 +414,47 @@ export default {
         .header-left {
             .fcc();
             img.logo {
-                width: 115px;
-                height: 30px;
+                height: 34px;
+            }
+        }
+
+        .header-center {
+            .fcc();
+
+            .header-button {
+                height: 40px;
+                border: 0px;
+                padding: 0 10px;
+                text-align: center;
+                align-items: center;
+                .ant-radio-button-wrapper {
+                    display:none;
+                }
+            }
+
+            .router-type {
+                height: 100%;
+                width: 100%;
+                .fcc();
+                img {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                }
+            }
+
+
+            .ant-radio-button-wrapper:focus {
+                border: 0px;
+            }
+            .ant-radio-button-wrapper:not(:first-child)::before {
+                border: 0px solid #d9d9d9;
+                border-radius: 2px 0 0 2px;
+                background: #fff;
+            }
+            .ant-radio-button-wrapper-checked {
+                background-color: #F3F6F8;
+                border: 0px;
             }
         }
 
@@ -346,6 +468,18 @@ export default {
                 .icon {
                     font-size: 20px;
                 }
+            }
+
+            height: 100%;
+            cursor: pointer;
+            .fjc();
+
+            i.icon {
+                font-size: 14px;
+            }
+            i.i_cart {
+                font-size: 25px;
+                color: @TC_header_item;
             }
         }
 
@@ -365,22 +499,6 @@ export default {
         .user-name {
             margin-left: 10px;
             color: @TC_header_name;
-        }
-
-        .header-item {
-            width: 64px;
-            height: 100%;
-            cursor: pointer;
-            .fjc();
-
-            i.icon {
-                font-size: 14px;
-                color: @TC_header_item;
-            }
-
-            &:hover i.icon {
-                color: @TC_P;
-            }
         }
     }
 
@@ -514,8 +632,8 @@ export default {
         }
     }
 
-    .layout-breadcrumb {
-    }
+    // .layout-breadcrumb {
+    // }
 
     .layout-content {
         padding: 16px;
@@ -523,6 +641,28 @@ export default {
         height: 100%;
         // height: calc(~"100% - 38px");
         overflow-y: auto;
+    }
+
+    @media (min-width: 820px) {
+    }
+    @media (max-width: 820px) {
+        .layout-header {
+            .header-center {
+                .header-button {
+                    padding: 2px 10px;
+                    .router-type {
+                        flex-direction: column;
+                        font-size: 10px;
+                        line-height: 1;
+                        img {
+                            margin: 0 5px;
+                            width: 26px;
+                            height: 26px;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 </style>

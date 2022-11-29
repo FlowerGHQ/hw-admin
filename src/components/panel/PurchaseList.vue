@@ -33,7 +33,7 @@
                         {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
                     <template v-if="column.dataIndex === 'purchase_method'">
-                        {{$Util.purchasePayMethodFilter(text)}}
+                        {{$Util.purchasePayMethodFilter(text, $i18n.locale)}}
                     </template>
                     <template v-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
@@ -139,6 +139,15 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         routerChange(type, item = {}) {

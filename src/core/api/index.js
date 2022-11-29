@@ -23,18 +23,35 @@ const apiList = {
     Export: { // 导出
         purchaseExport: ['PostJson', 'purchase-order/export'],
         purchaseTemplateExport: ['PostJson', 'purchase-order/export-template'], // 采购单模版导出
+	    purchaseOrderExport: ['PostJson', 'purchase-order/export-order'], // 采购单模版导出
         repairExport: ['PostJson', 'repair/export-repair-order-record'],
         invoiceOutExport: ['PostJson', 'invoice/export-out-invoice'],//导出
         invoiceInExport: ['PostJson', 'invoice/export-in-invoice'],//导出
+	    invoiceDetailExport: ['PostJson', 'invoice/export-detail'],//导出
         materialPurchaseExport: ['PostJson', '/material-purchase-order/export'],//导出
+	    ItemCollectExport: ['PostJson', '/shopping-cart/download-import-template'],//导出
+	    feedbackTemplateExport: ['PostJson', 'feedback/export-template'], // 采购单模版导出
+
+        exportOrderPrice: ['GetJson', 'purchase-order/export-item-price'], // 采购数据导出
+
+	    exportStock: ['GetJson', 'stock/export'], // 采购数据导出
+
+        exportItemPrice: ['GetJson', 'item/export-item-price'], // 导出数据
+
+        exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
+	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
+	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
     },
-    User: { // 员工
+    User: { // 用户
         save: ['PostJson', 'user/save'],
         list: ['PostJson', 'user/list'],
         listAll: ['PostJson', 'user/list-name'],
         detail: ['PostJson', 'user/detail'],
         delete: ['PostJson', 'user/delete'],
-        setAdmin: ['PostJson', 'user/set-admin'],
+	    setAdmin: ['PostJson', 'user/set-admin'],
+	    listGroup: ['PostJson', 'user/list-group'],
+	    setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
+
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
@@ -61,9 +78,9 @@ const apiList = {
 
         allotOrgAuth: ['PostJson', 'authority/save-org-type-authority'], // 向组织分配 可分配权限
         allotAuth: ['PostJson', 'authority/save-role-authority'], // 向角色分配权限
-        allotRole: ['PostJson', 'authority/save-user-role'], // 向员工账号分配角色
-        allotUser: ['PostJson', 'authority/save-user-authority'], // 向员工账户分配权限
-        deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向员工账号分配角色
+        allotRole: ['PostJson', 'authority/save-user-role'], // 向用户账号分配角色
+        allotUser: ['PostJson', 'authority/save-user-authority'], // 向用户账户分配权限
+        deleteUserRole: ['PostJson', 'authority/delete-user-role'], // 向用户账号分配角色
 
         listUserRole: ['PostJson', 'authority/list-user-role'], // 查看所有对应用户的所有角色
 
@@ -75,8 +92,6 @@ const apiList = {
         delete: ['PostJson', 'authority/delete-user-authority-scope'],//删除用户权限范围
         authority: ['PostJson', 'authority/list-by-resource-authorized'], //获得某个资源授权的用户ID列表
         user: ['PostJson', 'authority/user-has-authority'],//判断用户是否拥有对某个资源的权限
-
-
     },
     Agent: { // 零售商
         list: ['PostJson', 'agent/list'], // 列表
@@ -107,8 +122,30 @@ const apiList = {
         delete: ['PostJson', 'warehouse/delete'],
         listWithStock: ['PostJson', 'warehouse/list-with-stock'],
     },
+	WarehouseLocation: {
+		save: ['PostJson', 'warehouse-location/save'],
+		detail: ['PostJson', 'warehouse-location/detail'],
+		list: ['PostJson', 'warehouse-location/list'],
+		listAll: ['PostJson', 'warehouse-location/list-name'],
+		delete: ['PostJson', 'warehouse-location/delete'],
+	},
+	WarehouseLocationStock: {
+		save: ['PostJson', 'warehouse-location-stock/save'],
+		saveList: ['PostJson', 'warehouse-location-stock/save-list'],
+		detail: ['PostJson', 'warehouse-location-stock/detail'],
+		detailByWarehouseLocation: ['PostJson', 'warehouse-location-stock/detail-by-warehouse_location_id'],
+
+		list: ['PostJson', 'warehouse-location-stock/list'],
+		listAll: ['PostJson', 'warehouse-location-stock/list-name'],
+		delete: ['PostJson', 'warehouse-location-stock/delete'],
+		detailByWarehouseId: ['PostJson', 'warehouse-location-stock/detail-by-warehouse-id'],
+		adjust: ['PostJson', 'warehouse-location-stock/adjust'],
+		check: ['PostJson', 'warehouse-location-stock/check'],
+
+	},
     Stock: { //仓库库存管理
         add: ['PostJson', 'stock/add'],
+	    detail: ['PostJson', 'stock/detail'],
         reduce: ['PostJson', 'stock/reduce'],
         list: ['PostJson', 'stock/list'],
         transfer: ['PostJson', 'stock/transfer'],
@@ -116,7 +153,17 @@ const apiList = {
         listByTargetId: ['PostJson', 'stock/list-by-target-id'],
         stockRecordList: ['PostJson', 'stock-record/list'],
         stockRecordDetail: ['PostJson', 'stock-record/detail'],
+	    detailCodeWarehouse: ['PostJson', 'stock-record/detail-code-warehouse'],
+	    detailWarehouse: ['PostJson', 'stock-record/detail-warehouse'],
+
     },
+	StockRecord: { //仓库库存管理
+		add: ['PostJson', 'stock-record/add'],
+		adjust: ['PostJson', 'stock-record/adjust'],
+		detail: ['PostJson', 'stock-record/detail'],
+		detailWarehouse: ['PostJson', 'stock-record/detail-warehouse'],
+
+	},
     Invoice: { // 出入库货单
         save: ['PostJson', 'invoice/save'],
         detail: ['PostJson', 'invoice/detail'],
@@ -127,12 +174,16 @@ const apiList = {
         status: ['PostJson', 'invoice/status-list'], // 状态
         handle: ['PostJson', 'invoice/handle'], // 处理完成
         cancel: ['PostJson', 'invoice/cancel'], // 取消出入库单
+        listByPurchase: ['PostJson', 'invoice/list-by-purchase'],
+        updatePI: ['PostJson', 'invoice/update-pi'], // 修改pi
+        detailByItemUid: ['PostJson', 'invoice/detail-by-item-uid'], // 修改pi
 
     },
     InvoiceItem: {
         list: ['PostJson', 'invoice-item/list'], // 出入库单明细列表
         save: ['PostJson', 'invoice-item/save'], //出入库单明细 单个修改
         saveList: ['PostJson', 'invoice-item/save-list'], //出入库单明细 批量提交
+        saveChild: ['PostJson', 'invoice-item/save-child'], //出入库单明细 批量提交
         delete: ['PostJson', 'invoice-item/delete'], //出入库单明细 单个移除
     },
     Transfer: { // 调货申请单
@@ -156,6 +207,7 @@ const apiList = {
         detail: ['PostJson', 'repair/detail'], // 工单详情
 	    check: ['PostJson', 'repair/check'], // 确认
 	    audit: ['PostJson', 'repair/audit'], // 审批
+	    delete: ['PostJson', 'repair/delete'], // 审批
         statusList: ['PostJson', 'repair/status-list'], // 保存
 	    repair: ['PostJson', 'repair/repair'], // 维修结束
 	    secondDoor: ['PostJson', 'repair/second-door'], // 二次上门
@@ -167,7 +219,7 @@ const apiList = {
         detailByUid: ['PostJson', 'repair/detail-by-uid'],
         pay: ['PostJson', 'repair/pay'],
         stock: ['PostJson', 'repair/save-to-invoice'], //入库
-
+	    remark: ['PostJson', 'repair/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
     },
     RepairItem: { // 维修单
@@ -187,11 +239,20 @@ const apiList = {
         detailByCodeForRepair: ['PostJson','item/detail-by-code-for-repair'],
         delete: ['PostJson', 'item/delete'],
         setIndep: ['PostJson', 'item/set-flag-independent-info'],
+	    setDefaults: ['PostJson', 'item/set-flag-defaults'],
         addItemComponent: ['PostJson', 'item/item-component-set-save'], // 新增爆炸图
         getItemComponent: ['PostJson', 'item/item-component-set-list'], // 查询爆炸图列表
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
+	    saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
+
     },
+	ItemAccessory: { // 商品
+		save: ['PostJson', 'item-accessory/save'],
+		list: ['PostJson', 'item-accessory/list'],
+		delete: ['PostJson', 'item-accessory/delete'],
+	},
+
     Entity: {// 车架
         list: ['PostJson', 'entity/list'],
         save: ['PostJson', 'entity/save'],
@@ -201,13 +262,20 @@ const apiList = {
         getByUid: ['PostJson', 'entity/get-by-uid'],
         batchSave: ['PostJson', 'entity/batch-save-arrival-time'],
     },
+	Device: {// 车架
+		list: ['PostJson', 'device/list'],
+		deviceToEntity: ['PostJson', 'device/device-to-entity'],
+	},
     ItemCategory: { // 商品分类
         list: ['PostJson', 'item-category/list'],
+	    listAll: ['PostJson', 'item-category/list-all'],
         save: ['PostJson', 'item-category/save'],
         update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
+        // 是否显示爆炸图
+        updateDisplay: ['PostJson', 'item-category/update-display'],
     },
     ItemPrice: { // 商品价格体系
         save: ['PostJson', 'item-price/save'],
@@ -233,6 +301,7 @@ const apiList = {
         list: ['PostJson', 'item-sales-area/list'],
         bind: ['PostJson', 'item-sales-area/sales-ares-bind'],
         delete: ['PostJson', 'item-sales-area/delete'],
+	    batchSave: ['PostJson', 'item-sales-area/batch-save'],
     },
     ShopCart: { // 购物车
         save: ['PostJson', 'shopping-cart/save'],
@@ -240,6 +309,10 @@ const apiList = {
         clear: ['PostJson', 'shopping-cart/clear'],
         detail: ['GetJson', 'shopping-cart/detail'],
         remove: ['PostJson', 'shopping-cart/delete'],
+
+        // 备注
+        remark: ['PostJson', 'shopping-cart/remark'],
+
     },
     Favorite: { // 收藏夹
         add: ['PostJson', 'favorite/create'],
@@ -257,17 +330,31 @@ const apiList = {
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单
         detail: ['PostJson', 'purchase-order/detail'], // 采购订单详情
+	    update: ['PostJson', 'purchase-order/update'], // 采购订单修改
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
+	    payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
+	    createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
+	    delete: ['PostJson', 'purchase-order-pay/delete'], // 采购订单收款明细列表
         itemByIdList: ['PostJson', 'purchase-order-item/list-by-item-id'], // 采购订单明细列表
         payment: ['PostJson', 'purchase-order/payment'], // 支付订单
+	    outStock: ['PostJson', 'purchase-order/out-stock'], // 订单发货
         deliver: ['PostJson', 'purchase-order/deliver'], // 订单发货
+
+	    // takeDelivery: ['PostJson', 'purchase-order/take-delivery'], // 订单发货
         takeDeliver: ['PostJson', 'purchase-order/take-deliver'], // 确认收货
         review: ['PostJson', 'purchase-order/review'], // 评论
         statusList: ['PostJson', 'purchase-order/status-list'], // 保存
         recreate: ['PostJson', 'purchase-order/recreate'], // 再来一单
         transfer: ['PostJson', 'purchase-order/transfer'], // 转单
+
+        revise: ['PostJson', 'purchase-order/revise'], // 已下单的订单-编辑商品
+        reviseAudit: ['PostJson', 'purchase-order/revise-audit'], // 已下单的订单-编辑商品-审核
+
+	    createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
+	    updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
+
     },
     Aftersales: { // 售后单
         list: ['PostJson', 'after-sales-order/list'],
@@ -317,6 +404,7 @@ const apiList = {
     },
     ActionLog: { // 维修单 操作记录
         list: ['PostJson', 'action-log/list'],
+	    content: ['PostJson', 'action-log/content'],
     },
     Waybill: { // 物流
         delete: ['PostJson', 'waybill/delete'],
@@ -329,6 +417,7 @@ const apiList = {
         save: ['PostJson', 'waybill/save'],
         saveByUid: ['PostJson', 'waybill/save-by-uid'],
         update: ['PostJson', 'waybill/update'],
+        detailByUidNoException: ['PostJson', 'waybill/detail-by-uid-no-exception'],
     },
     Distributor: { // 分销商
         list: ['PostJson', 'distributor/list'],
@@ -479,6 +568,214 @@ const apiList = {
         detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-sn'],//入库
 
 
+    },
+	Feedback: {//质量反馈单
+		list: ['PostJson', 'feedback/list'],//
+		statusList: ['PostJson', 'feedback/status-list'],//
+		create: ['PostJson', 'feedback/create'],//
+		update: ['PostJson', 'feedback/update'],//
+		detail: ['PostJson', 'feedback/detail'],//
+		detailByUid: ['PostJson', 'feedback/detail-by-uid'],//
+		delete: ['PostJson', 'feedback/delete'],//删除
+		audit: ['PostJson', 'feedback/audit'],//审核
+		submit: ['PostJson', 'feedback/submit'],//提交
+		feedback: ['PostJson', 'feedback/feedback'],//
+		afterSalesDesc: ['PostJson', 'feedback/after-sales-desc'],//
+		saveTitle: ['PostJson', 'feedback/save-title'],//
+		content: ['PostJson', 'feedback/content'],//
+	},
+    FeedbackItem: { // 维修单
+        saveList: ['PostJson', 'quality-feedback-item/save-list'], // 列表
+        list: ['PostJson', 'quality-feedback-item/list'], // 列表
+        faultList: ['PostJson', 'quality-feedback-item/fault-list'], // 列表
+    },
+	AuditRecord: {//审核流程单
+		list: ['PostJson', 'audit-record/list'],//
+	},
+	PrintTemplate: {//审核流程单
+		list: ['PostJson', 'print-template/list'],//
+		save: ['PostJson', 'print-template/save'],//
+		delete: ['PostJson', 'print-template/delete'],//
+	},
+    Dept: { // EOS部门
+        // tree: ['PostJson', 'dept/tree'],
+        list: ['PostJson', 'dept/list'],
+        save: ['PostJson', 'dept/save'],
+        detail: ['PostJson', 'dept/detail'],
+        delete: ['PostJson', 'dept/delete'],
+    },
+    CRMGroup: { // CRM分组
+        // tree: ['PostJson', 'crm-group/tree'],
+        list: ['PostJson', 'crm-group/list'],
+        save: ['PostJson', 'crm-group/save'],
+        detail: ['PostJson', 'crm-group/detail'],
+        delete: ['PostJson', 'crm-group/delete'],
+	    batchAddMember: ['PostJson', 'crm-group/batch-add-member'],
+	    getGroupAdmin: ['PostJson', 'crm-group/get-group-admin'],
+    },
+    CRMGroupMember: {
+        save: ['PostJson', 'crm-group-member/save'],//
+        list: ['PostJson', 'crm-group-member/list'],//
+        delete: ['PostJson', 'crm-group-member/delete'],//
+        detail: ['PostJson', 'crm-group-member/detail'],//
+        structure: ['PostJson', 'crm-group-member/structure'],//
+        structureByUser: ['PostJson', 'crm-group-member/structure-by-user'],//
+        structureByUserGroup: ['PostJson', 'crm-group-member/structure-by-user-group'],//
+
+        users: ['PostJson', 'crm-group-member/users'],//
+	    setAdmin: ['PostJson', 'crm-group-member/set-admin'],
+    },
+	CRMCustomer:{//CRM 客户
+		save: ['PostJson', 'crm-customer/save'],//
+		list: ['PostJson', 'crm-customer/list'],//
+		delete: ['PostJson', 'crm-customer/delete'],//
+		detail: ['PostJson', 'crm-customer/detail'],//
+		obtain: ['PostJson', 'crm-customer/obtain'],//
+		distribute: ['PostJson', 'crm-customer/distribute'],//
+		returnPool: ['PostJson', 'crm-customer/return-pool'],//
+		transfer: ['PostJson', 'crm-customer/transfer'],//
+		checking: ['PostJson', 'crm-customer/checking'],//
+
+
+		batchGroup: ['PostJson', 'crm-customer/batch-group'],
+		batchDelete: ['PostJson', 'crm-customer/batch-delete'],
+		batchObtain: ['PostJson', 'crm-customer/batch-obtain'],
+		batchDistribute: ['PostJson', 'crm-customer/batch-distribute'],
+		batchReturnPool: ['PostJson', 'crm-customer/batch-return-pool'],
+		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
+		checkPhone: ['PostJson', 'crm-customer/check-phone'],
+		checkEmail: ['PostJson', 'crm-customer/check-email'],
+	},
+	CRMBo:{//CRM 商机
+		save: ['PostJson', 'crm-bo/save'],//
+		list: ['PostJson', 'crm-bo/list'],//
+		delete: ['PostJson', 'crm-bo/delete'],//
+		detail: ['PostJson', 'crm-bo/detail'],//
+		transfer: ['PostJson', 'crm-bo/transfer'],//
+		updateStatus: ['PostJson', 'crm-bo/update-status'],
+		success: ['PostJson', 'crm-bo/success'],
+		fail: ['PostJson', 'crm-bo/fail'],
+		reactivation: ['PostJson', 'crm-bo/reactivation'],
+		batchTransfer: ['PostJson', 'crm-bo/batch-transfer'],
+		batchDelete: ['PostJson', 'crm-bo/batch-delete'],
+	},
+	CRMOrderIncome:{//CRM 回款单
+		save: ['PostJson', 'crm-order-income/save'],//
+		list: ['PostJson', 'crm-order-income/list'],//
+		delete: ['PostJson', 'crm-order-income/delete'],//
+		detail: ['PostJson', 'crm-order-income/detail'],//
+		createUser: ['PostJson', 'crm-order-income/join-create-user-list'],// 搜索条件-创建人列表
+		audit: ['PostJson', 'crm-order-income/audit'],// 审核
+	},
+	CRMRefundRecord: {
+		save: ['PostJson', 'crm-refund-record/save'],//
+		list: ['PostJson', 'crm-refund-record/list'],//
+		delete: ['PostJson', 'crm-refund-record/delete'],//
+	},
+
+	CRMTrackMember:{//CRM 团队成员
+		save: ['PostJson', 'crm-track-member/save'],//
+		list: ['PostJson', 'crm-track-member/list'],//
+		delete: ['PostJson', 'crm-track-member/delete'],//
+		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
+		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
+		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
+
+	},
+	CRMLabel:{//CRM 标签
+		save: ['PostJson', 'crm-label/save'],//
+		list: ['PostJson', 'crm-label/list'],//
+		delete: ['PostJson', 'crm-label/delete'],//
+		batchSave: ['PostJson', 'crm-label/batch-save'],//
+		detail: ['PostJson', 'crm-label/detail'],//
+        change: ['PostJson', 'crm-label/change'],//
+	},
+	CRMTrackRecord:{//CRM跟进记录
+		save: ['PostJson', 'crm-track-record/save'],//
+		list: ['PostJson', 'crm-track-record/list'],//
+		delete: ['PostJson', 'crm-track-record/delete'],//
+		detail: ['PostJson', 'crm-track-record/detail'],//
+	},
+    CRMOrder: { // CRM合同订单
+        save: ['PostJson', 'crm-order/save'],//新增/修改
+		list: ['PostJson', 'crm-order/list'],//列表
+		delete: ['PostJson', 'crm-order/delete'],// 删除
+		detail: ['PostJson', 'crm-order/detail'],// 详情
+        batchDelete: ['PostJson', 'crm-order/batch-delete'],// 批量删除
+		createUser: ['PostJson', 'crm-order/join-create-user-list'],// 搜索条件-创建人列表
+        audit: ['PostJson', 'crm-order/audit'],// 审核
+        reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
+	    batchTransfer: ['PostJson', 'crm-order/batch-transfer'],
+    },
+    CRMItemBind: {  //CRM销售信息
+        save: ['PostJson', 'crm-item-bind/save'],//新增/修改
+		list: ['PostJson', 'crm-item-bind/list'],//列表
+		delete: ['PostJson', 'crm-item-bind/delete'],//删除
+		detail: ['PostJson', 'crm-item-bind/detail'],//详情
+    },
+	CRMBoStatusGroup:{//CRM 阶段
+		save: ['PostJson', 'crm-bo-status-group/save'],//
+		list: ['PostJson', 'crm-bo-status-group/list'],//
+		delete: ['PostJson', 'crm-bo-status-group/delete'],//
+		detail: ['PostJson', 'crm-bo-status-group/detail'],//
+	},
+	CrmContactBind:{//CRM联系人绑定
+		save: ['PostJson', 'crm-contact-bind/save'],//
+		list: ['PostJson', 'crm-contact-bind/list'],//
+		delete: ['PostJson', 'crm-contact-bind/delete'],//
+		detail: ['PostJson', 'crm-contact-bind/detail'],//
+		batchSave: ['PostJson', 'crm-contact-bind/batch-save'],//
+	},
+	CrmActionRecord:{//CRM联系人绑定
+		list: ['PostJson', 'crm-action-record/list'],//
+	},
+    CRMDict:{ //CRM数据字典
+        save: ['PostJson', 'crm-dict/save'],//
+        list: ['PostJson', 'crm-dict/list'],//
+        delete: ['PostJson', 'crm-dict/delete'],//
+        detail: ['PostJson', 'crm-dict/detail'],//
+        change: ['PostJson', 'crm-dict/change'],//
+    },
+	CRMLabelBind: {
+		list: ['PostJson', 'crm-label-bind/list'],//
+		save: ['PostJson', 'crm-label-bind/save'],//
+		saveList: ['PostJson', 'crm-label-bind/save-list'],//
+		delete: ['PostJson', 'crm-label-bind/delete'],//
+        labelList: ['PostJson', 'crm-label-bind/label-list'],//
+	},
+	CRMTestDriveOrder: {
+		save: ['PostJson', 'crm-test-drive-order/save'],//
+		list: ['PostJson', 'crm-test-drive-order/list'],//
+		delete: ['PostJson', 'crm-test-drive-order/delete'],//
+		detail: ['PostJson', 'crm-test-drive-order/detail'],//
+	},
+	CRMCustomerPortrait:{//CRM 客户画像
+		save: ['PostJson', 'crm-customer-portrait/save'],//
+		list: ['PostJson', 'crm-customer-portrait/list'],//
+		delete: ['PostJson', 'crm-customer-portrait/delete'],//
+		detail: ['PostJson', 'crm-customer-portrait/detail'],//
+		detailCustomerId: ['PostJson', 'crm-customer-portrait/detail-customer-id'],//
+
+	},
+
+	CRMDashboard: {
+		salesStatistics: ['PostJson', 'crm-dashboard/sales-statistics'],// 销售简报
+		trackStatistics: ['PostJson', 'crm-dashboard/track-statistics'],// 跟进统计
+		boStatistics: ['PostJson', 'crm-dashboard/bo-statistics'],// 商机统计
+		purchaseIntentStatistics: ['PostJson', 'crm-dashboard/purchase-intent-statistics'],// 商机统计
+		testDriveIntentStatistics: ['PostJson', 'crm-dashboard/test-drive-intent-statistics'],// 商机统计
+		performanceList: ['PostJson', 'crm-dashboard/performance-list'],// 业绩榜单
+
+
+		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
+	},
+
+    TestReport: { // 测试报告
+        list: ['PostJson', 'report/list'],
+		detail: ['PostJson', 'report/detail'],
+    },
+    MoneyChange:{
+        switch:['PostJson', 'crm-order/switch-currency']
     }
 };
 

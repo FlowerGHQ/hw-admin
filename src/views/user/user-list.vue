@@ -12,16 +12,26 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('n.name') }}:</div>
                     <div class="value">
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                    </div>
+                </a-col>
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                    <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
+                    <div class="value">
+                        <a-tree-select class="CategoryTreeSelect"
+                            v-model:value="searchForm.group_id"
+                            :placeholder="$t('def.select')"
+                            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                            :tree-data="groupOptions"
+                            tree-default-expand-all
+                        />
                     </div>
                 </a-col>
                 <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">类型:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择员工类型" allow-clear>
-                            <a-select-option :value="orgType">普通员工</a-select-option>
+                        <a-select v-model:value="searchForm.type" @change="handleSearch" placeholder="请选择用户类型" allow-clear>
+                            <a-select-option :value="orgType">普通用户</a-select-option>
                             <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                         </a-select>
                     </div>
@@ -43,8 +53,13 @@
                 </template>
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.dataIndex === 'flag_admin'">
-                        {{ text ? $t('i.yes') : $t('i.no') }}
+                        <template v-if="$auth('user.set-admin') && orgType === Core.Const.LOGIN.ORG_TYPE.ADMIN">
+                            <a-switch :checked="!!record.flag_admin" :checked-children="$t('i.yes')" :un-checked-children="$t('i.no')" @click="handleManagerChange(record)"/>
+                        </template>
+                        <template v-else> {{ text ? $t('i.yes') : $t('i.no') }}</template>
                     </template>
+
+
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
@@ -124,6 +139,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             orgType: Core.Data.getOrgType(),
             USER_TYPE: Core.Const.USER.TYPE,
             // 加载
@@ -135,6 +151,7 @@ export default {
             // 搜索
             searchForm: {
                 name: '',
+                group_id: undefined,
                 type: undefined,
                 org_id: Core.Data.getOrgId(),
                 org_type: Core.Data.getOrgType(),
@@ -163,12 +180,14 @@ export default {
                 password: '',
                 new_password: '',
             },
+            groupOptions: [],
         };
     },
     watch: {},
     computed: {},
     mounted() {
         this.getTableData();
+        this.handleGroupTree()
     },
     methods: {
         routerChange(type, item = {}) {
@@ -234,7 +253,7 @@ export default {
                 this.loading = false;
             });
         },
-        // 删除员工
+        // 删除用户
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -287,7 +306,27 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
+        handleManagerChange(record){
+            this.loading = true;
+            Core.Api.User.setPlatformAdmin({
+                id: record.id,
+                flag_admin: record.flag_admin ? 0 : 1
+            }).then(() => {
+                this.getTableData();
+            }).catch(err => {
+                console.log('handleManagerChange err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
     }
 };
 </script>

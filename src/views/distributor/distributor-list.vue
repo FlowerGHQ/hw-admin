@@ -10,7 +10,7 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name')}}:</div>
+                        <div class="key">{{ $t('d.name_short_name')}}:</div>
                         <div class="value">
                             <a-input :placeholder="$t('n.enter')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
@@ -21,8 +21,16 @@
                             <CountryCascader @search="handleOtherSearch" ref='CountryCascader'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                      <div class="key">{{ $t('d.pay_type')}}:</div>
+                      <div class="value">
+                        <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
+                          <a-select-option v-for="(item,index) of payTypeList" :key="index" :value="key">{{ item[$i18n.locale] }}</a-select-option>
+                        </a-select>
+                      </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
-                        <div class="key">{{ $t('d.create_time') }}:</div>
+                        <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
                     </a-col>
                 </a-row>
@@ -58,6 +66,9 @@
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'pay_type'">
+                            {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
@@ -98,10 +109,13 @@
 import Core from '../../core';
 
 import CountryCascader from '@/components/common/CountryCascader.vue'
+import TimeSearch from '@/components/common/TimeSearch.vue'
+import Const from "../../core/const";
 export default {
     name: 'DistributorList',
     components: {
         CountryCascader,
+        TimeSearch
     },
     props: {},
     data() {
@@ -115,6 +129,7 @@ export default {
             total: 0,
             // 搜索
             statusList: Core.Const.ORG_STATUS_LIST,
+            payTypeList: Const.DISTRIBUTOR.PAY_TIME_LIST,
             filteredInfo: {status: [1]},
             searchForm: {
                 name: '',
@@ -122,6 +137,7 @@ export default {
                 type: '',
                 continent: '',
                 country: '',
+                pay_type: '',
             },
             // 表格
             tableData: [],
@@ -137,6 +153,7 @@ export default {
             let columns = [
                 {title: this.$t('d.distributor_name'), dataIndex: 'name'},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.type'), dataIndex: 'type',
                     filters: this.$Util.tableFilterFormat(Core.Const.DISTRIBUTOR.TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.type || null },
                 {title: this.$t('n.country'),dataIndex: 'country', key: 'country'},
@@ -144,13 +161,13 @@ export default {
                 {title: this.$t('n.contact'), dataIndex: 'contact'},
                 {title: this.$t('n.phone'), dataIndex: 'phone'},
                 {title: this.$t('d.sales_area'), dataIndex: 'sales_area_list'},
-                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {
-                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                columns.splice(4, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
         },
@@ -232,13 +249,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除分零售商吗？',
-                okText: '确定',
+                title: _this.$t('a.remove_sub_retailer') + '？',
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Distributor.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);

@@ -1,8 +1,9 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="!dis">
         <slot>{{ btnText }}</slot>
     </a-button>
-    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'>
+    <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
+        class="ItemSelectModal">
         <div class="modal-content">
             <div class="search-container">
                 <a-row class="search-area">
@@ -31,9 +32,6 @@
                 </div>
             </div>
             <div class="table-container">
-                <div class="hint-count">
-                    <a-button type="primary">{{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}</a-button>
-                </div>
                 <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
                     :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
             </div>
@@ -49,6 +47,9 @@
                         :default-page-size='pageSize'
                         @change="pageChange"
                     />
+                    <div class="tip">
+                        {{ $t('in.selected') + ` ${this.selectItemIds.length} ` + $t('in.total')}}
+                    </div>
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleModalClose">{{ $t('def.cancel') }}</a-button>
@@ -62,11 +63,13 @@
 <script>
 import Core from '@/core';
 
+import ItemTable from '@/components/table/ItemTable.vue'
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+
 export default {
     components: {
-        ItemTable: () => import('@/components/table/ItemTable.vue'),
-        CategoryTreeSelect: () => import("@/components/popup-btn/CategoryTreeSelect.vue")
-
+        ItemTable,
+        CategoryTreeSelect,
     },
     emits: ['select', 'option'],
     props: {
@@ -108,6 +111,10 @@ export default {
         purchaseId: {
             type: Number,
             default: 0
+        },
+        dis:{
+            type:String,
+            default:''
         }
     },
     data() {
@@ -135,7 +142,7 @@ export default {
         tableColumns() {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: ['category','name']},
+                {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 {title: this.$t('i.number'), dataIndex: 'model', key: 'item'},
                 {title: this.$t('i.code'), dataIndex: 'code', key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: 'attr_list', key: 'spec'},
@@ -242,6 +249,14 @@ export default {
                 margin-bottom: 5px;
             }
         }
+    }
+}
+.ItemSelectModal {
+    .tip {
+        height: 30px;
+        line-height: 30px;
+        margin-left: 10px;
+        font-size: 12px;
     }
 }
 </style>

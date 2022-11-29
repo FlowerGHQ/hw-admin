@@ -14,7 +14,7 @@
             <div class="form-item required afs">
                 <div class="key">对应商品:</div>
                 <div class="value">
-                    <ItemSelect btnType='primary' btnText="选择商品" btnClass="item-select-btn"
+                    <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn"
                         @select="handleSelectItem" :radioMode="true"/>
                     <div class="item-select-display" v-if="!$Util.isEmptyObj(selectItem)">
                         <img :src="$Util.imageFilter(selectItem.logo)" />

@@ -111,10 +111,16 @@
                                           v-if="$auth('invoice.delete')"><i class="icon i_close_c"/>{{ $t('def.cancel') }}
                                 </a-button>
                             </template>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
+                            <AuditMaterialPurchase v-if="(record.status === STATUS.FINANCE_PASS || (record.status === STATUS.WAIT_AUDIT && record.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="link" :status="STATUS.WAIT_AUDIT"
                                                    :api-list="['Invoice', 'audit']" :invoiceId="record.id" @submit="getTableData"><i class="icon i_audit"/>{{ $t('in.admin') }}</AuditMaterialPurchase>
-                            <AuditMaterialPurchase v-if="record.status === STATUS.AUDIT_PASS && record.type === TYPE.OUT && $auth('invoice.finance-audit') && $auth('ADMIN')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
-                                                   :status="STATUS.AUDIT_PASS" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditMaterialPurchase>
+                            <AuditMaterialPurchase v-if="record.status === STATUS.WAIT_AUDIT && record.type === TYPE.OUT && $auth('invoice.finance-audit') && $auth('ADMIN')" btnType="link" :api-list="['Invoice', 'audit']" :invoiceId="record.id"
+                                                   :status="STATUS.FINANCE_PASS" @submit="getTableData" ><i class="icon i_audit"/>{{$t('in.finance_audit')}}</AuditMaterialPurchase>
+<!--                            <AuditHandle v-if="(detail.status === STATUS.FINANCE_PASS || (detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.IN)) && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
+<!--                                         :sPass="STATUS.AUDIT_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>仓库审核</AuditHandle>-->
+
+<!--                            <AuditHandle v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.finance-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :id="id"-->
+<!--                                         :sPass="STATUS.FINANCE_PASS" :sRefuse="STATUS.AUDIT_REFUSE" @submit="getTableData" ><i class="icon i_audit"/>财务审核</AuditHandle>-->
+
                         </template>
                     </template>
                 </a-table>
@@ -200,15 +206,18 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary', key: -1},
                 {zh: '待提交', en: 'Awaiting commit', value: '0', color: 'yellow', key: STATUS.INIT},
-                {zh: '仓库审核', en: 'Awaiting admin review', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT},
-                {zh: '审核通过', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {zh: '待财务审核', en: 'Waiting for financial review', value: '0', color: 'blue', key: STATUS.WAIT_AUDIT},
+                {zh: '待仓库审核', en: 'Waiting for warehouse review', value: '0', color: 'blue', key: STATUS.FINANCE_PASS},
                 {zh: '审核失败', en: 'Review failed', value: '0', color: 'red', key: STATUS.AUDIT_REFUSE},
-                {zh: '入库完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},
+                {zh: '审核通过 待完成', en: 'Review passed', value: '0', color: 'blue', key: STATUS.AUDIT_PASS},
+                {zh: '已完成', en: 'In the warehouse', value: '0', color: 'green', key: STATUS.CLOSE},
+                {zh: '已发货', en: 'Delivery', value: '0', color: 'green', key: STATUS.DELIVERY},
+                {zh: '已收货', en: 'Received', value: '0', color: 'green', key: STATUS.RECEIVED},
                 {zh: '已取消', en: 'Cancelled', value: '0', color: 'grey', key: STATUS.CANCEL},
             ]
-            if (this.$auth('ADMIN')) {
-                columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.FINANCE_PASS})
-            }
+            // if (this.$auth('ADMIN')) {
+            //     columns.splice(4, 0, {zh: '财务审核', en: 'Waiting for financial approval', value: '0', color: 'yellow', key: STATUS.WAIT_AUDIT})
+            // }
             return columns
         },
     },
@@ -216,6 +225,15 @@ export default {
         this.getTableData();
         this.getWarehouseList();
         this.getStatusList();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         routerChange(type, item = {}) {

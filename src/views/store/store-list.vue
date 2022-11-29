@@ -10,7 +10,7 @@
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name') }}:</div>
+                        <div class="key">{{ $t('d.name_short_name') }}:</div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
@@ -61,6 +61,9 @@
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'pay_type'">
+                            {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
 <!--                        <template v-if="column.key === 'flag_receive_transfer'">
                             <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
@@ -154,11 +157,12 @@ export default {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
                 {title: this.$t('d.short_name'), dataIndex: 'short_name'},
+                { title: this.$t('d.pay_type'), dataIndex: 'pay_type', key:'pay_type' },
                 {title: this.$t('n.contact'), dataIndex: 'contact_name', key:'item'},
                 {title: this.$t('n.phone'), dataIndex: 'contact_phone',key:'item'},
-                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('n.state'), dataIndex: 'status', key: 'status',
                     filters: this.$Util.tableFilterFormat(Core.Const.ORG_STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
@@ -271,13 +275,13 @@ export default {
         handleDelete(id) {
             let _this = this;
             this.$confirm({
-                title: '确定要删除该门店吗？',
-                okText: '确定',
+                title: _this.$t('s.sure_delete'),
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.delete({id}).then(() => {
-                        _this.$message.success('删除成功');
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -307,13 +311,13 @@ export default {
         handleTransferChange(record) {
             let _this = this;
             this.$confirm({
-                title: `确定要将该门店设置为${record.flag_receive_transfer ? '不可' : '可'}接受转单吗？`,
-                okText: '确定',
+                title: `${record.flag_receive_transfer ? _this.$t('s.store_settings_no') : _this.$t('s.store_settings_yes')}`,
+                okText: _this.$t('def.ok'),
                 okType: 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Store.updateTransfer({id:record.id}).then(() => {
-                        _this.$message.success(`${record.flag_receive_transfer ? '禁用' : '启用'}成功`);
+                        _this.$message.success(`${record.flag_receive_transfer ? _this.$t('def.disable') : _this.$t('def.enable')}` + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleTransferChange err", err);

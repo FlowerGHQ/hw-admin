@@ -31,7 +31,7 @@
             <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
         </div>
     </div>
-    <div class="login-footer">Copyright © 2021 杭州重构科技有限公司 浙ICP备17006717号</div>
+    <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
 </div>
 </template>
 
@@ -97,6 +97,7 @@ export default {
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
+                Core.Data.setCurrency(res.user.currency);
 
                 let loginType = TYPE_MAP[this.loginForm.user_type]
                 /* switch (this.loginForm.user_type) {
@@ -131,9 +132,17 @@ export default {
                 }
             }).finally(() => {
                 Core.Data.setAuthority(authorityMap)
-                setTimeout(() => {
-                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
-                }, 1000)
+                if (userType === Core.Const.USER.TYPE.ADMIN){
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                    }, 1000)
+                } else {
+                    setTimeout(() => {
+                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                    }, 1000)
+                }
+
+
             })
 
 

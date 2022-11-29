@@ -158,15 +158,15 @@ export default {
             let keys = []
             for (const item of config) {
                 if (keys.includes(item.key)) {
-                    return this.$message.warning('配置项的键值不可重复')
+                    return this.$message.warning(this.$t('i.key_unique'))
                 } else {
                     keys.push(item.key)
                 }
                 if (!item.name) {
-                    return this.$message.warning('请输入配置项名称')
+                    return this.$message.warning(this.$t('i.configuration_name'))
                 }
                 if (!item.key) {
-                    return this.$message.warning('请输入配置项键值')
+                    return this.$message.warning(this.$t('i.key_value'))
                 }
             }
             Core.Api.ItemCategory.save({
@@ -175,7 +175,7 @@ export default {
                 parent_id: this.detail.parent_id,
                 config: JSON.stringify(config),
             }).then(() => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)

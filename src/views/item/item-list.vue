@@ -4,6 +4,14 @@
         <div class="title-container">
             <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
+                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
+                <!-- <a-button class="download" type="primary" @click="showModal"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
+                <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
+                    <a-radio-group v-model:value="value">
+                        <a-radio-button value="1">Hangzhou</a-radio-button>
+                        <a-radio-button value="2">Shanghai</a-radio-button>
+                    </a-radio-group>
+                </a-modal> -->
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
@@ -14,6 +22,7 @@
                         <i class="icon i_add"/>{{ $t('i.import') }}
                     </a-button>
                 </a-upload>
+                <a-button type="primary" @click="handleSalesAreaByIdsShow()"><i class="icon i_edit"/> {{ $t('ar.set_sales') }} </a-button>
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
             </div>
         </div>
@@ -29,7 +38,7 @@
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
-                            <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val }}</a-select-option>
+                            <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -57,16 +66,16 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
-                :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange"
-                :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
+                :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange" :row-selection="rowSelection"
+                     :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                            <a-tooltip placement="top" :title='text' destroy-tooltip-on-hide>
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                            <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
                                 <div class="info">
                                     <a-button type="link" @click="routerChange('detail', record)">
-                                        <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
                                     </a-button>
                                     <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.attr_list)}}</p>
                                 </div>
@@ -79,11 +88,22 @@
                     <template v-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
+                    <template v-if="column.key === 'category_list'">
+                        <span v-for="(category, index) in text">
+                            <span v-if="index !== 0">,</span>
+                            {{$i18n.locale ==='zh'?category.category_name:category.category_name_en}}
+                        </span>
+                    </template>
                     <template v-if="column.key === 'money'">
                         ￥{{$Util.countFilter(text)}}
                     </template>
+                    <template v-if="column.key === 'flag_entity'">
+                        {{$Util.itemFlagEntityFilter(text, $i18n.locale)}}
+                    </template>
                     <template v-if="column.key === 'fob_money'">
-                        {{column.unit}} {{$Util.countFilter(text)}}
+                        <span v-if="text >= 0">{{column.unit}}</span>
+                         {{$Util.countFilter(text)}}
+
                     </template>
                     <template v-if="column.key === 'man_hour'">
                         {{ $Util.countFilter(text) }}
@@ -131,6 +151,22 @@
             />
         </div>
     </div>
+    <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
+        <div class="modal-content">
+            <div class="form-item required">
+                <div class="key">{{ $t('d.sales_area') }}</div>
+                <div class="value">
+                    <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
+                        <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
+        </div>
+        <template #footer>
+            <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
+        </template>
+    </a-modal>
 </div>
 </template>
 
@@ -170,6 +206,10 @@ export default {
             tableData: [],
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
+            selectedRowKeys: [],
+            salesAreaVisible: false,
+            salesList: [],
+            salesAreaIds: [],
             // 上传
             upload: {
                 action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
@@ -182,6 +222,11 @@ export default {
                     type: 'xlsx',
                 },
             },
+
+            // // 对话框显示
+            // visible: false,
+            // // 导出方式
+            // value: '',
         };
     },
     watch: {},
@@ -192,12 +237,13 @@ export default {
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
                 { title: this.$t('i.status'), dataIndex: 'status',
-                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
+                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
-                { title: this.$t('i.categories'), dataIndex: ['category','name'], key: 'item' },
+                { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
+                { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
-                { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
+                // { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
                 { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
@@ -205,10 +251,23 @@ export default {
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return tableColumns
-        }
+        },
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys
+                    this.selectedRowItems = selectedRows
+                    console.log('rowSelection onChange this.selectedRowKeys', this.selectedRowKeys);
+                },
+            };
+        },
     },
     mounted() {
         this.getTableData();
+        this.getSalesAreaList();
+
+
     },
     methods: {
         routerChange(type, item = {}) {
@@ -310,15 +369,15 @@ export default {
 
         handleStatusChange(record) {
             let _this = this;
-            let name = record.status === -1 ? '上架' : '下架'
+            let name = record.status === -1 ? _this.$t('i.active_a') : _this.$t('i.inactive_a')
             this.$confirm({
-                title: `确定要${name}该商品吗？`,
-                okText: '确定',
+                title: _this.$t('pop_up.sure') + `${name}` + _this.$t('i.the_goods'),
+                okText: _this.$t('def.sure'),
                 okType: record.status === -1 ?  '' : 'danger',
-                cancelText: '取消',
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Item.updateStatus({id: record.id}).then(() => {
-                        _this.$message.success(name + '成功');
+                        _this.$message.success(name + _this.$t('pop_up.success'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleStatusChange err", err);
@@ -351,20 +410,91 @@ export default {
         handleMatterChange({file, fileList}) {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(this.$t(file.response.code + ''))
                 } else {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('i.uploaded'));
                 }
             }
             this.upload.fileList = fileList
         },
+        getSalesAreaList() {
+            Core.Api.SalesArea.list({page:0}).then(res => {
+                this.salesList = res.list;
+            });
+        },
+        handleSalesAreaByIdsConfirm() {
+            if (this.salesAreaIds.length <= 0){
+                return this.$message.error(this.$t('n.choose') + this.$t('d.sales_area'));
+            }
+            Core.Api.SalesAreaItem.batchSave({
+                item_id_list: this.selectedRowKeys,
+                sales_area_id_list: this.salesAreaIds,
+            }).then(res =>{
+                this.getTableData();
+                this.handleSalesAreaByIdsClose();
+            })
+
+        },
+        handleSalesAreaByIdsShow() {
+            if (this.selectedRowKeys.length <= 0){
+                return this.$message.error(this.$t('n.choose') + this.$t('i.item'));
+            }
+            this.getSalesAreaList();
+            this.salesAreaVisible = true;
+        },
+        handleSalesAreaByIdsClose() {
+            this.salesAreaVisible = false;
+            this.salesList = [];
+            this.salesAreaIds = [];
+        },
+
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            // console.log('form',form)
+            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_self')
+            this.exportDisabled = false;
+        },
+
+        // // 显示导出对话框
+        // showModal() {
+        //     this.visible = true;
+        // },
+        // // 导出确定
+        // handleOk(e) {
+        //     // console.log(e);
+        //     this.visible = false;
+        // },
     }
 };
 </script>
 
 <style lang="less" scoped>
 #ItemList {
+    .download {
+        font-size: 14px;
+        text-align: center;
+        margin-right: 10px;
+    }
     .list-container {
         .title-container {
             .btns-area {
@@ -374,5 +504,22 @@ export default {
             }
         }
     }
+    .table-container{
+        .info{
+            .sub-info{
+                width: 20em;
+                overflow: hidden; /*超出长度的文字隐藏*/
+
+                text-overflow:ellipsis;/*文字隐藏以后添加省略号*/
+
+                white-space: nowrap; /*强制不换行*/
+            }
+        }
+    }
 }
+// .ant-modal {
+//     // top: 50% !important;
+//     // transform: translateY(-50%);
+//     color: red;
+// }
 </style>

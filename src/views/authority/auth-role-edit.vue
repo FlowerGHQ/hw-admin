@@ -1,5 +1,5 @@
 <template>
-    <div id="AuthRoleEdit" class="edit-container">
+    <div id="AuthRoleEdit" class="edit-container" :class="$i18n.locale">
         <div class="title-container">
             <div class="title-area">{{ form.id ? $t('role.edit') : $t('role.save') }}</div>
         </div>
@@ -31,9 +31,16 @@
             <div class="form-content long-key">
                 <template v-for="item of authItems" :key="item.key">
                     <div class="form-item afs" v-if="item.list.length">
-                        <div class="key">{{item.name}}:</div>
+                        <div class="key">{{$t('authority.title.'+item.key)}}:</div>
                         <div class="value">
-                            <a-checkbox-group :options="item.list" v-model:value="item.select"/>
+                            <a-checkbox class="select-all"
+                                v-model:checked="itemCheckAll[item.key]"
+                                :indeterminate="indeterminate[item.key]"
+                                @change="onCheckAllChange(itemCheckAll[item.key],item, key)"
+                            >{{$t('u.select_all')}}</a-checkbox>
+                            <a-checkbox-group v-model:value="item.select"  @change="onChange(item.select, item.key, item.list)">
+                                <a-checkbox v-for=" it in item.list" :value="it.value">{{$t('authority.'+it.label) }}</a-checkbox>
+                            </a-checkbox-group>
                         </div>
                     </div>
                 </template>
@@ -70,7 +77,9 @@ export default {
                 id: '',
                 name: '',
                 remark: '',
-            }
+            },
+            itemCheckAll: {},
+            indeterminate: {},
         };
     },
     watch: {},
@@ -118,7 +127,9 @@ export default {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
-                        item.list.push({ value: auth.id, label: auth.name });
+                        item.list.push({ value: auth.id, label: auth.key });
+                        this.itemCheckAll[key] = false;
+                        this.indeterminate[key] = false;
                     }
                 })
                 if (this.form.id) {
@@ -139,6 +150,9 @@ export default {
                     if (item) {
                         item.select.push(auth.id);
                     }
+                })
+                this.authItems.forEach(it => {
+                    this.onChange(it.select, it.key, it.list)
                 })
             }).catch(err => {
                 console.log('getRoleSelectedAuth err:', err)
@@ -164,17 +178,79 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+        onChange(checkedList, key, plainOptions) {
+            this.indeterminate[key] = !!checkedList.length && checkedList.length < plainOptions.length;
+            this.itemCheckAll[key] = checkedList.length === plainOptions.length;
+        },
+        onCheckAllChange(e,item, key) {
+            console.log("e",e)
+            let select = []
+            let selectDisabled = []
+            item.list.forEach(it => {
+                if (it.disabled){
+                    selectDisabled.push(it.value)
+                }
+                select.push(it.value)
+            })
+            console.log("list",select)
+            item.select = e ? select: selectDisabled;
+            this.indeterminate[key] = false;
+            this.itemCheckAll[key] = e;
+            // Object.assign(this, {
+            //     checkedList: e.checked ? item.list: [],
+            //     indeterminate: false,
+            //     checkAll: e.checked,
+            // });
+        },
     }
 };
 </script>
 
 <style lang="less">
 #AuthRoleEdit {
+    .form-block .form-item .value {
+        max-width: 100%;
+        width: 100%;
+    }
+    .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+        margin-left: 0px;
+    }
+    div.ant-checkbox-group {
+        display:inline;
+    }
+    div.ant-checkbox-group .ant-checkbox-wrapper {
+        display:inline-flex;
+    }
+
     .ant-checkbox + span {
         padding-right: 8px;
         padding-left: 8px;
-        width: 100px;
+        // width: 100px;
+    }
+
+    .select-all {
+        width: 100%;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+    &.en, &.zh {
+        .form-content.long-key {
+            padding: 0 5%;
+            .form-item {
+                .key {
+                    width: 15%;
+                    min-width: 140px;
+                    padding-right: 1em;
+                    text-align: right;
+                    line-height: 16px;
+                }
+                .value {
+                    width: 85%;
+                    max-width: calc(100% - 140px);
+                }
+            }
+        }
     }
 }
 </style>

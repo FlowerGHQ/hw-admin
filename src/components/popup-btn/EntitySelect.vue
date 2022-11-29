@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
+    <a-button class="EntitySelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'>
@@ -113,7 +113,8 @@ export default {
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: ['item','name'], key: 'item'},
                 {title: this.$t('v.number'), dataIndex: 'uid', key: 'item'},
-                {title: this.$t('i.categories'), dataIndex: ['item','category','name'], key: 'item'},
+                // {title: this.$t('i.categories'), dataIndex: ['item','category','name'], key: 'item'},
+                { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 {title: this.$t('i.number'), dataIndex: ['item','model'], key: 'item'},
                 {title: this.$t('i.code'), dataIndex: ['item','code'], key: 'item'},
                 {title: this.$t('i.spec'), dataIndex: ['item','attr_list'], key: 'spec'},
@@ -175,7 +176,7 @@ export default {
 </script>
 
 <style lang='less' scoped>
-.ItemSelectBtn {
+.EntitySelectBtn {
     &.ant-btn-link {
         line-height: 1;
         height: 1em;

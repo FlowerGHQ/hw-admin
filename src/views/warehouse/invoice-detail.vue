@@ -7,7 +7,7 @@
                 <a-button type="primary" @click="handleSubmit()" v-if="$auth('invoice.save')"><i class="icon i_confirm"/>{{ $t('def.submit') }}</a-button>
                 <a-button type="danger" ghost @click="handleCancel()" v-if="$auth('invoice.delete')"> <i class="icon i_close_c"/>{{ $t('def.cancel') }}</a-button>
             </template>
-            <template v-if="detail.status === STATUS.CLOSE && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
+            <template v-if="(detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY) && detail.type === TYPE.IN && detail.target_type === 30 && $auth('ADMIN') && $auth('invoice.import-export')">
                 <a-button type="primary" @click="handleExportIn"><i class="icon i_download"/>导出</a-button>
             </template>
             <AuditMaterialPurchase v-if="detail.status === STATUS.WAIT_AUDIT && $auth('invoice.warehouse-audit')" btnType="primary" :ghost="false" :api-list="['Invoice', 'audit']" :invoiceId="id"
@@ -91,7 +91,7 @@
         <a-collapse-panel key="ItemList" :header="$t('i.product_information')" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.ITEM">
             <template #extra>
                 <template  v-if="detail.status === STATUS.INIT && !addMode && $auth('invoice.save')">
-                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :sourceId="detail.type == TYPE.IN ? detail.source_id : 0"
+                    <ItemSelect btnType='link' :btnText="$t('i.add')" v-if="detail.source_type !== SOURCE_TYPE.PRODUCTION" :purchaseId="detail.type == TYPE.IN ? detail.source_id : 0"
                                 :sourceType="detail.type == TYPE.IN ? detail.source_type : 0"  :warehouseId="detail.type == TYPE.OUT ? detail.warehouse_id : 0" :disabledChecked="disabledChecked"
                         @select="handleAddItemChange"/>
                     <a-popover v-model:visible="production.addVisible" trigger="click" placement="left" v-else-if="production.maxCount"
@@ -213,7 +213,7 @@
                             <template v-if="column.dataIndex === 'amount'">
                                 <template v-if="addMode || record.editMode">
                                     <a-input-number v-model:value="record.amount" placeholder="请输入"
-                                        :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> 件
+                                        :min="1" :max="detail.type === TYPE.IN ? 9999: record.item.stock" :precision="0"/> {{ $t('i.pcs2') }}
                                 </template>
                                 <template v-else>{{ text ? text + '件' : '-' }}</template>
                             </template>

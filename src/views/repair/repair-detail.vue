@@ -8,6 +8,9 @@
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_edit"/>{{ $t('def.edit') }}
                     </a-button>
+                    <a-button type="primary" ghost @click="handleDelete()" v-if="detail.status == STATUS.WAIT_DETECTION || detail.status == STATUS.AUDIT_FAIL">
+                        <i class="icon i_edit"/>{{ $t('def.delete') }}
+                    </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')" v-if="detail.status == STATUS.AUDIT_FAIL">
                         {{ $t('def.re_edit') }}
                     </a-button>
@@ -17,19 +20,25 @@
                     <a-button type="primary" @click="handleFaultSubmit()" v-if="detail.status == STATUS.WAIT_DETECTION">
                         <i class="icon i_submit"/>{{ $t('def.submit') }}
                     </a-button>
-                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                    <a-button type="primary" @click="handleRepairEndShow()" v-if="detail.status == STATUS.WAIT_REPAIR">
+                        <i class="icon"/>{{ $t('r.repair_a') }}
+                    </a-button>
+                    <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
                         <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
                     <i class="icon i_detail_l"/>{{ $t('r.bill') }}
                 </a-button>
-<!--                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
+               <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT && $auth('DISTRIBUTOR') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
                 </a-button>
                 <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.DISTRIBUTOR_AUDIT_SUCCESS && $auth('ADMIN') && $auth('repair-order.audit')">
                     <i class="icon i_audit"/>{{ $t('n.audit') }}
-                </a-button>-->
+                </a-button>
+                <a-button type="primary" @click="handleAuditShow()" v-if="detail.status == STATUS.SETTLEMENT_DISTRIBUTOR && $auth('ADMIN') && $auth('repair-order.audit')">
+                    <i class="icon i_audit"/>{{ $t('n.audit') }}
+                </a-button>
             </div>
         </div>
         <div class="gray-panel info">
@@ -70,6 +79,15 @@
                     <div class="key">{{ $t('r.create_time') }}</div>
                     <div class="value">{{ $Util.timeFilter(detail.create_time) || '-' }}</div>
                 </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('r.description') }}</div>
+                    <div class="value">{{ detail.desc }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('r.remark_a') }}</div>
+                    <div class="value">{{ detail.remark }}</div>
+                </div>
+
                 <!-- <div class="info-item">
                     <div class="key">计划时间</div>
                     <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
@@ -91,47 +109,71 @@
             <RepairInfo  :id='id' :detail='detail'/>
             <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
-            <ActionLog   :id='id' :detail='detail'/>
+            <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER"/>
+            <FeedbackLog   :id='id' :detail='detail' :sourceType="Core.Const.FEEDBACK.SOURCE_TYPE.REPAIR_ORDER"/>
+
         </div>
     </div>
     <template class="modal-container">
         <!-- 转单物流 -->
-        <a-modal v-model:visible="deliveryShow" title="转单物流" @ok="handleDeliverySubmit">
+        <a-modal v-model:visible="deliveryShow" :title="$t('n.turn_logistics')" @ok="handleDeliverySubmit">
             <div class="form-item required">
-                <div class="key">物流公司:</div>
+                <div class="key">{{ $t('n.logistics_company') }}:</div>
                 <div class="value">
-                    <a-select v-model:value="deliveryForm.company_uid" placeholder="请选择物流公司">
+                    <a-select v-model:value="deliveryForm.company_uid" :placeholder="$t('r.logistics_company')">
                         <a-select-option v-for="(val,key) in companyMap" :key="key" :value="key">{{ val }}</a-select-option>
                     </a-select>
                 </div>
             </div>
             <div class="form-item required">
-                <div class="key">物流单号:</div>
+                <div class="key">{{ $t('n.tracking_number') }}:</div>
                 <div class="value">
-                    <a-input v-model:value="deliveryForm.waybill_uid" placeholder="请输入物流单号"/>
+                    <a-input v-model:value="deliveryForm.waybill_uid" :placeholder="$t('r.logistics_number')"/>
                 </div>
             </div>
         </a-modal>
-        <a-modal v-model:visible="repairAuditShow" title="审核" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="repairEndShow" :title="$t('r.repair_a')" class="repair-audit-modal" :after-close='handleRepairEndClose'>
             <div class="modal-content">
                 <div class="form-item required">
-                    <div class="key">审核结果:</div>
+                    <div class="key">{{ $t('r.result') }}:</div>
+                    <a-radio-group v-model:value="repairForm.results">
+                        <a-radio :value="1">{{ $t('def.sure') }}</a-radio>
+                        <a-radio :value="0">{{ $t('def.cancel') }}</a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="form-item textarea">
+                    <div class="key">{{ $t('r.remark_a') }}:</div>
+                    <div class="value">
+                        <a-textarea v-model:value="repairForm.repair_message" :placeholder="$t('r.input_remark')"
+                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="repairEndShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleRepairEnd()" type="primary">{{ $t('def.sure') }}</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
+            <div class="modal-content">
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.result') }}:</div>
                     <a-radio-group v-model:value="auditForm.audit_result">
-                        <a-radio :value="1">通过</a-radio>
-                        <a-radio :value="0">不通过</a-radio>
+                        <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                        <a-radio :value="0">{{ $t('n.fail') }}</a-radio>
                     </a-radio-group>
                 </div>
                 <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
-                    <div class="key">原因:</div>
+                    <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" placeholder="请输入不通过原因"
+                        <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
                 </div>
             </div>
             <template #footer>
-                <a-button @click="repairAuditShow = false">取消</a-button>
-                <a-button @click="handleAuditSubmit()" type="primary">确定</a-button>
+                <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAuditSubmit()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
     </template>
@@ -148,6 +190,8 @@ import RepairInfo from './components/RepairInfo.vue';
 import WaybillInfo from './components/WaybillInfo.vue';
 import Distribution from './components/Distribution.vue';
 import ActionLog from './components/ActionLog.vue';
+import FeedbackLog from './components/FeedbackLog.vue';
+
 import MySteps from '@/components/common/MySteps.vue';
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 
@@ -167,10 +211,12 @@ export default {
         MySteps,
         Distribution,
         WaybillInfo,
+        FeedbackLog,
     },
     props: {},
     data() {
         return {
+            Core,
             orgType: Core.Data.getOrgType(),
             orgId: Core.Data.getOrgId(),
             STATUS,
@@ -189,6 +235,7 @@ export default {
                 {zh: '检测', en: 'Check'},
                 {zh: '维修', en: 'Service'},
                 {zh: '结算', en: 'Settle accounts'},
+
             ],
             currStep: 0,
 
@@ -200,6 +247,13 @@ export default {
                 audit_result: '',
                 audit_message: '',
             },
+
+            repairEndShow: false,
+            repairForm: {
+                results: '',
+                repair_message: '',
+            },
+
 
             // 二次维修
             secondShow: false,
@@ -305,6 +359,9 @@ export default {
                 case STATUS.SETTLEMENT:
                     this.currStep = 3;
                     break;
+                case STATUS.SETTLEMENT_DISTRIBUTOR:
+                    this.currStep = 3;
+                    break;
                 case STATUS.AUDIT_SUCCESS:
                     this.currStep = 3;
                     break;
@@ -316,6 +373,44 @@ export default {
         // 提交检测结果
         handleFaultSubmit() {
             this.$refs.CheckFault.handleFaultSubmit();
+        },
+
+        // 工单 结算
+        handleRepairEndShow() {
+            this.repairEndShow = true
+        },
+        handleRepairEnd() {
+            let form = Core.Util.deepCopy(this.repairForm)
+            if (!form.results) {
+                return this.$message.warning(_this.$t('r.repair_result'))
+            }
+            let _this = this;
+            Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
+                _this.$message.success(_this.$t('pop_up.save_success'))
+                _this.handleRepairEndClose()
+                _this.getRepairDetail()
+            })
+        },
+        handleRepairEndClose() {
+            this.repairEndShow = false;
+            Object.assign(this.repairForm, this.$options.data().repairForm)
+        },
+
+        handleDelete() {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('p.determine_cancel'),
+                okText: _this.$t('pop_up.yes'),
+                okType: 'danger',
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Repair.delete({id: _this.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getRepairDetail()
+
+                    })
+                },
+            });
         },
         // 工单 结算
         handleSettlement() {
@@ -343,8 +438,8 @@ export default {
         },
         handleAuditSubmit() { // 审核提交
             let form = Core.Util.deepCopy(this.auditForm)
-            if (!form.audit_result) {
-                return this.$message.warning('请选择审核结果')
+            if (form.audit_result === '') {
+                return this.$message.warning(this.$t('r.audit_result'))
             }
             /*if (form.audit_result === 0 && !form.audit_message) {
                 return this.$message.warning('请输入审核未通过的原因')
@@ -398,16 +493,16 @@ export default {
             this.loading = true;
             let form = Core.Util.deepCopy(this.deliveryForm)
             if (!form.company_uid) {
-                return this.$message.warning('请选择物流公司')
+                return this.$message.warning(this.$t('r.logistics_company'))
             }
             if (!form.waybill_uid) {
-                return this.$message.warning('请输入物流单号')
+                return this.$message.warning(this.$t('r.logistics_number'))
             }
             Core.Api.Repair.post({
                 id: this.id,
                 ...form
             }).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.operate'))
                 this.getRepairDetail()
                 this.$refs.WaybillInfo.getWaybillDetail();
             }).catch(err => {

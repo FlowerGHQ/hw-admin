@@ -1,25 +1,47 @@
 <template>
 <div id="ItemCollect" class="list-container">
-    <a-select v-model:value="currency" class="monetary-select">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+    <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>{{$t('i.download_the_template')}}</a-button>
+    <a-upload name="file" class="monetary-upload"
+              :file-list="upload.fileList" :action="upload.action"
+              :show-upload-list='false'
+              :headers="upload.headers" :data='upload.data'
+              accept=".xlsx,.xls"
+              @change="handlePurchaseChange">
+        <a-button type="primary" ghost class="file-upload-btn">
+            <i class="icon i_add"/> {{$t('i.bulk_import')}}
+        </a-button>
+    </a-upload>
+<!--    <a-select v-model:value="currency" class="monetary-select">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
+
     <div class="list-container shop-cart-container">
         <div class="title-area">
             <div class="shop-area">{{ $t('i.shopping') }}</div>
+            <div class="shop-right">
+                <a-button type="link" @click="handleClearShopCart">{{$t('i.clear_shop_car')}}</a-button>
+            </div>
+
         </div>
         <div class="list-content">
             <div class="list-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
                     </div>
                     <span class="count" v-if="!item.editMode" @click="handleCountEditShow(item)">x{{item.amount}}</span>
                     <div class="count-edit" v-else>
                         <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus @blur="handleCountEditBlur(item)"/>
                     </div>
+                    <div v-if="!item.editRemark" @click="handleRemarkEditShow(item)" class="remark">{{$t('i.remark')}}：{{ item.remark }}</div>
+                    <a-form v-else :model="formState" :label-col="labelCol" :wrapper-col="wrapperCol">
+                        <a-form-item :label="$t('i.remark')">
+                            <a-input v-model:value="editRemark" @blur="handleRemarkEditBlur(item)" />
+                        </a-form-item>
+                    </a-form>
                     <div class="btns">
                         <a-button type="link" class="disabled" v-if="item.item && item.item.in_favorite">{{ $t('i.favorited') }}</a-button>
                         <a-button type="link" @click="handleMoveToFavorite(item)" v-else>{{ $t('i.move') }}</a-button>
@@ -30,24 +52,34 @@
                     {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!shopCartList.length" desc='您的购物车中暂无商品'/>
+            <SimpleImageEmpty v-if="!shopCartList.length" :desc="$t('i.no_item_cart')"/>
         </div>
         <div class="settle-content" v-if="shopCartList.length">
             <div class="title-area">{{ $t('i.summary') }}</div>
+            <div class="settle-item top">
+                <p class="name">{{ $t('n.name') }}</p>
+                <span class="price">{{ $t('i.amount') }}</span>
+                <span class="price">{{ $t('i.unit_price') }}</span>
+                <span class="price">{{ $t('i.total_price') }}</span>
+            </div>
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">
-                    {{item.item ? item.item.name : '-'}}
-                    <span class="spec" v-if='item.item && item.item.attr_list'>
-                        {{$Util.itemSpecFilter(item.item.attr_list)}}
-                    </span>
-                </p>
+                <div class="name">
+                    {{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}
+<!--                    <div class="spec" v-if='item.item && item.item.attr_list'>-->
+<!--                        {{$Util.itemSpecFilter(item.item.attr_list)}}-->
+<!--                    </div>-->
+                </div>
+                <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
                 <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
+
             <div class="settle-item sum">
                 <p class="name">{{ $t('p.total') }}</p>
+
                 <span class="price">{{currency}} {{sum_price}}</span>
             </div>
-            <a-button type="primary" ghost @click="routerChange('settle')">{{ $t('i.settle') }}</a-button>
+            <a-button type="primary" ghost @click="settle('settle')">{{ $t('i.settle') }}</a-button>
         </div>
     </div>
     <div class="list-container favorite-container">
@@ -56,15 +88,15 @@
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <div class="name" @click="routerChange('detail', item.item)">{{item.item ? item.item.name : '-'}}</div>
+                    <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list)}}
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
                     </div>
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
-                        <a-button type="link" class="disabled" v-if="item.item.in_shopping_cart">{{ $t('i.already') }}</a-button>
+                        <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button>
                         <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
@@ -72,7 +104,7 @@
                     {{currency}} {{$Util.countFilter(item.item ? item.item[priceKey + unitMap[currency].key] : item.price)}}
                 </div>
             </div>
-            <SimpleImageEmpty v-if="!favoriteList.length" desc='您的收藏夹中暂无商品'/>
+            <SimpleImageEmpty v-if="!favoriteList.length" :desc="$t('i.no_item_favorites')" />
         </div>
     </div>
 </div>
@@ -81,6 +113,8 @@
 <script>
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import Core from '../../core';
+import Const from "../../core/const";
+import Data from "../../core/data";
 export default {
     name: 'ItemCollect',
     components: {SimpleImageEmpty},
@@ -92,6 +126,7 @@ export default {
             loading: false,
 
             editCount: '',
+            editRemark: '',
             // 商品详情
             detail: {},
             shopCartList: [],
@@ -103,7 +138,24 @@ export default {
                 "$": { key: '_usd', text: '$ (USD)'},
                 // "£": { key: '_gbp', text: '£ (GBP)'},
             },
-            currency: Core.Const.ITEM.MONETARY_TYPE_MAP.EUR,
+            currency: "",
+            mark: '',
+            // 上传
+            upload: {
+                action: Core.Const.NET.URL_POINT + "/store/1/shopping-cart/import",
+                fileList: [],
+                headers: {
+                    ContentType: false
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: 'xlsx',
+                },
+            },
+
+            //  备注
+            labelCol: { style: { width: '40px' } },
+            wrapperCol: { span: 14 },
         };
     },
     watch: {},
@@ -121,12 +173,26 @@ export default {
                 sum += item.item[key] * item.amount
             }
             return Core.Util.countFilter(sum)
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
+    created() {
+        console.log(Core.Data.getCurrency())
+        this.currency = Core.Data.getCurrency()
+    },
     mounted() {
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.currency =  "€"
+        } else {
+            this.currency =  "$"
+        }
+
         this.getList()
     },
     methods: {
+
         routerChange(type, item) {
             let routeUrl
             switch (type) {
@@ -149,6 +215,31 @@ export default {
                     break;
             }
         },
+        settle(){
+            console.log(11111)
+            for(var i = 0 ; i< this.shopCartList.length ; i ++){}
+            this.shopCartList.forEach(it => {
+
+            });
+            for (const it of this.shopCartList) {
+                console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
+                if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
+                    console.log(2222)
+                    this.$message.error(this.$t('p.item_error'))
+                    return ;
+                }
+            }
+            var routeUrl = this.$router.resolve({
+                path: "/purchase/item-settle",
+                query: {
+                    unit: this.currency,
+                    currency: this.unitMap[this.currency].key
+                }
+            })
+            window.open(routeUrl.href, '_self')
+
+        },
+
         getList() {
             this.getShopCartList();
             this.getFavoriteList();
@@ -178,6 +269,26 @@ export default {
                 this.getShopCartList();
             }).finally(() => {
                 this.editCount = ''
+            })
+        },
+
+        //修改备注
+        handleRemarkEditShow(item) {
+            item.editRemark = !item.editRemark
+            this.editRemark = item.remark
+        },
+        handleRemarkEditBlur(item) {
+            // if (this.editRemark === item.remark) { return }
+            let _item = Core.Util.deepCopy(item)
+            _item.remark = this.editRemark
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: _item.id,
+                remark: _item.remark,
+            }).then(res => {
+                this.getShopCartList();
+            }).finally(() => {
+                this.editRemark = ''
             })
         },
 
@@ -245,11 +356,74 @@ export default {
                 },
             });
         },
+        // 上传文件
+        handlePurchaseChange({file, fileList}) {
+            let _this = this
+            console.log("handleMatterChange status:", file.status, "file:", file)
+            if (file.status == 'done') {
+                if (file.response && file.response.code > 0) {
+                    _this.getList()
+                    return this.$message.error(file.response.message)
+                } else {
+                    _this.getList()
+                    return this.$message.success($t('i.uploaded'));
+
+                }
+            }
+            this.upload.fileList = fileList
+        },
+        handleExport() { // 确认购物车模版是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('i.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleCollectExport();
+                }
+            })
+        },
+        handleCollectExport() { // 订单导出
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.ItemCollectExport({
+            })
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+        handleClearShopCart() {
+            let _this = this
+            Core.Api.ShopCart.clear().then(() => {
+                _this.$message.success(_this.$t('i.clear_shop_car'));
+                _this.getList()
+            })
+        },
     }
 };
 </script>
 
 <style lang="less">
+.ant-form {
+    width: 100%;
+}
+.ant-form-item {
+    margin: 0;
+}
+.ant-input {
+    border: none;
+    border-radius: 0px !important;
+    border-bottom: 1px solid #d9d9d9;
+}
+.ant-input:hover {
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+}
+.ant-input:focus{
+    border-color: #fff;
+    border-bottom-color: #d9d9d9;
+    box-shadow: none;
+    outline: 0;
+}
 #ItemCollect {
     padding: 60px 56px 150px 48px;
     position: relative;
@@ -265,20 +439,47 @@ export default {
             color: #006EF9;
         }
     }
+    .monetary-upload {
+        position: absolute;
+        top: 28px;
+        right: 160px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
+    .monetary-export {
+        position: absolute;
+        top: 28px;
+        right: 330px;
+        min-width: 126px;
+        .ant-select-selector {
+            border-color: #006EF9;
+        }
+        .ant-select-selection-item {
+            color: #006EF9;
+        }
+    }
     .list-container {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
         + .list-container { margin-top: 76px; }
         .title-area {
-            display: flex;
-            width: 100%;
+            width: 72%;
             font-size: 24px;
             font-weight: 500;
             color: #111111;
             line-height: 28px;
             margin-bottom: 8px;
-            
+            box-sizing: border-box;
+            padding-right: 10%;
+            .shop-right{
+                float: right;
+            }
         }
         .list-content {
             width: 72%;
@@ -298,7 +499,7 @@ export default {
                 }
                 .info {
                     width: calc(~'100% - 180px');
-                    height: 150px;
+                    // height: 175px;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
@@ -330,7 +531,7 @@ export default {
                         color: #757575;
                         margin: 4px 0;
                         line-height: 26px;
-                        height: 26px;
+                        height: auto;
                         font-size: 14px;
                         background: #F9F9F9;
                         border-radius: 2px;
@@ -349,6 +550,11 @@ export default {
                         font-size: 14px;
                         font-weight: 400;
                         color: #111111;
+                    }
+                    .remark {
+                        font-size: @fz_bs;
+                        height: 31px;
+                        line-height: 31px;
                     }
                 }
                 .price {
@@ -408,7 +614,7 @@ export default {
                         display: inline-block;
                         color: #757575;
                         line-height: 24px;
-                        height: 24px;
+                        height: auto;
                         font-size: 12px;
                         background: #F9F9F9;
                         border-radius: 2px;
@@ -417,7 +623,14 @@ export default {
                 }
                 .price {
                     width: 100px;
-                    text-align: right;
+                    text-align: left;
+                }
+                &.top {
+                    font-weight: 500;
+                    padding: 16px 0;
+                    border-top: 1px solid #E6EAEE;
+                    border-bottom: 1px solid #E6EAEE;
+                    margin: 14px 0 0px;
                 }
                 &.sum {
                     font-weight: 500;

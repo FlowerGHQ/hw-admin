@@ -255,6 +255,15 @@ export default {
         this.getToWarehouseList();
         this.getFromWarehouseList();
         this.getStatusList();
+        this.timer = window.setInterval(() => {
+            setTimeout(() => {
+                this.getTableData();
+            }, 0);
+        }, 5*1000);
+
+    },
+    beforeUnmount(){
+        clearInterval(this.timer)
     },
     methods: {
         routerChange(type, item = {}) {
@@ -360,7 +369,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.WarehouseTransfer.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getTableData();
                     }).catch(err => {
                         console.log("handleDelete err", err);
@@ -391,7 +400,7 @@ export default {
                 return this.$message.warning('发货仓和收货仓不能相同')
             }
             Core.Api.WarehouseTransfer.save(form).then(() => {
-                this.$message.success('操作成功')
+                this.$message.success(this.$t('pop_up.operate'))
                 this.handleModalClose()
                 this.getTableData()
             }).finally(() => {

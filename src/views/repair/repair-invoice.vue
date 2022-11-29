@@ -56,7 +56,7 @@
                         € {{ $Util.countFilter(record.price * record.amount) }}
                     </template>
                     <template v-if="column.dataIndex === 'man_hour'">
-                        {{ $Util.countFilter(text) }}工时
+                        {{ $Util.countFilter(text) }}{{ $t('i.hours') }}
                     </template>
                 </template>
                 <template #summary>

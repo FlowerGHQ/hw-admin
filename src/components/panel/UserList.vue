@@ -31,6 +31,7 @@
                         {{ $Util.timeFilter(text) }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <a-button type='link' @click="handleUserRole(record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('u.set_role') }}</a-button>
                         <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                         <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
@@ -52,17 +53,24 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
+        <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
+            <UserRole v-if="userRoleShow" :user-id="userId" :detail="userDetail"></UserRole>
+            <template #footer>
+                <a-button @click="handleRoleClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </div>
 </template>
 
 <script>
 import Core from '../../core';
+import UserRole from "../../views/user/components/UserRole.vue";
 const USER_TYPE = Core.Const.USER.TYPE
 
 export default {
     name: 'UserList',
-    components: {},
+    components: {UserRole},
     props: {
         orgId: {
             type: Number,
@@ -89,6 +97,10 @@ export default {
             total: 0,
             // 表格数据
             tableData: [],
+            userRoleShow: false,
+
+            userId: '',
+            userDetail: '',
         };
     },
     watch: {},
@@ -195,6 +207,17 @@ export default {
                     })
                 },
             });
+        },
+        handleUserRole(item) {
+            console.log(item)
+            this.userId = item.id;
+            this.userDetail = item;
+            this.userRoleShow = true;
+        },
+        handleRoleClose() {
+            this.userId = '';
+            this.userDetail = '';
+            this.userRoleShow = false;
         },
     }
 };

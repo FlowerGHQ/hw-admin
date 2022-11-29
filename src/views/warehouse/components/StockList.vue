@@ -2,42 +2,86 @@
 <div class="StockList gray-panel no-margin">
     <div class="panel-content">
         <div class="table-container">
+
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col :xs='24' :sm='24' :xl="16" :xxl='8' class="search-item">
+                        <div class="key">code：</div>
+                        <div class="value">
+                            <a-select
+                                v-model:value="searchForm.item_id"
+                                show-search
+                                placeholder="code"
+                                :default-active-first-option="false"
+                                :show-arrow="false"
+                                :filter-option="false"
+                                :not-found-content="null"
+                                @search="handleItemSearch"
+                            >
+                                <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
+                                    {{ item.code }} - {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                </a-row>
+
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">{{$t('def.search')}}</a-button>
+                    <a-button @click="handleSearchReset" >{{$t('def.reset')}}</a-button>
+                </div>
+            </div>
+
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text, record}">
-                    <template v-if="column.key === 'material_detail' && $auth('material.detail')">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 120px">
-                            <a-button type="link" @click="routerChange('material', record.material)">{{ text || '-' }}
-                            </a-button>
-                            </div>
-                        </a-tooltip>
+                    <template v-if="record.target_type === TARGET_TYPE.MATERIAL">
+                        <template v-if="column.key === 'item_detail' && $auth('material.detail')">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 120px">
+                                    <a-button type="link" @click="routerChange('material', record.material)">{{$i18n.locale == 'zh' ? record.material.name : record.material.name_en || '-' }}
+                                    </a-button>
+                                </div>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'code'">
+                            {{ record.material.code || '-' }}
+                        </template>
                     </template>
-                    <template v-if="column.key === 'item_detail' && $auth('item.detail')">
-                        <a-tooltip placement="top" :title='text'>
-                            <a-button type="link" @click="routerChange('item', record.item)">{{ text || '-' }}
-                            </a-button>
-                        </a-tooltip>
+                    <template v-if="record.target_type === TARGET_TYPE.ITEM">
+                        <template v-if="column.key === 'item_detail' && $auth('item.detail')">
+                            <a-tooltip placement="top" :title='text'>
+                                <a-button type="link" @click="routerChange('item', record.item)">{{$i18n.locale == 'zh' ? record.item.name : record.item.name_en || '-' }}
+                                </a-button>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'spec'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 100px">{{ $Util.itemSpecFilter(text) || '-'}}</div>
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'code'">
+                            {{ record.item.code || '-' }}
+                        </template>
                     </template>
-                    <template v-if="column.key === 'item'">
-                        {{ text || '-' }}
-                    </template>
-                    <template v-if="column.key === 'material_spec'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 100px">{{text || '-'}}</div>
-                        </a-tooltip>
-                    </template>
-                    <template v-if="column.key === 'spec'">
-                        <a-tooltip placement="top" :title='text'>
-                            <div class="ell" style="max-width: 100px">{{ $Util.itemSpecFilter(text) || '-'}}</div>
-                        </a-tooltip>
-                    </template>
+
+
+
+<!--                    <template v-if="column.key === 'item'">-->
+<!--                        {{ text || '-' }}-->
+<!--                    </template>-->
+<!--                    <template v-if="column.key === 'material_spec'">-->
+<!--                        <a-tooltip placement="top" :title='text'>-->
+<!--                            <div class="ell" style="max-width: 100px">{{text || '-'}}</div>-->
+<!--                        </a-tooltip>-->
+<!--                    </template>-->
+
                     <template v-if="column.key === 'count'">
-                        {{ text || 0 }} 件
+                        {{ text || 0 }} {{ $t('i.pcs2') }}
                     </template>
                     <template v-if="column.key === 'operation'">
-                        <a-button type='link' v-if="type === 'item' && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
-                        <a-button type='link' v-if="type === 'material' && $auth('material.detail')" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
+                        <a-button type='link' v-if="record.target_type === TARGET_TYPE.ITEM && $auth('item.detail')" @click="routerChange('item', record.item)"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                        <a-button type='link' v-if="record.target_type === TARGET_TYPE.MATERIAL && $auth('material.detail')" @click="routerChange('material', record.material)"><i class="icon i_detail"/>详情</a-button>
                     </template>
                 </template>
             </a-table>
@@ -93,6 +137,7 @@
 <script>
 import Core from '../../../core';
 const TYPE = Core.Const.STOCK_RECORD.TYPE
+const TARGET_TYPE = Core.Const.STOCK.TARGET_TYPE
 export default {
     name: 'StockList',
     components: {},
@@ -113,6 +158,7 @@ export default {
     data() {
         return {
             TYPE,
+            TARGET_TYPE,
             // 加载
             loading: false,
             // 分页
@@ -131,6 +177,10 @@ export default {
                 number: '',
                 warehouse_id: '',
             },
+            searchForm: {
+                item_id: '',
+            },
+            itemOptions: [],
             // 上传
             upload: {
                 action: Core.Const.NET.URL_POINT + "/admin/1/item/import",
@@ -151,26 +201,25 @@ export default {
             let type = this.type
             let tableColumns = [
                 {title: this.$t('n.name'), dataIndex: [type, 'name'], key: 'item_detail'},
-                {title: this.$t('i.number'), dataIndex: [type, 'model'], key: 'item'},
-                {title: this.$t('i.spec'), dataIndex: [type, 'attr_list'], key: 'spec'},
-                {title: this.$t('i.code'), dataIndex: [type, 'code'], key: 'item'},
+                {title: this.$t('i.code'),  key: 'code'},
+
                 {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
-            if (type === 'material' || type === 'customize') {
-                tableColumns = [
-                    {title: '名称', dataIndex: [type, 'name'], key: 'material_detail'},
-                    {title: '分类', dataIndex: [type, 'category','name'], key: 'item'},
-                    {title: '编码', dataIndex: [type, 'code'], key: 'item'},
-                    {title: '单位', dataIndex: [type, 'unit'], key: 'item'},
-                    {title: '规格', dataIndex: [type, 'spec'], key: 'material_spec'},
-                    {title: '库存数量', dataIndex: 'stock', key: 'count'},
-                    {title: '包装', dataIndex: [type, 'encapsulation'], key: 'item'},
-                    {title: '包装尺寸', dataIndex: [type, 'encapsulation_size'], key: 'item'},
-                    {title: '毛重', dataIndex: [type, 'gross_weight'], key: 'item'},
-                    { title: '操作', key: 'operation', fixed: 'right'}
-                ]
-            }
+            // if (type === 'material' || type === 'customize') {
+            //     tableColumns = [
+            //         {title: '名称', dataIndex: [type, 'name'], key: 'material_detail'},
+            //         {title: '分类', dataIndex: [type, 'category','name'], key: 'item'},
+            //         {title: '编码', dataIndex: [type, 'code'], key: 'item'},
+            //         {title: '单位', dataIndex: [type, 'unit'], key: 'item'},
+            //         {title: '规格', dataIndex: [type, 'spec'], key: 'material_spec'},
+            //         {title: '库存数量', dataIndex: 'stock', key: 'count'},
+            //         {title: '包装', dataIndex: [type, 'encapsulation'], key: 'item'},
+            //         {title: '包装尺寸', dataIndex: [type, 'encapsulation_size'], key: 'item'},
+            //         {title: '毛重', dataIndex: [type, 'gross_weight'], key: 'item'},
+            //         { title: '操作', key: 'operation', fixed: 'right'}
+            //     ]
+            // }
             return tableColumns
         },
     },
@@ -197,7 +246,7 @@ export default {
                     break;
             }
         },
-        
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -212,7 +261,7 @@ export default {
             let target_type = this.type === 'item' ? 1 : 2
             Core.Api.Stock.list({
                 warehouse_id: this.warehouseId,
-                target_type,
+                target_id: this.searchForm.item_id,
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then(res => {
@@ -290,13 +339,25 @@ export default {
         handleMatterChange({file, fileList}) {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 } else {
-                    return this.$message.success('领料成功');
+                    return this.$message.success(this.$t('pop_up.packing'));
                 }
             }
             this.upload.fileList = fileList
+        },
+        handleItemSearch(code) {
+            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                this.itemOptions = res.list
+            })
+        },
+        handleSearch() {
+            this.pageChange(1)
+        },
+        handleSearchReset() {
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.pageChange(1)
         },
     }
 };

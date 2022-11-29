@@ -21,6 +21,22 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('d.pay_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
+                            <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('p.currency') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                            <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
@@ -41,6 +57,7 @@
                         <a-input v-model:value="form.tax_no" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('d.port') }}:</div>
                     <div class="value">
@@ -72,9 +89,20 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('n.pda') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('d.sales_area') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.sales_area_ids" mode="tags" :placeholder=" $t('def.select')">
+                        <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder=" $t('def.select')">
                             <a-select-option v-for="(item,index) of salesList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
                         </a-select>
                     </div>
@@ -91,6 +119,7 @@
 <script>
 import Core from '../../core';
 import CountryCascader from '@/components/common/CountryCascader.vue';
+import Const from "../../core/const";
 
 export default {
     name: 'DistributorEdit',
@@ -100,7 +129,9 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             TYPE: Core.Const.DISTRIBUTOR.TYPE,
+            PAY_TIME_LIST: Const.DISTRIBUTOR.PAY_TIME_LIST,
             // 加载
             loading: false,
             detail: {},
@@ -119,10 +150,13 @@ export default {
                 type: undefined,
                 sales_area_ids: undefined,
                 pay_type: undefined,
+                currency: undefined,
+                flag_stock_change_use_pda: Const.FLAG.YES,
             },
 
             areaList: [],
             defArea: [],
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             area: {
                 continent: '',
                 country: '',
@@ -173,7 +207,7 @@ export default {
             });
         },
         getSalesAreaList() {
-            Core.Api.SalesArea.list().then(res => {
+            Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
             });
         },
@@ -208,6 +242,9 @@ export default {
                 }
             }
             if (!area.country) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             form.sales_area_ids = form.sales_area_ids.join(',')

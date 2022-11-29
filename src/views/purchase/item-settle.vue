@@ -1,8 +1,8 @@
 <template>
 <div id="ItemSettle" class="list-container">
-    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">
-        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>
-    </a-select>
+<!--    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">-->
+<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
+<!--    </a-select>-->
     <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -32,6 +32,7 @@
         <div class="config-item pay" v-if="$auth('DISTRIBUTOR')">
             <div class="config-title">2.{{ $t('i.shipping_settings') }}</div>
             <div class="config-content">
+
                 <div class="radio-item">
                     <div class="desc">{{ $t('p.partial_shipments') }}：</div>
                     <div class="value">
@@ -59,7 +60,7 @@
         </div>
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
-                <p class="name">{{item.item ? item.item.name : '-'}}</p>
+                <p class="name">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
                 <span class="price">{{unit}} {{$Util.countFilter(item.item[priceKey] * item.amount)}}
                 </span>
             </div>
@@ -71,11 +72,12 @@
             <div class="item-item" v-for="item of shopCartList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
                 <div class="info">
-                    <p>{{item.item ? item.item.name : '-'}}</p>
+                    <p>{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
                     <span>{{ $t('p.code') }}：{{item.item ? item.item.code : '-'}}</span>
-                    <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? item.item.attr_str : '-'}}</span>
+                    <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? lang =='zh' ? item.item.attr_str:item.item.attr_str_en : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
                     <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
+                    <span>{{ $t('i.remark') }}：{{item.remark}}</span>
                 </div>
             </div>
         </div>
@@ -98,10 +100,11 @@ export default {
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
             loading: false,
-
+            PURCHASE,
             receiveList: [],
             flagPartShipmentList: PURCHASE.FLAG_PART_SHIPMENT_LIST, // 分批发货
             flagTransferList: PURCHASE.FLAG_TRANSFER_LIST, // 转运
+            flagOrderTypeList: PURCHASE.FLAG_ORDER_TYPE_LIST, // 转运
             selectIndex: '',
 
             countryList: Core.Const.COUNTRY_LIST,
@@ -115,6 +118,7 @@ export default {
                 county: '',
                 address: '',
                 email: '',
+                flag_order_type: undefined,
                 flag_part_shipment: undefined,
                 flag_transfer: undefined,
             },
@@ -124,7 +128,7 @@ export default {
 
             unit: '', // €、$
             currency: '', // EUR、USD
-            priceKey: '', // purchase_price_eur
+            priceKey: "", // purchase_price_eur
             unitMap: {
                 "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
                 "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
@@ -139,6 +143,9 @@ export default {
                 sum += item.item[this.priceKey] * item.amount
             }
             return Core.Util.countFilter(sum)
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     mounted() {
@@ -146,7 +153,11 @@ export default {
         let currency = this.$route.query.currency || '_eur';
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
-
+        if (Core.Data.getCurrency() === 'EUR'){
+            this.handleUnitChange("€")
+        } else {
+            this.handleUnitChange("$")
+        }
         this.getReceiveList()
         this.getShopCartList()
     },
@@ -182,6 +193,8 @@ export default {
                     if (element.attr_list && element.attr_list.length) {
                         let str = element.attr_list.map(i => i.value).join(' ')
                         element.attr_str = str
+                        let str_en = element.attr_list.map(i => i.value_en).join(' ')
+                        element.attr_str_en = str_en
                     }
                 })
                 this.shopCartList = res.list
@@ -267,6 +280,7 @@ export default {
             if (!this.selectIndex) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+
             if(this.$auth('DISTRIBUTOR') && !this.form.flag_part_shipment) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -277,24 +291,29 @@ export default {
                 price: Math.round(this.sum_price * 100),
                 charge: Math.round(this.sum_price * 100),
                 remark: '',
+                type: this.form.flag_order_type,
                 receive_info_id: this.selectIndex,
                 currency: this.currency,
                 flag_part_shipment: this.form.flag_part_shipment,
                 item_list: this.shopCartList.map(item => ({
                     item_code: item.item.item_code,
+                    type: item.item.type,
                     amount: item.amount,
                     item_id: item.item_id,
                     charge: item.amount * item.item[this.priceKey],
                     price: item.amount * item.item[this.priceKey],
                     unit_price: item.item[this.priceKey],
+                    remark: item.remark,
                 }))
             }
             if(this.$auth('DISTRIBUTOR')) {
                 parms['flag_part_shipment'] = this.form.flag_part_shipment;
                 parms['flag_transfer'] = this.form.flag_transfer;
+
             }
             Core.Api.Purchase.create(parms).then(res => {
-                this.$message.success('下单成功');
+              let _this = this;
+                this.$message.success(_this.$t('i.order_success'));
                 this.routerChange('order');
                 this.handleClearShopCart()
             })

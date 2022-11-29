@@ -24,6 +24,9 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
+                            <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"><i class="icon i_edit"/> {{ $t('ar.set_sales') }} </a-button>
+                            <a-button type='link'  @click="routerChange('explored', record)"><i class="icon i_edit"/>{{ $t('i.edit_view') }}
+                            </a-button>
                             <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit"/>{{ $t('i.edit_name') }}
                             </a-button>
                             <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> {{ $t('i.product_configuration') }}
@@ -46,7 +49,41 @@
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')"/>
                         </div>
                     </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.name_en') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('n.index') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('i.home_page_redirect_number') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.index_key" :placeholder="$t('def.input')"/>
+                        </div>
+                    </div>
                 </div>
+            </a-modal>
+            <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630" :after-close='handleSalesAreaByIdsClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('d.sales_area') }}</div>
+                        <div class="value">
+                            <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
+                                <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
+                </template>
             </a-modal>
         </template>
     </div>
@@ -76,7 +113,14 @@ export default {
                 id: '',
                 parent_id: '',
                 name: '',
+                name_en: '',
+                index: '',
+                index_key: '',
             },
+
+            salesAreaVisible: false,
+            salesList: [],
+            salesAreaIds: [],
         };
     },
     watch: {},
@@ -84,6 +128,9 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('n.name_en'), dataIndex: 'name_en'},
+                {title: this.$t('n.index'), dataIndex: 'index'},
+                {title: this.$t('i.home_page_redirect_number'), dataIndex: 'index_key'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100,},
             ]
             return columns
@@ -99,6 +146,13 @@ export default {
                 case 'config':  // 详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-category-config",
+                        query: {id: item.id}
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'explored':  // 详情
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-category-explored",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_self')
@@ -170,11 +224,14 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name}, node = null, parent = null) {
+        handleModalShow({parent_id = 0, id, name, name_en,index,index_key}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
+                name_en: name_en,
                 parent_id: parent_id,
+                index: index,
+                index_key: index_key,
             }
             console.log('this.editForm:', this.editForm)
             this.parentNode = parent
@@ -186,6 +243,10 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.name_en) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            form.key = form.index_key
             this.loading = true
             let apiName = form.id ? 'update' : 'save';
             Core.Api.ItemCategory[apiName](form).then(res => {
@@ -238,6 +299,34 @@ export default {
                         _this.loading = false;
                     });
                 },
+            });
+        },
+        handleSalesAreaByIdsShow(id) {
+            this.categoryId = id
+            this.getSalesAreaList();
+            this.salesAreaVisible = true;
+        },
+        handleSalesAreaByIdsClose() {
+            this.salesAreaVisible = false;
+            this.salesList = [];
+            this.salesAreaIds = [];
+            this.categoryId = '';
+        },
+        handleSalesAreaByIdsConfirm() {
+            if (this.salesAreaIds.length <= 0){
+                return this.$message.error(this.$t('n.choose') + this.$t('d.sales_area'));
+            }
+            Core.Api.Item.saveSalesAreaByCategory({
+                category_id: this.categoryId,
+                sales_area_id_list: this.salesAreaIds,
+            }).then(res =>{
+                this.handleSalesAreaByIdsClose();
+            })
+
+        },
+        getSalesAreaList() {
+            Core.Api.SalesArea.list({page:0}).then(res => {
+                this.salesList = res.list;
             });
         },
     }

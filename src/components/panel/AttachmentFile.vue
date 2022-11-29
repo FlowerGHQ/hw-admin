@@ -13,7 +13,7 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
-                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" fallback='无'/>
+                                <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" :fallback="$t('def.none')"/>
                                 <a-tooltip placement="top" :title='text'>
                                     <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
                                 </a-tooltip>
@@ -62,7 +62,7 @@
         </div>
         <template #footer>
             <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
-            <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+            <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure') }}</a-button>
         </template>
     </a-modal>
 </div>
@@ -96,6 +96,7 @@ export default {
                 path: '',
                 type: ''
             },
+            submitDisabled: true,
 
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -152,6 +153,7 @@ export default {
         // 添加附件
         handleModalShow() {
             this.modalShow = true;
+            this.submitDisabled = true;
         },
         handleModalClose() {
             this.modalShow = false;
@@ -196,11 +198,14 @@ export default {
         handleFileChange({file, fileList}) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
                 this.form.path = file.response.data.filename
                 this.form.type = this.form.path.split('.').pop()
+                if (this.form.path){
+                    this.submitDisabled = false
+                }
             }
             this.upload.fileList = fileList
         },

@@ -6,7 +6,9 @@
         @expand='handleExpandedChange' :indentSize='24'>
         <template #bodyCell="{ column, text , record }">
             <template v-if="column.dataIndex === 'name'">
-                <div class="name" :class="record.id === selectKeys ? 'active' : ''" @click="handleSelect(record)">{{text}}</div>
+                <div class="name" :class="record.id === selectKeys ? 'active' : ''" @click="handleSelect(record)">
+                    {{$i18n.locale =='zh' ? record.name : record.name_en}}
+                </div>
             </template>
         </template>
     </a-table>
@@ -82,7 +84,11 @@ export default {
         },
 
         handleSelect(record) {
-            if (record.id === this.selectKeys) { return }
+
+            if (record.id === this.selectKeys) {
+                this.$emit('clickCurrent');
+                return;
+            }
             this.selectKeys = record.id
             this.$emit('change', record.id)
         },

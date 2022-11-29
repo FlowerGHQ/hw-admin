@@ -12,6 +12,7 @@
                     <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                 </div>
             </div>
+
             <template v-if="!form.id">
             <div class="form-item required" >
                 <div class="key">{{ $t('u.account') }}:</div>
@@ -25,27 +26,27 @@
                     <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" autocomplete="off"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('n.phone') }}:</div>
                 <div class="value">
                     <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             </template>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('n.email') }}:</div>
                 <div class="value">
                     <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                 </div>
             </div>
-<!--            <div class="form-item" v-if="$auth('MANAGER') && loginType == org_type">-->
-<!--                <div class="key">员工角色:</div>-->
-<!--                <div class="value">-->
-<!--                    <a-select v-model:value="form.role_id" placeholder="请选择员工角色">-->
-<!--                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>-->
-<!--                    </a-select>-->
-<!--                </div>-->
-<!--            </div>-->
+            <div class="form-item" v-if="$auth('MANAGER') && loginType === org_type && !form.id">
+                <div class="key">用户角色:</div>
+                <div class="value">
+                    <a-select v-model:value="form.role_ids" placeholder="请选择用户角色" mode="multiple">
+                        <a-select-option v-for="(item,index) of roleList" :key="index" :value="item.id">{{item.name}}</a-select-option>
+                    </a-select>
+                </div>
+            </div>
         </div>
     </div>
     <div class="form-btns">
@@ -75,14 +76,14 @@ export default {
 
             roleList: [],
 
-            org_type: '', // 想要编辑的 员工的组织类型
+            org_type: '', // 想要编辑的 用户的组织类型
             form: {
                 id: '',
                 user_id: '',
 
                 org_id: '', // 组织ID
                 org_type: '', // 组织类型 平台、代理、经销、门店
-                type: '', // 账号类型 维修工、普通员工（和org_type保持一致）
+                type: '', // 账号类型 维修工、普通用户（和org_type保持一致）
                 // role_id: undefined,
 
                 name: '',
@@ -90,7 +91,9 @@ export default {
                 password: '',
                 phone: '',
                 email: '',
-            }
+                role_ids : [],
+            },
+            groupOptions: [],
         };
     },
     watch: {},
@@ -111,15 +114,13 @@ export default {
         if (this.$auth('MANAGER') && this.loginType == this.org_type) {
             this.getRoleList();
         }
+        this.handleGroupTree();
     },
     methods: {
         routerChange(type, item) {
             switch (type) {
                 case 'back':
-                    let routeUrl = this.$router.resolve({
-                        path: "/system/user-list",
-                    })
-                    window.open(routeUrl.href, '_self')
+                    this.$router.go(-1);
                     break;
             }
         },
@@ -135,7 +136,7 @@ export default {
                     id: d.account_id,
                     user_id: d.id,
 
-                    // role_id: d.role_id || undefined,
+                    role_ids: d.role_ids || [],
                     org_id: d.org_id,
                     org_type: d.org_type,
                     type: d.type,
@@ -165,12 +166,6 @@ export default {
                     return this.$message.warning(this.$t('def.enter'))
                 }
             }
-            if (!form.phone) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.email) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
             Core.Api.Account[apiName](form).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -184,7 +179,14 @@ export default {
                 console.log('getRoleList res:', res)
                 this.roleList = res.list
             })
-        }
+        },
+        handleGroupTree(){
+            Core.Api.CRMGroupMember.structureByUser().then(res => {
+                this.groupOptions = res.list
+                console.log(res)
+
+            })
+        },
     }
 };
 </script>

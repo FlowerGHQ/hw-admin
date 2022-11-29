@@ -500,7 +500,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.deliver(_this.deliverForm).then(() => {
-                        _this.$message.success('完成发货');
+                        _this.$message.success(_this.$t('pop_up.delivery_finish'));
                         _this.getTableData();
                         _this.getStatusList()
                         _this.deliverShow = false
@@ -519,7 +519,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.receive({id}).then(() => {
-                        _this.$message.success('完成收货');
+                        _this.$message.success(_this.$t('pop_up.delivery_finish'));
                         _this.getTableData();
                         _this.getStatusList()
                     }).catch(err => {
@@ -528,7 +528,7 @@ export default {
                 },
             });
         },
-        
+
         // 调货单审核
         handleTransferAuditShow(id) { // 显示弹框
             this.auditShow = true
@@ -564,7 +564,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Transfer.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getStatusList();
                         _this.getTableData();
                     }).catch(err => {
@@ -593,7 +593,7 @@ export default {
                 Core.Api.Store.listAll().then(res => {
                     console.log('getStoreList res', res);
                     this.storeList = res.list
-                    
+
                 })
             }  else if (this.orgType < ORG_TYPE.STORE) {
                 Core.Api.Store.listAll().then(res => {
@@ -685,7 +685,7 @@ export default {
                 return this.$message.warning('请输入申请原因')
             }
             Core.Api.Transfer.save(form).then(res => {
-                this.$message.success('保存成功')
+                this.$message.success(this.$t('pop_up.save_success'))
                 this.handleTransferOrderClose()
                 this.routerChange('edit', res.detail)
             }).catch(err => {

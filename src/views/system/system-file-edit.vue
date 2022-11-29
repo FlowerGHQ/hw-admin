@@ -4,7 +4,7 @@
         <div class="title-area">{{ form.id ? $t('f.edit') : $t('f.save') }}</div>
     </div>
     <div class="form-block">
-        <div class="form-title"><div class="title">附件信息</div></div>
+        <div class="form-title"><div class="title">{{ $t('n.attachment') }}</div></div>
         <div class="form-content">
             <div class="form-item required">
                 <div class="key">{{  $t('n.name') }}:</div>
@@ -165,7 +165,7 @@ export default {
         handleFileChange({ file, fileList }) {
             console.log("handleFileChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
             }

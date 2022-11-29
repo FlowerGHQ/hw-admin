@@ -5,11 +5,11 @@
         <a-collapse-panel key="affirm" :header="$t('r.problem')" class="gray-collapse-panel">
             <div class="panel-content affirm">
                 <div class="title"><i class="icon i_warning"/>{{ $t('n.all_total') }}&nbsp;{{ faultSelect.length }}&nbsp;{{ $t('r.faults') }}</div>
-                <a-checkbox-group class="fault_select" v-model:value="faultSelect" @change="handleFaultSelect">
-                    <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key'>{{ value }}</a-checkbox>
+                <a-checkbox-group class="fault_select" :value="faultSelect">
+                    <a-checkbox v-for="(value,key) of faultMap" :key='key' :value='key' @change="handleFaultSelect">{{ value }}</a-checkbox>
                 </a-checkbox-group>
                 <div class="title-fault">
-                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" v-if="$auth('fault.save')"/>
+                    <FaultEdit :id="id" ref="FaultEdit" @saveFault="getFaultData" btn-type="primary" >{{ $t('r.new_fault') }}</FaultEdit>
                 </div>
             </div>
         </a-collapse-panel>
@@ -30,6 +30,9 @@
                         <template #bodyCell="{ column , record ,index, text}">
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'name'">
+                                {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 € <a-input-number v-model:value="record.price" style="width: 82px;"
@@ -106,6 +109,20 @@
             </div>
         </a-collapse-panel>
     </a-collapse>
+    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+        <template #expandIcon ><i class="icon i_expan_l"/> </template>
+        <a-collapse-panel key="Remark" :header="$t('r.remark')" class="gray-collapse-panel">
+            <div class="panel-content">
+                <div class="form-item required textarea">
+                    <div class="value">
+                        <a-textarea v-model:value="remark" :placeholder="$t('r.fault_description')"
+                                    :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
+                        <span class="content-length">{{ detail.remark.length }}/500</span>
+                    </div>
+                </div>
+            </div>
+        </a-collapse-panel>
+    </a-collapse>
 </div>
 </template>
 
@@ -146,7 +163,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            activeKey: ['affirm'],
+            activeKey: ['affirm', 'Remark'],
             faultMap: {}, // 存放所有可能的故障
             faultSelect: [], // 存放 被选中的故障
             failData: {}, // 存放 零部件更换 商品信息
@@ -155,13 +172,14 @@ export default {
             warehouseFailList: [], // 故障仓列表
             storeList: [], // 门店列表
             transferStoreId: undefined,
+            remark: "",
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: 'name', key: 'item'},
+                {title: 'n.name', dataIndex: 'name', key: 'name'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
                 {title: 'i.amount', key: 'amount'},
                 {title: 'i.unit_price', dataIndex: 'price'},
@@ -181,6 +199,7 @@ export default {
         this.getFaultData();
         this.getWarehouseList();
         this.getStoreList();
+        this.remark = Core.Util.deepCopy(this.detail.remark)
     },
     methods: {
         routerChange(type, item = {}) {
@@ -251,9 +270,15 @@ export default {
         },
 
         // 故障选择
-        handleFaultSelect(val) {
-            console.log('handleFaultSelect val:', val)
-            if (val.length) {
+        handleFaultSelect({target}) {
+            let faultSelect = []
+            if (target.checked) {
+                faultSelect.push(target.value)
+            }
+            this.faultSelect = faultSelect
+
+            console.log('handleFaultSelect faultSelect:', faultSelect)
+            if (faultSelect.length) {
                 if (!this.activeKey.includes('change')) {
                     this.activeKey.push('change')
                 }
@@ -392,7 +417,14 @@ export default {
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('submit')
+                Core.Api.Repair.remark({
+                    id: this.id,
+                    remark: this.remark
+                }).then(() => {
+                    this.$emit('submit')
+                })
             })
+
         },
     }
 };

@@ -11,24 +11,19 @@
                         :headers="upload.headers" :data='upload.data'
                         accept=".xlsx,.xls"
                         @change="handleMatterChange">
-                        <!-- <a-button type="primary" class="file-upload-btn">
-                            <i class="icon i_add"/> 批量导入
-                        </a-button>-->
+                        <a-button type="primary" class="file-upload-btn">
+                            <i class="icon i_add"/> {{ $t('v.bulk_import') }}
+                        </a-button>
                     </a-upload>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.name') }}:</div>
-                        <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                        </div>
-                    </a-col>
+
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('v.number') }}:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
@@ -42,7 +37,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
                         <div class="key">{{ $t('n.agent') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.agent_id" :placeholder="$t('def.select')" @change='handleSearch' :disabled="!searchForm.distributor_id">
                                 <a-select-option v-for="item of agentList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
@@ -50,7 +45,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="!$auth('STORE')">
                         <div class="key">{{ $t('n.store') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.store_id" :placeholder="$t('def.select')" @change='handleSearch'>
+                            <a-select v-model:value="searchForm.store_id" :placeholder="$t('def.select')" @change='handleSearch' :disabled="!searchForm.agent_id">
                                 <a-select-option v-for="item of storeList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
                             </a-select>
                         </div>
@@ -80,15 +75,28 @@
                     </template>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
-                            <a-button type="link" @click="routerChange('detail', record)">
-                                <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
-                                {{ text || '-' }}
-                            </a-button>
+
                             <!-- <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" fallback='无'/>
                             {{ text || '-' }} -->
                             <!-- <a-button type="link" @click="routerChange('detail', record)">
                                 <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
                             </a-button> -->
+
+                                <a-button type="link" @click="routerChange('detail', record)">
+                                     <span v-if="record.type === ITEM_TYPE.PRODUCT">
+                                        <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
+                                         {{ record.item? record.item.name || '-' : '-' }}
+                                     </span>
+                                    <span v-if="record.type === ITEM_TYPE.COMPONENT">
+                                        {{ record.material? record.material.name || '-' : '-' }}
+                                    </span>
+                                </a-button>
+
+                        </template>
+                        <template v-if="column.key === 'code'">
+                            <span v-if="record.type === ITEM_TYPE.PRODUCT"> {{ record.item? record.item.code || '-' : '-' }}</span>
+                            <span v-if="record.type === ITEM_TYPE.COMPONENT">  {{ record.material? record.material.code || '-' : '-' }}</span>
+
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
@@ -98,6 +106,9 @@
                         </template>
                         <template v-if="column.dataIndex === 'org_name'">
                             {{ text || '-' }}
+                        </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            {{ $Util.entityStatusFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'org_type'">
                             {{ $Util.userTypeFilter(text, $i18n.locale) }}
@@ -134,39 +145,53 @@
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? title + '编辑' : '新增' + title" class="vehicle-edit-modal"
+            <a-modal v-model:visible="vehicleShow" :title="editForm.uid ? $t(titleType) + $t('n.edit') : $t('v.save') + $t(titleType)" class="vehicle-edit-modal"
                 :after-close='handleVehicleClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">商品编码:</div>
-                        <a-input v-model:value="editForm.item_code" placeholder="请输入对应的商品编码" @blur="handleItemCodeBlur"/>
+                        <div class="key">{{ $t('i.type') }}:</div>
+                        <a-radio-group v-model:value="type">
+                            <a-radio v-for="item in TYPE_MAP" :value="item.key">
+                                {{lang === 'zh' ? item.zh: item.en}}
+                            </a-radio>
+                        </a-radio-group>
+                    </div>
+                    <div class="form-item required" v-if="type === 1 ">
+                        <div class="key">{{ $t('i.code') }}:</div>
+                        <a-input v-model:value="editForm.item_code" :placeholder="$t('i.commodity_code')" @blur="handleItemCodeBlur"/>
                         <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
                         <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
                     </div>
+
+                    <div class="form-item required" v-if="type === 2 ">
+                        <div class="key">{{ $t('r.item_name') }}:</div>
+                        <a-input v-model:value="editForm.name" :placeholder="$t('def.input')" />
+                    </div>
+
                     <div class="form-item required">
-                        <div class="key">{{ title + '编号'}}</div>
-                        <a-input v-model:value="editForm.uid" :placeholder="'请输入' + title + '编号'"/>
+                        <div class="key">{{ $t(titleType) + $t('n.serial_number')}}</div>
+                        <a-input v-model:value="editForm.uid" :placeholder="$t('n.please_input') + $t(titleType) + $t('n.serial_number')"/>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="vehicleShow = false">取消</a-button>
-                    <a-button @click="handleVehicleSubmit" type="primary">确定</a-button>
+                    <a-button @click="vehicleShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleVehicleSubmit" type="primary">{{ $t('def.ok') }}</a-button>
                 </template>
             </a-modal>
-            <a-modal v-model:visible="entityShow" title="批量设置到港时间" class="arrival-time-modal" :after-close='handleEntityClose'>
+            <a-modal v-model:visible="entityShow" :title="$t('v.set')" class="arrival-time-modal" :after-close='handleEntityClose'>
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">到港时间:</div>
+                        <div class="key">{{ $t('r.arrival_time') }}:</div>
                         <div class="value">
-                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" placeholder="请选择到港时间">
+                            <a-date-picker v-model:value="entityForm.arrival_time" valueFormat='YYYY-MM-DD HH:mm:ss' :show-time="defaultTime" :placeholder="$t('r.select_arrival')">
                                 <template #suffixIcon><i class="icon i_calendar"/></template>
                             </a-date-picker>
                         </div>
                     </div>
                 </div>
                 <template #footer>
-                    <a-button @click="entityShow = false">取消</a-button>
-                    <a-button @click="handleEntitySubmit" type="primary">确定</a-button>
+                    <a-button @click="entityShow = false">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="handleEntitySubmit" type="primary">{{ $t('def.ok') }}</a-button>
                 </template>
             </a-modal>
         </template>
@@ -177,18 +202,22 @@
 import Core from '../../core';
 import dayjs from "dayjs";
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+import TimeSearch from '@/components/common/TimeSearch.vue'
 
 const ITEM_TYPE = Core.Const.ITEM.TYPE
+const TYPE_MAP = Core.Const.ENTITY.TYPE_MAP
 
 export default {
     name: 'EntityList',
     components: {
-        CategoryTreeSelect,
+        CategoryTreeSelect,TimeSearch
     },
     props: {},
     data() {
         return {
+            type: 1,
             ITEM_TYPE,
+            TYPE_MAP,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -202,7 +231,7 @@ export default {
             storeList: [],
             searchForm: {
                 name: '',
-                code: '',
+                uid: '',
                 category_id: undefined,
                 begin_time: '',
                 end_time: '',
@@ -234,6 +263,7 @@ export default {
                 id: '',
                 uid: '',
                 item_code: '',
+                name: '',
             },
             selectedRowKeys: [],
             selectedRowItems: [],
@@ -244,7 +274,8 @@ export default {
                 arrival_time: '',
             },
             viewType: '',
-            title: '整车'
+            title: '整车',
+            titleType: ''
         };
     },
     watch: {
@@ -256,22 +287,36 @@ export default {
                 this.viewType = type
                 if (type === "part")  {
                     this.title = this.$t('v.parts')
+                    this.titleType = 'v.parts'
                 } else {
                     this.title = this.$t('v.vehicle')
+                    this.titleType = 'v.vehicle'
                 }
                 Object.assign(this.searchForm, this.$options.data().searchForm)
                 this.pageChange(1)
             }
         },
+        'searchForm.distributor_id': function () {
+            this.getAgentListAll();
+            this.searchForm.agent_id = undefined
+            this.searchForm.store_id = undefined
+        },
+        'searchForm.agent_id': function () {
+            this.getStoreListAll()
+            this.searchForm.store_id = undefined
+        },
     },
     computed: {
         tableColumns() {
             let columns = [
-                {title: 'n.name', dataIndex: ['item', 'name'], key: 'detail'},
+                {title: 'n.name', dataIndex: 'name', key: 'detail'},
+                {title: 'p.code', dataIndex: 'code', key: 'code'},
                 {title: 'v.number', dataIndex: 'uid', key: 'item'},
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},
                 {title: 'r.unit', dataIndex: 'org_name'},
+                {title: 'wa.related', dataIndex: 'warehouse_name'},
+                {title: 'p.status', dataIndex: 'status'},
                 {title: 'v.date', dataIndex: 'arrival_time', key: 'time'},
                 {title: 'd.create_time', dataIndex: 'create_time', key: 'time'},
                 {title: 'def.operate', key: 'operation', fixed: 'right', width: 180}
@@ -288,6 +333,9 @@ export default {
                 },
             };
         },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         this.getTableData();
@@ -336,8 +384,8 @@ export default {
         },
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
+            this.$refs.TimeSearch.handleReset()
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {
@@ -345,14 +393,22 @@ export default {
             });
         },
         getAgentListAll() {
-            Core.Api.Agent.listAll().then(res => {
-                this.agentList = res.list
-            });
+            if (this.searchForm.distributor_id) {
+                Core.Api.Agent.listAll({distributor_id: this.searchForm.distributor_id}).then(res => {
+                    this.agentList = res.list
+                });
+            } else {
+                this.agentList = []
+            }
         },
         getStoreListAll() {
-            Core.Api.Store.listAll().then(res => {
-                this.storeList = res.list
-            });
+            if (this.searchForm.agent_id) {
+                Core.Api.Store.listAll({agent_id: this.searchForm.agent_id}).then(res => {
+                    this.storeList = res.list
+                });
+            } else {
+                this.storeList = []
+            }
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
@@ -364,13 +420,13 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log("getTableData res:", res)
-                let list = res.list.map(entity => {
-                    entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
-                    return entity
-                })
+                // let list = res.list.map(entity => {
+                //     entity.attr_desc = entity.item.attr_list ? entity.item.attr_list.map(i => i.value).join(',') : ''
+                //     return entity
+                // })
                 console.log("res.list", res.list)
                 this.total = res.count;
-                this.tableData = list;
+                this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -421,7 +477,12 @@ export default {
             if (!form.uid) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.item_code) {
+            if (!form.item_code && this.type === 1) {
+                form.name = ''
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.name && this.type === 2) {
+                form.item_code = ''
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (this.isExist == 2) {
@@ -459,10 +520,10 @@ export default {
         handleMatterChange({file, fileList}) {
             console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
-                    return this.$message.error(file.response.message)
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(this.$t(file.response.code + '',JSON.parse(file.response.message)))
                 } else {
-                    return this.$message.success('上传成功');
+                    return this.$message.success(this.$t('i.uploaded'));
                 }
             }
             this.upload.fileList = fileList
@@ -497,7 +558,7 @@ export default {
             form.ids = this.selectedRowKeys.join(',')
             Core.Api.Entity.batchSave(form).then(res => {
                 console.log('handleEntitySubmit res', res)
-                this.$message.success('批量设置成功')
+                this.$message.success(this.$t('i.settings') + this.$t('pop_up.success'))
                 this.handleEntityClose()
                 this.getTableData()
                 this.selectedRowKeys = []

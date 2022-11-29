@@ -36,8 +36,7 @@
             </div>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                     :row-key="record => record.id" :pagination='false' :loading="loading">
+            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' :loading="loading">
                 <template #bodyCell="{ column, text , record }">
                     <template v-if="column.key === 'detail' && $auth('material-purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -99,8 +98,6 @@
             />
         </div>
     </div>
-
-
 </template>
 
 <script>
@@ -244,7 +241,7 @@ export default {
             Core.Api.MaterialPurchase.list({
                 ...this.searchForm,
                 page: this.currPage,
-                pageSize: this.pageSize,
+                page_size: this.pageSize,
             }).then(res => {
                 console.log('getTableData res', res)
                 this.tableData = res.list
@@ -264,7 +261,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.MaterialPurchase.cancel({id}).then(() => {
-                        _this.$message.success('取消成功');
+                        _this.$message.success(_this.$('pop_up.canceled'));
                         _this.getTableData();
                         this.getStatusStat()
                     }).catch(err => {

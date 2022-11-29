@@ -1,8 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1652322256863') format('woff2'),
-       url('iconfont.woff?t=1652322256863') format('woff'),
-       url('iconfont.ttf?t=1652322256863') format('truetype');
+  src: url('iconfont.woff2?t=1669016152776') format('woff2'),
+       url('iconfont.woff?t=1669016152776') format('woff'),
+       url('iconfont.ttf?t=1669016152776') format('truetype');
 }
 
 .icon {
@@ -11,6 +11,58 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.i_xialajiantouxiao:before {
+  content: "\e87e";
+}
+
+.i_shouqijiantouxiao:before {
+  content: "\e892";
+}
+
+.i_crm_data:before {
+  content: "\e605";
+}
+
+.i_crm_order:before {
+  content: "\e606";
+}
+
+.i_crm_test_drive:before {
+  content: "\e607";
+}
+
+.i_crm_bo:before {
+  content: "\e608";
+}
+
+.i_crm_setting:before {
+  content: "\e609";
+}
+
+.i_crm_label:before {
+  content: "\e60a";
+}
+
+.i_crm_order_income:before {
+  content: "\e60b";
+}
+
+.i_test:before {
+  content: "\e616";
+}
+
+.i_print:before {
+  content: "\e613";
+}
+
+.i_home:before {
+  content: "\e61b";
+}
+
+.i_setting:before {
+  content: "\e623";
 }
 
 .i_skew-bg:before {

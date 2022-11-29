@@ -30,10 +30,19 @@
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+
                 <div class="form-item required">
                     <div class="key">{{ $t('d.short_name') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.pay_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
+                            <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
+                        </a-select>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -46,6 +55,25 @@
                     <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('p.currency') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                            <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.pda') }}:</div>
+                    <div class="value">
+                        <div class="value">
+                            <a-radio-group v-model:value="form.flag_stock_change_use_pda">
+                                <a-radio :value="Core.Const.FLAG.YES">{{ $t('i.yes') }}</a-radio>
+                                <a-radio :value="Core.Const.FLAG.NO">{{ $t('i.no') }}</a-radio>
+                            </a-radio-group>
+                        </div>
                     </div>
                 </div>
                 <div class="form-item img-upload">
@@ -67,8 +95,8 @@
             </div>
         </div>
         <div class="form-btns">
-            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">确定</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost>取消</a-button>
+            <a-button @click="handleSubmit" type="primary" v-if="$auth('store.save')">{{ $t('def.sure') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost>{{ $t('def.cancel') }}</a-button>
         </div>
     </div>
 </template>
@@ -83,6 +111,8 @@ export default {
     props: {},
     data() {
         return {
+            Core,
+            PAY_TIME_LIST: Core.Const.DISTRIBUTOR.PAY_TIME_LIST,
             loginType: Core.Data.getLoginType(),
             LOGIN_TYPE,
             // 加载
@@ -95,6 +125,7 @@ export default {
                 distributor_id: undefined,
                 agent_id: undefined,
                 name: '',
+                currency: undefined,
                 short_name: '',
                 contact_name: '',
                 contact_phone: '',
@@ -104,6 +135,7 @@ export default {
             agentSearchFrom: {
                 distributor_id: ''
             },
+            monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             upload: {
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 fileList: [],
@@ -207,6 +239,9 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
+            if (!form.currency) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!form.short_name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -228,11 +263,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
             return isCanUpType && isLt10M;
         },
@@ -240,7 +275,7 @@ export default {
         handleLogoChange({file, fileList}) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
             }

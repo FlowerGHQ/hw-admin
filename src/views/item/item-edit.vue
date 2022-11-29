@@ -16,11 +16,25 @@
                     <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('n.name_en') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength='50'/>
+                </div>
+            </div>
             <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('n.type') }}</div>
                 <div class="value">
                     <a-radio-group v-model:value="form.type">
                         <a-radio class="type-item" v-for="item of itemTypeMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required" v-if="!indep_flag">
+                <div class="key">{{ $t('n.flag_entity') }}</div>
+                <div class="value">
+                    <a-radio-group v-model:value="form.flag_entity">
+                        <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
                     </a-radio-group>
                 </div>
             </div>
@@ -39,8 +53,8 @@
             <div class="form-item required">
                 <div class="key">{{ $t('i.categories') }}</div>
                 <div class="value">
-                    <CategoryTreeSelect @change="handleCategorySelect"
-                        :category='item_category' :category-id='form.category_id' v-if="form.id !== ''"/>
+                    <CategoryTreeSelectMultiple @change="handleCategorySelect"
+                        :category='item_category' :category-id='form.category_ids' v-if="form.id !== ''"/>
                 </div>
             </div>
             <div class="form-item required">
@@ -53,9 +67,31 @@
             <div class="form-item required">
                 <div class="key">{{ $t('d.sales_area') }}</div>
                 <div class="value">
-                    <a-select v-model:value="form.sales_area_ids" mode="tags" :placeholder="$t('def.select')">
+                    <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder="$t('def.select')">
                         <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
                     </a-select>
+                </div>
+            </div>
+            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('i.on_board_battery') }}</div>
+                <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
+                    <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                        <i class="icon i_add"/> {{ $t('i.add') }}
+                    </ItemSelect>
+                </div>
+                <div class="value" v-else>
+                        {{form.accessory_code}} {{form.accessory_name}}
+                        <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
+                            <i class="icon i_edit"/> {{ $t('def.edit') }}
+                        </ItemSelect>
+                        <a-button type="link" @click="handleDeleteItem"><i class="icon i_delete"/>删除</a-button>
+                </div>
+            </div>
+            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('i.on_board_battery') }}{{ $t('i.amount') }}</div>
+                <div class="value input-number" v-if="form.accessory_code !== '' && form.accessory_code !== undefined">
+                    <a-input-number v-model:value="form.accessory_amount" :min="0" :precision="0" placeholder="0"/>
+                    <span>{{ $t('i.pcs2') }}</span>
                 </div>
             </div>
         </div>
@@ -99,7 +135,7 @@
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.category_id && configTemp.length"> <!-- 分类配置 -->
+    <div class="form-block" v-if="form.category_ids && configTemp.length"> <!-- 分类配置 -->
         <div class="form-title">
             <div class="title">{{ $t('i.configuration') }}</div>
         </div>
@@ -125,7 +161,7 @@
                         </a-radio-group>
                     </template>
                     <template v-if="item.type == 'rich_text'">
-                        <VueTinymce v-model="form.config[index].value" :setting="tinymce_setting"/>
+                        <a-textarea v-model="form.config[index].value"/>
                     </template>
                 </div>
             </div>
@@ -162,17 +198,19 @@
                             <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
-                            <p>{{ $t('i.value') }}</p>
+                            <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option" :placeholder="$t('def.input')"/>
+                                    <a-input :value="option.zh" class="option-input" :placeholder="$t('def.input')" disabled/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
                                     <template #content>
                                         <div class="specific-option-edit-popover">
-                                            <a-input v-model:value="item.addValue" :placeholder="$t('def.input')" :max-length='50' @keydown.enter="handleAddSpecOption(index)" :autofocus='true'/>
-                                            <div class="content-length">{{item.addValue.length}}/50</div>
+                                            <a-input v-model:value="item.addValue.zh" :placeholder="$t('def.input')+$t('i.value_zh')" :max-length='50' />
+                                            <div class="content-length">{{item.addValue.zh.length}}/50</div>
+                                            <a-input v-model:value="item.addValue.en" :placeholder="$t('def.input')+$t('i.value_en')" :max-length='50'/>
+                                            <div class="content-length">{{item.addValue.en.length}}/50</div>
                                             <div class="btns">
                                                 <a-button type="primary" ghost @click="handleCloseSpecOption(index)">{{ $t('def.cancel') }}</a-button>
                                                 <a-button type="primary" @click="handleAddSpecOption(index)">{{ $t('def.sure') }}</a-button>
@@ -181,6 +219,15 @@
                                     </template>
                                     <a-button type="link"><i class="icon i_add"></i> {{ $t('i.addition') }}</a-button>
                                 </a-popover>
+                            </div>
+                        </div>
+                        <div class="option">
+                            <p>{{ $t('i.value_en') }}</p>
+                            <div class="option-list">
+                                <div class="option-item" v-for="(option, i) of item.option" :key="i">
+                                    <a-input :value="option.en" class="option-input" :placeholder="$t('def.input')" disabled/>
+                                    <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -195,6 +242,12 @@
                         <template #bodyCell="{ column, record }">
                             <template v-if="column.dataIndex === 'code'">
                                 <a-input class="code" v-model:value="record.code" :placeholder="$t('def.input')"/>
+                            </template>
+                            <template v-if="column.dataIndex === 'name'">
+                                <a-input class="code" v-model:value="record.name" :placeholder="$t('def.input')"/>
+                            </template>
+                            <template v-if="column.dataIndex === 'name_en'">
+                                <a-input class="code" v-model:value="record.name_en" :placeholder="$t('def.input')"/>
                             </template>
                             <template v-if="column.dataIndex === 'price'">
                                 <a-input-number v-model:value="record.price" :min="0.01" :precision="2"
@@ -215,9 +268,12 @@
                                 <a-input-number v-model:value="record.fob_usd" :min="0.01" :precision="2"
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            </template>
                             <template v-if="column.key === 'select'">
-                                <a-select v-model:value="record[column.dataIndex]" placeholder="请选择">
-                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val">{{ val }}</a-select-option>
+                                <a-select v-model:value="record[column.dataIndex]" :placeholder="$t('def.select')">
+                                    <a-select-option v-for="(val,index) of column.option" :key="index" :value="val.key"  @click="specChange(record, column.dataIndex, val)">{{ val[$i18n.locale] }}</a-select-option>
                                 </a-select>
                             </template>
                         </template>
@@ -325,24 +381,29 @@
 
 <script>
 import Core from '../../core';
-import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import CategoryTreeSelectMultiple from '@/components/popup-btn/CategoryTreeSelectMultiple.vue'
 import ItemHeader from './components/ItemHeader.vue'
-import VueTinymce from '@jsdawn/vue3-tinymce';
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+
+// import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
     components: {
-        CategoryTreeSelect,
+        CategoryTreeSelectMultiple,
         ItemHeader,
-        VueTinymce,
+        ItemSelect,
+        // VueTinymce,
     },
     props: {},
     data() {
         return {
+            Core,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
             itemTypeMap: Core.Const.ITEM.TYPE_MAP,
+            flagEntityMap: Core.Const.ITEM.FLAG_ENTITY_MAP,
             indep_flag: 0,
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             set_id: '',
@@ -350,12 +411,14 @@ export default {
             form: {
                 id: '',
                 name: '',
+                name_en: '',
                 type:'',
                 code: '',
                 model: '',
                 logo: '',
                 imgs: '',
-                category_id: undefined,
+                flag_entity: undefined,
+                category_ids: [],
                 price: undefined,
                 original_price_currency: undefined,
                 original_price: undefined,
@@ -364,6 +427,11 @@ export default {
                 sales_area_ids: undefined,
                 fob_eur: '',
                 fob_usd: '',
+                accessory_id:'',
+                accessory_name:'',
+                accessory_name_en:'',
+                accessory_code:'',
+                accessory_amount: '',
             },
             salesList: [],
             // 商品分类
@@ -430,7 +498,7 @@ export default {
             let column = []
             column = this.specific.list.map((item, index) => ({
                 id: item.id,
-                title: item.name,
+                title: this.$i18n.locale === 'zh'? item.name: item.key ,
                 dataIndex: item.key,
                 key: 'select',
                 option: item.option,
@@ -439,11 +507,14 @@ export default {
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
                 {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('n.name'), key: 'input', dataIndex: 'name'},
+                {title: this.$t('n.name_en'), key: 'input', dataIndex: 'name_en'},
             )
             column.push(
-                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price', fixed: 'right'},
+                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
+                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation', fixed: 'right'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
@@ -544,6 +615,7 @@ export default {
             this.form.fob_eur = Core.Util.countFilter(res.fob_eur)
             this.form.fob_usd = Core.Util.countFilter(res.fob_usd)
             this.form.man_hour = Core.Util.countFilter(res.man_hour)
+            this.form.category_ids = this.detail.category_list ? this.detail.category_list.map(i => i.category_id): []
             // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
@@ -567,7 +639,23 @@ export default {
                     status: 'done',
                 }))
             }
+
+            if (this.form.type === Core.Const.ITEM.TYPE.PRODUCT){
+                Core.Api.ItemAccessory.list({type: 10}).then(res => {
+
+                    if (res.list.length > 0){
+                        this.form.accessory_code = res.list[0].target_uid
+                        this.form.accessory_name = res.list[0].target_name
+                        this.form.accessory_name_en = res.list[0].target_name_en
+
+                        this.form.accessory_id = res.list[0].target_id
+                        this.form.accessory_amount = res.list[0].amount
+                    }
+                })
+
+            }
             this.loading = false
+
         },
         setSpecificData(itemList) {
             this.loading = true
@@ -577,8 +665,16 @@ export default {
                     id: item.id,
                     key: item.key,
                     name: item.name,
-                    option: item.value.split(','),
-                    addValue: '',
+                    option: item.value_en.split(',').map((it, index) =>({
+                            key: it,
+                            zh: item.value.split(',')[index],
+                            en: it,
+                        })),
+                    addValue:{
+                        key: '',
+                        zh: '',
+                        en: '',
+                    },
                     addVisible: false,
                 }))
                 console.log('setSpecificData list:', list)
@@ -586,11 +682,25 @@ export default {
                     let params = {}
                     for (const attr of list) {
                         let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        params[attr.key] = element.value
+                        console.log(item)
+                        // console.log(element.value)
+                        // params[attr.key] = element.value
+                        if (element != undefined){
+                            params[attr.key] = {
+                                value:element.value,
+                                value_en:element.value_en
+                            }
+                        } else {
+                            params[attr.key] = {
+                                value:'',
+                            }
+                        }
                     }
                     return {
                         ...params,
                         code: item.code,
+                        name: item.name,
+                        name_en: item.name_en,
                         price: Core.Util.countFilter(item.price),
                         fob_eur: Core.Util.countFilter(item.fob_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
@@ -605,7 +715,23 @@ export default {
                 this.specific.data = data
             })
         },
-
+        handleDelete(id){
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Item.delete({id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.delete_success'));
+                        _this.getItemDetail();
+                    }).catch(err => {
+                        console.log("handleDelete err", err);
+                    })
+                },
+            });
+        },
         // 保存、新建 商品
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
@@ -642,6 +768,8 @@ export default {
                     return {
                         id: data.target_id,
                         code: data.code,
+                        name: data.name,
+                        name_en: data.name_en,
                         price: Math.round(data.price * 100),
                         fob_eur: Math.round(data.fob_eur * 100),
                         fob_usd: Math.round(data.fob_usd * 100),
@@ -659,8 +787,9 @@ export default {
                                 attr_def_id: attr.id,
                                 attr_def_name: attr.name,
                                 id,
-                                name: data[attr.key],
-                                value: data[attr.key],
+                                name: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value: data[attr.key].value ? data[attr.key].value: data[attr.key],
+                                value_en: data[attr.key].value_en ? data[attr.key].value_en: data[attr.key],
                                 target_id: data.target_id || '',
                                 target_type: 1,
                             }
@@ -687,7 +816,7 @@ export default {
             if (!form.model) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.category_id) {
+            if (!form.category_ids) {
                 return this.$message.warning(this.$t('def.enter'))
             }
            /* if (!form.man_hour) {
@@ -772,7 +901,7 @@ export default {
                 for (let i = 0; i < this.configTemp.length; i++) {
                     let item = this.configTemp[i]
                     if (item.required && !form.config[i].value) {
-                        return this.$message.warning(`请${['select','radio'].includes(item.type) ? '选择' : '输入'}${item.name}`)
+                        return this.$message.warning(`${['select','radio'].includes(item.type) ? this.$t('def.select') : this.$t('def.input')}${item.name}`)
                     }
                 }
             }
@@ -783,11 +912,11 @@ export default {
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
-                this.$message.warning('文件格式不正确');
+                this.$message.warning(this.$t('n.file_incorrect'));
             }
             const isLt10M = (file.size / 1024 / 1024) < 10;
             if (!isLt10M) {
-                this.$message.warning('请上传小于10MB的图片');
+                this.$message.warning(this.$t('n.picture_smaller'));
             }
             return isCanUpType && isLt10M;
         },
@@ -795,7 +924,7 @@ export default {
         handleCoverChange({ file, fileList }) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
             }
@@ -804,7 +933,7 @@ export default {
         handleDetailChange({ file, fileList }) {
             console.log("handleDetailChange status:", file.status, "file:", file)
             if (file.status == 'done') {
-                if (file.response && file.response.code < 0) {
+                if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
             }
@@ -813,7 +942,7 @@ export default {
 
         // 商品分类选择
         handleCategorySelect(val, node) {
-            this.form.category_id = val
+            this.form.category_ids = val
             this.item_category = node
             try {
                 this.configTemp = JSON.parse(node.config)
@@ -848,6 +977,8 @@ export default {
                 this.specific.data = [{
                     target_id: this.form.id,
                     code: this.form.code,
+                    name: this.form.name,
+                    name_en: this.form.name_en,
                     price: this.form.price,
                     fob_eur: this.form.fob_eur,
                     fob_usd: this.form.fob_usd,
@@ -856,6 +987,8 @@ export default {
                 }]
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code
+                this.form.name = this.specific.data[0].name
+                this.form.name_en = this.specific.data[0].name_en
                 this.form.price = this.specific.data[0].price
                 this.form.fob_eur = this.specific.data[0].fob_eur
                 this.form.fob_usd = this.specific.data[0].fob_usd
@@ -866,7 +999,7 @@ export default {
         // 规格定义
         // 规格名
         handleAddSpec() { // 添加规格定义
-            this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false, addValue: ''})
+            this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false,addValue: {key:'', zh:'', en:''}})
         },
         handleRemoveSpec(index) { // 删除规格定义
             let item = this.specific.list[index]
@@ -879,72 +1012,115 @@ export default {
             let item = this.specific.list[index]
             if (key === 'name') {
                 if (!item.name) {
-                    return this.$message.warning('请输入规格名')
+                    return this.$message.warning(this.$t('def.specification_name'))
                 }
                 let names = this.specific.list.map(i => i.name).filter((val,i) => val && i !== index)
                 if (names.includes(item.name)) {
                     this.specific.list[index].name = ''
-                    return this.$message.warning('规格名不可重复')
+                    return this.$message.warning(this.$t('def.specification_be_unique'))
                 }
             } else {
                 let reg = /^[a-z]+$/g
                 if (!item.key) {
-                    return this.$message.warning('请输入规格关键字')
+                    return this.$message.warning(this.$t('def.specification_keyword'))
                 }
                 if (!reg.test(item.key)) {
                     this.specific.list[index].key = ''
-                    return this.$message.warning('规格关键字应由小写英文字母组成')
+                    return this.$message.warning(this.$t('def.keyword_lowercase'))
                 }
                 let keys = this.specific.list.map(i => i.key).filter((val,i) => val && i !== index)
                 if (keys.includes(item.key)) {
                     this.specific.list[index].key = ''
-                    return this.$message.warning('规格关键字不可重复')
+                    return this.$message.warning(this.$t('def.keyword_unique'))
                 }
             }
             if (item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                let value = ""
+                let value_en = ""
+                item.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
+                let _item = { id: item.id, key: item.key, name: item.name, value: value, value_en: value_en }
                 Core.Api.AttrDef.save(_item).then(res => {
                     console.log('handleSpecEditBlur res:', res)
                     this.specific.list[index].id = res.detail.id
+                    console.log(" this.specific", this.specific)
+                    // this.getItemDetail();
                 })
             }
         },
         // 规格值
         handleAddSpecOption(index) {
-            let item = this.specific.list[index]
-            if (!item.addValue) {
-                return this.$message.warning('请输入规格值')
+            let target = this.specific.list[index]
+            let item = Core.Util.deepCopy(this.specific.list[index].addValue)
+
+            if (!item.zh) {
+                return this.$message.warning(this.$t('def.enter_specification_value'))
             }
-            if (item.option.includes(item.addValue)) {
-                return this.$message.warning('同以规格下，规格值不可重复')
+            if (!item.en) {
+                return this.$message.warning(this.$t('def.enter_specification_value_en'))
             }
 
-            item.option.push(this.specific.list[index].addValue)
+            if (target.option.includes(item.zh)) {
+                return this.$message.warning(this.$t('def.specification_value_repeated'))
+            }
+            if (target.option.includes(item.en)) {
+                return this.$message.warning(this.$t('def.specification_value_repeated_en'))
+            }
+            item.key = item.en;
+
+            console.log("addValue", item)
+            target.option.push(item)
+            console.log("this.specific.list[index]", target)
             this.handleCloseSpecOption(index)
-            if (item.id && item.key.trim() && item.name.trim()) {
-                let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+            if (target.id && target.key.trim() && target.name.trim()) {
+                let value = ""
+                let value_en = ""
+                target.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
+                let _item = { id: target.id, key: target.key, name: target.name, value: value, value_en:value_en }
                 Core.Api.AttrDef.save(_item)
             }
         },
         handleCloseSpecOption(index) {
-            this.specific.list[index].addValue = ''
+            this.specific.list[index].addValue.zh = ''
+            this.specific.list[index].addValue.en = ''
+            this.specific.list[index].addValue.key = ''
             this.specific.list[index].addVisible = false
         },
         handleRemoveSpecOption(index, i) {
             let item = this.specific.list[index]
             let _do = function() {
                 item.option.splice(i, 1)
+                let value = ""
+                let value_en = ""
+                item.option.forEach(it => {
+                    value += it.zh + ","
+                    value_en += it.en + ","
+                });
+                var reg =/,$/gi;
+                value = value.replace(reg, "")
+                value_en = value_en.replace(reg, "")
                 if (item.id && item.key.trim() && item.name.trim()) {
-                    let _item = { id: item.id, key: item.key, name: item.name, value: item.option.join(',') }
+                    let _item = { id: item.id, key: item.key, name: item.name, value: value, value_en:value_en}
                     Core.Api.AttrDef.save(_item)
                 }
             }
             if (this.specific.data.map(i => i[item.key]).includes(item.option[i])) {
                 this.$confirm({
-                    title: `该规格值已被使用，确认要删除此规格值吗？`,
-                    okText: '确定',
+                    title: this.$t('def.specification_value_remove'),
+                    okText: this.$t('def.ok'),
                     okType: 'danger',
-                    cancelText: '取消',
+                    cancelText: this.$t('def.cancel'),
                     onOk: () => {
                         for (const element of this.specific.data) {
                             if (element[item.key] === item.option[i]) {
@@ -959,7 +1135,7 @@ export default {
             }
         },
         getSalesAreaList() {
-            Core.Api.SalesArea.list().then(res => {
+            Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
             });
         },
@@ -970,11 +1146,13 @@ export default {
                 const len = this.specific.list[i].option.length || 1;
                 maxLen = maxLen*len
             }
-            if (this.specific.data.length >= maxLen) {
-                return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
-            }
+            // if (this.specific.data.length >= maxLen) {
+            //     return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
+            // }
             this.specific.data.push({
                 code: '',
+                name: '',
+                name_en: '',
                 price: '',
                 original_price: '',
                 fob_eur: '',
@@ -997,14 +1175,39 @@ export default {
         },
         handleBatchSpec(key) {
             if (!this.batchSet[key] && this.batchSet[key] !== 0) {
-                return this.$message.warning('请输入您要设置的价格')
+                return this.$message.warning(this.$t('def.set_price'))
             }
             this.specific.data = this.specific.data.map(item => {
                 item[key] = this.batchSet[key]
                 return item
             })
             this.handleCloseBatchSet()
-        }
+        },
+        specChange(record, key, item){
+            record[key] = {
+                value : item.zh,
+                value_en : item.en
+            }
+            // value.value = item.zh
+            console.log("record",record)
+        },
+        // 添加商品
+        handleAddItemShow(ids, items) {
+            this.form.accessory_id = items[0].id
+            this.form.accessory_name = items[0].name
+            this.form.accessory_name_en = items[0].name_en
+
+            this.form.accessory_code = items[0].code
+            this.form.accessory_amount = 0
+        },
+        // 添加商品
+        handleDeleteItem() {
+            this.form.accessory_id = ''
+            this.form.accessory_name = ''
+            this.form.accessory_name_en = ''
+            this.form.accessory_code = ''
+            this.form.accessory_amount = 0
+        },
     }
 };
 </script>
@@ -1091,7 +1294,8 @@ export default {
             display: flex;
             margin-bottom: 20px;
             > p {
-                padding-left: 64px;
+                padding-left: 34px;
+                padding-right: 50px;
                 height: 32px;
                 line-height: 32px;
                 margin-top: 8px;
@@ -1104,6 +1308,10 @@ export default {
             .option-item {
                 position: relative;
                 margin-top: 8px;
+                .option-input {
+                    background-color: #fff;
+                    color: #000;
+                }
                 .ant-input {
                     width: 90px;
                     margin-right: 14px;
@@ -1186,7 +1394,7 @@ export default {
     display: flex;
     .flex(flex-start,flex-end);
     .ant-input, .ant-input-number {
-        width: 134px;
+        width: 180px;
         margin-bottom: 8px;
     }
     .content-length {

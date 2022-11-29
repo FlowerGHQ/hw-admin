@@ -27,7 +27,7 @@
         <div class="form-content">
             <div class="form-item required afs rich_text">
                 <div class="value">
-                    <VueTinymce v-model="form.content" :setting="tinymce_setting" />
+                    <a-textarea v-model="form.content" />
                 </div>
             </div>
         </div>
@@ -41,12 +41,11 @@
 
 <script>
 import Core from '../../core';
-import VueTinymce from '@jsdawn/vue3-tinymce';
 
 
 export default {
     name: 'NoticeEdit',
-    components: { VueTinymce },
+    components: {  },
     props: {},
     data() {
         return {
