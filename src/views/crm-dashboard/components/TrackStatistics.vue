@@ -7,37 +7,37 @@
             <a-row :gutter="[20,0]">
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.track_count") }}</span>
                         <span class="form-value">{{  this.form.track_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.call_count") }}</span>
                         <span class="form-value">{{  this.form.call_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.visit_count") }}</span>
                         <span class="form-value">{{  this.form.visit_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.pool_count") }}</span>
                         <span class="form-value">{{  this.form.pool_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.customer_count") }}</span>
                         <span class="form-value">{{  this.form.customer_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
-                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
+                        <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.bo_count") }}</span>
                         <span class="form-value">{{  this.form.bo_count || '-' }}</span>
                     </div>
                 </a-col>
