@@ -127,9 +127,9 @@
                         <ItemSelect @select="handleAddFailItem"
                                     :disabled-checked='tableData.map(i => i.item_id)'
                                     btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
-                                    :dis="moneyType"
+                                    :dis="form.currency"
                                     v-if="$auth('repair-order.save')"/>
-                                    <a-select v-model:value="moneyType"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
+                                    <a-select v-model:value="form.currency"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
                                         <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                                     </a-select>
                     </div>
@@ -266,6 +266,7 @@ export default {
             loading: false,
             detail: {},
             form: {
+                currency: undefined,
                 bo_id: '',
                 customer_id: '',
                 name: '',
@@ -310,7 +311,6 @@ export default {
             moneyDisabled: 'false',
             labelList: [],
             labelIdList: [],
-            moneyType:undefined,
             MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
         };
     },
@@ -330,7 +330,7 @@ export default {
             return this.$store.state.lang
         },
         moneyT(){
-            switch(this.moneyType){
+            switch(this.form.currency){
                 case 'usd': return '$';break;
                 case 'eur': return '€';break;
             }
@@ -377,17 +377,17 @@ export default {
     methods: {
         moneyChange(){  //货币切换
          Core.Api.MoneyChange.switch({
-            currency:this.moneyType,
+            currency:this.form.currency,
             item_bind_list:this.tableData
          }).then(res=>{
            res.list.forEach(it =>{
               it.name = it.item_name
               it.code = it.item_code
-              it.price = it.price / 100
+              it.price = Core.Util.countFilter(it.price)
               it.discount_price = it.discount_price / 100
            })
            this.tableData = res.list
-            console.log(this.moneyType,this.tableData);
+            console.log(this.form.currency,this.tableData);
          }).catch(err=>{
             console.log(err);
          })
@@ -420,6 +420,7 @@ export default {
                         this.form[key] = undefined
                     }
                 }
+
                 this.form.total_price =this.$Util.countFilter(this.form.total_price)
                 this.form.other_cost =this.$Util.countFilter(this.form.other_cost)
                 this.form.discount_amount =this.$Util.countFilter(this.form.discount_amount)
@@ -491,8 +492,7 @@ export default {
             // }
             form.item_bind_list = this.$Util.deepCopy(this.tableData)
             form.item_bind_list.forEach(it =>{
-                it.discount_price = it.discount_price * 100
-                it.total_price = it.total_price * 100
+                it.price = it.price * 100
             })
             form.total_price = this.form.total_price * 100
             form.other_cost = this.form.other_cost * 100
@@ -517,7 +517,7 @@ export default {
             console.log('form',form)
             Core.Api.CRMOrder.save({
                 ...form,
-                currency:this.moneyType,
+                currency:this.form.currency,
                 money: this.contractAmount * 100,
                 audit_user_id_list: audit_user_id_list,
                 label_id_list: this.labelIdList,
@@ -536,7 +536,7 @@ export default {
         async handleAddFailItem(ids, items) {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
-                switch(this.moneyType){
+                switch(this.form.currency){
                     case 'usd': element.price = element.fob_usd / 100;break;
                     case 'eur': element.price = element.fob_eur / 100;break;
                 }
@@ -603,6 +603,7 @@ export default {
                 source_type: source_type,
             }).then(res => {
                 res.list.forEach(it => {
+                    it.price = Core.Util.countFilter(it.price)
                     it.discount_price = it.price * it.discount / 100
                 })
                 this.tableData = res.list

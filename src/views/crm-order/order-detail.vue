@@ -106,7 +106,7 @@
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane> -->
                         <a-tab-pane key="salesinfo" :tab="$t('crm_o.sales_info')">
-                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :currency="detail.currency" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                         </a-tab-pane>
                         <a-tab-pane key="RemittanceList" :tab="$t('crm_oi.list')">
                             <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>

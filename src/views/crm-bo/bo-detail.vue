@@ -79,7 +79,7 @@
                             <CustomerSituation  v-if="id>0" :detail="detail" :currentStepText="currentStepText"/>
                         </a-tab-pane>
                         <a-tab-pane key="SalesInformation" :tab="$t('crm_b.select_item')">
-                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
+                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :currency="detail.currency" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
                         </a-tab-pane>
                         <a-tab-pane key="ContactPerson" :tab="$t('crm_t.contact_customer')">
                             <CRMContact :detail="detail" v-if="id>0"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact">

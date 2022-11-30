@@ -28,6 +28,13 @@
                     <template v-if="column.key === 'estimated_deal_time'">
                         {{ $Util.timeFilter(text, 3) }}
                     </template>
+                    <template v-if="column.key === 'price'">
+                        {{moneyT + $Util.countFilter(text) }}
+                    </template>
+                    <template v-if="column.key === 'discount'">
+                        {{text}}%
+                    </template>
+
 
                 </template>
             </a-table>
@@ -70,6 +77,10 @@ export default {
             type: Number,
             default: 0
         },
+        currency: {
+            type: String,
+            default: ""
+        },
 
 
     },
@@ -98,17 +109,23 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key: 'item'},
                 {title: 'i.code', dataIndex: 'code', key: 'item'},
-                {title: 'i.unit_price', dataIndex: 'price'},
-                {title: 'crm_b.discount_price', dataIndex: 'discount_price'},
+                {title: 'i.unit_price', dataIndex: 'price', key: 'price'},
+                {title: 'crm_b.discount_price', dataIndex: 'discount_price', key: 'price'},
                 {title: 'i.amount',  dataIndex: 'amount',key: 'amount'},
                 {title: 'crm_b.discount',dataIndex: 'discount', key: 'discount'},
-                {title: 'i.total_price',dataIndex: 'total_price', key: 'total_price'},
+                {title: 'i.total_price',dataIndex: 'total_price', key: 'price'},
             ]
             return columns
         },
         lang() {
             return this.$store.state.lang
-        }
+        },
+        moneyT(){
+            switch(this.currency){
+                case 'usd': return '$';break;
+                case 'eur': return '€';break;
+            }
+        },
     },
     mounted() {
         this.getTableData();
