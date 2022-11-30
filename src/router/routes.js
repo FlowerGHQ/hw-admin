@@ -1591,13 +1591,13 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'customer-list',
-				name: 'CustomerList',
+				path: 'region-customer-list',
+				name: 'RegionCustomerList',
 				component: () => import('@/views/crm-customer/customer-list.vue'),
 				meta: {
-					title: '未分配客户',
-					title_en: 'Unassigned Customers',
-					type: 'high_seas',
+					title: '区域客户',
+					title_en: 'Regional Customers',
+					type: 'region',
 					auth: ["crm-customer.list"],
 				}
 			},
@@ -1612,17 +1612,17 @@ const routes = [
                     auth: ["crm-customer.list"],
 				}
 			},
-            {
-                path: 'region-customer-list',
-                name: 'RegionCustomerList',
-                component: () => import('@/views/crm-customer/customer-list.vue'),
-                meta: {
-                    title: '区域客户',
-                    title_en: 'Regional Customers',
-                    type: 'region',
-                    auth: ["crm-customer.list"],
-                }
-            },
+			{
+				path: 'customer-list',
+				name: 'CustomerList',
+				component: () => import('@/views/crm-customer/customer-list.vue'),
+				meta: {
+					title: '未分配客户',
+					title_en: 'Unassigned Customers',
+					type: 'high_seas',
+					auth: ["crm-customer.list"],
+				}
+			},
 			{
 				path: 'customer-edit',
 				name: 'CustomerEdit',

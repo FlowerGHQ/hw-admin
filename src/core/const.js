@@ -1525,6 +1525,7 @@ let Const = {
 		SOURCE_TYPE_MAP: {
 			'1': { key: 1, zh: '预定小程序',en: 'Order Applets', value: 1 },
 			'2': { key: 2, zh: '后台注册',en: 'Background Registration', value: 2 },
+			'3': { key: 3, zh: 'Shopify',en: 'Shopify', value: 3 },
 		},
 
 	},
