@@ -204,7 +204,7 @@ export default {
             }       
             cvs.forEach(canvas=>{
                 canvas.width = 800;
-                canvas.height = this.mediaWidth ? height / width * 800 : height / width * this.mediaWidth.replace(/['px']/g,'')
+                canvas.height = height / width * 800;
                 this.canvasUpdata(canvas, index, rate);
             })
         },
