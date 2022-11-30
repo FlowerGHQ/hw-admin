@@ -312,6 +312,7 @@
           </template>
         </a-table>
       </div>
+      <!-- 分页 -->
       <div class="paging-container with-operate">
         <div class="tip">
           {{
@@ -608,14 +609,14 @@ export default {
             path: "/crm-customer/customer-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-edit",
             query: { id: item.id, status: this.searchForm.status },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
       }
     },

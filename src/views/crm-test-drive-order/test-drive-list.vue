@@ -438,7 +438,7 @@ export default {
             path: "/crm-customer/customer-detail",
             query: { id: item.customer_id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_block");
           break;
         // case 'detail':    // 编辑
         //     routeUrl = this.$router.resolve({

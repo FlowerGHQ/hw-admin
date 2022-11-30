@@ -108,29 +108,35 @@
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
+                        <!-- 跟进记录 tab -->
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
                             <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord">
                                 <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
                             </CRMTrackRecord>
                         </a-tab-pane>
+                        <!-- 资料 tab -->
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
+                        <!-- 试驾单列表 tab -->
                         <a-tab-pane key="TestDriveList" :tab="$t('crm_d.list')">
                             <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive">
                                 <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                             </CRMTestDrive>
                         </a-tab-pane>
+                        <!-- 联系人 tab -->
                         <a-tab-pane key="ContacPerson" :tab="$t('crm_t.contact_customer')">
                             <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact">
                                 <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             </CRMContact>
                         </a-tab-pane>
+                        <!-- 商机 tab -->
                         <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
                                 <a-button type="primary" @click="routerChange('add-crm-bo')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                             </CRMBo>
                         </a-tab-pane>
+                        <!-- 合同 -->
                         <a-tab-pane key="ContractList" :tab="$t('crm_o.list')">
                             <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder">
                                 <a-button type="primary" @click="routerChange('add-order')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
