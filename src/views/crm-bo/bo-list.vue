@@ -272,14 +272,14 @@ export default {
                         path: "/crm-bo/bo-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_block')
                     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-bo/bo-edit",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_block')
                     break;
             }
         },

@@ -539,14 +539,14 @@ export default {
             path: "/crm-order/order-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_block");
           break;
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-edit",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_block");
           break;
       }
     },
