@@ -16,6 +16,7 @@
       </div>
       <div class="search-container">
         <a-row class="search-area">
+          <!-- 名称 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.name") }}：</div>
             <div class="value">
@@ -26,6 +27,7 @@
               />
             </div>
           </a-col>
+          <!-- 手机号 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.phone") }}：</div>
             <div class="value">
@@ -36,6 +38,7 @@
               />
             </div>
           </a-col>
+          <!-- 客户类型 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -63,6 +66,7 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 创建人 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -93,6 +97,7 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 客户级别 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -120,6 +125,26 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 区域 -->
+          <a-col 
+            v-if="show" 
+            :xs='24' 
+            :sm='24' 
+            :xl="8" 
+            :xxl='8'  
+            class="search-item">
+              <div class="key">{{ $t('crm_c.group') }}：</div>
+              <div class="value">
+                  <a-tree-select
+                    v-model:value="searchForm.group_id"
+                    :placeholder="$t('def.select')"
+                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                    :tree-data="groupOptions"
+                    tree-default-expand-all
+                  />                  
+              </div>
+          </a-col>
+          <!-- 创建时间 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -133,6 +158,7 @@
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
             </div>
           </a-col>
+          <!-- 高级搜索按钮           -->
           <a-col
             :xs="24"
             :sm="24"
@@ -459,6 +485,7 @@ export default {
         type: 0,
         status: undefined,
         search_type: undefined,
+        group_id: undefined
       },
       batchForm: {
         group_id: undefined,
@@ -600,6 +627,7 @@ export default {
   methods: {
     moreSearch() {
       this.show = !this.show;
+      this.handleGroupTree()
     },
     routerChange(type, item = {}) {
       let routeUrl = "";
