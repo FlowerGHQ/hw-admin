@@ -60,7 +60,7 @@
             :headers="upload.headers"
             :data="upload.data"
             :before-upload="handleImgCheck"
-            @change="handleCoverChange"
+            @change="handleCoverChange"              
           >
             <div class="image-inner" v-if="upload.coverList.length < 10">
               <i class="icon i_upload" />
@@ -79,7 +79,7 @@
             :action="fileUpload.action"
             :headers="fileUpload.headers"
             :data="fileUpload.data"
-            @change="handleFileChange"
+            @change="handleFileChange"                       
           >
             <a-button
               class="file-upload-btn"
@@ -139,7 +139,7 @@
       </div>
       <!-- 意向程度 -->
       <div class="form-item">
-        <div class="key">{{ $t("crm_t.intent") }}：</div>
+        <div class="key">{{ $t("crm_t.intent") }}</div>
         <div class="value">
           <a-select
             v-model:value="trackRecordForm.intent"
@@ -231,6 +231,7 @@ export default {
       type: Number,
       default: 0,
     },
+    // 数据详情
     detail: {
       type: Object,
     },
@@ -293,23 +294,42 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    handleModalShow() {
+    handleModalShow() {      
       if (this.detail) {
+        let detail = Core.Util.deepCopy(this.detail); // 深拷贝防止影响结果        
+        // 点击编辑执行这里面语句
         for (const key in this.trackRecordForm) {
-          this.trackRecordForm[key] = this.detail[key];
-        }
-        console.log("this.form:", this.detail);
-        this.trackRecordForm.track_time = this.detail.track_time
-          ? dayjs.unix(this.detail.track_time).format("YYYY-MM-DD HH:mm:ss")
+          this.trackRecordForm[key] = detail[key];
+        }        
+        this.trackRecordForm.track_time = detail.track_time
+          ? dayjs.unix(detail.track_time).format("YYYY-MM-DD HH:mm:ss")
           : undefined;
-        this.trackRecordForm.next_track_time = this.detail.next_track_time
+        this.trackRecordForm.next_track_time = detail.next_track_time
           ? dayjs
-              .unix(this.detail.next_track_time)
+              .unix(detail.next_track_time)
               .format("YYYY-MM-DD HH:mm:ss")
           : undefined;
-        this.trackRecordForm.contact_customer_name = this.detail.contact
-          ? this.detail.contact.name
+        this.trackRecordForm.contact_customer_name = detail.contact
+          ? detail.contact.name
           : "-";
+
+        // 让编辑照片显示(还有个bug删除需要后端一起配置)
+        this.trackRecordForm.image_attachment_list.forEach(el => {            
+          this.upload.detailList.push({         
+            uid: el.id,               
+            name: el.name,            
+            url:this.$Util.imageFilter(el.path),
+            thumbUrl: this.$Util.imageFilter(el.path),
+          })          
+        });
+        // 让编辑文件显示
+        this.trackRecordForm.file_attachment_list.forEach(el => {            
+          this.fileUpload.fileList.push({            
+            uid: el.id,
+            name: el.name,            
+            url:  Core.Const.NET.FILE_URL_PREFIX + el.path            
+          })          
+        });        
       }
 
       this.TrackRecordShow = true;
@@ -381,12 +401,15 @@ export default {
       return isCanUpType && isLt10M;
     },
     // 上传图片
-    handleCoverChange({ file, fileList }) {
+    handleCoverChange({ file, fileList }) {     
+      // 上传成功后在添加   
       if (file.status == "done") {
         if (file.response && file.response.code > 0) {
           return this.$message.error(file.response.message);
         }
         let imageAttachment = {
+          id: file.uid,
+          uid: file.uid,
           name: file.name,
           path: file.response.data.filename,
           type: file.response.data.filename.split(".").pop(),
@@ -398,16 +421,24 @@ export default {
         // }
         this.trackRecordForm.image_attachment_list.push(imageAttachment);
       }
+      // 删除的时候
+      if (file.status == "removed") {
+        this.trackRecordForm.image_attachment_list = this.trackRecordForm.image_attachment_list.filter(el => {        
+          return el.id != file.uid
+        })        
+      }
+            
       this.upload.detailList = fileList;
     },
     // 上传文件
-    handleFileChange({ file, fileList }) {
-      console.log("handleCoverChange status:", file.status, "file:", file);
+    handleFileChange({ file, fileList }) {            
       if (file.status == "done") {
         if (file.response && file.response.code > 0) {
           return this.$message.error(file.response.message);
         }
         let fileAttachment = {
+          id: file.uid,
+          uid: file.uid,
           name: file.name,
           path: file.response.data.filename,
           type: file.response.data.filename.split(".").pop(),
@@ -419,13 +450,21 @@ export default {
         // }
         this.trackRecordForm.file_attachment_list.push(fileAttachment);
       }
+
+      // 删除的时候
+      if (file.status == "removed") {
+        this.trackRecordForm.file_attachment_list = this.trackRecordForm.file_attachment_list.filter(el => {        
+             return el.id != file.uid
+        })        
+      }
+
       this.fileUpload.fileList = fileList;
     },
     // 添加商品
     handleAddCustomerShow(ids, items) {
       this.trackRecordForm.contact_customer_id = items[0].id;
       this.trackRecordForm.contact_customer_name = items[0].name;
-    },
+    }   
   },
 };
 </script>
