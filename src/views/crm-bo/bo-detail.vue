@@ -25,9 +25,12 @@
                     </div>
                 </div>
                 <a-row class="desc-detail">
+                    <!-- 客户名称 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.customer_name') }}：</span>
-                        <span class="value">{{detail.customer_name}}</span>
+                        <router-link target="_blank" :to="{ path: '/crm-customer/customer-detail', query: { id: detail.customer_id } }">
+                            {{detail.customer_name}}
+                        </router-link>                        
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.money') }}：</span>
