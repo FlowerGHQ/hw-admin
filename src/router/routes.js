@@ -1598,7 +1598,7 @@ const routes = [
 					title: '区域客户',
 					title_en: 'Regional Customers',
 					type: 'region',
-					auth: ["crm-customer.list"],
+					auth: ['MANAGER_GROUP','MANAGER'],
 				}
 			},
 			{
