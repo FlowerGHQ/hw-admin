@@ -109,17 +109,21 @@ export default {
                         break;
                 } */
                 Core.Data.setUserType(loginType);
-                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin);
+                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
             });
         },
 
-        async getAuthority(userId, userType, loginType, roleId, flag_admin) {
+        async getAuthority(userId, userType, loginType, roleId, flag_admin, flagGroupCustomerAdmin) {
             Core.Data.setAuthority('')
             let authorityMap = {}
             authorityMap[loginType] = true
             if (flag_admin) {
                 authorityMap['MANAGER'] = true
             }
+            if (flagGroupCustomerAdmin){
+                authorityMap['MANAGER_GROUP'] = true
+            }
+
             Core.Api.Authority.authUserAll({
                 user_id: userId,
                 user_type: userType
