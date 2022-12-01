@@ -131,7 +131,7 @@
             :xs='24' 
             :sm='24' 
             :xl="8" 
-            :xxl='8'  
+            :xxl='6'  
             class="search-item">
               <div class="key">{{ $t('crm_c.group') }}：</div>
               <div class="value">
@@ -141,6 +141,7 @@
                     :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                     :tree-data="groupOptions"
                     tree-default-expand-all
+                    allowClear
                   />                  
               </div>
           </a-col>
@@ -451,6 +452,7 @@
 </template>
 
 <script>
+import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
 export default {
@@ -625,7 +627,7 @@ export default {
   },
   mounted() {
     this.getUserData();
-    this.getTableData();
+    this.getTableData();    
   },
   methods: {
     moreSearch() {
@@ -928,12 +930,10 @@ export default {
       }
     },
     handleCreateUserSearch(name) {
-      // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
+      // 创建人条件搜索 下拉框    
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleGroupTree() {
       Core.Api.CRMGroupMember.structureByUser({}).then((res) => {
@@ -949,6 +949,16 @@ export default {
         item.flag_eyes = true;
       });
     },
+
+    /*接口*/
+    // 创建人条件数据
+    createUserFetch(params = {}){
+      Core.Api.CRMOrder.createUser({
+        ...params
+      }).then((res) => {       
+        this.createUserOptions = res.list;
+      });
+    }
   },
 };
 </script>
