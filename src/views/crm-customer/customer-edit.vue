@@ -41,7 +41,7 @@
                 <div class="form-item required with-btn" >
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && detail.phone != undefined) ||  form.country_code == undefined"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && detail.phone) ||  form.country_code == undefined"/>
 
                         <div class="btn">
                             <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
@@ -55,7 +55,7 @@
                 <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && detail.email != undefined"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && detail.email ||  form.country_code == undefined"/>
                         <div class="btn">
                             <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
@@ -341,6 +341,7 @@ export default {
                 address: '',
                 country_code: '',
                 phone_country_code: '',
+                email:''
             },
             detail: {
                 id: '',
