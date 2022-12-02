@@ -232,9 +232,7 @@
           </a-col>
         </a-row>
         <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
+          <a-button @click="handleSearch" type="primary">{{$t("def.search")}}</a-button>
           <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
         </div>
       </div>
@@ -542,7 +540,8 @@ export default {
         type: 0,
         status: undefined,
         search_type: undefined,
-        group_id: undefined
+        group_id: undefined,
+        create_user_id: undefined,
       },
       batchForm: {
         group_id: undefined,
@@ -737,8 +736,8 @@ export default {
       }
       this.pageChange(1);
     },
+    // 重置搜索
     handleSearchReset() {
-      // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       if (this.operMode === "private") {
         this.searchForm.status = this.CRM_STATUS.CUSTOMER;

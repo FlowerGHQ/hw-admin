@@ -214,6 +214,7 @@ export default {
                 begin_time: '',
                 end_time: '',
                 type: '',
+                own_user_id: undefined
             },
             batchForm: {
                 own_user_id: '',

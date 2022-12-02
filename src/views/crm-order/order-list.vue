@@ -404,6 +404,7 @@ export default {
         begin_time: "",
         end_time: "",
         type: "",
+        create_user_id:undefined
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
