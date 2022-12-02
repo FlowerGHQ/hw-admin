@@ -28,10 +28,11 @@
                                         <div class="line">{{ item.content }}</div>
                                     </div>
                                 </a-col>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intent != undefined">
-                                    <div class="content">
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intent">
+                                <!-- 意向程度 -->
+                                    <div class="content">                                        
                                         <div class="line grey">{{$t('crm_t.intent')}}:</div>
-                                        <div class="line">{{$Util.CRMTrackRecordIntentFilter( item.intent) }}</div>
+                                        <div class="line">{{$Util.CRMTrackRecordIntentFilter( item.intent,lang,DEGREE_INTENT) }}</div>
                                     </div>
                                 </a-col>
                             </a-row>
@@ -126,7 +127,7 @@ export default {
     },
     data() {
         return {
-
+            DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
             loginType: Core.Data.getLoginType(),
             user: Core.Data.getUser(),
             // 加载

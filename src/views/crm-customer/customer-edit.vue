@@ -103,38 +103,61 @@
                 <div class="title-colorful">{{ $t('crm_c.extended_information') }}</div>
             </div>
             <div class="form-content key130">
+                <!-- 客户级别 -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
-
                 </div>
+
+                <!-- 意向程度 -->                
+                <!-- <div class="form-item">
+                    <div class="key">{{ $t("crm_t.intent") }}</div>
+                    <div class="value">
+                        <a-select  
+                            v-model:value="form.intent"                      
+                            :placeholder="$t('def.select')"
+                            allowClear
+                        >
+                            <a-select-option
+                                v-for="item of DEGREE_INTENT"
+                                :key="item.key"
+                                :value="item.value"
+                                >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                                >
+                        </a-select>
+                    </div>
+                </div> -->
+
+                <!-- 购物意向 -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.purchase_intent') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_PURCHASE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
 
                 </div>
+
+                <!-- 试驾意向 -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.test_drive_intent') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.test_drive_intent" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.test_drive_intent" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_TEST_DRIVE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
 
                 </div>
-
+                <!-- 客户来源 -->
                 <div class="form-item with-btn">
                     <div class="key">{{ $t('crm_c.crm_dict_id') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" allowClear>
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
                         <div class="btn">
@@ -249,7 +272,16 @@
 
         <div class="form-btns">
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{ $t('def.sure') }}</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
+             <a-popconfirm
+                title="你确定关闭当前窗口吗？"
+                :visible="windowsVisible"
+                ok-text="确定"
+                cancel-text="取消"                
+                @confirm="windowsConfirm"
+                @cancel="windowsVisible = false"
+                >                
+                <a-button @click="routerChange()" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
+            </a-popconfirm>
         </div>
         <template class="modal-container">
             <a-modal v-model:visible="sourceModalShow" :title="sourceForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleSourceModalClose">
@@ -300,7 +332,7 @@ export default {
     components: { ChinaAddressCascader, CountryCascader, AddressCascader, CustomerSelect, LabelSelect},
     props: {},
     data() {
-        return {
+        return {            
             CATEGORY: Core.Const.CRM_LABEL.CATEGORY,
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
@@ -313,7 +345,7 @@ export default {
             CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
             CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
             CRM_COMPANY_SIZE_MAP: Core.Const.CRM_CUSTOMER.COMPANY_SIZE_MAP,
-
+            // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -341,7 +373,8 @@ export default {
                 address: '',
                 country_code: '',
                 phone_country_code: '',
-                email:''
+                email:'',
+                intent:''
             },
             detail: {
                 id: '',
@@ -408,7 +441,8 @@ export default {
             labelIdList: [],
             groupOptions: [],
 
-            phoneCountryCodeList: []  //手机号地区
+            phoneCountryCodeList: [],  //手机号地区
+            windowsVisible: false, // 关闭当前窗口布尔值
         };
     },
     watch: {},
@@ -441,11 +475,12 @@ export default {
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
-        routerChange(type, item) {
-            switch (type) {
-                case 'back':    // 详情
-                    this.$router.go(-1)
-            }
+        routerChange(type) {
+            this.windowsVisible = true            
+        },
+        // 关闭窗口二次确认
+        windowsConfirm(){
+            window.close()
         },
         getCustomerDetail() {
             this.loading = true;
@@ -468,7 +503,6 @@ export default {
                 this.handleContinentSelect(this.defAreaContinent);
                 this.handleAddressSelect(this.defAddr);
 
-
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -488,7 +522,7 @@ export default {
                 }
             }
 
-            console.log("areaContinent", areaContinent)
+            // console.log("areaContinent", areaContinent)
             if (!form.country_code) {
                 return this.$message.warning(this.$t('n.choose') + ":" + this.$t('crm_c.phone_country_code') )
             }
@@ -510,7 +544,7 @@ export default {
             }*/
             form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
 
-            console.log('form',this.form)
+            // console.log('form',this.form)
             // if (!Core.Util.isEmptyObj(this.defAddr)) {
             //     console.log('areaMap2222',this.defAddr)
             //     area.country = this.defAddr.country
@@ -528,8 +562,10 @@ export default {
                 ...areaContinent,
                 label_id_list: this.labelIdList,
             }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('back')
+                this.$message.success(this.$t('pop_up.save_success'))                
+                setTimeout(() => {
+                    window.close()
+                },1000)
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })

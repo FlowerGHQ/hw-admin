@@ -954,8 +954,12 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-	CRMTrackRecordIntentFilter(val,  to='zh') {
-		const MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+	CRMTrackRecordIntentFilter(val,  to='zh',selectList) {
+        /* selectList 传需要转换的数据*/
+		let MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+        if(selectList){
+            MAP = selectList
+        }
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},

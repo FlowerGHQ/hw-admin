@@ -144,13 +144,15 @@
           <a-select
             v-model:value="trackRecordForm.intent"
             :placeholder="$t('def.select')"
+            allowClear
           >
             <a-select-option
-              v-for="item of INTENT_MAP"
+              v-for="item of DEGREE_INTENT"
               :key="item.key"
               :value="item.value"
-              >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
-            >
+              >
+              {{ lang === "zh" ? item.zh : item.en }}
+            </a-select-option>
           </a-select>
         </div>
       </div>
@@ -241,6 +243,7 @@ export default {
       TYPE_MAP: Core.Const.CRM_TRACK_RECORD.TYPE_MAP,
       INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+      DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
 
       loginType: Core.Data.getLoginType(),
       // 加载
@@ -252,7 +255,7 @@ export default {
         content: "",
         contact_customer_id: "",
         track_time: undefined,
-        intent: "",
+        intent: undefined,
         next_track_time: undefined,
         next_track_plan: undefined,
         image_attachment_list: [],
@@ -296,11 +299,12 @@ export default {
   methods: {
     handleModalShow() {      
       if (this.detail) {
-        let detail = Core.Util.deepCopy(this.detail); // 深拷贝防止影响结果        
+        let detail = Core.Util.deepCopy(this.detail); // 深拷贝防止影响结果            
         // 点击编辑执行这里面语句
         for (const key in this.trackRecordForm) {
           this.trackRecordForm[key] = detail[key];
         }        
+        this.trackRecordForm['intent'] = detail['intent']?detail['intent']:undefined  // 这返回的数据有 0 的情况（意向程度）
         this.trackRecordForm.track_time = detail.track_time
           ? dayjs.unix(detail.track_time).format("YYYY-MM-DD HH:mm:ss")
           : undefined;
