@@ -170,6 +170,31 @@
               </a-select>
             </div>       
           </a-col> -->
+          <!-- 来源类型 -->
+          <a-col 
+           v-if="show" 
+           :xs='24' 
+           :sm='24' 
+           :xl="8" 
+           :xxl='6'  
+           class="search-item">
+            <div class="key">{{$t('crm_c.source_type')}}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.source_type"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <a-select-option
+                  v-for="item of SOURCE_TYPE_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >
+                  {{ lang === "zh" ? item.zh : item.en }}
+                </a-select-option>
+              </a-select>
+            </div>       
+          </a-col>
           <!-- 创建时间 -->
           <a-col
             :xs="24"
@@ -504,6 +529,7 @@ export default {
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
       // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, // 意向程度list
       total: 0,
       orderByFields: {},
       // 搜索

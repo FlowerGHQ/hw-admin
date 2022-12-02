@@ -70,9 +70,10 @@
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
+                    <!-- 标签展示 -->
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
-                        <span class="value">
+                        <span class="value" style="overflow: initial; white-space: normal;">
                             <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"/>
                         </span>
                     </a-col>
@@ -487,11 +488,10 @@ export default {
                 target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER,
             }).then(res => {
                 this.trackMemberDetail = res.detail
-                console.log("trackMemberDetail", this.trackMemberDetail);
+                // console.log("trackMemberDetail", this.trackMemberDetail);
             })
         },
         getCRMTrackRecord(){
-            console.log("getTrackRecord");
             this.$refs.CRMTrackRecord.getTableData();
         },
         getCrmActionRecordTableData(){

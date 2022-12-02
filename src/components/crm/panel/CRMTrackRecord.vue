@@ -17,7 +17,7 @@
                             <div class="top">
                                 <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
                                 <span class="item-time" v-if="item.create_user_id === user.id">
-                                    <FollowUpShow btnType="link" :targetId="targetId" :targetType="targetType" :detail="item" @submit="getTableData"><i class="icon i_edit"  /></FollowUpShow>
+                                    <FollowUpShow ref="followUp" btnType="link" :targetId="targetId" :targetType="targetType" :detail="item" @submit="getTableData"><i class="icon i_edit"  /></FollowUpShow>
                                     <a class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></a>
                                 </span>
                             </div>
@@ -236,6 +236,10 @@ export default {
             let url = Core.Const.NET.FILE_URL_PREFIX + record.path
             window.open(url, '_self')
         },
+        // 父组件调用刷新数据
+        onUpdate(){
+
+        }
     }
 };
 </script>

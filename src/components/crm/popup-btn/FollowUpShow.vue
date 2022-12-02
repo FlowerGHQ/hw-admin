@@ -183,7 +183,13 @@
           >
         </div>
       </div>
-
+      <!-- 标签展示 -->
+      <div class="form-item textarea">
+          <div class="key">{{ $t('sl.show') }}：</div>  
+          <div class="value">			
+				<LabelList  :targetId="$route.query.id" :targetType="CUSTOMER"/>
+          </div>
+      </div>
       <template #footer>
         <!-- 确定按钮 -->
         <a-button @click="handleTrackRecordSubmit" type="primary">{{
@@ -203,12 +209,13 @@ import Core from "../../../core";
 import dayjs from "dayjs";
 import { get } from "lodash";
 import CustomerSelect from "@/components/crm/popup-btn/CustomerSelect.vue";
+import LabelList from '@/components/crm/common/LabelList.vue';
 
 const WAYBILL = Core.Const.WAYBILL;
 
 export default {
   name: "FollowUpShow",
-  components: { CustomerSelect },
+  components: { CustomerSelect,LabelList },
   props: {
     btnText: {
       type: String,
@@ -244,7 +251,7 @@ export default {
       INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
       DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
-
+	  CUSTOMER:Core.Const.CRM_LABEL.CATEGORY.CUSTOMER,
       loginType: Core.Data.getLoginType(),
       // 加载
       loading: false,
@@ -371,14 +378,15 @@ export default {
       })
         .then(() => {
           this.$message.success(this.$t("pop_up.save_success"));
-          this.handleTrackRecordClose();
+          this.handleTrackRecordClose();	
           this.$emit("submit");
+		  location.reload();	  
         })
         .catch((err) => {
           console.log("handleSubmit err:", err);
         });
     },
-    handleTrackRecordClose() {
+    handleTrackRecordClose() {		
       this.TrackRecordShow = false;
       Object.assign(this.trackRecordForm, this.$options.data().trackRecordForm);
       this.upload.detailList = []; // 清空上传照片数据

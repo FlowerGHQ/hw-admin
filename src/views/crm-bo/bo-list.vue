@@ -21,10 +21,28 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <!-- 负责人 -->
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                            <a-select
+                                v-model:value="searchForm.own_user_id"
+                                show-search
+                                :placeholder="$t('def.input')"
+                                :default-active-first-option="false"
+                                :show-arrow="false"
+                                :filter-option="false"
+                                :not-found-content="null"
+                                @search="handleOwnUserSearch"
+                            >
+                                <a-select-option
+                                v-for="item in ownUserOptions"
+                                :key="item.user.id"
+                                :value="item.user.id"
+                                >
+                                {{ item.user.account.name }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
@@ -169,7 +187,7 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
-
+import { take, uniqBy } from 'lodash'
 export default {
     name: 'CustomerList',
     components: {
@@ -211,6 +229,7 @@ export default {
             detail: [],
             groupOptions: [],
             group_id: undefined,
+            ownUserOptions: [], // 负责人
         };
     },
     watch: {},
@@ -259,8 +278,32 @@ export default {
     mounted() {
         this.getGroupStatusDetail()
         this.getTableData();
+        this.ownUserFetch()
     },
     methods: {
+        /* 接口 */
+        // 负责人接口
+        ownUserFetch(params = {}){
+            Core.Api.CRMTrackMember.joinUserList({
+                type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO,
+                ...params
+            }).then((res) => {
+                console.log('测试', res);
+                if(this.$Util.isEmptyObj(params)){                                    
+                    this.ownUserOptions = take(res.list, 50);
+                }else{
+                    this.ownUserOptions = res.list;          
+                }          
+            });
+        },
+        /*methods*/
+        // 负责人事件
+         handleOwnUserSearch(name) {             
+            this.ownUserFetch({
+                name: name,
+            })
+        },
         moreSearch(){
             this.show = !this.show
         },
