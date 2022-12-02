@@ -37,10 +37,10 @@
                             >
                                 <a-select-option
                                 v-for="item in ownUserOptions"
-                                :key="item.user.id"
-                                :value="item.user.id"
+                                :key="item.user_id"
+                                :value="item.user_id"
                                 >
-                                {{ item.user.account.name }}
+                                {{ item.name }}
                                 </a-select-option>
                             </a-select>
                         </div>
