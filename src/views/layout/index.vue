@@ -376,9 +376,9 @@ export default {
 
 
         handleWindowResize(e) {
-            console.log('handleWindowResize e:', e)
+            // console.log('handleWindowResize e:', e)
 
-            console.log('window.innerWidth:', window.innerWidth)
+            // console.log('window.innerWidth:', window.innerWidth)
             if (window.innerWidth <= 830) {
                 this.collapsed = true
             }
