@@ -33,6 +33,7 @@
                                 :show-arrow="false"
                                 :filter-option="false"
                                 :not-found-content="null"
+                                allowClear
                                 @search="handleOwnUserSearch"
                             >
                                 <a-select-option
@@ -48,7 +49,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.status') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
+                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" allowClear @change="handleSearch">
                                 <a-select-option v-for="(item,index) of groupStatusTableData" :key="index" :value="index">{{ lang==='zh' ? item.zh: item.en }}</a-select-option>
                             </a-select>
                         </div>

@@ -163,6 +163,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -311,6 +312,7 @@
 <script>
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
+import { take} from 'lodash'
 export default {
   name: "OrderList",
   components: {
@@ -425,8 +427,23 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.createUserFetch()
   },
   methods: {
+    /* 接口 */
+    // 创建人接口
+    createUserFetch(params = {}){       
+        Core.Api.CRMOrderIncome.createUser({
+            ...params         
+        }).then((res) => {
+          // console.log('测试', res);
+            if(this.$Util.isEmptyObj(params)){
+                this.createUserOptions = take(res.list, 50);
+            }else{
+                this.createUserOptions = res.list;          
+            }          
+        });
+    },
     moreSearch() {
       this.show = !this.show;
     },
@@ -537,12 +554,10 @@ export default {
       this.getTableData();
     },
     handleCreateUserSearch(name) {
-      // 创建人条件搜索 下拉框
-      Core.Api.CRMOrderIncome.createUser({
+      // 创建人条件搜索 下拉框     
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleDelete(id) {
       let _this = this;

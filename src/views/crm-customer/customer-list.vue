@@ -84,7 +84,8 @@
                 :default-active-first-option="false"
                 :show-arrow="false"
                 :filter-option="false"
-                :not-found-content="null"                
+                :not-found-content="null"    
+                allowClear            
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -145,8 +146,8 @@
                   />                  
               </div>
           </a-col>
-          <!-- 意向程度 不确定加不加-->
-          <!-- <a-col 
+          <!-- 意向程度 -->
+          <a-col 
            v-if="show" 
            :xs='24' 
            :sm='24' 
@@ -156,7 +157,7 @@
             <div class="key">{{$t('crm_t.intent')}}:</div>
             <div class="value">
               <a-select
-                v-model:value="searchForm.intent"
+                v-model:value="searchForm.purchase_intent"
                 :placeholder="$t('def.select')"
                 allowClear
               >
@@ -169,7 +170,7 @@
                 </a-select-option>
               </a-select>
             </div>       
-          </a-col> -->
+          </a-col>
           <!-- 来源类型 -->
           <a-col 
            v-if="show" 
@@ -283,15 +284,19 @@
           :row-selection="rowSelection"
           @change="getTableDataSorter"
         >
-          <template #headerCell="{ title }">
+          <template #headerCell="{ column,title }">
             {{ $t(title) }}
+            <template v-if="column.key == 'operation'">         
+            </template>
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
               <a-tooltip placement="top" :title="text">
-                <a-button type="link" @click="routerChange('detail', record)">{{
-                  text || "-"
-                }}</a-button>
+                <a-button type="link" @click="routerChange('detail', record)">
+                  <span :class="{nameStyle: nameBoolean(record)}">                    
+                    {{text || "-"}}
+                  </span>
+                </a-button>
               </a-tooltip>
             </template>
             <template v-if="column.key === 'item'">
@@ -356,9 +361,9 @@
               >
             </template>
             <!-- 意向程度 -->
-            <!-- <template v-if="column.name === 'intent'">
-              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) }}
-            </template> -->
+            <template v-if="column.name === 'intent'">
+              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) || '_' }}
+            </template>
             <template v-if="column.type === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
@@ -526,8 +531,8 @@ export default {
       CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
-      // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
-      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, // 意向程度list
+      DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, 
       total: 0,
       orderByFields: {},
       // 搜索
@@ -542,6 +547,7 @@ export default {
         search_type: undefined,
         group_id: undefined,
         create_user_id: undefined,
+        purchase_intent: undefined
       },
       batchForm: {
         group_id: undefined,
@@ -560,6 +566,7 @@ export default {
       group_id: undefined,
       groupOptions: [],
       detail: {},
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
     };
   },
   watch: {
@@ -569,9 +576,12 @@ export default {
       handler(newRoute) {
         let type = newRoute.meta ? newRoute.meta.type : "";
         this.operMode = type;
-        this.handleSearchReset(false);
-        // this.getUserData()
-        // this.getTableData();
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
       },
     },
   },
@@ -638,12 +648,12 @@ export default {
           sorter: true,
         },
         // 意向程度
-        // {
-        //   title:"crm_t.intent",
-        //   dataIndex: "intent",
-        //   key:'intent',
-        //   name:'intent'
-        // },
+        {
+          title:"crm_t.intent",
+          dataIndex: "purchase_intent",
+          key:'intent',
+          name:'intent'
+        },
         {
           title: "d.update_time",
           dataIndex: "update_time",
@@ -684,14 +694,20 @@ export default {
     },
     lang() {
       return this.$store.state.lang;
-    },
+    }    
   },
-  mounted() {
+  mounted() {    
     this.getUserData();
-    this.getTableData(); 
     this.createUserFetch(); // 创建人数据初始化  
+    this.getTableData(); 
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
     moreSearch() {
       this.show = !this.show;
       this.handleGroupTree()
@@ -699,7 +715,10 @@ export default {
     routerChange(type, item = {}) {
       let routeUrl = "";
       switch (type) {
-        case "detail": // 编辑
+        case "detail": // 编辑          
+          if(!this.$Util.isEmptyObj(item)){
+            this.nameColor.push({ id: item.id})
+          }
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
             query: { id: item.id },
@@ -715,14 +734,16 @@ export default {
           break;
       }
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
@@ -768,6 +789,7 @@ export default {
         page_size: this.pageSize,
       })
         .then((res) => {
+          console.log("测试", res);
           this.total = res.count;
           this.tableData = res.list;
           // 切换的时候清除 // table的选择
@@ -1049,5 +1071,8 @@ export default {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>

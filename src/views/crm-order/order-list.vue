@@ -70,6 +70,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleOwnUserSearch"
               >
                 <a-select-option
@@ -157,6 +158,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleCreateUserSearch"
               >
                 <a-select-option

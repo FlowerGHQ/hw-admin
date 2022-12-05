@@ -7,7 +7,7 @@
         <a-descriptions :title="$t('n.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('n.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.level')" class="label">{{$Util.CRMCustomerLevelFilter(detail.level, $i18n.locale)}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.purchase_intent')" class="label">{{$Util.CRMCustomerPurchaseIntentFilter(detail.purchase_intent, $i18n.locale)}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_t.intent')" class="label">{{$Util.CRMTrackRecordIntentFilter(detail.purchase_intent,lang,Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.test_drive_intent')" class="label">{{$Util.CRMCustomerTestDriveIntentFilter(detail.test_drive_intent, $i18n.locale)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('n.source')" class="label">{{$i18n.locale === 'zh'?detail.source:detail.source_en}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.industry')" class="label">{{$Util.CRMCustomerIndustryFilter(detail.industry, $i18n.locale)}}</a-descriptions-item>
@@ -80,7 +80,7 @@ export default {
         }
 
     },
-    data() {
+    data() {        
         return {
             Core,
             USER_TYPE,
