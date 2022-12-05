@@ -84,7 +84,8 @@
                 :default-active-first-option="false"
                 :show-arrow="false"
                 :filter-option="false"
-                :not-found-content="null"                
+                :not-found-content="null"    
+                allowClear            
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -289,9 +290,11 @@
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
               <a-tooltip placement="top" :title="text">
-                <a-button type="link" @click="routerChange('detail', record)">{{
-                  text || "-"
-                }}</a-button>
+                <a-button type="link" @click="routerChange('detail', record)">
+                  <span :class="{nameStyle: nameBoolean(record)}">                    
+                    {{text || "-"}}
+                  </span>
+                </a-button>
               </a-tooltip>
             </template>
             <template v-if="column.key === 'item'">
@@ -560,6 +563,7 @@ export default {
       group_id: undefined,
       groupOptions: [],
       detail: {},
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
     };
   },
   watch: {
@@ -569,9 +573,12 @@ export default {
       handler(newRoute) {
         let type = newRoute.meta ? newRoute.meta.type : "";
         this.operMode = type;
-        this.handleSearchReset(false);
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
         // this.getUserData()
-        // this.getTableData();
       },
     },
   },
@@ -684,14 +691,20 @@ export default {
     },
     lang() {
       return this.$store.state.lang;
-    },
+    }    
   },
-  mounted() {
+  mounted() {    
     this.getUserData();
-    this.getTableData(); 
     this.createUserFetch(); // 创建人数据初始化  
+    this.getTableData(); 
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
     moreSearch() {
       this.show = !this.show;
       this.handleGroupTree()
@@ -699,7 +712,10 @@ export default {
     routerChange(type, item = {}) {
       let routeUrl = "";
       switch (type) {
-        case "detail": // 编辑
+        case "detail": // 编辑          
+          if(!this.$Util.isEmptyObj(item)){
+            this.nameColor.push({ id: item.id})
+          }
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
             query: { id: item.id },
@@ -715,14 +731,16 @@ export default {
           break;
       }
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
@@ -1049,5 +1067,8 @@ export default {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>
