@@ -1634,6 +1634,17 @@ let Const = {
 			'20': { key: 20, zh: '一般',en: 'General', value: 20 },
 			'30': { key: 30, zh: '低',en: 'Low', value: 30 },
 		},
+        DEGREE_INTENT:{
+            '10': { key: 10, zh: '未接',en: 'Missed', value: 10 },
+            '20': { key: 20, zh: '挂断',en: 'Hang up', value: 20 },
+            '30': { key: 30, zh: '拒绝加微信',en: 'Refuse to add Wechat', value: 30 },
+            '40': { key: 40, zh: '仅加微信',en: 'Add Wechat only', value: 40 },
+            '50': { key: 50, zh: '寻求合作',en: 'Seek cooperation', value: 50 },
+            '60': { key: 60, zh: '很感兴趣会关注',en: 'will follow', value: 60 },
+            '70': { key: 70, zh: '已支付订金',en: 'Deposit paid', value: 70 },
+            '80': { key: 80, zh: '已试驾',en: 'Test drive', value: 80 },
+            '90': { key: 90, zh: '已购',en: 'Purchased', value: 90 },
+        },
 		TARGET_TYPE: {
 			CUSTOMER: 1,
 			BO: 2,

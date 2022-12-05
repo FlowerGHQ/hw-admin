@@ -679,8 +679,8 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-member/delete'],//
 		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
 		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
-		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
-
+		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//                
+        joinUserList:['PostJson', 'crm-track-member/join-user-list'], // 负责人列表
 	},
 	CRMLabel:{//CRM 标签
 		save: ['PostJson', 'crm-label/save'],//

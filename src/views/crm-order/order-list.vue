@@ -74,10 +74,10 @@
               >
                 <a-select-option
                   v-for="item in ownUserOptions"
-                  :key="item.user.id"
-                  :value="item.user.id"
+                  :key="item.user_id"
+                  :value="item.user_id"
                 >
-                  {{ item.user.account.name }}
+                  {{ item.name }}
                 </a-select-option>
               </a-select>
             </div>
@@ -371,7 +371,7 @@
 <script>
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
-
+import { take } from 'lodash'
 export default {
   name: "OrderList",
   components: {
@@ -404,6 +404,7 @@ export default {
         begin_time: "",
         end_time: "",
         type: "",
+        create_user_id:undefined
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
@@ -526,8 +527,37 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.ownUserFetch()
+    this.createUserFetch()
   },
   methods: {
+    /* 接口 */
+    // 负责人接口
+    ownUserFetch(params = {}){
+        Core.Api.CRMTrackMember.joinUserList({
+          type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
+          target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.ownUserOptions = take(res.list, 50);
+            }else{
+                this.ownUserOptions = res.list;          
+            }          
+        });
+    },
+    // 创建人接口
+    createUserFetch(params = {}){       
+        Core.Api.CRMOrder.createUser({
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.createUserOptions = take(res.list, 50);
+            }else{
+                this.createUserOptions = res.list;          
+            }          
+        });
+    },
     moreSearch() {
       this.show = !this.show;
     },
@@ -629,21 +659,15 @@ export default {
     },
     handleOwnUserSearch(name) {
       // 负责人条件搜索 下拉框
-      Core.Api.CRMTrackMember.list({
-        type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
-        target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+      this.ownUserFetch({        
         name: name,
-      }).then((res) => {
-        this.ownUserOptions = res.list;
-      });
+      })
     },
     handleCreateUserSearch(name) {
       // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleDelete(id) {
       let _this = this;

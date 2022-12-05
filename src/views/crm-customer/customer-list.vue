@@ -84,7 +84,7 @@
                 :default-active-first-option="false"
                 :show-arrow="false"
                 :filter-option="false"
-                :not-found-content="null"
+                :not-found-content="null"                
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -131,7 +131,7 @@
             :xs='24' 
             :sm='24' 
             :xl="8" 
-            :xxl='8'  
+            :xxl='6'  
             class="search-item">
               <div class="key">{{ $t('crm_c.group') }}：</div>
               <div class="value">
@@ -141,8 +141,59 @@
                     :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
                     :tree-data="groupOptions"
                     tree-default-expand-all
+                    allowClear
                   />                  
               </div>
+          </a-col>
+          <!-- 意向程度 不确定加不加-->
+          <!-- <a-col 
+           v-if="show" 
+           :xs='24' 
+           :sm='24' 
+           :xl="8" 
+           :xxl='6'  
+           class="search-item">
+            <div class="key">{{$t('crm_t.intent')}}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.intent"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <a-select-option
+                  v-for="item of DEGREE_INTENT"
+                  :key="item.key"
+                  :value="item.value"
+                  >
+                  {{ lang === "zh" ? item.zh : item.en }}
+                </a-select-option>
+              </a-select>
+            </div>       
+          </a-col> -->
+          <!-- 来源类型 -->
+          <a-col 
+           v-if="show" 
+           :xs='24' 
+           :sm='24' 
+           :xl="8" 
+           :xxl='6'  
+           class="search-item">
+            <div class="key">{{$t('crm_c.source_type')}}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.source_type"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <a-select-option
+                  v-for="item of SOURCE_TYPE_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >
+                  {{ lang === "zh" ? item.zh : item.en }}
+                </a-select-option>
+              </a-select>
+            </div>       
           </a-col>
           <!-- 创建时间 -->
           <a-col
@@ -181,9 +232,7 @@
           </a-col>
         </a-row>
         <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
+          <a-button @click="handleSearch" type="primary">{{$t("def.search")}}</a-button>
           <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
         </div>
       </div>
@@ -306,7 +355,10 @@
                 >{{ lang === "zh" ? item.label : item.label_en }}</a-tag
               >
             </template>
-
+            <!-- 意向程度 -->
+            <!-- <template v-if="column.name === 'intent'">
+              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) }}
+            </template> -->
             <template v-if="column.type === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
@@ -451,6 +503,7 @@
 </template>
 
 <script>
+import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
 export default {
@@ -473,6 +526,8 @@ export default {
       CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
+      // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, // 意向程度list
       total: 0,
       orderByFields: {},
       // 搜索
@@ -485,7 +540,8 @@ export default {
         type: 0,
         status: undefined,
         search_type: undefined,
-        group_id: undefined
+        group_id: undefined,
+        create_user_id: undefined,
       },
       batchForm: {
         group_id: undefined,
@@ -581,6 +637,13 @@ export default {
           key: "source_type",
           sorter: true,
         },
+        // 意向程度
+        // {
+        //   title:"crm_t.intent",
+        //   dataIndex: "intent",
+        //   key:'intent',
+        //   name:'intent'
+        // },
         {
           title: "d.update_time",
           dataIndex: "update_time",
@@ -625,7 +688,8 @@ export default {
   },
   mounted() {
     this.getUserData();
-    this.getTableData();
+    this.getTableData(); 
+    this.createUserFetch(); // 创建人数据初始化  
   },
   methods: {
     moreSearch() {
@@ -672,8 +736,8 @@ export default {
       }
       this.pageChange(1);
     },
+    // 重置搜索
     handleSearchReset() {
-      // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       if (this.operMode === "private") {
         this.searchForm.status = this.CRM_STATUS.CUSTOMER;
@@ -928,12 +992,10 @@ export default {
       }
     },
     handleCreateUserSearch(name) {
-      // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
+      // 创建人条件搜索 下拉框    
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleGroupTree() {
       Core.Api.CRMGroupMember.structureByUser({}).then((res) => {
@@ -949,6 +1011,20 @@ export default {
         item.flag_eyes = true;
       });
     },
+
+    /*接口*/
+    // 创建人条件数据
+    createUserFetch(params = {}){
+      Core.Api.CRMOrder.createUser({
+        ...params
+      }).then((res) => {
+        if(this.$Util.isEmptyObj(params)){
+          this.createUserOptions = take(res.list, 50);
+        }else{
+          this.createUserOptions = res.list;          
+        }
+      });
+    }
   },
 };
 </script>
