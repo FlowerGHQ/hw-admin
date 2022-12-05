@@ -146,8 +146,8 @@
                   />                  
               </div>
           </a-col>
-          <!-- 意向程度 不确定加不加-->
-          <!-- <a-col 
+          <!-- 意向程度 -->
+          <a-col 
            v-if="show" 
            :xs='24' 
            :sm='24' 
@@ -157,7 +157,7 @@
             <div class="key">{{$t('crm_t.intent')}}:</div>
             <div class="value">
               <a-select
-                v-model:value="searchForm.intent"
+                v-model:value="searchForm.purchase_intent"
                 :placeholder="$t('def.select')"
                 allowClear
               >
@@ -170,7 +170,7 @@
                 </a-select-option>
               </a-select>
             </div>       
-          </a-col> -->
+          </a-col>
           <!-- 来源类型 -->
           <a-col 
            v-if="show" 
@@ -284,8 +284,10 @@
           :row-selection="rowSelection"
           @change="getTableDataSorter"
         >
-          <template #headerCell="{ title }">
+          <template #headerCell="{ column,title }">
             {{ $t(title) }}
+            <template v-if="column.key == 'operation'">         
+            </template>
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
@@ -359,9 +361,9 @@
               >
             </template>
             <!-- 意向程度 -->
-            <!-- <template v-if="column.name === 'intent'">
-              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) }}
-            </template> -->
+            <template v-if="column.name === 'intent'">
+              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) || '_' }}
+            </template>
             <template v-if="column.type === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
@@ -529,8 +531,8 @@ export default {
       CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
-      // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
-      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, // 意向程度list
+      DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, 
       total: 0,
       orderByFields: {},
       // 搜索
@@ -545,6 +547,7 @@ export default {
         search_type: undefined,
         group_id: undefined,
         create_user_id: undefined,
+        purchase_intent: undefined
       },
       batchForm: {
         group_id: undefined,
@@ -578,7 +581,7 @@ export default {
         this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
         this.getTableData();
         // this.handleSearchReset(false);
-        // this.getUserData()
+        // this.getUserData();
       },
     },
   },
@@ -645,12 +648,12 @@ export default {
           sorter: true,
         },
         // 意向程度
-        // {
-        //   title:"crm_t.intent",
-        //   dataIndex: "intent",
-        //   key:'intent',
-        //   name:'intent'
-        // },
+        {
+          title:"crm_t.intent",
+          dataIndex: "purchase_intent",
+          key:'intent',
+          name:'intent'
+        },
         {
           title: "d.update_time",
           dataIndex: "update_time",
@@ -786,6 +789,7 @@ export default {
         page_size: this.pageSize,
       })
         .then((res) => {
+          console.log("测试", res);
           this.total = res.count;
           this.tableData = res.list;
           // 切换的时候清除 // table的选择

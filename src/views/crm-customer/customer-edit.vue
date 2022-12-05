@@ -38,6 +38,7 @@
                         </a-select>
                     </div>
                 </div>
+                <!-- 手机号 -->
                 <div class="form-item required with-btn" >
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
@@ -52,6 +53,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- 邮箱 -->
                 <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
@@ -114,11 +116,11 @@
                 </div>
 
                 <!-- 意向程度 -->                
-                <!-- <div class="form-item">
+                <div class="form-item">
                     <div class="key">{{ $t("crm_t.intent") }}</div>
                     <div class="value">
                         <a-select  
-                            v-model:value="form.intent"                      
+                            v-model:value="form.purchase_intent"                      
                             :placeholder="$t('def.select')"
                             allowClear
                         >
@@ -126,22 +128,22 @@
                                 v-for="item of DEGREE_INTENT"
                                 :key="item.key"
                                 :value="item.value"
-                                >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
                                 >
+                                {{ lang === "zh" ? item.zh : item.en }}
+                            </a-select-option>
                         </a-select>
                     </div>
-                </div> -->
+                </div>
 
                 <!-- 购物意向 -->
-                <div class="form-item">
+                <!-- <div class="form-item">
                     <div class="key">{{ $t('crm_c.purchase_intent') }}：</div>
                     <div class="value">
                         <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_PURCHASE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
-
-                </div>
+                </div> -->
 
                 <!-- 试驾意向 -->
                 <div class="form-item">
@@ -337,7 +339,7 @@ export default {
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_PURCHASE_INTENT_MAP: Core.Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP,
+            // CRM_PURCHASE_INTENT_MAP: Core.Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP, // 购买意向
             CRM_TEST_DRIVE_INTENT_MAP: Core.Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP,
             CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
             CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
@@ -345,7 +347,7 @@ export default {
             CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
             CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
             CRM_COMPANY_SIZE_MAP: Core.Const.CRM_CUSTOMER.COMPANY_SIZE_MAP,
-            // DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+            DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             // 加载
             loading: false,
@@ -356,7 +358,7 @@ export default {
                 phone: '',
                 level: '',
                 group_id: '',
-                purchase_intent: '',
+                // purchase_intent: '',
                 test_drive_intent: '',
                 crm_dict_id: '',
                 company_size: '',
@@ -374,7 +376,7 @@ export default {
                 country_code: '',
                 phone_country_code: '',
                 email:'',
-                intent:''
+                purchase_intent:''
             },
             detail: {
                 id: '',
@@ -382,8 +384,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
-                group_id: '',
-                purchase_intent: '',
+                group_id: '',                
                 test_drive_intent: '',
                 crm_dict_id: '',
                 company_size: '',
@@ -398,7 +399,7 @@ export default {
                 remark: '',
                 status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
-
+                purchase_intent:'',
                 phone_country_code: ''
             },
             defAddr: [],
