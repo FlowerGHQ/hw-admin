@@ -75,60 +75,85 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 380,
+                height: 218,
+                width: 600,
             });
-
+            chart.axis('value',{ // 隐藏y轴线
+                grid: {
+                    line: {
+                        type: 'line',
+                        style: {
+                            lineDash: [5, 5, 5] ,
+                        }
+                    }
+                }
+            })
             chart.data(data);
-            chart.scale('type', {
+            // chart.scale('type', {
+            //     nice: true,
+            // });
+            chart.scale('value', {
+                alias: '数量：',
                 nice: true,
             });
-            chart.coordinate('theta', {
-                radius: 0.75,
-                innerRadius: 0.6,
+            // chart.coordinate('theta', {
+            //     radius: 0.75,
+            //     innerRadius: 0.6,
+            // });
+            // chart.tooltip({
+            //     showTitle: false,
+            //     showMarkers: false,
+            //     itemTpl:
+            //         '<li style="margin-bottom:0px;list-style-type:none;padding: 0;">' +
+            //         '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
+            //         '数量：{value}<br/>' +
+            //         '名称：{name}<br/>' +
+            //         '</li>',
+            // });
+            chart.axis('type', {
+                tickLine: null
             });
             chart.tooltip({
-                showTitle: false,
-                showMarkers: false,
-                itemTpl:
-                    '<li style="margin-bottom:0px;list-style-type:none;padding: 0;">' +
-                    '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
-                    '数量：{value}<br/>' +
-                    '</li>',
+                showMarkers: false
             });
-            chart
-                .interval()
-                .adjust('stack')
-                .position('value')
-                .color('type')
-                .shape('slice-shape');
+            chart.interval().position('type*value').color('#2194ff')
+            // chart.interval()
+                // .adjust('stack')
+                // .position('value')
+                // .color('type')
+                // .shape('slice-shape');
 
-            chart.interaction('element-active');
-            chart
-                .annotation()
-                .text({
-                    position: ['50%', '56%'],
-                    content: 'Purchase Intention',
-                    style: {
-                        fontSize: 14,
-                        fill: '#000000',
-                        textAlign: 'center',
-                        fontWeight:900
-                    },
-                    offsetY: -20,
-                })
+            // chart.interaction('element-active');
+            // chart
+            //     .annotation()
+            //     .text({
+            //         position: ['50%', '56%'],
+            //         content: this.$t('crm_dash.purchase_intention_echarts'),
+            //         style: {
+            //             fontSize: 14,
+            //             fill: '#000000',
+            //             textAlign: 'center',
+            //             fontWeight:900
+            //         },
+            //         offsetY: -20,
+            //     })
             chart.render();
             this.boStatisticsChart = chart
         },
         testDriveIntentStatistics() {
             this.loading = true;
-            Core.Api.CRMDashboard.testDriveIntentStatistics({
+            Core.Api.CRMDashboard.purchaseIntentStatistics({
                 ...this.searchForm
             }).then(res => {
                 console.log('getTableData err', res)
                 // this.testDriveIntentList = res.list;
                 const dv = []
                 res.list.forEach(res => {
-                    dv.push({ type: this.$Util.CRMCustomerTestDriveIntentFilter(res.type, this.lang), value: res.value })
+                    if(res.type !== 0){
+                        if(res.type !== 40){
+                        dv.push({ type: this.$Util.CRMCustomerPurchaseIntentChartFilter(res.type, this.lang), value: res.value })
+                        }
+                    }
                 })
                 this.drawBoStatisticsChart(dv)
 

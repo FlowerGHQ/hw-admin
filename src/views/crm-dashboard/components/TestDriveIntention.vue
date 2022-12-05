@@ -96,9 +96,10 @@ export default {
                 showTitle: false,
                 showMarkers: false,
                 itemTpl:
-                    '<li style="margin-bottom:0px;list-style-type:none;padding: 0;">' +
+                    '<li style="margin-bottom:0px;list-style-type:none;padding: 0; height:40px">' +
                     '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
                     '数量：{value}<br/>' +
+                    '<span style="padding-left: 16px;line-height: 20px;">名称：{name}<br/></span>' +
                     '</li>',
             });
             chart
@@ -113,7 +114,8 @@ export default {
                 .annotation()
                 .text({
                     position: ['50%', '56%'],
-                    content: 'Test Drive intention',
+                    // content: 'Test Drive intention',
+                    content:this.$t('crm_dash.test_drive_intention_echarts'),
                     style: {
                         fontSize: 14,
                         fill: '#000000',
@@ -128,14 +130,16 @@ export default {
         },
         purchaseIntentStatistics() {
             this.loading = true;
-            Core.Api.CRMDashboard.purchaseIntentStatistics({
+            Core.Api.CRMDashboard.testDriveIntentStatistics({
                 ...this.searchForm
             }).then(res => {
                 console.log('getTableData err', res)
                 // this.testDriveIntentList = res.list;
                 const dv = []
                 res.list.forEach(res => {
-                    dv.push({ type: this.$Util.CRMCustomerPurchaseIntentFilter(res.type, this.lang), value: res.value })
+                    if(res.type !== 0){
+                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
+                    }
                 })
                 this.drawBoStatisticsChart(dv)
 
