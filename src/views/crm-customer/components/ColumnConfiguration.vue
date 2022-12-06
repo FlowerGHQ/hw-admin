@@ -7,42 +7,25 @@
         height:    ----- 外面可以设置
         options: checkbox的数据
     -->
-    <div id="content" :style="{width:width, height:height}">             
+    <div id="content" :style="{ width: width, height: height }">
         <div class="main">
             <div>
                 <!-- 标题 -->
                 <slot name="title">
                     <div class="title-line">
-                       <div class="title-style">{{title}}</div> 
-                    </div>                    
+                        <div class="title-style">{{ title }}</div>
+                    </div>
                 </slot>
                 <!-- 主要内容 -->
                 <slot name="select">
-                    <div class="select-config" :style="{height: contentHeight+'px'}">
-                         <a-checkbox-group v-model:value="CheckGroupValue">                                                        
-                                 <a-row v-if="options.length != 0">
-                                    <a-col :span="24">
-                                        <a-checkbox value="A">A</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="B">B</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="C">C</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="D">D</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="E">E</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="E">E</a-checkbox>
-                                    </a-col>
-                                    <a-col :span="24">
-                                        <a-checkbox value="E">E</a-checkbox>
-                                    </a-col>
-                                </a-row>
+                    <div class="select-config" :style="{ height: contentHeight + 'px' }">
+                        <a-checkbox-group v-model:value="CheckGroupValue" @change="handleCheckChange">
+                            <a-row v-if="options.length != 0">
+                                <a-col :span="24">
+                                    <a-checkbox v-for="item in checkBoxOptions"
+                                        :value="item.dataIndex">{{ $t(item.title) }}</a-checkbox>
+                                </a-col>
+                            </a-row>
                         </a-checkbox-group>
                     </div>
                 </slot>
@@ -52,8 +35,8 @@
         <div class="footer">
             <slot name="foot">
                 <div class="foot-style">
-                    <a-button type="primary" size="middle">保存</a-button>
-                    <a-button type="primary" size="middle">重置</a-button>
+                    <a-button type="primary" size="small" @click="submitCheck">保存</a-button>
+                    <a-button type="default" size="small">重置</a-button>
                 </div>
             </slot>
         </div>
@@ -65,16 +48,16 @@ import { ref } from "@vue/reactivity"
 import { computed, onMounted } from "@vue/runtime-core"
 
 const props = defineProps({
-    title:{
-        type:String,
-        default:'显示这些字段'
+    title: {
+        type: String,
+        default: '显示这些字段'
     },
-    width:{
-        type:String,
-        default: '200px'
+    width: {
+        type: String,
+        default: '240px'
     },
-    height:{
-        type:String,
+    height: {
+        type: String,
         default: '300px'
     },
     options: {
@@ -83,19 +66,46 @@ const props = defineProps({
     }
 })
 
-
+const emits = defineEmits(['configOptions'])
 
 /* data */
 const CheckGroupValue = ref([])
+/* 多选选项数组 */
+const checkBoxOptions = ref([])
 
+const isCheckOptions = ref([])
 /* computed */
 // 计算中间选择内容的高度
 const contentHeight = computed(() => {
-    return props.height.replace(/px/g,'') - 100
+    return props.height.replace(/px/g, '') - 100
 })
 
+// 选项改变的回调
+function handleCheckChange(){
+    console.log('CheckGroupValue:',CheckGroupValue.value);
+}
+
+// 保存配置
+function submitCheck(){
+    props.options.forEach( e =>{
+        CheckGroupValue.value.forEach( v =>{
+            if(v === e.dataIndex){
+                isCheckOptions.value.push(e)
+            }
+        })
+    })
+    emits('configOptions',isCheckOptions.value)
+}
+
 /* methods */
-onMounted(() => { })
+onMounted(() => {
+    console.log('options', props.options);
+    props.options.forEach(val => {
+        if (val.key !== 'operation') {
+            checkBoxOptions.value.push(val);
+        }
+    })
+})
 </script>
  
 <style lang='less' scoped>
@@ -110,36 +120,42 @@ onMounted(() => { })
     }
 
 */
-#content{ 
-   background-color:#ffffff;
-   border: 1px solid #f0f0f0;
-   border-radius: 5px;
-   .title-line{        
+#content {
+    background-color: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 5px;
+
+    .title-line {
         height: 40px;
         line-height: 40px;
         border-bottom: 1px solid #f0f0f0;
-        .title-style{
+
+        .title-style {
             padding-left: 12px;
             color: #6b778c;
             font-size: 12px;
         }
-   }
-   .select-config{
+    }
+
+    .select-config {
         width: 100%;
-        height: 200px;        
+        height: 200px;
         overflow-y: auto;
-        padding-left: 12px;          
-        .ant-checkbox-wrapper{
+        padding-left: 12px;
+
+        .ant-checkbox-wrapper {
             height: 40px;
             line-height: 40px;
-        }     
-   }
-   .foot-style{
-        display: flex; 
+            margin: 0;
+        }
+    }
+
+    .foot-style {
+        display: flex;
         align-items: center;
         justify-content: end;
         height: 60px;
         border-top: 1px solid #f0f0f0;
-   }
+    }
 }
 </style>  

@@ -328,7 +328,29 @@ export default {
       tableData: [],
     };
   },
-  watch: {},
+  watch: {
+    $route: {
+      deep: true,
+      immediate: true,
+      handler() {
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
+      },
+    },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -413,20 +435,21 @@ export default {
           break;
       }
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索

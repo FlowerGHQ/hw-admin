@@ -236,7 +236,9 @@
                   type="link"
                   @click="routerChange('detail', record)"
                   v-if="$auth('crm-order-income.detail')"
-                  >{{ text || "-" }}</a-button
+                  ><span :class="{nameStyle: nameBoolean(record)}">                    
+                    {{text || "-"}}
+                  </span></a-button
                 >
               </a-tooltip>
             </template>
@@ -321,6 +323,7 @@ export default {
   props: {},
   data() {
     return {
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
       loginType: Core.Data.getLoginType(),
       show: false,
       // 加载
@@ -355,7 +358,29 @@ export default {
       tableData: [],
     };
   },
-  watch: {},
+  watch: {
+    $route: {
+      deep: true,
+      immediate: true,
+      handler() {
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
+      },
+    },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -430,6 +455,12 @@ export default {
     this.createUserFetch()
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
     /* 接口 */
     // 创建人接口
     createUserFetch(params = {}){       
@@ -451,6 +482,9 @@ export default {
       let routeUrl = "";
       switch (type) {
         case "detail": // 详情
+          if(!this.$Util.isEmptyObj(item)){
+            this.nameColor.push({ id: item.id})
+          }
           routeUrl = this.$router.resolve({
             path: "/crm-order-income/order-income-detail",
             query: { id: item.id },
@@ -475,20 +509,21 @@ export default {
       }
     },
 
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -588,5 +623,8 @@ export default {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>

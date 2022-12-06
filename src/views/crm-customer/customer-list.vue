@@ -286,11 +286,11 @@
         >
           <template #headerCell="{ column,title }">
             {{ $t(title) }}
-            <template v-if="column.key == 'operation'">   
+            <!-- <template v-if="column.key == 'operation'">   
               <span style="font-size: 18px" @click="OnConfiguration">
                 <caret-up-outlined />                                                
               </span>      
-            </template>
+            </template> -->
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
@@ -398,7 +398,7 @@
           </template>
         </a-table>
         <!-- 表格列配置项选项 -->
-        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" :options="columnOptions"></ColumnConfiguration> 
+        <!-- <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :options="columnOptions"></ColumnConfiguration> -->
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -595,6 +595,15 @@ export default {
         // this.getUserData();
       },
     },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
   },
   computed: {
     tableColumns() {
@@ -759,7 +768,7 @@ export default {
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -1059,16 +1068,19 @@ export default {
     },
     /*methods*/
     // 配置表格列的名称
-    OnConfiguration(){
-      if(this.ConfigurationBool === false){
-        // this.columnOptions = this.tableColumns
-        this.ConfigurationBool = true
-      } else
-      if(this.ConfigurationBool === true){
-        // this.columnOptions = []
-        this.ConfigurationBool = false
-      }
-    },
+    // OnConfiguration(){
+    //   if(this.ConfigurationBool === false){
+    //     this.columnOptions = this.tableColumns
+    //     this.ConfigurationBool = true
+    //   } else
+    //   if(this.ConfigurationBool === true){
+    //     // this.columnOptions = []
+    //     this.ConfigurationBool = false
+    //   }
+    // },
+    // getConfigOptions(val){
+    //   this.columnOptions = val
+    // },
   },
 };
 </script>
@@ -1103,7 +1115,7 @@ export default {
    position:absolute;
    top: 40px;
    bottom: 0;  
-   right: 20px;   
+   right: 0px;   
    z-index: 999;
 }
 </style>
