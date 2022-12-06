@@ -98,8 +98,8 @@ export default {
                 itemTpl:
                     '<li style="margin-bottom:0px;list-style-type:none;padding: 0; height:40px">' +
                     '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
-                    '数量：{value}<br/>' +
-                    '<span style="padding-left: 16px;line-height: 20px;">名称：{name}<br/></span>' +
+                    '<span style="line-height: 20px;">名称：{name}<br/></span>' +
+                    '<span style="padding-left: 16px; line-height: 20px;">数量：{value}<br/></span>' +
                     '</li>',
             });
             chart

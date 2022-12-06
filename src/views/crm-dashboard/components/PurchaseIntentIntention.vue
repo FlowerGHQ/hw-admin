@@ -75,7 +75,7 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 218,
+                height: 260,
                 width: 600,
             });
             chart.axis('value',{ // 隐藏y轴线
@@ -92,10 +92,10 @@ export default {
             // chart.scale('type', {
             //     nice: true,
             // });
-            chart.scale('value', {
-                alias: '数量：',
-                nice: true,
-            });
+            // chart.scale('value', {
+            //     alias: '数量',
+            //     nice: true,
+            // });
             // chart.coordinate('theta', {
             //     radius: 0.75,
             //     innerRadius: 0.6,
@@ -114,9 +114,18 @@ export default {
                 tickLine: null
             });
             chart.tooltip({
-                showMarkers: false
+                showTitle:false,
+                showMarkers: false,
+                itemTpl:
+                    '<li style="margin-bottom:4px;list-style-type:none;padding: 0;">' +
+                    '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
+                    '{title}<br/>' +
+                    '<span style="padding-left: 16px;line-height: 30px;">数量：{value}</span><br/>' +
+                    '</li>',
             });
-            chart.interval().position('type*value').color('rgb(99,149,249)')
+            chart
+            .interval().position('type*value').color('rgb(99,149,249)')
+            .color('type',[ '#6395f9', '#657798', '#62daab'])
             // chart.interval()
                 // .adjust('stack')
                 // .position('value')

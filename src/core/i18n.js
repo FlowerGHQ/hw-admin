@@ -1200,7 +1200,7 @@ const messages = {
 		    source_type: '来源类型',
 		    last_track_time: '本次跟进时间',
 		    next_track_time: '下次跟进时间',
-
+            phone_country_code:'国家/地区',
 
 	    },
 	    crm_t: {
@@ -3191,6 +3191,7 @@ const messages = {
 		    source_type: 'Source Type',
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
+            phone_country_code:'Country/Region'
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
