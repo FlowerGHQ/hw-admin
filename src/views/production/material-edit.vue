@@ -20,7 +20,7 @@
                         <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='50'/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_category') }}</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
@@ -28,25 +28,25 @@
                             :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_code') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.code" :placeholder="$t('n.enter')+$t('m.material_code')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_spec') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.spec" :placeholder="$t('n.enter')+$t('m.material_spec')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.unit') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.unit" :placeholder="$t('n.enter')+$t('m.unit')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_picture') }}</div>
                     <div class="value">
                         <a-upload name="file" class="image-uploader"
@@ -61,13 +61,13 @@
                         </a-upload>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.boxes') }}</div>
                     <div class="value">
                         <a-input-number v-model:value="form.pack_count" :placeholder="$t('n.enter')" />{{ $t('m.pcs') }}
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.color') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.color" :placeholder="$t('n.enter')" />

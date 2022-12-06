@@ -1444,6 +1444,8 @@ const messages = {
 		    pool_count: '跟进公海客户次数',
 		    customer_count: '跟进私人客户次数',
 		    bo_count: '跟进商机次数',
+            purchase_intention_echarts:'客户购买意向',
+            test_drive_intention_echarts:'客户试驾意向',
 	    },
 	    sl: {  // 智能标签
             list: '标签列表',
@@ -3430,6 +3432,8 @@ const messages = {
 		    pool_count: 'Untracked Customer Count',
 		    customer_count: 'Tracker Customer Count',
 		    bo_count: 'Tracking Business Count',
+            purchase_intention_echarts:'Purchase Intention',
+            test_drive_intention_echarts:'Test Drive intention',
 	    },
 
         sl: {  // 智能标签
