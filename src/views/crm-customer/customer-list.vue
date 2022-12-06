@@ -276,7 +276,7 @@
       </div>
       <div class="table-container">
         <a-table
-          :columns="tableColumns"
+          :columns="columnOptions.length === 0? tableColumns:columnOptions"
           :data-source="tableData"
           :scroll="{ x: true }"
           :row-key="(record) => record.id"
@@ -286,7 +286,10 @@
         >
           <template #headerCell="{ column,title }">
             {{ $t(title) }}
-            <template v-if="column.key == 'operation'">         
+            <template v-if="column.key == 'operation'">   
+              <span style="font-size: 18px" @click="OnConfiguration">
+                <caret-up-outlined />                                                
+              </span>      
             </template>
           </template>
           <template #bodyCell="{ column, text, record }">
@@ -394,6 +397,8 @@
             </template>
           </template>
         </a-table>
+        <!-- 表格列配置项选项 -->
+        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" :options="columnOptions"></ColumnConfiguration> 
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -511,10 +516,14 @@
 import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
+import { CaretUpOutlined  } from '@ant-design/icons-vue';
+import { ColumnConfiguration } from './components/index.js'
 export default {
   name: "CustomerList",
   components: {
     TimeSearch,
+    CaretUpOutlined,
+    ColumnConfiguration      
   },
   props: {},
   data() {
@@ -567,6 +576,8 @@ export default {
       groupOptions: [],
       detail: {},
       nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
+      ConfigurationBool: false, // 配置项的显示隐藏
+      columnOptions: []
     };
   },
   watch: {
@@ -694,9 +705,9 @@ export default {
     },
     lang() {
       return this.$store.state.lang;
-    }    
+    }
   },
-  mounted() {    
+  mounted() {      
     this.getUserData();
     this.createUserFetch(); // 创建人数据初始化  
     this.getTableData(); 
@@ -788,8 +799,7 @@ export default {
         page: this.currPage,
         page_size: this.pageSize,
       })
-        .then((res) => {
-          console.log("测试", res);
+        .then((res) => {          
           this.total = res.count;
           this.tableData = res.list;
           // 切换的时候清除 // table的选择
@@ -1046,7 +1056,19 @@ export default {
           this.createUserOptions = res.list;          
         }
       });
-    }
+    },
+    /*methods*/
+    // 配置表格列的名称
+    OnConfiguration(){
+      if(this.ConfigurationBool === false){
+        // this.columnOptions = this.tableColumns
+        this.ConfigurationBool = true
+      } else
+      if(this.ConfigurationBool === true){
+        // this.columnOptions = []
+        this.ConfigurationBool = false
+      }
+    },
   },
 };
 </script>
@@ -1074,5 +1096,14 @@ export default {
 }
 .nameStyle{
   color: #9000f0;
+}
+
+// 配置项组件自定义位置
+.Configuration-style{
+   position:absolute;
+   top: 40px;
+   bottom: 0;  
+   right: 20px;   
+   z-index: 999;
 }
 </style>
