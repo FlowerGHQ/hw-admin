@@ -116,7 +116,7 @@ export default {
             chart.tooltip({
                 showMarkers: false
             });
-            chart.interval().position('type*value').color('#2194ff')
+            chart.interval().position('type*value').color('rgb(99,149,249)')
             // chart.interval()
                 // .adjust('stack')
                 // .position('value')
