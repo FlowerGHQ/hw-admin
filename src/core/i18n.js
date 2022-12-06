@@ -296,6 +296,7 @@ const messages = {
             sure_settlement: '确定要结算吗？',
             settlement: '结算完成',
             input_fault_number: '请输入故障件编号',
+	        vehicle_not_exist: '整车编码不存在，请联系管理员',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2314,6 +2315,7 @@ const messages = {
             sure_settlement: 'Are you sure you want to checkout?',
             settlement: 'Settlement Completed',
             input_fault_number: 'Please enter the fault part number',
+	        vehicle_not_exist: 'Vehicle number does not exist. Please contact the administrator',
         },
         d: {
             distributor_detail: 'Distributor Details',
