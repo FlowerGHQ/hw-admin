@@ -97,9 +97,10 @@
                 <div class="key">{{ $t('search.vehicle_no') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
-                    <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                    <span v-else-if="isExist == 2"><i class="icon i_close_c"/></span>
+
                 </div>
+                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
+                <span class="not_exist" v-else-if="isExist == 2"><i class="icon i_close_c"/>{{$t('r.vehicle_not_exist')}}</span>
             </div>
             <div class="form-item" v-if="form.vehicle_no && isExist == 1">
                 <div class="key">{{ $t('r.arrival_time') }}</div>
@@ -522,19 +523,27 @@ export default {
                 line-height: 16px;
                 color: #363D42;
             }
-            i.icon {
-                display: inline-block;
-                width: 24px;
-                text-align: right;
-            }
-            .i_confirm {
-                color: @green;
-                font-size: 18px;
-            }
-            .i_close_c {
-                color: @red;
-                font-size: 18px;
-            }
+
+        }
+        i.icon {
+            display: inline-block;
+            width: 24px;
+            text-align: right;
+            font-size: 18px;
+
+        }
+        .i_confirm {
+            color: @green;
+            font-size: 18px;
+        }
+        .i_close_c {
+            color: @red;
+            font-size: 18px;
+
+        }
+        .not_exist{
+            text-align: center;
+            align-items: center;
         }
     }
 }
