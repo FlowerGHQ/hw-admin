@@ -127,7 +127,7 @@
                         <ItemSelect @select="handleAddFailItem"
                                     :disabled-checked='tableData.map(i => i.item_id)'
                                     btn-type='primary' :btn-text="$t('i.add')" btn-class="fault-btn"
-                                    :dis="form.currency"
+                                    :disabled="!!form.currency"
                                     v-if="$auth('repair-order.save')"/>
                                     <a-select v-model:value="form.currency"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
                                         <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
