@@ -11,18 +11,18 @@
         <div class="main">
             <div>
                 <!-- 标题 -->
-                <slot name="title">
+                <!-- <slot name="title">
                     <div class="title-line">
                         <div class="title-style">{{ title }}</div>
                     </div>
-                </slot>
+                </slot> -->
                 <!-- 主要内容 -->
                 <slot name="select">
                     <div class="select-config" :style="{ height: contentHeight + 'px' }">
                         <a-checkbox-group v-model:value="CheckGroupValue" @change="handleCheckChange">
                             <a-row v-if="options.length != 0">
-                                <a-col :span="24">
-                                    <a-checkbox v-for="item in checkBoxOptions"
+                                <a-col :span="24" v-for="item in checkBoxOptions">
+                                    <a-checkbox v-if="item.key !== 'operation'"
                                         :value="item.dataIndex">{{ $t(item.title) }}</a-checkbox>
                                 </a-col>
                             </a-row>
@@ -35,8 +35,8 @@
         <div class="footer">
             <slot name="foot">
                 <div class="foot-style">
-                    <a-button type="primary" size="small" @click="submitCheck">保存</a-button>
-                    <a-button type="default" size="small">重置</a-button>
+                    <a-button type="default" size="small" @click="resetCheck">重置</a-button>
+                    <a-button class="btn-mr" type="primary" size="small" @click="submitCheck">保存</a-button>
                 </div>
             </slot>
         </div>
@@ -63,6 +63,10 @@ const props = defineProps({
     options: {
         type: Array,
         default: () => []
+    },
+    dataOptions: {
+        type: Array,
+        default: () => []
     }
 })
 
@@ -77,7 +81,7 @@ const isCheckOptions = ref([])
 /* computed */
 // 计算中间选择内容的高度
 const contentHeight = computed(() => {
-    return props.height.replace(/px/g, '') - 100
+    return props.height.replace(/px/g, '') - 60
 })
 
 // 选项改变的回调
@@ -91,20 +95,41 @@ function submitCheck(){
         CheckGroupValue.value.forEach( v =>{
             if(v === e.dataIndex){
                 isCheckOptions.value.push(e)
-            }
+            }            
         })
+        if(e.key == "operation"){
+            isCheckOptions.value.push(e)
+        }
     })
     emits('configOptions',isCheckOptions.value)
+}
+
+// 重置配置
+function resetCheck(){
+    // checkBoxOptions.value.forEach( val =>{
+    //     if(val.key !== 'operation'){
+    //         CheckGroupValue.value.push(val.dataIndex)
+    //     }
+    // })
+    CheckGroupValue.value = []
+    console.log('CheckGroupValue',CheckGroupValue.value);
 }
 
 /* methods */
 onMounted(() => {
     console.log('options', props.options);
-    props.options.forEach(val => {
-        if (val.key !== 'operation') {
-            checkBoxOptions.value.push(val);
-        }
-    })
+    checkBoxOptions.value = props.options
+    console.log('props.dataOptions',props.dataOptions);
+    if(props.dataOptions.length){
+        props.dataOptions.forEach( item =>{
+            CheckGroupValue.value.push(item.dataIndex)
+        })
+    }else{
+        props.options.forEach( val =>{
+            CheckGroupValue.value.push(val.dataIndex)
+        })
+    }
+    console.log('CheckGroupValue.value',CheckGroupValue.value);
 })
 </script>
  
@@ -156,6 +181,9 @@ onMounted(() => {
         justify-content: end;
         height: 60px;
         border-top: 1px solid #f0f0f0;
+        .btn-mr{
+            margin-right: 20px;
+        }
     }
 }
 </style>  

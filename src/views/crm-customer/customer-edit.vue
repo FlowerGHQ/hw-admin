@@ -21,7 +21,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :disabled="form.id > 0"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
 
                 </div>

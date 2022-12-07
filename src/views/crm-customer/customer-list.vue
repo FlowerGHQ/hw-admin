@@ -286,11 +286,11 @@
         >
           <template #headerCell="{ column,title }">
             {{ $t(title) }}
-            <!-- <template v-if="column.key == 'operation'">   
-              <span style="font-size: 18px" @click="OnConfiguration">
-                <caret-up-outlined />                                                
+            <template v-if="column.key == 'operation'">   
+              <span class="config-icon" @click="OnConfiguration">
+                <SettingOutlined />
               </span>      
-            </template> -->
+            </template>
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
@@ -398,7 +398,7 @@
           </template>
         </a-table>
         <!-- 表格列配置项选项 -->
-        <!-- <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :options="columnOptions"></ColumnConfiguration> -->
+        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -516,13 +516,14 @@
 import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
-import { CaretUpOutlined  } from '@ant-design/icons-vue';
+import { CaretUpOutlined, SettingOutlined  } from '@ant-design/icons-vue';
 import { ColumnConfiguration } from './components/index.js'
 export default {
   name: "CustomerList",
   components: {
     TimeSearch,
     CaretUpOutlined,
+    SettingOutlined,
     ColumnConfiguration      
   },
   props: {},
@@ -1068,19 +1069,20 @@ export default {
     },
     /*methods*/
     // 配置表格列的名称
-    // OnConfiguration(){
-    //   if(this.ConfigurationBool === false){
-    //     this.columnOptions = this.tableColumns
-    //     this.ConfigurationBool = true
-    //   } else
-    //   if(this.ConfigurationBool === true){
-    //     // this.columnOptions = []
-    //     this.ConfigurationBool = false
-    //   }
-    // },
-    // getConfigOptions(val){
-    //   this.columnOptions = val
-    // },
+    OnConfiguration(){
+      if(this.ConfigurationBool === false){
+        // this.columnOptions = this.tableColumns
+        this.ConfigurationBool = true
+      } else
+      if(this.ConfigurationBool === true){
+        // this.columnOptions = []
+        this.ConfigurationBool = false
+      }
+    },
+    getConfigOptions(val){
+      this.columnOptions = val
+      this.ConfigurationBool = false
+    },
   },
 };
 </script>
@@ -1117,5 +1119,9 @@ export default {
    bottom: 0;  
    right: 0px;   
    z-index: 999;
+}
+.config-icon{
+  font-size: 14px;
+  cursor: pointer;
 }
 </style>
