@@ -487,16 +487,7 @@
 
         <div class="form-btns">
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{ $t('def.sure') }}</a-button>
-             <a-popconfirm
-                title="你确定关闭当前窗口吗？"
-                :visible="windowsVisible"
-                ok-text="确定"
-                cancel-text="取消"                
-                @confirm="windowsConfirm"
-                @cancel="windowsVisible = false"
-                >                
-                <a-button @click="routerChange()" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
-            </a-popconfirm>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>           
         </div>
         <template class="modal-container">
             <a-modal v-model:visible="sourceModalShow" :title="sourceForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleSourceModalClose">
@@ -694,8 +685,7 @@ export default {
             labelIdList: [],
             groupOptions: [],
 
-            phoneCountryCodeList: [],  //手机号地区
-            windowsVisible: false, // 关闭当前窗口布尔值
+            phoneCountryCodeList: [],  //手机号地区            
         };
     },
     watch: {},
@@ -728,13 +718,12 @@ export default {
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
-        routerChange(type) {
-            this.windowsVisible = true            
-        },
-        // 关闭窗口二次确认
-        windowsConfirm(){
-            window.close()
-        },
+        routerChange(type) {                    
+            switch (type) {
+                case 'back':    // 详情
+                    this.$router.go(-1)
+            }
+        },     
         getCustomerDetail() {
             this.loading = true;
             Core.Api.CRMCustomer.detail({
@@ -815,10 +804,8 @@ export default {
                 ...areaContinent,
                 label_id_list: this.labelIdList,
             }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))                
-                setTimeout(() => {
-                    window.close()
-                },1000)
+                this.$message.success(this.$t('pop_up.save_success'))                              
+                this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })

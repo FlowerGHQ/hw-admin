@@ -286,7 +286,7 @@ export default {
                         path: "/crm-customer/customer-edit",
                         query: { id: this.detail.id }
                     })
-                    window.open(routeUrl.href, '_block')
+                    window.open(routeUrl.href, '_self')
                     break;
                 case 'bo-save':  // 修改
                     routeUrl = this.$router.resolve({
