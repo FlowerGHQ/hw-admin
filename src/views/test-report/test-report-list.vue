@@ -115,6 +115,8 @@ export default {
             currPage: 1,
             pageSize: 10,
             total: 0,
+            TYPE_LIST,
+            STATUS_LIST,
             // 搜索
 
             searchForm: {
