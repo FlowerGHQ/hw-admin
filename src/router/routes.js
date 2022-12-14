@@ -22,6 +22,7 @@ const routes = [
         meta: {
             hidden: true,
             title: '登录',
+	        title_en: 'Login',
         }
     },
     { // 看板

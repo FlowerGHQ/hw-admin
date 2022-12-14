@@ -69,13 +69,18 @@ export default {
         }
     },
     created() {
+        if (Core.Data.getLang() === "" || Core.Data.getLang() === null){
+            Core.Data.setLang("zh")
+        }
         if (Core.Data.getLoginType()) {
             this.loginForm.user_type = Core.Data.getLoginType();
         } else {
             this.loginForm.user_type = TYPE.AGENT;
         }
     },
-    mounted() {},
+    mounted() {
+
+    },
     methods: {
         handleFocusPwd() {
             this.$refs['password-input'].focus()
