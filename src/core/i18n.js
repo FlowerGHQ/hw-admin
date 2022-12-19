@@ -19,6 +19,22 @@ import { createI18n } from 'vue-i18n'
  */
 const messages = {
     zh: {
+        db: {  // 数据概览
+            new_customer: '新增客户',
+            new_follow_up_records: '新增跟进记录',
+            new_business: '新增商机',
+            new_orders: '新增订单',
+            new_drive_order: '新增试驾单',
+            new_payment_receipt: '新增回款单',
+            previous_days: '较前7日',
+            more: '更多',
+            backlog: '待办事项',
+            follow_up_statistics: '跟进统计',
+            highsea_customer_follow: '公海客户跟进',
+            individual_customer_follow: '个人客户跟进',
+            drive_order_follow: '试驾单跟进',
+            business_opportunities_follow: '商机跟进',
+        },
         ac: { //账户
             account_list: '账户列表',
             new_account: '新建账户',
@@ -2040,6 +2056,22 @@ const messages = {
     },
 
     en: {
+        db: {  // 数据概览
+            new_customer: 'Add New Customer',
+            new_follow_up_records: 'New Follow-up Records',
+            new_business: 'New Business Opportunities',
+            new_orders: 'New Orders',
+            new_drive_order: 'New Test Drive Order',
+            new_payment_receipt: 'New Payment Receipt',
+            previous_days: 'Compared to the previous 7 days',
+            more: 'More',
+            backlog: 'Backlog',
+            follow_up_statistics: 'Follow-up statistics',
+            highsea_customer_follow: 'Highsea customer follow up',
+            individual_customer_follow: 'Individual customer Follow-up',
+            drive_order_follow: 'Follow up on test drive order',
+            business_opportunities_follow: 'Follow up business opportunities',
+        },
         ac: { //账户
             account_list: 'Account List',
             new_account: 'Create a new account',

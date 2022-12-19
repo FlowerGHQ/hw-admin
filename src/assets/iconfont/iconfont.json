@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "22425850",
+      "name": "point",
+      "font_class": "point1",
+      "unicode": "e6d1",
+      "unicode_decimal": 59089
+    },
+    {
+      "icon_id": "33454234",
+      "name": "icon-follow",
+      "font_class": "icon-follow",
+      "unicode": "e611",
+      "unicode_decimal": 58897
+    },
+    {
       "icon_id": "2076220",
       "name": " 下拉箭头小",
       "font_class": "xialajiantouxiao",

@@ -1,6 +1,20 @@
 <template>
   <div id="DemoPage">
-    <div class="SearchRangePicker">
+    <DataOverview />
+    <div class="SearchRangePicker list-container range">
+      <div class="title">统计范围：</div>
+      <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
+        <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']" :value="1">近7日</a-radio-button>
+        <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2">近15日</a-radio-button>
+        <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3">近30日</a-radio-button>
+      </a-radio-group>
+      <a-range-picker
+        v-model:value="time"
+        @change="handleChange()"
+        :allowClear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
+        ref="TimeSearch"
+      />
       <a-tree-select
         class="CategoryTreeSelect"
         v-model:value="searchForm.group_id"
@@ -9,12 +23,10 @@
         :tree-data="groupOptions"
         tree-default-expand-all
       />
-      <a-range-picker
-        v-model:value="time"
-        @change="handleChange()"
-        :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
-      />
+      <div class="time-pick">
+        <a-button type="primary" class="btn search" @click="handleTimeChange">查询</a-button>
+        <a-button class="btn reset" @click="handleSearchReset">重置</a-button>
+      </div>
     </div>
     <div></div>
     <a-row :gutter="[8, 0]">
@@ -23,15 +35,18 @@
           <a-col :span="24"> </a-col>
           <!-- 销售简报 -->
           <a-col :span="24">
-            <SalesStatistics :searchForm="searchForm" />
+            <!-- <SalesStatistics :searchForm="searchForm" /> -->
+            <!-- 代办事项 -->
+            <Backlog />
           </a-col>
           <!-- 跟进统计 -->
-          <a-col :span="24">
+          <!-- <a-col :span="24">
             <TrackStatistics :searchForm="searchForm" />
-          </a-col>
+          </a-col> -->
           <!-- 商机分析 -->
           <a-col :span="24">
-            <BoStatistics :searchForm="searchForm" />
+            <!-- <BoStatistics :searchForm="searchForm" /> -->
+            <NewBoStatistics />
           </a-col>
         </a-row>
       </a-col>
@@ -39,7 +54,9 @@
         <a-row :gutter="[8, 0]">
           <!-- 业绩榜单 -->
           <a-col :span="24">
-            <PerformanceList :searchForm="searchForm" />
+            <!-- <PerformanceList :searchForm="searchForm" /> -->
+            <!-- 跟进统计 -->
+            <FollowUpStatistics />
           </a-col>
           <a-col :span="24"> </a-col>
           <!-- 客户购买意向 -->
@@ -65,6 +82,11 @@ import BoStatistics from "./components/BoStatistics.vue";
 import PurchaseIntentIntention from "./components/PurchaseIntentIntention.vue";
 import TestDriveIntention from "./components/TestDriveIntention.vue";
 
+import DataOverview from "./components/DataOverview.vue";
+import Backlog from "./components/Backlog.vue";
+import FollowUpStatistics from "./components/FollowUpStatistics.vue";
+import NewBoStatistics from "./components/NewBoStatistics.vue";
+
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import Core from "../../core";
 import dayjs from "dayjs";
@@ -80,6 +102,11 @@ export default {
     BoStatistics,
     PurchaseIntentIntention,
     TestDriveIntention,
+
+    DataOverview,
+    Backlog,
+    FollowUpStatistics,
+    NewBoStatistics,
   },
   props: {},
   data() {
@@ -91,6 +118,7 @@ export default {
       },
       time: [],
       groupOptions: [],
+      day: '',
     };
   },
   watch: {},
@@ -107,7 +135,8 @@ export default {
     handleSearchReset() {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
-      this.$refs.TimeSearch.handleReset();
+      this.day = ''
+      this.time = []
       // this.getTableData();
     },
     handleGroupTree() {
@@ -137,6 +166,23 @@ export default {
       this.searchForm = searchForm;
       // this.$emit('search', data, dateList)
     },
+
+    handleTimeChange() {},
+
+    // 时间转换
+    handleTimeTypeChange() {
+      switch (this.day){
+          case 1:
+            this.searchForm.begin_time = (Date.now() - 7*24*60*60*1000) /1000; break;
+          case 2:
+            this.searchForm.begin_time = (Date.now() - 15*24*60*60*1000) /1000; break;
+          case 3:
+            this.searchForm.begin_time = (Date.now() - 30*24*60*60*1000) /1000; break;
+      }
+
+      this.searchForm.end_time = Date.now() /1000;
+
+    }
   },
 };
 </script>
@@ -184,12 +230,19 @@ export default {
   }
 
   .time-type {
-    margin-left: 20px;
+    margin-left: 24px;
     .fac();
 
     .type-item {
-      padding: 0;
-
+      height: 40px;
+      padding: 10px 24px;
+      margin-left: 0 !important;
+      margin-right: 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #444444;
+      .fcc();
+      // border-radius: 4px;
       + .type-item {
         margin-left: 24px;
       }
@@ -206,7 +259,58 @@ export default {
 
   .CategoryTreeSelect {
     width: 200px;
-    margin-right: 20px;
+    margin-right: 24px;
+  }
+}
+
+.range {
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  .title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #333333;
+  }
+
+  .time-pick {
+    .btn {
+      height: 40px;
+      padding-left: 25px;
+      padding-right: 25px;
+      border-radius: 4px 4px 4px 4px;
+      font-size: 14px;
+    }
+    .search {
+      background: #DC6E38;
+      border-color: #DC6E38;
+    }
+  }
+
+  :deep(.ant-select-selector) {
+    height: 40px;
+  }
+  :deep(.ant-select-selection-placeholder) {
+    line-height: 38px;
+    font-weight: 500;
+    font-size: 14px;
+  }
+  :deep(.ant-select-selection-item) {
+    height: 38px;
+    line-height: 38px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #444444;
+  }
+  :deep(.ant-picker-range) {
+    margin-right: 24px;
+    height: 40px;
+  }
+  :deep(.ant-picker-input input) {
+    font-size: 14px;
+    font-weight: 500;
   }
 }
 </style>
