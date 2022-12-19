@@ -511,11 +511,17 @@ export default {
         },
 
         {
-          title: "d.create_time",
-          dataIndex: "create_time",
+          title: "crm_o.signing_date",
+          dataIndex: "date",
           key: "time",
           sorter: true,
         },
+          {
+              title: "d.create_time",
+              dataIndex: "create_time",
+              key: "time",
+              sorter: true,
+          },
         { title: "def.operate", key: "operation", fixed: "right" },
       ];
       return columns;
