@@ -734,24 +734,21 @@ export default {
       this.handleGroupTree()
     },
     routerChange(type, item = {}) {
-      let routeUrl = "";
       switch (type) {
         case "detail": // 编辑          
           if(!this.$Util.isEmptyObj(item)){
             this.nameColor.push({ id: item.id})
           }
-          routeUrl = this.$router.resolve({
+          this.$router.push({
             path: "/crm-customer/customer-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_blank");
           break;
         case "edit": // 编辑
-          routeUrl = this.$router.resolve({
+          this.$router.push({
             path: "/crm-customer/customer-edit",
             query: { id: item.id, status: this.searchForm.status },
           });
-          window.open(routeUrl.href, "_blank");
           break;
       }
     },
