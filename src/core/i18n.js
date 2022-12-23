@@ -34,6 +34,7 @@ const messages = {
             individual_customer_follow: '个人客户跟进',
             drive_order_follow: '试驾单跟进',
             business_opportunities_follow: '商机跟进',
+            data_overview:'今日数据概览',
         },
         ac: { //账户
             account_list: '账户列表',
@@ -2071,6 +2072,7 @@ const messages = {
             individual_customer_follow: 'Individual customer Follow-up',
             drive_order_follow: 'Follow up on test drive order',
             business_opportunities_follow: 'Follow up business opportunities',
+            data_overview:"Today's data overview",
         },
         ac: { //账户
             account_list: 'Account List',

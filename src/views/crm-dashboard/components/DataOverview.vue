@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <div class="title">今日数据概览</div>
+        <div class="title">{{ $t('db.data_overview') }}</div>
         <a-row  :gutter="[24, 0]">
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_customer') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #DC6E38;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/customer.png" alt="">
                     </div>
                 </div>
@@ -17,7 +17,7 @@
                     <div class="top">{{ $t('db.new_follow_up_records') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #346EF2;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/follow_up-records.png" alt="">
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                     <div class="top">{{ $t('db.new_business') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #30C9AF;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/business.png" alt="">
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                     <div class="top">{{ $t('db.new_orders') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #F39533;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/order.png" alt="">
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     <div class="top">{{ $t('db.new_drive_order') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #70DE78;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="">
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                     <div class="top">{{ $t('db.new_payment_receipt') }}</div>
                     <div class="center">{{ $t('db.previous_days') }} <span>+100</span></div>
                     <div class="bottom">
-                        <div class="num">652</div>
+                        <div class="num" style="color: #7EA4F1;">652</div>
                         <img class="img" src="../../../assets/images/dashboard/return-order.png" alt="">
                     </div>
                 </div>
@@ -164,7 +164,6 @@ export default {
             .num {
                 font-size: 40px;
                 font-weight: 600;
-                color: #DC6E38;
                 flex:1;
                 height: 40px;
                 line-height: 40px;

@@ -287,6 +287,9 @@ export default {
       background: #DC6E38;
       border-color: #DC6E38;
     }
+    .reset {
+      margin-left: 24px;
+    }
   }
 
   :deep(.ant-select-selector) {
