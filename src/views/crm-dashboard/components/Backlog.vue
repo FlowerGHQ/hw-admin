@@ -11,7 +11,7 @@
                     <div class="info">{{ item.info }}</div>
                 </div>
                 <div class="right">
-                    <div class="status">
+                    <div :class="[item.id === 4 ? 'status-red' : 'status']">
                         <i class="icon i_point1"></i>{{ item.status }}
                     </div>
                     <div class="time">{{ item.time }}</div>
@@ -42,21 +42,21 @@ export default {
                     name: '【客户】',
                     info: '11.30需要跟进该客户，客户意向较大，促成订单较稳定，11.30需要跟进该客户，客户意向较大，促成订单较稳定',
                     time: '2022-06-13',
-                    status: '待跟进',
+                    status: '已跟进',
                 },
                 {
                     id: 2,
                     name: '【商机】',
                     info: '11.30需要跟进该客户，客户意向较大，促成订单较稳定，11.30需要跟进该客户，客户意向较大，促成订单较稳定',
                     time: '2022-06-13',
-                    status: '待跟进',
+                    status: '已跟进',
                 },
                 {
                     id: 3,
                     name: '【试驾单】',
                     info: '11.30需要跟进该客户，客户意向较大，促成订单较稳定，11.30需要跟进该客户，客户意向较大，促成订单较稳定',
                     time: '2022-06-13',
-                    status: '待跟进',
+                    status: '已跟进',
                 },
                 {
                     id: 4,
@@ -117,6 +117,7 @@ export default {
             font-size: 14px;
             font-weight: 500;
             color: #999999;
+            cursor: pointer;
             .i_more {
                 margin-left: 4px;
             }
@@ -158,7 +159,14 @@ export default {
                     font-weight: 500;
                     color: #6BCB76;
                     .i_point1 {
-                        margin-right: 3px;
+                        margin-right: 5px;
+                    }
+                }
+                .status-red{
+                    font-weight: 500;
+                    color: #E13C39;
+                    .i_point1 {
+                        margin-right: 5px;
                     }
                 }
                 .time {

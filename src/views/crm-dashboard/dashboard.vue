@@ -58,14 +58,14 @@
             <!-- 跟进统计 -->
             <FollowUpStatistics />
           </a-col>
-          <a-col :span="24"> </a-col>
+          <!-- <a-col :span="24"> </a-col> -->
           <!-- 客户购买意向 -->
           <a-col :span="24">
             <PurchaseIntentIntention :searchForm="searchForm" />
           </a-col>
           <!-- 客户试驾意向 -->
           <a-col :span="24">
-            <TestDriveIntention :searchForm="searchForm" />
+            <!-- <TestDriveIntention :searchForm="searchForm" /> -->
           </a-col>
         </a-row>
       </a-col>
