@@ -1,6 +1,6 @@
 <template>
   <div id="DemoPage">
-    <DataOverview />
+    <DataOverview :searchForm="searchForm"  />
     <div class="SearchRangePicker list-container range">
       <div class="title">统计范围：</div>
       <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
