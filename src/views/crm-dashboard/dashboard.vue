@@ -56,7 +56,7 @@
           <a-col :span="24">
             <!-- <PerformanceList :searchForm="searchForm" /> -->
             <!-- 跟进统计 -->
-            <FollowUpStatistics />
+            <FollowUpStatistics :searchForm="searchForm"/>
           </a-col>
           <!-- <a-col :span="24"> </a-col> -->
           <!-- 客户购买意向 -->

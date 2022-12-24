@@ -5,12 +5,12 @@
             <div class="item">
                 <img class="img" src="../../../assets/images/dashboard/high-seas-customers.png" alt="">
                 <div class="text">{{ $t('db.highsea_customer_follow') }}</div>
-                <div class="num">652</div>
+                <div class="num">{{ form.pool_count }}</div>
             </div>
             <div class="item">
                 <img class="img" src="../../../assets/images/dashboard/customer.png" alt="">
                 <div class="text">{{ $t('db.individual_customer_follow') }}</div>
-                <div class="num">652</div>
+                <div class="num">{{ form.customer_count }}</div>
             </div>
             <div class="item mt-28">
                 <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="">
@@ -20,7 +20,7 @@
             <div class="item mt-28">
                 <img class="img" src="../../../assets/images/dashboard/business.png" alt="">
                 <div class="text">{{ $t('db.business_opportunities_follow') }}</div>
-                <div class="num">652</div>
+                <div class="num">{{ form.bo_count }}</div>
             </div>
         </div>
     </div>
@@ -41,6 +41,11 @@ export default {
     },
     data() {
         return {
+            form: {
+                pool_count: '',
+                customer_count: '',
+                bo_count: '',
+            }
         };
     },
     watch: {
@@ -50,25 +55,21 @@ export default {
     created() {
     },
     mounted() {
-        // this.salesStatistics()
+        this.salesStatistics()
     },
     beforeUnmount() {
     },
     methods: {
-        // salesStatistics() {
-        //     Core.Api.CRMDashboard.salesStatistics({
-        //         ...this.searchForm
-        //     }).then(res => {
-        //         console.log("dataOverview salesStatistics ~ res", res)
-        //         // this.form.new_customer_count = res.new_customer_count
-        //         // this.form.new_contact_count = res.new_contact_count
-        //         // this.form.new_order_count = res.new_order_count
-        //         // this.form.new_bo_count = res.new_bo_count
-        //         // this.form.win_bo_count = res.win_bo_count
-        //         // this.form.new_test_driver_count = res.new_test_driver_count
+        salesStatistics() {
+            Core.Api.CRMDashboard.trackStatistics({
+                ...this.searchForm
+            }).then(res => {
+                this.form.pool_count = res.pool_count
+                this.form.customer_count = res.customer_count
+                this.form.bo_count = res.bo_count
 
-        //     })
-        // },
+            })
+        },
     }
 };
 </script>
