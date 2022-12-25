@@ -4,20 +4,60 @@
             <div class="title">{{ $t('db.backlog') }}</div>
             <div class="more">{{ $t('db.more') }}<i class="icon i_more"></i></div>
         </div>
-        <div class="bottom">
-            <div class="item" v-for="item in followList" :key="item.id">
-                <div class="left">
-                    <div class="name">{{ item.name }}</div>
-                    <div class="info">{{ item.info }}</div>
-                </div>
-                <div class="right">
-                    <div :class="[item.id === 4 ? 'status-red' : 'status']">
-                        <i class="icon i_point1"></i>{{ item.status }}
+        <div class="center">
+            <a-tabs v-model:activeKey="activeKey" @change="toDoList">
+                <a-tab-pane key="customer" tab="私人客户">
+                    <div class="bottom">
+                        <div class="item" v-for="item in customerList" :key="item.id">
+                            <div class="left">
+                                <div class="name">{{ item.name }}</div>
+                                <div class="info">{{ item.info }}</div>
+                            </div>
+                            <div class="right">
+                                <div :class="[item.status === STATUS.TIME_OUT ? 'status-red' : 'status']">
+                                    <i class="icon i_point1"></i>{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
+                                </div>
+                                <div class="time">{{ $Util.timeFilter(item.next_track_time, 3) }}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="time">{{ item.time }}</div>
-                </div>
-            </div>
+                </a-tab-pane>
+                <a-tab-pane key="pool_customer" tab="公海客户">
+                    <div class="bottom">
+                        <div class="item" v-for="item in customerList" :key="item.id">
+                            <div class="left">
+                                <div class="name">{{ item.name }}</div>
+                                <div class="info">{{ item.info }}</div>
+                            </div>
+                            <div class="right">
+                                <div :class="[item.status === STATUS.TIME_OUT ? 'status-red' : 'status']">
+                                    <i class="icon i_point1"></i>{{ $Util.CRMToDoStatusFilter(item.status, $i18n.locale) }}
+                                </div>
+                                <div class="time">{{ $Util.timeFilter(item.next_track_time, 3) }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a-tab-pane>
+                <a-tab-pane key="bo" tab="商机">
+                    <div class="bottom">
+                        <div class="item" v-for="item in boList" :key="item.id">
+                            <div class="left">
+                                <div class="name">{{ item.name }}</div>
+                                <div class="info">{{ item.info }}111</div>
+                            </div>
+                            <div class="right">
+                                <div :class="[item.id === 4 ? 'status-red' : 'status']">
+                                    <i class="icon i_point1"></i>{{ item.status }}
+                                </div>
+                                <div class="time">{{ item.time }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a-tab-pane>
+            </a-tabs>
+
         </div>
+
     </div>
 </template>
 
@@ -36,6 +76,12 @@ export default {
     },
     data() {
         return {
+            activeKey: 'customer',
+            SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
+            STATUS: Core.Const.CRM_TODO.STATUS,
+            customerList: [],
+            boList: [],
+            pageSize: 5,
             followList: [
                 {
                     id: 1,
@@ -75,25 +121,39 @@ export default {
     created() {
     },
     mounted() {
-        // this.salesStatistics()
+        this.toDoList()
     },
     beforeUnmount() {
     },
     methods: {
-        // salesStatistics() {
-        //     Core.Api.CRMDashboard.salesStatistics({
-        //         ...this.searchForm
-        //     }).then(res => {
-        //         console.log("dataOverview salesStatistics ~ res", res)
-        //         // this.form.new_customer_count = res.new_customer_count
-        //         // this.form.new_contact_count = res.new_contact_count
-        //         // this.form.new_order_count = res.new_order_count
-        //         // this.form.new_bo_count = res.new_bo_count
-        //         // this.form.win_bo_count = res.win_bo_count
-        //         // this.form.new_test_driver_count = res.new_test_driver_count
+        toDoList() {
+            switch (this.activeKey){
+                case "customer":
+                    Core.Api.CRMCustomer.toDoList({
+                        search_type: this.SEARCH_TYPE.PRIVATE,
+                        page_size : this.pageSize
+                    }).then(res => {
+                        this.customerList = res.list
+                    })
+                    break;
+                case "pool_customer":
+                    Core.Api.CRMCustomer.toDoList({
+                        search_type: this.SEARCH_TYPE.POOL,
+                        page_size : this.pageSize
+                    }).then(res => {
+                        this.customerList = res.list
+                    })
+                    break;
+                case "bo":
+                    Core.Api.CRMBo.toDoList({
+                        page_size : this.pageSize
+                    }).then(res => {
+                        this.boList = res.list
+                    })
+                    break;
+            }
 
-        //     })
-        // },
+        },
     }
 };
 </script>

@@ -5,7 +5,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_customer') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.new_customer_seven_day_count >= 0 ">{{ '+' + form.new_customer_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.new_customer_seven_day_count}}</span>
                     </div>
@@ -18,7 +18,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_follow_up_records') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.new_contact_seven_day_count >= 0 ">{{ '+' + form.new_contact_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.new_contact_seven_day_count}}</span>
                     </div>
@@ -31,7 +31,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_business') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.new_order_seven_day_count >= 0 ">{{ '+' + form.new_order_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.new_order_seven_day_count}}</span>
                     </div>
@@ -44,7 +44,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_orders') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.new_bo_seven_day_count >= 0 ">{{ '+' + form.new_bo_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.new_bo_seven_day_count}}</span>
                     </div>
@@ -57,7 +57,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_drive_order') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.win_bo_seven_day_count >= 0 ">{{ '+' + form.win_bo_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.win_bo_seven_day_count}}</span>
                     </div>
@@ -70,7 +70,7 @@
             <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
                 <div class="list-container">
                     <div class="top">{{ $t('db.new_payment_receipt') }}</div>
-                    <div class="center">{{ $t('db.previous_days') }}
+                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
                         <span class="positive" v-if="form.new_test_driver_seven_day_count >= 0 ">{{ '+' + form.new_test_driver_seven_day_count}}</span>
                         <span class="minus" v-else>{{form.new_test_driver_seven_day_count}}</span>
                     </div>
@@ -86,6 +86,7 @@
 
 <script>
 import Core from '../../../core';
+import dayjs from "dayjs";
 
 export default {
     name: 'Card',
@@ -113,7 +114,8 @@ export default {
                 new_bo_seven_day_count: '',
                 win_bo_seven_day_count: '',
                 new_test_driver_seven_day_count: '',
-            }
+            },
+            day: 0,
         };
     },
     watch: {
@@ -140,6 +142,21 @@ export default {
             Core.Api.CRMDashboard.salesStatistics({
                 ...this.searchForm
             }).then(res => {
+                switch (this.searchForm.day){
+                    case 1:
+                        this.day = 7
+                        break;
+                    case 2:
+                        this.day = 15
+                        break;
+                    case 3:
+                        this.day = 30
+                        break;
+                }
+
+
+
+
                 console.log("dataOverview salesStatistics ~ res", res)
                 this.form.new_customer_count = res.new_customer_count
                 this.form.new_contact_count = res.new_contact_count

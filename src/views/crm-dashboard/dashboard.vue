@@ -115,6 +115,7 @@ export default {
         group_id: undefined,
         begin_time: "",
         end_time: "",
+        day: 1,
       },
       time: [],
       groupOptions: [],
@@ -181,7 +182,7 @@ export default {
       }
 
       this.searchForm.end_time = Date.now() /1000;
-
+        this.searchForm.day = this.day
     }
   },
 };
