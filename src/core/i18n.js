@@ -46,6 +46,11 @@ const messages = {
             data_trend:'数据趋势',
             transformation_analysis:'转化分析',
             customer_distribution:'客户来源分布',
+            number_of_contacts:'触达人数',
+            valid_visitors:'有效访问人数',
+            interested_persons:'兴趣人数',
+            order_number:'下单人数',
+            payer:'支付人数',
         },
         ac: { //账户
             account_list: '账户列表',
@@ -2095,6 +2100,11 @@ const messages = {
             data_trend:'Data trend',
             transformation_analysis:'Transformation analysis',
             customer_distribution:'Customer source distribution',
+            number_of_contacts:'Number of contacts',
+            valid_visitors:'Valid number of visitors',
+            interested_persons:'Number of interested persons',
+            order_number:'Order number',
+            payer:'payer'
         },
         ac: { //账户
             account_list: 'Account List',
