@@ -8,64 +8,88 @@
         <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2">近15日</a-radio-button>
         <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3">近30日</a-radio-button>
       </a-radio-group>
-      <a-range-picker
-        v-model:value="time"
-        @change="handleChange()"
-        :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
-        ref="TimeSearch"
-      />
-      <a-tree-select
-        class="CategoryTreeSelect"
-        v-model:value="searchForm.group_id"
-        :placeholder="$t('def.select') + $t('crm_c.group')"
-        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-        :tree-data="groupOptions"
-        tree-default-expand-all
-      />
+      <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+      <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
+        :placeholder="$t('def.select') + $t('crm_c.group')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+        :tree-data="groupOptions" tree-default-expand-all />
       <div class="time-pick">
         <a-button type="primary" class="btn search" @click="handleTimeChange">查询</a-button>
         <a-button class="btn reset" @click="handleSearchReset">重置</a-button>
       </div>
     </div>
     <div></div>
-    <a-row :gutter="[8, 0]">
+    <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="14">
         <a-row :gutter="[8, 0]">
-          <a-col :span="24"> </a-col>
-          <!-- 销售简报 -->
+          <!-- 待办事项 -->
           <a-col :span="24">
-            <!-- <SalesStatistics :searchForm="searchForm" /> -->
-            <!-- 代办事项 -->
             <Backlog />
           </a-col>
-          <!-- 跟进统计 -->
-          <!-- <a-col :span="24">
-            <TrackStatistics :searchForm="searchForm" />
-          </a-col> -->
           <!-- 商机分析 -->
           <a-col :span="24">
-            <!-- <BoStatistics :searchForm="searchForm" /> -->
             <NewBoStatistics />
           </a-col>
         </a-row>
       </a-col>
       <a-col :xs="24" :sm="24" :xl="12" :xxl="10">
         <a-row :gutter="[8, 0]">
-          <!-- 业绩榜单 -->
+          <!-- 跟进统计 -->
           <a-col :span="24">
-            <!-- <PerformanceList :searchForm="searchForm" /> -->
-            <!-- 跟进统计 -->
             <FollowUpStatistics />
           </a-col>
-          <!-- <a-col :span="24"> </a-col> -->
+          <!-- 销售业绩排名(TOP10) -->
+          <a-col :span="24">
+            <SaleRankStatistics :searchForm="searchForm" />
+          </a-col>
+        </a-row>
+      </a-col>
+    </a-row>
+    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="9">
+        <a-row :gutter="[8, 0]">
+          <!-- 车辆预订总数 -->
+          <a-col :span="24">
+            <OrderTotalCard />
+          </a-col>
+          <!-- 客户总数 -->
+          <a-col :span="24">
+            <ClientTotalCard />
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="15">
+        <a-row :gutter="[8, 0]">
+          <!-- 数据趋势 -->
+          <a-col :span="24">
+            <DataTrendStatistics />
+          </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
-            <PurchaseIntentIntention :searchForm="searchForm" />
           </a-col>
-          <!-- 客户试驾意向 -->
+        </a-row>
+      </a-col>
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="13">
+        <a-row :gutter="[8, 0]">
+          <!-- 转化分析 -->
           <a-col :span="24">
-            <!-- <TestDriveIntention :searchForm="searchForm" /> -->
+            <TransformationStatistics />
+          </a-col>
+          <!-- 客户来源分布 -->
+          <a-col :span="24">
+            <DistributionStatistics />
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="11">
+        <a-row :gutter="[8, 0]">
+          <!-- 商机分析 -->
+          <a-col :span="24">
+            <NewBoStatistics />
+          </a-col>
+          <!-- 销售业绩排名(TOP10) -->
+          <a-col :span="24">
+            <SaleRankStatistics :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
@@ -81,6 +105,12 @@ import PerformanceList from "./components/PerformanceList.vue";
 import BoStatistics from "./components/BoStatistics.vue";
 import PurchaseIntentIntention from "./components/PurchaseIntentIntention.vue";
 import TestDriveIntention from "./components/TestDriveIntention.vue";
+import SaleRankStatistics from './components/SaleRankStatustics.vue';
+import OrderTotalCard from './components/OrderTotalCard.vue'
+import ClientTotalCard from './components/ClientTotalCard.vue'
+import DataTrendStatistics from './components/DataTrendStatistics.vue'
+import TransformationStatistics from './components/TransformationStatistics.vue'
+import DistributionStatistics from './components/DistributionStatistics.vue'
 
 import DataOverview from "./components/DataOverview.vue";
 import Backlog from "./components/Backlog.vue";
@@ -102,11 +132,17 @@ export default {
     BoStatistics,
     PurchaseIntentIntention,
     TestDriveIntention,
+    SaleRankStatistics,
+    DataTrendStatistics,
+    DistributionStatistics,
 
     DataOverview,
     Backlog,
     FollowUpStatistics,
     NewBoStatistics,
+    OrderTotalCard,
+    ClientTotalCard,
+    TransformationStatistics,
   },
   props: {},
   data() {
@@ -123,7 +159,7 @@ export default {
   },
   watch: {},
   computed: {},
-  created() {},
+  created() { },
   mounted() {
     this.handleGroupTree();
   },
@@ -167,20 +203,20 @@ export default {
       // this.$emit('search', data, dateList)
     },
 
-    handleTimeChange() {},
+    handleTimeChange() { },
 
     // 时间转换
     handleTimeTypeChange() {
-      switch (this.day){
-          case 1:
-            this.searchForm.begin_time = (Date.now() - 7*24*60*60*1000) /1000; break;
-          case 2:
-            this.searchForm.begin_time = (Date.now() - 15*24*60*60*1000) /1000; break;
-          case 3:
-            this.searchForm.begin_time = (Date.now() - 30*24*60*60*1000) /1000; break;
+      switch (this.day) {
+        case 1:
+          this.searchForm.begin_time = (Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000; break;
+        case 2:
+          this.searchForm.begin_time = (Date.now() - 15 * 24 * 60 * 60 * 1000) / 1000; break;
+        case 3:
+          this.searchForm.begin_time = (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000; break;
       }
 
-      this.searchForm.end_time = Date.now() /1000;
+      this.searchForm.end_time = Date.now() / 1000;
 
     }
   },
@@ -242,8 +278,9 @@ export default {
       font-weight: 500;
       color: #444444;
       .fcc();
+
       // border-radius: 4px;
-      + .type-item {
+      +.type-item {
         margin-left: 24px;
       }
 
@@ -269,6 +306,7 @@ export default {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
+
   .title {
     font-size: 18px;
     font-weight: 500;
@@ -283,10 +321,12 @@ export default {
       border-radius: 4px 4px 4px 4px;
       font-size: 14px;
     }
+
     .search {
       background: #DC6E38;
       border-color: #DC6E38;
     }
+
     .reset {
       margin-left: 24px;
     }
@@ -295,11 +335,13 @@ export default {
   :deep(.ant-select-selector) {
     height: 40px;
   }
+
   :deep(.ant-select-selection-placeholder) {
     line-height: 38px;
     font-weight: 500;
     font-size: 14px;
   }
+
   :deep(.ant-select-selection-item) {
     height: 38px;
     line-height: 38px;
@@ -307,10 +349,12 @@ export default {
     font-size: 14px;
     color: #444444;
   }
+
   :deep(.ant-picker-range) {
     margin-right: 24px;
     height: 40px;
   }
+
   :deep(.ant-picker-input input) {
     font-size: 14px;
     font-weight: 500;
