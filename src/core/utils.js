@@ -1120,12 +1120,14 @@ const Util = {
 		return item[to] || ''
 	},
 
-
-
-
-
-
 	/* =============== 试驾单 ================ */
+    /* =============== 待办事项 ================ */
+    CRMToDoStatusFilter(val,  to='zh') {
+        const MAP = Const.CRM_TODO.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 待办事项 ================ */
     /* =============== 测试报告 ================ */
     testCaseNameFilter(id, type) {
         const TAR = Const.TEST.TYPE_CASE_MAP[type + ''] || {}

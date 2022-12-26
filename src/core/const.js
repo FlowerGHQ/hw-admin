@@ -1666,6 +1666,16 @@ let Const = {
 			ORDER_INCOME:4,
 		},
 	},
+    CRM_TODO: {
+        STATUS: {
+            PENDING: 100,
+            TIME_OUT: 110,
+        },
+        STATUS_MAP: {
+            '100': { key: 100, zh: '待完成',en: 'Pending', value: 100 },
+            '110': { key: 110, zh: '超时',en: 'Time out', value: 110 },
+        },
+    },
 	CRM_TRACK_MEMBER: {
 		TARGET_TYPE: {
             CUSTOMER: 1,      // 1客户

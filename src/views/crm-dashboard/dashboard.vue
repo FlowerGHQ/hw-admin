@@ -1,6 +1,6 @@
 <template>
   <div id="DemoPage">
-    <DataOverview />
+    <DataOverview :searchForm="searchForm"  />
     <div class="SearchRangePicker list-container range">
       <div class="title">统计范围：</div>
       <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
@@ -36,7 +36,9 @@
         <a-row :gutter="[8, 0]">
           <!-- 跟进统计 -->
           <a-col :span="24">
-            <FollowUpStatistics />
+            <!-- <PerformanceList :searchForm="searchForm" /> -->
+            <!-- 跟进统计 -->
+            <FollowUpStatistics :searchForm="searchForm"/>
           </a-col>
           <!-- 销售业绩排名(TOP10) -->
           <a-col :span="24">
@@ -151,6 +153,7 @@ export default {
         group_id: undefined,
         begin_time: "",
         end_time: "",
+        day: 1,
       },
       time: [],
       groupOptions: [],
@@ -216,8 +219,8 @@ export default {
           this.searchForm.begin_time = (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000; break;
       }
 
-      this.searchForm.end_time = Date.now() / 1000;
-
+      this.searchForm.end_time = Date.now() /1000;
+        this.searchForm.day = this.day
     }
   },
 };

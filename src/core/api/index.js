@@ -645,6 +645,7 @@ const apiList = {
 		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
 		checkPhone: ['PostJson', 'crm-customer/check-phone'],
 		checkEmail: ['PostJson', 'crm-customer/check-email'],
+        toDoList: ['PostJson', 'crm-customer/to-do-list'],
 	},
 	CRMBo:{//CRM 商机
 		save: ['PostJson', 'crm-bo/save'],//
@@ -658,6 +659,7 @@ const apiList = {
 		reactivation: ['PostJson', 'crm-bo/reactivation'],
 		batchTransfer: ['PostJson', 'crm-bo/batch-transfer'],
 		batchDelete: ['PostJson', 'crm-bo/batch-delete'],
+        toDoList: ['PostJson', 'crm-bo/to-do-list'],
 	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order-income/save'],//
