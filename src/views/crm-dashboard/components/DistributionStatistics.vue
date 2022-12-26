@@ -105,20 +105,12 @@ export default {
                 .color('#5C6FD3')
                 .size(3);
             chart
-                .point()
-                .position('item*value')
-                .color('#5C6FD3')
-                .shape('circle')
-                .size(4)
-                .style({
-                    stroke: '#fff',
-                    lineWidth: 1,
-                    fillOpacity: 1,
-                });
-            chart
                 .area()
                 .position('item*value')
-                .color('#AFB9F5');
+                .color('#AFB9F5')
+                .style({
+                    fillOpacity: 0.8,
+                });
             chart.render();
             this.boStatisticsChart = chart
         },

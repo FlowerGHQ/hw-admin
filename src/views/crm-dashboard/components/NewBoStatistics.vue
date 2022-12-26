@@ -81,69 +81,121 @@ export default {
                 autoFit: true,
                 height: 306,
             });
-
+            // 新建一个 view 用来单独渲染Annotation
+            const innerView = chart.createView();
             chart.data(data);
-            chart.scale('type', {
-                nice: true,
+            chart.scale('percent', {
+                formatter: val => {
+                    val = val * 100 + '%';
+                    return val;
+                },
             });
+            chart.tooltip(false);
             chart.coordinate('theta', {
                 radius: 0.7,
                 innerRadius: 0.8,
             });
-            // chart.tooltip({
-            //     showTitle: false,
-            //     showMarkers: false,
-            //     itemTpl:
-            //         '<li style="margin-bottom:0px;list-style-type:none;padding: 0; height:40px">' +
-            //         '<span style="background-color:{color};" class="g2-tooltip-marker"></span>' +
-            //         '<span style="line-height: 20px;">名称：{name}<br/></span>' +
-            //         '<span style="padding-left: 16px; line-height: 20px;">比例：{value}%<br/></span>' +
-            //         '</li>',
-            // });
-            chart.legend({
-                position: 'bottom',
-                itemName: {
+            // 声明需要进行自定义图例字段： 'item'
+            chart.legend('item', {
+                position: 'bottom',                                  // 配置图例显示位置
+                custom: true,                                       // 关键字段，告诉 G2，要使用自定义的图例
+                items: data.map((obj, index) => {
+                    return {
+                        name: obj.item,                                 // 对应 itemName
+                        value: obj.percent,                             // 对应 itemValue
+                        marker: {
+                            symbol: 'circle',                             // marker 的形状
+                            style: {
+                                r: 5,                                       // marker 图形半径
+                                fill: chart.getTheme().colors10[index],     // marker 颜色，使用默认颜色，同图形对应
+                            },
+                        },                                              // marker 配置
+                    };
+                }),
+                itemValue: {
                     style: {
-                        fontSize: 16,
-                        fontWeight: 500,
-                        fill: '#333333',
-                    }
+                        fill: '#999',
+                    },                                               // 配置 itemValue 样式
+                    formatter: val => `${val * 100}%`                // 格式化 itemValue 内容
                 },
-                animate: true,
             });
+            // 监听 element 上状态的变化来动态更新 Annotation 信息
+            chart.on('element:statechange', (ev) => {
+                const { state, stateStatus, element } = ev.gEvent.originalEvent;
+
+                // 本示例只需要监听 active 的状态变化
+                if (state === 'active') {
+                    const data = element.getData();
+                    if (stateStatus) {
+                        // 更新 Annotation
+                        updateAnnotation(data);
+                    } else {
+                        // 隐藏 Annotation
+                        clearAnnotation();
+                    }
+                }
+            });
+
+            // 绘制 annotation
+            let lastItem;
+            function updateAnnotation(data) {
+                if (data.item !== lastItem) {
+                    innerView.annotation().clear(true);
+                    innerView
+                        .annotation()
+                        .text({
+                            position: ['50%', '46%'],
+                            content: data.percent * 100 + '%',
+                            style: {
+                                fontSize: 30,
+                                fill: '#DC6E38',
+                                textAlign: 'center',
+                            },
+                        })
+                        .text({
+                            position: ['50%', '56%'],
+                            content: data.item,
+                            style: {
+                                fontSize: 14,
+                                fill: '#333333',
+                                textAlign: 'center',
+                            },
+                        })
+                    innerView.render(true);
+                    lastItem = data.item;
+                }
+            }
+
+            // 清空 annotation
+            function clearAnnotation() {
+                innerView.annotation().clear(true);
+                innerView.render(true);
+                lastItem = null;
+            }
 
             chart
                 .interval()
                 .adjust('stack')
-                .position('value')
-                .color('type', ['#7E86F7', '#65D3C2', '#F7CC73', '#9BE5A0', '#7EA4F1', '#F18447'])
-                .label('value', (value) => {
-                    return {
-                        content: (data) => {
-                            return `${data.type}: ${value}%`;
+                .position('percent')
+                .color('item', ['#7E86F7', '#65D3C2', '#F7CC73', '#9BE5A0', '#7EA4F1', '#F18447'])
+                .style({
+                    fillOpacity: 1,
+                })
+                .state({
+                    active: {
+                        style: element => {
+                            const shape = element.shape;
+                            return {
+                                lineWidth: 10,
+                                stroke: shape.attr('fill'),
+                                strokeOpacity: shape.attr('fillOpacity'),
+                            };
                         },
-                    };
-                })
-                .tooltip('type*value', (data, value) => {
-                    value = value + '%';
-                    return {
-                        name: type,
-                        value: value,
-                    };
-                });
-            chart.interaction('element-active');
-            chart
-                .annotation()
-                .text({
-                    position: ['50%', '56%'],
-                    content: this.$t('crm_dash.business_analysis'),
-                    style: {
-                        fontSize: 16,
-                        fill: '#333333',
-                        textAlign: 'center',
                     },
-                    offsetY: -20,
-                })
+                });
+            // 移除图例点击过滤交互
+            chart.removeInteraction('legend-filter');
+            chart.interaction('element-active');
             chart.render();
             this.boStatisticsChart = chart
         },
@@ -155,12 +207,12 @@ export default {
                 console.log('getTableData err', res)
                 // this.testDriveIntentList = res.list;
                 const dv = [
-                    { type: '咨询', value: 3669 },
-                    { type: '支付定金', value: 2441 },
-                    { type: '等待交付', value: 370 },
-                    { type: '预约试驾', value: 1233 },
-                    { type: '订单支付', value: 2071 },
-                    { type: '已交付', value: 217 },
+                    { item: '咨询', count: 20, percent: 0.2 },
+                    { item: '支付定金', count: 20, percent: 0.2 },
+                    { item: '等待交付', count: 21, percent: 0.21 },
+                    { item: '预约试驾', count: 17, percent: 0.17 },
+                    { item: '订单支付', count: 13, percent: 0.13 },
+                    { item: '已交付', count: 9, percent: 0.09 },
                 ]
                 // const dv = []
                 // res.list.forEach(res => {
@@ -168,12 +220,8 @@ export default {
                 //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
                 //     }
                 // })
-                const data = []
-                dv.forEach((item) => {
-                    data.push({ type: item.type, value: item.value / 100 })
-                })
-                console.log('yxy:', data);
-                this.drawBoStatisticsChart(data)
+                console.log('yxy:', dv);
+                this.drawBoStatisticsChart(dv)
 
             }).catch(err => {
                 console.log('getTableData err', err)
