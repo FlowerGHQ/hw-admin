@@ -4,65 +4,81 @@
             {{ $t('db.transformation_analysis') }}
         </div>
         <div class="funnel">
+            <!-- 触达人数 -->
             <div class="layer_1">{{ $t('db.number_of_contacts') }}</div>
+            <!-- 有效访问人数 -->
             <div class="layer_2">{{ $t('db.valid_visitors') }}</div>
+            <!-- 兴趣人数 -->
             <div class="layer_3">{{ $t('db.interested_persons') }}</div>
+            <!-- 下单人数 -->
             <div class="layer_4">{{ $t('db.order_number') }}</div>
+            <!-- 支付人数 -->
             <div class="layer_5">{{ $t('db.payer') }}</div>
         </div>
         <div class="right-content">
             <div class="lay_1">
                 <div class="flex-direction">
-                    <div class="text">客户总人数</div>
+                    <!-- 客户总人数 -->
+                    <div class="text">{{ $t('db.total_number_of_customers') }}</div>
                     <div class="num">172873</div>
                 </div>
             </div>
             <div class="lay_2">
                 <div class="flex-direction">
-                    <div class="text">公海客户数</div>
+                    <!-- 公海客户数 -->
+                    <div class="text">{{ $t('db.number_of_high_seas') }}</div>
                     <div class="num">9837</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">已领取客户数</div>
+                    <!-- 已领取客户数 -->
+                    <div class="text">{{ $t('db.number_of_received') }}</div>
                     <div class="num">9837</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">未分配客户数</div>
+                    <!-- 未分配客户数 -->
+                    <div class="text">{{ $t('db.number_of_unallocated') }}</div>
                     <div class="num">9837</div>
                 </div>
             </div>
             <div class="lay_3">
                 <div class="flex-direction">
-                    <div class="text">商机总数</div>
+                    <!-- 商机总数 -->
+                    <div class="text">{{ $t('db.total_business_opportunities') }}</div>
                     <div class="num">28736</div>
                 </div>
             </div>
             <div class="lay_4">
                 <div class="flex-direction">
-                    <div class="text">试驾单总数</div>
+                    <!-- 试驾单总数 -->
+                    <div class="text">{{ $t('db.total_of_test_drive') }}</div>
                     <div class="num">2837</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">预约成功人数</div>
+                    <!-- 预约成功人数 -->
+                    <div class="text">{{ $t('db.number_of_successful_appointments') }}</div>
                     <div class="num">9837</div>
                 </div>
             </div>
             <div class="lay_5">
                 <div class="flex-direction">
-                    <div class="text">回款单总数</div>
+                    <!-- 回款单总数 -->
+                    <div class="text">{{ $t('db.total_amount_of_payment_receipt') }}</div>
                     <div class="num">9837</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">回款单总金额</div>
-                    <div class="num">9837</div>
+                    <!-- 回款单总金额 -->
+                    <div class="text">{{ $t('db.total_amount_of_payment_money') }}</div>
+                    <div class="num">¥2873</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">已回款金额</div>
-                    <div class="num">9837</div>
+                    <!-- 已回款金额 -->
+                    <div class="text">{{ $t('db.amount_received') }}</div>
+                    <div class="num">¥2873</div>
                 </div>
                 <div class="flex-direction">
-                    <div class="text">待回款金额</div>
-                    <div class="num">9837</div>
+                    <!-- 待回款金额 -->
+                    <div class="text">{{ $t('db.amount_to_be_collected') }}</div>
+                    <div class="num">¥2873</div>
                 </div>
             </div>
         </div>
