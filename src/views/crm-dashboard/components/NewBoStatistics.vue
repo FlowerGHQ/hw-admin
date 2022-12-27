@@ -58,8 +58,6 @@ export default {
         // }
         // this.drawBoStatisticsChart(this.tableData)
         this.purchaseIntentStatistics()
-
-
     },
     beforeUnmount() {
         this.$refs.NewBoStatisticsChartId.innerHTML = ''
