@@ -10,7 +10,7 @@
                         <span class="minus" v-else>{{form.new_customer_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #4977EE;">{{form.new_customer_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.new_customer_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/customer.png" alt="">
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                         <span class="minus" v-else>{{form.new_contact_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #DC6E38;">{{form.new_contact_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.new_contact_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/follow_up-records.png" alt="">
                     </div>
                 </div>
@@ -36,7 +36,7 @@
                         <span class="minus" v-else>{{form.new_order_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #65D3C2;">{{form.new_order_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.new_order_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/business.png" alt="">
                     </div>
                 </div>
@@ -49,7 +49,7 @@
                         <span class="minus" v-else>{{form.new_bo_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #F39533;">{{form.new_bo_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.new_bo_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/order.png" alt="">
                     </div>
                 </div>
@@ -62,7 +62,7 @@
                         <span class="minus" v-else>{{form.win_bo_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #79DF81;">{{form.win_bo_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.win_bo_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="">
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                         <span class="minus" v-else>{{form.new_test_driver_seven_day_count}}</span>
                     </div>
                     <div class="bottom">
-                        <div class="num" style="color: #7EA4F1;">{{form.new_test_driver_count}}</div>
+                        <div class="num" style="color: #333333;">{{form.new_test_driver_count}}</div>
                         <img class="img" src="../../../assets/images/dashboard/return-order.png" alt="">
                     </div>
                 </div>

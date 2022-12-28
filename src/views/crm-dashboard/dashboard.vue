@@ -19,7 +19,7 @@
       </div>
     </div>
     <div></div>
-    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
+    <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="14">
         <a-row :gutter="[8, 0]">
           <!-- 待办事项 -->
@@ -47,7 +47,7 @@
         </a-row>
       </a-col>
     </a-row>
-    <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
+    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="9">
         <a-row :gutter="[8, 0]">
           <!-- 车辆预订总数 -->
