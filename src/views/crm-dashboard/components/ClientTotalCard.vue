@@ -1,18 +1,10 @@
 <template>
     <div class="list-container">
-        <div class="title">
+        <div :class="[isPeople ? 'title active' : 'title']">
             {{ $t('db.custom_total') }}
         </div>
-        <!-- <div class="flex">
-            <div class="increase">
-                {{ $t('db.increase') }}
-            </div>
-            <div class="increase-num">
-                +{{ num }}
-            </div>
-        </div> -->
         <div class="flex-total">
-            <div class="total">
+            <div :class="[isPeople ? 'total active' : 'total']">
                 {{ total }}
             </div>
             <img class="img" src="../../../assets/images/dashboard/people.png" alt="">
@@ -32,6 +24,10 @@ export default {
             type: Object,
             default: () => { }
         },
+        isPeople: {
+            type: Boolean,
+            default: () => false
+        }
     },
     data() {
         return {
@@ -55,6 +51,7 @@ export default {
 <style lang="less" scoped>
 .list-container {
     padding: 20px 24px;
+    cursor: pointer;
 
     .title {
         width: 100%;
@@ -62,6 +59,9 @@ export default {
         font-family: PingFang SC-Medium, PingFang SC;
         font-weight: 600;
         color: #333333;
+        &.active {
+            color: #346EF2;
+        }
     }
 
     .flex {
@@ -95,6 +95,9 @@ export default {
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
             color: #333333;
+            &.active {
+                color: #346EF2;
+            }
         }
 
         .img {

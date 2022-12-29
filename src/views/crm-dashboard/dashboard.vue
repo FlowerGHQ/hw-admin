@@ -34,11 +34,11 @@
         <a-row :gutter="[8, 0]">
           <!-- 车辆预订总数 -->
           <a-col :span="24">
-            <OrderTotalCard />
+            <OrderTotalCard @click="handleCarClick" :isCar="isCar" />
           </a-col>
           <!-- 客户总数 -->
           <a-col :span="24">
-            <ClientTotalCard />
+            <ClientTotalCard @click="handlePeopleClick" :isPeople="isPeople" />
           </a-col>
         </a-row>
       </a-col>
@@ -46,7 +46,7 @@
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">
-            <DataTrendStatistics />
+            <DataTrendStatistics :isPeople="isPeople" />
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
@@ -140,6 +140,8 @@ export default {
       time: [],
       groupOptions: [],
       day: '',
+      isCar:true,
+      isPeople:false,
     };
   },
   watch: {},
@@ -203,6 +205,14 @@ export default {
 
       this.searchForm.end_time = Date.now() /1000;
         this.searchForm.day = this.day
+    },
+    handleCarClick(){
+      this.isCar = true
+      this.isPeople = false
+    },
+    handlePeopleClick(){
+      this.isCar = false
+      this.isPeople = true
     }
   },
 };

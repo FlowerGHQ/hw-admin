@@ -1,18 +1,10 @@
 <template>
     <div class="list-container">
-        <div class="title">
+        <div :class="[isCar ? 'title active' : 'title']">
             {{ $t('db.order_total') }}
         </div>
-        <!-- <div class="flex">
-            <div class="increase">
-                {{ $t('db.increase') }}
-            </div>
-            <div class="increase-num">
-                +{{ num }}
-            </div>
-        </div> -->
         <div class="flex-total">
-            <div class="total">
+            <div :class="[isCar ? 'total active' : 'total']">
                 {{ total }}
             </div>
             <img class="img" src="../../../assets/images/dashboard/total.png" alt="">
@@ -32,6 +24,10 @@ export default {
             type: Object,
             default: () => { }
         },
+        isCar: {
+            type: Boolean,
+            default: () => false
+        }
     },
     data() {
         return {
@@ -39,13 +35,12 @@ export default {
             total: '256,648',
         };
     },
-    watch: {
-    },
+    watch: {},
     computed: {
     },
     created() {
     },
-    mounted() { },
+    mounted() {},
     beforeUnmount() {
     },
     methods: {}
@@ -55,13 +50,16 @@ export default {
 <style lang="less" scoped>
 .list-container {
     padding: 20px 24px;
-
+    cursor: pointer;
     .title {
         width: 100%;
         font-size: 18px;
         font-family: PingFang SC-Medium, PingFang SC;
         font-weight: 600;
         color: #333333;
+        &.active {
+            color: #DC6E38;
+        }
     }
 
     .flex {
@@ -95,6 +93,9 @@ export default {
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
             color: #333333;
+            &.active {
+                color: #DC6E38;
+            }
         }
 
         .img {

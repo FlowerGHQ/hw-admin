@@ -98,7 +98,10 @@
                 <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
                     :placeholder="$t('def.select') + $t('crm_c.group')"
                     :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
-                    tree-default-expand-all />
+                    tree-default-expand-all >
+                    <!--a-cascader级联选择后缀图标 -->
+                    <template #suffixIcon><span class="icon i_xialajiantouxiao" /></template>
+                </a-tree-select>
                 <!-- <div class="time-pick">
                     <a-button type="primary" class="btn search" @click="handleTimeChange">查询</a-button>
                     <a-button class="btn reset" @click="handleSearchReset">重置</a-button>
@@ -224,6 +227,7 @@
 import Core from '../../../core';
 import dayjs from "dayjs";
 import TimeSearch from "@/components/common/TimeSearch.vue";
+import '../../../assets/iconfont/iconfont';
 
 export default {
     name: 'Card',
@@ -415,6 +419,7 @@ export default {
                 font-size: 14px;
                 font-weight: 500;
                 color: #666;
+                border-radius: 4px 4px 4px 4px;
                 .fcc();
 
                 // border-radius: 4px;
