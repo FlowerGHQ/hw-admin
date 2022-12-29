@@ -1,24 +1,6 @@
 <template>
   <div id="DemoPage">
     <DataOverview :searchForm="searchForm"  />
-    <div class="SearchRangePicker list-container range">
-      <div class="title">统计范围：</div>
-      <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
-        <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']" :value="1">近7日</a-radio-button>
-        <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2">近15日</a-radio-button>
-        <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3">近30日</a-radio-button>
-      </a-radio-group>
-      <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
-      <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
-        :placeholder="$t('def.select') + $t('crm_c.group')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-        :tree-data="groupOptions" tree-default-expand-all />
-      <div class="time-pick">
-        <a-button type="primary" class="btn search" @click="handleTimeChange">查询</a-button>
-        <a-button class="btn reset" @click="handleSearchReset">重置</a-button>
-      </div>
-    </div>
-    <div></div>
     <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="14">
         <a-row :gutter="[8, 0]">
@@ -228,139 +210,9 @@ export default {
 
 <style lang="less" scoped>
 .list-container {
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
-
-.SearchRangePicker {
-  margin-bottom: 20px;
-  width: 100%;
-  display: flex;
-
-  .org-type {
-    margin-right: 20px;
-
-    .type-item {
-      width: 88px;
-      text-align: center;
-      border-color: #eaecf2;
-      box-shadow: 0 0 0 0;
-
-      &::after,
-      &::before {
-        background-color: #eaecf2;
-      }
-
-      &:hover {
-        color: @TC_P;
-      }
-
-      &.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
-        color: @TC_P;
-        background: @BG_N;
-        border-color: @BC_P;
-        box-shadow: 0;
-
-        &::after,
-        &::before {
-          background-color: @BC_P;
-        }
-      }
-    }
-  }
-
-  .time-type {
-    margin-left: 24px;
-    .fac();
-
-    .type-item {
-      height: 40px;
-      padding: 10px 24px;
-      margin-left: 0 !important;
-      margin-right: 24px;
-      font-size: 14px;
-      font-weight: 500;
-      color: #444444;
-      .fcc();
-
-      // border-radius: 4px;
-      +.type-item {
-        margin-left: 24px;
-      }
-
-      color: @TC_link;
-      cursor: pointer;
-
-      &:hover,
-      &.active {
-        color: @TC_P;
-      }
-    }
-  }
-
-  .CategoryTreeSelect {
-    width: 200px;
-    margin-right: 24px;
-  }
-}
-
-.range {
-  padding: 24px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-
-  .title {
-    font-size: 18px;
-    font-weight: 500;
-    color: #333333;
-  }
-
-  .time-pick {
-    .btn {
-      height: 40px;
-      padding-left: 25px;
-      padding-right: 25px;
-      border-radius: 4px 4px 4px 4px;
-      font-size: 14px;
-    }
-
-    .search {
-      background: #4977EE;
-      border-color: #4977EE;
-    }
-
-    .reset {
-      margin-left: 24px;
-    }
-  }
-
-  :deep(.ant-select-selector) {
-    height: 40px;
-  }
-
-  :deep(.ant-select-selection-placeholder) {
-    line-height: 38px;
-    font-weight: 500;
-    font-size: 14px;
-  }
-
-  :deep(.ant-select-selection-item) {
-    height: 38px;
-    line-height: 38px;
-    font-weight: 500;
-    font-size: 14px;
-    color: #444444;
-  }
-
-  :deep(.ant-picker-range) {
-    margin-right: 24px;
-    height: 40px;
-  }
-
-  :deep(.ant-picker-input input) {
-    font-size: 14px;
-    font-weight: 500;
-  }
+/deep/ .ant-col-24 {
+  padding-right: 12px;
 }
 </style>

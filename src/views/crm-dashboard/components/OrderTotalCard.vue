@@ -3,14 +3,14 @@
         <div class="title">
             {{ $t('db.order_total') }}
         </div>
-        <div class="flex">
+        <!-- <div class="flex">
             <div class="increase">
                 {{ $t('db.increase') }}
             </div>
             <div class="increase-num">
                 +{{ num }}
             </div>
-        </div>
+        </div> -->
         <div class="flex-total">
             <div class="total">
                 {{ total }}
@@ -87,13 +87,14 @@ export default {
         width: 100%;
         display: flex;
         justify-content: space-between;
-        margin-top: 24px;
+        align-items: center;
+        margin-top: 50px;
 
         .total {
             font-size: 40px;
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
-            color: #DC6E38;
+            color: #333333;
         }
 
         .img {

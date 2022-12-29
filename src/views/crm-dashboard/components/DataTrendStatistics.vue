@@ -65,7 +65,7 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 236,
+                height: 242,
                 width: 600,
             });
             chart.data(data)
@@ -98,12 +98,12 @@ export default {
                 offsetY: -6,
                 items: [
                     {
-                        name: '车型A',
+                        name: this.$t('db.model_A'),
                         value: 'value1',
                         marker: { symbol: 'circle', style: { fill: 'l(270) 0:#FFFFFF 1:#346EF2', r: 5 } },
                     },
                     {
-                        name: '车型B',
+                        name: this.$t('db.model_B'),
                         value: 'value2',
                         marker: { symbol: 'circle', style: { fill: 'l(270) 0:#FFFFFF 1:#DC6E38', r: 5 } },
                     },
