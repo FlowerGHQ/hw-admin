@@ -140,7 +140,7 @@ export default {
         .layer_4,
         .layer_5 {
             .fcc();
-            font-size: 0.7vw;
+            font-size: 0.6vw;
             font-family: PingFang SC-Medium, PingFang SC;
             font-weight: 500;
             color: #FFFFFF;
@@ -155,15 +155,16 @@ export default {
         }
 
         .layer_2 {
-            width: 13vw;
+            width: 13.1vw;
             height: 58px;
             background: url("../../../assets/images/dashboard/layer2.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
+            margin-left: 1px;
         }
 
         .layer_3 {
-            width: 10.4vw;
+            width: 10.43vw;
             height: 59px;
             background: url("../../../assets/images/dashboard/layer3.png");
             background-repeat: no-repeat;
@@ -176,14 +177,16 @@ export default {
             background: url("../../../assets/images/dashboard/layer4.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
+            margin-left: 1px;
         }
 
         .layer_5 {
-            width: 4.8vw;
+            width: 4.9vw;
             height: 59px;
             background: url("../../../assets/images/dashboard/layer5.png");
             background-repeat: no-repeat;
             background-size: 100% 100%;
+            margin-left: 2px;
         }
     }
 
