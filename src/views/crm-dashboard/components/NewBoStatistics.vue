@@ -175,7 +175,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#7E86F7', '#65D3C2', '#F7CC73', '#9BE5A0', '#7EA4F1', '#F18447'])
+                .color('item', ['#5b8ff9', '#5ad8a6', '#5d7092', '#f6bd16', '#6f5ef9', '#6dc8ec'])
                 .style({
                     fillOpacity: 1,
                 })
