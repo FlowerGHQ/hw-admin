@@ -212,7 +212,7 @@ export default {
 .list-container {
   margin-bottom: 24px;
 }
-/deep/ .ant-col-24 {
+:deep(.ant-col-24) {
   padding-right: 12px;
 }
 </style>
