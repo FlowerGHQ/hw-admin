@@ -142,6 +142,15 @@ export default {
             font-size: 0.6vw;
             font-weight: 500;
             color: #FFFFFF;
+            transition: all 0.5s;
+            cursor: pointer;
+        }
+        .layer_1:hover,
+        .layer_2:hover,
+        .layer_3:hover,
+        .layer_4:hover,
+        .layer_5:hover {
+            transform: scale(1.1);
         }
 
         .layer_1 {
