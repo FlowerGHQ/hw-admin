@@ -76,7 +76,7 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 242,
+                height: 217,
                 width: 600,
             });
             chart.data(data)
@@ -156,7 +156,7 @@ export default {
             const chart = new Chart({
                 container: 'PurchaseIntentchartId',
                 autoFit: true,
-                height: 242,
+                height: 217,
                 width: 600,
             });
             chart.data(people_data)
@@ -238,100 +238,29 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.title {
-    padding: 12px 16px;
-    // border-bottom: 2px solid #f0f2f5;
-    font-size: 20px;
-    font-weight: bold;
-    .flex(space-between, center, row);
+.list-container {
+    padding: 14px 18px 18px 18px;
+    box-sizing: border-box;
 
-    .tab-item {
-        display: inline-block;
-        padding: 4px 8px;
-        border: 1px solid grey;
-        margin-right: 2px;
-        font-size: 12px;
-        user-select: none;
-        cursor: pointer;
-
-        &:first-child {
-            border-top-left-radius: 4px;
-            border-bottom-left-radius: 4px;
-        }
-
-        &:last-child {
-            border-top-right-radius: 4px;
-            border-bottom-right-radius: 4px;
-            margin-right: 0;
-        }
-    }
-
-    .tab-current {
-        border: 1px solid #006EF9;
-        color: #006EF9;
+    .title {
+        width: 100%;
+        font-size: 15px;
+        font-weight: 600;
+        color: #333333;
+        margin-bottom: 14px;
     }
 }
 
 .unit {
-    padding: 12px 16px;
+    margin-bottom: 4px;
     width: 100%;
-    font-size: 16px;
-    font-family: PingFang SC-Semibold, PingFang SC;
+    font-size: 12px;
     font-weight: 600;
     color: #333333;
-}
-
-.contain {
-    padding: 16px;
-}
-
-.form-item {
-    // border: 1px solid red;
-    border-bottom: 1px solid #f0f2f5;
-    padding: 16px 0;
-    .flex(space-between, center, row);
-
-    .form-label {
-        font-size: 14px;
-    }
-
-    .form-value {
-        color: #006EF9;
-        font-size: 20px;
-    }
 }
 
 .chart {
     width: 100%;
     height: auto;
-}
-
-.data-body {
-    .flex(flex-start, center, row);
-
-    .icon {
-        text-align: center;
-    }
-}
-
-.data-contain {
-    flex-grow: 1;
-    width: auto;
-    .flex(space-between, center, row);
-
-    .info-item {
-        .flex(space-between, center);
-
-        .label {
-            font-size: 12px;
-            color: grey;
-        }
-
-        .value {
-            font-size: 24px;
-            font-weight: bold;
-            color: black;
-        }
-    }
 }
 </style>

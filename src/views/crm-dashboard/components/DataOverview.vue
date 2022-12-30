@@ -358,10 +358,8 @@ export default {
 .container {
     width: 100%;
     box-sizing: border-box;
-    // padding-right: 24px;
     .title {
-        font-size: 20px;
-        font-family: PingFang SC-Medium, PingFang SC;
+        font-size: 16px;
         font-weight: 600;
         color: #333333;
         .ell();
@@ -445,7 +443,6 @@ export default {
     }
 
     .range {
-        // padding: 24px;
         box-sizing: border-box;
         display: flex;
         align-items: center;
@@ -518,8 +515,7 @@ export default {
 
         .card-name {
             width: 100%;
-            font-size: 18px;
-            font-family: PingFang SC-Medium, PingFang SC;
+            font-size: 14px;
             font-weight: 500;
             color: #333333;
         }
@@ -530,7 +526,7 @@ export default {
         }
 
         .card-total-num {
-            font-size: 40px;
+            font-size: 30px;
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
             color: #333333;
@@ -541,9 +537,8 @@ export default {
         }
 
         .increase-fall {
-            font-size: 18px;
-            font-family: PingFang SC-Regular, PingFang SC;
-            line-height: 21px;
+            font-size: 14px;
+            line-height: 24px;
             font-weight: 400;
             color: #37D1C8;
             margin-left: 7px;
@@ -555,8 +550,8 @@ export default {
         }
 
         .img {
-            width: 36px;
-            height: 36px;
+            width: 27px;
+            height: 27px;
         }
 
         .allow {

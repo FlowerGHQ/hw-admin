@@ -250,7 +250,7 @@ export default {
         .fsb();
         padding: 19px 0;
         .title {
-            font-size: 20px;
+            font-size: 15px;
             font-weight: 600;
             color: #333333;
             flex: 1;

@@ -114,16 +114,15 @@ export default {
 
 <style lang="less" scoped>
 .list-container {
-    padding: 20px 24px;
+    padding: 13px 18px 20px 18px;
     box-sizing: border-box;
 
     .title {
         width: 100%;
-        font-size: 18px;
-        font-family: PingFang SC-Medium, PingFang SC;
+        font-size: 15px;
         font-weight: 600;
         color: #333333;
-        margin-bottom: 36px;
+        margin-bottom: 16px;
     }
 
     .funnel {
@@ -141,7 +140,6 @@ export default {
         .layer_5 {
             .fcc();
             font-size: 0.6vw;
-            font-family: PingFang SC-Medium, PingFang SC;
             font-weight: 500;
             color: #FFFFFF;
         }
@@ -215,7 +213,6 @@ export default {
 
             .text {
                 font-size: 12px;
-                font-family: PingFang SC-Medium, PingFang SC;
                 font-weight: 500;
                 color: #DD6623;
                 margin-left: 3vw;
@@ -223,7 +220,6 @@ export default {
 
             .num {
                 font-size: 12px;
-                font-family: PingFang SC-Medium, PingFang SC;
                 font-weight: 500;
                 color: #DD6623;
                 margin-left: 3vw;

@@ -55,32 +55,12 @@ export default {
 
     .title {
         width: 100%;
-        font-size: 18px;
-        font-family: PingFang SC-Medium, PingFang SC;
+        font-size: 15px;
         font-weight: 600;
         color: #333333;
         &.active {
             color: #346EF2;
         }
-    }
-
-    .flex {
-        display: flex;
-    }
-
-    .increase {
-        font-size: 18px;
-        font-family: PingFang SC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #666666;
-    }
-
-    .increase-num {
-        font-size: 18px;
-        font-family: PingFang SC-Regular, PingFang SC;
-        font-weight: 400;
-        color: #DC6E38;
-        margin-left: 6px;
     }
 
     .flex-total {
@@ -91,7 +71,7 @@ export default {
         margin-top: 50px;
 
         .total {
-            font-size: 40px;
+            font-size: 30px;
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
             color: #333333;
@@ -101,8 +81,8 @@ export default {
         }
 
         .img {
-            width: 36px;
-            height: 36px;
+            width: 27px;
+            height: 27px;
         }
     }
 }
