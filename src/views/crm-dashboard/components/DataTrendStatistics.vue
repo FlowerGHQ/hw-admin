@@ -4,7 +4,7 @@
             <span>{{ $t('db.data_trend') }}</span>
         </div>
         <div class="unit">
-            {{ isPeople ? $t('db.unit_people') : $t('db.unit_car') }}
+            {{ isPeople ? $t('db.unit_people') : $t('db.unit_order') }}
         </div>
         <!-- echarts -->
         <div class="table-container">
