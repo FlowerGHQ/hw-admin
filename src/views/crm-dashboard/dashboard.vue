@@ -1,5 +1,6 @@
 <template>
   <div id="DemoPage">
+    <!-- 数据概览 -->
     <DataOverview :searchForm="searchForm"  />
     <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="14">
@@ -30,7 +31,7 @@
       </a-col>
     </a-row>
     <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
-      <a-col :xs="24" :sm="24" :xl="12" :xxl="9">
+      <a-col :xs="24" :sm="24" :xl="9" :xxl="9">
         <a-row :gutter="[8, 0]">
           <!-- 车辆预订总数 -->
           <a-col :span="24">
@@ -42,7 +43,7 @@
           </a-col>
         </a-row>
       </a-col>
-      <a-col :xs="24" :sm="24" :xl="12" :xxl="15">
+      <a-col :xs="24" :sm="24" :xl="15" :xxl="15">
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">

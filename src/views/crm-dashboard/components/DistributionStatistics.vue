@@ -131,7 +131,6 @@ export default {
 <style lang="less" scoped>
 .title {
     padding: 12px 16px;
-    border-bottom: 2px solid #f0f2f5;
     font-size: 16px;
     font-weight: bold;
     .flex(space-between, center, row);

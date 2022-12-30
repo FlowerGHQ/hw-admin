@@ -384,10 +384,11 @@ export default {
             text-align: center;
             border-color: #eaecf2;
             box-shadow: 0 0 0 0;
+            border-left: 1px solid #E5E5EE;
 
             &::after,
             &::before {
-                background-color: #eaecf2;
+                display: none;
             }
 
             &:hover {
@@ -454,6 +455,7 @@ export default {
             height: 30px;
             box-sizing: border-box;
             padding-left: 25px;
+            padding-right: 10px !important;
         }
 
         :deep(.ant-select-selection-placeholder) {
