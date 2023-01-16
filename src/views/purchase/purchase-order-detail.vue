@@ -327,7 +327,7 @@
                             v-model:value="form.payment"
                             style="width: 120px"
                             :min="0"
-                            :max="((detail.freight||0) + detail.price-detail.payment)/100"
+                            :max="((detail.freight||0) + detail.price - detail.payment)/100"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
@@ -335,8 +335,8 @@
                         <!-- <span>{{$Util.priceUnitFilter(detail.currency)}}</span> -->
                     </div>
                 </div>
-                <div class="form-item img-upload">
-                    <div class="key">xxx{{ $t('p.attachment') }}</div>
+                <div class="form-item img-upload required">
+                    <div class="key">{{ $t('p.attachment') }}</div>
                     <div class="value">
                         <!-- <a-upload name="file" class="image-uploader"-->
                         <!--     list-type="picture-card" accept='image/*'-->
@@ -1140,7 +1140,7 @@ export default {
                 Core.Api.Purchase.payment({
                     id: this.id,
                     pay_method: form.pay_method,
-                    payment: form.payment * 100,
+                    payment: Core.Util.countFilter(form.payment, 100, 0,true),
                     imgs: form.path,
                     img_type: form.type,
                     remark: form.remark
