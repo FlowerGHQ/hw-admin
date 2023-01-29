@@ -11,7 +11,7 @@
           </a-col>
           <!-- 商机分析 -->
           <a-col :span="24">
-            <NewBoStatistics />
+              <NewBoStatistics :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
@@ -70,7 +70,7 @@
         <a-row :gutter="[8, 0]">
           <!-- 商机分析 -->
           <a-col :span="24">
-            <NewBoStatistics />
+            <NewBoStatistics :searchForm="searchForm" />
           </a-col>
           <!-- 销售业绩排名(TOP10) -->
           <a-col :span="24">

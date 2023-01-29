@@ -87,18 +87,18 @@
                 <div class="title">{{ $t('db.data_overview') }}</div>
                 <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
                     <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']"
-                        :value="1">{{$t('db.day')}}</a-radio-button>
+                                    :value="1">{{$t('db.day')}}</a-radio-button>
                     <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']"
-                        :value="2">{{$t('db.week')}}</a-radio-button>
+                                    :value="2">{{$t('db.week')}}</a-radio-button>
                     <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']"
-                        :value="3">{{$t('db.month')}}</a-radio-button>
+                                    :value="3">{{$t('db.month')}}</a-radio-button>
                 </a-radio-group>
                 <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
-                    :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+                                :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
                 <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
-                    :placeholder="$t('def.select') + $t('crm_c.group')"
-                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
-                    tree-default-expand-all >
+                               :placeholder="$t('def.select') + $t('crm_c.group')"
+                               :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
+                               tree-default-expand-all >
                     <!--a-cascader级联选择后缀图标 -->
                     <template #suffixIcon><span class="icon i_xialajiantouxiao" /></template>
                 </a-tree-select>
@@ -257,7 +257,7 @@ export default {
                 win_bo_seven_day_count: '',
                 new_test_driver_seven_day_count: '',
             },
-            day: 0,
+            day: 1,
             searchForm: {
                 group_id: undefined,
                 begin_time: "",
@@ -266,7 +266,6 @@ export default {
             },
             time: [],
             groupOptions: [],
-            day: '',
         };
     },
     watch: {
@@ -296,13 +295,13 @@ export default {
             }).then(res => {
                 switch (this.searchForm.day) {
                     case 1:
-                        this.day = 7
+                        this.day = 1
                         break;
                     case 2:
-                        this.day = 15
+                        this.day = 2
                         break;
                     case 3:
-                        this.day = 30
+                        this.day = 3
                         break;
                 }
                 console.log("dataOverview salesStatistics ~ res", res)
@@ -477,21 +476,21 @@ export default {
             padding-left: 0;
         }
         :deep(.ant-picker-input) {
-            input::-webkit-input-placeholder { 
+            input::-webkit-input-placeholder {
                 /* WebKit browsers，webkit内核浏览器 */
-                color: #666; 
-            } 
-            input:-moz-placeholder { 
-                /* Mozilla Firefox 4 to 18 */ 
-                color: #666; 
-            } 
-            input::-moz-placeholder { 
-                /* Mozilla Firefox 19+ */ 
-                color: #666; 
-            } 
-            input:-ms-input-placeholder { 
-                /* Internet Explorer 10+ */ 
-                color: #666; 
+                color: #666;
+            }
+            input:-moz-placeholder {
+                /* Mozilla Firefox 4 to 18 */
+                color: #666;
+            }
+            input::-moz-placeholder {
+                /* Mozilla Firefox 19+ */
+                color: #666;
+            }
+            input:-ms-input-placeholder {
+                /* Internet Explorer 10+ */
+                color: #666;
             }
         }
 
