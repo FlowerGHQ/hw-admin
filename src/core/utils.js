@@ -620,7 +620,7 @@ const Util = {
 		return value[to] || '-'
 	},
     refundOrderStatusFilter(val, to='zh') {
-        const MAP = Const.REFUND.REFUND_STATUS_MAP
+        const MAP = Const.AFTERSALES.REFUND_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },

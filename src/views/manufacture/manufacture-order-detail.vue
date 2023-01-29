@@ -3,7 +3,7 @@
         <div class='title-container'>
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
-                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>
+<!--                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>-->
                 <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
             </div>
@@ -267,7 +267,7 @@ export default {
                 cancelText: '取消',
                 onOk() {
                     Core.Api.Invoice.generateMaterialRequisition({
-                        production_order_id: _this.id,
+                        source_id: _this.id,
                     }).then(() => {
                         this.$message.success('领料完成');
                         this.getOrderDetail();

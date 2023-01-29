@@ -565,7 +565,7 @@ export default {
                     {key: 'port', msg: this.$t('p.enter_harbor')},
                     {key: 'delivery_address', msg: this.$t('p.fill_address')},
                     {key: 'delivery_time', msg: this.$t('wb.delivery_time')},
-                    {key: 'freight', msg: this.$t('p.enter_freight')},
+                    // {key: 'freight', msg: this.$t('p.enter_freight')},
                     {key: 'waybill', msg: this.$t('n.tracking_number')},
                     {key: 'entry_bill_no', msg: this.$t('wb.entry_bill_no')},
                     {key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no')},
