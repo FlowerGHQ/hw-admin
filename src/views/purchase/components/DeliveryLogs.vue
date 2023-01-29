@@ -389,13 +389,13 @@ export default {
         },
         tableColumns() {
             let columns = [
-                {title: this.$t('n.name'), key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
+                {title: this.$t('n.name'),dataIndex: 'item_name', key: 'name'},
+                // {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 // {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
                 // {title: this.$t('n.name'), dataIndex: ['item', 'name'], key: 'detail'},
                 // {title: this.$t('i.categories'), dataIndex: ['item', 'name']},
                 // {title: this.$t('i.number'), dataIndex: ['item', 'category', 'name'], key: 'item'},
-                // {title: this.$t('i.code'), dataIndex: ['item', 'code'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: "item_code", key: 'item'},
 
                 {title: this.$t('i.deliver_amount'), dataIndex: 'amount', key: 'count'},
             ]
