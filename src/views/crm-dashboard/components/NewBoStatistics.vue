@@ -31,6 +31,7 @@ export default {
             currentTab: '',
             myChart: null,
             boStatisticsChart: {},
+            groupStatusTableData: [],
 
         };
     },
@@ -39,6 +40,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
+                console.log("purchaseIntentStatistics")
                 this.purchaseIntentStatistics()
             }
         },
@@ -50,6 +52,7 @@ export default {
         },
     },
     created() {
+        this.getGroupStatusDetail();
     },
     mounted() {
         // const ths = this;
@@ -57,6 +60,7 @@ export default {
         //     ths.resetChart();
         // }
         // this.drawBoStatisticsChart(this.tableData)
+
         this.purchaseIntentStatistics()
     },
     beforeUnmount() {
@@ -197,21 +201,43 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
+        getGroupStatusDetail() {    // 获取 表格 数据
+            this.loading = true;
+            Core.Api.CRMBoStatusGroup.detail({
+                id: 1,
+            }).then(res => {
+                this.groupStatusTableData = JSON.parse(res.detail.status_list)
+            }).catch(err => {
+                console.log('getTableData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         purchaseIntentStatistics() {
             this.loading = true;
-            Core.Api.CRMDashboard.testDriveIntentStatistics({
+            Core.Api.CRMDashboard.boStatistics({
                 ...this.searchForm
             }).then(res => {
                 console.log('getTableData err', res)
                 // this.testDriveIntentList = res.list;
-                const dv = [
-                    { item: '咨询', count: 20, percent: 0.2 },
-                    { item: '支付定金', count: 20, percent: 0.2 },
-                    { item: '等待交付', count: 21, percent: 0.21 },
-                    { item: '预约试驾', count: 17, percent: 0.17 },
-                    { item: '订单支付', count: 13, percent: 0.13 },
-                    { item: '已交付', count: 9, percent: 0.09 },
-                ]
+                const dv = [];
+                res.list.forEach(it => {
+                    this.groupStatusTableData.forEach((item,index) => {
+
+                        if (index == it.status){
+                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count/res.total, 1,2)});
+                        }
+                    })
+
+                })
+                // const dv = [
+                //     { item: '咨询', count: 20, percent: 0.2 },
+                //     { item: '支付定金', count: 20, percent: 0.2 },
+                //     { item: '等待交付', count: 21, percent: 0.21 },
+                //     { item: '预约试驾', count: 17, percent: 0.17 },
+                //     { item: '订单支付', count: 13, percent: 0.13 },
+                //     { item: '已交付', count: 9, percent: 0.09 },
+                // ]
                 // const dv = []
                 // res.list.forEach(res => {
                 //     if(res.type !== 0){

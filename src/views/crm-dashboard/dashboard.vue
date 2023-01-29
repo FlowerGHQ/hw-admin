@@ -1,7 +1,7 @@
 <template>
   <div id="DemoPage">
     <!-- 数据概览 -->
-    <DataOverview :searchForm="searchForm"  />
+    <DataOverview :searchForm="searchForm" @select="searchFormOperation" />
     <a-row :gutter="[8, 0]" v-if="!$auth('ADMIN')">
       <a-col :xs="24" :sm="24" :xl="12" :xxl="14">
         <a-row :gutter="[8, 0]">
@@ -214,7 +214,11 @@ export default {
     handlePeopleClick(){
       this.isCar = false
       this.isPeople = true
-    }
+    },
+      searchFormOperation(searchForm){
+        this.searchForm = searchForm
+      },
+
   },
 };
 </script>

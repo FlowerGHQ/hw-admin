@@ -95,7 +95,7 @@
                 </a-radio-group>
                 <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
                                 :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
-                <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id"
+                <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id" @change="handleChange()"
                                :placeholder="$t('def.select') + $t('crm_c.group')"
                                :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
                                tree-default-expand-all >
@@ -334,6 +334,7 @@ export default {
 
             this.searchForm.end_time = Date.now() / 1000;
             this.searchForm.day = this.day
+            this.$emit('select', this.searchForm);
         },
         handleChange() {
             let begin_time = dayjs(this.time[0]);
@@ -342,6 +343,7 @@ export default {
             searchForm.begin_time = begin_time.startOf("day").unix();
             searchForm.end_time = end_time.endOf("day").unix();
             this.searchForm = searchForm;
+            this.$emit('select', searchForm);
         },
         handleGroupTree() {
             Core.Api.CRMGroupMember.structureByUser().then((res) => {
