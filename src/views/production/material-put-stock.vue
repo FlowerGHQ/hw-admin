@@ -85,7 +85,7 @@
                 <div class="form-item">
                     <div class="key">{{ $t('wa.current_stock') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock.stock.stock" disabled/>
+                        <a-input v-model:value="form.stock.stock" disabled/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -278,7 +278,7 @@ export default {
                 target_id: this.form.target_id,
                 target_type: this.form.stock_target_type,
             }).then(res => {
-                this.form.stock.stock = res.stock
+                this.form.stock.stock = res.stock.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
             })
         },

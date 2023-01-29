@@ -33,7 +33,9 @@
             <div class="table-container">
                 <div class="hint-count">
                     <a-button type="primary">{{ `已选中 ${this.selectItemIds.length} 条` }}</a-button>
-                    <ItemTable></ItemTable>
+<!--                    <ItemTable></ItemTable>-->
+                    <ItemTable :columns="tableColumns" :data-source="tableData" :loading='loading' v-if="modalShow" :showStock='!!warehouseId'
+                               :check-mode='true' :disabled-checked='disabledChecked' @submit="handleSelectItem" :radio-mode='radioMode'/>
                 </div>
             </div>
         </div>
