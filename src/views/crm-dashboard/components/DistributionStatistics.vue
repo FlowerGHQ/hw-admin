@@ -28,9 +28,18 @@ export default {
     data() {
         return {
             boStatisticsChart: {},
+            maxCount: 0,
         };
     },
-    watch: {},
+    watch: {
+        searchForm: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.customerStatistics()
+            }
+        },
+    },
     computed: {
         lang() {
             return this.$store.state.lang
@@ -39,7 +48,7 @@ export default {
     created() {
     },
     mounted() {
-        this.purchaseIntentStatistics()
+        this.customerStatistics()
     },
     beforeUnmount() {
         this.$refs.DistributionChartId.innerHTML = ''
@@ -58,7 +67,7 @@ export default {
             chart.data(data);
             chart.scale('value', {
                 min: 0,
-                max: 80,
+                max: this.maxCount,
             });
             chart.coordinate('polar', {
                 radius: 0.8,
@@ -114,15 +123,32 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
-        purchaseIntentStatistics() {
-            const dv = [
-                { item: '系统录入', value: 70 },
-                { item: '国内官网', value: 60 },
-                { item: '海外官网', value: 50 },
-                { item: '小程序', value: 40 },
-                { item: 'APP', value: 60 },
-            ]
-            this.drawBoStatisticsChart(dv)
+        customerStatistics() {
+            const dv = [];
+            Core.Api.CRMDashboard.customerStatistics({
+                ...this.searchForm
+            }).then(res => {
+                res.list.forEach(it =>{
+                    if (this.maxCount < it.count){
+                        this.maxCount = it.count;
+                    }
+
+                    switch (it.source_type) {
+                        case 1:dv.push({ item: '预定小程序', value: it.count });break;
+                        case 2:dv.push({ item: '系统录入', value: it.count });break;
+                        case 3:dv.push({ item: 'Shopify', value: it.count });break;
+                    }
+                })
+                this.drawBoStatisticsChart(dv)
+            })
+            // const dv = [
+            //     { item: '系统录入', value: 70 },
+            //     { item: '国内官网', value: 60 },
+            //     { item: '海外官网', value: 50 },
+            //     { item: '小程序', value: 40 },
+            //     { item: 'APP', value: 60 },
+            // ]
+
         }
     }
 };

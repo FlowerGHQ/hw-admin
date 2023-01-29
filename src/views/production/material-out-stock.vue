@@ -85,7 +85,7 @@
                 <div class="form-item">
                     <div class="key">{{ $t('wa.current_stock') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.stock.stock" disabled/>
+                        <a-input v-model:value="form.stock.stock.stock" disabled/>
                     </div>
                 </div>
                 <div class="form-item">

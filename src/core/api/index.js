@@ -681,7 +681,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-member/delete'],//
 		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
 		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
-		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//                
+		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
         joinUserList:['PostJson', 'crm-track-member/join-user-list'], // 负责人列表
 	},
 	CRMLabel:{//CRM 标签
@@ -767,6 +767,7 @@ const apiList = {
 		purchaseIntentStatistics: ['PostJson', 'crm-dashboard/purchase-intent-statistics'],// 商机统计
 		testDriveIntentStatistics: ['PostJson', 'crm-dashboard/test-drive-intent-statistics'],// 商机统计
 		performanceList: ['PostJson', 'crm-dashboard/performance-list'],// 业绩榜单
+		customerStatistics: ['PostJson', 'crm-dashboard/customer-statistics'],// 客户来源分布
 
 
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
