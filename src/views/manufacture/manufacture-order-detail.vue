@@ -266,7 +266,7 @@ export default {
                 okType: 'danger',
                 cancelText: '取消',
                 onOk() {
-                    Core.Api.Invoice.save({
+                    Core.Api.Invoice.generateMaterialRequisition({
                         production_order_id: _this.id,
                     }).then(() => {
                         this.$message.success('领料完成');

@@ -8,7 +8,7 @@
                 <AuditHandle v-if="detail.status === STATUS.SUBMIT && $auth('material-purchase-order.audit')" btnType='primary' :api-list="['MaterialPurchase', 'audit']" :id="id" @submit="getMaterialPurchaseDetail"
                              :s-pass="STATUS.PASS" :s-refuse="STATUS.REFUSE" no-refuse><i class="icon i_audit"/>审核
                 </AuditHandle>
-                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="routerChange('invoice')"><i class="icon i_s_warehouse"/>入库</a-button>
+<!--                <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="routerChange('invoice')"><i class="icon i_s_warehouse"/>入库</a-button>-->
                 <a-button v-if="(detail.status === STATUS.PASS || detail.status === STATUS.PART) && $auth('material-purchase-order.save-to-invoice')" type="primary" @click="handlePurchaseShow"><i class="icon i_s_warehouse"/>全部入库</a-button>
                 <a-button v-if="$auth('material-purchase-order.export')" type="primary" @click="handleExport"><i class="icon i_download"/>导出</a-button>
             </div>
@@ -309,7 +309,7 @@ export default {
                             type: STOCK_RECORD.TYPE.IN,
                             target_type: STOCK_RECORD.COMMODITY_TYPE.MATERIALS,
                             source_id: this.id,
-                            source_type: STOCK_RECORD.SOURCE_TYPE.MATERIAL_PURCHASE,
+                            source_type: STOCK_RECORD.SOURCE_TYPE.PURCHASE,
                             warehouse_id: this.detail.warehouse_id,
                         },
                     }

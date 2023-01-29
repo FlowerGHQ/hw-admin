@@ -177,6 +177,7 @@ const apiList = {
         listByPurchase: ['PostJson', 'invoice/list-by-purchase'],
         updatePI: ['PostJson', 'invoice/update-pi'], // 修改pi
         detailByItemUid: ['PostJson', 'invoice/detail-by-item-uid'], // 修改pi
+        generateMaterialRequisition: ['PostJson', 'invoice/generate-material-requisition'], // 一键领料
 
     },
     InvoiceItem: {
