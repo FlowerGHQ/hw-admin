@@ -29,6 +29,10 @@ export default {
         isPeople: {
             type: Boolean,
             default: () => false
+        },
+        list: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
@@ -202,24 +206,9 @@ export default {
                         }
                     }
                 })
-                const _data = [
-                    { date: '2022-12-01', value1: 80, value2: 52 },
-                    { date: '2022-12-02', value1: 52, value2: 12 },
-                    { date: '2022-12-03', value1: 201, value2: 39 },
-                    { date: '2022-12-04', value1: 145, value2: 152 },
-                    { date: '2022-12-05', value1: 48, value2: 32 },
-                    { date: '2022-12-06', value1: 68, value2: 93 },
-                    { date: '2022-12-07', value1: 18, value2: 84 },
-                ];
-                const people_data = [
-                    { date: '2022-12-10', value: 52 },
-                    { date: '2022-12-11', value: 12 },
-                    { date: '2022-12-12', value: 39 },
-                    { date: '2022-12-13', value: 152 },
-                    { date: '2022-12-14', value: 32 },
-                    { date: '2022-12-15', value: 93 },
-                    { date: '2022-12-16', value: 84 },
-                ];
+                const _data = this.list;
+                const people_data = this.list;
+                console.log(this.list)
                 if(this.isPeople === true){
                     this.drawPeopleBoStatisticsChart(people_data)
                 }else{

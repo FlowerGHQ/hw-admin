@@ -769,7 +769,8 @@ const apiList = {
 		testDriveIntentStatistics: ['PostJson', 'crm-dashboard/test-drive-intent-statistics'],// 商机统计
 		performanceList: ['PostJson', 'crm-dashboard/performance-list'],// 业绩榜单
 		customerStatistics: ['PostJson', 'crm-dashboard/customer-statistics'],// 客户来源分布
-
+		carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
+		customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
 
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
 	},

@@ -5,7 +5,7 @@
         </div>
         <div class="flex-total">
             <div :class="[isCar ? 'total active' : 'total']">
-                {{ total }}
+                {{ count }}
             </div>
             <img class="img" src="../../../assets/images/dashboard/total.png" alt="">
         </div>
@@ -27,6 +27,10 @@ export default {
         isCar: {
             type: Boolean,
             default: () => false
+        },
+        count: {
+            type: Number,
+            default: () => 0
         }
     },
     data() {

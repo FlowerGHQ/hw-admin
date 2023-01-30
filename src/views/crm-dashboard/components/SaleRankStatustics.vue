@@ -88,30 +88,26 @@ export default {
         },
         testDriveIntentStatistics() {
             this.loading = true;
-            Core.Api.CRMDashboard.purchaseIntentStatistics({
+            Core.Api.CRMDashboard.performanceList({
                 ...this.searchForm
             }).then(res => {
-                console.log('getTableData err', res)
+                console.log('performanceList err', res)
                 // this.testDriveIntentList = res.list;
                 const dv = []
-                res.list.forEach(res => {
-                    if(res.type !== 0){
-                        if(res.type !== 40){
-                        dv.push({ type: this.$Util.CRMCustomerPurchaseIntentChartFilter(res.type, this.lang), value: res.value })
-                        }
-                    }
+                res.list.forEach(it => {
+                    dv.push({ name: it.user_name+"", sales: it.money/10000 })
                 })
-                const _data = [
-                    { name: '李小明', sales: 80 },
-                    { name: '黄丹', sales: 52 },
-                    { name: '徐鹏', sales: 201 },
-                    { name: '王一鸣', sales: 145 },
-                    { name: '乔治', sales: 48 },
-                    { name: '佩奇', sales: 68 },
-                    { name: '张三', sales: 18 },
-                    { name: '李四', sales: 138 },
-                ];
-                this.drawBoStatisticsChart(_data)
+                // const _data = [
+                //     { name: '李小明', sales: 80 },
+                //     { name: '黄丹', sales: 52 },
+                //     { name: '徐鹏', sales: 201 },
+                //     { name: '王一鸣', sales: 145 },
+                //     { name: '乔治', sales: 48 },
+                //     { name: '佩奇', sales: 68 },
+                //     { name: '张三', sales: 18 },
+                //     { name: '李四', sales: 138 },
+                // ];
+                this.drawBoStatisticsChart(dv)
 
             }).catch(err => {
                 console.log('getTableData err', err)

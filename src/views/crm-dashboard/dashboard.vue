@@ -35,11 +35,11 @@
         <a-row :gutter="[8, 0]">
           <!-- 车辆预订总数 -->
           <a-col :span="24">
-            <OrderTotalCard @click="handleCarClick" :isCar="isCar" />
+            <OrderTotalCard @click="handleCarClick" :isCar="isCar" :count="carCount" />
           </a-col>
           <!-- 客户总数 -->
           <a-col :span="24">
-            <ClientTotalCard @click="handlePeopleClick" :isPeople="isPeople" />
+            <ClientTotalCard @click="handlePeopleClick" :isPeople="isPeople" :count="peopleCount" />
           </a-col>
         </a-row>
       </a-col>
@@ -47,7 +47,7 @@
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">
-            <DataTrendStatistics :isPeople="isPeople" />
+            <DataTrendStatistics :isPeople="isPeople" :list="list" :maxCount="maxCount" />
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
@@ -143,6 +143,10 @@ export default {
       day: '',
       isCar:true,
       isPeople:false,
+        carCount: 0,
+        peopleCount: 0,
+        list: [],
+        maxCount: 0,
     };
   },
   watch: {},
@@ -150,6 +154,9 @@ export default {
   created() { },
   mounted() {
     this.handleGroupTree();
+      this.httpPeople();
+      this.httpCar();
+
   },
   methods: {
     handleSearch() {
@@ -208,16 +215,34 @@ export default {
         this.searchForm.day = this.day
     },
     handleCarClick(){
+        this.httpCar();
       this.isCar = true
       this.isPeople = false
     },
     handlePeopleClick(){
+        this.httpPeople()
       this.isCar = false
       this.isPeople = true
     },
       searchFormOperation(searchForm){
         this.searchForm = searchForm
+          this.httpPeople();
+          this.httpCar();
       },
+      httpCar(){
+          Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {
+              this.list = res.list
+              this.carCount = res.count
+              this.maxCount = res.max_count
+          })
+      },
+      httpPeople(){
+          Core.Api.CRMDashboard.customerTotalStatistics(this.searchForm).then(res => {
+              this.list = res.list
+              this.peopleCount = res.count
+              this.maxCount = res.max_count
+          })
+      }
 
   },
 };
