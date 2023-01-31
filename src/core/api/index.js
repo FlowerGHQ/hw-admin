@@ -771,6 +771,7 @@ const apiList = {
 		customerStatistics: ['PostJson', 'crm-dashboard/customer-statistics'],// 客户来源分布
 		carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
 		customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
+		transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
 
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
 	},

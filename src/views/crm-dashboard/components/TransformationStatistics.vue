@@ -133,7 +133,7 @@ export default {
     methods: {
         transformationStatistics() {
             this.loading = true;
-            Core.Api.CRMDashboard.purchaseIntentStatistics({
+            Core.Api.CRMDashboard.transformationStatistics({
                 ...this.searchForm
             }).then(res => {
                 this.customer_count= res.customer_count
