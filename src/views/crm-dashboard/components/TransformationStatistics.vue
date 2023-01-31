@@ -20,65 +20,65 @@
                 <div class="flex-direction">
                     <!-- 客户总人数 -->
                     <div class="text">{{ $t('db.total_number_of_customers') }}</div>
-                    <div class="num">172873</div>
+                    <div class="num">{{ customer_count }}</div>
                 </div>
             </div>
             <div class="lay_2">
                 <div class="flex-direction">
                     <!-- 公海客户数 -->
                     <div class="text">{{ $t('db.number_of_high_seas') }}</div>
-                    <div class="num">9837</div>
+                    <div class="num">{{ customer_pool_count }}</div>
                 </div>
                 <div class="flex-direction">
                     <!-- 已领取客户数 -->
                     <div class="text">{{ $t('db.number_of_received') }}</div>
-                    <div class="num">9837</div>
+                    <div class="num">{{ customer_customer_count }}</div>
                 </div>
-                <div class="flex-direction">
-                    <!-- 未分配客户数 -->
+<!--                <div class="flex-direction">
+                    &lt;!&ndash; 未分配客户数 &ndash;&gt;
                     <div class="text">{{ $t('db.number_of_unallocated') }}</div>
-                    <div class="num">9837</div>
-                </div>
+                    <div class="num">{{ customer_count }}</div>
+                </div>-->
             </div>
             <div class="lay_3">
                 <div class="flex-direction">
                     <!-- 商机总数 -->
                     <div class="text">{{ $t('db.total_business_opportunities') }}</div>
-                    <div class="num">28736</div>
+                    <div class="num">{{ bo_count }}</div>
                 </div>
             </div>
             <div class="lay_4">
                 <div class="flex-direction">
                     <!-- 试驾单总数 -->
                     <div class="text">{{ $t('db.total_of_test_drive') }}</div>
-                    <div class="num">2837</div>
+                    <div class="num">{{ test_drive_count }}</div>
                 </div>
-                <div class="flex-direction">
-                    <!-- 预约成功人数 -->
+<!--                <div class="flex-direction">
+                    &lt;!&ndash; 预约成功人数 &ndash;&gt;
                     <div class="text">{{ $t('db.number_of_successful_appointments') }}</div>
-                    <div class="num">9837</div>
-                </div>
+                    <div class="num">{{ customer_count }}</div>
+                </div>-->
             </div>
             <div class="lay_5">
                 <div class="flex-direction">
                     <!-- 回款单总数 -->
                     <div class="text">{{ $t('db.total_amount_of_payment_receipt') }}</div>
-                    <div class="num">9837</div>
+                    <div class="num">{{ order_income_count }}</div>
                 </div>
                 <div class="flex-direction">
                     <!-- 回款单总金额 -->
                     <div class="text">{{ $t('db.total_amount_of_payment_money') }}</div>
-                    <div class="num">¥2873</div>
+                    <div class="num">¥{{ order_income_sum }}</div>
                 </div>
                 <div class="flex-direction">
                     <!-- 已回款金额 -->
                     <div class="text">{{ $t('db.amount_received') }}</div>
-                    <div class="num">¥2873</div>
+                    <div class="num">¥{{ order_income_completed_sum }}</div>
                 </div>
                 <div class="flex-direction">
                     <!-- 待回款金额 -->
                     <div class="text">{{ $t('db.amount_to_be_collected') }}</div>
-                    <div class="num">¥2873</div>
+                    <div class="num">¥{{ order_income_incomplete_sum }}</div>
                 </div>
             </div>
         </div>
@@ -95,20 +95,63 @@ export default {
     },
     data() {
         return {
-
+            customer_count: "",
+            customer_pool_count: "",
+            customer_customer_count: "",
+            bo_count: "",
+            test_drive_count: "",
+            order_income_count: "",
+            order_income_sum: "",
+            order_income_completed_sum: "",
+            order_income_incomplete_sum: "",
         };
     },
+    props: {
+        searchForm: {
+            type: Object,
+            default: () => { }
+        },
+    },
     watch: {
+        searchForm: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.transformationStatistics()
+            }
+        },
     },
     computed: {
     },
     created() {
     },
     mounted() {
+        this.transformationStatistics()
     },
     beforeUnmount() {
     },
-    methods: {},
+    methods: {
+        transformationStatistics() {
+            this.loading = true;
+            Core.Api.CRMDashboard.purchaseIntentStatistics({
+                ...this.searchForm
+            }).then(res => {
+                this.customer_count= res.customer_count
+                this.customer_pool_count= res.customer_pool_count
+                this.customer_customer_count= res.customer_customer_count
+                this.bo_count= res.bo_count
+                this.test_drive_count= res.test_drive_count
+                this.order_income_count= res.order_income_count
+                this.order_income_sum= res.order_income_sum
+                this.order_income_completed_sum= res.order_income_completed_sum
+                this.order_income_incomplete_sum= res.order_income_incomplete_sum
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        }
+    },
 };
 </script>
 

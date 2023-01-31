@@ -58,11 +58,11 @@
         <a-row :gutter="[8, 0]">
           <!-- 转化分析 -->
           <a-col :span="24">
-            <TransformationStatistics />
+            <TransformationStatistics :searchForm="searchForm"  />
           </a-col>
           <!-- 客户来源分布 -->
           <a-col :span="24">
-            <DistributionStatistics />
+            <DistributionStatistics :searchForm="searchForm"  />
           </a-col>
         </a-row>
       </a-col>
