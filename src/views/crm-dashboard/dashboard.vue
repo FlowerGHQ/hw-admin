@@ -204,11 +204,11 @@ export default {
     handleTimeTypeChange() {
       switch (this.day) {
         case 1:
-          this.searchForm.begin_time = (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000; break;
-        case 2:
           this.searchForm.begin_time = (Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000; break;
+        case 2:
+          this.searchForm.begin_time = (Date.now() - 15 * 24 * 60 * 60 * 1000) / 1000; break;
         case 3:
-          this.searchForm.begin_time = (Date.now() - 365 * 24 * 60 * 60 * 1000) / 1000; break;
+          this.searchForm.begin_time = (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000; break;
       }
 
       this.searchForm.end_time = Date.now() /1000;
