@@ -68,6 +68,7 @@ const messages = {
             day:'日',
             week:'周',
             month:'月',
+            year:'年',
             domestic:'国内订单总数',
             abroad:'国外订单总数',
         },
@@ -2141,6 +2142,7 @@ const messages = {
             day:'day',
             week:'week',
             month:'month',
+            year:'year',
             model_A:'Model A',
             model_B:'Model B'
         },

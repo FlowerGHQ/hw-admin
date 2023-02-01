@@ -81,6 +81,7 @@
                 </div>
             </a-col>
         </a-row>  -->
+
         <div class="list-container">
             <div class="SearchRangePicker range">
                 <!-- 数据概览 -->
@@ -89,9 +90,9 @@
                     <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']"
                                     :value="1">{{$t('db.day')}}</a-radio-button>
                     <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']"
-                                    :value="2">{{$t('db.week')}}</a-radio-button>
+                                    :value="2">{{$t('db.month')}}</a-radio-button>
                     <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']"
-                                    :value="3">{{$t('db.month')}}</a-radio-button>
+                                    :value="3">{{$t('db.year')}}</a-radio-button>
                 </a-radio-group>
                 <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
                                 :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
