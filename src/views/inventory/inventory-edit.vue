@@ -170,7 +170,10 @@ export default {
                 abc_type: undefined,
                 flag_batch: undefined,
                 start_date: undefined,
-                flag_extra_feature:undefined,
+                flag_extra_feature: undefined,
+                user: undefined,
+                uom_group: undefined,
+                uom_primary: undefined,
             },
         };
     },
@@ -197,9 +200,10 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getWarehouseDetail res', res)
-                this.detail = res.detail
+                this.detail = res.inventory
+                this.detail.start_date = this.detail.start_date ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD') : undefined
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = res.inventory[key]
                 }
                 console.log('defAddr err', this.defAddr)
             }).catch(err => {

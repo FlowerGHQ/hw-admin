@@ -224,7 +224,7 @@
                     okType: 'danger',
                     cancelText: this.$t('def.cancel'),
                     onOk() {
-                        Core.Api.Warehouse.delete({id}).then(() => {
+                        Core.Api.Inventory.delete({id}).then(() => {
                             _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.getTableData();
                         }).catch(err => {
