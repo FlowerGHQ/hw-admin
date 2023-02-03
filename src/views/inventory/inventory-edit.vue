@@ -18,11 +18,7 @@
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
                         <a-radio-group v-model:value="form.type">
-                            <a-radio :value="inventoryType.MATERIAL">{{ $t('inv.material') }}</a-radio>
-                            <a-radio :value="inventoryType.FINISHED">{{ $t('inv.finished') }}</a-radio>
-                            <a-radio :value="inventoryType.ADVERTISING">{{ $t('inv.advertising') }}</a-radio>
-                            <a-radio :value="inventoryType.PERIPHERAL">{{ $t('inv.peripheral') }}</a-radio>
-                            <a-radio :value="inventoryType.EXPENSE">{{ $t('inv.expense') }}</a-radio>
+                            <a-radio :value="item.key" v-for="item in TYPE_MAP">{{  lang === 'zh'?item.zh : item.en }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
@@ -157,6 +153,7 @@ export default {
             is_outsourcing: Core.Const.INVENTORY.IS_OUTSOURCING,
             is_batch: Core.Const.INVENTORY.IS_BATCH,
             feature: Core.Const.INVENTORY.FEATURE,
+            TYPE_MAP: Core.Const.INVENTORY.TYPE_MAP,
             form: {
                 id: '',
                 name: '',
@@ -170,12 +167,19 @@ export default {
                 abc_type: undefined,
                 flag_batch: undefined,
                 start_date: undefined,
-                flag_extra_feature:undefined,
+                flag_extra_feature: undefined,
+                user: undefined,
+                uom_group: undefined,
+                uom_primary: undefined,
             },
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        },
+    },
 
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
@@ -197,9 +201,10 @@ export default {
                 id: this.form.id,
             }).then(res => {
                 console.log('getWarehouseDetail res', res)
-                this.detail = res.detail
+                this.detail = res.inventory
+                this.detail.start_date = this.detail.start_date ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD') : undefined
                 for (const key in this.form) {
-                    this.form[key] = res.detail[key]
+                    this.form[key] = res.inventory[key]
                 }
                 console.log('defAddr err', this.defAddr)
             }).catch(err => {

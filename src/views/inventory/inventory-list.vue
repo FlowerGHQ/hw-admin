@@ -63,7 +63,7 @@
                             {{ record.flag_extra_feature ? '是' : '否' }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
+                            <!-- <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button> -->
                             <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
@@ -169,7 +169,7 @@
             tableColumns() {
                 let columns = [
                     {title: this.$t('inv.inventory_coding'), dataIndex: 'uid',key: 'text',},
-                    {title: this.$t('inv.inventory_name'), dataIndex: 'name',key: 'detail',},
+                    {title: this.$t('inv.inventory_name'), dataIndex: 'name',key: 'text',},
                     {title: this.$t('inv.type'), dataIndex: 'type',key: 'type',},
                     {title: this.$t('inv.spec_no'), dataIndex: 'spec',key: 'text',},
                     {title: this.$t('inv.inventory_code'), dataIndex: 'model',key: 'text',},
@@ -266,7 +266,7 @@
                     okType: 'danger',
                     cancelText: this.$t('def.cancel'),
                     onOk() {
-                        Core.Api.Warehouse.delete({id}).then(() => {
+                        Core.Api.Inventory.delete({id}).then(() => {
                             _this.$message.success(_this.$t('pop_up.delete_success'));
                             _this.getTableData();
                         }).catch(err => {
