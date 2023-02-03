@@ -3,6 +3,9 @@ node_modules
 /dist
 dist-ssr
 *.local
+<<<<<<< HEAD
+package-lock.json
+=======
 
 # local env files
 .env.local
@@ -23,3 +26,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw*
+>>>>>>> main

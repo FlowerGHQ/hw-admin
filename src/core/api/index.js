@@ -782,7 +782,14 @@ const apiList = {
     },
     MoneyChange:{
         switch:['PostJson', 'crm-order/switch-currency']
+    },
+    Inventory:{
+        list: ['PostJson','inventory/list'], // 存货列表
+        save: ['PostJson','inventory/save'], // 新增存货档案
+        detail: ['PostJson','inventory/detail'], // 存货档案详情
+        delete: ['PostJson','inventory/delete'], // 删除存货档案
     }
+
 };
 
 export default new Api(baseUrl, apiList);

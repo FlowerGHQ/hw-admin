@@ -694,6 +694,11 @@ const Util = {
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
+    inventoryTypeFilter(val, to='zh') {
+        const MAP = Const.INVENTORY.TYPE_MAP
+        const item = MAP[val] || {}
+        return item[to] || '未知'
+    },
     invoiceStatusFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.STATUS_MAP
         let item = MAP[val + ''] || {}

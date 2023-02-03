@@ -32,6 +32,9 @@ switch (window.location.hostname) {
     case "10.0.0.107":
         URL_POINT = 'http://10.0.0.107:8889'
         break;
+    case "10.0.0.245":
+        URL_POINT = 'http://10.0.0.213:8889'
+        break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://10.0.0.205:8889'
@@ -935,6 +938,41 @@ let Const = {
 		    YES: 1,
 		    NO: 0,
 	    },
+    },
+    INVENTORY: {
+        TYPE: { //存货类型
+
+            FINISHED: 2, // 成品
+            ADVERTISING: 3, // 广宣产品
+            PERIPHERAL: 4, // 周边产品
+            EXPENSE: 5, // 费用
+	        INVENTORY_MATERIAL: 6, // 物料
+        },
+        TYPE_MAP: {
+
+            '2': { key: 2, zh: '成品', en: 'Finished product' },
+            '3': { key: 3, zh: '广宣产品', en: 'Advertising products'},
+            '4': { key: 4, zh: '周边产品',en: 'Peripheral products'},
+            '5': { key: 5, zh: '费用',en: 'Expense'},
+	        '6': { key: 6, zh: '物料', en: 'Material'},
+        },
+        IS_PRODUCTION_CONSUMPTION: { // 是否生产耗用
+		    YES: 1,
+		    NO: 0,
+	    },
+        IS_OUTSOURCING: { // 是否委外
+		    YES: 1,
+		    NO: 0,
+	    },
+        IS_BATCH: { // 是否有批次
+		    YES: 1,
+		    NO: 0,
+	    },
+        FEATURE: { // 特征选配
+		    YES: 1,
+		    NO: 0,
+	    },
+
     },
 	STOCK: {
 		TARGET_TYPE: {
