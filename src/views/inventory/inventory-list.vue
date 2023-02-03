@@ -4,8 +4,8 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('inv.file_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="modalShow = true" v-if="$auth('warehouse.save')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
-                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
+                    <a-button type="primary" @click="modalShow = true;upload.data.inventory_type = ''"><i class="icon i_add"/>{{ $t('inv.importInv') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -47,9 +47,16 @@
                         <template v-if="column.key === 'type'">
                             {{ $Util.inventoryTypeFilter(text, $i18n.locale) }}
                         </template>
+                        <template v-if="column.key === 'category'">
+                            {{record.category.category_name}}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
+                        <template v-if="column.key === 'cost'">
+                            {{  $Util.countFilter(text) }}
+                        </template>
+
                         <template v-if="column.key === 'flag_production_use'">
                             {{ record.flag_production_use ? '是' : '否' }}
                         </template>
@@ -64,8 +71,8 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <!-- <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button> -->
-                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" ><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" ><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -89,9 +96,11 @@
         <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" >
             <div class="form-title">
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.name') }}:</div>
+                    <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="upload.data.inventory_type" :placeholder="$t('def.input')"/>
+                        <a-radio-group v-model:value="upload.data.inventory_type">
+                            <a-radio :value="item.key" v-for="item in typeList">{{  lang === 'zh'?item.zh : item.en }}</a-radio>
+                        </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required file-upload">
@@ -149,7 +158,7 @@
                 },
                 tableData: [],
                 typeList: Core.Const.INVENTORY.TYPE_MAP,
-                modalShow: true,
+                modalShow: false,
                 upload: {
                     action: Core.Const.NET.URL_POINT + "/admin/1/inventory/import",
                     fileList: [],
@@ -168,16 +177,17 @@
         computed: {
             tableColumns() {
                 let columns = [
+                    {title: this.$t('inv.type'), dataIndex: 'type',key: 'type',},
                     {title: this.$t('inv.inventory_coding'), dataIndex: 'uid',key: 'text',},
                     {title: this.$t('inv.inventory_name'), dataIndex: 'name',key: 'text',},
-                    {title: this.$t('inv.type'), dataIndex: 'type',key: 'type',},
+                    {title: this.$t('inv.category'), dataIndex: 'category',key: 'category',},
                     {title: this.$t('inv.spec_no'), dataIndex: 'spec',key: 'text',},
                     {title: this.$t('inv.inventory_code'), dataIndex: 'model',key: 'text',},
                     {title: this.$t('inv.admin'), dataIndex: 'admin_name',key: 'text',},
                     {title: this.$t('inv.production_consumption'), dataIndex: 'flag_production_use',key: 'flag_production_use',},
                     {title: this.$t('inv.outsourcing'), dataIndex: 'flag_outsourcing',key: 'flag_outsourcing',},
                     {title: this.$t('inv.tax_rate'), dataIndex: 'tax',key: 'text',},
-                    {title: this.$t('inv.cost'), dataIndex: 'cost',key: 'text',},
+                    {title: this.$t('inv.cost'), dataIndex: 'cost',key: 'cost',},
                     {title: this.$t('inv.abc_type'), dataIndex: 'abc_type',key: 'text',},
                     {title: this.$t('inv.batch'), dataIndex: 'flag_batch',key: 'flag_batch',},
                     {title: this.$t('inv.start_date'), dataIndex: 'start_date', key: 'time'},
@@ -190,6 +200,9 @@
                     {title: this.$t('def.operate'), key: 'operation', fixed: 'right' },
                 ]
                 return columns
+            },
+            lang() {
+                return this.$store.state.lang
             },
         },
         mounted() {
@@ -281,10 +294,10 @@
                 if (file.status == 'done') {
                     if (file.response && file.response.code > 0) {
                         _this.getTableData()
-                        return _this.$message.error(file.response.message)
+                        return this.$message.error(file.response.message)
                     } else {
                         _this.getTableData()
-                        return _this.$message.success($t('i.uploaded'));
+                        return this.$message.success(this.$t('i.uploaded'));
 
                     }
                 }

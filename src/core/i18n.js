@@ -668,6 +668,8 @@ const messages = {
             expense:'费用',
             yes:'是',
             no:'否',
+	        importInv: '导入存货档案',
+	        category: '存货大类名称',
         },
         in: { // 出入库
             list: '出入库单列表',
@@ -2716,6 +2718,8 @@ const messages = {
             expense:'Expense',
             yes:'Yes',
             no:'No',
+	        importInv: 'Import Inventory',
+	        category: 'Inventory Category',
         },
         in: {
             list:'Warehousing and EX-warehousing bill list',

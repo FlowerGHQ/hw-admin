@@ -23,6 +23,15 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('n.type') }}：</div>
+                    <div class="value">
+                        <CategoryTreeSelect @change="handleCategorySelect"
+                                            :category='item_category' :category-id='form.category_id'
+                                            :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
+                    </div>
+                </div>
+
+                <div class="form-item required">
                     <div class="key">{{ $t('inv.spec_no') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.spec" :placeholder="$t('def.input')" />
@@ -73,7 +82,9 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.cost') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.cost" :placeholder="$t('def.input')" />
+                        <a-input-number v-model:value="form.cost" style="width: 82px;"
+                                        :min="0" :precision="2" :placeholder="$t('n.please_input')"/>
+
                     </div>
                 </div>
                 <div class="form-item required">
@@ -138,9 +149,13 @@
 <script>
 import Core from '../../core';
 import dayjs from "dayjs";
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 
 export default {
     name: 'WarehouseEdit',
+    components: {
+        CategoryTreeSelect,
+    },
     props: {},
     data() {
         return {
@@ -154,10 +169,12 @@ export default {
             is_batch: Core.Const.INVENTORY.IS_BATCH,
             feature: Core.Const.INVENTORY.FEATURE,
             TYPE_MAP: Core.Const.INVENTORY.TYPE_MAP,
+            item_category: {},
             form: {
                 id: '',
                 name: '',
                 type: '',
+                category_id: undefined,
                 uid:undefined,
                 model:undefined,
                 flag_production_use: undefined,
@@ -206,6 +223,8 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.inventory[key]
                 }
+                this.form.start_date = this.detail.start_date ? dayjs.unix(this.detail.start_date).format('YYYY-MM-DD') : undefined
+                this.form.cost = Core.Util.countFilter(this.form.cost)
                 console.log('defAddr err', this.defAddr)
             }).catch(err => {
                 console.log('getWarehouseDetail err', err)
@@ -219,36 +238,10 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.type) {
+            if (!form.uid) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.flag_production_use) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.flag_outsourcing) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.tax) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.cost) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.abc_type) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.flag_batch) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.start_date) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.flag_extra_feature) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            form.cost = Core.Util.countFilter(this.form.cost,100,0,true)
             form.start_date = form.start_date ? dayjs(form.start_date).unix() : 0 // 日期转时间戳
             Core.Api.Inventory.save({
                 ...form,
@@ -258,6 +251,10 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        // 物料分类选择
+        handleCategorySelect(val, node) {
+            this.form.category_id = val
         },
     }
 };
