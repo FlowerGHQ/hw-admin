@@ -941,18 +941,20 @@ let Const = {
     },
     INVENTORY: {
         TYPE: { //存货类型
-            MATERIAL: 1, // 物料
+
             FINISHED: 2, // 成品
             ADVERTISING: 3, // 广宣产品
             PERIPHERAL: 4, // 周边产品
             EXPENSE: 5, // 费用
+	        INVENTORY_MATERIAL: 6, // 物料
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '物料', en: 'Material'},
+
             '2': { key: 2, zh: '成品', en: 'Finished product' },
             '3': { key: 3, zh: '广宣产品', en: 'Advertising products'},
             '4': { key: 4, zh: '周边产品',en: 'Peripheral products'},
             '5': { key: 5, zh: '费用',en: 'Expense'},
+	        '6': { key: 6, zh: '物料', en: 'Material'},
         },
         IS_PRODUCTION_CONSUMPTION: { // 是否生产耗用
 		    YES: 1,
@@ -970,7 +972,7 @@ let Const = {
 		    YES: 1,
 		    NO: 0,
 	    },
-       
+
     },
 	STOCK: {
 		TARGET_TYPE: {

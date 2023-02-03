@@ -17,17 +17,17 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.type') }}：</div>
                     <div class="value">
-                        <a-radio-group v-model:value="form.type">
+                        <a-radio-group v-model:value="form.type" @click="form.category_id = undefined">
                             <a-radio :value="item.key" v-for="item in TYPE_MAP">{{  lang === 'zh'?item.zh : item.en }}</a-radio>
                         </a-radio-group>
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('n.type') }}：</div>
+                    <div class="key">{{ $t('inv.category') }}：</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
                                             :category='item_category' :category-id='form.category_id'
-                                            :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
+                                            :placeholder="$t('n.choose') + $t('m.material_category')" type="material" :inventory-type="form.type"/>
                     </div>
                 </div>
 

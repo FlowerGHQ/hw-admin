@@ -1486,9 +1486,17 @@ const routes = [
                 meta: {
                     title: '存货档案',
                     title_en: 'Inventory Files',
-                    auth: ['warehouse.list'],
                 }
             },
+	        {
+		        path: 'inventory-category',
+		        name: 'InventoryCategory',
+		        component: () => import('@/views/inventory/inventory-category.vue'),
+		        meta: {
+			        title: '存货分类',
+			        title_en: 'Inventory Category',
+		        }
+	        },
             {
                 path: 'inventory-edit',
                 name: 'InventoryEdit',
@@ -1497,21 +1505,8 @@ const routes = [
                     hidden: true,
                     title: '档案编辑',
                     parent: '/inventory/inventory-edit',
-                    auth: ['warehouse.save'],
                 }
             },
-            {
-                path: 'warehouse-detail',
-                name: 'WarehouseDetail',
-                component: () => import('@/views/warehouse/warehouse-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '仓库详情',
-                    parent: '/warehouse/warehouse-list',
-                    auth: ['warehouse.detail'],
-
-                }
-            }
         ]
     },
     { // 账户管理

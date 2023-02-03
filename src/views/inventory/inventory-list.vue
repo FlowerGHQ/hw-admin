@@ -8,6 +8,16 @@
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
                 </div>
             </div>
+            <div class="tabs-container colorful">
+                <a-tabs v-model:activeKey="searchForm.type" @change='handleSearch'>
+                    <a-tab-pane :key="item.key" v-for="item of typeList">
+                        <template #tab>
+                            <div class="tabs-title">{{ item[$i18n.locale] }}
+                            </div>
+                        </template>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -17,12 +27,17 @@
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">{{ $t('n.type') }}:</div>
+                        <div class="key">{{ $t('inv.inventory_coding') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
-                                <a-select-option v-for="(val,key) of typeList" :key="val" :value="key">{{ val[$i18n.locale] }}
-                                </a-select-option>
-                            </a-select>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('inv.category') }}:</div>
+                        <div class="value">
+                            <CategoryTreeSelect @change="handleCategorySelect"
+                                                :category='item_category' :category-id='searchForm.category_id'
+                                                :placeholder="$t('n.choose') + $t('m.material_category')" type="material" :inventory-type="searchForm.type" />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -55,6 +70,9 @@
                         </template>
                         <template v-if="column.key === 'cost'">
                             {{  $Util.countFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'tax'">
+                            {{  text + "%" }}
                         </template>
 
                         <template v-if="column.key === 'flag_production_use'">
@@ -129,11 +147,13 @@
     <script>
     import Core from '../../core';
     import TimeSearch from '@/components/common/TimeSearch.vue'
+    import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
 
     export default {
         name: 'WarehouseList',
         components: {
-            TimeSearch
+            TimeSearch,
+            CategoryTreeSelect
         },
         props: {},
         data() {
@@ -150,12 +170,16 @@
                     name: '',
                     begin_time: '',
                     end_time: '',
-                    type: undefined,
+                    type: Core.Const.INVENTORY.TYPE.FINISHED,
                     flag_production_use:-1,
                     flag_outsourcing:-1,
                     flag_batch:-1,
                     flag_extra_feature:-1,
+                    category_id: undefined,
+                    uid: undefined,
+
                 },
+                item_category: {},
                 tableData: [],
                 typeList: Core.Const.INVENTORY.TYPE_MAP,
                 modalShow: false,
@@ -186,7 +210,7 @@
                     {title: this.$t('inv.admin'), dataIndex: 'admin_name',key: 'text',},
                     {title: this.$t('inv.production_consumption'), dataIndex: 'flag_production_use',key: 'flag_production_use',},
                     {title: this.$t('inv.outsourcing'), dataIndex: 'flag_outsourcing',key: 'flag_outsourcing',},
-                    {title: this.$t('inv.tax_rate'), dataIndex: 'tax',key: 'text',},
+                    {title: this.$t('inv.tax_rate'), dataIndex: 'tax',key: 'tax',},
                     {title: this.$t('inv.cost'), dataIndex: 'cost',key: 'cost',},
                     {title: this.$t('inv.abc_type'), dataIndex: 'abc_type',key: 'text',},
                     {title: this.$t('inv.batch'), dataIndex: 'flag_batch',key: 'flag_batch',},
@@ -302,6 +326,10 @@
                     }
                 }
                 this.upload.fileList = fileList
+            },
+            // 物料分类选择
+            handleCategorySelect(val, node) {
+                this.searchForm.category_id = val
             },
         }
     };

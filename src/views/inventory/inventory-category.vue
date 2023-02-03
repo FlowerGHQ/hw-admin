@@ -2,12 +2,21 @@
     <div id="MaterialCategory">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('m.material_category') }}</div>
+                <div class="title-area">{{ $t('inv.category') }}</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('m.new_category') }}</a-button>
                 </div>
             </div>
-
+            <div class="tabs-container colorful">
+                <a-tabs v-model:activeKey="type" @change='handleSearch'>
+                    <a-tab-pane :key="item.key" v-for="item of TYPE_MAP">
+                        <template #tab>
+                            <div class="tabs-title">{{ item[$i18n.locale] }}
+                            </div>
+                        </template>
+                    </a-tab-pane>
+                </a-tabs>
+            </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'
@@ -62,17 +71,18 @@ export default {
             loading: false,
 
             tableData: [],
-
+            TYPE_MAP: Core.Const.INVENTORY.TYPE_MAP,
             expandedRowKeys: [],
-
+            type: Core.Const.INVENTORY.TYPE.FINISHED,
             editNode: null,
             parentNode: null,
             modalVisible: false,
+            statusList: [],
             editForm: {
                 id: '',
                 parent_id: '',
                 name: '',
-                type: 1,
+                type: Core.Const.INVENTORY.TYPE.FINISHED,
             },
         };
     },
@@ -100,7 +110,7 @@ export default {
             Core.Api.MaterialCategory.tree({
                 page: 0,
                 parent_id: parent_id,
-                type: 1,
+                type: this.type
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
@@ -126,7 +136,7 @@ export default {
             Core.Api.MaterialCategory.tree({
                 page: 0,
                 id: id,
-                type: 1,
+                type: this.type
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
@@ -162,7 +172,7 @@ export default {
                 id: id,
                 name: name,
                 parent_id: parent_id,
-                type: 1,
+                type: this.type
             }
             console.log('this.editForm:', this.editForm)
             this.parentNode = parent
