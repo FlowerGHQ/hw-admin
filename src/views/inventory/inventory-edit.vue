@@ -92,7 +92,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.start_date') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.start_date" :placeholder="$t('def.input')" />
+                        <a-date-picker v-model:value="form.start_date" valueFormat='YYYY-MM-DD' :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <div class="form-item required">
@@ -135,14 +135,8 @@
 
 <script>
 import Core from '../../core';
-import ChinaAddressCascader from '../../components/common/ChinaAddressCascader.vue'
-import AddressCascader from '@/components/common/AddressCascader.vue';
-
-
-
 export default {
     name: 'WarehouseEdit',
-    components: { ChinaAddressCascader, AddressCascader },
     props: {},
     data() {
         return {
@@ -150,7 +144,6 @@ export default {
             // 加载
             loading: false,
             detail: {},
-            // warehouseType: Core.Const.WAREHOUSE.TYPE_MAP,
             inventoryType: Core.Const.INVENTORY.TYPE,
             is_production_consumption: Core.Const.INVENTORY.IS_PRODUCTION_CONSUMPTION,
             is_outsourcing: Core.Const.INVENTORY.IS_OUTSOURCING,
@@ -167,19 +160,8 @@ export default {
                 abc_type: undefined,
                 flag_batch: undefined,
                 start_date: undefined,
-                flag_extra_feature:undefined
+                flag_extra_feature:undefined,
             },
-            defAddr: [],
-            areaMap: {},
-            area: {
-                country: '',
-                country_en: '',
-                province: '',
-                province_en: '',
-                city: '',
-                city_en: '',
-                county: '',
-            }
         };
     },
     watch: {},
@@ -188,7 +170,7 @@ export default {
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
-            this.getWarehouseDetail();
+            this.getInventoryDetail();
         }
     },
     methods: {
@@ -199,9 +181,9 @@ export default {
                     break;
             }
         },
-        getWarehouseDetail() {
+        getInventoryDetail() {
             this.loading = true;
-            Core.Api.Warehouse.detail({
+            Core.Api.Inventory.detail({
                 id: this.form.id,
             }).then(res => {
                 console.log('getWarehouseDetail res', res)
@@ -209,14 +191,6 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
-                // this.area = [ this.form.province, this.form.city, this.form.county]
-                this.area.country = this.form.country
-                this.area.country_en = this.form.country
-                this.area.city = this.form.city
-                this.area.city_en = this.form.city
-                this.area.province = this.form.province
-                this.area.province_en = this.form.province
-                this.area.county = this.form.county
                 console.log('defAddr err', this.defAddr)
             }).catch(err => {
                 console.log('getWarehouseDetail err', err)
@@ -227,52 +201,41 @@ export default {
         handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('form', form)
-            let area = Core.Util.deepCopy(this.area)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.type) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.contact_name) {
+            if (!form.flag_production_use) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.contact_phone) {
+            if (!form.flag_outsourcing) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.address) {
+            if (!form.tax) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!form.location_uid_regex) {
+            if (!form.cost) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!Core.Util.isEmptyObj(this.areaMap)) {
-                console.log('areaMap2222', this.areaMap)
-                form.country = this.areaMap.country.name
-                form.country_en = this.areaMap.country.name_en
-                form.city = this.areaMap.city.name
-                form.city_en = this.areaMap.city.name_en
-                if (this.areaMap.province) {
-                    form.province = this.areaMap.province.name
-                    form.province_en = this.areaMap.province.name_en
-                } else {
-                    form.province = ""
-                    form.province_en = ""
-
-                }
-                if (this.areaMap.county) {
-                    form.county = this.areaMap.county.name
-                    form.county_en = this.areaMap.county.county_en
-                } else {
-                    form.county = ""
-                    form.county_en = ""
-                }
+            if (!form.abc_type) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.flag_batch) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.start_date) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.flag_extra_feature) {
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!this.$auth('ADMIN') && !(Object.values(area).filter(i => i).length)) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            console.log('area12333333', area)
-            Core.Api.Warehouse.save({
+            form.start_date = form.start_date ? dayjs(form.start_date).unix() : 0 // 日期转时间戳
+            Core.Api.Inventory.save({
                 ...form,
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
@@ -280,12 +243,6 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        },
-
-        handleAddressSelect(address = []) {
-            this.form.province = address[0]
-            this.form.city = address[1]
-            this.form.county = address[2]
         },
     }
 };
