@@ -1465,6 +1465,55 @@ const routes = [
             },*/
         ]
     },
+    { // 存货管理
+        path: '/inventory',
+        component: Layout,
+        redirect: '/inventory/inventory-list',
+        name: 'InventoryManagement',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
+        meta: {
+            title: '存货管理',
+            title_en: 'Stock Control',
+            icon: 'i_s_warehouse',
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+            auth: ['warehouse.list', 'warehouse-transfer-order.list', 'invoice.list', 'stock.list'],
+        },
+        children: [
+            {
+                path: 'inventory-list',
+                name: 'InventoryList',
+                component: () => import('@/views/inventory/inventory-list.vue'),
+                meta: {
+                    title: '存货档案',
+                    title_en: 'Inventory Files',
+                    auth: ['warehouse.list'],
+                }
+            },
+            {
+                path: 'inventory-edit',
+                name: 'InventoryEdit',
+                component: () => import('@/views/inventory/inventory-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '档案编辑',
+                    parent: '/inventory/inventory-edit',
+                    auth: ['warehouse.save'],
+                }
+            },
+            {
+                path: 'warehouse-detail',
+                name: 'WarehouseDetail',
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '仓库详情',
+                    parent: '/warehouse/warehouse-list',
+                    auth: ['warehouse.detail'],
+
+                }
+            }
+        ]
+    },
     { // 账户管理
         path: '/wallet',
         component: Layout,
