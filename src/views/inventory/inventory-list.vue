@@ -4,6 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('inv.file_list') }}</div>
                 <div class="btns-area">
+                    <a-button type="primary" @click="modalShow = true" v-if="$auth('warehouse.save')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
                     <a-button type="primary" @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
                 </div>
             </div>
@@ -33,7 +34,7 @@
                     <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
-    
+
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
@@ -85,13 +86,41 @@
                 />
             </div>
         </div>
+        <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" >
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.name') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="upload.data.inventory_type" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required file-upload">
+                    <div class="key">{{ $t('f.upload') }}:</div>
+                    <div class="value">
+                        <a-upload name="file" class="monetary-upload"
+                                  :file-list="upload.fileList" :action="upload.action"
+                                  :show-upload-list='false'
+                                  :headers="upload.headers" :data='upload.data'
+                                  accept=".xlsx,.xls"
+                                  @change="handlePurchaseChange">
+                            <a-button type="primary" ghost class="file-upload-btn">
+                                <i class="icon i_add"/> {{$t('i.bulk_import')}}
+                            </a-button>
+                        </a-upload>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
     </div>
     </template>
-    
+
     <script>
     import Core from '../../core';
     import TimeSearch from '@/components/common/TimeSearch.vue'
-    
+
     export default {
         name: 'WarehouseList',
         components: {
@@ -120,6 +149,19 @@
                 },
                 tableData: [],
                 typeList: Core.Const.INVENTORY.TYPE_MAP,
+                modalShow: true,
+                upload: {
+                    action: Core.Const.NET.URL_POINT + "/admin/1/inventory/import",
+                    fileList: [],
+                    headers: {
+                        ContentType: false
+                    },
+                    data: {
+                        token: Core.Data.getToken(),
+                        type: 'xlsx',
+                        inventory_type: "",
+                    },
+                },
             };
         },
         watch: {},
@@ -215,7 +257,7 @@
                     this.loading = false;
                 });
             },
-    
+
             handleDelete(id) {
                 let _this = this;
                 this.$confirm({
@@ -233,10 +275,25 @@
                     },
                 });
             },
+            handlePurchaseChange({file, fileList}) {
+                let _this = this
+                console.log("handleMatterChange status:", file.status, "file:", file)
+                if (file.status == 'done') {
+                    if (file.response && file.response.code > 0) {
+                        _this.getTableData()
+                        return _this.$message.error(file.response.message)
+                    } else {
+                        _this.getTableData()
+                        return _this.$message.success($t('i.uploaded'));
+
+                    }
+                }
+                this.upload.fileList = fileList
+            },
         }
     };
     </script>
-    
+
     <style lang="less" scoped>
     // #WarehouseList {}
     </style>
