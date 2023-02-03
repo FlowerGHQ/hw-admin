@@ -947,6 +947,13 @@ let Const = {
             PERIPHERAL: 4, // 周边产品
             EXPENSE: 5, // 费用
         },
+        TYPE_MAP: {
+            '1': { key: 1, zh: '物料', en: 'Material'},
+            '2': { key: 2, zh: '成品', en: 'Finished product' },
+            '3': { key: 3, zh: '广宣产品', en: 'Advertising products'},
+            '4': { key: 4, zh: '周边产品',en: 'Peripheral products'},
+            '5': { key: 5, zh: '费用',en: 'Expense'},
+        },
         IS_PRODUCTION_CONSUMPTION: { // 是否生产耗用
 		    YES: 1,
 		    NO: 0,
@@ -963,13 +970,7 @@ let Const = {
 		    YES: 1,
 		    NO: 0,
 	    },
-        TYPE_MAP: {
-            '1': { key: 1, zh: '物料', en: 'Material'},
-            '2': { key: 2, zh: '成品', en: 'Finished product' },
-            '3': { key: 3, zh: '广宣产品', en: 'Advertising products'},
-            '4': { key: 4, zh: '周边产品',en: 'Peripheral products'},
-            '5': { key: 5, zh: '费用',en: 'Expense'},
-        }
+       
     },
 	STOCK: {
 		TARGET_TYPE: {
