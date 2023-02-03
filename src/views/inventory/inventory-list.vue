@@ -38,19 +38,28 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
-                        <template v-if="column.key === 'detail' && $auth('warehouse.detail')">
+                        <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'type'">
-                            {{ $Util.warehouseTypeFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.key === 'address'">
-                            {{ $Util.addressFilter(record, $i18n.locale) }}
+                            {{ $Util.inventoryTypeFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
+                        </template>
+                        <template v-if="column.key === 'flag_production_use'">
+                            {{ record.flag_production_use ? '是' : '否' }}
+                        </template>
+                        <template v-if="column.key === 'flag_outsourcing'">
+                            {{ record.flag_outsourcing ? '是' : '否' }}
+                        </template>
+                        <template v-if="column.key === 'flag_batch'">
+                            {{ record.flag_batch ? '是' : '否' }}
+                        </template>
+                        <template v-if="column.key === 'flag_extra_feature'">
+                            {{ record.flag_extra_feature ? '是' : '否' }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
@@ -110,7 +119,7 @@
                     flag_extra_feature:-1,
                 },
                 tableData: [],
-                typeList: Core.Const.WAREHOUSE.TYPE_MAP,
+                typeList: Core.Const.INVENTORY.TYPE_MAP,
             };
         },
         watch: {},
@@ -123,17 +132,17 @@
                     {title: this.$t('inv.spec_no'), dataIndex: 'spec',key: 'text',},
                     {title: this.$t('inv.inventory_code'), dataIndex: 'model',key: 'text',},
                     {title: this.$t('inv.admin'), dataIndex: 'admin_name',key: 'text',},
-                    {title: this.$t('inv.production_consumption'), dataIndex: 'flag_production_use',key: 'text',},
-                    {title: this.$t('inv.outsourcing'), dataIndex: 'flag_outsourcing',key: 'text',},
+                    {title: this.$t('inv.production_consumption'), dataIndex: 'flag_production_use',key: 'flag_production_use',},
+                    {title: this.$t('inv.outsourcing'), dataIndex: 'flag_outsourcing',key: 'flag_outsourcing',},
                     {title: this.$t('inv.tax_rate'), dataIndex: 'tax',key: 'text',},
                     {title: this.$t('inv.cost'), dataIndex: 'cost',key: 'text',},
-                    {title: this.$t('inv.abc_type'), dataIndex: 'abc_type',key: 'type',},
-                    {title: this.$t('inv.batch'), dataIndex: 'flag_batch',key: 'text',},
+                    {title: this.$t('inv.abc_type'), dataIndex: 'abc_type',key: 'text',},
+                    {title: this.$t('inv.batch'), dataIndex: 'flag_batch',key: 'flag_batch',},
                     {title: this.$t('inv.start_date'), dataIndex: 'start_date', key: 'time'},
                     {title: this.$t('inv.create_user'), dataIndex: 'user', key: 'text'},
                     {title: this.$t('inv.unit_group'), dataIndex: 'uom_group', key: 'text'},
                     {title: this.$t('inv.primary_unit'), dataIndex: 'uom_primary', key: 'text'},
-                    {title: this.$t('inv.feature_matching'), dataIndex: 'flag_extra_feature', key: 'text'},
+                    {title: this.$t('inv.feature_matching'), dataIndex: 'flag_extra_feature', key: 'flag_extra_feature'},
                     {title: this.$t('inv.create_time'), dataIndex: 'create_time', key: 'time'},
                     {title: this.$t('inv.update_time'), dataIndex: 'update_time', key: 'time'},
                     {title: this.$t('def.operate'), key: 'operation', fixed: 'right' },

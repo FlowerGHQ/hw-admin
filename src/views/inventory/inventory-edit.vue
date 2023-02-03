@@ -33,9 +33,15 @@
                     </div>
                 </div>
                 <div class="form-item required">
-                    <div class="key">{{ $t('inv.inventory_code') }}：</div>
+                    <div class="key">{{ $t('inv.inventory_coding') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.uid" :placeholder="$t('def.input')" />
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('inv.inventory_code') }}：</div>
+                    <div class="value">
+                        <a-input v-model:value="form.model" :placeholder="$t('def.input')" />
                     </div>
                 </div>
                 <div class="form-item required">
@@ -65,7 +71,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('inv.tax_rate') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.tax" :placeholder="$t('def.input')" />
+                        <a-input style="width: 70px;" v-model:value="form.tax" :placeholder="$t('def.input')" />%
                     </div>
                 </div>
                 <div class="form-item required">
@@ -135,6 +141,8 @@
 
 <script>
 import Core from '../../core';
+import dayjs from "dayjs";
+
 export default {
     name: 'WarehouseEdit',
     props: {},
@@ -153,6 +161,8 @@ export default {
                 id: '',
                 name: '',
                 type: '',
+                uid:undefined,
+                model:undefined,
                 flag_production_use: undefined,
                 flag_outsourcing: undefined,
                 tax: undefined,
