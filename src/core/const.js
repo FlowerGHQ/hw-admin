@@ -24,8 +24,8 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
         break;
 
-	case "10.0.0.207":
-		URL_POINT = 'http://10.0.0.207:8889'
+	case "10.0.0.213":
+		URL_POINT = 'http://10.0.0.213:8889'
 		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
@@ -889,6 +889,8 @@ let Const = {
         { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
         { list: [], select: [], key: 'material', name: '物料' },
         { list: [], select: [], key: 'material-category', name: '物料分类' },
+	    { list: [], select: [], key: 'inventory', name: '存货档案' },
+	    { list: [], select: [], key: 'inventory-category', name: '存货分类' },
         { list: [], select: [], key: 'bom', name: 'BOM表' },
         { list: [], select: [], key: 'production-order', name: '生产单' },
         { list: [], select: [], key: 'message', name: '消息' },

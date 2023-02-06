@@ -1532,8 +1532,10 @@ const messages = {
                 'transfer': '调货单',
                 'warehouse-transfer-order': '仓库调货单',
                 'material-purchase-order': '物料采购单',
-                'material': '物料',
-                'material-category': '物料分类',
+	            'material': '物料',
+	            'material-category': '物料分类',
+                'inventory': '存货档案',
+                'inventory-category': '存货分类',
                 'bom': 'BOM表',
                 'production-order': '生产单',
                 'message': '消息',
@@ -1840,6 +1842,19 @@ const messages = {
                 'detail': '区域详情',
                 'delete': '删除区域',
             },
+	        'inventory': {
+		        'list':'查看存货档案列表',
+		        'save':'保存存货档案',
+		        'detail':'查看存货档案详情',
+		        'delete':'删除存货档案',
+		        'import':'导入存货档案',
+	        },
+	        'inventory-category': {
+		        'list':'查看存货档案分类',
+		        'save':'保存存货档案分类',
+		        'detail':'查看存货档案分类详情',
+		        'delete':'删除存货档案分类',
+	        },
         },
         error_code: {
             expire: '登录状态已过期，请重新登录',
@@ -3844,6 +3859,20 @@ const messages = {
                 'preset': 'set preset',
                 'status': 'set status',
             },
+		    'inventory': {
+			    'list':'View inventory list',
+			    'save': 'Edit inventory',
+			    'detail': 'Inventory details',
+			    'delete': 'Delete inventory',
+			    'import':'Import inventory',
+
+		    },
+		    'inventory-category': {
+			    'list':'View inventory category list',
+			    'save': 'Edit inventory category',
+			    'detail': 'Inventory category details',
+			    'delete': 'Delete inventory category',
+		    },
 
         },
         error_code: {

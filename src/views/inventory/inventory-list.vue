@@ -4,8 +4,8 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('inv.file_list') }}</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="modalShow = true;upload.data.inventory_type = ''"><i class="icon i_add"/>{{ $t('inv.importInv') }}</a-button>
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
+                    <a-button type="primary" @click="modalShow = true;upload.data.inventory_type = ''" v-if="$auth('inventory.import')"><i class="icon i_add"/>{{ $t('inv.importInv') }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('inventory.save')"><i class="icon i_add"/>{{ $t('inv.add') }}</a-button>
                 </div>
             </div>
             <div class="tabs-container colorful">
@@ -55,9 +55,10 @@
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title='text'>
+<!--                            <a-tooltip placement="top" :title='text'>
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                            </a-tooltip>
+                            </a-tooltip>-->
+                            {{text || '-'}}
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.inventoryTypeFilter(text, $i18n.locale) }}
@@ -89,8 +90,8 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <!-- <a-button type="link" @click="routerChange('detail',record)" v-if="$auth('warehouse.detail')"><i class="icon i_detail"/>{{ $t('def.detail') }}</a-button> -->
-                            <a-button type="link" @click="routerChange('edit',record)" ><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                            <a-button type="link" @click="handleDelete(record.id)" class="danger" ><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('inventory.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('inventory.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
