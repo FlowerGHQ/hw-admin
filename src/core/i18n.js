@@ -333,6 +333,9 @@ const messages = {
             manage_account: '账户管理',
             item: '商品价格',
             name_short_name: '名称或简称',
+            account_wallet:'账户钱包',
+            account_balance:'账户余额',
+            balance_details:'余额明细'
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2401,6 +2404,9 @@ const messages = {
             manage_account: 'Account management',
             item: 'product price',
             name_short_name: 'Name or brief name',
+            account_wallet:'account wallet',
+            account_balance:'account balance',
+            balance_details:'balance details'
         },
         e: {
             employee_list: 'employee list',

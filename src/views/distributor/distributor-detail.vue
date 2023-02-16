@@ -113,6 +113,10 @@
                 <a-tab-pane key="ReceiverAddress" :tab="$t('d.address')">
                     <ReceiverAddress :orgId="distributor_id" :orgType="USER_TYPE.DISTRIBUTOR" v-if="activeKey === 'ReceiverAddress'"/>
                 </a-tab-pane>
+                <!-- 账户钱包 -->
+                <a-tab-pane key="AccountWallet" :tab="$t('d.account_wallet')">
+                    <AccountWallet v-if="activeKey === 'AccountWallet'"/>
+                </a-tab-pane>
             </a-tabs>
         </div>
     </div>
@@ -126,6 +130,7 @@ import StoreList from '@/components/panel/StoreList.vue';
 import WalletList from '@/components/panel/WalletList.vue';
 import PurchaseList from '@/components/panel/PurchaseList.vue';
 import ReceiverAddress from '@/components/panel/ReceiverAddress.vue';
+import AccountWallet from './components/AccountWallet.vue'
 
 // import PricingStructure from '@/components/panel/PricingStructure.vue';
 
@@ -140,6 +145,7 @@ export default {
         // PricingStructure,
         WalletList,
         ReceiverAddress,
+        AccountWallet
     },
     props: {},
     data() {
