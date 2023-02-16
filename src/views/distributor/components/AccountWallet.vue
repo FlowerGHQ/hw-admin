@@ -2,10 +2,7 @@
     <div class="account">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" :tab="$t('d.account_balance')">
-                <div class="user-name">
-                    用户姓名
-                </div>
-                <div class="account-balance"></div>
+                <AccountBalance/>
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
                 <balanceDetails />
@@ -17,17 +14,10 @@
 <script setup>
     import { ref } from 'vue';
     import balanceDetails from './balanceDetails.vue'
+    import AccountBalance from './AccountBalance.vue'
     const activeKey = ref('1')
 </script>
 
 <style lang="less" scoped>
-.user-name {
-    width: 100%;
-    height: 100px;
-    box-sizing: border-box;
-    padding: 30px 30px;
-}
-.account-balance {
-    
-}
+
 </style>
