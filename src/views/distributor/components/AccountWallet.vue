@@ -8,7 +8,7 @@
                 <div class="account-balance"></div>
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
-                2
+                <balanceDetails />
             </a-tab-pane>            
         </a-tabs>
     </div>
@@ -16,6 +16,7 @@
 
 <script setup>
     import { ref } from 'vue';
+    import balanceDetails from './balanceDetails.vue'
     const activeKey = ref('1')
 </script>
 
