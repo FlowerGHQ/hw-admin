@@ -335,7 +335,13 @@ const messages = {
             name_short_name: '名称或简称',
             account_wallet:'账户钱包',
             account_balance:'账户余额',
-            balance_details:'余额明细'
+            balance_details:'余额明细',
+            source: '来源',
+            repair_sn: '工单编号',
+            money:'金额',
+            Income_expenditure: '收/支',  
+            capital_type: '资金类型',            
+            create_time: '创建时间',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2406,7 +2412,13 @@ const messages = {
             name_short_name: 'Name or brief name',
             account_wallet:'account wallet',
             account_balance:'account balance',
-            balance_details:'balance details'
+            balance_details:'balance details',
+            source: 'source',
+            repair_sn: 'repairsn',
+            money:'money',
+            Income_expenditure: 'Income expenditure',  
+            capital_type: 'capital type',            
+            create_time: 'Create Time',
         },
         e: {
             employee_list: 'employee list',
