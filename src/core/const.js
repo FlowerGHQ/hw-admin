@@ -1698,6 +1698,7 @@ let Const = {
             '70': { key: 70, zh: '已支付订金',en: 'Deposit paid', value: 70 },
             '80': { key: 80, zh: '已试驾',en: 'Test drive', value: 80 },
             '90': { key: 90, zh: '已购',en: 'Purchased', value: 90 },
+	        '100': { key: 100, zh: '预约试驾',en: 'Book a test drive', value: 100 },
         },
 		TARGET_TYPE: {
 			CUSTOMER: 1,
