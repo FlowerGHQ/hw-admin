@@ -154,22 +154,78 @@
                 <a-button @click="handleRepairEnd()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')" class="repair-audit-modal" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')"  style="width: 800px;" :after-close='handleAuditClose'>
             <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">{{ $t('n.result') }}:</div>
-                    <a-radio-group v-model:value="auditForm.audit_result">
-                        <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
-                        <a-radio :value="0">{{ $t('n.fail') }}</a-radio>
-                    </a-radio-group>
+                <!-- 结算清单 -->
+                <div>
+                    <h3>{{ $t('r.settlement_list') }}</h3>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>{{ $t('r.warranty') }}：{{ $Util.repairServiceFilter(detail.service_type, $i18n.locale) }}</span>
+                        <span>{{ $t('r.serial_number') }}：{{ detail.uid }}</span>
+                        <span>{{ $t('r.date') }}：{{ $Util.timeFilter(detail.create_time, 3) || '-' }}</span>
+                    </div>
                 </div>
-                <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
+                <!-- 工单记录 -->
+                <div style="margin-top: 40px;">
+                    <h3>工单记录</h3>
+                </div>
+                <!-- 工单处理 -->
+                <div style="margin-top: 40px;">
+                    <h3>工单处理</h3>
+                    <!-- 处理方式 -->
+                    <div style="line-height: 50px;">
+                        <div class="form-item">
+                        <div class="key">处理方式:</div>
+                            <a-radio-group v-model:value="auditForm">
+                                <a-radio :value="1">赔付配件</a-radio>
+                                <a-radio :value="0">配付至账户</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                    <!-- 抵扣方式 -->
+                    <div style="line-height: 50px;">
+                        <div class="form-item">
+                        <div class="key">处理方式:</div>
+                            <a-radio-group v-model:value="auditForm">
+                                <a-radio :value="1">百分比</a-radio>
+                                <a-radio :value="0">金额</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                    <!-- 抵扣价格 -->
+                    <div style="line-height: 50px;">
+                        <div class="form-item">
+                            <div class="key">处理方式:</div>
+                            <!-- v-model:value="auditForm." -->
+                            <a-input style="width: 100px;"  placeholder="请输入"/> &nbsp;%
+                        </div>
+                    </div>
+                    <!-- 赔付金额 -->
+                    <div style="line-height: 50px;">
+                        <div class="form-item">
+                            <div class="key">赔付金额:</div>
+                            100元
+                        </div>
+                    </div>
+                </div>
+                <!-- 审核 -->
+                <div style="margin-top: 40px;">   
+                    <h3>{{ $t('n.audit') }}</h3>             
+                    <div class="form-item required">
+                        <div class="key">{{ $t('n.result') }}:</div>
+                        <a-radio-group v-model:value="auditForm.audit_result">
+                            <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                            <a-radio :value="0">{{ $t('n.fail') }}</a-radio>
+                        </a-radio-group>
+                    </div>
+                </div>
+                <!-- <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
                     <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
-                </div>
+                </div> -->
             </div>
             <template #footer>
                 <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
@@ -568,7 +624,7 @@ export default {
 
     .steps-container {
         padding: 0 20px;
-        margin-bottom: 20px;
+        margin-bottom: 20px;        
     }
 }
 </style>
