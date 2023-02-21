@@ -425,6 +425,8 @@ const apiList = {
         listAll: ['PostJson', 'distributor/list-name'], //选择用的 名称列表 无分页
         detail: ['PostJson', 'distributor/detail'],
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
+        walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
+        walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
     },
     Fault: { // 产品故障管理
         list: ['PostJson', 'item-fault/list'],
