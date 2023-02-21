@@ -20,7 +20,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.repair_sn') }}:</div>
                         <div class="value">
-                            <a-input  v-model:value="balanceForm.repair_sn" placeholder="请输入任务名称搜索" allowClear/>
+                            <a-input  v-model:value="balanceForm.repair_sn" allowClear/>
                         </div>
                     </a-col>
                     <!-- 创建时间 -->
@@ -35,23 +35,19 @@
                         <div class="key">{{ $t('d.Income_expenditure') }}:</div>
                         <div class="value">
                             <a-select v-model:value="balanceForm.Income_expenditure" allowClear>
-                                <a-select-option value="1">全部</a-select-option>
-                                <a-select-option value="lucy">收入</a-select-option>                                
-                                <a-select-option value="lucy">支出</a-select-option>                                
+                                <a-select-option v-for="(val,key) in Income_type" :key="key" :value="val.id">{{ val[$i18n.locale]  }}</a-select-option>
                             </a-select>
                         </div>
                     </a-col>
-                    <!-- 资金类型 -->
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <!-- 资金类型 后期可能要加上 -->
+                    <!-- <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.capital_type') }}:</div>
                         <div class="value">
                             <a-select v-model:value="balanceForm.capital_type" allowClear>
-                                <a-select-option value="1">全部</a-select-option>
-                                <a-select-option value="lucy">余额</a-select-option>                                
-                                <a-select-option value="lucy">充值</a-select-option>                                
+                                <a-select-option v-for="(val,key) in capital_type" :key="key" :value="val.id">{{ val[$i18n.locale]  }}</a-select-option>                               
                             </a-select>
                         </div>
-                    </a-col>
+                    </a-col> -->
                     
                 </a-row>
                 <div class="btn-area">
@@ -59,14 +55,49 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
-            <div class="table-container">
+            <div class="table-container">                
                 <a-table 
                     :columns="tableColumns" 
                     :data-source="tableData" 
                     :scroll="{ x: true }" 
                     :row-key="record => record.id"
+                    :pagination="false"
                 >
-                    <template #bodyCell="{ column, text , record }">                        
+                    <template #bodyCell="{ column, text , record }">   
+                        <!-- 来源 1工单类型 2采购下单 -->
+                        <template v-if="column.dataIndex === 'sourceType'">
+                            {{ source_type[text][$i18n.locale] }}
+                        </template>
+
+                        <!-- 工单编号 -->
+                        <template v-if="column.dataIndex === 'sourceId'">
+                            <a>{{ text }}</a>
+                        </template>
+
+                        <!-- 金额 -->
+                        <template v-if="column.dataIndex === 'money'">
+                            {{ text }}
+                        </template>
+
+                        <!-- 1收入 2支出 -->
+                        <template v-if="column.dataIndex === 'type'">
+                            {{ Income_type[text][$i18n.locale] }}
+                        </template>
+
+                        <!-- 资金类型 1是余额 -->
+                        <template v-if="column.dataIndex === 'subject'">
+                            {{ capital_type[text][$i18n.locale] }}
+                        </template>   
+
+                        <!-- 账户余额 -->
+                        <template v-if="column.dataIndex === 'subject'">
+                            {{ text }}
+                        </template> 
+
+                        <!-- 创建时间 -->
+                        <template v-if="column.dataIndex === 'create_time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template> 
                     </template>
                 </a-table>
             </div>
@@ -90,41 +121,73 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, ref } from 'vue';
+import Core from '@/core';
+import { computed, getCurrentInstance, ref, onMounted } from 'vue';
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
-const  source_type = {
-    '1': {id: '1', zh: '全部', en: 'ALL'},
-    '2': {id: '2', zh: '工单转入', en: 'Work order transfer'},
-    '3': {id: '3', zh: '采购下单', en: 'Purchase order'},    
+// 来源
+const source_type = {
+    '0': {id: '0', zh: '全部', en: 'ALL'},
+    '1': {id: '1', zh: '工单转入', en: 'Work order transfer'},
+    '2': {id: '2', zh: '采购下单', en: 'Purchase order'},    
+}
+// 收入/支出
+const Income_type = {
+    '0': {id: '0', zh: '全部', en: 'ALL'},
+    '1': {id: '1', zh: '收入', en: 'income'},
+    '2': {id: '2', zh: '支出', en: 'expenditure'},    
+}
+// 资金类型(目前只有余额)
+const capital_type = {
+    '0': {id: '0', zh: '全部', en: 'ALL'},
+    '1': {id: '1', zh: '余额', en: 'balance'},
+    '2': {id: '2', zh: '充值', en: 'Recharge'},    
 }
 
 const {proxy} = getCurrentInstance();
 
 const TimeSearchs = ref(null)  //组件的ref
 const balanceForm = ref({
-    source: "1",
+    source: "0",
     repair_sn: null,
-    Income_expenditure: "1",
-    capital_type: "1",
+    Income_expenditure: "0",    
     begin_time: '',
     end_time: '',
+})
+const tableData = ref([]) // 明细列表详情
+
+/* 初始化 */
+onMounted(() => {
+    walletListFetch()
 })
 
 
 // 计算属性
 const  tableColumns = computed(() => {
     let columns = [
-        {title: proxy.$t('d.source'), dataIndex: 'phone',key: 'item'},
-        {title: proxy.$t('d.repair_sn'), dataIndex: 'name', key: 'item'},
-        {title: proxy.$t('d.money'), dataIndex: 'country',key: 'item'},
-        {title: proxy.$t('d.Income_expenditure'), dataIndex: 'address', key: 'address'},
-        {title: proxy.$t('d.capital_type'), dataIndex: 'create_time', key: 'time'},                
-        {title: proxy.$t('d.account_balance'), dataIndex: 'create_time', key: 'time'},                
-        {title: proxy.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},                
+        {title: proxy.$t('d.source'), dataIndex: 'sourceType',key: 'sourceType'},  // 来源
+        {title: proxy.$t('d.repair_sn'), dataIndex: 'sourceId', key: 'sourceId'}, // 工单编号
+        {title: proxy.$t('d.money'), dataIndex: 'money',key: 'money'},  // 金额
+        {title: proxy.$t('d.Income_expenditure'), dataIndex: 'type', key: 'type'}, // 1收入 2支出
+        {title: proxy.$t('d.capital_type'), dataIndex: 'subject', key: 'subject'}, // 资金类型  1目前只有余额  充值(这期不做)  
+        {title: proxy.$t('d.account_balance'), dataIndex: 'balance', key: 'balance'}, // 账户余额
+        {title: proxy.$t('d.create_time'), dataIndex: 'create_time', key: 'create_time'},
     ]
     return columns
 })
+
+/* Fetch */
+// 明细列表
+const walletListFetch = (params = {}) => {    
+    Core.Api.Distributor.walletMoneyList({
+        ...params
+    }).then(res => {
+        console.log('walletListFetch res', res)
+        tableData.value = res?.list
+    }).catch(err => {
+        console.log('walletListFetch err', err)
+    })
+}
 
 // methods
 // 时间组件事件
@@ -136,10 +199,21 @@ const handleOtherSearch = (item) => {
     console.log(balanceForm.value);
 }
 // 查询
-const handleSearch = () => {}
+const handleSearch = () => {
+    walletListFetch()
+}
 
 // 重置
-const handleSearchReset = () => {}
+const handleSearchReset = () => {
+    balanceForm.value = {
+        source: "0",
+        repair_sn: null,
+        Income_expenditure: "0",    
+        begin_time: null,
+        end_time: null
+    }
+    walletListFetch()
+}
 </script>
 
 <style lang="less" scoped>

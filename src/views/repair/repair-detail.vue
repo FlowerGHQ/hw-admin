@@ -168,11 +168,46 @@
                 <!-- 工单记录 -->
                 <div style="margin-top: 40px;">
                     <h3>{{ $t('r.Work_order_record') }}</h3>
+                    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"  :pagination='false'>
+                        <template #headerCell="{title}">
+                            {{ $t(title) }}
+                        </template>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.key === 'item'">
+                                {{ text || '-'}}
+                            </template>
+                            <template v-if="column.dataIndex === 'item_fault_id'">
+                                {{ faultMap[text] }}
+                            </template>
+                            <template v-if="column.dataIndex === 'amount'">
+                                {{ text }} {{ $t('in.item') }}
+                            </template>
+                            <template v-if="column.dataIndex === 'price'">
+                                € {{ $Util.countFilter(text) }}
+                            </template>
+                            <template v-if="column.dataIndex === 'sum_price'">
+                                € {{ $Util.countFilter(record.price * record.amount) }}
+                            </template>
+                        </template>
+                <template #summary>
+                    <a-table-summary>
+                        <a-table-summary-row>
+                            <a-table-summary-cell :index="0" :col-span="4"></a-table-summary-cell>
+                            <a-table-summary-cell :index="1" :col-span="1">
+                                <div class="sum-price">
+                                    <div class="row" style="display:flex;margin-bottom:5px"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
+                                    <div class="row" style="display:flex"><p>{{ $t('r.amount_paid') }}</p><span>€0</span></div>
+                                </div>
+                            </a-table-summary-cell>
+                        </a-table-summary-row>
+                    </a-table-summary>
+                </template>
+            </a-table>
                     <!-- :dataSource="dataSource" -->
-                    <a-table :columns="workColumns" :pagination='false'>
-                        <!-- 总价格换算 -->
-                        <!-- <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
-                        {{$Util.countFilter(text)}} -->
+                    <!-- <a-table :columns="workColumns" :pagination='false' :dataSource="dataSource">
+                        总价格换算
+                        <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                        {{$Util.countFilter(text)}}
                     </a-table>
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
                         <div>
@@ -183,22 +218,22 @@
                             <span>{{ $t('r.amount_paid') }}</span>
                             <span style="margin-left: 100px;">&1.2</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
                 <!-- 工单处理 -->
                 <div style="margin-top: 40px;">
                     <h3>{{ $t('r.Work_order_processing') }}</h3>
                     <!-- 处理方式 -->
                     <div style="line-height: 50px;">
-                        <div class="form-item"> 
+                        <div class="form-item">
                         <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Treatment_mode') }}:</div>
-                            <a-radio-group v-model:value="auditForm.handle">
+                            <a-radio-group v-model:value="auditForm.compensation_method">
                                 <a-radio value="1">{{ $t('r.Compensation_accessories') }}</a-radio>
                                 <a-radio value="2">
                                     {{ $t('r.Allocated_account') }}
                                     <a-popover color="#535353">
                                         <template #content>
-                                            <div style="color: #fff; width:350px">                                            
+                                            <div style="color: #fff; width:350px">
                                                 <p>
                                                     {{ $t('r.Allocated_account') }}：
                                                     <span>{{ $t('r.Allocated_account_Text') }}</span>
@@ -215,12 +250,12 @@
                             </a-radio-group>
                         </div>
                     </div>
-                    <template v-if="auditForm.handle == 2">
+                    <template v-if="auditForm.compensation_method == 2">
                         <!-- 抵扣方式 -->
                         <div style="line-height: 50px;">
                             <div class="form-item">
                             <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
-                                <a-radio-group v-model:value="auditForm.deduction">
+                                <a-radio-group v-model:value="auditForm.compensation_type" @change="radioChange">
                                     <a-radio value="1">{{ $t('r.percentage') }}</a-radio>
                                     <a-radio value="2">{{ $t('r.money') }}</a-radio>
                                 </a-radio-group>
@@ -231,15 +266,15 @@
                             <div class="form-item">
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
                                 <!-- v-model:value="auditForm." -->
-                                <a-input style="width: 100px;"  placeholder="请输入"/> 
-                                <span style="margin-left:10px;">{{ auditForm.deduction == 1?'%':'元' }}</span>
+                                <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
+                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%':'元' }}</span>
                             </div>
                         </div>
                         <!-- 赔付金额 -->
                         <div style="line-height: 50px;">
                             <div class="form-item" style="color:#9495a4">
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
-                                <span>100</span>
+                                <span>{{this.auditForm.compensation_price}}</span>
                                 <!-- 单位 -->
                                 <span>元</span>
                             </div>
@@ -247,8 +282,8 @@
                     </template>
                 </div>
                 <!-- 审核 -->
-                <div style="margin-top: 40px;">   
-                    <h3>{{ $t('n.audit') }}</h3>             
+                <div style="margin-top: 40px;">
+                    <h3>{{ $t('n.audit') }}</h3>
                     <div class="form-item required">
                         <div class="key">{{ $t('n.result') }}:</div>
                         <a-radio-group v-model:value="auditForm.audit_result">
@@ -340,8 +375,10 @@ export default {
             auditForm: {
                 audit_result: '',
                 audit_message: '',
-                handle: '1', // 处理方式 1是赔付配件  2赔付至账户
-                deduction: '1', // 抵扣方式 1是百分比 2金额
+                compensation_method: '1', // 处理方式 1是赔付配件  2赔付至账户
+                compensation_type: '1', // 抵扣方式 1是百分比 2金额
+                compensation_money:'',//抵扣价格
+                compensation_price:'0'//赔付金额
             },
 
             repairEndShow: false,
@@ -365,6 +402,8 @@ export default {
                 waybill_uid: "",
                 company_uid: undefined,
             },
+            tableData:[],
+            faultMap: {}
         };
     },
     watch: {},
@@ -421,11 +460,29 @@ export default {
                 },
             ]
             return columns
+        },
+        tableColumns() {
+            let tableColumns = [
+                {title: 'r.fault_name', dataIndex: 'item_fault_id'},
+                {title: 'r.material', dataIndex: ['item', 'name'], key: 'item'},
+                {title: 'i.amount', dataIndex: 'amount'},
+                {title: 'i.unit_price', dataIndex: 'price'},
+                {title: 'i.total_price', dataIndex: 'sum_price'},
+            ]
+            return tableColumns
+        },
+        sum_price() {
+            let sum = 0
+            this.tableData.forEach(item => {
+                sum += item.amount * item.price
+            })
+            return sum
         }
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
         this.getRepairDetail();
+        this.getTableData()
     },
     methods: {
         // 页面跳转
@@ -464,11 +521,69 @@ export default {
                 console.log('getRepairDetail res', res)
                 this.detail = res
                 this.getCurrStep(this.detail.status)
+                this.getFaultData()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        getTableData() {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.RepairItem.list({
+                repair_order_id: this.id
+            }).then(res => {
+                console.log("getTableData res", res)
+                this.tableData = res.list;
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getFaultData() {
+            this.loading = true;
+            Core.Api.Fault.list({
+                org_id: this.detail.org_id,
+                org_type: this.detail.org_type,
+            }).then(res => {
+                console.log("getFaultData res:", res)
+                let list = res.list;
+                let map = {};
+                for (const item of list) {
+                    map[item.id] = item.name
+                }
+                console.log('getFaultData faultMap:', map)
+                this.faultMap = map;
+            }).catch(err => {
+                console.log('getFaultData err:', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        radioChange(){
+            this.auditForm.compensation_money = ''
+            this.auditForm.compensation_price = 0
+        },
+        typeChange(e){
+            if(this.auditForm.compensation_type === '1'){
+                if(this.auditForm.compensation_money > 100){
+                    this.$message.warning(this.$t('r.Percentage_exceeds'))
+                    this.auditForm.compensation_money = ''
+                    this.auditForm.compensation_price = 0
+                }else{
+                    this.auditForm.compensation_price = this.auditForm.compensation_money / 100 * this.$Util.countFilter(this.sum_price)
+                }
+            }
+            if(this.auditForm.compensation_type === '2'){
+                if(this.auditForm.compensation_money > this.$Util.countFilter(this.sum_price)){
+                    this.$message.warning(this.$t('r.Amount_exceeds'))
+                    this.auditForm.compensation_money = ''
+                    this.auditForm.compensation_price = 0
+                }else{
+                    this.auditForm.compensation_price = this.auditForm.compensation_money
+                }
+            }
         },
         // 获取当前工单进度
         getCurrStep(status) {
@@ -694,7 +809,7 @@ export default {
 
     .steps-container {
         padding: 0 20px;
-        margin-bottom: 20px;        
+        margin-bottom: 20px;
     }
 }
 
@@ -710,8 +825,8 @@ export default {
     height: 15px;
     line-height: 15px;
     text-align: center;
-    border-radius: 50%;    
-    border: 1px solid #919191;    
-    color: #919191;       
+    border-radius: 50%;
+    border: 1px solid #919191;
+    color: #919191;
 }
 </style>
