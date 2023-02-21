@@ -174,6 +174,16 @@
                         <!-- <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
                         {{$Util.countFilter(text)}} -->
                     </a-table>
+                    <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
+                        <div>
+                            <span>{{ $t('r.total_price') }}</span>
+                            <span style="margin-left: 100px;">&1.2</span>
+                        </div>
+                        <div>
+                            <span>{{ $t('r.amount_paid') }}</span>
+                            <span style="margin-left: 100px;">&1.2</span>
+                        </div>
+                    </div>
                 </div>
                 <!-- 工单处理 -->
                 <div style="margin-top: 40px;">
@@ -182,9 +192,9 @@
                     <div style="line-height: 50px;">
                         <div class="form-item"> 
                         <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Treatment_mode') }}:</div>
-                            <a-radio-group v-model:value="auditForm">
-                                <a-radio :value="1">{{ $t('r.Compensation_accessories') }}</a-radio>
-                                <a-radio :value="0">
+                            <a-radio-group v-model:value="auditForm.handle">
+                                <a-radio value="1">{{ $t('r.Compensation_accessories') }}</a-radio>
+                                <a-radio value="2">
                                     {{ $t('r.Allocated_account') }}
                                     <a-popover color="#535353">
                                         <template #content>
@@ -205,33 +215,36 @@
                             </a-radio-group>
                         </div>
                     </div>
-                    <!-- 抵扣方式 -->
-                    <div style="line-height: 50px;">
-                        <div class="form-item">
-                        <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
-                            <a-radio-group v-model:value="auditForm">
-                                <a-radio :value="1">{{ $t('r.percentage') }}</a-radio>
-                                <a-radio :value="0">{{ $t('r.money') }}</a-radio>
-                            </a-radio-group>
+                    <template v-if="auditForm.handle == 2">
+                        <!-- 抵扣方式 -->
+                        <div style="line-height: 50px;">
+                            <div class="form-item">
+                            <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
+                                <a-radio-group v-model:value="auditForm.deduction">
+                                    <a-radio value="1">{{ $t('r.percentage') }}</a-radio>
+                                    <a-radio value="2">{{ $t('r.money') }}</a-radio>
+                                </a-radio-group>
+                            </div>
                         </div>
-                    </div>
-                    <!-- 抵扣价格 -->
-                    <div style="line-height: 50px;">
-                        <div class="form-item">
-                            <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
-                            <!-- v-model:value="auditForm." -->
-                            <a-input style="width: 100px;"  placeholder="请输入"/> &nbsp;%
+                        <!-- 抵扣价格 -->
+                        <div style="line-height: 50px;">
+                            <div class="form-item">
+                                <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
+                                <!-- v-model:value="auditForm." -->
+                                <a-input style="width: 100px;"  placeholder="请输入"/> 
+                                <span style="margin-left:10px;">{{ auditForm.deduction == 1?'%':'元' }}</span>
+                            </div>
                         </div>
-                    </div>
-                    <!-- 赔付金额 -->
-                    <div style="line-height: 50px;">
-                        <div class="form-item" style="color:#9495a4">
-                            <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
-                            <span>                            
-                                100元
-                            </span>
+                        <!-- 赔付金额 -->
+                        <div style="line-height: 50px;">
+                            <div class="form-item" style="color:#9495a4">
+                                <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
+                                <span>100</span>
+                                <!-- 单位 -->
+                                <span>元</span>
+                            </div>
                         </div>
-                    </div>
+                    </template>
                 </div>
                 <!-- 审核 -->
                 <div style="margin-top: 40px;">   
@@ -327,6 +340,8 @@ export default {
             auditForm: {
                 audit_result: '',
                 audit_message: '',
+                handle: '1', // 处理方式 1是赔付配件  2赔付至账户
+                deduction: '1', // 抵扣方式 1是百分比 2金额
             },
 
             repairEndShow: false,
@@ -697,6 +712,6 @@ export default {
     text-align: center;
     border-radius: 50%;    
     border: 1px solid #919191;    
-    color: #919191;
+    color: #919191;       
 }
 </style>
