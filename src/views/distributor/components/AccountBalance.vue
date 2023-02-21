@@ -3,7 +3,7 @@
         <!-- 上方个人信息 -->
         <div class="top-content">
             <div class="user-name">
-                {{ user_name }}
+                {{ name || '-' }}
             </div>
             <div class="account-balance-content">
                 <div class="account-balance-title">{{ $t('d.account_balance') }}</div>
@@ -31,6 +31,9 @@ import { Chart } from '@antv/g2'
 
 export default {
     name: 'Cards',
+    props: { 
+        name:String
+    },
     components: {
     },
     data() {
@@ -38,7 +41,7 @@ export default {
             currentTab: '',
             myChart: null,
             boStatisticsChart: {},
-            accountBalance: '123,456',
+            accountBalance: 0,
             user_name: '用户姓名',
             currency: '',
         };
@@ -55,12 +58,40 @@ export default {
     },
     mounted() {
         this.currency = Core.Data.getCurrency();
-        this.purchaseIntentStatistics()
+        this.getWalletDetail()
     },
     beforeUnmount() {
         this.$refs.TestDriveIntentionChartId.innerHTML = ''
     },
     methods: {
+        // 钱包详情
+        getWalletDetail() {
+            // this.loading = true;
+            // Core.Api.Distributor.walletDetail({
+            //     id:2
+            // }).then(res => {
+            //     console.log('getTableData err', res)
+            //     this.accountBalance = res.detail.balance
+            //     // this.testDriveIntentList = res.list;
+            //     const dv = []
+            //     // res.list.forEach(res => {
+            //     //     if (res.type !== 0) {
+            //     //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
+            //     //     }
+            //     // })
+            //     this.drawBoStatisticsChart(dv)
+
+            // }).catch(err => {
+            //     console.log('getTableData err', err)
+            // }).finally(() => {
+            //     this.loading = false;
+            // });
+            const dv = [
+                { type: '余额', value: 20 },
+                { type: '可用金额', value: 18 },
+            ]
+            this.drawBoStatisticsChart(dv)
+        },
         handleGetDetail() {
             this.$emit("changeTabToDetail", '2')
         },
@@ -134,32 +165,7 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
-        purchaseIntentStatistics() {
-            // this.loading = true;
-            // Core.Api.CRMDashboard.testDriveIntentStatistics({
-            //     ...this.searchForm
-            // }).then(res => {
-            //     console.log('getTableData err', res)
-            //     // this.testDriveIntentList = res.list;
-            //     const dv = []
-            //     res.list.forEach(res => {
-            //         if (res.type !== 0) {
-            //             dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-            //         }
-            //     })
-            //     this.drawBoStatisticsChart(dv)
 
-            // }).catch(err => {
-            //     console.log('getTableData err', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            // });
-            const dv = [
-                { type: '余额', value: 20 },
-                { type: '可用金额', value: 18 },
-            ]
-            this.drawBoStatisticsChart(dv)
-        }
     }
 };
 </script>
