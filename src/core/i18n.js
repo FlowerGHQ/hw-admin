@@ -311,7 +311,9 @@ const messages = {
             unit_price: '单价',
             total_price: '总价',
             Allocated_account_Text:'工单索赔金额将通过账户余额的形式发放至经销商的账户余额中。',
-            Compensation_accessories_text:'需要人工将需要赔偿的配件寄出。'
+            Compensation_accessories_text:'需要人工将需要赔偿的配件寄出。',
+            Percentage_exceeds:'抵扣百分比不能超出百分之百',
+            Amount_exceeds:'抵扣金额不能超出总金额'
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -354,10 +356,10 @@ const messages = {
             source: '来源',
             repair_sn: '工单编号',
             money:'金额',
-            Income_expenditure: '收/支',  
-            capital_type: '资金类型',            
+            Income_expenditure: '收/支',
+            capital_type: '资金类型',
             create_time: '创建时间',
-            total_account: '账户总资产', 
+            total_account: '账户总资产',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2404,7 +2406,9 @@ const messages = {
             unit_price: 'unit price',
             total_price: 'total price',
             Allocated_account_Text:'The work order claim amount will be distributed to the dealers account balance in the form of account balance。',
-            Compensation_accessories_text:'The parts that need compensation need to be sent manually.'
+            Compensation_accessories_text:'The parts that need compensation need to be sent manually.',
+            Percentage_exceeds:'The deduction percentage cannot exceed 100%',
+            Amount_exceeds:'The deduction amount cannot exceed the total amount'
         },
         d: {
             distributor_detail: 'Distributor details',
@@ -2447,8 +2451,8 @@ const messages = {
             source: 'source',
             repair_sn: 'repairsn',
             money:'money',
-            Income_expenditure: 'Income expenditure',  
-            capital_type: 'capital type',            
+            Income_expenditure: 'Income expenditure',
+            capital_type: 'capital type',
             create_time: 'Create Time',
             total_account: 'Total account assets',
         },
