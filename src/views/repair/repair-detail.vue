@@ -167,44 +167,69 @@
                 </div>
                 <!-- 工单记录 -->
                 <div style="margin-top: 40px;">
-                    <h3>工单记录</h3>
+                    <h3>{{ $t('r.Work_order_record') }}</h3>
+                    <!-- :dataSource="dataSource" -->
+                    <a-table :columns="workColumns" :pagination='false'>
+                        <!-- 总价格换算 -->
+                        <!-- <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                        {{$Util.countFilter(text)}} -->
+                    </a-table>
                 </div>
                 <!-- 工单处理 -->
                 <div style="margin-top: 40px;">
-                    <h3>工单处理</h3>
+                    <h3>{{ $t('r.Work_order_processing') }}</h3>
                     <!-- 处理方式 -->
                     <div style="line-height: 50px;">
-                        <div class="form-item">
-                        <div class="key">处理方式:</div>
+                        <div class="form-item"> 
+                        <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Treatment_mode') }}:</div>
                             <a-radio-group v-model:value="auditForm">
-                                <a-radio :value="1">赔付配件</a-radio>
-                                <a-radio :value="0">配付至账户</a-radio>
+                                <a-radio :value="1">{{ $t('r.Compensation_accessories') }}</a-radio>
+                                <a-radio :value="0">
+                                    {{ $t('r.Allocated_account') }}
+                                    <a-popover color="#535353">
+                                        <template #content>
+                                            <div style="color: #fff; width:350px">                                            
+                                                <p>
+                                                    {{ $t('r.Allocated_account') }}：
+                                                    <span>{{ $t('r.Allocated_account_Text') }}</span>
+                                                </p>
+                                                <p>
+                                                    {{ $t('r.Compensation_accessories') }}：
+                                                    <span>{{ $t('r.Compensation_accessories_text') }}</span>
+                                                </p>
+                                            </div>
+                                        </template>
+                                        <span class="popovers">i</span>
+                                    </a-popover>
+                                </a-radio>
                             </a-radio-group>
                         </div>
                     </div>
                     <!-- 抵扣方式 -->
                     <div style="line-height: 50px;">
                         <div class="form-item">
-                        <div class="key">处理方式:</div>
+                        <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
                             <a-radio-group v-model:value="auditForm">
-                                <a-radio :value="1">百分比</a-radio>
-                                <a-radio :value="0">金额</a-radio>
+                                <a-radio :value="1">{{ $t('r.percentage') }}</a-radio>
+                                <a-radio :value="0">{{ $t('r.money') }}</a-radio>
                             </a-radio-group>
                         </div>
                     </div>
                     <!-- 抵扣价格 -->
                     <div style="line-height: 50px;">
                         <div class="form-item">
-                            <div class="key">处理方式:</div>
+                            <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
                             <!-- v-model:value="auditForm." -->
                             <a-input style="width: 100px;"  placeholder="请输入"/> &nbsp;%
                         </div>
                     </div>
                     <!-- 赔付金额 -->
                     <div style="line-height: 50px;">
-                        <div class="form-item">
-                            <div class="key">赔付金额:</div>
-                            100元
+                        <div class="form-item" style="color:#9495a4">
+                            <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
+                            <span>                            
+                                100元
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -351,6 +376,36 @@ export default {
                     return true
                 default: return false
             }
+        },
+        workColumns(){
+            let columns = [
+                {
+                    title: this.$t('r.fault_name'),
+                    dataIndex: 'name',
+                    key: 'name',
+                },
+                {
+                    title: this.$t('r.material'),
+                    dataIndex: 'age',
+                    key: 'age',
+                },
+                {
+                    title: this.$t('r.quantity'),
+                    dataIndex: 'quantity',
+                    key: 'quantity',
+                },
+                {
+                    title: this.$t('r.unit_price'),
+                    dataIndex: 'unit_price',
+                    key: 'unit_price',
+                },
+                {
+                    title: this.$t('r.total_price'),
+                    dataIndex: 'total_price',
+                    key: 'total_price',
+                },
+            ]
+            return columns
         }
     },
     created() {
@@ -626,5 +681,22 @@ export default {
         padding: 0 20px;
         margin-bottom: 20px;        
     }
+}
+
+// 英文的时候的样式
+.en_key{
+    width: auto !important;
+    margin-right: 10px;
+}
+.popovers{
+    margin-left: 10px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    text-align: center;
+    border-radius: 50%;    
+    border: 1px solid #919191;    
+    color: #919191;
 }
 </style>
