@@ -342,6 +342,7 @@ const messages = {
             Income_expenditure: '收/支',  
             capital_type: '资金类型',            
             create_time: '创建时间',
+            total_account: '账户总资产', 
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2419,6 +2420,7 @@ const messages = {
             Income_expenditure: 'Income expenditure',  
             capital_type: 'capital type',            
             create_time: 'Create Time',
+            total_account: 'Total account assets',
         },
         e: {
             employee_list: 'employee list',
