@@ -140,7 +140,7 @@ export default {
                     break;
                 case 'detail':    // 详情
                     routeUrl = this.$router.resolve({
-                        path: "/system/user-detail",
+                        path: "/crm-order/order-detail",
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
