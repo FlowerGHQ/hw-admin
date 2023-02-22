@@ -65,7 +65,7 @@ export default {
         this.$refs.TestDriveIntentionChartId.innerHTML = ''
     },
     methods: {
-        // 钱包详情
+        // 经销商钱包详情
         getWalletDetail() {
             this.loading = true;
             Core.Api.Distributor.detail({
