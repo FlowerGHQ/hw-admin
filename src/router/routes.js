@@ -1470,13 +1470,13 @@ const routes = [
         component: Layout,
         redirect: '/inventory/inventory-list',
         name: 'InventoryManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '存货管理',
             title_en: 'Stock Control',
             icon: 'i_s_warehouse',
-            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
-            auth: ['warehouse.list', 'warehouse-transfer-order.list', 'invoice.list', 'stock.list'],
+            roles: [LOGIN_TYPE.ADMIN],
+            auth: ['inventory.list'],
         },
         children: [
             {
@@ -1486,6 +1486,7 @@ const routes = [
                 meta: {
                     title: '存货档案',
                     title_en: 'Inventory Files',
+	                auth: ['inventory.list'],
                 }
             },
 	        {
@@ -1495,6 +1496,7 @@ const routes = [
 		        meta: {
 			        title: '存货分类',
 			        title_en: 'Inventory Category',
+			        auth: ['inventory-category.list'],
 		        }
 	        },
             {
@@ -1503,8 +1505,9 @@ const routes = [
                 component: () => import('@/views/inventory/inventory-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '档案编辑',
+                    title: '存货档案编辑',
                     parent: '/inventory/inventory-edit',
+	                auth: ['inventory.edit'],
                 }
             },
         ]
