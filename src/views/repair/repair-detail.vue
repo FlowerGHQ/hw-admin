@@ -688,6 +688,7 @@ export default {
             this.loading = true;
             Core.Api.Repair.audit({
                 ...form,
+                compensation_price:this.auditForm.compensation_price * 100,
                 id: this.id
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
