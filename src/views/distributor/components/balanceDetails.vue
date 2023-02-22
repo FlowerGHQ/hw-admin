@@ -11,7 +11,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.source') }}:</div>
                         <div class="value">
-                            <a-select  v-model:value="balanceForm.source" allowClear>
+                            <a-select  v-model:value="balanceForm.source_type" allowClear>
                                 <a-select-option v-for="(val,key) in source_type" :key="key" :value="val.id">{{ val[$i18n.locale]  }}</a-select-option>                              
                             </a-select>
                         </div>
@@ -65,12 +65,12 @@
                 >
                     <template #bodyCell="{ column, text , record }">   
                         <!-- 来源 1工单类型 2采购下单 -->
-                        <template v-if="column.dataIndex === 'sourceType'">
-                            {{ source_type[text][$i18n.locale] }}
+                        <template v-if="column.dataIndex === 'source_type'">
+                            {{ text?source_type[text][$i18n.locale]:"" }}                            
                         </template>
 
                         <!-- 工单编号 -->
-                        <template v-if="column.dataIndex === 'sourceId'">
+                        <template v-if="column.dataIndex === 'source_id'">
                             <a>{{ text }}</a>
                         </template>
 
@@ -81,16 +81,16 @@
 
                         <!-- 1收入 2支出 -->
                         <template v-if="column.dataIndex === 'type'">
-                            {{ Income_type[text][$i18n.locale] }}
+                            {{ text?Income_type[text][$i18n.locale]:"" }}
                         </template>
 
                         <!-- 资金类型 1是余额 -->
                         <template v-if="column.dataIndex === 'subject'">
-                            {{ capital_type[text][$i18n.locale] }}
+                            {{ text?capital_type[text][$i18n.locale]:"" }}
                         </template>   
 
                         <!-- 账户余额 -->
-                        <template v-if="column.dataIndex === 'subject'">
+                        <template v-if="column.dataIndex === 'balance'">
                             {{ text }}
                         </template> 
 
@@ -120,6 +120,18 @@
     </div>
 </template>
 
+
+const val SOURCE_TYPE_MANAGER_CREATE = 10 //管理员创建         
+const val SOURCE_TYPE_PURCHASE_ORDER = 20 //采购单         
+const val SOURCE_TYPE_AFTER_SALES_ORDER = 30 //售后单         
+const val SOURCE_TYPE_TRANSFER_ORDER = 40 //调货单         
+const val SOURCE_TYPE_REPAIR_ORDER= 50 //维修单         
+const val SOURCE_TYPE_MATERIAL_PURCHASE_ORDER = 60 //物料采购单        
+const val SOURCE_TYPE_WAREHOUSE_TRANSFER_ORDER = 70 //仓库调货单          
+const val SOURCE_TYPE_MANAGER_CREATE = 101 //管理员创建        
+const val SOURCE_TYPE_PURCHASE_ORDER = 201 //采购单        
+const val SOURCE_TYPE_REPAIR_ORDER= 501 //维修单
+
 <script setup>
 import Core from '@/core';
 import { computed, getCurrentInstance, ref, onMounted } from 'vue';
@@ -128,8 +140,8 @@ import TimeSearch from '@/components/common/TimeSearch.vue'
 // 来源
 const source_type = {
     '0': {id: '0', zh: '全部', en: 'ALL'},
-    '1': {id: '1', zh: '工单转入', en: 'Work order transfer'},
-    '2': {id: '2', zh: '采购下单', en: 'Purchase order'},    
+    '1': {id: '50', zh: '工单转入', en: 'Work order transfer'},
+    '2': {id: '20', zh: '采购下单', en: 'Purchase order'},
 }
 // 收入/支出
 const Income_type = {
@@ -141,18 +153,15 @@ const Income_type = {
 const capital_type = {
     '0': {id: '0', zh: '全部', en: 'ALL'},
     '1': {id: '1', zh: '余额', en: 'balance'},
-    '2': {id: '2', zh: '充值', en: 'Recharge'},    
+    // '2': {id: '2', zh: '充值', en: 'Recharge'},
 }
 
 const {proxy} = getCurrentInstance();
 
 const TimeSearchs = ref(null)  //组件的ref
 const balanceForm = ref({
-    source: "0",
-    repair_sn: null,
-    Income_expenditure: "0",    
-    begin_time: '',
-    end_time: '',
+    source_type: "0",    
+    Income_expenditure: "0",            
 })
 const tableData = ref([]) // 明细列表详情
 
@@ -165,8 +174,8 @@ onMounted(() => {
 // 计算属性
 const  tableColumns = computed(() => {
     let columns = [
-        {title: proxy.$t('d.source'), dataIndex: 'sourceType',key: 'sourceType'},  // 来源
-        {title: proxy.$t('d.repair_sn'), dataIndex: 'sourceId', key: 'sourceId'}, // 工单编号
+        {title: proxy.$t('d.source'), dataIndex: 'source_type',key: 'source_type'},  // 来源
+        {title: proxy.$t('d.repair_sn'), dataIndex: 'source_id', key: 'source_id'}, // 工单编号
         {title: proxy.$t('d.money'), dataIndex: 'money',key: 'money'},  // 金额
         {title: proxy.$t('d.Income_expenditure'), dataIndex: 'type', key: 'type'}, // 1收入 2支出
         {title: proxy.$t('d.capital_type'), dataIndex: 'subject', key: 'subject'}, // 资金类型  1目前只有余额  充值(这期不做)  
@@ -205,14 +214,15 @@ const handleSearch = () => {
 
 // 重置
 const handleSearchReset = () => {
-    balanceForm.value = {
-        source: "0",
-        repair_sn: null,
-        Income_expenditure: "0",    
-        begin_time: null,
-        end_time: null
-    }
-    walletListFetch()
+    // balanceForm.value = {
+    //     source: "0",
+    //     repair_sn: null,
+    //     Income_expenditure: "0",    
+    //     begin_time: null,
+    //     end_time: null
+    // }
+    // walletListFetch()
+    console.log(balanceForm.value);
 }
 </script>
 
