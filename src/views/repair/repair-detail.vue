@@ -195,11 +195,17 @@
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
                         <div>
                             <span>{{ $t('r.total_price') }}</span>
-                            <span style="margin-left: 100px;">€{{$Util.countFilter(sum_price)}}</span>
+                            <span style="margin-left: 100px;">
+                                {{$Util.priceUnitFilter(detail.currency)}}
+                                {{$Util.countFilter(sum_price)}}
+                            </span>
                         </div>
                         <div>
                             <span>{{ $t('r.amount_paid') }}</span>
-                            <span style="margin-left: 100px;">€{{$Util.countFilter(sum_price)}}</span>
+                            <span style="margin-left: 100px;">
+                                {{$Util.priceUnitFilter(detail.currency)}}
+                                {{$Util.countFilter(sum_price)}}
+                            </span>
                         </div>
                     </div>
                 </div>
