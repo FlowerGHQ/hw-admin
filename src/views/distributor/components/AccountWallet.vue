@@ -2,7 +2,7 @@
     <div class="account">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" :tab="$t('d.account_balance')">
-                <AccountBalance @changeTabToDetail="getTabInfo" />
+                <AccountBalance :id="id" :name="name" @changeTabToDetail="getTabInfo" />
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
                 <balanceDetails />
@@ -12,11 +12,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import balanceDetails from './balanceDetails.vue'
 import AccountBalance from './AccountBalance.vue'
 const activeKey = ref('1')
-
+const name = ref('')
+const props = defineProps({
+    name: { type: String, default: '' },
+    id: { type: Number, default: 0 },
+})
+onMounted(()=>{
+    name.value = props.name
+})
 // 子组件AccountBalance的切换到明细的事件
 const getTabInfo = (data) => {
     activeKey.value = data
