@@ -7,19 +7,16 @@
             </div>
             <div class="account-balance-content">
                 <div class="account-balance-title">{{ $t('d.account_balance') }}</div>
-                <div v-if="currency === 'eur' || currency === 'EUR'" class="balance-detail">
-                    €{{ $Util.countFilter(accountBalance[priceKey + 'eur']) }}
-                </div>
-                <div v-else class="balance-detail">
-                    ${{ $Util.countFilter(accountBalance[priceKey + 'usd']) }}
+                <div class="balance-detail">
+                    €{{ accountBalance }}
                 </div>
             </div>
         </div>
         <!-- echarts -->
         <div class="table-container">
             <div id="TestDriveIntentionChartId" class="chart" ref='TestDriveIntentionChartId'></div>
-            <div class="balance-num">¥ 4,544</div>
-            <div class="balance-use-num">¥ 4,544</div>
+            <div class="balance-num">€{{ accountBalance }}</div>
+            <div class="balance-use-num">€{{ availableBalance }}</div>
             <a-button type="link" class="detail-btn" @click="handleGetDetail">明细</a-button>
         </div>
 
@@ -31,8 +28,9 @@ import { Chart } from '@antv/g2'
 
 export default {
     name: 'Cards',
-    props: { 
-        name:String
+    props: {
+        name: String,
+        id: Number,
     },
     components: {
     },
@@ -42,16 +40,17 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             accountBalance: 0,
+            availableBalance: 0,
             user_name: '用户姓名',
             currency: '',
+            chartData: [],
+            accountBalancePercent: 0,
+            availableBalancePercent: 0
         };
     },
     computed: {
         lang() {
             return this.$store.state.lang
-        },
-        priceKey() {
-            return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
         },
     },
     created() {
@@ -66,31 +65,35 @@ export default {
     methods: {
         // 钱包详情
         getWalletDetail() {
-            // this.loading = true;
-            // Core.Api.Distributor.walletDetail({
-            //     id:2
-            // }).then(res => {
-            //     console.log('getTableData err', res)
-            //     this.accountBalance = res.detail.balance
-            //     // this.testDriveIntentList = res.list;
-            //     const dv = []
-            //     // res.list.forEach(res => {
-            //     //     if (res.type !== 0) {
-            //     //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-            //     //     }
-            //     // })
-            //     this.drawBoStatisticsChart(dv)
-
-            // }).catch(err => {
-            //     console.log('getTableData err', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            // });
-            const dv = [
-                { type: '余额', value: 20 },
-                { type: '可用金额', value: 18 },
-            ]
-            this.drawBoStatisticsChart(dv)
+            this.loading = true;
+            Core.Api.Distributor.detail({
+                id: this.id
+            }).then(res => {
+                console.log('getWalletDetail res', res)
+                this.accountBalance = (res.detail.wallet_list.balance.balance + res.detail.wallet_list.deposit.balance) / 100
+                this.availableBalance = res.detail.wallet_list.balance.balance / 100
+                this.accountBalancePercent = this.accountBalance / (this.accountBalance + this.availableBalance)
+                this.availableBalancePercent = this.availableBalance / (this.accountBalance + this.availableBalance)
+                this.handleChartData()
+            }).catch(err => {
+                console.log('getTableData err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        handleChartData() {
+            if (this.accountBalance || this.availableBalance) {
+                this.chartData = [
+                    { type: this.$t('d.balance'), value: this.accountBalance, percent: this.accountBalancePercent },
+                    { type: this.$t('d.available_balance'), value: this.availableBalance, percent: this.availableBalancePercent },
+                ]
+            } else {
+                this.chartData = [
+                    { type: this.$t('d.balance'), value: this.accountBalance, percent: 0.5 },
+                    { type: this.$t('d.available_balance'), value: this.availableBalance, percent: 0.5 },
+                ]
+            }
+            this.drawBoStatisticsChart(this.chartData)
         },
         handleGetDetail() {
             this.$emit("changeTabToDetail", '2')
@@ -114,6 +117,12 @@ export default {
                 radius: 0.75,
                 innerRadius: 0.6,
             });
+            chart.scale('percent', {
+                formatter: (val) => {
+                    val = val * 100 + '%';
+                    return val;
+                },
+            });
             chart.tooltip({
                 showTitle: false,
                 showMarkers: false,
@@ -123,13 +132,21 @@ export default {
                     '<span style="line-height: 20px;">名称：{name}<br/></span>' +
                     '<span style="padding-left: 16px; line-height: 20px;">占比：{value}<br/></span>' +
                     '</li>',
+                // itemTpl: '<li class="g2-tooltip-list-item"><span style="background-color:{color};" class="g2-tooltip-marker"></span>{name}: {value}</li>',
             });
             chart
                 .interval()
                 .adjust('stack')
-                .position('value')
+                .position('percent')
                 .color('type')
-                .shape('slice-shape');
+                .shape('slice-shape')
+                .tooltip('type*percent', (item, percent) => {
+                    percent = percent * 100 + '%';
+                    return {
+                        name: item,
+                        value: percent,
+                    };
+                });
             chart.legend({
                 position: 'right',
             });
@@ -229,4 +246,5 @@ export default {
         left: 520px;
         bottom: 162px;
     }
-}</style>
+}
+</style>

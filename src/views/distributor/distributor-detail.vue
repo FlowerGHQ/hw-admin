@@ -115,7 +115,7 @@
                 </a-tab-pane>
                 <!-- 账户钱包 -->
                 <a-tab-pane key="AccountWallet" :tab="$t('d.account_wallet')">
-                    <AccountWallet :name="detail.name" v-if="activeKey === 'AccountWallet'"/>
+                    <AccountWallet :id="detail.id" :name="detail.name" v-if="activeKey === 'AccountWallet'"/>
                 </a-tab-pane>
             </a-tabs>
         </div>

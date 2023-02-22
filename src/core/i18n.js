@@ -360,6 +360,8 @@ const messages = {
             capital_type: '资金类型',
             create_time: '创建时间',
             total_account: '账户总资产',
+            balance: '余额',
+            available_balance: '可用余额',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2455,6 +2457,8 @@ const messages = {
             capital_type: 'capital type',
             create_time: 'Create Time',
             total_account: 'Total account assets',
+            balance: 'Balance',
+            available_balance: 'Available balance',
         },
         e: {
             employee_list: 'employee list',
