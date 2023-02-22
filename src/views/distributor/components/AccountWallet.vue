@@ -2,10 +2,10 @@
     <div class="account">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" :tab="$t('d.account_balance')">
-                <AccountBalance :id="id" :name="name" @changeTabToDetail="getTabInfo" />
+                <AccountBalance v-if="activeKey == 1" :id="id" :name="name" @changeTabToDetail="getTabInfo" />
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
-                <balanceDetails />
+                <balanceDetails v-if="activeKey == 2" />
             </a-tab-pane>
         </a-tabs>
     </div>

@@ -320,6 +320,22 @@
                         </a-select>
                     </div>
                 </div>
+                <!-- 账户余额 -->
+                <div class="form-item">
+                    <div class="key">账户余额:</div>
+                    <div class="value">
+                        <a-input-number
+                            v-model:value="form.payment"
+                            style="width: 120px"
+                            :min="0"
+                            :max="((detail.freight || 0) + detail.price - detail.payment)/100"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
+                            placeholder="余额"
+                        />
+                    </div>
+                </div>
+                <!-- 金额 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">

@@ -60,9 +60,9 @@
                     :columns="tableColumns" 
                     :data-source="tableData" 
                     :scroll="{ x: true }" 
-                    :row-key="record => record.id"
-                    :pagination="false"
+                    :row-key="record => record.id"                    
                 >
+                <!-- :pagination="false" -->
                     <template #bodyCell="{ column, text , record }">   
                         <!-- 来源 1工单类型 2采购下单 -->
                         <template v-if="column.dataIndex === 'source_type'">
@@ -70,13 +70,15 @@
                         </template>
 
                         <!-- 工单编号 -->
-                        <template v-if="column.dataIndex === 'source_id'">
-                            <a>{{ text }}</a>
+                        <template v-if="column.dataIndex === 'order_sn'">                            
+                            <a-tooltip placement="top" :title='text' >
+                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                            </a-tooltip>
                         </template>
 
                         <!-- 金额 -->
                         <template v-if="column.dataIndex === 'money'">
-                            {{ text }}
+                            {{walletFilter[record.price_currency] }}{{ $Util.countFilter(text) }}
                         </template>
 
                         <!-- 1收入 2支出 -->
@@ -91,7 +93,7 @@
 
                         <!-- 账户余额 -->
                         <template v-if="column.dataIndex === 'balance'">
-                            {{ text }}
+                            {{walletFilter[record.price_currency] }}{{ $Util.countFilter(text) }}
                         </template> 
 
                         <!-- 创建时间 -->
@@ -135,13 +137,15 @@ const val SOURCE_TYPE_REPAIR_ORDER= 501 //维修单
 <script setup>
 import Core from '@/core';
 import { computed, getCurrentInstance, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
+const router = useRouter()
 // 来源
 const source_type = {
     '0': {id: '0', zh: '全部', en: 'ALL'},
-    '1': {id: '50', zh: '工单转入', en: 'Work order transfer'},
-    '2': {id: '20', zh: '采购下单', en: 'Purchase order'},
+    '50': {id: '50', zh: '工单转入', en: 'Work order transfer'},
+    '20': {id: '20', zh: '采购下单', en: 'Purchase order'},
 }
 // 收入/支出
 const Income_type = {
@@ -154,6 +158,13 @@ const capital_type = {
     '0': {id: '0', zh: '全部', en: 'ALL'},
     '1': {id: '1', zh: '余额', en: 'balance'},
     // '2': {id: '2', zh: '充值', en: 'Recharge'},
+}
+// 单位转换 后端传的是 1人民币 2欧元 EUR 3美元 USD 4英镑
+const walletFilter = {
+    '1': '￥',
+    '2': '€',
+    '3': '$',
+    '4': '£',
 }
 
 const {proxy} = getCurrentInstance();
@@ -175,7 +186,7 @@ onMounted(() => {
 const  tableColumns = computed(() => {
     let columns = [
         {title: proxy.$t('d.source'), dataIndex: 'source_type',key: 'source_type'},  // 来源
-        {title: proxy.$t('d.repair_sn'), dataIndex: 'source_id', key: 'source_id'}, // 工单编号
+        {title: proxy.$t('d.repair_sn'), dataIndex: 'order_sn', key: 'order_sn'}, // 工单编号
         {title: proxy.$t('d.money'), dataIndex: 'money',key: 'money'},  // 金额
         {title: proxy.$t('d.Income_expenditure'), dataIndex: 'type', key: 'type'}, // 1收入 2支出
         {title: proxy.$t('d.capital_type'), dataIndex: 'subject', key: 'subject'}, // 资金类型  1目前只有余额  充值(这期不做)  
@@ -184,6 +195,20 @@ const  tableColumns = computed(() => {
     ]
     return columns
 })
+
+// 路由跳转
+const routerChange = (type, item = {}) => {
+    let routeUrl = ''
+    switch (type) {  
+        case 'detail':  // 详情
+            routeUrl = router.resolve({
+                path: "/repair/repair-detail",
+                query: { id: item.source_id }
+            })
+            window.open(routeUrl.href, '_self')
+            break;
+    }
+}
 
 /* Fetch */
 // 明细列表
