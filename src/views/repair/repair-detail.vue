@@ -256,7 +256,7 @@
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
                                 <!-- v-model:value="auditForm." -->
                                 <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
-                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%':'元' }}</span>
+                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
                             </div>
                         </div>
                         <!-- 赔付金额 -->
@@ -265,7 +265,7 @@
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
                                 <span>{{this.auditForm.compensation_price}}</span>
                                 <!-- 单位 -->
-                                <span>元</span>
+                                <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                             </div>
                         </div>
                     </template>
