@@ -1152,7 +1152,7 @@ export default {
             if (!form.pay_method) {
                 return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
-            if (!form.payment) {
+            if (!form.payment && !form.accountBalance) {
                 return this.$message.warning(this.$t('p.enter_payment'))
             }
 
@@ -1164,7 +1164,8 @@ export default {
                     payment: Core.Util.countFilter(form.payment, 100, 0,true),
                     imgs: form.path,
                     img_type: form.type,
-                    remark: form.remark
+                    remark: form.remark,
+                    wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0,true)
                 }).then(res => {
                     this.$message.success(this.$t('p.payment_success'))
                     this.getList()

@@ -20,7 +20,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.repair_sn') }}:</div>
                         <div class="value">
-                            <a-input  v-model:value="balanceForm.repair_sn" allowClear/>
+                            <a-input  v-model:value="balanceForm.order_sn" allowClear/>
                         </div>
                     </a-col>
                     <!-- 创建时间 -->
@@ -34,7 +34,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.Income_expenditure') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="balanceForm.Income_expenditure" allowClear>
+                            <a-select v-model:value="balanceForm.type" allowClear>
                                 <a-select-option v-for="(val,key) in Income_type" :key="key" :value="val.id">{{ val[$i18n.locale]  }}</a-select-option>
                             </a-select>
                         </div>
@@ -60,7 +60,8 @@
                     :columns="tableColumns" 
                     :data-source="tableData" 
                     :scroll="{ x: true }" 
-                    :row-key="record => record.id"                    
+                    :row-key="record => record.id"
+                    :pagination="false"
                 >
                 <!-- :pagination="false" -->
                     <template #bodyCell="{ column, text , record }">   
@@ -83,12 +84,13 @@
 
                         <!-- 1收入 2支出 -->
                         <template v-if="column.dataIndex === 'type'">
-                            {{ text?Income_type[text][$i18n.locale]:"" }}
+                            {{ Income_type[text]?Income_type[text][$i18n.locale]:"-" }}
                         </template>
 
-                        <!-- 资金类型 1是余额 -->
+                        <!-- 资金类型 1是余额 目前这里全部显示余额 -->
                         <template v-if="column.dataIndex === 'subject'">
-                            {{ text?capital_type[text][$i18n.locale]:"" }}
+                            余额
+                            <!-- {{ capital_type[text]?capital_type[text][$i18n.locale]:"余额" }} -->
                         </template>   
 
                         <!-- 账户余额 -->
@@ -103,11 +105,11 @@
                     </template>
                 </a-table>
             </div>
-            <!-- <div class="paging-container">
+            <div class="paging-container">
                 <a-pagination
-                    v-model:current="currPage"
-                    :page-size='pageSize'
-                    :total="total"
+                    v-model:current="balancePagination.currPage"
+                    :page-size='balancePagination.pageSize'
+                    :total="balancePagination.total"
                     show-quick-jumper
                     show-size-changer
                     show-less-items
@@ -117,22 +119,10 @@
                     @change="pageChange"
                     @showSizeChange="pageSizeChange"
                 />
-            </div> -->
+            </div>
         </div>
     </div>
 </template>
-
-
-const val SOURCE_TYPE_MANAGER_CREATE = 10 //管理员创建         
-const val SOURCE_TYPE_PURCHASE_ORDER = 20 //采购单         
-const val SOURCE_TYPE_AFTER_SALES_ORDER = 30 //售后单         
-const val SOURCE_TYPE_TRANSFER_ORDER = 40 //调货单         
-const val SOURCE_TYPE_REPAIR_ORDER= 50 //维修单         
-const val SOURCE_TYPE_MATERIAL_PURCHASE_ORDER = 60 //物料采购单        
-const val SOURCE_TYPE_WAREHOUSE_TRANSFER_ORDER = 70 //仓库调货单          
-const val SOURCE_TYPE_MANAGER_CREATE = 101 //管理员创建        
-const val SOURCE_TYPE_PURCHASE_ORDER = 201 //采购单        
-const val SOURCE_TYPE_REPAIR_ORDER= 501 //维修单
 
 <script setup>
 import Core from '@/core';
@@ -171,10 +161,17 @@ const {proxy} = getCurrentInstance();
 
 const TimeSearchs = ref(null)  //组件的ref
 const balanceForm = ref({
-    source_type: "0",    
-    Income_expenditure: "0",            
+    source_type:"0", // 来源
+    order_sn: null, // 工单编号
+    type:"0", // 收入还是支出
 })
 const tableData = ref([]) // 明细列表详情
+// 分页
+const balancePagination = ref({
+    currPage: 1,
+    pageSize: 10,
+    total: 0,
+})
 
 /* 初始化 */
 onMounted(() => {
@@ -197,14 +194,22 @@ const  tableColumns = computed(() => {
 })
 
 // 路由跳转
-const routerChange = (type, item = {}) => {
+const routerChange = (type, item = {}) => {    
     let routeUrl = ''
     switch (type) {  
         case 'detail':  // 详情
-            routeUrl = router.resolve({
-                path: "/repair/repair-detail",
-                query: { id: item.source_id }
-            })
+            if(item.source_type == 50){
+                routeUrl = router.resolve({
+                    path: "/repair/repair-detail",
+                    query: { id: item.source_id }
+                })
+            }else if(item.source_type == 20){
+                routeUrl = router.resolve({
+                    path: "/purchase/purchase-order-detail",
+                    query: { id: item.source_id }
+                })
+            }
+            
             window.open(routeUrl.href, '_self')
             break;
     }
@@ -214,8 +219,11 @@ const routerChange = (type, item = {}) => {
 // 明细列表
 const walletListFetch = (params = {}) => {    
     Core.Api.Distributor.walletMoneyList({
-        ...params
+        ...params,
+        page: balancePagination.value.currPage,
+        page_size: balancePagination.value.pageSize
     }).then(res => {
+        balancePagination.value.total = res.count;
         console.log('walletListFetch res', res)
         tableData.value = res?.list
     }).catch(err => {
@@ -224,6 +232,16 @@ const walletListFetch = (params = {}) => {
 }
 
 // methods
+// 分页事件
+const pageChange = (curr) => {  // 页码改变
+    balancePagination.value.currPage = curr
+    walletListFetch()
+}
+const pageSizeChange = (current, size) => {  // 页码尺寸改变
+    console.log('pageSizeChange size:', size)
+    balancePagination.value.pageSize = size
+    walletListFetch()
+}
 // 时间组件事件
 const handleOtherSearch = (item) => {
     console.log(item);
@@ -234,20 +252,20 @@ const handleOtherSearch = (item) => {
 }
 // 查询
 const handleSearch = () => {
-    walletListFetch()
+    console.log("balanceForm", balanceForm);
+    walletListFetch({
+        ...balanceForm.value
+    })
 }
 
 // 重置
 const handleSearchReset = () => {
-    // balanceForm.value = {
-    //     source: "0",
-    //     repair_sn: null,
-    //     Income_expenditure: "0",    
-    //     begin_time: null,
-    //     end_time: null
-    // }
-    // walletListFetch()
-    console.log(balanceForm.value);
+    balanceForm.value = {
+        source_type:"0", 
+        order_sn: null, 
+        type:"0", 
+    }
+    walletListFetch({...balanceForm.value})    
 }
 </script>
 
