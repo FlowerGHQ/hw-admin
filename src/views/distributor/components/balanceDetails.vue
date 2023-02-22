@@ -79,7 +79,7 @@
 
                         <!-- 金额 -->
                         <template v-if="column.dataIndex === 'money'">
-                            {{walletFilter[record.price_currency] }}{{ $Util.countFilter(text) }}
+                            {{walletFilter[record.currency_type] }}{{ $Util.countFilter(text) }}
                         </template>
 
                         <!-- 1收入 2支出 -->
@@ -95,7 +95,7 @@
 
                         <!-- 账户余额 -->
                         <template v-if="column.dataIndex === 'balance'">
-                            {{walletFilter[record.price_currency] }}{{ $Util.countFilter(text) }}
+                            {{walletFilter[record.currency_type] }}{{ $Util.countFilter(text) }}
                         </template> 
 
                         <!-- 创建时间 -->

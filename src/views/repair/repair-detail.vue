@@ -182,43 +182,26 @@
                             <template v-if="column.dataIndex === 'amount'">
                                 {{ text }} {{ $t('in.item') }}
                             </template>
+                            <!-- 单价 -->
                             <template v-if="column.dataIndex === 'price'">
                                 € {{ $Util.countFilter(text) }}
                             </template>
+                            <!-- 总价 -->
                             <template v-if="column.dataIndex === 'sum_price'">
                                 € {{ $Util.countFilter(record.price * record.amount) }}
                             </template>
-                        </template>
-                <template #summary>
-                    <a-table-summary>
-                        <a-table-summary-row>
-                            <a-table-summary-cell :index="0" :col-span="4"></a-table-summary-cell>
-                            <a-table-summary-cell :index="1" :col-span="1">
-                                <div class="sum-price">
-                                    <div class="row" style="display:flex;margin-bottom:5px"><p>{{ $t('i.total_price') }}</p> <span>€{{$Util.countFilter(sum_price)}}</span></div>
-                                    <div class="row" style="display:flex"><p>{{ $t('r.amount_paid') }}</p><span>€0</span></div>
-                                </div>
-                            </a-table-summary-cell>
-                        </a-table-summary-row>
-                    </a-table-summary>
-                </template>
-            </a-table>
-                    <!-- :dataSource="dataSource" -->
-                    <!-- <a-table :columns="workColumns" :pagination='false' :dataSource="dataSource">
-                        总价格换算
-                        <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
-                        {{$Util.countFilter(text)}}
+                        </template>                     
                     </a-table>
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
                         <div>
                             <span>{{ $t('r.total_price') }}</span>
-                            <span style="margin-left: 100px;">&1.2</span>
+                            <span style="margin-left: 100px;">€{{$Util.countFilter(sum_price)}}</span>
                         </div>
                         <div>
                             <span>{{ $t('r.amount_paid') }}</span>
-                            <span style="margin-left: 100px;">&1.2</span>
+                            <span style="margin-left: 100px;">€{{$Util.countFilter(sum_price)}}</span>
                         </div>
-                    </div> -->
+                    </div>
                 </div>
                 <!-- 工单处理 -->
                 <div style="margin-top: 40px;">
@@ -533,7 +516,7 @@ export default {
             Core.Api.RepairItem.list({
                 repair_order_id: this.id
             }).then(res => {
-                console.log("getTableData res", res)
+                console.log("测试", res)
                 this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err', err)
