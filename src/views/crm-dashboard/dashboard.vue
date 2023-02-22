@@ -47,7 +47,7 @@
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">
-            <DataTrendStatistics :isPeople="isPeople" :list="list" :maxCount="maxCount" />
+            <DataTrendStatistics :searchForm="searchForm" :isCar="isCar" :isPeople="isPeople" :list="list" :maxCount="maxCount" />
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
@@ -215,19 +215,23 @@ export default {
         this.searchForm.day = this.day
     },
     handleCarClick(){
-        this.httpCar();
+      this.httpCar();
       this.isCar = true
       this.isPeople = false
     },
     handlePeopleClick(){
-        this.httpPeople()
+      this.httpPeople()
       this.isCar = false
       this.isPeople = true
     },
       searchFormOperation(searchForm){
         this.searchForm = searchForm
-          this.httpPeople();
+        if(this.isCar === true){
           this.httpCar();
+        }
+        if(this.isPeople === true){
+          this.httpPeople();
+        }
       },
       httpCar(){
           Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {

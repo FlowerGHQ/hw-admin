@@ -55,6 +55,21 @@ export default {
                 this.testDriveIntentStatistics()
             }
         },
+        isCar: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.testDriveIntentStatistics()
+            }
+        },
+        list: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.testDriveIntentStatistics()
+                console.log(this.list, 'this.list');
+            }
+        },
 
     },
     computed: {
@@ -94,17 +109,11 @@ export default {
                     alias: this.$t('db.order_amount'),
                     range: [0, 0.97],
                     type: 'linear',
-                    // formatter: (val) => {
-                    //     return val + ' 人';
-                    // },
                 },
                 value2: {
                     alias: this.$t('db.order_amount'),
                     range: [0, 0.97],
                     type: 'linear',
-                    // formatter: (val) => {
-                    //     return val + ' 人';
-                    // },
                 }
             });
             chart.legend({
@@ -124,6 +133,7 @@ export default {
                     },
                 ],
             });
+            chart.interaction('legend-highlight');
             chart.axis('value1', { // 隐藏y轴线
                 grid: null
             })
@@ -208,10 +218,15 @@ export default {
                 })
                 const _data = this.list;
                 const people_data = this.list;
-                console.log(this.list)
-                if(this.isPeople === true){
+                if (this.isPeople === true) {
                     this.drawPeopleBoStatisticsChart(people_data)
-                }else{
+                } else {
+                    console.log('_data', _data);
+                    // const carData = [
+                    //     { value: 46, value1: 0, value2: 0, date: '2023-02-20' },
+                    //     { value: 46, value1: 22, value2: 20, date: '2023-02-20' },
+                    //     { value: 46, value1: 10, value2: 22, date: '2023-02-21' },
+                    // ]
                     this.drawCarBoStatisticsChart(_data)
                 }
             }).catch(err => {
