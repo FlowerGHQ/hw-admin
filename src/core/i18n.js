@@ -302,7 +302,7 @@ const messages = {
             Deduction_price:"抵扣价格",
             Compensation_amount:"赔付金额",
             Compensation_accessories:"赔付配件",
-            Allocated_account:"配付至账户",
+            Allocated_account:"赔付至账户",
             percentage:"百分比",
             money:"金额",
             Work_order_record:"工单记录",
