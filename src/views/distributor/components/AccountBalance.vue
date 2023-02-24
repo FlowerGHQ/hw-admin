@@ -1,6 +1,6 @@
 <template>
     <div class="account-balance">
-        <!-- 上方个人信息 -->
+        <!-- 上方个人信息
         <div class="top-content">
             <div class="user-name">
                 {{ name || '-' }}
@@ -12,7 +12,7 @@
                     {{ accountBalance }}
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- echarts -->
         <div class="table-container">
             <div id="TestDriveIntentionChartId" class="chart" ref='TestDriveIntentionChartId'></div>
