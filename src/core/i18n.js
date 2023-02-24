@@ -311,7 +311,7 @@ const messages = {
             unit_price: '单价',
             total_price: '总价',
             Allocated_account_Text:'工单索赔金额将通过账户余额的形式发放至经销商的账户余额中。',
-            Compensation_accessories_text:'需要人工将需要赔偿的配件寄出。',
+            Compensation_accessories_text:'需要人工将赔偿的配件寄出。',
             Percentage_exceeds:'抵扣百分比不能超出百分之百',
             Amount_exceeds:'抵扣金额不能超出总金额'
         },
