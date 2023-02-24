@@ -73,7 +73,7 @@ export default {
             }).then(res => {                
                 console.log('getWalletDetail res', res)
                 this.walletDetail = res.detail
-                this.accountBalance =  7.3 // 账户余额  this.$Util.countFilter(res.detail.wallet_list.balance.balance)
+                this.accountBalance =  this.$Util.countFilter(res.detail.wallet_list.balance.balance)  // 账户余额  
                 this.availableBalance = this.$Util.countFilter(res.detail.wallet_list.deposit.balance)   // 质保金
                 this.accountBalancePercent = this.accountBalance / (this.accountBalance + this.availableBalance)
                 this.availableBalancePercent = this.availableBalance / (this.accountBalance + this.availableBalance)
