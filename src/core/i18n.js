@@ -359,7 +359,7 @@ const messages = {
             Income_expenditure: '收/支',
             capital_type: '资金类型',            
             total_account: '账户总资产',
-            balance: '账户余额',
+            balance: '账户可用余额',
             available_balance: '质保金余额',
         },
         e: { // 用户
