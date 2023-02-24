@@ -184,14 +184,15 @@
                             </template>
                             <!-- 单价 -->
                             <template v-if="column.dataIndex === 'price'">
-                                € {{ $Util.countFilter(text) }}
+                                {{$Util.priceUnitFilter(detail.currency)}} {{ $Util.countFilter(text) }}
                             </template>
                             <!-- 总价 -->
                             <template v-if="column.dataIndex === 'sum_price'">
-                                € {{ $Util.countFilter(record.price * record.amount) }}
+                                {{$Util.priceUnitFilter(detail.currency)}} {{ $Util.countFilter(record.price * record.amount) }}
                             </template>
                         </template>                     
                     </a-table>
+                    <!-- 总价 实付金额 -->
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
                         <div>
                             <span>{{ $t('r.total_price') }}</span>
@@ -241,7 +242,7 @@
                     </div>
                     <template v-if="auditForm.compensation_method == 2">
                         <!-- 抵扣方式 -->
-                        <div style="line-height: 50px;">
+                        <!-- <div style="line-height: 50px;">
                             <div class="form-item">
                             <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
                                 <a-radio-group v-model:value="auditForm.compensation_type" @change="radioChange">
@@ -249,23 +250,23 @@
                                     <a-radio value="2">{{ $t('r.money') }}</a-radio>
                                 </a-radio-group>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- 抵扣价格 -->
-                        <div style="line-height: 50px;">
+                        <!-- <div style="line-height: 50px;">
                             <div class="form-item">
-                                <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
-                                <!-- v-model:value="auditForm." -->
+                                <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>                                
                                 <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
-                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%':'元' }}</span>
+                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- 赔付金额 -->
                         <div style="line-height: 50px;">
                             <div class="form-item" style="color:#9495a4">
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
-                                <span>{{this.auditForm.compensation_price}}</span>
+                                <!-- <span>{{this.auditForm.compensation_price}}</span> -->
+                                <span>{{$Util.countFilter(sum_price)}}</span>
                                 <!-- 单位 -->
-                                <span>元</span>
+                                <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                             </div>
                         </div>
                     </template>
@@ -365,9 +366,9 @@ export default {
                 audit_result: '',
                 audit_message: '',
                 compensation_method: '1', // 处理方式 1是赔付配件  2赔付至账户
-                compensation_type: '1', // 抵扣方式 1是百分比 2金额
-                compensation_money:'',//抵扣价格
-                compensation_price:'0'//赔付金额
+                // compensation_type: '1', // 抵扣方式 1是百分比 2金额
+                // compensation_money:'',//抵扣价格
+                // compensation_price:'0'//赔付金额
             },
 
             repairEndShow: false,
@@ -550,30 +551,30 @@ export default {
                 this.loading = false;
             });
         },
-        radioChange(){
-            this.auditForm.compensation_money = ''
-            this.auditForm.compensation_price = 0
-        },
-        typeChange(e){
-            if(this.auditForm.compensation_type === '1'){
-                if(this.auditForm.compensation_money > 100){
-                    this.$message.warning(this.$t('r.Percentage_exceeds'))
-                    this.auditForm.compensation_money = ''
-                    this.auditForm.compensation_price = 0
-                }else{
-                    this.auditForm.compensation_price = this.auditForm.compensation_money / 100 * this.$Util.countFilter(this.sum_price)
-                }
-            }
-            if(this.auditForm.compensation_type === '2'){
-                if(this.auditForm.compensation_money > this.$Util.countFilter(this.sum_price)){
-                    this.$message.warning(this.$t('r.Amount_exceeds'))
-                    this.auditForm.compensation_money = ''
-                    this.auditForm.compensation_price = 0
-                }else{
-                    this.auditForm.compensation_price = this.auditForm.compensation_money
-                }
-            }
-        },
+        // radioChange(){
+        //     this.auditForm.compensation_money = ''
+        //     this.auditForm.compensation_price = 0
+        // },
+        // typeChange(e){
+        //     if(this.auditForm.compensation_type === '1'){
+        //         if(this.auditForm.compensation_money > 100){
+        //             this.$message.warning(this.$t('r.Percentage_exceeds'))
+        //             this.auditForm.compensation_money = ''
+        //             this.auditForm.compensation_price = 0
+        //         }else{
+        //             this.auditForm.compensation_price = this.auditForm.compensation_money / 100 * this.$Util.countFilter(this.sum_price)
+        //         }
+        //     }
+        //     if(this.auditForm.compensation_type === '2'){
+        //         if(this.auditForm.compensation_money > this.$Util.countFilter(this.sum_price)){
+        //             this.$message.warning(this.$t('r.Amount_exceeds'))
+        //             this.auditForm.compensation_money = ''
+        //             this.auditForm.compensation_price = 0
+        //         }else{
+        //             this.auditForm.compensation_price = this.auditForm.compensation_money
+        //         }
+        //     }
+        // },
         // 获取当前工单进度
         getCurrStep(status) {
             switch (status) {
@@ -677,7 +678,7 @@ export default {
             this.loading = true;
             Core.Api.Repair.audit({
                 ...form,
-                compensation_price:this.auditForm.compensation_price * 100,
+                compensation_price: this.sum_price,
                 id: this.id
             }).then(res => {
                 console.log('handleAuditSubmit res', res)
