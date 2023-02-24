@@ -18,7 +18,7 @@
             <div id="TestDriveIntentionChartId" class="chart" ref='TestDriveIntentionChartId'></div>
             <div class="balance-num"> {{$Util.priceUnitFilter(walletDetail.currency)}}{{ accountBalance }}</div>
             <div class="balance-use-num"> {{$Util.priceUnitFilter(walletDetail.currency)}}{{ availableBalance }}</div>
-            <a-button type="link" class="detail-btn" @click="handleGetDetail">明细</a-button>
+            <a-button type="link" class="detail-btn" @click="handleGetDetail">明细 </a-button> 
         </div>
 
     </div>
@@ -41,8 +41,8 @@ export default {
             currentTab: '',
             myChart: null,
             boStatisticsChart: {},
-            accountBalance: 0,  // 账户余额(余额 + 质保金)
-            availableBalance: 0, // 可以的就是减去质保金的
+            accountBalance: 0,  // 账户余额
+            availableBalance: 0, // 质保金
             user_name: '用户姓名',
             currency: '',
             chartData: [],
@@ -70,14 +70,15 @@ export default {
             this.loading = true;
             Core.Api.Distributor.detail({
                 id: this.id
-            }).then(res => {
+            }).then(res => {                
                 console.log('getWalletDetail res', res)
                 this.walletDetail = res.detail
-                this.accountBalance = (res.detail.wallet_list.balance.balance + res.detail.wallet_list.deposit.balance) / 100
-                this.availableBalance = res.detail.wallet_list.balance.balance / 100
+                this.accountBalance =  7.3 // 账户余额  this.$Util.countFilter(res.detail.wallet_list.balance.balance)
+                this.availableBalance = this.$Util.countFilter(res.detail.wallet_list.deposit.balance)   // 质保金
                 this.accountBalancePercent = this.accountBalance / (this.accountBalance + this.availableBalance)
                 this.availableBalancePercent = this.availableBalance / (this.accountBalance + this.availableBalance)
                 this.handleChartData()
+                console.log('测试',this.accountBalancePercent);
             }).catch(err => {
                 console.log('getTableData err', err)
             }).finally(() => {
