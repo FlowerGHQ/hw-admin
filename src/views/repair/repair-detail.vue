@@ -240,36 +240,39 @@
                             </a-radio-group>
                         </div>
                     </div>
-                    <template v-if="auditForm.compensation_method == 2">
-                        <!-- 抵扣方式 -->
-                        <!-- <div style="line-height: 50px;">
-                            <div class="form-item">
-                            <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
-                                <a-radio-group v-model:value="auditForm.compensation_type" @change="radioChange">
-                                    <a-radio value="1">{{ $t('r.percentage') }}</a-radio>
-                                    <a-radio value="2">{{ $t('r.money') }}</a-radio>
-                                </a-radio-group>
-                            </div>
-                        </div> -->
-                        <!-- 抵扣价格 -->
-                        <!-- <div style="line-height: 50px;">
-                            <div class="form-item">
-                                <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>                                
-                                <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
-                                <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
-                            </div>
-                        </div> -->
-                        <!-- 赔付金额 -->
-                        <div>
-                            <div class="form-item" style="color:#9495a4">
-                                <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
-                                <!-- <span>{{this.auditForm.compensation_price}}</span> -->
-                                <span>{{$Util.countFilter(sum_price)}}</span>
-                                <!-- 单位 -->
-                                <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
-                            </div>
-                        </div>
-                    </template>
+                    <transition>
+                        <template v-if="auditForm.compensation_method == 2">
+                            <!-- 抵扣方式 -->
+                            <!-- <div style="line-height: 50px;">
+                                <div class="form-item">
+                                <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_method') }}:</div>
+                                    <a-radio-group v-model:value="auditForm.compensation_type" @change="radioChange">
+                                        <a-radio value="1">{{ $t('r.percentage') }}</a-radio>
+                                        <a-radio value="2">{{ $t('r.money') }}</a-radio>
+                                    </a-radio-group>
+                                </div>
+                            </div> -->
+                            <!-- 抵扣价格 -->
+                            <!-- <div style="line-height: 50px;">
+                                <div class="form-item">
+                                    <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>                                
+                                    <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
+                                    <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
+                                </div>
+                            </div> -->
+                            <!-- 赔付金额 -->
+                            
+                                <div>
+                                    <div class="form-item" style="color:#9495a4">
+                                        <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
+                                        <!-- <span>{{this.auditForm.compensation_price}}</span> -->
+                                        <span>{{$Util.countFilter(sum_price)}}</span>
+                                        <!-- 单位 -->
+                                        <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
+                                    </div>
+                                </div>                        
+                        </template>
+                    </transition>
                 </div>
                 <!-- 审核 -->
                 <div style="margin-top: 10px;">
@@ -288,7 +291,7 @@
                         <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
-                </div> -->
+                </div> -->     
             </div>
             <template #footer>
                 <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
@@ -334,7 +337,7 @@ export default {
     },
     props: {},
     data() {
-        return {
+        return {            
             Core,
             orgType: Core.Data.getOrgType(),
             orgId: Core.Data.getOrgId(),
@@ -819,5 +822,21 @@ export default {
     border-radius: 50%;
     border: 1px solid #919191;
     color: #919191;
+}
+
+// 动画效果
+.v-enter-active{
+    animation: slidein 0.3s linear;
+}
+.v-leave-active{
+    animation: slidein 0.3s linear reverse;
+}
+@keyframes slidein {
+    from{
+        transform: translateY(-100%);
+    }
+    to{
+        transform: translateY(0px);
+    }
 }
 </style>
