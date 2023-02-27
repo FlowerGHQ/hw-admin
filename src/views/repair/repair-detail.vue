@@ -154,7 +154,7 @@
                 <a-button @click="handleRepairEnd()" type="primary">{{ $t('def.sure') }}</a-button>
             </template>
         </a-modal>
-        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')"  style="width: 800px;" :after-close='handleAuditClose'>
+        <a-modal v-model:visible="repairAuditShow" :title="$t('n.audit')"  style="width: 800px; height:600px" :after-close='handleAuditClose'>
             <div class="modal-content">
                 <!-- 结算清单 -->
                 <div>
@@ -166,7 +166,7 @@
                     </div>
                 </div>
                 <!-- 工单记录 -->
-                <div style="margin-top: 40px;">
+                <div style="margin-top: 10px;">
                     <h3>{{ $t('r.Work_order_record') }}</h3>
                     <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"  :pagination='false'>
                         <template #headerCell="{title}">
@@ -193,7 +193,7 @@
                         </template>                     
                     </a-table>
                     <!-- 总价 实付金额 -->
-                    <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px;">
+                    <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px; font-size: 12px;">
                         <div>
                             <span>{{ $t('r.total_price') }}</span>
                             <span style="margin-left: 100px;">
@@ -211,10 +211,10 @@
                     </div>
                 </div>
                 <!-- 工单处理 -->
-                <div style="margin-top: 40px;">
+                <div style="margin-top: 10px;">
                     <h3>{{ $t('r.Work_order_processing') }}</h3>
                     <!-- 处理方式 -->
-                    <div style="line-height: 50px;">
+                    <div>
                         <div class="form-item">
                         <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Treatment_mode') }}:</div>
                             <a-radio-group v-model:value="auditForm.compensation_method">
@@ -260,7 +260,7 @@
                             </div>
                         </div> -->
                         <!-- 赔付金额 -->
-                        <div style="line-height: 50px;">
+                        <div>
                             <div class="form-item" style="color:#9495a4">
                                 <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
                                 <!-- <span>{{this.auditForm.compensation_price}}</span> -->
@@ -272,7 +272,7 @@
                     </template>
                 </div>
                 <!-- 审核 -->
-                <div style="margin-top: 40px;">
+                <div style="margin-top: 10px;">
                     <h3>{{ $t('n.audit') }}</h3>
                     <div class="form-item required">
                         <div class="key">{{ $t('n.result') }}:</div>
