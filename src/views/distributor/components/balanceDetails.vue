@@ -89,7 +89,7 @@
 
                         <!-- 资金类型 1是余额 目前这里全部显示余额 -->
                         <template v-if="column.dataIndex === 'subject'">
-                            余额
+                            {{ $t('w.balance') }} <!-- 余额 -->
                             <!-- {{ capital_type[text]?capital_type[text][$i18n.locale]:"余额" }} -->
                         </template>   
 

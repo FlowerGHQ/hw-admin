@@ -2446,7 +2446,7 @@ const messages = {
             manage_account: 'Account management',
             item: 'product price',
             name_short_name: 'Name or brief name',
-            account_wallet:'account wallet',
+            account_wallet:'E-wallet',
             account_balance:'account balance',
             balance_details:'balance details',
             source: 'source',
