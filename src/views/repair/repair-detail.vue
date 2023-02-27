@@ -240,7 +240,7 @@
                             </a-radio-group>
                         </div>
                     </div>
-                    <transition>
+                    <!-- <transition> -->
                         <template v-if="auditForm.compensation_method == 2">
                             <!-- 抵扣方式 -->
                             <!-- <div style="line-height: 50px;">
@@ -272,7 +272,7 @@
                                     </div>
                                 </div>                        
                         </template>
-                    </transition>
+                    <!-- </transition> -->
                 </div>
                 <!-- 审核 -->
                 <div style="margin-top: 10px;">
@@ -824,19 +824,19 @@ export default {
     color: #919191;
 }
 
-// 动画效果
-.v-enter-active{
-    animation: slidein 0.3s linear;
-}
-.v-leave-active{
-    animation: slidein 0.3s linear reverse;
-}
-@keyframes slidein {
-    from{
-        transform: translateY(-100%);
-    }
-    to{
-        transform: translateY(0px);
-    }
-}
+// // 动画效果
+// .v-enter-active{
+//     animation: slidein 0.2s linear;
+// }
+// .v-leave-active{
+//     animation: slidein 0.2s linear reverse;
+// }
+// @keyframes slidein {
+//     from{
+//         transform: translateY(-50%);
+//     }
+//     to{
+//         transform: translateY(0px);
+//     }
+// }
 </style>
