@@ -51,12 +51,68 @@
                         <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+                <!-- 手机号 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
+                <!-- 邮箱号 -->
+                <div class="form-item required">
+                    <div class="key">邮箱号:</div>
+                    <div class="value">                        
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <!-- 门店地址 -->
+                <div class="form-item required">
+                    <div class="key">门店地址:</div>
+                    <div class="value">
+                        <a-select style="width: 49%;"  placeholder="请选择国家">
+                            <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        </a-select>
+                        <a-select style="width: 49%; margin-left:1%"  placeholder="请选择城市">
+                            <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        </a-select>                        
+                        <a-input style="margin-top: 10px;" v-model:value="form.email" placeholder="请输入详细地址"/>
+                    </div>
+                </div>
+                <!-- 营业时间 -->
+                <div class="form-item required">
+                    <div class="key">营业时间:</div>
+                    <div class="value">
+                        <a-select style="width: 49%"  placeholder="请选择上班时间">
+                            <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        </a-select>                        
+                        <a-select style="width: 49%; margin-left:1%"  placeholder="请选择下班时间">
+                            <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        </a-select>                        
+                        <a-input style="margin-top: 10px;" v-model:value="form.email" placeholder="请输入营业时间备注"/>
+                    </div>
+                </div>
+                <!-- 官网地址 -->
+                <div class="form-item required">
+                    <div class="key">官网地址:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <!-- 使用语言 -->
+                <div class="form-item required">
+                    <div class="key">使用语言:</div>
+                    <div class="value">
+                        <a-select style="width: 50%"  placeholder="请选择语言">
+                            <a-select-option value="jack">Jack</a-select-option>
+                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        </a-select>  
+                    </div>
+                </div>
+                <!-- 货币 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('p.currency') }}:</div>
                     <div class="value">
