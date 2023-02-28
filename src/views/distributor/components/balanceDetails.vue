@@ -20,7 +20,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('d.repair_sn') }}:</div>
                         <div class="value">
-                            <a-input  v-model:value="balanceForm.order_sn" allowClear/>
+                            <a-input  v-model:value="balanceForm.source_uid" allowClear/>
                         </div>
                     </a-col>
                     <!-- 创建时间 -->
@@ -71,7 +71,7 @@
                         </template>
 
                         <!-- 工单编号 -->
-                        <template v-if="column.dataIndex === 'order_sn'">                            
+                        <template v-if="column.dataIndex === 'source_uid'">                            
                             <a-tooltip placement="top" :title='text' >
                                 <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                             </a-tooltip>
@@ -162,7 +162,7 @@ const {proxy} = getCurrentInstance();
 const TimeSearchs = ref(null)  //组件的ref
 const balanceForm = ref({
     source_type:"0", // 来源
-    order_sn: null, // 工单编号
+    source_uid: null, // 工单编号
     type:"0", // 收入还是支出
 })
 const tableData = ref([]) // 明细列表详情
@@ -183,7 +183,7 @@ onMounted(() => {
 const  tableColumns = computed(() => {
     let columns = [
         {title: proxy.$t('d.source'), dataIndex: 'source_type',key: 'source_type'},  // 来源
-        {title: proxy.$t('d.repair_sn'), dataIndex: 'order_sn', key: 'order_sn'}, // 工单编号
+        {title: proxy.$t('d.repair_sn'), dataIndex: 'source_uid', key: 'source_uid'}, // 工单编号
         {title: proxy.$t('d.money'), dataIndex: 'money',key: 'money'},  // 金额
         {title: proxy.$t('d.Income_expenditure'), dataIndex: 'type', key: 'type'}, // 1收入 2支出
         {title: proxy.$t('d.capital_type'), dataIndex: 'subject', key: 'subject'}, // 资金类型  1目前只有余额  充值(这期不做)  
@@ -262,7 +262,7 @@ const handleSearch = () => {
 const handleSearchReset = () => {
     balanceForm.value = {
         source_type:"0", 
-        order_sn: null, 
+        source_uid: null, 
         type:"0", 
     }
     walletListFetch({...balanceForm.value})    
