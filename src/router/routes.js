@@ -1904,6 +1904,16 @@ const routes = [
 				}
 			},
 			{
+				path: 'order-income-dispose',
+				name: 'TestDriveDispose',
+				component: () => import('@/views/crm-test-drive-order/test-drive-dispose.vue'),
+				meta: {
+					title: '试驾配置',
+					title_en: 'Test Drive dispose',
+					auth: ["crm-order-income.list"],
+				}
+			},
+			{
 				path: 'test-drive-edit',
 				name: 'TestDriveEdit',
 				component: () => import('@/views/crm-test-drive-order/test-drive-edit.vue'),

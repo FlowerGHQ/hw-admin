@@ -16,6 +16,7 @@ import { createI18n } from 'vue-i18n'
  * p: 采购
  * s: 门店
  * ar: 销售区域
+ * dis: 试驾单
  */
 const messages = {
     zh: {
@@ -2113,6 +2114,35 @@ const messages = {
             40006: '您不是团队负责人，无法删除团队成员',
             40007: '无法删除负责人',
         },
+        // 试驾
+        dis:{
+            test_dispose:"试驾配置",
+            vehicle_dispose:"车型配置",
+            mail_dispose:"邮件配置",
+            dispose_id:"配置ID",
+            display_order:"显示顺序",
+            vehicle_name:"车辆名称",
+            vehicle_picture:"车辆图片",
+            view_type:"可见状态",
+            add_vehicle:"添加车辆",
+            order_top:"顺序上移",
+            order_bottom:"顺序下移",
+            hide:"隐藏",
+            delete:"删除",
+            edit:'编辑',
+            disable:"禁用",
+            send_target:"发送目标",
+            language:"语言",
+            mailbox_purpose:"邮箱用途",
+            add_system_mail:"添加系统邮件",
+            system_mail_id:"系统邮件ID",
+            mail_use:"邮件用途",
+            mail_send_target:"邮件发送目标",
+            mould_language:"模板语言",
+            mail_title:"邮件标题",
+            use_status:"使用状态",
+            select:'选择',
+        }
     },
 
     en: {
@@ -4131,6 +4161,35 @@ const messages = {
 	        40007:"The team leader cannot be deleted.",
 
         },
+        // 试驾
+        dis:{
+            test_dispose:"test dispose",
+            vehicle_dispose:"vehicle dispose",
+            mail_dispose:"mail dispose",
+            dispose_id:"dispose id",
+            display_order:"display order",
+            vehicle_name:"vehicle name",
+            vehicle_picture:"vehicle picture",
+            view_type:"view type",
+            add_vehicle:"add vehicle",
+            order_top:"order top",
+            order_bottom:"order bottom",
+            hide:"hide",
+            delete:"delete",
+            edit:'edit',
+            disable:"disable",
+            send_target:"send target",
+            language:"language",
+            mailbox_purpose:"mailbox purpose",
+            add_system_mail:"add system mail",
+            system_mail_id:"system_mail_id",
+            mail_use:"mail_use",
+            mail_send_target:"mail_send_target",
+            mould_language:"mould_language",
+            mail_title:"mail_title",
+            use_status:"use_status",
+            select:'select',
+        }
     },
 }
 
