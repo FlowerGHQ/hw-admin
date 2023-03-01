@@ -12,7 +12,7 @@
           >
         </div>
       </div>
-      <a-calendar
+      <!-- <a-calendar
         v-model:value="calendar"
         @change="getCalendarDate"
         style="margin: 0 20px"
@@ -24,7 +24,7 @@
             </li>
           </ul>
         </template>
-      </a-calendar>
+      </a-calendar> -->
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
@@ -176,33 +176,36 @@
           <template #headerCell="{ title }">
             {{ $t(title) }}
           </template>
-          <template #bodyCell="{ column, text, record }">
-            <!--                        <template v-if="column.key === 'detail'">
-                                                    <a-tooltip placement="top" :title='text'>
-                                                        <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                                                    </a-tooltip>
-                                                </template>-->
-            <template v-if="column.key === 'item'">
+          <template #bodyCell="{ column, text, record }"> 			
+			<!-- 订单来源	 -->
+			<!-- 创建时间	 -->
+			<template v-if="column.key === 'create_time'">
+              {{ $Util.timeFilter(text,3) }}
+            </template>
+			<!-- 预约车型	 -->
+			<template v-if="column.key === 'subscribe_vehicle'">
+              {{ text || "-" }}
+            </template>	
+			<!-- 预约门店-->
+			<!-- 门店区域-->
+			<!-- 用户名称 -->
+			<template v-if="column.key === 'user_name'">
+              {{ record.customer ? record.customer.name || "-" : "-" }}
+            </template> 
+			<!-- 用户邮箱	 -->
+			<!-- 用户手机号	 -->
+			<template v-if="column.key === 'phone'">
               {{ text || "-" }}
             </template>
-            <template v-if="column.key === 'phone'">
-              {{ text || "-" }}
-            </template>
-            <template v-if="column.key === 'status'">
+			<!-- 状态 -->
+			<template v-if="column.key === 'status'">
               {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
             </template>
-            <template v-if="column.key === 'channel'">
-              {{ $Util.CRMTestDriveChannelMapFilter(text, $i18n.locale) }}
-            </template>
+			<!-- 创建人 -->			           				                       
             <template v-if="column.key === 'creator_name'">
               {{ record.create_user_name || "-" }}
-            </template>
-            <template v-if="column.key === 'customer'">
-              {{ record.customer ? record.customer.name || "-" : "-" }}
-            </template>
-            <template v-if="column.key === 'time'">
-              {{ $Util.timeFilter(text) }}
-            </template>
+            </template>              
+			<!-- 操作-->
             <template v-if="column.key === 'operation'">
               <a-button
                 type="link"
@@ -348,43 +351,46 @@ export default {
   watch: {},
   computed: {
     tableColumns() {
-      let columns = [
-        {
-          title: "n.name",
+      let columns = [                                                     
+		// id
+		{ title: "id", dataIndex: "id", key: "id" },
+		// 订单来源
+		{ title: "dis.order_source", dataIndex: "create_time", key: "create_time" },
+		// 创建时间  
+		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
+		// 预约车型
+		{ title: "dis.subscribe_vehicle", dataIndex: ["crm_dict", "name"], key: "subscribe_vehicle" },
+		// 预约门店
+		{ title: "dis.subscribe_store", dataIndex: "create_time", key: "create_time" },
+		// 门店区域
+		{ title: "dis.store_area", dataIndex: "group_name", key: "group_name" },
+		// 用户名称
+		{
+          title: "dis.user_name",
           dataIndex: "customer_id",
-          key: "customer",
+          key: "user_name",
           sorter: true,
         },
-        { title: "n.phone", dataIndex: ["customer", "phone"], key: "phone" },
+		// 用户邮箱
+		{ title: "dis.user_email", dataIndex: "email", key: "email" },
+		// 用户手机号
+		{ title: "dis.user_phone", dataIndex: ["customer", "phone"], key: "phone" },
+		// 门店邮箱是否发送				
+        // 状态
         {
-          title: "crm_d.test_drive_time",
-          dataIndex: "test_drive_time",
-          key: "time",
-        },
-        {
-          title: "crm_d.crm_dict_id",
-          dataIndex: ["crm_dict", "name"],
-          key: "item",
-        },
-        {
-          title: "crm_d.channel",
-          dataIndex: "channel",
-          key: "channel",
-          sorter: true,
-        },
-        {
-          title: "crm_d.status",
+          title: "dis.status",
           dataIndex: "status",
           key: "status",
           sorter: true,
         },
+        // 创建人
         {
-          title: "r.creator_name",
+          title: "dis.creator_name",
           dataIndex: "create_user_id",
           key: "creator_name",
           sorter: true,
         },
-        { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
+        // 操作
         { title: "def.operate", key: "operation", fixed: "right" },
       ];
       return columns;
@@ -433,20 +439,13 @@ export default {
     routerChange(type, item = {}) {
       let routeUrl = "";
       switch (type) {
-        case "detail": // 编辑
+        case "detail": // 详情
           routeUrl = this.$router.resolve({
-            path: "/crm-customer/customer-detail",
+            path: "/crm-test-drive-order/test-drive-detail",
             query: { id: item.customer_id },
           });
           window.open(routeUrl.href, "_block");
-          break;
-        // case 'detail':    // 编辑
-        //     routeUrl = this.$router.resolve({
-        //         path: "/crm-test-drive-order/test-drive-detail",
-        //         query: {id: item.id}
-        //     })
-        //     window.open(routeUrl.href, '_self')
-        //     break;
+          break;  
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-test-drive-order/test-drive-edit",

@@ -154,12 +154,13 @@
         <div class="title-colorful">{{ $t("crm_d.drive_information") }}</div>
       </div>
       <div class="form-content">
+		<!-- 试驾车型： -->
         <div class="form-item required with-btn">
           <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
           <div class="value">
-            <!-- <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
-                        </a-select> -->
+            <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
+                <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
+            </a-select>
             <div class="btn">
               <a-button type="link" @click="getSourceList()">{{
                 $t("crm_set.refresh")
@@ -180,6 +181,7 @@
             </a-date-picker>
           </div>
         </div>
+		<!-- 门店 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_d.dept_id") }}：</div>
           <div class="value">
@@ -191,6 +193,34 @@
             </a-select>
           </div>
         </div>
+		<!-- 门店邮箱 -->
+		<div class="form-item">
+          <div class="key">{{ $t("dis.store_email") }}：</div>
+          <div class="value">      
+		  1     
+          </div>
+        </div>
+		<!-- 门店电话号 -->
+		<div class="form-item">
+          <div class="key">{{$t("dis.store_phone") }}：</div>
+          <div class="value">   
+		  1        
+          </div>
+        </div>
+		<!-- 营业时间 -->
+		<div class="form-item">
+          <div class="key">{{$t("dis.business_hours") }}：</div>
+          <div class="value">   
+		  1        
+          </div>
+        </div>
+		<!-- 门店地址 -->	
+		<div class="form-item">
+          <div class="key">{{$t("dis.store_address") }}：</div>
+          <div class="value"> 
+		  1          
+          </div>
+        </div>	
       </div>
     </div>
     <div class="form-block">

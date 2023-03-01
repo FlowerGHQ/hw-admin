@@ -1914,18 +1914,18 @@ const routes = [
 					auth: ["crm-test-drive-order.save"],
 				}
 			},
-			// {
-			// 	path: 'test-drive-detail',
-			// 	name: 'TestDriveDetail',
-			// 	component: () => import('@/views/crm-order-income/test-drive-detail.vue'),
-			// 	meta: {
-			// 		hidden: true,
-			// 		title: '试驾单详情',
-			// 		title_en: 'Business opportunities phase',
-			// 		parent: '/crm-order-income/order-income-list',
-			// 		auth: ["crm-order-income.detail"],
-			// 	}
-			// },
+			{
+				path: 'test-drive-detail',
+				name: 'TestDriveDetail',
+				component: () => import('@/views/crm-test-drive-order/test-drive-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '试驾单详情',
+					title_en: 'Business opportunities phase',
+					parent: '/crm-test-drive-order/test-drive-list',
+					auth: ["crm-order-income.detail"],
+				}
+			},
             {
 				path: 'test-drive-dispose',
 				name: 'TestDriveDispose',
