@@ -1894,22 +1894,12 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'order-income-list',
+				path: 'test-drive-list',
 				name: 'TestDriveList',
 				component: () => import('@/views/crm-test-drive-order/test-drive-list.vue'),
 				meta: {
 					title: '试驾单列表',
 					title_en: 'Test Drive List',
-					auth: ["crm-order-income.list"],
-				}
-			},
-			{
-				path: 'order-income-dispose',
-				name: 'TestDriveDispose',
-				component: () => import('@/views/crm-test-drive-order/test-drive-dispose.vue'),
-				meta: {
-					title: '试驾配置',
-					title_en: 'Test Drive dispose',
 					auth: ["crm-order-income.list"],
 				}
 			},
@@ -1920,7 +1910,7 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '新建试驾单',
-					parent: '/crm-order-income/order-income-list',
+					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
 			},
@@ -1936,6 +1926,27 @@ const routes = [
 			// 		auth: ["crm-order-income.detail"],
 			// 	}
 			// },
+            {
+				path: 'test-drive-dispose',
+				name: 'TestDriveDispose',
+				component: () => import('@/views/crm-test-drive-order/test-drive-dispose.vue'),
+				meta: {
+					title: '试驾配置',
+					title_en: 'Test Drive dispose',
+					auth: ["crm-order-income.list"],
+				}
+			},
+            {
+				path: 'mail-dispose-edit',
+				name: 'mailDisposeEdit',
+				component: () => import('@/views/crm-test-drive-order/components/mail-dispose-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '新建系统邮件',					
+                    parent: '/crm-test-drive-order/test-drive-list',
+                    auth: ["crm-test-drive-order.save"],
+				}
+			}
 		]
 	},
     { // 智能标签

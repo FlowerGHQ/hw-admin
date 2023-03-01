@@ -37,19 +37,16 @@
         </div>
 
          <!-- 添加车辆 -->
-        <a-modal v-model:visible="addVehicleVisible" title="添加车辆" @ok="addOk">
+        <a-modal v-model:visible="addVehicleVisible" :title="$t('dis.add_vehicle')" @ok="addOk">
             <a-table 
+                :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
                 :columns="vehicleColumns" 
-                :data-source="vehicleData" 
-                :scroll="{ x: true }" 
+                :data-source="vehicleData"                 
                 :row-key="record => record.id"
                 :pagination="false"
             >            
-                <template #bodyCell="{ column, text , record }">     
-                    <!-- 操作 -->
-                    <template v-if="column.key === 'operation'">
-                        <a-checkbox @change="onCheckAllChange(record)"></a-checkbox>                        
-                    </template>                  
+                <template #bodyCell="{ column, text , record }">  
+                                                                          
                 </template>
             </a-table>
         </a-modal>
@@ -68,8 +65,8 @@ const  tableColumns = computed(() => {
         {title: proxy.$t('dis.display_order'), dataIndex: 'display_order', key: 'display_order'}, // 显示顺序
         {title: proxy.$t('dis.vehicle_name'), dataIndex: 'vehicle_name',key: 'vehicle_name'},  // 车辆名称
         {title: proxy.$t('dis.vehicle_picture'), dataIndex: 'vehicle_picture', key: 'vehicle_picture'}, // 车辆图片
-        {title: proxy.$t('dis.view_type'), dataIndex: 'view_type', key: 'view_type'}, // 可见状态
-        { title: proxy.$t('def.operate'),key: 'operation'},                
+        {title: proxy.$t('dis.view_type'), dataIndex: 'view_type', key: 'view_type'}, // 可见状态             
+        { title: proxy.$t('def.operate'),key: 'operation'},            
     ]
     return columns
 })
@@ -85,18 +82,19 @@ const  tableData= ref([{
 const  vehicleColumns = computed(() => {
     let columns = [                
         {title: proxy.$t('dis.vehicle_name'), dataIndex: 'vehicle_name',key: 'vehicle_name'},  // 车辆名称
-        {title: proxy.$t('dis.vehicle_picture'), dataIndex: 'vehicle_picture', key: 'vehicle_picture'}, // 车辆图片        
-        { title: proxy.$t('def.select'),key: 'operation'},                
+        {title: proxy.$t('dis.vehicle_picture'), dataIndex: 'vehicle_picture', key: 'vehicle_picture'}, // 车辆图片                
     ]
     return columns
 })
 
 const vehicleData = ref([
     {        
+        id:1,
         vehicle_name: 1,
         vehicle_picture: 1,    
     },
     {        
+        id:2,
         vehicle_name:2 ,
         vehicle_picture: 2,    
     },
@@ -105,7 +103,7 @@ const vehicleData = ref([
 
 
 const addVehicleVisible = ref(false) // 添加车辆model
-
+const selectedRowKeys = ref([])
 /*methods*/
 // 添加车辆事件
 const addVehicleEvent = () => {
@@ -115,10 +113,11 @@ const addVehicleEvent = () => {
 const addOk = () => {
     addVehicleVisible.value = false
 }
-
-const onCheckAllChange = (e) =>{
-    console.log(e);
-}
+// model选择事件
+const onSelectChange = (selectedRowKey) => {
+  console.log('selectedRowKeys changed: ', selectedRowKey);
+  selectedRowKeys.value = selectedRowKey;
+};
  
 </script>
 

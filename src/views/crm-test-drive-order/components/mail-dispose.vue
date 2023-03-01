@@ -36,9 +36,10 @@
                 <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
             </div>
         </div>
-        <!-- 按钮 -->
+        <!-- 添加系统邮件 -->
         <div class="btns">
-            <a-button type="primary" v-if="$auth('crm-customer.save')">
+            <!-- v-if="$auth('crm-customer.save')" 权限 --> 
+            <a-button type="primary"  @click="routerChange('add')">
                 <i class="icon i_add" /> {{$t('dis.add_system_mail')}}
             </a-button>            
         </div>  
@@ -55,11 +56,12 @@
                 <template #bodyCell="{ column, text , record }">     
                     <!-- 操作 -->
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link">
+                        <a-button type="link" @click="routerChange('edit')">
                             {{$t('dis.edit')}}
                         </a-button>
                         <a-button type="link">
                             {{$t('dis.disable')}}
+                            <!--  使用 {{$t('dis.use')}} -->
                         </a-button>
                         <a-button type="link">
                             {{$t('dis.delete')}}
@@ -68,13 +70,15 @@
                 </template>
             </a-table>
         </div>        
-    </div>   
+    </div>
 </template>
 
 <script setup>
 import { ref, computed, getCurrentInstance } from 'vue';
+import { useRouter } from 'vue-router';
 
 const {proxy} = getCurrentInstance();
+const router = useRouter()
 
 const source_type = {
     '0': {id: '0', zh: '全部', en: 'ALL'},
@@ -107,10 +111,29 @@ const  tableColumns = computed(() => {
     return columns
 })
 /* methods */
+// 路由跳转
+const routerChange = (type, item = {}) => {
+   switch(type) {
+       case 'edit': {
+           let routeUrl = router.resolve({
+               path: "/crm-test-drive-order/mail-dispose-edit",
+            //    query: { id: item.id }
+           })
+           window.open(routeUrl.href, '_self')
+       }; break
+       case 'add': {
+           let routeUrl = router.resolve({
+               path: "/crm-test-drive-order/mail-dispose-edit",            
+           })
+           window.open(routeUrl.href, '_self')
+       }; break
+   }
+}
 // 查询
 const handleSearch = () => {}
 // 重置
 const handleSearchReset = () => {}
+
 </script>
 
 <style lang="less" scoped>
