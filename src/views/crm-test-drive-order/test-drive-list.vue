@@ -12,7 +12,7 @@
           >
         </div>
       </div>
-      <!-- <a-calendar
+      <a-calendar
         v-model:value="calendar"
         @change="getCalendarDate"
         style="margin: 0 20px"
@@ -24,7 +24,7 @@
             </li>
           </ul>
         </template>
-      </a-calendar> -->
+      </a-calendar>
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">

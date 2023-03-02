@@ -69,15 +69,9 @@
                 <div class="form-item required">
                     <div class="key">{{$t('dis.store_address')}}:</div>
                     <div class="value">
-                        <a-select style="width: 49%;"  :placeholder="$t('dis.select_country')">
-                            <a-select-option value="jack">Jack</a-select-option>
-                            <a-select-option value="lucy">Lucy</a-select-option>               
-                        </a-select>
-                        <a-select style="width: 49%; margin-left:1%"  :placeholder="$t('dis.select_city')">
-                            <a-select-option value="jack">Jack</a-select-option>
-                            <a-select-option value="lucy">Lucy</a-select-option>               
-                        </a-select>                        
-                        <a-input style="margin-top: 10px;" v-model:value="form.email" :placeholder="$t('dis.input_detail_address')"/>
+                        <!-- 参考 customer -> customer-edit -->
+                        <addressCascader />  
+                        <a-input style="margin-top: 10px;" v-model:value="form.addressDetail" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
                 <!-- 营业时间 -->
@@ -153,11 +147,14 @@
 
 <script>
 import Core from '../../core';
+import addressCascader from '@/components/common/AddressCascader.vue'
 
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 export default {
     name: 'StoreEdit',
-    components: {},
+    components: {
+        addressCascader
+    },
     props: {},
     data() {
         return {

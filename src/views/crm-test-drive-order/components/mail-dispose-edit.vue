@@ -9,7 +9,7 @@
                 <div class="title"></div>
             </div>               
             <div class="form-content">
-                 <!-- 收件人： -->
+                 <!-- 收件人-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.receiver')}}：</div>
                     <div class="value">                        
@@ -19,7 +19,7 @@
                         </a-select>
                     </div>
                 </div>
-                <!-- 使用语言： -->
+                <!-- 使用语言 -->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.use_language')}}</div>
                     <div class="value">                        
@@ -29,7 +29,7 @@
                         </a-select>
                     </div>
                 </div>
-                <!-- 邮箱用途： -->
+                <!-- 邮箱用途-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.mailbox_purpose')}}</div>
                     <div class="value">
@@ -46,27 +46,27 @@
                         <a-input style="width: 120px;"  /> {{$t('dis.hour_after')}}
                     </div>
                 </div>
-                <!-- 回访问卷： -->
+                <!-- 回访问卷-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.visit_questionnaire')}}：</div>
                     <div class="value">
                         <a-input placeholder="请填写问卷ID"  />
                     </div>
                 </div>
-                <!-- 邮件标题： -->
+                <!-- 邮件标题-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.mail_title')}}：</div>
                     <div class="value">
                         <a-input placeholder="请填写邮件标题" />
                     </div>
                 </div>
-                <!-- 邮件内容： -->
+                <!-- 邮件内容-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.mail_content')}}：</div>
                     <div class="value">                        
                     </div>
                 </div>
-                <!-- 插入动态内容： -->
+                <!-- 插入动态内容-->
                 <div class="form-item">
                     <div class="key form-key">{{$t('dis.insert_dynamic_content')}}：</div>
                     <div class="value">  
