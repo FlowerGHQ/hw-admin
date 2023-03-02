@@ -1913,40 +1913,7 @@ const routes = [
 					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
-			},
-			{
-				path: 'test-drive-detail',
-				name: 'TestDriveDetail',
-				component: () => import('@/views/crm-test-drive-order/test-drive-detail.vue'),
-				meta: {
-					hidden: true,
-					title: '试驾单详情',
-					title_en: 'Business opportunities phase',
-					parent: '/crm-test-drive-order/test-drive-list',
-					auth: ["crm-order-income.detail"],
-				}
-			},
-            {
-				path: 'test-drive-dispose',
-				name: 'TestDriveDispose',
-				component: () => import('@/views/crm-test-drive-order/test-drive-dispose.vue'),
-				meta: {
-					title: '试驾配置',
-					title_en: 'Test Drive dispose',
-					auth: ["crm-order-income.list"],
-				}
-			},
-            {
-				path: 'mail-dispose-edit',
-				name: 'mailDisposeEdit',
-				component: () => import('@/views/crm-test-drive-order/components/mail-dispose-edit.vue'),
-				meta: {
-					hidden: true,
-					title: '新建系统邮件',					
-                    parent: '/crm-test-drive-order/test-drive-list',
-                    auth: ["crm-test-drive-order.save"],
-				}
-			}
+			}        
 		]
 	},
     { // 智能标签
