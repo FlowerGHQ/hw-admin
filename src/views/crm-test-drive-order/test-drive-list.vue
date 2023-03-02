@@ -441,7 +441,7 @@ export default {
       switch (type) {
         case "detail": // 详情
           routeUrl = this.$router.resolve({
-            path: "/crm-test-drive-order/test-drive-detail",
+            path: "/crm-customer/customer-detail",
             query: { id: item.customer_id },
           });
           window.open(routeUrl.href, "_block");
