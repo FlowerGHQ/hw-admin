@@ -70,6 +70,16 @@
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
+                    <!-- 订单来源 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.order_source') }}：</span>
+                        <span class="value">官网-美国</span>
+                    </a-col>
+                    <!-- 试驾车型 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
+                        <span class="value">EK3</span>
+                    </a-col>
                     <!-- 标签展示 -->
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -101,6 +111,72 @@
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
                         </template> -->
+                    </a-col>
+                    <!-- 门店邮件是否发送 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.store_is_send_mail') }}：</span>
+                        <span>
+                            <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
+                            <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
+                        </span>
+                    </a-col>
+                    <!-- 用户邮件是否发送 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.user_is_send_mail') }}：</span>
+                        <span>
+                            {{ $t('dis.been_sent') }}({{ $t('dis.mail') }}:1234)
+                        </span>
+                    </a-col>
+                </a-row>
+            </div>
+            <div class="panel-content desc-container">
+                <div class="desc-title">
+                    <div class="title-area">
+                        <span class="title">{{ $t('dis.subscribe_store') }}</span> 
+                    </div>
+                </div>
+                <a-row class="desc-detail">
+                    <!-- 门店名称 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_name') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
+                    </a-col>
+                    <!-- 门店手机号 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_phone') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
+                    </a-col>
+                    <!-- 门店邮箱 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_email') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
+                    </a-col>
+                    <!-- 营业时间 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.business_hours') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
+                    </a-col>
+                    <!-- 门店地址 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_address') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
+                    </a-col>
+                    <!-- 门店官网 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_website') }}：</span>
+                        <span class="value">
+                        xxxx                      
+                        </span>
                     </a-col>
                 </a-row>
             </div>
