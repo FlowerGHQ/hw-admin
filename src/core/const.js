@@ -39,6 +39,7 @@ switch (window.location.hostname) {
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://10.0.0.205:8889'
         // URL_POINT = 'http://10.0.0.131:8889' // yzy
+        // URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         break;
 }
@@ -1700,6 +1701,7 @@ let Const = {
             '70': { key: 70, zh: '已支付订金',en: 'Deposit paid', value: 70 },
             '80': { key: 80, zh: '已试驾',en: 'Test drive', value: 80 },
             '90': { key: 90, zh: '已购',en: 'Purchased', value: 90 },
+	        '100': { key: 100, zh: '预约试驾',en: 'Book a test drive', value: 100 },
         },
 		TARGET_TYPE: {
 			CUSTOMER: 1,

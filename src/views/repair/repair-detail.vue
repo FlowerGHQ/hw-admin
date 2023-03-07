@@ -61,7 +61,9 @@
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('search.vehicle_no') }}</div>
-                    <div class="value">{{ detail.vehicle_no || '-' }}</div>
+                    <div class="value">{{ detail.vehicle_no || '-' }}
+                        <a-tag v-if="detail.flag_source" color="blue">{{ $t('search.special') }}</a-tag>
+                    </div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.creator_name') }}</div>
