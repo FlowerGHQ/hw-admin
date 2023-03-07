@@ -31,7 +31,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('p.currency') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                        <a-select v-model:value="form.currency" :disabled="isDisabled" :placeholder="$t('def.input')">
                             <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
                         </a-select>
                     </div>
@@ -166,7 +166,12 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+         // 计算货币是否显示
+        isDisabled(){            
+            return this.monetaryList[this.form.currency] || null
+        }
+    },
 
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
@@ -186,7 +191,7 @@ export default {
         getDistributorDetail() {
             this.loading = true;
             console.log("id", this.form.id)
-            Core.Api.Distributor.detail({
+            Core.Api.Distributor.detailUpdate({
                 id: this.form.id,
             }).then(res => {
                 console.log('getDistributorDetail res', res)
