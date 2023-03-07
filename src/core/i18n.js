@@ -1018,7 +1018,8 @@ const messages = {
             select_a_first: '请先选择所属零售商',
             enter_sn: '请输入序号',
             advanced_search:'高级搜索',
-            stow:'收起'
+            stow:'收起',
+            special:'特殊'
         },
         pop_up: {
             reason: '原因',
@@ -3073,7 +3074,8 @@ const messages = {
             select_a_first:'Please select your shop.',
             enter_sn:'Please enter the serial number',
             advanced_search:'Advanced Search',
-            stow:'Stow'
+            stow:'Stow',
+            special:'Special',
         },
         pop_up: {
             reason:'reason',
