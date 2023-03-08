@@ -2189,6 +2189,7 @@ const messages = {
             work_end:'请选择下班时间',
             input_business_hours:'请输入营业时间备注',
             select_language:'请选择语言',
+            is_test_drive:'是否可试驾'
         }
     },
 

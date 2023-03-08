@@ -100,6 +100,22 @@
                         </a-select>  
                     </div>
                 </div>
+                <!-- 区域 -->
+                <div class="form-item required">
+                    <div class="key">{{ $t("crm_c.group") }}:</div>
+                    <div class="value">                        
+                    </div>
+                </div>
+                <!-- 是否可试驾 -->
+                <div class="form-item required">
+                    <div class="key">{{ $t("dis.is_test_drive") }}:</div>
+                    <div class="value">
+                        <a-select style="width: 50%"  :placeholder="$t('dis.select_language')">
+                            <a-select-option value="jack">可预约试驾</a-select-option>
+                            <a-select-option value="lucy">不可预约试驾</a-select-option>               
+                        </a-select>  
+                    </div>
+                </div>
                 <!-- 货币 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('p.currency') }}:</div>
