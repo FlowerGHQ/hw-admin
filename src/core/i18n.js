@@ -4283,7 +4283,7 @@ const messages = {
             work_go:'work_go',
             work_end:'work_end',
             input_business_hours:'input_business_hours',
-            select_language:'select_language',
+            select_language:'select_language'
         }
     },
 }

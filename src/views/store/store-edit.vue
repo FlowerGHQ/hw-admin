@@ -62,7 +62,7 @@
                 <div class="form-item required">
                     <div class="key">{{$t('dis.mail_number')}}:</div>
                     <div class="value">                        
-                        <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.contact_email" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 门店地址 -->
@@ -70,44 +70,70 @@
                     <div class="key">{{$t('dis.store_address')}}:</div>
                     <div class="value">
                         <!-- 参考 customer -> customer-edit -->
-                        <addressCascader />  
-                        <a-input style="margin-top: 10px;" v-model:value="form.addressDetail" :placeholder="$t('dis.input_detail_address')"/>
+                        <addressCascader 
+                            v-model:value="areaMap" 
+                            :defArea="{
+                                country:form.country,
+                                province:form.province,
+                                city: form.city,
+                            }"/>  
+                        <a-input v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
                 <!-- 营业时间 -->
                 <div class="form-item required">
                     <div class="key">{{$t('dis.business_hours')}}:</div>
-                    <div class="value">                                                                   
-                        <a-date-picker v-model:value="form.work_time" style="width: 49%" :placeholder="$t('dis.work_go')"/>                                                                                                                   
-                        <a-date-picker v-model:value="form.endWork_time" style="width: 49%; margin-left:1%" :placeholder="$t('dis.work_end')"/>                                                                                     
-                        <a-input style="margin-top: 10px;" v-model:value="form.email" :placeholder="$t('dis.input_business_hours')"/>
+                    <div class="value">
+                        <a-time-picker 
+                            style="width: 49%" 
+                            v-model:value="work.business_start" 
+                            format="HH:mm" 
+                            :placeholder="$t('dis.work_go')"/>
+                        <a-time-picker 
+                            style="width: 49%; margin-left:1%" 
+                            format="HH:mm" 
+                            v-model:value="work.business_end"  
+                            :placeholder="$t('dis.work_end')"/>
+                
+                        <a-input v-model:value="form.business_remark" style="margin-top: 10px;" :placeholder="$t('dis.input_business_hours')"/>
                     </div>
                 </div>
                 <!-- 官网地址 -->
                 <div class="form-item required">
                     <div class="key">{{$t('dis.store_website')}}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.website_url" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 使用语言 -->
                 <div class="form-item required">
                     <div class="key">{{$t('dis.use_language')}}:</div>
                     <div class="value">
-                        <a-select style="width: 50%"  :placeholder="$t('dis.select_language')">
-                            <a-select-option value="jack">Jack</a-select-option>
-                            <a-select-option value="lucy">Lucy</a-select-option>               
+                        <a-select v-model:value="form.language"  :placeholder="$t('dis.select_language')">
+                            <a-select-option 
+                                v-for="(item, index) in Core.Const.language" 
+                                :key="index"
+                                :value="item.key">
+                                    {{ item[$i18n.locale]  }}
+                                </a-select-option>                                        
                         </a-select>  
                     </div>
                 </div>
                 <!-- 区域 -->
                 <div class="form-item required">
                     <div class="key">{{ $t("crm_c.group") }}:</div>
-                    <div class="value">                        
+                    <div class="value">  
+                        <a-tree-select                            
+                            v-model:value="form.group_id"
+                            :placeholder="$t('def.select')"
+                            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                            :tree-data="groupOptions"                           
+                            tree-default-expand-all                            
+                            />                      
                     </div>
                 </div>
                 <!-- 是否可试驾 -->
-                <div class="form-item required">
+                <!-- <div class="form-item required">
                     <div class="key">{{ $t("dis.is_test_drive") }}:</div>
                     <div class="value">
                         <a-select style="width: 50%"  :placeholder="$t('dis.select_language')">
@@ -115,7 +141,7 @@
                             <a-select-option value="lucy">不可预约试驾</a-select-option>               
                         </a-select>  
                     </div>
-                </div>
+                </div> -->
                 <!-- 货币 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('p.currency') }}:</div>
@@ -164,6 +190,7 @@
 <script>
 import Core from '../../core';
 import addressCascader from '@/components/common/AddressCascader.vue'
+import dayjs from 'dayjs'
 
 const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 export default {
@@ -185,15 +212,30 @@ export default {
             distributorList: [],
             form: {
                 id: '',
-                distributor_id: undefined,
-                agent_id: undefined,
-                name: '',
-                currency: undefined,
-                short_name: '',
-                contact_name: '',
-                contact_phone: '',
-                logo: '',
-                type: 0,
+                distributor_id: undefined, // 分销商
+                agent_id: undefined, // 零售商
+                name: '', 
+                short_name: '', // 简称
+                pay_type: null, // 付款方式 
+                contact_name: '', // 联系人
+                contact_phone: '', // 手机号
+                contact_email: null, // 邮箱
+                country: '', // 国家
+                province: '', // 省份           
+                city: '',   // 城市             
+                address: null, // 详情地址
+                business_time: null, // 营业时间 样式是 9:00~18:00
+                business_remark: "周一~周五", // 营业时间备注
+                website_url: null, // 门店官网
+                language: null, // 语言
+                group_id: null, // 区域
+                currency: undefined, // 货币
+                logo: '', // logo
+                flag_stock_change_use_pda: null, // 启用PDA
+            },
+            work:{
+                business_start: null,
+                business_end: null,
             },
             agentSearchFrom: {
                 distributor_id: ''
@@ -210,11 +252,14 @@ export default {
                     type: 'img',
                 },
             },
+            areaMap: {}, // 门店地址选择
+            groupOptions: [], // 区域数据
         };
     },
     watch: {},
     computed: {},
     mounted() {
+        this.handleGroupTreeFetch()
         this.form.id = Number(this.$route.query.id) || 0
         this.form.agent_id = Number(this.$route.query.agent_id) || undefined
         if (this.form.id) {
@@ -236,6 +281,14 @@ export default {
                     this.$router.go(-1)
                     break;
             }
+        },
+        /* fetch start*/
+          // 区域接口数据
+          handleGroupTreeFetch() {
+            Core.Api.CRMGroupMember.structureByUser().then((res) => {
+                // console.log("区域",res);
+                this.groupOptions = res.list;
+            });
         },
         // 获取门店详情
         getStoreDetail() {
@@ -263,6 +316,7 @@ export default {
                 this.loading = false;
             });
         },
+        /* fetch end*/
         getDistributorList() {
             Core.Api.Distributor.listAll().then(res => {
                 this.distributorList = res.list
@@ -283,46 +337,41 @@ export default {
         },
         // 提交编辑
         handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
+            let formCopy = Core.Util.deepCopy(this.form)
+
             if (this.upload.fileList.length) {
                 let file_url = this.upload.fileList.map(item => {
                     return item.short_path || item.response.data.filename
                 })
                 if (file_url.length > 0) {
-                    form.logo = file_url[0]
+                    formCopy.logo = file_url[0]
                 }
             }
-            console.log('form:', form)
-            if (!form.distributor_id && this.$auth('ADMIN')) {
-                return this.$message.warning(this.$t('def.enter'))
+
+            // 地区显示
+            if (!Core.Util.isEmptyObj(this.areaMap)) {                
+                formCopy.country = this.areaMap.country.name              
+                if (this.areaMap.province) {
+                    formCopy.province = this.areaMap.province.name
+                }
+                if(this.areaMap.city){
+                    formCopy.city = this.areaMap.city.name
+                }
             }
-            if (!form.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.currency) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.short_name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.contact_name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.contact_phone) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            Core.Api.Store.save(form).then(() => {
+            
+            console.log('formCopy:', formCopy)
+            if(this.checkInput(formCopy)) return            
+            console.log('formCopy完成:', formCopy)
+          
+            Core.Api.Store.save({
+                ...formCopy,
+            }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
         },
-
-
         handleImgCheck(file) {
             const isCanUpType = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp'].includes(file.type)
             if (!isCanUpType) {
@@ -344,6 +393,70 @@ export default {
             }
             this.upload.fileList = fileList
         },
+        // 表单检查
+        checkInput(formCopy){
+            if (!formCopy.distributor_id && this.$auth('ADMIN')) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.currency) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.short_name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.contact_name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!formCopy.contact_phone) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            // 邮箱
+            if (!formCopy.contact_email) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            // 门店地址
+            if (!(Object.values(this.areaMap).filter(i => i).length)) {
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_address')})`)
+            }
+            // 营业时间
+            if(!this.workTimeFilter(formCopy)) return
+            // 门店官网
+            if (!formCopy.website_url) {
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
+            }
+            // 使用语言
+            if (!formCopy.language) {
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.language')})`)
+            }
+            // 区域
+            if (!formCopy.group_id) {
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('crm_c.group')})`)
+            }
+
+            return false
+        },
+        // 上班时间转化需要的样式
+        workTimeFilter(formCopy){
+            console.log("时间",  this.work);
+            if (!this.work.business_start) {
+                this.$message.warning(this.$t('dis.work_go'))
+                return false
+            }
+            if (!this.work.business_end) {
+                this.$message.warning(this.$t('dis.work_end'))
+                return false
+            }
+            let start =  dayjs(this.work.business_start).format('HH:mm')
+            let end = dayjs(this.work.business_end).format('HH:mm')
+            formCopy.business_time = `${start}~${end}`
+            return true
+        }
     }
 }
 </script>
