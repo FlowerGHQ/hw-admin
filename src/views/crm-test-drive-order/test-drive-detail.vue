@@ -38,33 +38,33 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('def.create_time') }}：</span>
                         <span class="value">
-                            {{ driveDetail.customer?.createTime }}                    
+                            {{ $Util.timeFilter(driveDetail.customer?.createTime,3) }}                    
                         </span>
                     </a-col>
                     <!-- 试驾车型 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
                         <span class="value">
-                            {{ driveDetail.item_id }}
+                            {{ driveDetail.item_code }}
                         </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>                       
                     </a-col>
                     <!-- 门店邮件是否发送 -->
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <!-- <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span style="color:#8b9aae">{{ $t('dis.store_is_send_mail') }}：</span>
                         <span>
                             <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
                             <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
                         </span>
-                    </a-col>
+                    </a-col> -->
                     <!-- 用户邮件是否发送 -->
-                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                    <!-- <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span style="color:#8b9aae">{{ $t('dis.user_is_send_mail') }}：</span>
                         <span>
                             {{ $t('dis.been_sent') }}({{ $t('dis.mail') }}:1234)
                         </span>
-                    </a-col>
+                    </a-col> -->
                 </a-row>
             </div>
             <div class="panel-content desc-container">

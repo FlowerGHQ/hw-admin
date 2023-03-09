@@ -2052,6 +2052,17 @@ let Const = {
     language:{
         '1': { key: 1, zh: '中文', en: 'Chinese'},
         '2': { key: 2, zh: '英文', en: 'English'},
+    },
+    // 试驾单
+    test_drive:{
+        test_drive_status: {
+            '0': { key: 0, zh: '未联系',en: 'uncontacted' },
+            '5': { key: 5, zh: '已联系',en: 'Have contacted' },
+            '10': { key: 10, zh: '预约试驾',en: 'Make drive' },
+            '20': { key: 20, zh: '试驾中',en: 'Appointment in progress' },
+            '30': { key: 30, zh: '已试驾',en: 'tested' },
+            '40': { key: 40, zh: '过期未试驾',en: 'No test drive due' },
+        }
     }
 };
 

@@ -1124,6 +1124,11 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+    CRMTestDriveStatusCycFilter(val,  to='zh') {
+		const MAP = Const.test_drive.test_drive_status
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 
 
 

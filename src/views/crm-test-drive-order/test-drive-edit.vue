@@ -87,7 +87,8 @@
             <a-input
               v-model:value="form.email"
               :placeholder="$t('def.input')"
-              @blur="handleCustomerEmailBlur"              
+              @blur="handleCustomerEmailBlur" 
+			  :disabled="form.id > 0 && form.email != ''"
             />
             <div class="btn">
               <span v-if="isExistEmail == 1"><i class="icon i_confirm" /></span>
@@ -145,24 +146,9 @@
               v-model:value="form.birthday"
               valueFormat="YYYY-MM-DD"
               :placeholder="$t('def.input')"
-            />
-            <!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
+            />            
           </div>
-        </div>
-		<!-- 试驾车型： -->
-        <div class="form-item required with-btn">
-          <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
-          <div class="value">
-            <a-select v-model:value="form.item_id" :placeholder="$t('def.input')" >
-                <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
-            </a-select>
-            <div class="btn">
-              <a-button type="link" @click="getSourceList()">{{
-                $t("crm_set.refresh")
-              }}</a-button>
-            </div>
-          </div>
-        </div>
+        </div>		
 		<!-- 试驾时间 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_d.test_drive_time") }}：</div>
@@ -518,8 +504,7 @@ export default {
         group_id: undefined, // 区域
         phone_country_code: undefined,
         gender: undefined, // 性别
-        birthday: undefined, // 生日
-        item_id: undefined, // 试驾车型
+        birthday: undefined, // 生日        
 		test_drive_time: undefined, // 试驾时间
         store_id: undefined, // 门店选择
        
@@ -611,6 +596,7 @@ export default {
         type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
         status: Core.Const.CRM_DICT.STATUS.STATUS_NORM,
       }).then((res) => {
+		console.log("试驾单车型接口", res.list);
         this.sourceList = res.list;
       });
     },
@@ -697,8 +683,7 @@ export default {
           let detail = res.detail;
           this.form.test_drive_time = detail.test_drive_time
             ? dayjs.unix(detail.test_drive_time).format("YYYY-MM-DD  HH:mm:ss")
-            : undefined;  // 试驾时间
-          this.form.item_id = detail.item_id; // 试驾车型
+            : undefined;  // 试驾时间          
           this.form.store_id = detail.store_id; // 门店选择		  
           this.form.customer_id = detail.customer_id;
 

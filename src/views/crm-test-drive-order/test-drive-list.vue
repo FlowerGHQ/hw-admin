@@ -186,7 +186,10 @@
 			<template v-if="column.key === 'subscribe_vehicle'">
               {{ text || "-" }}
             </template>	
-			<!-- 预约门店-->			
+			<!-- 预约门店-->
+			<template v-if="column.key === 'store_id'">
+              {{ text || "-" }}
+            </template>				
 			<!-- 用户名称 -->
 			<template v-if="column.key === 'user_name'">
               {{ record.customer ? record.customer.name || "-" : "-" }}
@@ -197,7 +200,13 @@
             </template>
 			<!-- 状态 -->
 			<template v-if="column.key === 'status'">
-              {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
+              {{ $Util.CRMTestDriveStatusCycFilter(text, $i18n.locale) }}
+            </template>
+			<!-- 门店邮箱是否发送 -->
+			<template v-if="column.key === 'flag_email'">
+              <span v-if="text == 0">-</span>
+              <span v-if="text == 1">{{ $t('dis.been_sent') }}</span>
+              <span v-if="text == 2">{{ $t('dis.not_sent') }}</span>
             </template>
 			<!-- 创建人 -->			           				                       
             <template v-if="column.key === 'creator_name'">
@@ -343,7 +352,7 @@ export default {
       calendar: "",
       createTime: [],
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-      calendarTime: "",
+      calendarTime: ""	  
     };
   },
   watch: {},
@@ -357,9 +366,9 @@ export default {
 		// 创建时间  
 		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
 		// 预约车型
-		{ title: "dis.subscribe_vehicle", dataIndex: ["crm_dict", "name"], key: "subscribe_vehicle" },
+		{ title: "dis.subscribe_vehicle", dataIndex: "item_code", key: "subscribe_vehicle" },
 		// 预约门店
-		// { title: "dis.subscribe_store", dataIndex: "create_time", key: "create_time" },
+		{ title: "dis.subscribe_store", dataIndex: ["store", "name"], key: "store_id" },
 		// 门店区域
 		{ title: "dis.store_area", dataIndex: "group_name", key: "group_name" },
 		// 用户名称
@@ -373,7 +382,8 @@ export default {
 		{ title: "dis.user_email", dataIndex: ["customer", "email"], key: "email" },
 		// 用户手机号
 		{ title: "dis.user_phone", dataIndex: ["customer", "phone"], key: "phone" },
-		// 门店邮箱是否发送				
+		// 门店邮箱是否发送			
+		{ title: "dis.store_is_send_mail", dataIndex: "flag_email", key: "flag_email" },	
         // 状态
         {
           title: "dis.status",
@@ -431,6 +441,7 @@ export default {
     dayjs.locale("zh-cn");
   },
   methods: {
+	/* methods */	
     moreSearch() {
       this.show = !this.show;
     },
@@ -721,26 +732,18 @@ export default {
         this.sourceList = res.list;
       });
     },
-    getListData(value) {
-      // console.log("value", value.month())
-      // console.log("value", value.date())
+    getListData(value) {    
       let listData = [];
-      this.tableTimeData.forEach((res) => {
-        let date = new Date(res.test_drive_time * 1000);
-        // console.log("date", date)
-        // console.log("content", date.getMonth())
-        // console.log("content", date.getDate())
-        if (
-          value.month() === date.getMonth() &&
-          value.date() === date.getDate()
-        ) {
+      this.tableTimeData.forEach((res) => {		
+        let date = new Date(res.test_drive_time * 1000);       
+        if (value.month() === date.getMonth() &&value.date() === date.getDate()) {
           let content =
-            (res.customer !== null ? res.customer.name : "-") +
-            " " +
-            (res.crm_dict !== null ? res.crm_dict.name : "-") +
-            " " +
+            (res.customer !== null ? res.customer.name : "-") 
+			+ " " + 		
             this.$Util.timeFilter(res.test_drive_time, 5);
-          // console.log("content", content)
+
+          console.log("content", content)
+
           listData.push({ type: "blue", content: content });
         }
       });
