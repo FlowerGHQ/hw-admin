@@ -88,7 +88,7 @@
               v-model:value="form.email"
               :placeholder="$t('def.input')"
               @blur="handleCustomerEmailBlur"
-              :disabled="form.email != undefined || form.email != ''"
+              :disabled="form.email != undefined && form.email != ''"
             />
             <div class="btn">
               <span v-if="isExistEmail == 1"><i class="icon i_confirm" /></span>
