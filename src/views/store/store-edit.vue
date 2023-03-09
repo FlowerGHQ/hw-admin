@@ -71,7 +71,10 @@
                     <div class="value">
                         <!-- 参考 customer -> customer-edit -->
                         <addressCascader 
-                            v-model:value="areaMap" :def-area='showArea'/>  
+                            v-model:value="areaMap" 
+                            :def-area='showArea'
+                            @select="addressSelect"
+                            />  
                         <a-input v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
@@ -217,8 +220,9 @@ export default {
                 contact_email: null, // 邮箱
                 country: '', // 国家
                 province: '', // 省份           
-                city: '',   // 城市             
-                address: null, // 详情地址
+                city: '',   // 城市       
+                county:'', // 区      
+                address: "", // 详情地址
                 business_time: null, // 营业时间 样式是 9:00~18:00
                 business_remark: "周一~周五", // 营业时间备注
                 website_url: null, // 门店官网
@@ -251,7 +255,8 @@ export default {
             showArea:{
                 country: '', // 国家
                 province: '', // 省份           
-                city: '',   // 城市 
+                city: '',   // 城市
+                county: '', 
             }, // 回显门店地址选择
             groupOptions: [], // 区域数据
         };
@@ -304,11 +309,13 @@ export default {
                 // 回显地址
                 for (const key in this.showArea) {
                     this.showArea[key] = res.detail[key]
+                }                
+                // 营业时间回显
+                let businessTime = res.detail.business_time.split("~");                
+                if(businessTime.length){
+                    this.work.business_start =  dayjs(`1970-00-0 ${businessTime[0]}`)         
+                    this.work.business_end =  dayjs(`1970-00-0 ${businessTime[1]}`)
                 }
-                // this.areaMap = this.showArea
-
-                // this.work.business_start =  res.detail.business_time.split("~")[0]             
-                this.work.business_end =  dayjs({ hour:15, minute:10 });
                 
                 console.log("测试", dayjs({ hour:15, minute:10 }));
                 if (this.form.logo) {
@@ -367,9 +374,12 @@ export default {
                 if(this.areaMap.city){
                     formCopy.city = this.areaMap.city.name
                 }
+                if(this.areaMap.county){
+                    formCopy.county = this.areaMap.county.name
+                }
             }
             
-            console.log('formCopy:', formCopy)
+            console.log('formCopy:', formCopy, this.areaMap)
             if(this.checkInput(formCopy)) return            
             console.log('formCopy完成:', formCopy)
           
@@ -404,7 +414,7 @@ export default {
             this.upload.fileList = fileList
         },
         // 表单检查
-        checkInput(formCopy){
+        checkInput(formCopy){   
             if (!formCopy.distributor_id && this.$auth('ADMIN')) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -431,11 +441,13 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
             // 门店地址
-            if (!(Object.values(this.areaMap).filter(i => i).length)) {
-                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_address')})`)
+            if(!formCopy.country){
+                if (!(Object.values(this.areaMap).filter(i => i).length)) {
+                    return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_address')})`)
+                }
             }
-            // 营业时间
-            if(!this.workTimeFilter(formCopy)) return
+            // 营业时间            
+            if(this.workTimeFilter(formCopy)) return true
             // 门店官网
             if (!formCopy.website_url) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
@@ -454,18 +466,31 @@ export default {
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
             console.log("时间",  this.work);
-            if (!this.work.business_start) {
-                this.$message.warning(this.$t('dis.work_go'))
-                return false
+            if (!this.work.business_start) {                
+                return this.$message.warning(this.$t('dis.work_go'))
             }
-            if (!this.work.business_end) {
-                this.$message.warning(this.$t('dis.work_end'))
-                return false
+            if (!this.work.business_end) {                
+                return this.$message.warning(this.$t('dis.work_end'))
             }
             let start =  dayjs(this.work.business_start).format('HH:mm')
             let end = dayjs(this.work.business_end).format('HH:mm')
             formCopy.business_time = `${start}~${end}`
-            return true
+            return false
+        },
+        // 选择地址
+        addressSelect(data){
+            console.log("测试",data);
+            let address = data.country.name;
+            if(data.province){
+                address += data.province.name
+            }
+            if(data.city){
+                address += data.city.name
+            }
+            if(data.county){
+                address += data.county.name
+            }        
+            this.form.address = address                    
         }
     }
 }

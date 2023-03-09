@@ -92,6 +92,7 @@ export default {
                 }
             }
             this.$emit('update:value', update)
+            this.$emit('select', update)
         },
         handleReset() {
             this.selectCode = []
