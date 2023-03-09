@@ -12,7 +12,7 @@
           >
         </div>
       </div>
-      <!-- <a-calendar
+      <a-calendar
         v-model:value="calendar"
         @change="getCalendarDate"
         style="margin: 0 20px"
@@ -24,7 +24,7 @@
             </li>
           </ul>
         </template>
-      </a-calendar> -->
+      </a-calendar>
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
@@ -186,13 +186,11 @@
 			<template v-if="column.key === 'subscribe_vehicle'">
               {{ text || "-" }}
             </template>	
-			<!-- 预约门店-->
-			<!-- 门店区域-->
+			<!-- 预约门店-->			
 			<!-- 用户名称 -->
 			<template v-if="column.key === 'user_name'">
               {{ record.customer ? record.customer.name || "-" : "-" }}
-            </template> 
-			<!-- 用户邮箱	 -->
+            </template> 			
 			<!-- 用户手机号	 -->
 			<template v-if="column.key === 'phone'">
               {{ text || "-" }}
