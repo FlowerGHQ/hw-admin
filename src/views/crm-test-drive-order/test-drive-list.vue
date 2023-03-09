@@ -12,7 +12,7 @@
           >
         </div>
       </div>
-      <a-calendar
+      <!-- <a-calendar
         v-model:value="calendar"
         @change="getCalendarDate"
         style="margin: 0 20px"
@@ -24,7 +24,7 @@
             </li>
           </ul>
         </template>
-      </a-calendar>
+      </a-calendar> -->
       <div class="search-container">
         <a-row class="search-area">
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
@@ -355,24 +355,24 @@ export default {
 		// id
 		{ title: "id", dataIndex: "id", key: "id" },
 		// 订单来源
-		{ title: "dis.order_source", dataIndex: "create_time", key: "create_time" },
+		// { title: "dis.order_source", dataIndex: "create_time", key: "create_time" },
 		// 创建时间  
 		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
 		// 预约车型
 		{ title: "dis.subscribe_vehicle", dataIndex: ["crm_dict", "name"], key: "subscribe_vehicle" },
 		// 预约门店
-		{ title: "dis.subscribe_store", dataIndex: "create_time", key: "create_time" },
+		// { title: "dis.subscribe_store", dataIndex: "create_time", key: "create_time" },
 		// 门店区域
 		{ title: "dis.store_area", dataIndex: "group_name", key: "group_name" },
 		// 用户名称
 		{
           title: "dis.user_name",
-          dataIndex: "customer_id",
+          dataIndex: ["customer", "name"],
           key: "user_name",
           sorter: true,
         },
 		// 用户邮箱
-		{ title: "dis.user_email", dataIndex: "email", key: "email" },
+		{ title: "dis.user_email", dataIndex: ["customer", "email"], key: "email" },
 		// 用户手机号
 		{ title: "dis.user_phone", dataIndex: ["customer", "phone"], key: "phone" },
 		// 门店邮箱是否发送				
