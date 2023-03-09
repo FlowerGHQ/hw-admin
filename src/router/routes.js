@@ -1913,6 +1913,17 @@ const routes = [
 					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
+			},      
+			{
+				path: 'test-drive-detail',
+				name: 'TestDriveDetail',
+				component: () => import('@/views/crm-test-drive-order/test-drive-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '试驾订单',
+					parent: '/crm-test-drive-order/test-drive-list',
+					auth: ["crm-test-drive-order.save"],
+				}
 			}        
 		]
 	},

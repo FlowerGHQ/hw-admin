@@ -87,8 +87,7 @@
             <a-input
               v-model:value="form.email"
               :placeholder="$t('def.input')"
-              @blur="handleCustomerEmailBlur"
-              :disabled="form.email != undefined && form.email != ''"
+              @blur="handleCustomerEmailBlur"              
             />
             <div class="btn">
               <span v-if="isExistEmail == 1"><i class="icon i_confirm" /></span>
@@ -154,7 +153,7 @@
         <div class="form-item required with-btn">
           <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
           <div class="value">
-            <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
+            <a-select v-model:value="form.item_id" :placeholder="$t('def.input')" >
                 <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
             </a-select>
             <div class="btn">
@@ -183,7 +182,7 @@
           <div class="key">{{ $t("crm_d.dept_id") }}：</div>
           <div class="value">
             <a-select
-              v-model:value="form.dept_id"
+              v-model:value="form.store_id"
               :placeholder="$t('def.input')"
 			  @change="storeChange"
             >
@@ -520,9 +519,9 @@ export default {
         phone_country_code: undefined,
         gender: undefined, // 性别
         birthday: undefined, // 生日
-        crm_dict_id: undefined, // 试驾车型
+        item_id: undefined, // 试驾车型
 		test_drive_time: undefined, // 试驾时间
-        dept_id: undefined, // 门店选择
+        store_id: undefined, // 门店选择
        
         //用户画像
         customer_portrait_id: undefined,
@@ -699,16 +698,16 @@ export default {
           this.form.test_drive_time = detail.test_drive_time
             ? dayjs.unix(detail.test_drive_time).format("YYYY-MM-DD  HH:mm:ss")
             : undefined;  // 试驾时间
-          this.form.crm_dict_id = detail.crm_dict_id; // 试驾车型
-          this.form.dept_id = detail.dept_id; // 门店选择		  
+          this.form.item_id = detail.item_id; // 试驾车型
+          this.form.store_id = detail.store_id; // 门店选择		  
           this.form.customer_id = detail.customer_id;
 
 		  // 有门店选择的话渲染门店下面的信息
-		  if(this.form.dept_id && this.form.dept_id != ''){
+		  if(this.form.store_id && this.form.store_id != ''){
 			  this.storeDetail = this.storeList.find(el => {				
-				  return el.id == this.form.dept_id
+				  return el.id == this.form.store_id
 				})						
-				console.log("进来", this.storeDetail, this.form.dept_id );
+				console.log("进来", this.storeDetail, this.form.store_id );
 		  }
           console.log("customer_id", res);
           this.getCustomerDetail(); // 用户详情
