@@ -71,12 +71,7 @@
                     <div class="value">
                         <!-- 参考 customer -> customer-edit -->
                         <addressCascader 
-                            v-model:value="areaMap" 
-                            :defArea="{
-                                country:form.country,
-                                province:form.province,
-                                city: form.city,
-                            }"/>  
+                            v-model:value="areaMap" :def-area='showArea'/>  
                         <a-input v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
@@ -253,12 +248,17 @@ export default {
                 },
             },
             areaMap: {}, // 门店地址选择
+            showArea:{
+                country: '', // 国家
+                province: '', // 省份           
+                city: '',   // 城市 
+            }, // 回显门店地址选择
             groupOptions: [], // 区域数据
         };
     },
     watch: {},
     computed: {},
-    mounted() {
+    mounted() {        
         this.handleGroupTreeFetch()
         this.form.id = Number(this.$route.query.id) || 0
         this.form.agent_id = Number(this.$route.query.agent_id) || undefined
@@ -286,7 +286,7 @@ export default {
           // 区域接口数据
           handleGroupTreeFetch() {
             Core.Api.CRMGroupMember.structureByUser().then((res) => {
-                // console.log("区域",res);
+                console.log("区域",res);
                 this.groupOptions = res.list;
             });
         },
@@ -301,6 +301,16 @@ export default {
                 for (const key in this.form) {
                     this.form[key] = res.detail[key]
                 }
+                // 回显地址
+                for (const key in this.showArea) {
+                    this.showArea[key] = res.detail[key]
+                }
+                // this.areaMap = this.showArea
+
+                // this.work.business_start =  res.detail.business_time.split("~")[0]             
+                this.work.business_end =  dayjs({ hour:15, minute:10 });
+                
+                console.log("测试", dayjs({ hour:15, minute:10 }));
                 if (this.form.logo) {
                     this.upload.fileList = [{
                         uid: 1,
@@ -336,8 +346,8 @@ export default {
 
         },
         // 提交编辑
-        handleSubmit() {
-            let formCopy = Core.Util.deepCopy(this.form)
+        handleSubmit() { 
+            let formCopy = Core.Util.deepCopy(this.form)                 
 
             if (this.upload.fileList.length) {
                 let file_url = this.upload.fileList.map(item => {
