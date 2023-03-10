@@ -2062,6 +2062,10 @@ let Const = {
             '20': { key: 20, zh: '试驾中',en: 'Appointment in progress' },
             '30': { key: 30, zh: '已试驾',en: 'tested' },
             '40': { key: 40, zh: '过期未试驾',en: 'No test drive due' },
+        },
+        appointment_channel:{
+            '10': { key: 10, zh: '销售录入', en: 'sales entry'},
+            '20': { key: 20, zh: '官网预约', en: 'appointment website'},
         }
     }
 };

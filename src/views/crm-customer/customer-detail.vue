@@ -69,12 +69,58 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
+                    </a-col>  
+                    <!-- 订单来源 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.order_source') }}：</span>
+                        <span class="value">                           
+                            {{ $Util.CRMTestDriveSourceFilter(detail.crm_test_drive_order?.channel, $i18n.locale) || "-" }}
+                        </span>
+                    </a-col>                                  
+                    <!-- 试驾车型 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
+                        <span class="value">
+                            {{ detail.crm_test_drive_order?.item_name || "-" }}
+                        </span>
                     </a-col>                                  
                     <!-- 标签展示 -->
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
                         <span class="value" style="overflow: initial; white-space: normal;">
                             <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"/>
+                        </span>
+                    </a-col>
+                    <!-- 门店邮件是否发送 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.store_is_send_mail') }}：</span>
+                        <span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_email">-</span>
+                            <!-- 1已发 2未发-->
+                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 1">
+                                {{ $t('dis.been_sent') }}
+                                <!-- ({{ $t('dis.mail') }}:1234) -->
+                            </span>
+                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 2">
+                                <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
+                                <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
+                            </span>
+                        </span>
+                    </a-col>
+                    <!-- 用户邮件是否发送 -->
+                   <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.user_is_send_mail') }}：</span>
+                        <span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_email">-</span>
+                            <!-- 1已发 2未发 -->
+                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 1">
+                                {{ $t('dis.been_sent') }}
+                                <!-- ({{ $t('dis.mail') }}:1234) -->
+                            </span>
+                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 2">
+                                <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
+                                <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
+                            </span>
                         </span>
                     </a-col>
 
@@ -103,8 +149,60 @@
                         </template> -->
                     </a-col>                    
                 </a-row>
-            </div>           
+            </div>  
+            <div class="panel-content desc-container">
+                <div class="desc-title">
+                    <div class="title-area">
+                        <span class="title">{{ $t('dis.subscribe_store') }}</span> 
+                    </div>
+                </div>
+                <a-row class="desc-detail">
+                    <!-- 门店名称 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_name') }}：</span>
+                        <span class="value">
+                            {{storeDetail.name}}                    
+                        </span>
+                    </a-col>
+                    <!-- 门店手机号 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_phone') }}：</span>
+                        <span class="value">
+                            {{storeDetail.contact_phone}}                     
+                        </span>
+                    </a-col>
+                    <!-- 门店邮箱 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_email') }}：</span>
+                        <span class="value">
+                            {{storeDetail.contact_email}}                       
+                        </span>
+                    </a-col>
+                    <!-- 营业时间 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.business_hours') }}：</span>
+                        <span class="value">
+                            {{storeDetail.business_time}}({{storeDetail.business_remark}})
+                        </span>
+                    </a-col>
+                    <!-- 门店地址 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_address') }}：</span>
+                        <span class="value">
+                            {{storeDetail.address}}
+                        </span>
+                    </a-col>
+                    <!-- 门店官网 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_website') }}：</span>
+                        <span class="value">
+                            <a :href="storeDetail.website_url">{{storeDetail.website_url}}  </a>                  
+                        </span>
+                    </a-col>
+                </a-row>
+            </div>         
         </div>
+        
         <a-row >
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
@@ -242,7 +340,9 @@ export default {
             loading: false,
             activeKey: 'TrackRecord',
             tabActiveKey: 'CustomerSituation',
-            detail: {},
+            detail: {
+                crm_test_drive_order: null
+            },
             batchForm: {
                 own_user_id: '',
             },
@@ -252,6 +352,7 @@ export default {
             groupOptions: [],
             group_id: undefined,
             id: '',
+            storeDetail: {}, // 门店详情
         };
     },
     watch: {},
@@ -263,15 +364,28 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
     },
-    mounted() {
-        // this.id = Number(this.$route.query.id) || 0
+    mounted() {        
         if (this.id) {
             this.getCustomerDetail();
             this.getTargetByUserId();
+            this.storeFetch()
         }
 
     },
     methods: {
+        /* Fetch */
+        // 门店详情
+        storeFetch(params = {}){
+            Core.Api.Store.detail({
+                ...params,
+                id: Number(this.$route.query.store_id),
+            }).then(res => {
+                console.log("获取门店详情", res)    
+                this.storeDetail = res.detail
+            }).catch(err => {
+                console.log('获取门店列表失败', err)		
+            })
+        },
         routerChange(type, item) {
             let routeUrl = ""
             switch (type) {

@@ -178,6 +178,9 @@
           </template>
           <template #bodyCell="{ column, text, record }"> 			
 			<!-- 订单来源	 -->
+			<template v-if="column.key === 'channel'">
+				{{ $Util.CRMTestDriveSourceFilter(text, $i18n.locale) || "-"}}
+            </template>
 			<!-- 创建时间	 -->
 			<template v-if="column.key === 'create_time'">
               {{ $Util.timeFilter(text,3) }}
@@ -200,13 +203,14 @@
             </template>
 			<!-- 状态 -->
 			<template v-if="column.key === 'status'">
-              {{ $Util.CRMTestDriveStatusCycFilter(text, $i18n.locale) }}
+              {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
             </template>
 			<!-- 门店邮箱是否发送 -->
 			<template v-if="column.key === 'flag_email'">
+			  <!-- 1 已发送 2 未发 -->
               <span v-if="text == 0">-</span>
-              <span v-if="text == 1">{{ $t('dis.been_sent') }}</span>
-              <span v-if="text == 2">{{ $t('dis.not_sent') }}</span>
+              <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
+              <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
             </template>
 			<!-- 创建人 -->			           				                       
             <template v-if="column.key === 'creator_name'">
@@ -302,7 +306,7 @@
 <script>
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn"; // dayjs.locale('zh-cn');
-import Core from "../../core";
+import Core from "@/core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
 
 export default {
@@ -362,7 +366,7 @@ export default {
 		// id
 		{ title: "id", dataIndex: "id", key: "id" },
 		// 订单来源
-		// { title: "dis.order_source", dataIndex: "create_time", key: "create_time" },
+		{ title: "dis.order_source", dataIndex: "channel", key: "channel" },
 		// 创建时间  
 		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
 		// 预约车型
@@ -450,8 +454,8 @@ export default {
       switch (type) {
         case "detail": // 详情
           routeUrl = this.$router.resolve({
-            path: "/crm-test-drive-order/test-drive-detail",
-            query: { id: item.id },
+            path: "/crm-customer/customer-detail",
+            query: { id: item.id, store_id: item.store.id },
           });
           window.open(routeUrl.href, "_self");
           break;  
@@ -724,6 +728,7 @@ export default {
         this.createUserOptions = res.list;
       });
     },
+	// 试驾车型接口
     getSourceList() {
       Core.Api.CRMDict.list({
         type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
