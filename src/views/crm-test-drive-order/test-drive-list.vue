@@ -366,7 +366,7 @@ export default {
 		// 创建时间  
 		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
 		// 预约车型
-		{ title: "dis.subscribe_vehicle", dataIndex: "item_code", key: "subscribe_vehicle" },
+		{ title: "dis.subscribe_vehicle", dataIndex: "item_name", key: "subscribe_vehicle" },
 		// 预约门店
 		{ title: "dis.subscribe_store", dataIndex: ["store", "name"], key: "store_id" },
 		// 门店区域

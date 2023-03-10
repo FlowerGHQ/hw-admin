@@ -45,7 +45,7 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
                         <span class="value">
-                            {{ driveDetail.item_code }}
+                            {{ driveDetail.item_name }}
                         </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>                       
