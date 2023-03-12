@@ -154,7 +154,7 @@
           <div class="key">{{ $t("crm_d.test_drive_time") }}：</div>
           <div class="value">
             <a-date-picker
-              v-model:value="form.test_drive_time"
+              v-model:value="form.drive_time"
               valueFormat="YYYY-MM-DD HH:mm:ss"
               :show-time="defaultTime"
               :placeholder="$t('def.input')"
@@ -505,7 +505,7 @@ export default {
         phone_country_code: undefined,
         gender: undefined, // 性别
         birthday: undefined, // 生日        
-		test_drive_time: undefined, // 试驾时间
+		    drive_time: undefined, // 试驾时间
         store_id: undefined, // 门店选择
        
         //用户画像
@@ -681,8 +681,8 @@ export default {
         .then((res) => {
           console.log("getCustomerDetail res", res);
           let detail = res.detail;
-          this.form.test_drive_time = detail.test_drive_time
-            ? dayjs.unix(detail.test_drive_time).format("YYYY-MM-DD  HH:mm:ss")
+          this.form.drive_time = detail.drive_time
+            ? dayjs.unix(detail.drive_time).format("YYYY-MM-DD  HH:mm:ss")
             : undefined;  // 试驾时间          
           this.form.store_id = detail.store_id; // 门店选择		  
           this.form.customer_id = detail.customer_id;
@@ -712,8 +712,8 @@ export default {
 		let formCopy = Core.Util.deepCopy(this.form);
 	
 
-		formCopy.test_drive_time = formCopy.test_drive_time
-			? dayjs(formCopy.test_drive_time).unix()
+		formCopy.drive_time = formCopy.drive_time
+			? dayjs(formCopy.drive_time).unix()
 			: 0; // 日期转时间戳
 			formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
 
@@ -797,7 +797,7 @@ export default {
 		if (!formCopy.group_id) {
 			return this.$message.warning(this.$t("def.enter"));
 		}
-		if (!formCopy.test_drive_time) {
+		if (!formCopy.drive_time) {
 			return this.$message.warning(this.$t("def.enter"));
 		}
 

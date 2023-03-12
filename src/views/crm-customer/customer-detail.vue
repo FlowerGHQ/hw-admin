@@ -95,13 +95,13 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span style="color:#8b9aae">{{ $t('dis.store_is_send_mail') }}：</span>
                         <span>
-                            <span v-if="!detail.crm_test_drive_order?.flag_email">-</span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_mail_sent">-</span>
                             <!-- 1已发 2未发-->
-                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 1">
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 1">
                                 {{ $t('dis.been_sent') }}
                                 <!-- ({{ $t('dis.mail') }}:1234) -->
                             </span>
-                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 2">
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 2">
                                 <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
                                 <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
                             </span>
@@ -111,13 +111,13 @@
                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span style="color:#8b9aae">{{ $t('dis.user_is_send_mail') }}：</span>
                         <span>
-                            <span v-if="!detail.crm_test_drive_order?.flag_email">-</span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_mail_sent">-</span>
                             <!-- 1已发 2未发 -->
-                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 1">
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 1">
                                 {{ $t('dis.been_sent') }}
                                 <!-- ({{ $t('dis.mail') }}:1234) -->
                             </span>
-                            <span v-else-if="detail.crm_test_drive_order?.flag_email == 2">
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 2">
                                 <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
                                 <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
                             </span>

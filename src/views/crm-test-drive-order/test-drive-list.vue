@@ -206,7 +206,7 @@
               {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
             </template>
 			<!-- 门店邮箱是否发送 -->
-			<template v-if="column.key === 'flag_email'">
+			<template v-if="column.key === 'flag_mail_sent'">
 			  <!-- 1 已发送 2 未发 -->
               <span v-if="text == 0">-</span>
               <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
@@ -387,7 +387,7 @@ export default {
 		// 用户手机号
 		{ title: "dis.user_phone", dataIndex: ["customer", "phone"], key: "phone" },
 		// 门店邮箱是否发送			
-		{ title: "dis.store_is_send_mail", dataIndex: "flag_email", key: "flag_email" },	
+		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent", key: "flag_mail_sent" },	
         // 状态
         {
           title: "dis.status",
@@ -740,12 +740,12 @@ export default {
     getListData(value) {    
       let listData = [];
       this.tableTimeData.forEach((res) => {		
-        let date = new Date(res.test_drive_time * 1000);       
+        let date = new Date(res.drive_time * 1000);       
         if (value.month() === date.getMonth() &&value.date() === date.getDate()) {
           let content =
             (res.customer !== null ? res.customer.name : "-") 
 			+ " " + 		
-            this.$Util.timeFilter(res.test_drive_time, 5);
+            this.$Util.timeFilter(res.drive_time, 5);
 
           console.log("content", content)
 
