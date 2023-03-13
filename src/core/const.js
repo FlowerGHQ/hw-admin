@@ -36,9 +36,9 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.213:8889'
         break;
     default:
-	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://10.0.0.205:8889'
-        // URL_POINT = 'http://10.0.0.109:8889' // yzy
+        URL_POINT = 'http://10.0.0.10:8889' // yzy
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         break;
 }
@@ -2066,6 +2066,18 @@ let Const = {
         appointment_channel:{
             '10': { key: 10, zh: '销售录入', en: 'sales entry'},
             '20': { key: 20, zh: '官网预约', en: 'appointment website'},
+        }
+    },
+    // 日期
+    DATATIMES:{
+        week:{
+            '1': { key: 1, zh: '周一',en: 'Monday' },
+            '2': { key: 2, zh: '周二',en: 'Tuesday' },
+            '3': { key: 3, zh: '周三',en: 'Wednesday' },
+            '4': { key: 4, zh: '周四',en: 'Thursday' },
+            '5': { key: 5, zh: '周五',en: 'Friday' },
+            '6': { key: 6, zh: '周六',en: 'Saturday' },
+            '7': { key: 7, zh: '周日',en: 'Sunday' },
         }
     }
 };
