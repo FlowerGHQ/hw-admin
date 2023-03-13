@@ -2186,11 +2186,14 @@ const messages = {
             select_country:'请选择国家',
             select_city:'请选择城市',
             input_detail_address:'请输入详细地址',
-            work_go:'请选择上班时间',
-            work_end:'请选择下班时间',
+            work_morning_go:'请选择早上上班时间',
+            work_morning_end:'请选择早上下班时间',
+            work_afternoon_go:'请选择下午上班时间',
+            work_afternoon_end:'请选择下午下班时间',
             input_business_hours:'请输入营业时间备注',
             select_language:'请选择语言',
-            is_test_drive:'是否可试驾'
+            is_test_drive:'是否可试驾',
+            week:"请选择周期"
         }
     },
 
@@ -4281,11 +4284,14 @@ const messages = {
             mail_number:'mail_number',
             select_country:'select_country',
             select_city:'select_city',
-            input_detail_address:'input_detail_address',
-            work_go:'work_go',
-            work_end:'work_end',
+            input_detail_address:'input_detail_address',          
+            work_morning_go:'work morning go',
+            work_morning_end:'work morning end',
+            work_afternoon_go:'work afternoon go',
+            work_afternoon_end:'work afternoon end',
             input_business_hours:'input_business_hours',
-            select_language:'select_language'
+            select_language:'select_language',
+            week:"sleect week"
         }
     },
 }

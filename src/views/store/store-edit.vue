@@ -84,15 +84,40 @@
                     <div class="value">
                         <a-time-picker 
                             style="width: 49%" 
-                            v-model:value="work.business_start" 
+                            v-model:value="work.time.morning.begin" 
                             format="HH:mm" 
-                            :placeholder="$t('dis.work_go')"/>
+                            :placeholder="$t('dis.work_morning_go')"/>
                         <a-time-picker 
                             style="width: 49%; margin-left:1%" 
                             format="HH:mm" 
-                            v-model:value="work.business_end"  
-                            :placeholder="$t('dis.work_end')"/>
+                            v-model:value="work.time.morning.end"  
+                            :placeholder="$t('dis.work_morning_end')"/>   
+                        <div style="height: 8px;"></div>
+                        <a-time-picker 
+                            style="width: 49%; " 
+                            v-model:value="work.time.afternoon.begin" 
+                            format="HH:mm" 
+                            :placeholder="$t('dis.work_afternoon_go')"/>
+                        <a-time-picker 
+                            style="width: 49%; margin-left:1%" 
+                            format="HH:mm" 
+                            v-model:value="work.time.afternoon.end"  
+                            :placeholder="$t('dis.work_afternoon_end')"/>
                 
+                        <a-select 
+                            style="margin-top: 8px;" 
+                            v-model:value="work.week_days"  
+                            mode="multiple" 
+                            allowClear
+                            :placeholder="$t('dis.week')">
+                            <a-select-option 
+                                v-for="(item, index) in Core.Const.DATATIMES.week" 
+                                :key="index"
+                                :value="item.key">
+                                    {{ item[$i18n.locale]  }}
+                            </a-select-option>    
+                        </a-select>
+
                         <a-input v-model:value="form.business_remark" style="margin-top: 10px;" :placeholder="$t('dis.input_business_hours')"/>
                     </div>
                 </div>
@@ -113,7 +138,7 @@
                                 :key="index"
                                 :value="item.key">
                                     {{ item[$i18n.locale]  }}
-                                </a-select-option>                                        
+                            </a-select-option>                                        
                         </a-select>  
                     </div>
                 </div>
@@ -223,8 +248,8 @@ export default {
                 city: '',   // 城市       
                 county:'', // 区      
                 address: "", // 详情地址
-                business_time: null, // 营业时间 样式是 9:00~18:00
-                business_remark: "周一~周五", // 营业时间备注
+                business_time: {}, // 营业时间            
+                business_remark: "", // 营业时间备注
                 website_url: null, // 门店官网
                 language: null, // 语言
                 group_id: null, // 区域
@@ -233,8 +258,11 @@ export default {
                 flag_stock_change_use_pda: null, // 启用PDA
             },
             work:{
-                business_start: null,
-                business_end: null,
+                time:{
+                    morning:{},
+                    afternoon:{},
+                },
+                week_days:[],
             },
             agentSearchFrom: {
                 distributor_id: ''
@@ -281,9 +309,13 @@ export default {
     },
     methods: {
         routerChange(type, item) {
+            let routeUrl = ''
             switch (type) {
-                case 'back':
-                    this.$router.go(-1)
+                case 'back':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/distributor/store-list",                   
+                    })
+                    window.open(routeUrl.href, '_self')
                     break;
             }
         },
@@ -310,14 +342,19 @@ export default {
                 for (const key in this.showArea) {
                     this.showArea[key] = res.detail[key]
                 }                
-                // 营业时间回显
-                let businessTime = res.detail.business_time.split("~");                
-                if(businessTime.length){
-                    this.work.business_start =  dayjs(`1970-00-0 ${businessTime[0]}`)         
-                    this.work.business_end =  dayjs(`1970-00-0 ${businessTime[1]}`)
+                // 营业时间回显                               
+                if(!this.$Util.isEmptyObj(JSON.parse(this.form.business_time))){
+                    let timeData = JSON.parse(this.form.business_time)
+
+                    this.work.time.morning.begin = dayjs(`1970-00-0 ${timeData.time.morning.begin}`)
+                    this.work.time.morning.end = dayjs(`1970-00-0 ${timeData.time.morning.end}`)
+
+                    this.work.time.afternoon.begin = dayjs(`1970-00-0 ${timeData.time.afternoon.begin}`)
+                    this.work.time.afternoon.end = dayjs(`1970-00-0 ${timeData.time.afternoon.end}`)
+
+                    this.work.week_days = timeData.week_days
                 }
-                
-                console.log("测试", dayjs({ hour:15, minute:10 }));
+                                
                 if (this.form.logo) {
                     this.upload.fileList = [{
                         uid: 1,
@@ -354,7 +391,8 @@ export default {
         },
         // 提交编辑
         handleSubmit() { 
-            let formCopy = Core.Util.deepCopy(this.form)                 
+            
+            let formCopy = Core.Util.deepCopy(this.form)                             
 
             if (this.upload.fileList.length) {
                 let file_url = this.upload.fileList.map(item => {
@@ -465,16 +503,28 @@ export default {
         },
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
-            console.log("时间",  this.work);
-            if (!this.work.business_start) {                
-                return this.$message.warning(this.$t('dis.work_go'))
+            console.log("时间", this.work.time.morning.begin);
+            if (this.$Util.isEmptyObj(this.work.time.morning)) {                
+                return this.$message.warning(this.$t('dis.work_morning_go'))
             }
-            if (!this.work.business_end) {                
-                return this.$message.warning(this.$t('dis.work_end'))
+            if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                
+                return this.$message.warning(this.$t('dis.work_afternoon_end'))
             }
-            let start =  dayjs(this.work.business_start).format('HH:mm')
-            let end = dayjs(this.work.business_end).format('HH:mm')
-            formCopy.business_time = `${start}~${end}`
+            let works ={
+                time:{
+                    morning:{},
+                    afternoon:{},
+                },
+                week_days:[],
+            }
+
+            works.time.morning.begin = dayjs(this.work.time.morning.begin).format('HH:mm')
+            works.time.morning.end = dayjs(this.work.time.morning.end).format('HH:mm')
+
+            works.time.afternoon.begin = dayjs(this.work.time.afternoon.begin).format('HH:mm')
+            works.time.afternoon.end = dayjs(this.work.time.afternoon.end).format('HH:mm')
+            
+            formCopy.business_time = JSON.stringify(works)           
             return false
         },
         // 选择地址

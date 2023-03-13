@@ -213,8 +213,8 @@
               <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
             </template>
 			<!-- 创建人 -->			           				                       
-            <template v-if="column.key === 'creator_name'">
-              {{ record.create_user_name || "-" }}
+            <template v-if="column.key === 'create_user_name'">
+              {{ text || "-" }}
             </template>              
 			<!-- 操作-->
             <template v-if="column.key === 'operation'">
@@ -383,9 +383,9 @@ export default {
           sorter: true,
         },
 		// 用户邮箱
-		{ title: "dis.user_email", dataIndex: ["customer", "email"], key: "email" },
+		{ title: "dis.user_email", dataIndex: "user_email", key: "email" },
 		// 用户手机号
-		{ title: "dis.user_phone", dataIndex: ["customer", "phone"], key: "phone" },
+		{ title: "dis.user_phone", dataIndex: "user_phone", key: "phone" },
 		// 门店邮箱是否发送			
 		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent", key: "flag_mail_sent" },	
         // 状态
@@ -398,9 +398,8 @@ export default {
         // 创建人
         {
           title: "dis.creator_name",
-          dataIndex: "create_user_id",
-          key: "creator_name",
-          sorter: true,
+          dataIndex: "create_user_name",
+          key: "create_user_name",          
         },
         // 操作
         { title: "def.operate", key: "operation", fixed: "right" },
@@ -455,7 +454,7 @@ export default {
         case "detail": // 详情
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
-            query: { id: item.id, store_id: item.store.id },
+            query: { id: item.customer_id, store_id: item.store.id },
           });
           window.open(routeUrl.href, "_self");
           break;  
