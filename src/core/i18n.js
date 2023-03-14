@@ -2193,7 +2193,9 @@ const messages = {
             input_business_hours:'请输入营业时间备注',
             select_language:'请选择语言',
             is_test_drive:'是否可试驾',
-            week:"请选择周期"
+            week:"请选择周期",
+            morning:"早上",
+            afternoon:"下午",
         }
     },
 
@@ -4291,7 +4293,9 @@ const messages = {
             work_afternoon_end:'work afternoon end',
             input_business_hours:'input_business_hours',
             select_language:'select_language',
-            week:"sleect week"
+            week:"sleect week",
+            morning:"morning",
+            afternoon:"afternoon",
         }
     },
 }

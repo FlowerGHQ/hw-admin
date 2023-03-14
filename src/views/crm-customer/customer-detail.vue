@@ -103,7 +103,7 @@
                             </span>
                             <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 2">
                                 <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
-                                <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
+                                <a-button type="link" style="margin-left: 8px;" @click="resetEmailEvent('store')">{{ $t('dis.fagain_send') }}</a-button>
                             </span>
                         </span>
                     </a-col>
@@ -119,7 +119,7 @@
                             </span>
                             <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent == 2">
                                 <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
-                                <a-button type="link" style="margin-left: 8px;">{{ $t('dis.fagain_send') }}</a-button>
+                                <a-button type="link" style="margin-left: 8px;" @click="resetEmailEvent('user')">{{ $t('dis.fagain_send') }}</a-button>
                             </span>
                         </span>
                     </a-col>
@@ -181,8 +181,9 @@
                     <!-- 营业时间 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.business_hours') }}：</span>
-                        <span class="value">
-                            {{storeDetail.business_time}}({{storeDetail.business_remark}})
+                        <span class="value">                        
+                            {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                            {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
                         </span>
                     </a-col>
                     <!-- 门店地址 -->
@@ -382,6 +383,8 @@ export default {
             }).then(res => {
                 console.log("获取门店详情", res)    
                 this.storeDetail = res.detail
+                this.storeDetail.business_time = JSON.parse(this.storeDetail.business_time)
+                console.log("测试", this.storeDetail);
             }).catch(err => {
                 console.log('获取门店列表失败', err)		
             })
@@ -632,6 +635,27 @@ export default {
 
             })
         },
+        // 重新发送
+        resetEmailEvent(type){
+            // 用户
+            if(type == "user"){
+                Core.Api.CRMTESTDRIVE.userEmail({
+                    id: this.detail.crm_test_drive_order.id
+                }).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+            } else if(type == "store") {                
+                Core.Api.CRMTESTDRIVE.storeEmail({
+                    id: this.detail.crm_test_drive_order.id
+                }).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }
 
     }
 };
