@@ -127,21 +127,7 @@
                     <div class="value">
                         <a-input v-model:value="form.official_website" :placeholder="$t('def.input')"/>
                     </div>
-                </div>
-                <!-- 使用语言 -->
-                <div class="form-item required">
-                    <div class="key">{{$t('dis.use_language')}}:</div>
-                    <div class="value">
-                        <a-select v-model:value="form.language"  :placeholder="$t('dis.select_language')">
-                            <a-select-option 
-                                v-for="(item, index) in Core.Const.language" 
-                                :key="index"
-                                :value="item.key">
-                                    {{ item[$i18n.locale]  }}
-                            </a-select-option>                                        
-                        </a-select>  
-                    </div>
-                </div>
+                </div>               
                 <!-- 区域 -->
                 <div class="form-item required">
                     <div class="key">{{ $t("crm_c.group") }}:</div>
@@ -250,8 +236,7 @@ export default {
                 address: "", // 详情地址
                 business_time: {}, // 营业时间            
                 business_time_remark: "", // 营业时间备注
-                official_website: null, // 门店官网
-                language: null, // 语言
+                official_website: null, // 门店官网                
                 group_id: null, // 区域
                 currency: undefined, // 货币
                 logo: '', // logo
@@ -488,11 +473,7 @@ export default {
             // 门店官网
             if (!formCopy.official_website) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
-            }
-            // 使用语言
-            if (!formCopy.language) {
-                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.language')})`)
-            }
+            }           
             // 区域
             if (!formCopy.group_id) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('crm_c.group')})`)
