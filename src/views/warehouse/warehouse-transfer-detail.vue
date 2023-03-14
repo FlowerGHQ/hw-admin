@@ -278,6 +278,7 @@
 import Core from '../../core';
 import MaterialSelect from '../../components/popup-btn/MaterialSelect.vue'
 import AuditHandle from '../../components/popup-btn/AuditHandle.vue'
+import ItemSelect from '../../components/popup-btn/ItemSelect.vue'
 import dayjs from "dayjs";
 
 const WAREHOUSE_TRANSFER = Core.Const.WAREHOUSE_TRANSFER
@@ -288,7 +289,8 @@ export default {
     name: 'WarehouseTransferDetail',
     components: {
         MaterialSelect,
-        AuditHandle
+        AuditHandle,
+        ItemSelect
     },
     props: {},
     data() {
