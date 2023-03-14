@@ -392,8 +392,7 @@ export default {
         // 提交编辑
         handleSubmit() { 
             
-            let formCopy = Core.Util.deepCopy(this.form)                             
-
+            let formCopy = Core.Util.deepCopy(this.form)                                         
             if (this.upload.fileList.length) {
                 let file_url = this.upload.fileList.map(item => {
                     return item.short_path || item.response.data.filename
@@ -503,12 +502,16 @@ export default {
         },
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
-            console.log("时间", this.work.time.morning.begin);
+            console.log("时间1", this.work);
             if (this.$Util.isEmptyObj(this.work.time.morning)) {                
                 return this.$message.warning(this.$t('dis.work_morning_go'))
             }
             if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                
                 return this.$message.warning(this.$t('dis.work_afternoon_end'))
+            }
+
+            if (this.work.week_days.length == 0) {                
+                return this.$message.warning(this.$t('dis.week'))
             }
             let works ={
                 time:{
@@ -523,7 +526,8 @@ export default {
 
             works.time.afternoon.begin = dayjs(this.work.time.afternoon.begin).format('HH:mm')
             works.time.afternoon.end = dayjs(this.work.time.afternoon.end).format('HH:mm')
-            
+
+            works.week_days = [...this.work.week_days]            
             formCopy.business_time = JSON.stringify(works)           
             return false
         },
