@@ -206,11 +206,20 @@
               {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
             </template>
 			<!-- 门店邮箱是否发送 -->
-			<template v-if="column.key === 'flag_mail_sent'">
+			<template v-if="column.key === 'flag_mail_sent_store'">
 			  <!-- 1 已发送 2 未发 -->
               <span v-if="text == 0">-</span>
               <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
               <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
+			  <span v-else>-</span>
+            </template>
+			<!-- 用户邮箱是否发送 -->
+			<template v-if="column.key === 'flag_mail_sent_user'">
+			  <!-- 1 已发送 2 未发 -->
+              <span v-if="text == 0">-</span>
+              <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
+              <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
+			  <span v-else>-</span>
             </template>
 			<!-- 创建人 -->			           				                       
             <template v-if="column.key === 'create_user_name'">
@@ -387,7 +396,9 @@ export default {
 		// 用户手机号
 		{ title: "dis.user_phone", dataIndex: "user_phone", key: "phone" },
 		// 门店邮箱是否发送			
-		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent", key: "flag_mail_sent" },	
+		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent_store", key: "flag_mail_sent_store" },	
+		// 用户邮箱是否发送			
+		{ title: "dis.user_is_send_mail", dataIndex: "flag_mail_sent_user", key: "flag_mail_sent_user" },	
         // 状态
         {
           title: "dis.status",

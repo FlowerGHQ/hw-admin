@@ -118,14 +118,14 @@
                             </a-select-option>    
                         </a-select>
 
-                        <a-input v-model:value="form.business_remark" style="margin-top: 10px;" :placeholder="$t('dis.input_business_hours')"/>
+                        <a-input v-model:value="form.business_time_remark" style="margin-top: 10px;" :placeholder="$t('dis.input_business_hours')"/>
                     </div>
                 </div>
                 <!-- 官网地址 -->
                 <div class="form-item required">
                     <div class="key">{{$t('dis.store_website')}}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.website_url" :placeholder="$t('def.input')"/>
+                        <a-input v-model:value="form.official_website" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 使用语言 -->
@@ -249,8 +249,8 @@ export default {
                 county:'', // 区      
                 address: "", // 详情地址
                 business_time: {}, // 营业时间            
-                business_remark: "", // 营业时间备注
-                website_url: null, // 门店官网
+                business_time_remark: "", // 营业时间备注
+                official_website: null, // 门店官网
                 language: null, // 语言
                 group_id: null, // 区域
                 currency: undefined, // 货币
@@ -486,7 +486,7 @@ export default {
             // 营业时间            
             if(this.workTimeFilter(formCopy)) return true
             // 门店官网
-            if (!formCopy.website_url) {
+            if (!formCopy.official_website) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
             }
             // 使用语言
