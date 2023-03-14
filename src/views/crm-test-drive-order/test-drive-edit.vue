@@ -5,11 +5,13 @@
         {{ form.id ? $t("crm_d.edit") : $t("crm_d.save") }}
       </div>
     </div>
+	<!-- 客户信息 -->
     <div class="form-block">
       <div class="form-title">
         <div class="title-colorful">{{ $t("crm_d.customer_information") }}</div>
       </div>
       <div class="form-content">
+	  	<!-- 名称 -->
         <div class="form-item required">
           <div class="key">{{ $t("n.name") }}：</div>
           <div class="value">
@@ -20,6 +22,7 @@
             />
           </div>
         </div>
+		<!-- 国家/地区 -->
         <div
           class="form-item required"
           v-if="form.id === 0 || form.phone_country_code === ''"
@@ -28,9 +31,8 @@
           <div class="value">
             <a-select
               v-model:value="form.country_code"
-              :placeholder="$t('def.input')"
-              @select="setPhoneCountryCode"
-              :disabled="form.id > 0 && form.phone_country_code != ''"
+              :placeholder="$t('def.input')"              
+              :disabled="form.id > 0 && form.country_code != ''"
               show-search
               option-filter-prop="key"
               allow-clear
@@ -46,6 +48,7 @@
             </a-select>
           </div>
         </div>
+		<!-- 手机号 -->
         <div class="form-item required with-btn">
           <div class="key">{{ $t("n.phone") }}：</div>
           <div class="value">
@@ -77,17 +80,15 @@
             </div>
           </div>
         </div>
-        <div
-          class="form-item required with-btn"
-          v-if="form.id === 0 || form.email === ''"
-        >
+		<!-- 邮箱 -->
+        <div class="form-item required with-btn">
           <div class="key">{{ $t("n.email") }}：</div>
           <div class="value">
             <a-input
               v-model:value="form.email"
               :placeholder="$t('def.input')"
-              @blur="handleCustomerEmailBlur"
-              :disabled="form.id > 0 && form.email != undefined"
+              @blur="handleCustomerEmailBlur" 
+			  :disabled="form.id > 0 && form.email != ''"
             />
             <div class="btn">
               <span v-if="isExistEmail == 1"><i class="icon i_confirm" /></span>
@@ -108,7 +109,7 @@
             </div>
           </div>
         </div>
-
+		<!-- 区域 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_c.group") }}：</div>
           <div class="value">
@@ -126,6 +127,7 @@
             />
           </div>
         </div>
+		<!-- 性别 -->
         <div class="form-item" v-if="form.id == 0">
           <div class="key">{{ $t("crm_c.gender") }}：</div>
           <div class="value">
@@ -136,6 +138,7 @@
             </a-radio-group>
           </div>
         </div>
+		<!-- 生日 -->
         <div class="form-item" v-if="form.id == 0">
           <div class="key">{{ $t("crm_c.birthday") }}：</div>
           <div class="value">
@@ -143,35 +146,15 @@
               v-model:value="form.birthday"
               valueFormat="YYYY-MM-DD"
               :placeholder="$t('def.input')"
-            />
-            <!--                        <a-input v-model:value="form.birthday" :placeholder="$t('def.input')"/>-->
+            />            
           </div>
-        </div>
-      </div>
-    </div>
-    <div class="form-block">
-      <div class="form-title">
-        <div class="title-colorful">{{ $t("crm_d.drive_information") }}</div>
-      </div>
-      <div class="form-content">
-        <div class="form-item required with-btn">
-          <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
-          <div class="value">
-            <!-- <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
-                            <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
-                        </a-select> -->
-            <div class="btn">
-              <a-button type="link" @click="getSourceList()">{{
-                $t("crm_set.refresh")
-              }}</a-button>
-            </div>
-          </div>
-        </div>
+        </div>		
+		<!-- 试驾时间 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_d.test_drive_time") }}：</div>
           <div class="value">
             <a-date-picker
-              v-model:value="form.test_drive_time"
+              v-model:value="form.drive_time"
               valueFormat="YYYY-MM-DD HH:mm:ss"
               :show-time="defaultTime"
               :placeholder="$t('def.input')"
@@ -180,24 +163,61 @@
             </a-date-picker>
           </div>
         </div>
+		<!-- 门店 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_d.dept_id") }}：</div>
           <div class="value">
             <a-select
-              v-model:value="form.dept_id"
+              v-model:value="form.store_id"
               :placeholder="$t('def.input')"
+			  @change="storeChange"
             >
-              <a-select-option :key="1" :value="1">浩万门店</a-select-option>
+              <a-select-option 
+			  		v-for="(item, index) in storeList" 
+					:key="index" 
+					:value="item.id">
+						{{ item.name }}
+					</a-select-option>
             </a-select>
           </div>
         </div>
+		<!-- 门店邮箱 -->
+		<div class="form-item">
+          <div class="key">{{ $t("dis.store_email") }}：</div>
+          <div class="value">      
+				{{ storeDetail?.contact_email || "-"}}
+          </div>
+        </div>
+		<!-- 门店电话号 -->
+		<div class="form-item">
+          <div class="key">{{$t("dis.store_phone") }}：</div>
+          <div class="value">   
+			{{ storeDetail?.contact_phone}}
+          </div>
+        </div>
+		<!-- 营业时间 -->
+		<div class="form-item">
+          <div class="key">{{$t("dis.business_hours") }}：</div>
+          <div class="value">   
+				{{ storeDetail?.business_time || "-"}}
+          </div>
+        </div>
+		<!-- 门店地址 -->	
+		<div class="form-item">
+          <div class="key">{{$t("dis.store_address") }}：</div>
+          <div class="value"> 
+				{{ storeDetail?.address || "-"}}
+          </div>
+        </div>
       </div>
-    </div>
+    </div>    
+	<!-- 用户画像 -->
     <div class="form-block">
       <div class="form-title">
         <div class="title-colorful">{{ $t("crm_d.user_portrait") }}</div>
       </div>
       <a-row class="form-content long-key">
+		<!-- 购车方式 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.buy_type") }}：</div>
@@ -216,6 +236,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 租赁需求 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.rental_demand") }}：</div>
@@ -228,6 +249,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 常驻城市 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.city") }}：</div>
@@ -239,6 +261,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 出行范围 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.travel_range") }}：</div>
@@ -257,6 +280,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 他牌车型 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.other_brand_model") }}：</div>
@@ -268,6 +292,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 车位&充电桩情况 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.park_and_charging_pile") }}：</div>
@@ -279,6 +304,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 家庭成员 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.family_member") }}：</div>
@@ -290,6 +316,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 新能源车主 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.green_car_owner") }}：</div>
@@ -302,6 +329,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 驾驶资格 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.driver_license") }}：</div>
@@ -314,6 +342,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 骑行经验 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.ride_exp") }}：</div>
@@ -326,6 +355,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 摩旅经验 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.moto_exp") }}：</div>
@@ -338,6 +368,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 摩旅意向 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.moto_tour_intention") }}：</div>
@@ -353,6 +384,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 重视方向 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.pay_attention_to") }}：</div>
@@ -364,7 +396,8 @@
               </a-radio-group>
             </div>
           </div>
-        </a-col>
+        </a-col>		
+		<!-- 新能源认知度 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">{{ $t("crm_c_p.green_energy_understand") }}：</div>
@@ -383,6 +416,7 @@
             </div>
           </div>
         </a-col>
+		<!-- 电动两轮认知度 -->
         <a-col :xs="24" :sm="24" :md="24" :lg="12">
           <div class="form-item">
             <div class="key">
@@ -421,7 +455,7 @@
 </template>
 
 <script>
-import Core from "../../core";
+import Core from "@/core";
 
 import dayjs from "dayjs";
 import CustomerSelect from "@/components/crm/popup-btn/CustomerSelect.vue";
@@ -464,43 +498,43 @@ export default {
         customer_id: undefined,
         //用户信息
         name: undefined,
-        phone: undefined,
-        email: undefined,
-        country_code: undefined,
+        country_code: undefined, // 国家区域
+        phone: undefined, // 手机
+        email: undefined, // 邮箱
+        group_id: undefined, // 区域
         phone_country_code: undefined,
-        group_id: undefined,
-        gender: undefined,
-        birthday: undefined,
-        customer_type: Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL,
-        customer_status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
-
+        gender: undefined, // 性别
+        birthday: undefined, // 生日        
+		    drive_time: undefined, // 试驾时间
+        store_id: undefined, // 门店选择
+       
         //用户画像
         customer_portrait_id: undefined,
-        buy_type: undefined,
-        rental_demand: undefined,
-        country: undefined,
+        buy_type: undefined, // 购车方式
+        rental_demand: undefined, // 租赁需求
+        country: undefined, // start
         province: undefined,
-        city: undefined,
+        city: undefined, 
         country_en: undefined,
         province_en: undefined,
-        city_en: undefined,
-        travel_range: undefined,
-        other_brand_model: undefined,
-        park_and_charging_pile: undefined,
-        family_member: undefined,
-        green_car_owner: undefined,
-        driver_license: undefined,
-        ride_exp: undefined,
-        moto_exp: undefined,
-        moto_tour_intention: undefined,
-        pay_attention_to: undefined,
-        green_energy_understand: undefined,
-        electric_two_wheeler_understand: undefined,
-        //试驾信息
-        test_drive_time: undefined,
-        crm_dict_id: undefined,
-        dept_id: undefined,
-        channel: Core.Const.CRM_TEST_DRIVE.SALES_ENTRY,
+        city_en: undefined, // end 常驻城市
+        travel_range: undefined, // 出行范围
+        other_brand_model: undefined, // 他牌车型
+        park_and_charging_pile: undefined, // 车位&充电桩情况
+        family_member: undefined, // 家庭成员
+        green_car_owner: undefined, // 新能源车主
+        driver_license: undefined, // 驾驶资格
+        ride_exp: undefined, // 骑行经验
+        moto_exp: undefined, // 摩旅经验
+        moto_tour_intention: undefined, //摩旅意向
+        pay_attention_to: undefined, // 重视方向
+        green_energy_understand: undefined, // 新能源认知度
+        electric_two_wheeler_understand: undefined,  // 电动两轮认知度
+		
+		// 其他
+		channel: Core.Const.CRM_TEST_DRIVE.SALES_ENTRY,
+        customer_type: Core.Const.CRM_CUSTOMER.TYPE.INDIVIDUAL,
+        customer_status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
       },
 
       isExistPhone: "", // 名称输入框提示
@@ -508,6 +542,8 @@ export default {
       sourceList: [],
       groupOptions: [],
       phoneCountryCodeList: [],
+	  storeList: [], // 门店列表
+	  storeDetail: [], // 门店详情
     };
   },
   watch: {},
@@ -516,12 +552,13 @@ export default {
       return this.$store.state.lang;
     },
   },
-  mounted() {
+  async mounted() {
     this.phoneCountryCodeList = phoneCountryCode;
     this.id = Number(this.$route.query.id) || 0;
     this.customer_id = Number(this.$route.query.customer_id) || 0;
     this.form.id = this.id;
     this.form.customer_id = this.customer_id;
+	await this.getStoreListFetch() // 获取门店列表
     if (this.form.id) {
       this.getCrmTestDriveOrder();
       // this.getCustomerDetail();
@@ -542,39 +579,28 @@ export default {
       });
     }
     if (Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId();
+	
   },
   methods: {
+	// 路由跳转
     routerChange(type, item) {
       switch (type) {
         case "back": // 详情
           this.$router.go(-1);
       }
     },
-    getCrmTestDriveOrder() {
-      this.loading = true;
-      Core.Api.CRMTestDriveOrder.detail({
-        id: this.form.id,
-      })
-        .then((res) => {
-          console.log("getCustomerDetail res", res);
-          let detail = res.detail;
-          this.form.test_drive_time = detail.test_drive_time
-            ? dayjs.unix(detail.test_drive_time).format("YYYY-MM-DD  HH:mm:ss")
-            : undefined;
-          this.form.crm_dict_id = detail.crm_dict_id;
-          this.form.dept_id = detail.dept_id;
-          this.form.customer_id = detail.customer_id;
-          console.log("customer_id", res);
-          this.getCustomerDetail();
-          this.getCustomerPortraitDetail();
-        })
-        .catch((err) => {
-          console.log("getCustomerDetail err", err);
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+	/* Fetch start*/
+	// 获取试驾车型列表接口
+    getSourceList() {
+      Core.Api.CRMDict.list({
+        type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
+        status: Core.Const.CRM_DICT.STATUS.STATUS_NORM,
+      }).then((res) => {
+		console.log("试驾单车型接口", res.list);
+        this.sourceList = res.list;
+      });
     },
+	// 用户详情接口
     getCustomerDetail() {
       console.log("customer_id", this.form.customer_id);
       this.loading = true;
@@ -582,9 +608,8 @@ export default {
         id: this.form.customer_id,
       })
         .then((res) => {
-          console.log("getCustomerDetail res", res);
-          let d = res.detail;
-          this.detail = d;
+          console.log("用户详情接口", res);          
+          this.detail = res.detail;
           this.form.birthday = this.detail.birthday
             ? dayjs.unix(this.detail.birthday).format("YYYY-MM-DD")
             : undefined;
@@ -595,7 +620,6 @@ export default {
           this.form.email = this.detail.email;
           this.form.country_code = this.detail.country_code;
           this.form.phone_country_code = this.detail.phone_country_code;
-
           this.form.group_id = this.detail.group_id;
         })
         .catch((err) => {
@@ -605,6 +629,7 @@ export default {
           this.loading = false;
         });
     },
+	// 用户画像详情
     getCustomerPortraitDetail() {
       console.log("customer_id", this.form.customer_id);
       this.loading = true;
@@ -628,43 +653,82 @@ export default {
           this.loading = false;
         });
     },
-    handleSubmit() {
-      let form = Core.Util.deepCopy(this.form);
-
-      if (!form.name) {
-        return this.$message.warning(this.$t("def.enter"));
-      }
-      if (!form.phone) {
-        return this.$message.warning(this.$t("def.enter"));
-      }
-
-      if (!this.$Util.ifPhoneFilter(form.phone)) {
-        return this.$message.warning(this.$t("def.error_phone"));
-      }
-
-      if (!form.group_id) {
-        return this.$message.warning(this.$t("def.enter"));
-      }
-      if (!form.test_drive_time) {
-        return this.$message.warning(this.$t("def.enter"));
-      }
-
-      form.test_drive_time = form.test_drive_time
-        ? dayjs(form.test_drive_time).unix()
-        : 0; // 日期转时间戳
-      form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0; // 日期转时间戳
-
-      Core.Api.CRMTestDriveOrder.save({
-        ...form,
+	// 获取区域接口
+    handleGroupTree() {
+      Core.Api.CRMGroupMember.structureByUser().then((res) => {
+        this.groupOptions = res.list;
+        console.log('获取区域接口',res);
+      });
+    }, 
+	// 获取门店列表
+	getStoreListFetch(params = {}){
+		return new Promise((resolve,reject) => {
+			Core.Api.Store.list({...params}).then(res => {
+				console.log("获取门店列表", res)    
+				this.storeList= res.list
+				resolve()
+			}).catch(err => {
+				console.log('获取门店列表失败', err)
+				reject()
+			})
+		})
+	},
+	getCrmTestDriveOrder() {
+      this.loading = true;
+      Core.Api.CRMTestDriveOrder.detail({
+        id: this.form.id,
       })
-        .then(() => {
-          this.$message.success(this.$t("pop_up.save_success"));
-          this.routerChange("back");
+        .then((res) => {
+          console.log("getCustomerDetail res", res);
+          let detail = res.detail;
+          this.form.drive_time = detail.drive_time
+            ? dayjs.unix(detail.drive_time).format("YYYY-MM-DD  HH:mm:ss")
+            : undefined;  // 试驾时间          
+          this.form.store_id = detail.store_id; // 门店选择		  
+          this.form.customer_id = detail.customer_id;
+
+		  // 有门店选择的话渲染门店下面的信息
+		  if(this.form.store_id && this.form.store_id != ''){
+			  this.storeDetail = this.storeList.find(el => {				
+				  return el.id == this.form.store_id
+				})						
+				console.log("进来", this.storeDetail, this.form.store_id );
+		  }
+          console.log("customer_id", res);
+          this.getCustomerDetail(); // 用户详情
+          this.getCustomerPortraitDetail();
         })
         .catch((err) => {
-          console.log("handleSubmit err:", err);
+          console.log("getCustomerDetail err", err);
+        })
+        .finally(() => {
+          this.loading = false;
         });
+    },	  
+	/* Fetch end */
+    /* methods */
+	// 确定	
+    handleSubmit() {
+		let formCopy = Core.Util.deepCopy(this.form);
+	
+
+		formCopy.drive_time = formCopy.drive_time
+			? dayjs(formCopy.drive_time).unix()
+			: 0; // 日期转时间戳
+			formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
+
+		if(this.checkInput(formCopy)) return    
+		  Core.Api.CRMTestDriveOrder.save({
+		    ...formCopy,
+		  }).then(() => {
+			this.$message.success(this.$t("pop_up.save_success"));
+			this.routerChange("back");
+		})
+		.catch((err) => {
+			console.log("handleSubmit err:", err);
+		});
     },
+	// 失去焦点手机号验证
     handleCustomerBlur() {
       // 获取 车架号
       if (!this.form.phone) {
@@ -687,6 +751,7 @@ export default {
         })
         .finally(() => {});
     },
+	// 失去焦点邮箱验证
     handleCustomerEmailBlur() {
       // 获取 车架号
       if (!this.form.email) {
@@ -704,32 +769,46 @@ export default {
           console.log("handleVehicleBlur err", err);
         })
         .finally(() => {});
-    },
-    getSourceList() {
-      Core.Api.CRMDict.list({
-        type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
-        status: Core.Const.CRM_DICT.STATUS.STATUS_NORM,
-      }).then((res) => {
-        this.sourceList = res.list;
-      });
-    },
+    },	
     selectItem(id) {
       this.form.customer_id = id;
       this.getCustomerDetail();
-    },
-    handleGroupTree() {
-      Core.Api.CRMGroupMember.structureByUser().then((res) => {
-        this.groupOptions = res.list;
-        console.log(res);
-      });
-    },
-    // 存国家和区域数据
-    setPhoneCountryCode(val) {
-      Core.Data.setPhoneCountryCode(val);
-    },
+    },	
     setGroupId(val) {
       Core.Data.setGroupId(val);
     },
+	// form表单检查
+	checkInput(formCopy){
+		
+		if (!formCopy.name) {
+			return this.$message.warning(this.$t("def.enter"));
+		}
+		if (!formCopy.phone) {
+			return this.$message.warning(this.$t("def.enter"));
+		}	
+		if (!this.$Util.ifPhoneFilter(formCopy.phone)) {
+			return this.$message.warning(this.$t("def.error_phone"));
+		}
+
+		if (!formCopy.email || formCopy.email == '') {
+			return this.$message.warning(`${this.$t("def.enter")} (${this.$t("n.email")})` );
+		}
+
+		if (!formCopy.group_id) {
+			return this.$message.warning(this.$t("def.enter"));
+		}
+		if (!formCopy.drive_time) {
+			return this.$message.warning(this.$t("def.enter"));
+		}
+
+		return false
+	},
+	// 门店选择
+	storeChange(data){
+		this.storeDetail = this.storeList.find(el => {				
+			return el.id == data
+		})	
+	}
   },
 };
 </script>

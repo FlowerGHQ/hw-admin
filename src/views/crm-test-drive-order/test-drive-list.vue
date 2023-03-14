@@ -87,7 +87,7 @@
             <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
             <div class="value">
               <a-select
-                v-model:value="searchForm.crm_dict_id"
+                v-model:value="searchForm.item_id"
                 :placeholder="$t('def.select')"
                 @change="handleSearch"
               >
@@ -176,33 +176,56 @@
           <template #headerCell="{ title }">
             {{ $t(title) }}
           </template>
-          <template #bodyCell="{ column, text, record }">
-            <!--                        <template v-if="column.key === 'detail'">
-                                                    <a-tooltip placement="top" :title='text'>
-                                                        <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                                                    </a-tooltip>
-                                                </template>-->
-            <template v-if="column.key === 'item'">
+          <template #bodyCell="{ column, text, record }"> 			
+			<!-- 订单来源	 -->
+			<template v-if="column.key === 'channel'">
+				{{ $Util.CRMTestDriveSourceFilter(text, $i18n.locale) || "-"}}
+            </template>
+			<!-- 创建时间	 -->
+			<template v-if="column.key === 'create_time'">
+              {{ $Util.timeFilter(text,3) }}
+            </template>
+			<!-- 预约车型	 -->
+			<template v-if="column.key === 'subscribe_vehicle'">
+              {{ text || "-" }}
+            </template>	
+			<!-- 预约门店-->
+			<template v-if="column.key === 'store_id'">
+              {{ text || "-" }}
+            </template>				
+			<!-- 用户名称 -->
+			<template v-if="column.key === 'user_name'">
+              {{ record.customer ? record.customer.name || "-" : "-" }}
+            </template> 			
+			<!-- 用户手机号	 -->
+			<template v-if="column.key === 'phone'">
               {{ text || "-" }}
             </template>
-            <template v-if="column.key === 'phone'">
-              {{ text || "-" }}
-            </template>
-            <template v-if="column.key === 'status'">
+			<!-- 状态 -->
+			<template v-if="column.key === 'status'">
               {{ $Util.CRMTestDriveStatusMapFilter(text, $i18n.locale) }}
             </template>
-            <template v-if="column.key === 'channel'">
-              {{ $Util.CRMTestDriveChannelMapFilter(text, $i18n.locale) }}
+			<!-- 门店邮箱是否发送 -->
+			<template v-if="column.key === 'flag_mail_sent_store'">
+			  <!-- 1 已发送 2 未发 -->
+              <span v-if="text == 0">-</span>
+              <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
+              <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
+			  <span v-else>-</span>
             </template>
-            <template v-if="column.key === 'creator_name'">
-              {{ record.create_user_name || "-" }}
+			<!-- 用户邮箱是否发送 -->
+			<template v-if="column.key === 'flag_mail_sent_user'">
+			  <!-- 1 已发送 2 未发 -->
+              <span v-if="text == 0">-</span>
+              <span v-else-if="text == 1">{{ $t('dis.been_sent') }}</span>
+              <span v-else-if="text == 2">{{ $t('dis.not_sent') }}</span>
+			  <span v-else>-</span>
             </template>
-            <template v-if="column.key === 'customer'">
-              {{ record.customer ? record.customer.name || "-" : "-" }}
-            </template>
-            <template v-if="column.key === 'time'">
-              {{ $Util.timeFilter(text) }}
-            </template>
+			<!-- 创建人 -->			           				                       
+            <template v-if="column.key === 'create_user_name'">
+              {{ text || "-" }}
+            </template>              
+			<!-- 操作-->
             <template v-if="column.key === 'operation'">
               <a-button
                 type="link"
@@ -292,7 +315,7 @@
 <script>
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn"; // dayjs.locale('zh-cn');
-import Core from "../../core";
+import Core from "@/core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
 
 export default {
@@ -323,7 +346,7 @@ export default {
         end_time: "",
         type: "",
         status: 0,
-        crm_dict_id: 0,
+        item_id: 0,
       },
       batchForm: {
         own_user_id: "",
@@ -342,49 +365,54 @@ export default {
       calendar: "",
       createTime: [],
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-      calendarTime: "",
+      calendarTime: ""	  
     };
   },
   watch: {},
   computed: {
     tableColumns() {
-      let columns = [
-        {
-          title: "n.name",
-          dataIndex: "customer_id",
-          key: "customer",
+      let columns = [                                                     
+		// id
+		{ title: "id", dataIndex: "id", key: "id" },
+		// 订单来源
+		{ title: "dis.order_source", dataIndex: "channel", key: "channel" },
+		// 创建时间  
+		{ title: "n.time", dataIndex: "create_time", key: "create_time" },
+		// 预约车型
+		{ title: "dis.subscribe_vehicle", dataIndex: "item_name", key: "subscribe_vehicle" },
+		// 预约门店
+		{ title: "dis.subscribe_store", dataIndex: ["store", "name"], key: "store_id" },
+		// 门店区域
+		{ title: "dis.store_area", dataIndex: "group_name", key: "group_name" },
+		// 用户名称
+		{
+          title: "dis.user_name",
+          dataIndex: ["customer", "name"],
+          key: "user_name",
           sorter: true,
         },
-        { title: "n.phone", dataIndex: ["customer", "phone"], key: "phone" },
+		// 用户邮箱
+		{ title: "dis.user_email", dataIndex: "user_email", key: "email" },
+		// 用户手机号
+		{ title: "dis.user_phone", dataIndex: "user_phone", key: "phone" },
+		// 门店邮箱是否发送			
+		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent_store", key: "flag_mail_sent_store" },	
+		// 用户邮箱是否发送			
+		{ title: "dis.user_is_send_mail", dataIndex: "flag_mail_sent_user", key: "flag_mail_sent_user" },	
+        // 状态
         {
-          title: "crm_d.test_drive_time",
-          dataIndex: "test_drive_time",
-          key: "time",
-        },
-        {
-          title: "crm_d.crm_dict_id",
-          dataIndex: ["crm_dict", "name"],
-          key: "item",
-        },
-        {
-          title: "crm_d.channel",
-          dataIndex: "channel",
-          key: "channel",
-          sorter: true,
-        },
-        {
-          title: "crm_d.status",
+          title: "dis.status",
           dataIndex: "status",
           key: "status",
           sorter: true,
         },
+        // 创建人
         {
-          title: "r.creator_name",
-          dataIndex: "create_user_id",
-          key: "creator_name",
-          sorter: true,
+          title: "dis.creator_name",
+          dataIndex: "create_user_name",
+          key: "create_user_name",          
         },
-        { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
+        // 操作
         { title: "def.operate", key: "operation", fixed: "right" },
       ];
       return columns;
@@ -427,26 +455,20 @@ export default {
     dayjs.locale("zh-cn");
   },
   methods: {
+	/* methods */	
     moreSearch() {
       this.show = !this.show;
     },
     routerChange(type, item = {}) {
       let routeUrl = "";
       switch (type) {
-        case "detail": // 编辑
+        case "detail": // 详情
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
-            query: { id: item.customer_id },
+            query: { id: item.customer_id, store_id: item.store.id },
           });
-          window.open(routeUrl.href, "_block");
-          break;
-        // case 'detail':    // 编辑
-        //     routeUrl = this.$router.resolve({
-        //         path: "/crm-test-drive-order/test-drive-detail",
-        //         query: {id: item.id}
-        //     })
-        //     window.open(routeUrl.href, '_self')
-        //     break;
+          window.open(routeUrl.href, "_self");
+          break;  
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-test-drive-order/test-drive-edit",
@@ -716,6 +738,7 @@ export default {
         this.createUserOptions = res.list;
       });
     },
+	// 试驾车型接口
     getSourceList() {
       Core.Api.CRMDict.list({
         type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
@@ -724,26 +747,18 @@ export default {
         this.sourceList = res.list;
       });
     },
-    getListData(value) {
-      // console.log("value", value.month())
-      // console.log("value", value.date())
+    getListData(value) {    
       let listData = [];
-      this.tableTimeData.forEach((res) => {
-        let date = new Date(res.test_drive_time * 1000);
-        // console.log("date", date)
-        // console.log("content", date.getMonth())
-        // console.log("content", date.getDate())
-        if (
-          value.month() === date.getMonth() &&
-          value.date() === date.getDate()
-        ) {
+      this.tableTimeData.forEach((res) => {		
+        let date = new Date(res.drive_time * 1000);       
+        if (value.month() === date.getMonth() &&value.date() === date.getDate()) {
           let content =
-            (res.customer !== null ? res.customer.name : "-") +
-            " " +
-            (res.crm_dict !== null ? res.crm_dict.name : "-") +
-            " " +
-            this.$Util.timeFilter(res.test_drive_time, 5);
-          // console.log("content", content)
+            (res.customer !== null ? res.customer.name : "-") 
+			+ " " + 		
+            this.$Util.timeFilter(res.drive_time, 5);
+
+          console.log("content", content)
+
           listData.push({ type: "blue", content: content });
         }
       });

@@ -1894,7 +1894,7 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'order-income-list',
+				path: 'test-drive-list',
 				name: 'TestDriveList',
 				component: () => import('@/views/crm-test-drive-order/test-drive-list.vue'),
 				meta: {
@@ -1910,22 +1910,21 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '新建试驾单',
-					parent: '/crm-order-income/order-income-list',
+					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
-			},
-			// {
-			// 	path: 'test-drive-detail',
-			// 	name: 'TestDriveDetail',
-			// 	component: () => import('@/views/crm-order-income/test-drive-detail.vue'),
-			// 	meta: {
-			// 		hidden: true,
-			// 		title: '试驾单详情',
-			// 		title_en: 'Business opportunities phase',
-			// 		parent: '/crm-order-income/order-income-list',
-			// 		auth: ["crm-order-income.detail"],
-			// 	}
-			// },
+			},      
+			{
+				path: 'test-drive-detail',
+				name: 'TestDriveDetail',
+				component: () => import('@/views/crm-test-drive-order/test-drive-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '试驾订单',
+					parent: '/crm-test-drive-order/test-drive-list',
+					auth: ["crm-test-drive-order.save"],
+				}
+			}        
 		]
 	},
     { // 智能标签

@@ -1124,6 +1124,16 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+    CRMTestDriveStatusCycFilter(val,  to='zh') {
+		const MAP = Const.test_drive.test_drive_status
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+    CRMTestDriveSourceFilter(val,  to='zh') {
+		const MAP = Const.test_drive.appointment_channel
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 
 	/* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */

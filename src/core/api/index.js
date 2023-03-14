@@ -791,6 +791,11 @@ const apiList = {
         save: ['PostJson','inventory/save'], // 新增存货档案
         detail: ['PostJson','inventory/detail'], // 存货档案详情
         delete: ['PostJson','inventory/delete'], // 删除存货档案
+    },
+    // CRM 试驾单
+    CRMTESTDRIVE:{
+        userEmail:['PostJson', 'crm-test-drive-order/reset-email-to-user'],
+        storeEmail:['PostJson', 'crm-test-drive-order/reset-email-to-store']
     }
 
 };
