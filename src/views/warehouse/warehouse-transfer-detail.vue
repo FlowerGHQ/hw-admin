@@ -75,46 +75,105 @@
                 <div class="panel-content">
                     <div class="table-container">
                         <a-table :columns="itemTableColumns" :data-source="addMode ? addData : tableData" :scroll="{ x: true }"
-                                 :row-key="record => record.id" :pagination='false'>
-                            <template #bodyCell="{ column, text, record }">
-                                <template v-if="column.key === 'tip_item'">
-                                    <a-tooltip placement="top" :title='text'>
-                                        <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
-                                    </a-tooltip>
+                        :row-key="record => record.id" :pagination='false'>
+                        <template #bodyCell="{ column, text, record }">
+                            <!-- <template v-if="column.key === 'tip_item'">
+                                <a-tooltip placement="top" :title='text'>
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('item', record )">{{ text || '-' }}</a-button>
+                                    </div>
+                                </a-tooltip>
+                            </template> -->
+                           <!-- <template v-if="column.key === 'attr_list'">
+                               <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
+                                   <div class="ell" style="max-width: 120px">
+                                       {{ $Util.itemSpecFilter(text) }}
+                                   </div>
+                               </a-tooltip>
+                           </template> -->
+
+                            <template v-if="column.key === 'target_type'">
+                                {{ $Util.targetTypeFilter(record.target_type, $i18n.locale ) }}
+                            </template>
+                            <template v-if="record.target_type === COMMODITY_TYPE.MATERIALS">
+                                <template v-if="column.key === 'name'">
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('material', record )">{{$i18n.locale == 'zh' ? record.material.name || '-': record.material.name_en || '-' }}</a-button>
+                                    </div>
                                 </template>
-                                <template v-if="column.key === 'item_name'">
-                                    <a-tooltip placement="top" :title='text'>
+                                <template v-if="column.key === 'code'">
+                                    {{ record.material.code || '-' }}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{ record.material.spec || '-' }}
+                                </template>
+                                <!-- <template v-if="column.key === 'count'">
+                                    {{ record.material.stock ? record.material.stock + $t('in.item') : '-' }}
+                                </template> -->
+                                <template v-if="column.key === 'amount'">
+                                    <template v-if="addMode || record.editMode">
+                                        <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
+                                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.material!= undefined ? record.material.stock: 0" :precision="0"/> {{ $t('in.item') }}
+                                    </template>
+                                    <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
+                                </template>
+
+                            </template>
+                            <template v-if="record.target_type === COMMODITY_TYPE.ITEM">
+                                <template v-if="column.key === 'name'">
+                                    <div class="ell" style="max-width: 160px">
+                                        <a-button type="link" @click="routerChange('item', record )">{{$i18n.locale == 'zh' ? record.item.name || '-': record.item.name_en || '-' }}</a-button>
+                                    </div>
+                                </template>
+                                <template v-if="column.key === 'code'">
+                                    {{ record.item.code || '-' }}
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text, $i18n.locale)'>
                                         <div class="ell" style="max-width: 120px">
-                                            <a-button type="link" @click="routerChange('item', record )">{{ text || '-' }}</a-button>
+                                            {{ $Util.itemSpecFilter(text, $i18n.locale) }}
                                         </div>
                                     </a-tooltip>
-                                </template>
-                                <template v-if="column.key === 'attr_list'">
-                                    <a-tooltip placement="top" :title='$Util.itemSpecFilter(text)'>
-                                        <div class="ell" style="max-width: 120px">
-                                            {{ $Util.itemSpecFilter(text) }}
-                                        </div>
-                                    </a-tooltip>
-                                </template>
-                                <template v-if="column.key === 'item'">
-                                    {{ text || '-' }}
                                 </template>
                                 <template v-if="column.key === 'count'">
-                                    {{ text ? text + '件' : '-' }}
+                                    {{ record.item.stock ? record.item.stock + $t('in.item') : '-' }}
                                 </template>
                                 <template v-if="column.key === 'amount'">
                                     <template v-if="addMode || record.editMode">
-                                        <a-input-number v-model:value="record.amount" :min="1" placeholder="请输入" :precision="0"/> 件
+                                        <a-input-number v-model:value="record.amount" :placeholder="$t('def.input')"
+                                                        :min="1" :max="detail.type === TYPE.IN ? 99999: record.item!= undefined ? record.item.stock: 0" :precision="0"/> {{ $t('in.item') }}
                                     </template>
-                                    <template v-else>{{ text ? text + '件' : '-' }}</template>
+                                    <template v-else>{{ text ? text +$t('in.item') : '-' }}</template>
                                 </template>
-                                <template v-if="column.key === 'operation' && $auth('invoice.save')">
-                                    <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>更改数量</a-button>
-                                    <a-button type="link" @click="handleRowSubmit(record, 'item')" v-else><i class="icon i_confirm"/>确认更改</a-button>
-                                    <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>移除</a-button>
-                                </template>
+
                             </template>
-                        </a-table>
+
+
+                            <!-- <template v-if="column.key === 'flag_entity'">
+                                {{ $Util.itemFlagEntityFilter(text, $i18n.locale) }}
+                            </template> -->
+
+                            <!-- <template v-if="column.key === 'count'">
+                                {{ text ? text + $t('in.item') : '-' }}
+                            </template> -->
+                            <!-- <template v-if="column.key === 'child_size'">
+                                <a-button type="link" @click="handleRowUidInfoShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES && (detail.status === STATUS.CLOSE || detail.status === STATUS.DELIVERY || detail.status === STATUS.AUDIT_REFUSE || detail.status === STATUS.CANCEL)"> {{ text  }} / {{record.amount}} </a-button>
+                                <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES && detail.status !== STATUS.CLOSE && detail.status !== STATUS.DELIVERY && detail.status !== STATUS.AUDIT_REFUSE && detail.status !== STATUS.CANCEL">{{ text  }} / {{record.amount}} </a-button>
+                            </template> -->
+                            <!-- <template v-if="column.key === 'confirm_amount'">
+                               {{ text ? text +$t('in.item') : '-' }}
+                            </template> -->
+
+                            <template v-if="column.key === 'operation'" >
+                                <a-button type="link" @click="handleRowUidShow(record)" v-if="record.flag_entity === Core.Const.ITEM.FLAG_ENTITY.YES"><i class="icon i_edit"/>{{ $t('in.enter_instance_number') }}</a-button>
+                            </template>
+                            <template v-if="column.key === 'operation' && $auth('invoice.save')" >
+                                <a-button type="link" @click="handleRowChange(record)" v-if="!record.editMode"><i class="icon i_edit"/>{{ $t('in.change') }}</a-button>
+                                <a-button type="link" @click="handleRowSubmit(record, record.target_type)" v-else><i class="icon i_confirm"/>{{ $t('in.changes') }}</a-button>
+                                <a-button type="link" @click="handleRemoveRow(record)" class="danger"><i class="icon i_delete"/>{{ $t('def.remove') }}</a-button>
+                            </template>
+                        </template>
+                    </a-table>
                     </div>
                     <div class="paging-container">
                         <a-pagination
@@ -134,7 +193,7 @@
                 </div>
             </a-collapse-panel>
             <!-- 物料 -->
-            <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
+            <!-- <a-collapse-panel key="ItemList" header="物料信息" class="gray-collapse-panel" collapsible="disabled" v-if="detail.target_type === COMMODITY_TYPE.MATERIALS">
                 <template #extra v-if="$auth('invoice.save')">
                     <MaterialSelect btnType='link' btnText="添加物料" v-if="detail.status === STATUS.INIT && !addMode" :disabledChecked="disabledChecked"
                                     @select="handleAddChange"/>
@@ -222,7 +281,7 @@
                         />
                     </div>
                 </div>
-            </a-collapse-panel>
+            </a-collapse-panel> -->
         </a-collapse>
         <template class="modal-container" v-if="detail.status === STATUS.SUBMIT">
             <a-modal v-model:visible="purchaseShow" title="审核" class="purchase-audit-modal" :after-close='handlePurchaseClose'>
@@ -285,6 +344,8 @@ const WAREHOUSE_TRANSFER = Core.Const.WAREHOUSE_TRANSFER
 const STATUS = WAREHOUSE_TRANSFER.STATUS
 
 const COMMODITY_TYPE = Core.Const.WAREHOUSE_TRANSFER.COMMODITY_TYPE
+const STOCK_RECORD = Core.Const.STOCK_RECORD
+const TYPE = STOCK_RECORD.TYPE
 export default {
     name: 'WarehouseTransferDetail',
     components: {
@@ -298,6 +359,7 @@ export default {
             STATUS,
             WAREHOUSE_TRANSFER,
             COMMODITY_TYPE,
+            TYPE,
             // 加载
             loading: false,
             // 分页
@@ -329,6 +391,9 @@ export default {
     },
     watch: {},
     computed: {
+        type_ch() {
+            return this.detail.type == TYPE.IN ? this.$t('in.inbound') :  this.$t('in.outbound')
+        },
         disabledChecked() {
             let list = []
             this.tableData.forEach(item => {
@@ -341,17 +406,25 @@ export default {
             return list
         },
         itemTableColumns() {
-            // 无实例商品的调货
+            // 无实例商品的 出入库
             let columns = [
-                {title: '商品名称', dataIndex: ['item', 'name'],  key: 'item_name'},
-                {title: '商品品号', dataIndex: ['item', 'model'], key: 'item'},
-                {title: '商品编码', dataIndex: ['item', 'code'],  key: 'item'},
-                {title: '商品规格', dataIndex: ['item', 'attr_list'], key: 'attr_list'},
-                {title: '调货数量', dataIndex: 'amount' , key: 'amount'},
-                {title: '操作', key: 'operation'},
+                {title: this.$t('n.name'), dataIndex: "name",  key: 'name'},
+
+                // {title: this.$t('i.number'), dataIndex: ['item', 'model'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: 'code',  key: 'code'},
+                {title: this.$t('i.type'), dataIndex: 'target_type',  key: 'target_type'},
+                {title: this.$t('i.spec'), dataIndex: 'spec', key: 'spec'},
+                // {title: this.$t('in.has_number'), dataIndex: "flag_entity", key: 'flag_entity'},
+                // {title: this.$t('in.instance_number_amount'), dataIndex: "child_size", key: 'child_size'},
+                // {title: this.$t('in.realistic') + this.type_ch + this.$t('i.amount'), dataIndex: 'confirm_amount' , key: 'confirm_amount'},
+                {title: this.type_ch + this.$t('i.amount'), dataIndex: 'amount' , key: 'amount'},
+                {title: this.$t('def.operate'), key: 'operation'},
             ]
             if (this.detail.status !== STATUS.INIT || this.addMode) {
                 columns.pop()
+            }
+            if (this.detail.type == TYPE.OUT) {
+                columns.splice(2, 0, {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'stock'})
             }
             return columns
         },
