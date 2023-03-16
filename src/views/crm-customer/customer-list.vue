@@ -367,7 +367,7 @@
             <template v-if="column.name === 'intent'">
               {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) || '_' }}
             </template>
-            <template v-if="column.type === 'time'">
+            <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
             <template v-if="column.key === 'operation'">
