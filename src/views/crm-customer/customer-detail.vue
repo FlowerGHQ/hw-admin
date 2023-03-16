@@ -150,7 +150,7 @@
                     </a-col>                    
                 </a-row>
             </div>  
-            <div class="panel-content desc-container">
+            <div v-if="false" class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
                         <span class="title">{{ $t('dis.subscribe_store') }}</span> 
@@ -369,7 +369,7 @@ export default {
         if (this.id) {
             this.getCustomerDetail();
             this.getTargetByUserId();
-            this.storeFetch()
+            // this.storeFetch()
         }
 
     },
