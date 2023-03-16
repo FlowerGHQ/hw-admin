@@ -1,105 +1,27 @@
 <template>
     <div class="container">
-        <!-- <div class="title">{{ $t('db.data_overview') }}</div> -->
-        <!-- <a-row  :gutter="[24, 0]">
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_customer') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.new_customer_seven_day_count >= 0 ">{{ '+' + form.new_customer_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.new_customer_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.new_customer_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/customer.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_follow_up_records') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.new_contact_seven_day_count >= 0 ">{{ '+' + form.new_contact_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.new_contact_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.new_contact_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/follow_up-records.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_business') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.new_order_seven_day_count >= 0 ">{{ '+' + form.new_order_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.new_order_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.new_order_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/business.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_orders') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.new_bo_seven_day_count >= 0 ">{{ '+' + form.new_bo_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.new_bo_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.new_bo_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/order.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_drive_order') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.win_bo_seven_day_count >= 0 ">{{ '+' + form.win_bo_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.win_bo_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.win_bo_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/drive-order.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="4">
-                <div class="list-container">
-                    <div class="top">{{ $t('db.new_payment_receipt') }}</div>
-                    <div class="center">{{ $t('db.previous_days') + day + $t('db.day')  }}
-                        <span class="positive" v-if="form.new_test_driver_seven_day_count >= 0 ">{{ '+' + form.new_test_driver_seven_day_count}}</span>
-                        <span class="minus" v-else>{{form.new_test_driver_seven_day_count}}</span>
-                    </div>
-                    <div class="bottom">
-                        <div class="num" style="color: #333333;">{{form.new_test_driver_count}}</div>
-                        <img class="img" src="../../../assets/images/dashboard/return-order.png" alt="">
-                    </div>
-                </div>
-            </a-col>
-        </a-row>  -->
-
         <div class="list-container">
             <div class="SearchRangePicker range">
                 <!-- 数据概览 -->
                 <div class="title">{{ $t('db.data_overview') }}</div>
                 <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
                     <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']"
-                                    :value="1">{{$t('db.day')}}</a-radio-button>
+                        :value="1">{{ $t('db.day') }}</a-radio-button>
                     <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']"
-                                    :value="2">{{$t('db.month')}}</a-radio-button>
+                        :value="2">{{ $t('db.month') }}</a-radio-button>
                     <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']"
-                                    :value="3">{{$t('db.year')}}</a-radio-button>
+                        :value="3">{{ $t('db.year') }}</a-radio-button>
                 </a-radio-group>
-                <a-range-picker v-model:value="time" @change="handleChange()" :allowClear="false"
-                                :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+                <a-range-picker v-if="day === 1" v-model:value="time" @change="handleChange()" :allowClear="false"
+                    :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+                <a-range-picker v-if="day === 2" v-model:value="time" @change="handleChange()" :allowClear="false"
+                    :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" picker="month" />
+                <a-range-picker v-if="day === 3" v-model:value="time" @change="handleChange()" :allowClear="false"
+                    :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" picker="year" />
                 <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id" @change="handleChange()"
-                               :placeholder="$t('def.select') + $t('crm_c.group')"
-                               :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
-                               tree-default-expand-all >
+                    :placeholder="$t('def.select') + $t('crm_c.group')"
+                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
+                    tree-default-expand-all>
                     <!--a-cascader级联选择后缀图标 -->
                     <template #suffixIcon><span class="icon i_xialajiantouxiao" /></template>
                 </a-tree-select>
@@ -115,8 +37,7 @@
                     <div class="card-total">
                         <div class="card-total-num">
                             {{ form.new_customer_count }}
-                            <div
-                                :class="[form.new_customer_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
+                            <div :class="[form.new_customer_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
                                 <img v-if="form.new_customer_seven_day_count >= 0" class="allow"
                                     src="../../../assets/images/dashboard/increase.png" alt="">
                                 <img v-if="form.new_customer_seven_day_count < 0" class="allow"
@@ -135,8 +56,7 @@
                     <div class="card-total">
                         <div class="card-total-num">
                             {{ form.new_contact_count }}
-                            <div
-                                :class="[form.new_contact_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
+                            <div :class="[form.new_contact_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
                                 <img v-if="form.new_contact_seven_day_count >= 0" class="allow"
                                     src="../../../assets/images/dashboard/increase.png" alt="">
                                 <img v-if="form.new_contact_seven_day_count < 0" class="allow"
@@ -208,7 +128,8 @@
                     <div class="card-total">
                         <div class="card-total-num">
                             {{ form.new_test_driver_count }}
-                            <div :class="[form.new_test_driver_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
+                            <div
+                                :class="[form.new_test_driver_seven_day_count >= 0 ? 'increase-fall act' : 'increase-fall']">
                                 <img v-if="form.new_test_driver_seven_day_count >= 0" class="allow"
                                     src="../../../assets/images/dashboard/increase.png" alt="">
                                 <img v-if="form.new_test_driver_seven_day_count < 0" class="allow"
@@ -360,6 +281,7 @@ export default {
 .container {
     width: 100%;
     box-sizing: border-box;
+
     .title {
         font-size: 16px;
         font-weight: 600;
@@ -478,19 +400,23 @@ export default {
             box-sizing: border-box;
             padding-left: 0;
         }
+
         :deep(.ant-picker-input) {
             input::-webkit-input-placeholder {
                 /* WebKit browsers，webkit内核浏览器 */
                 color: #666;
             }
+
             input:-moz-placeholder {
                 /* Mozilla Firefox 4 to 18 */
                 color: #666;
             }
+
             input::-moz-placeholder {
                 /* Mozilla Firefox 19+ */
                 color: #666;
             }
+
             input:-ms-input-placeholder {
                 /* Internet Explorer 10+ */
                 color: #666;
@@ -571,5 +497,4 @@ export default {
             margin-right: 30px;
         }
     }
-}
-</style>
+}</style>
