@@ -161,43 +161,48 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_name') }}：</span>
                         <span class="value">
-                            {{storeDetail.name}}                    
+                            {{storeDetail.name || "-"}}                    
                         </span>
                     </a-col>
                     <!-- 门店手机号 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_phone') }}：</span>
                         <span class="value">
-                            {{storeDetail.contact_phone}}                     
+                            {{storeDetail.contact_phone || "-"}}                     
                         </span>
                     </a-col>
                     <!-- 门店邮箱 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_email') }}：</span>
                         <span class="value">
-                            {{storeDetail.contact_email}}                       
+                            {{storeDetail.contact_email || "-"}}                       
                         </span>
                     </a-col>
                     <!-- 营业时间 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.business_hours') }}：</span>
-                        <span class="value">                        
-                            {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
-                            {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                        <span class="value"> 
+                            <span v-if="storeDetail.business_time">
+                                {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                                {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                            </span>                       
+                            <span v-else>
+                                -
+                            </span>                           
                         </span>
                     </a-col>
                     <!-- 门店地址 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_address') }}：</span>
                         <span class="value">
-                            {{storeDetail.address}}
+                            {{storeDetail.address || "-"}}
                         </span>
                     </a-col>
                     <!-- 门店官网 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_website') }}：</span>
                         <span class="value">
-                            <a :href="storeDetail.official_website">{{storeDetail.official_website}}  </a>                  
+                            <a :href="storeDetail.official_website">{{storeDetail.official_website || "-"}}  </a>                  
                         </span>
                     </a-col>
                 </a-row>
@@ -368,10 +373,11 @@ export default {
     mounted() {        
         if (this.id) {
             this.getCustomerDetail();
-            this.getTargetByUserId();
+            this.getTargetByUserId();            
+        }
+        if(Number(this.$route.query.store_id)){
             this.storeFetch()
         }
-
     },
     methods: {
         /* Fetch */
