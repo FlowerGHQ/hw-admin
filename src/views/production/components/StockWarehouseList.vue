@@ -125,6 +125,7 @@ export default {
         getTableData() {    // 获取 表格 数据
             this.loading = true;
             Core.Api.Stock.list({
+                target_type:Core.Const.STOCK.TARGET_TYPE.MATERIAL,
                 target_id: this.targetId,
                 page: this.currPage,
                 page_size: this.pageSize
