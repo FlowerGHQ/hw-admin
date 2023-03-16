@@ -197,7 +197,7 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_website') }}：</span>
                         <span class="value">
-                            <a :href="storeDetail.website_url">{{storeDetail.website_url}}  </a>                  
+                            <a :href="storeDetail.official_website">{{storeDetail.official_website}}  </a>                  
                         </span>
                     </a-col>
                 </a-row>
