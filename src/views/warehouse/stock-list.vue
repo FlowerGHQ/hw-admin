@@ -223,6 +223,7 @@ export default {
     },
     methods: {
         routerChange(type, item = {}) {
+            console.log("输出",item);
             let routeUrl = ''
             switch (type) {
                 case 'item':
@@ -242,7 +243,7 @@ export default {
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
-                        query: {id: item.material.id}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
