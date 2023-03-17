@@ -370,6 +370,9 @@
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
+            <template v-if="column.type === 'time'">
+              {{ $Util.timeFilter(text) }}
+            </template>
             <template v-if="column.key === 'operation'">
               <a-button
                 type="link"
@@ -398,7 +401,7 @@
           </template>
         </a-table>
         <!-- 表格列配置项选项 -->
-        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>
+        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>		
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -734,23 +737,26 @@ export default {
       this.handleGroupTree()
     },
     routerChange(type, item = {}) {
-      switch (type) {
-        case "detail": // 编辑          
-          if(!this.$Util.isEmptyObj(item)){
-            this.nameColor.push({ id: item.id})
-          }
-          this.$router.push({
-            path: "/crm-customer/customer-detail",
-            query: { id: item.id },
-          });
-          break;
-        case "edit": // 编辑
-          this.$router.push({
-            path: "/crm-customer/customer-edit",
-            query: { id: item.id, status: this.searchForm.status },
-          });
-          break;
-      }
+		let routeUrl = ''
+		switch (type) {
+			case "detail": // 编辑          
+				if(!this.$Util.isEmptyObj(item)){
+					this.nameColor.push({ id: item.id})
+				}			
+				routeUrl = this.$router.resolve({
+					path: "/crm-customer/customer-detail",
+					query: {id: item.id}
+				})
+				window.open(routeUrl.href, '_block')
+				break;
+			case "edit": // 编辑			
+				routeUrl = this.$router.resolve({
+					path: "/crm-customer/customer-edit",
+					query: { id: item.id, status: this.searchForm.status },
+				})
+				window.open(routeUrl.href, '_block')
+				break;
+		}
     },
     pageChange(page) {          
       // 页码改变
