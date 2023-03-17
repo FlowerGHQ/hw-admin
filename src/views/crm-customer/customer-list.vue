@@ -370,6 +370,9 @@
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
+            <template v-if="column.type === 'time'">
+              {{ $Util.timeFilter(text) }}
+            </template>
             <template v-if="column.key === 'operation'">
               <a-button
                 type="link"
