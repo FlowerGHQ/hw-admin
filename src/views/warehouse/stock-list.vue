@@ -222,8 +222,7 @@ export default {
         this.getWarehouseList()
     },
     methods: {
-        routerChange(type, item = {}) {
-            console.log("输出",item);
+        routerChange(type, item = {}) {            
             let routeUrl = ''
             switch (type) {
                 case 'item':
