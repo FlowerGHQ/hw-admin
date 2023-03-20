@@ -13,12 +13,7 @@
                     <div class="value">
                         <a-select
                             v-model:value="warehouse_id"
-                            show-search
                             :placeholder="$t('def.input')+$t('n.warehouse')"
-                            :default-active-first-option="false"
-                            :show-arrow="false"
-                            :filter-option="false"
-                            :not-found-content="null"
                             @search="handleWarehouseSearch"
                             @change="handleWarehouseChange"
                         >
@@ -195,6 +190,7 @@ export default {
     created() {
     },
     mounted() {
+        this.handleWarehouseSearch();
     },
     methods: {
         routerChange(type, item) {
