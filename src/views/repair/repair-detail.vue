@@ -109,7 +109,7 @@
             <CheckFault  :id='id' :detail='detail' :serviceType='detail.service_type' @submit="getRepairDetail" v-if="detail.status == STATUS.WAIT_DETECTION && sameOrg" ref="CheckFault"/>
             <CheckResult :id='id' :detail='detail' @hasTransfer='hasTransfer = true' v-if="showCheckResult"/>
             <RepairInfo  :id='id' :detail='detail'/>
-            <AttachmentFile :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
+            <AttachmentFile @attachmentEmpty="getAttachmentEmpty" :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
             <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER"/>
             <FeedbackLog   :id='id' :detail='detail' :sourceType="Core.Const.FEEDBACK.SOURCE_TYPE.REPAIR_ORDER"/>
@@ -398,7 +398,8 @@ export default {
                 company_uid: undefined,
             },
             tableData:[],
-            faultMap: {}
+            faultMap: {},
+            isAttachmentEmpty: true,
         };
     },
     watch: {},
@@ -480,6 +481,10 @@ export default {
         this.getTableData()
     },
     methods: {
+        getAttachmentEmpty(attachmentEmpty) {
+            console.log('attachmentEmpty',attachmentEmpty);
+            this.isAttachmentEmpty = attachmentEmpty
+        },
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -657,10 +662,15 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Repair.settlement({id: _this.id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.save_success'))
-                        _this.getRepairDetail()
-                    })
+                    if(_this.isAttachmentEmpty) {
+                        _this.$message.warning(_this.$t('r.check_attachment'))
+                        _this.handleAuditClose()
+                    }else {
+                        Core.Api.Repair.settlement({id: _this.id}).then(() => {
+                            _this.$message.success(_this.$t('pop_up.save_success'))
+                            _this.getRepairDetail()
+                        })
+                    }
                 },
             });
         },
