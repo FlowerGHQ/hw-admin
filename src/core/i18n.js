@@ -373,6 +373,7 @@ const messages = {
         d: { // 分销商
             distributor_detail: '分销商详情',
             name: '分销商名称',
+	        code: '编码',
             distribution_management: '分销管理',
             distributor_list: '分销商列表',
             new_distributor: '新建分销商',
@@ -2608,6 +2609,7 @@ const messages = {
         d: {
             distributor_detail: 'Distributor details',
             name: 'Distributor name',
+	        code: 'Code',
             distribution_management: 'Distribution management',
             distributor_list: 'Distributor list',
             distributor_name: 'Distributor name',
