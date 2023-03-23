@@ -2,10 +2,10 @@
     <div class="account">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" :tab="$t('d.account_balance')">
-                <AccountBalance v-if="activeKey == 1" :id="id" :name="name" @changeTabToDetail="getTabInfo" />
+                <AccountBalance v-if="activeKey == 1" :id="detail.id" :name="detail.name" @changeTabToDetail="getTabInfo" />
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
-                <balanceDetails v-if="activeKey == 2" />
+                <balanceDetails v-if="activeKey == 2" :walletId="detail.wallet_list.balance.id"/>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -18,8 +18,7 @@ import AccountBalance from './AccountBalance.vue'
 const activeKey = ref('1')
 const name = ref('')
 const props = defineProps({
-    name: { type: String, default: '' },
-    id: { type: Number, default: 0 },
+    detail: { type: String, default: () => {} },    
 })
 onMounted(()=>{
     name.value = props.name
