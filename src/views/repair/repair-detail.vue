@@ -613,7 +613,11 @@ export default {
         },
         // 提交检测结果
         handleFaultSubmit() {
-            this.$refs.CheckFault.handleFaultSubmit();
+            if(this.isAttachmentEmpty) {
+                this.$message.warning(this.$t('r.check_attachment'))
+            }else {
+                this.$refs.CheckFault.handleFaultSubmit();
+            }
         },
 
         // 工单 结算
@@ -662,15 +666,15 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    if(_this.isAttachmentEmpty) {
-                        _this.$message.warning(_this.$t('r.check_attachment'))
-                        _this.handleAuditClose()
-                    }else {
+                    // if(_this.isAttachmentEmpty) {
+                    //     _this.$message.warning(_this.$t('r.check_attachment'))
+                    //     _this.handleAuditClose()
+                    // }else {
                         Core.Api.Repair.settlement({id: _this.id}).then(() => {
                             _this.$message.success(_this.$t('pop_up.save_success'))
                             _this.getRepairDetail()
                         })
-                    }
+                    // }
                 },
             });
         },
