@@ -156,12 +156,7 @@ const walletFilter = {
     '3': '$',
     '4': '£',
 }
-// emits
-const props = defineProps({
-    walletId: {
-        type: Number,        
-    }
-})
+
 
 
 const {proxy} = getCurrentInstance();
@@ -227,7 +222,6 @@ const routerChange = (type, item = {}) => {
 const walletListFetch = (params = {}) => {    
     Core.Api.Distributor.walletMoneyList({
         ...params,
-        wallet_id:props.walletId,
         page: balancePagination.value.currPage,
         page_size: balancePagination.value.pageSize
     }).then(res => {
