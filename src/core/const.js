@@ -30,7 +30,7 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     case "10.0.0.107":
-        URL_POINT = 'http://10.0.0.107:8889'
+        URL_POINT = 'http://eos-dev-api.horwincloud.com'
         break;
     case "10.0.0.245":
         URL_POINT = 'http://10.0.0.213:8889'
