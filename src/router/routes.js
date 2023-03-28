@@ -1652,7 +1652,7 @@ const routes = [
 			{
 				path: 'private-customer-list',
 				name: 'PrivateCustomerList',
-				component: () => import('@/views/crm-customer/customer-list.vue'),
+				component: () => import('@/views/crm-customer/customer-list-copy1.vue'),
 				meta: {
 					title: '我的客户',
 					title_en: 'My Customers',
@@ -1663,7 +1663,7 @@ const routes = [
 			{
 				path: 'customer-list',
 				name: 'CustomerList',
-				component: () => import('@/views/crm-customer/customer-list.vue'),
+				component: () => import('@/views/crm-customer/customer-list-copy2.vue'),
 				meta: {
 					title: '未分配客户',
 					title_en: 'Unassigned Customers',
