@@ -856,9 +856,7 @@ export default {
         this.getList();
 
         this.getWarehouseList();
-        // this.getWaybillDetail()
-
-        this.getWalletDetail() // 钱包详情
+        // this.getWaybillDetail()        
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -1098,6 +1096,7 @@ export default {
             switch (val) {
                 case "payment":
                     this.paymentShow = true
+                    this.getWalletDetail()  // 钱包详情          
                     break;
                 case "out_stock":
                     this.outStockShow = true
@@ -1511,7 +1510,7 @@ export default {
             }).then(res => {
                 // console.log('getWalletDetail res', res)
                 this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance)  
-                this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance)                
+                this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
             }).catch(err => {
                 console.log('getTableData err', err)
             })
