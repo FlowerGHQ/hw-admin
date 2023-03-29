@@ -72,7 +72,7 @@
                     </a-select>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('d.drawing_code') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
