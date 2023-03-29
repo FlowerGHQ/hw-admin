@@ -666,15 +666,10 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    // if(_this.isAttachmentEmpty) {
-                    //     _this.$message.warning(_this.$t('r.check_attachment'))
-                    //     _this.handleAuditClose()
-                    // }else {
-                        Core.Api.Repair.settlement({id: _this.id}).then(() => {
-                            _this.$message.success(_this.$t('pop_up.save_success'))
-                            _this.getRepairDetail()
-                        })
-                    // }
+                    Core.Api.Repair.settlement({id: _this.id}).then(() => {
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getRepairDetail()
+                    })
                 },
             });
         },
