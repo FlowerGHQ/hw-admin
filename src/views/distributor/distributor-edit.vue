@@ -9,6 +9,12 @@
             </div>
             <div class="form-content">
                 <div class="form-item required">
+                    <div class="key">{{ $t('d.code') }}:</div>
+                    <div class="value">
+                        <a-input v-model:value="form.code" :placeholder="$t('n.enter')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('d.name') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('n.enter')"/>
@@ -139,6 +145,7 @@ export default {
 
             form: {
                 id: '',
+                code: '',
                 name: '',
                 short_name: '',
                 company_name: '',
@@ -168,7 +175,7 @@ export default {
     watch: {},
     computed: {
          // 计算货币是否显示
-        isDisabled(){            
+        isDisabled(){
             return this.monetaryList[this.form.currency] || null
         }
     },
@@ -229,6 +236,7 @@ export default {
                 }
             }
             const requireList = [
+                { key: 'code', msg: this.$t('def.enter') },
                 { key: 'name', msg: this.$t('def.enter') },
                 { key: 'short_name', msg: this.$t('def.enter') },
                 { key: 'type', msg: this.$t('def.enter') },

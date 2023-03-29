@@ -72,6 +72,12 @@
                     </a-select>
                 </div>
             </div>
+            <div class="form-item required">
+                <div class="key">{{ $t('d.drawing_code') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
             <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('i.on_board_battery') }}</div>
                 <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
@@ -425,6 +431,7 @@ export default {
                 config: '',
                 man_hour: '',
                 sales_area_ids: undefined,
+                drawing_code: "",
                 fob_eur: '',
                 fob_usd: '',
                 accessory_id:'',
@@ -619,6 +626,7 @@ export default {
             // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
+            this.form.drawing_code = res.drawing_code
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
                 this.upload.coverList = logos.map((item, index) => ({
@@ -823,6 +831,9 @@ export default {
                 return this.$message.warning('请输入工时')
             }*/
             if (!form.sales_area_ids) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.drawing_code) {
                 return this.$message.warning(this.$t('def.enter'))
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格

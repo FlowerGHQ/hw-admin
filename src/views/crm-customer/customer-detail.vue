@@ -69,21 +69,21 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
-                    </a-col>  
+                    </a-col>
                     <!-- 订单来源 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.order_source') }}：</span>
-                        <span class="value">                           
+                        <span class="value">
                             {{ $Util.CRMTestDriveSourceFilter(detail.crm_test_drive_order?.channel, $i18n.locale) || "-" }}
                         </span>
-                    </a-col>                                  
+                    </a-col>
                     <!-- 试驾车型 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
                         <span class="value">
                             {{ detail.crm_test_drive_order?.item_name || "-" }}
                         </span>
-                    </a-col>                                  
+                    </a-col>
                     <!-- 标签展示 -->
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
@@ -147,13 +147,13 @@
                                 <a-button type="danger" @click="handleReturnPool" v-if="$auth('crm-customer.return-pool')">{{ $t('crm_c.return_pool') }}</a-button>
                             </template>
                         </template> -->
-                    </a-col>                    
+                    </a-col>
                 </a-row>
-            </div>  
-            <div class="panel-content desc-container">
+            </div>
+            <div v-if="false" class="panel-content desc-container">
                 <div class="desc-title">
                     <div class="title-area">
-                        <span class="title">{{ $t('dis.subscribe_store') }}</span> 
+                        <span class="title">{{ $t('dis.subscribe_store') }}</span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
@@ -161,49 +161,54 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_name') }}：</span>
                         <span class="value">
-                            {{storeDetail.name}}                    
+                            {{storeDetail.name || "-"}}
                         </span>
                     </a-col>
                     <!-- 门店手机号 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_phone') }}：</span>
                         <span class="value">
-                            {{storeDetail.contact_phone}}                     
+                            {{storeDetail.contact_phone || "-"}}
                         </span>
                     </a-col>
                     <!-- 门店邮箱 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_email') }}：</span>
                         <span class="value">
-                            {{storeDetail.contact_email}}                       
+                            {{storeDetail.contact_email || "-"}}
                         </span>
                     </a-col>
                     <!-- 营业时间 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.business_hours') }}：</span>
-                        <span class="value">                        
-                            {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
-                            {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                        <span class="value">
+                            <span v-if="storeDetail.business_time">
+                                {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                                {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                            </span>
+                            <span v-else>
+                                -
+                            </span>
                         </span>
                     </a-col>
                     <!-- 门店地址 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_address') }}：</span>
                         <span class="value">
-                            {{storeDetail.address}}
+                            {{storeDetail.address || "-"}}
                         </span>
                     </a-col>
                     <!-- 门店官网 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.store_website') }}：</span>
                         <span class="value">
-                            <a :href="storeDetail.website_url">{{storeDetail.website_url}}  </a>                  
+                            <a :href="storeDetail.official_website">{{storeDetail.official_website || "-"}}  </a>
                         </span>
                     </a-col>
                 </a-row>
-            </div>         
+            </div>
         </div>
-        
+
         <a-row >
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
@@ -365,13 +370,15 @@ export default {
     created() {
         this.id = Number(this.$route.query.id) || 0
     },
-    mounted() {        
+    mounted() {
         if (this.id) {
             this.getCustomerDetail();
             this.getTargetByUserId();
-            this.storeFetch()
         }
-
+        if(Number(this.$route.query.store_id)){
+            this.storeFetch()
+            // this.storeFetch()
+        }
     },
     methods: {
         /* Fetch */
@@ -381,12 +388,12 @@ export default {
                 ...params,
                 id: Number(this.$route.query.store_id),
             }).then(res => {
-                console.log("获取门店详情", res)    
+                console.log("获取门店详情", res)
                 this.storeDetail = res.detail
                 this.storeDetail.business_time = JSON.parse(this.storeDetail.business_time)
                 console.log("测试", this.storeDetail);
             }).catch(err => {
-                console.log('获取门店列表失败', err)		
+                console.log('获取门店列表失败', err)
             })
         },
         routerChange(type, item) {
@@ -646,7 +653,7 @@ export default {
                 }).catch(err => {
                     console.log(err);
                 })
-            } else if(type == "store") {                
+            } else if(type == "store") {
                 Core.Api.CRMTESTDRIVE.storeEmail({
                     id: this.detail.crm_test_drive_order.id
                 }).then(res => {

@@ -30,7 +30,7 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     case "10.0.0.107":
-        URL_POINT = 'http://10.0.0.107:8889'
+        URL_POINT = 'http://eos-dev-api.horwincloud.com'
         break;
     case "10.0.0.245":
         URL_POINT = 'http://10.0.0.213:8889'
@@ -1063,7 +1063,7 @@ let Const = {
             '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
             '40': {key: 40, zh: '调货单', en: 'Transfer order', color: 'blue'},
             '50': {key: 50, zh: '维修单', en: 'Repair order', color: 'orange'},
-            '60': {key: 60, text: '物料采购单', color: 'yellow'},
+            '60': {key: 60, zh: '物料采购单', en: 'Material purchase order', color: 'yellow'},
             '70': {key: 70, zh: '仓库调货单', en: 'Warehouse transfer order', color: 'blue'},
         },
         SOURCE_TYPE_MAP: {
