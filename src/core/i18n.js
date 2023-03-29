@@ -1406,6 +1406,7 @@ const messages = {
 		    status: '合同状态',
 		    contract_type: '合同类型',
 		    collection_schedule: '回款进度', // 重复
+            customer_status: '客户状态',
 		    create_user: '创建人',
 		    paid_money_progress:'回款进度',
 		    belone_customer: '所属客户',
@@ -3608,6 +3609,7 @@ const messages = {
 		    own_user_name: "Tracker",
 		    status: 'Contract Status',
 		    collection_schedule: 'Payment Progress',
+            customer_status: 'Customer Status',
 		    create_user: 'Founder',
 		    paid_money_progress:'Payment Progress',
 		    belone_customer: 'Customer',

@@ -147,6 +147,31 @@
             class="search-item"
             v-if="show"
           >
+            <div class="key">{{ $t("crm_o.customer_status") }}：</div>
+            <!-- 客户状态 -->
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.search_type"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option
+                  v-for="item of CRM_CUSTOMER_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="search-item"
+            v-if="show"
+          >
             <div class="key">{{ $t("crm_o.create_user") }}：</div>
             <!-- 创建人 -->
             <div class="value">
@@ -392,6 +417,7 @@ export default {
       CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
       CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
       CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
+      CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,
       total: 0,
       orderByFields: {},
       // 搜索
@@ -405,7 +431,8 @@ export default {
         begin_time: "",
         end_time: "",
         type: "",
-        create_user_id:undefined
+        create_user_id:undefined,
+        search_type: 10
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
@@ -655,7 +682,6 @@ export default {
       Core.Api.CRMOrder.list({
         ...this.searchForm,
         order_by_fields: this.orderByFields,
-        search_type: 10,
         page: this.currPage,
         page_size: this.pageSize,
       })
