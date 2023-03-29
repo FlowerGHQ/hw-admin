@@ -226,8 +226,7 @@ const routerChange = (type, item = {}) => {
 // 明细列表
 const walletListFetch = (params = {}) => {    
     Core.Api.Distributor.walletMoneyList({
-        ...params,
-        wallet_id:props.walletId,
+        ...params,        
         page: balancePagination.value.currPage,
         page_size: balancePagination.value.pageSize
     }).then(res => {

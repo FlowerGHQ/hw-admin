@@ -35,6 +35,13 @@ export default {
     },
     components: {
     },
+    watch: {
+        '$i18n.locale': {       
+            handler(n) {
+                this.handleChartData() // 监听者中英文切换
+            }
+        }
+    },
     data() {
         return {
             walletDetail: {}, // 钱包的详情
