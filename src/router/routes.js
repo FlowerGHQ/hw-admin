@@ -1798,6 +1798,17 @@ const routes = [
                 }
             },
 			{
+				path: 'order-pool-list',
+				name: 'OrderPoolList',
+				component: () => import('@/views/crm-order/order-pool-list.vue'),
+				meta: {
+					title: '公海列表',
+					title_en: 'Pool List',
+					auth: ["crm-order.list"],
+				}
+			},
+
+			{
 				path: 'order-edit',
 				name: 'OrderEdit',
 				component: () => import('@/views/crm-order/order-edit.vue'),
@@ -1913,7 +1924,7 @@ const routes = [
 					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
-			},      
+			},
 			{
 				path: 'test-drive-detail',
 				name: 'TestDriveDetail',
@@ -1924,7 +1935,7 @@ const routes = [
 					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
-			}        
+			}
 		]
 	},
     { // 智能标签
