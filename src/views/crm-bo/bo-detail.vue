@@ -94,6 +94,9 @@
                                 <a-button type="primary" @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
                             </CRMOrder>
                         </a-tab-pane>
+                        <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">
+                            <CrmCustomerDetail  v-if="id>0" :id="detail.customer_id" ref ="CrmCustomerDetail"/>
+                        </a-tab-pane>
                     </a-tabs>
                 </div>
             </a-col>
@@ -179,13 +182,13 @@ import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
-
+import CrmCustomerDetail from '../../components/crm/panel/CrmCustomerDetail.vue';
 import LabelList from '@/components/crm/common/LabelList.vue';
 
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, CustomerSelect, NewMySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem,LabelList},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, NewMySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem,LabelList,CrmCustomerDetail},
     props: {},
     data() {
         return {

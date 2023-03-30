@@ -1440,6 +1440,7 @@ const messages = {
             income_money: '已回款',
             refunded_amount: '已退款',
 		    info: '订单信息',
+            customer_detail: '客户详情',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -3645,6 +3646,7 @@ const messages = {
 		    audit_list: 'List of Pending Contracts',
 		    income_money: 'Money Received',
 		    refunded_amount: 'Refunded',
+            customer_detail: 'Customer Detail'
 	    },
 	    crm_oi: {
 		    list: 'Collection Slip List',
