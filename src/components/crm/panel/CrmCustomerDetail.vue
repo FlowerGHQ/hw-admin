@@ -101,6 +101,10 @@
                             </span>
                         </span>
                     </a-col>
+                    <a-col :xs='24' :sm='12' :lg='24' class='detail-item'>
+                        <span class="key">{{ $t('crm_c.custom_area') }}：</span>
+                        <span class="value">{{ detail.address ? detail.address : '-' }}</span>
+                    </a-col>
                 </a-row>
             </div>
         </div>

@@ -1324,6 +1324,7 @@ const messages = {
 		    last_track_time: '本次跟进时间',
 		    next_track_time: '下次跟进时间',
             phone_country_code:'国家/地区',
+            custom_area: '客户地址',
 
 	    },
 	    crm_t: {
@@ -3532,7 +3533,8 @@ const messages = {
 		    source_type: 'Source Type',
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
-            phone_country_code:'Country/Region'
+            phone_country_code:'Country/Region',
+            custom_area: 'Customer Address'
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
