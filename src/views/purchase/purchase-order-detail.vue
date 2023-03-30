@@ -350,7 +350,7 @@
                     </div>
                 </div>
                 <div class="form-item img-upload required">
-                    <div class="key">{{ $t('p.attachment') }}</div>
+                    <div class="key">{{ $t(/*上传付款凭证*/'p.upload_payment_voucher') }}</div>
                     <div class="value">
                         <!-- <a-upload name="file" class="image-uploader"-->
                         <!--     list-type="picture-card" accept='image/*'-->

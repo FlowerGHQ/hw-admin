@@ -53,7 +53,7 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
-        <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
+        <a-modal v-model:visible="userRoleShow" :title="$t('p.financial_audit')" :after-close='handleRoleClose'>
             <UserRole v-if="userRoleShow" :user-id="userId" :detail="userDetail"></UserRole>
             <template #footer>
                 <a-button @click="handleRoleClose">{{ $t('def.cancel') }}</a-button>

@@ -268,9 +268,9 @@
                                     <div class="form-item" style="color:#9495a4">
                                         <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
                                         <!-- <span>{{this.auditForm.compensation_price}}</span> -->
-                                        <span>{{$Util.countFilter(sum_price)}}</span>
                                         <!-- 单位 -->
                                         <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
+                                        <span>{{$Util.countFilter(sum_price)}}</span>
                                     </div>
                                 </div>                        
                         </template>
