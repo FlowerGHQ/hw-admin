@@ -11,7 +11,7 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.phone') }}：</span>
                         <span class="value phone-hover">
-                            {{ detail.phone_country_code }} {{ detail.phone }}
+                            {{ detail.phone_country_code }} {{ detail.phone ? detail.phone : '-' }}
                             <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER"
                                 class="switch" @click="handleChecking()"><i class="icon i_eyes" /></a-button>
                         </span>
