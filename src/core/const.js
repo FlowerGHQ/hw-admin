@@ -394,6 +394,13 @@ let Const = {
             PASS: 1,
             REFUSE: 2
         },
+        // 工单审核
+        COMPENSATION:{
+            COMPENSATION_METHOD:{
+                '1' : { value: 1,}, // 赔付方式 赔付到配件
+                '2' : { value: 2,}, // 赔付方式 赔付到账户
+            }
+        }
     },
 	INVOICE_ITEM:{
 		TARGET_TYPE: {
