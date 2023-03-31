@@ -1327,6 +1327,7 @@ const messages = {
 		    last_track_time: '本次跟进时间',
 		    next_track_time: '下次跟进时间',
             phone_country_code:'国家/地区',
+            custom_area: '客户地址',
 
 	    },
 	    crm_t: {
@@ -1443,6 +1444,7 @@ const messages = {
             income_money: '已回款',
             refunded_amount: '已退款',
 		    info: '订单信息',
+            customer_detail: '客户详情',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -3537,7 +3539,8 @@ const messages = {
 		    source_type: 'Source Type',
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
-            phone_country_code:'Country/Region'
+            phone_country_code:'Country/Region',
+            custom_area: 'Customer Address'
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
@@ -3651,6 +3654,7 @@ const messages = {
 		    audit_list: 'List of Pending Contracts',
 		    income_money: 'Money Received',
 		    refunded_amount: 'Refunded',
+            customer_detail: 'Customer Detail'
 	    },
 	    crm_oi: {
 		    list: 'Collection Slip List',
