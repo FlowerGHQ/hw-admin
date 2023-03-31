@@ -54,7 +54,7 @@
                    </a-radio-group>
                </div>
            </div>
-            <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
+            <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
             <div class="form-item required">
                 <div class="key">{{ $t('r.repair_name') }}</div>
                 <div class="value">

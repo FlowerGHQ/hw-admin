@@ -655,6 +655,9 @@ const messages = {
             date_a: '到港日期',
             add: '添加实例商品',
             bulk_import: '批量导入',
+            battery_code: '电池编码',
+            motor_coding: '电机编码',
+            control_code: '电控编码',
         },
         wa: { //仓库
             list: '仓库列表',
@@ -2896,6 +2899,9 @@ const messages = {
             date_a:'Arrival date',
             add:'Add instance products',
             bulk_import:'Batch Import',
+            battery_code: 'Battery coding',
+            motor_coding: 'Motor coding',
+            control_code: 'Electronic control code',
         },
         wa: { //仓库
             list:'Warehouse list',

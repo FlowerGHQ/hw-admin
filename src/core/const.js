@@ -289,7 +289,7 @@ let Const = {
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
             { zh: '开箱损', en: 'dead on arrival', value: 3 },
-	        { zh: '电池维修', en: 'battery', value: 4 },
+            { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -395,6 +395,13 @@ let Const = {
             PASS: 1,
             REFUSE: 2
         },
+        // 工单审核
+        COMPENSATION:{
+            COMPENSATION_METHOD:{
+                '1' : { value: 1,}, // 赔付方式 赔付到配件
+                '2' : { value: 2,}, // 赔付方式 赔付到账户
+            }
+        }
     },
 	INVOICE_ITEM:{
 		TARGET_TYPE: {
