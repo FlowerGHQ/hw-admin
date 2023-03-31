@@ -289,6 +289,7 @@ let Const = {
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
             { zh: '开箱损', en: 'dead on arrival', value: 3 },
+	        { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -1631,6 +1632,10 @@ let Const = {
 			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
 			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
 		},
+        CUSTOMER_MAP: {
+            '10': { key: 10, zh: '私人客户',en: 'Private client', value: 10 },
+			'40': { key: 40, zh: '公海客户',en: 'High seas customers', value: 40 },
+        },
         // PAID_MONEY_PROGRESS: {
         //     0_20: 1,        // 回款进度 0%-20%
         //     20_40: 2,       // 回款进度 20%-40%

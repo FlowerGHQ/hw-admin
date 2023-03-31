@@ -147,31 +147,6 @@
             class="search-item"
             v-if="show"
           >
-            <div class="key">{{ $t("crm_o.customer_status") }}：</div>
-            <!-- 客户状态 -->
-            <div class="value">
-              <a-select
-                v-model:value="searchForm.search_type"
-                :placeholder="$t('def.select')"
-                @change="handleSearch"
-              >
-                <a-select-option
-                  v-for="item of CRM_CUSTOMER_MAP"
-                  :key="item.key"
-                  :value="item.value"
-                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
-                >
-              </a-select>
-            </div>
-          </a-col>
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="8"
-            :xxl="6"
-            class="search-item"
-            v-if="show"
-          >
             <div class="key">{{ $t("crm_o.create_user") }}：</div>
             <!-- 创建人 -->
             <div class="value">
@@ -417,7 +392,6 @@ export default {
       CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
       CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
       CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
-      CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,
       total: 0,
       orderByFields: {},
       // 搜索
@@ -431,8 +405,7 @@ export default {
         begin_time: "",
         end_time: "",
         type: "",
-        create_user_id:undefined,
-        search_type: 10
+        create_user_id:undefined
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
@@ -600,25 +573,25 @@ export default {
         Core.Api.CRMTrackMember.joinUserList({
           type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
           target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
-            ...params         
+            ...params
         }).then((res) => {
             if(this.$Util.isEmptyObj(params)){
                 this.ownUserOptions = take(res.list, 50);
             }else{
-                this.ownUserOptions = res.list;          
-            }          
+                this.ownUserOptions = res.list;
+            }
         });
     },
     // 创建人接口
-    createUserFetch(params = {}){       
+    createUserFetch(params = {}){
         Core.Api.CRMOrder.createUser({
-            ...params         
+            ...params
         }).then((res) => {
             if(this.$Util.isEmptyObj(params)){
                 this.createUserOptions = take(res.list, 50);
             }else{
-                this.createUserOptions = res.list;          
-            }          
+                this.createUserOptions = res.list;
+            }
         });
     },
     moreSearch() {
@@ -646,7 +619,7 @@ export default {
           break;
       }
     },
-    pageChange(page) {          
+    pageChange(page) {
       // 页码改变
       this.currPage = page;
       Core.Data.setItem('currPage',page)
@@ -682,6 +655,7 @@ export default {
       Core.Api.CRMOrder.list({
         ...this.searchForm,
         order_by_fields: this.orderByFields,
+        search_type: 40,
         page: this.currPage,
         page_size: this.pageSize,
       })
@@ -725,7 +699,7 @@ export default {
     },
     handleOwnUserSearch(name) {
       // 负责人条件搜索 下拉框
-      this.ownUserFetch({        
+      this.ownUserFetch({
         name: name,
       })
     },

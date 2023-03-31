@@ -839,6 +839,7 @@ const messages = {
             shipment_number: '发货单号',
 	        payment: '付款',
             confirm_payment: '确认付款',
+            financial_audit: '财务审核',
             confirm_transfer: '确认转单',
 	        out_stock: '出库',
             ship: '发货',
@@ -852,6 +853,7 @@ const messages = {
             unit_price: '单价',
 	        export_product_information: '导出商品信息',
 	        attachment: '上传附件',
+            upload_payment_voucher: '上传付款凭证',
 	        payment_method: '付款方式',
 	        export_purchase: '导出PI',
 	        payment_term: '收款方式',
@@ -1322,6 +1324,7 @@ const messages = {
 		    last_track_time: '本次跟进时间',
 		    next_track_time: '下次跟进时间',
             phone_country_code:'国家/地区',
+            custom_area: '客户地址',
 
 	    },
 	    crm_t: {
@@ -1406,6 +1409,7 @@ const messages = {
 		    status: '合同状态',
 		    contract_type: '合同类型',
 		    collection_schedule: '回款进度', // 重复
+            customer_status: '客户状态',
 		    create_user: '创建人',
 		    paid_money_progress:'回款进度',
 		    belone_customer: '所属客户',
@@ -1437,6 +1441,7 @@ const messages = {
             income_money: '已回款',
             refunded_amount: '已退款',
 		    info: '订单信息',
+            customer_detail: '客户详情',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -3069,7 +3074,8 @@ const messages = {
             delivery_method:'Delivery method',
             shipment_number:'shipment number',
             payment:'Payment',
-            confirm_payment:'comfirm the payment',
+            confirm_payment:'Confirmation of payment',
+            financial_audit: 'Financial audit',
             confirm_transfer:'Confirm order transferring',
             out_stock:'Ex-warehousing',
             ship:'Delivery',
@@ -3082,6 +3088,7 @@ const messages = {
             code: 'Code',
             unit_price: 'Unit price',
             attachment: 'appendix',
+            upload_payment_voucher: 'Upload payment voucher',
             payment_method:'payment method',
             export_purchase:'Export PI',
             payment_term:'Collecting method',
@@ -3526,7 +3533,8 @@ const messages = {
 		    source_type: 'Source Type',
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
-            phone_country_code:'Country/Region'
+            phone_country_code:'Country/Region',
+            custom_area: 'Customer Address'
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
@@ -3608,6 +3616,7 @@ const messages = {
 		    own_user_name: "Tracker",
 		    status: 'Contract Status',
 		    collection_schedule: 'Payment Progress',
+            customer_status: 'Customer Status',
 		    create_user: 'Founder',
 		    paid_money_progress:'Payment Progress',
 		    belone_customer: 'Customer',
@@ -3639,6 +3648,7 @@ const messages = {
 		    audit_list: 'List of Pending Contracts',
 		    income_money: 'Money Received',
 		    refunded_amount: 'Refunded',
+            customer_detail: 'Customer Detail'
 	    },
 	    crm_oi: {
 		    list: 'Collection Slip List',

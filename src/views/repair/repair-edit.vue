@@ -46,15 +46,15 @@
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.warranty') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
-                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
+           <div class="form-item required">
+               <div class="key">{{ $t('r.warranty') }}</div>
+               <div class="value">
+                   <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
+                       <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                   </a-radio-group>
+               </div>
+           </div>
+            <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/>
             <div class="form-item required">
                 <div class="key">{{ $t('r.repair_name') }}</div>
                 <div class="value">
