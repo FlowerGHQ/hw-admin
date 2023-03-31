@@ -2915,6 +2915,7 @@ const messages = {
             amount:'Stock quantity after change',
             type:'warehouse type',
             location:'warehouse mangement',
+            location_stock: 'Store corresponding materials',
             area:'Region',
             row:'Row',
             layer:'line',
