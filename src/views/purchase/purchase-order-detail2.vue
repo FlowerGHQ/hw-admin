@@ -3,6 +3,11 @@
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
+            <div  class="center-info">
+                <span class="header-info">{{ $t('p.order_number')}}：{{detail.sn || '-'}}</span>
+                <span class="header-info">{{ $t('p.order_time')}}：{{$Util.timeFilter(detail.create_time) || '-'}}</span>
+                <span class="header-info">{{ $t('p.person')}}：{{detail.user_name|| '-'}}</span>
+            </div>
             <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
                 <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
                     <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
@@ -51,127 +56,77 @@
                 <MySteps :stepsList='stepsList' :current='currStep'></MySteps>
             </div>
         </div>
-        <div class="form-container">
-            <EditItem v-if="giveOrderShow" :order-id='id' :detail='detail' type='GIVE_ORDER' @submit="getList" @cancel='giveOrderShow = false'></EditItem>
+    </div>
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area2">{{$t('p.payment_detail')}}</div>
+            <div class="btns-area">
+                <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+            </div>
+        </div>
+        <div style="padding-left:20px">
+            <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
+                                     :row-key="record => record.id" :pagination='false'>
+                                <template #bodyCell="{ column, text, record }">
+                                    <template v-if="column.key === 'item'">
+                                        {{ text || '-' }}
+                                    </template>
+                                    <template v-if="column.dataIndex === 'attachment'">
+                                        <div class="table-img">
+                                            <a-image-preview-group class="image-group">
+                                                <a-image v-for="(path, index) in record.paths" :key="index"
+                                                         class="image" :width="55" :height="55"
+                                                         :src="$Util.imageFilter(path)" :fallback="$t('def.none')"/>
+                                            </a-image-preview-group>
+                                        </div>
+                                    </template>
 
-            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                <template #expandIcon ><i class="icon i_expan_l"/> </template>
-                <!-- 商品信息 -->
-                <a-collapse-panel key="ItemInfo" :header="$t('i.product_information')" class="gray-collapse-panel" v-show="!itemEditShow">
-                    <div class="panel-content">
-                            <a-table
-                                :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
-                                :row-key="record => record.id" :loading='loading' :pagination='false'
-                                :row-selection="rowSelection">
-                            <template #bodyCell="{ column, text, record}">
-                                <template v-if="column.dataIndex === 'item'">
-                                    <div class="table-img">
-                                        <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
-                                        <a-tooltip placement="top" :title='text'>
-                                            <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
-                                                {{ text ? lang =='zh' ? text.name : text.name_en : '-' }}
+                                    <template v-if="column.key === 'detail'">
+                                        <div class="table-img">
+                                            <a-image :width="24" :height="24"
+                                                     :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)"
+                                                     :fallback="$t('def.none')"/>
+                                            <a-tooltip placement="top" :title='text'>
+                                                <p class="ell" style="max-width:120px;margin-left:12px;">
+                                                    {{ text || '-' }}</p>
+                                            </a-tooltip>
+                                        </div>
+                                    </template>
+
+                                    <template v-if="column.dataIndex === 'type'">
+                                        {{ $Util.purchasePayMethodFilter(text , $i18n.locale) }}
+                                    </template>
+                                    <template v-if="column.key === 'status'">
+                                        {{ $Util.purchasePayStatusFilter(text, $i18n.locale) }}
+                                    </template>
+                                    <template v-if="column.key === 'money'">
+                                        {{ $Util.priceUnitFilter(detail.currency) }} {{ $Util.countFilter(text) }}
+                                    </template>
+                                    <template v-if="column.key === 'time'">
+                                        {{ $Util.timeFilter(text) }}
+                                    </template>
+                                    <template v-if="column.key === 'operation'">
+                                        <a-button type='link' @click="handleDownload(record)"><i
+                                            class="icon i_download"/>{{ $t('n.download') }}
+                                        </a-button>
+                                        <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
+                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                      @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
                                             </a-button>
-                                        </a-tooltip>
-                                    </div>
+                                        </template>
+                                        <template v-if="authOrg(detail.org_id, detail.org_type)">
+                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                      @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
+                                            </a-button>
+                                        </template>
+                                    </template>
                                 </template>
-                                <template v-if="column.dataIndex === 'amount'">
-                                    {{record.amount}}
-                                </template>
-                                <template v-if="column.dataIndex === 'deliver_amount'">
-                                    <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
-                                </template>
-                                <template v-if="column.key === 'money'">
-                                    <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
-                                    {{$Util.countFilter(text)}}
-<!--                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}-->
-                                </template>
-                                <template v-if="column.key === 'spec'">
-                                    {{$Util.itemSpecFilter(text, $i18n.locale )}}
-                                </template>
-                            </template>
-                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
-                                <a-table-summary  >
-                                    <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
-                                        <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
-                                        <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
-                                    </a-table-summary-row>
-                                </a-table-summary>
-                            </template>
-                        </a-table>
-                    </div>
-                </a-collapse-panel>
-
-                <EditItem v-if="itemEditShow" :order-id='id' :detail='detail' type='PURCHASE_ORDER' @submit="getList" @cancel='itemEditShow = false'></EditItem>
-
-
-                <!-- 订单信息 -->
-                <a-collapse-panel key="PurchaseInfo" :header="$t('p.order_information')" class="gray-collapse-panel">
-                    <a-row class="panel-content info-container">
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.order_number')}}</div>
-                                <div class="value">{{detail.sn || '-'}}</div>
-                            </div>
-                            <div v-show="!$auth('purchase-order.supply-detail')">
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.person')}}</div>
-                                <div class="value">{{detail.user_name|| '-'}}</div>
-                            </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('p.order_time')}}</div>
-                                <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
-                            </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div v-show="!$auth('purchase-order.supply-detail')">
-
-                                <div class="info-item">
-                                    <div class="key">{{ $t('n.contact')}}</div>
-                                    <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
-                                    <div class="value" v-else>-</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">{{ $t('p.payment_terms')}}</div>
-                                    <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">{{ $t('p.remark')}}</div>
-                                    <div class="value">{{detail.remark || '-'}}</div>
-                                </div>
-                                <!-- <div class="info-item">
-                                    <div class="key">支付方式</div>
-                                    <div class="value">{{$Util.purchasePayMethodFilter(detail.pay_method) || '-'}}</div>
-                                </div> -->
-                            </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div v-show="!$auth('purchase-order.supply-detail')">
-                                <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                                    <div class="key">{{ $t('p.shipping_port')}}</div>
-                                    <div class="value" >{{detail.port || '-'}}</div>
-                                </div>
-                                <div class="info-item" >
-                                    <div class="key">{{ $t('p.partial_shipments')}}</div>
-                                    <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">{{ $t('p.transshipment')}}</div>
-                                    <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
-                                </div>
-                            </div>
-                        </a-col>
-
-                    </a-row>
-                </a-collapse-panel>
-            </a-collapse>
-            <div v-show="!$auth('purchase-order.supply-detail')">
+            </a-table>
+        </div>
+        <!-- <div v-show="!$auth('purchase-order.supply-detail')">
                 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                    <!-- 明细列表 -->
-                    <a-collapse-panel key="PayInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel">
+                    <a-collapse-panel key="PayInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel" :showArrow="false" collapsible="disabled">
                         <div class="panel-content">
                             <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
                                      :row-key="record => record.id" :pagination='false'>
@@ -232,7 +187,64 @@
                             </a-table>
                         </div>
                     </a-collapse-panel>
-                    <!-- 发货记录 -->
+                </a-collapse>
+        </div> -->
+    </div>
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area2">{{$t('i.product_information')}}</div>
+            <div class="btns-area">
+                <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+            </div>
+        </div>
+        <div style="padding-left:20px">
+            <a-table
+                                :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                                :row-key="record => record.id" :loading='loading' :pagination='false'
+                                :row-selection="rowSelection">
+                            <template #bodyCell="{ column, text, record}">
+                                <template v-if="column.dataIndex === 'item'">
+                                    <div class="table-img">
+                                        <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
+                                        <a-tooltip placement="top" :title='text'>
+                                            <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
+                                                {{ text ? lang =='zh' ? text.name : text.name_en : '-' }}
+                                            </a-button>
+                                        </a-tooltip>
+                                    </div>
+                                </template>
+                                <template v-if="column.dataIndex === 'amount'">
+                                    {{record.amount}}
+                                </template>
+                                <template v-if="column.dataIndex === 'deliver_amount'">
+                                    <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
+                                </template>
+                                <template v-if="column.key === 'money'">
+                                    <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                                    {{$Util.countFilter(text)}}
+<!--                                    {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}-->
+                                </template>
+                                <template v-if="column.key === 'spec'">
+                                    {{$Util.itemSpecFilter(text, $i18n.locale )}}
+                                </template>
+                            </template>
+                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
+                                <a-table-summary  >
+                                    <a-table-summary-row>
+                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
+                                        <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
+                                    </a-table-summary-row>
+                                </a-table-summary>
+                            </template>
+            </a-table>
+        </div>
+    </div>
+    <div class="list-container">
+                            <!-- 发货记录 -->
                     <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList"
                                   ref="out_delivery"/>
                     <!-- 收货记录 -->
@@ -301,10 +313,6 @@
 
                     <ActionLog :id='id' :detail='detail'
                                :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
-                </a-collapse>
-            </div>
-
-        </div>
     </div>
     <template class="modal-container">
         <!-- 确认收款 -->
@@ -350,7 +358,7 @@
                     </div>
                 </div>
                 <div class="form-item img-upload required">
-                    <div class="key">{{ $t(/*上传付款凭证*/'p.upload_payment_voucher') }}</div>
+                    <div class="key">{{ $t('p.attachment') }}</div>
                     <div class="value">
                         <!-- <a-upload name="file" class="image-uploader"-->
                         <!--     list-type="picture-card" accept='image/*'-->
@@ -549,7 +557,7 @@
 import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
-import MySteps from "@/components/common/MySteps.vue"
+import MySteps from "./components/MySteps.vue"
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
@@ -1520,5 +1528,47 @@ export default {
 </script>
 
 <style lang="less">
-// #PurchaseOrderDetail {}
+#PurchaseOrderDetail {
+    .list-container{
+        margin-bottom: 20px;
+
+        .title-container{
+            display: flex;
+            justify-content: flex-start;
+            .title-area{
+                margin-right: 32px;
+            }
+            .center-info{
+                flex: 1;
+                .header-info{
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 20px;
+                    color: #252526;
+                    margin-right: 16px;
+                }
+            }
+        }
+        .gray-panel{
+            margin-top: 8px;
+            border: 1px solid #E6EAEE;
+            border-radius: 6px;
+            background: none;
+            padding: 0;
+            height: 118px;
+            .panel-content{
+            }
+        }
+        .title-container{
+            display: flex;
+            justify-content: space-between;
+            .title-area2{
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 22px;
+                color: rgba(0, 0, 0, 0.85);
+        }
+        }
+    }
+}
 </style>
