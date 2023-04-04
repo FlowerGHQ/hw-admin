@@ -48,7 +48,8 @@ const onClick = ($1) => {
 .eos-tabs-style{
     display: inline-flex;
     background-color:#f5f5f5;
-    padding: 3px 10px;
+    padding: 3px 10px;    
+    cursor: pointer;
     .tabs-item{        
         padding: 5px 10px;   
         color: #6a6a6a;     

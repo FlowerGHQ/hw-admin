@@ -21,7 +21,8 @@
                     <a-row class="desc-detail">
                         <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                             <span class="key">{{ $t('n.type') }}：</span>
-                            <span class="value">{{ $Util.warehouseTypeFilter(warehoseDetail.type, $i18n.locale) || '-' }}</span>
+                            <span class="value">{{ $Util.warehouseTypeFilter(warehoseDetail.type, $i18n.locale) || '-'
+                            }}</span>
                         </a-col>
                         <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
                             <span class="key">{{ $t('n.contact') }}：</span>
@@ -44,23 +45,29 @@
             </div>
             <!-- 库存告警，呆滞物料 -->
             <div class="warwhouse-tabs1">
-                <eosTabs 
-                    v-model:activeKey="activeKey1"
-                    :tabsList="tabsList1"                                        
-                >
+                <eosTabs v-model:activeKey="activeKey1" :tabsList="tabsList1">
                     <div v-if="activeKey1 == 1">1</div>
-                    <div v-else="activeKey1 == 2">2</div>
+                    <div v-else="activeKey1 == 2">
+                        <a-row>
+                            <a-col :xs="12" :sm="12" :lg="12">
+                                <!-- 呆滞物料折线图 -->
+                                <div class="unit">时长</div>
+                                <SluggishMaterialTrend />
+                            </a-col>
+                            <a-col :xs="12" :sm="12" :lg="12">
+                                <div class="unit">数量</div>
+                                <SluggishMaterialRank />
+                            </a-col>
+                        </a-row>
+                    </div>
                 </eosTabs>
-            </div>        
+            </div>
         </div>
         <!-- bottom -->
         <div class="list-container" style="margin-top: 10px;">
             <div class="title-container" style="border-bottom: 1px solid #eff2f4; border-radius: 0px;">
                 <div class="title-area" style="font-size: 14px;">
-                    <eosTabs 
-                        v-model:activeKey="activeKey2"
-                        :tabsList="tabsList2"
-                    >                        
+                    <eosTabs v-model:activeKey="activeKey2" :tabsList="tabsList2">
                     </eosTabs>
                 </div>
                 <div class="btns-area">
@@ -72,48 +79,47 @@
                             <a-select-option value="Yiminghe">yiminghe</a-select-option>
                         </a-select>
                         <a-input placeholder="请输入" />
-                        <a-input-search         
-                            style="margin-left: 15px;"                   
-                            placeholder="请输入库位号"                                                  
-                        />
-                    </div>                    
+                        <a-input-search style="margin-left: 15px;" placeholder="请输入库位号" />
+                    </div>
                 </div>
             </div>
             <!-- 对应上面组件 eosTabs -->
             <div class="warwhouse-tabs2">
                 <template v-if="activeKey2 == 1">1</template>
                 <template v-else-if="activeKey2 == 2">
-                    <inventoryManage/>
+                    <inventoryManage />
                 </template>
                 <template v-else-if="activeKey2 == 3">3</template>
                 <template v-else="activeKey2 == 4">4</template>
-            </div>                         
+            </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref,reactive, getCurrentInstance,onMounted,computed } from 'vue';
+import { ref, reactive, getCurrentInstance, onMounted, computed } from 'vue';
 import eosTabs from '@/components/common/eos-tabs.vue'
 import { inventoryManage } from './components/index'
 import { useRoute } from 'vue-router'
 import Core from "@/core";
+import SluggishMaterialTrend from './components/SluggishMaterialTrend.vue'
+import SluggishMaterialRank from './components/SluggishMaterialRank.vue'
 
 const route = useRoute()
-const {proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance()
 
 
 const activeKey1 = ref(1) // top
 const tabsList1 = computed(() => [
-    {key:1,value:`${proxy.$t('wa.inventory_alarm')}`}, // 库存告警
-    {key:2,value:`${proxy.$t('wa.inert_material')}`}, // 呆滞物料
+    { key: 1, value: `${proxy.$t('wa.inventory_alarm')}` }, // 库存告警
+    { key: 2, value: `${proxy.$t('wa.inert_material')}` }, // 呆滞物料
 ])
 const activeKey2 = ref(2) // bottom
 const tabsList2 = computed(() => [
-    {key:1,value:`${proxy.$t('wa.stock')}`}, // 库存产品
-    {key:2,value:`${proxy.$t('wa.location')}`}, // 库存管理
-    {key:3,value:`${proxy.$t('wa.records')}`}, // 出入库记录
-    {key:4,value:`${proxy.$t('wa.operation_record')}`}, // 操作记录
+    { key: 1, value: `${proxy.$t('wa.stock')}` }, // 库存产品
+    { key: 2, value: `${proxy.$t('wa.location')}` }, // 库存管理
+    { key: 3, value: `${proxy.$t('wa.records')}` }, // 出入库记录
+    { key: 4, value: `${proxy.$t('wa.operation_record')}` }, // 操作记录
 ])
 
 const warehoseDetail = ref({}) // 改仓库详情
@@ -137,13 +143,18 @@ const getWarehouseDetail = (params = {}) => {
 </script>
 
 <style lang="less" scoped>
-#WarehouseDetail{
-    .warwhouse-tabs1{
-        padding: 10px 20px;
+#WarehouseDetail {
+    .warwhouse-tabs1 {
+        padding: 20px 20px;
     }
 }
 
-.warwhouse-tabs2{
-        padding: 0px 20px 0px 20px;
+.warwhouse-tabs2 {
+    padding: 0px 20px 0px 20px;
+}
+
+.unit {
+    color: #999999;
+    font-size: 12px;
 }
 </style>
