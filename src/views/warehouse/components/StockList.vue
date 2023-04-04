@@ -143,7 +143,7 @@ export default {
     components: {},
     props: {
         warehouseId: {
-            type: Number,
+            type: [Number,String],
         },
         detail: {
             type: Object,

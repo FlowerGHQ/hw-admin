@@ -85,12 +85,38 @@
             </div>
             <!-- 对应上面组件 eosTabs -->
             <div class="warwhouse-tabs2">
-                <template v-if="activeKey2 == 1">1</template>
-                <template v-else-if="activeKey2 == 2">
+                <!-- 库存产品 -->
+                <template v-if="activeKey2 == 'ItemStockList'">1</template>
+                <!-- 库存管理 -->
+                <template v-else-if="activeKey2 == 'WarehouseLocation'">
                     <inventoryManage />
                 </template>
-                <template v-else-if="activeKey2 == 3">3</template>
-                <template v-else="activeKey2 == 4">4</template>
+                <!-- 出入库记录 -->
+                <template v-else-if="activeKey2 == 'StockRecord'">
+                    <StockRecord                         
+                        :warehouseId="route.query.id" 
+                        :detail="warehoseDetail"                         
+                    />
+                </template>
+
+                <template v-else-if="activeKey2 == 'operation_record'">4</template>
+
+                <!-- 库位对应物料 -->
+                <template v-else-if="activeKey2 == 'location_stock'">
+                    <WarehouseLocationStock                         
+                        :warehouseId="route.query.id" 
+                        :detail="warehoseDetail"
+                    />
+                </template>
+
+                <!-- 库存物料 -->
+                <template v-else="activeKey2 == 'MaterialStockList'">
+                    <StockList                         
+                        type='material' 
+                        :warehouseId="route.query.id" 
+                        :detail="warehoseDetail"                         
+                    />
+                </template>
             </div>
         </div>
     </div>
@@ -98,12 +124,13 @@
 
 <script setup>
 import { ref, reactive, getCurrentInstance, onMounted, computed } from 'vue';
-import eosTabs from '@/components/common/eos-tabs.vue'
-import { inventoryManage } from './components/index'
 import { useRoute } from 'vue-router'
+
 import Core from "@/core";
-import SluggishMaterialTrend from './components/SluggishMaterialTrend.vue'
-import SluggishMaterialRank from './components/SluggishMaterialRank.vue'
+import eosTabs from '@/components/common/eos-tabs.vue'
+import { inventoryManage, StockRecord, SluggishMaterialTrend, SluggishMaterialRank } from './components/index'
+import WarehouseLocationStock from "./components/WarehouseLocationStock.vue";
+import StockList from "./components/StockList.vue";
 
 const route = useRoute()
 const { proxy } = getCurrentInstance()
@@ -114,13 +141,29 @@ const tabsList1 = computed(() => [
     { key: 1, value: `${proxy.$t('wa.inventory_alarm')}` }, // 库存告警
     { key: 2, value: `${proxy.$t('wa.inert_material')}` }, // 呆滞物料
 ])
-const activeKey2 = ref(2) // bottom
-const tabsList2 = computed(() => [
-    { key: 1, value: `${proxy.$t('wa.stock')}` }, // 库存产品
-    { key: 2, value: `${proxy.$t('wa.location')}` }, // 库存管理
-    { key: 3, value: `${proxy.$t('wa.records')}` }, // 出入库记录
-    { key: 4, value: `${proxy.$t('wa.operation_record')}` }, // 操作记录
-])
+const activeKey2 = ref('WarehouseLocation') // bottom
+const tabsList2 = computed(() => {
+    
+    let arr = [
+        { weight:1, key: 'ItemStockList', value: `${proxy.$t('wa.stock')}` }, // 库存产品
+        { weight:2, key: 'WarehouseLocation', value: `${proxy.$t('wa.location')}` }, // 库存管理        
+        { weight:4, key: 'operation_record', value: `${proxy.$t('wa.operation_record')}` }, // 操作记录
+        { weight:10, key: 'location_stock', value: `${proxy.$t('wa.location_stock')}` }, // 库位对应物料
+    ]
+
+    // 出入库记录(残次仓不显示)
+    if(warehoseDetail.value.type !== WAREHOUSE_TYPE.DEFECTIVE){
+        arr.push({ weight:3, key: 'StockRecord', value: `${proxy.$t('wa.records')}` }) // 出入库记录
+    }
+    // 库存物料(物料仓)
+    if(warehoseDetail.value.type == WAREHOUSE_TYPE.MATERIAL || true){
+        arr.push({ weight:3, key: 'MaterialStockList', value: `${proxy.$t('wa.stock_material')}` })
+    }
+
+    return arr.sort((a,b) => a.weight - b.weight)
+})
+
+const WAREHOUSE_TYPE = Core.Const.WAREHOUSE.TYPE //仓库类型  1成品仓 2残次仓 3物料仓 4广宣品仓
 
 const warehoseDetail = ref({}) // 改仓库详情
 

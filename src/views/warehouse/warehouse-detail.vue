@@ -104,8 +104,7 @@
                     <StockRecord 
                         v-if="activeKey === 'StockRecord'"
                         :warehouseId="warehouse_id" 
-                        :detail="detail" 
-                        @submit="getWarehouseDetail"
+                        :detail="detail"
                     />
                 </a-tab-pane>
                 <!-- 库位管理(全部仓库都看得见) -->

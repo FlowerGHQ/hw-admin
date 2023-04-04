@@ -7,7 +7,7 @@
     <div class="custom-tabs">
         <div class="eos-tabs-style" :style="eosTabsCustom">    
             <slot name="tab">
-                <template v-for="item in tabsList" :key="item.key">
+                <template v-for="(item,index) in tabsList" :key="item.key">
                     <div class="tabs-item" :class="{tabsItemActive: item.key == activeKey}" @click="onClick(item.key)">{{ item.value }}</div>
                 </template>            
             </slot>       
@@ -24,12 +24,11 @@ import { ref } from 'vue';
 const props = defineProps({  
     // v-model 绑定值  
     activeKey:{
-        type: Number,
-        default: 1
+        type: [Number,String],        
     },
     // 渲染tabs数据
     tabsList:{
-        type: Array || Object,
+        type: [Array,Object],
         default: () => []
     },
     // 自定义外层样式
