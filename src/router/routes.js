@@ -1288,7 +1288,7 @@ const routes = [
             {
                 path: 'warehouse-list',
                 name: 'WarehouseList',
-                component: () => import('@/views/warehouse/warehouse-list.vue'),
+                component: () => import('@/views/warehouse/warehouse-list.vue'),                
                 meta: {
                     title: '仓库管理',
                     title_en: 'Warehouses',
@@ -1309,13 +1309,13 @@ const routes = [
             {
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
-                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                // component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                component: () => import('@/views/warehouse/warehouse-detail-copy.vue'),
                 meta: {
                     hidden: true,
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
                     auth: ['warehouse.detail'],
-
                 }
             },
 	        {

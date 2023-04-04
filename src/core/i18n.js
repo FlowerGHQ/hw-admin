@@ -722,6 +722,9 @@ const messages = {
 	        location_detail: '查看库位库存',
 	        open_adjust: '开启调库',
 	        close_adjust: '关闭调库',
+            operation_record:'操作记录',
+            inventory_alarm:'库存告警',
+            inert_material:'呆滞物料',
         },
         inv:{
             file_list:'档案列表',
@@ -2961,6 +2964,9 @@ const messages = {
             out_item:'Transfer out products',
             warehouse_name: 'Warehouse Name',
 	        location_detail: 'Check the inventory location',
+            operation_record:'operation record',
+            inventory_alarm:'inventory alarm',
+            inert_material:'inert material',
         },
         inv: {
             file_list:'File List',
