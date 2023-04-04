@@ -39,6 +39,7 @@ const onClick = ($1) => {
     display: inline-flex;
     background-color:#f5f5f5;
     padding: 5px 5px;
+    cursor: pointer;
     .tabs-item{        
         padding: 0 8px;   
         color: #6a6a6a;     
