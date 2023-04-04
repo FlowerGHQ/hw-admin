@@ -1,14 +1,23 @@
 <template>
-    <!-- 左侧目录树 -->
+    <!-- 
+		左侧目录树 样式可在仓库管理-仓库详情查看
+		gData 渲染数据  结构 看下	
+	 -->
     <div class="tree_meun_style">
         <template v-for="(item,index) in gData" :key="item.key">            
-            <div class="one_directory" @click="onOneDirectoryEvent(index)">{{ item.title }}</div>
-            <Transition name="bounce">            
-                <a-tree
-                    v-if="index == IsTwoTree"
-                    :tree-data="item.children"                
-                >         
-                </a-tree>
+            <div class="one_directory" :class="{oneDirectoryActive: index == IsTwoTree}" @click="onOneDirectoryEvent(index)">{{ item.title }}</div>
+            <Transition>  
+				<div v-if="IsTwoTree == index">			
+					<a-tree						
+						:tree-data="item.children"                
+					>         
+						<template #switcherIcon="{ switcherCls }">
+							<div class="customIcon">						
+								<down-outlined :class="switcherCls" />
+							</div>
+						</template>
+					</a-tree>
+				</div>          
             </Transition>
             
         </template>        
@@ -16,81 +25,45 @@
 </template>
 
 <script setup>
+import { DownOutlined } from '@ant-design/icons-vue';
 import { defineComponent, ref, watch } from 'vue';
-const gData = ref([
-    {
-        title: '一级目录',
-        key: '1',
-        children: [
-          {
-            title: 'parent 1-0',
-            key: '0-0-0',
-            children: [
-              {
-                title: 'leaf',
-                key: '0-0-0-0',
-              },
-              {
-                title: 'leaf',
-                key: '0-0-0-1',
-              },
-              {
-                title: 'leaf',
-                key: '0-0-0-2',
-              },
-            ],
-          },
-          {
-            title: 'parent 1-1',
-            key: '0-0-1',
-            children: [
-              {
-                title: 'leaf',
-                key: '0-0-1-0',
-              },
-            ],
-          },          
-        ],
-    },
-    {
-        title: '一级目录',
-        key: '2',
-        children: [
-          {
-            title: 'parent 1-0',
-            key: '0-0-0',
-            children: [
-              {
-                title: 'leaf',
-                key: '0-0-0-0',
-              },
-              {
-                title: 'leaf',
-                key: '0-0-0-1',
-              },
-              {
-                title: 'leaf',
-                key: '0-0-0-2',
-              },
-            ],
-          },
-          {
-            title: 'parent 1-1',
-            key: '0-0-1',
-            children: [
-              {
-                title: 'leaf',
-                key: '0-0-1-0',
-              },
-            ],
-          },          
-        ],
-    },
-])
+
+
+const props = defineProps({  
+	// 渲染数据    
+    gData:{
+		type: Object,
+		default: () => {}
+	}
+})
+// 默认结构
+// const gData = ref([
+//     {
+//         title: '一级目录',
+//         key: '1',
+//         children: [
+//           {
+//             title: 'parent 1-0',
+//             key: '0-0-0',
+//             children: [
+//               {
+//                 title: 'leaf',
+//                 key: '0-0-0-0',
+//               },
+//             ],
+//           },        
+//         ],
+//     },
+// ])
 const IsTwoTree = ref(null)
+
 /* methods */ 
 const onOneDirectoryEvent = ($1) => {
-    IsTwoTree.value = $1
+	if(IsTwoTree.value !== $1){
+		IsTwoTree.value = $1	
+	} else{
+		IsTwoTree.value = null
+	}
 }
 </script>
 
@@ -100,26 +73,30 @@ const onOneDirectoryEvent = ($1) => {
         height: 35px;
         line-height: 35px;
         padding-left: 15px;
-        background-color: #006ef9;
-        color: #fff;
     }
+	.oneDirectoryActive{
+		background-color: #006ef9;
+        color: #fff;
+	}
 }
 
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease;
 }
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
+
+.customIcon{
+	.ant-tree-switcher-icon{
+		background-color: #f2f7fe;
+		width: 14px;
+		height: 14px;		
+		font-size: 12px;
+		color: #87bbfc;
+	}
 }
 </style>

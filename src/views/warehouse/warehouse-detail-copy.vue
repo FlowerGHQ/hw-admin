@@ -4,7 +4,7 @@
         <div id="WarehouseDetail" class="list-container">
             <!-- 标题 -->
             <div class="title-container">
-                <div class="title-area">标题</div>
+                <div class="title-area">{{ $t('wa.detail') }}</div>
                 <div class="btns-area">
                     <!-- <a-button type="primary" ghost  v-if="$auth('warehouse.save')"><i class="icon i_edit"/>编辑</a-button> -->
                     <!-- <a-button type="danger" ghost  v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>删除</a-button> -->
@@ -46,7 +46,7 @@
             <div class="warwhouse-tabs1">
                 <eosTabs 
                     v-model:activeKey="activeKey1"
-                    :tabsList="tabsList1"
+                    :tabsList="tabsList1"                                        
                 >
                     <div v-if="activeKey1 == 1">1</div>
                     <div v-else="activeKey1 == 2">2</div>
@@ -127,7 +127,8 @@ const getWarehouseDetail = (params = {}) => {
     Core.Api.Warehouse.detail({
         id: Number(route.query.id),
         ...params
-    }).then(res => {        
+    }).then(res => {
+        // console.log("详情", res.detail);
         warehoseDetail.value = res.detail;     
     }).catch(err => {
         console.log("getWarehouseDetail err", err);

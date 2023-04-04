@@ -1,22 +1,28 @@
 <template>
-<div class="custom-tabs">
-    <div class="eos-tabs-style">    
-        <slot name="tab">
-            <template v-for="item in tabsList" :key="item.key">
-                <div class="tabs-item" :class="{tabsItemActive: item.key == activeKey}" @click="onClick(item.key)">{{ item.value }}</div>        
-            </template>            
-        </slot>       
+    <!-- 
+        activeKey v-model 选中哪个值 示例 v-model:activeKey="activeKey1"
+        tabsList 渲染tabs数据  示例 [{key: 1, value:""}]
+        eosTabsCustom  自定义外层样式
+     -->
+    <div class="custom-tabs">
+        <div class="eos-tabs-style" :style="eosTabsCustom">    
+            <slot name="tab">
+                <template v-for="item in tabsList" :key="item.key">
+                    <div class="tabs-item" :class="{tabsItemActive: item.key == activeKey}" @click="onClick(item.key)">{{ item.value }}</div>
+                </template>            
+            </slot>       
+        </div>
+        <div class="custom-slot-default">
+            <slot></slot>    
+        </div>
     </div>
-    <div class="custom-slot-default">
-        <slot></slot>    
-    </div>
-</div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-const props = defineProps({    
+const props = defineProps({  
+    // v-model 绑定值  
     activeKey:{
         type: Number,
         default: 1
@@ -25,7 +31,11 @@ const props = defineProps({
     tabsList:{
         type: Array || Object,
         default: () => []
-    }
+    },
+    // 自定义外层样式
+    eosTabsCustom:{
+        type: Object,
+    },
 })
 
 const emits = defineEmits(['update:activeKey']) 
@@ -38,9 +48,9 @@ const onClick = ($1) => {
 .eos-tabs-style{
     display: inline-flex;
     background-color:#f5f5f5;
-    padding: 5px 5px;
+    padding: 3px 10px;
     .tabs-item{        
-        padding: 0 8px;   
+        padding: 5px 10px;   
         color: #6a6a6a;     
     }
     .tabsItemActive{

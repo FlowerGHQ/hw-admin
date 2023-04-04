@@ -1,7 +1,8 @@
 <template>
     <div id="WarehouseDetail" class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('wa.detail') }}</div>
+            <div class="title-area">
+            </div>
             <div class="btns-area">
                 <a-button type="primary" ghost @click="routerChange('edit')" v-if="$auth('warehouse.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                 <a-button type="danger" ghost @click="handleDelete(warehouse_id)" v-if="$auth('warehouse.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
@@ -51,40 +52,79 @@
                                         <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail" v-if="activeKey === 'StockRecord'"/>
                                     </a-tab-pane>
                                 </template>-->
+                <!-- 库存产品(成品仓) -->
                 <a-tab-pane key="ItemStockList" :tab="$t('wa.goods')" v-if="detail.type == WAREHOUSE_TYPE.QUALITY">
-                    <StockList type='item' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                               v-if="activeKey === 'ItemStockList'"/>
+                    <StockList 
+                        v-if="activeKey === 'ItemStockList'" 
+                        type='item' 
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
 
+                <!-- 库存物料 -->
                 <a-tab-pane key="MaterialStockList" :tab="$t('wa.stock_material')" v-if="detail.type == WAREHOUSE_TYPE.MATERIAL">
-                    <StockList type='material' :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                               v-if="activeKey === 'MaterialStockList'"/>
+                    <StockList 
+                        v-if="activeKey === 'MaterialStockList'"
+                        type='material' 
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
 
-                <a-tab-pane key="CustomizeStockList" :tab="$t('wa.stock_customize')"
-                            v-if="$auth('ADMIN') && detail.type == WAREHOUSE_TYPE.CUSTOMIZE">
-                    <StockList type='customize' :warehouseId="warehouse_id" :detail="detail"
-                               @submit="getWarehouseDetail"
-                               v-if="activeKey === 'CustomizeStockList'"/>
+                <!-- 库存广宣品 -->
+                <a-tab-pane 
+                    v-if="$auth('ADMIN') && detail.type == WAREHOUSE_TYPE.CUSTOMIZE"
+                    key="CustomizeStockList" 
+                    :tab="$t('wa.stock_customize')" 
+                >
+                    <StockList 
+                        v-if="activeKey === 'CustomizeStockList'"
+                        type='customize' 
+                        :warehouseId="warehouse_id" 
+                        :detail="detail"
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
 
-                <a-tab-pane key="ImperfectList" :tab="$t('wa.faulty_part')"
-                            v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
-                    <ImperfectList :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                   v-if="activeKey === 'ImperfectList'"/>
+                <!-- 故障件列表 -->
+                <a-tab-pane key="ImperfectList" :tab="$t('wa.faulty_part')" v-if="detail.type == WAREHOUSE_TYPE.DEFECTIVE">
+                    <ImperfectList 
+                        v-if="activeKey === 'ImperfectList'"
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
 
+                <!-- 出入库记录(残次仓不显示) -->
                 <a-tab-pane key="StockRecord" :tab="$t('wa.records')" v-if="detail.type !== WAREHOUSE_TYPE.DEFECTIVE">
-                    <StockRecord :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                 v-if="activeKey === 'StockRecord'"/>
+                    <StockRecord 
+                        v-if="activeKey === 'StockRecord'"
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
+                <!-- 库位管理(全部仓库都看得见) -->
                 <a-tab-pane key="WarehouseLocation" :tab="$t('wa.location')">
-                    <WarehouseLocation :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                 v-if="activeKey === 'WarehouseLocation'"/>
+                    <WarehouseLocation
+                        v-if="activeKey === 'WarehouseLocation'"
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
+                <!-- 库位对应物料(全部仓库都看得见) -->
                 <a-tab-pane key="WarehouseLocationStock" :tab="$t('wa.location_stock')">
-                    <WarehouseLocationStock :warehouseId="warehouse_id" :detail="detail" @submit="getWarehouseDetail"
-                                       v-if="activeKey === 'WarehouseLocationStock'"/>
+                    <WarehouseLocationStock 
+                        v-if="activeKey === 'WarehouseLocationStock'"
+                        :warehouseId="warehouse_id" 
+                        :detail="detail" 
+                        @submit="getWarehouseDetail"
+                    />
                 </a-tab-pane>
             </a-tabs>
         </div>

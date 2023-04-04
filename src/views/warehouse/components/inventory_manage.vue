@@ -7,7 +7,7 @@
                 <a-button>删除</a-button>
             </div>
             <div class="meun">
-               <eos-tree-meun/>
+               <eos-tree-meun :gData="gDatas"/>
             </div>
         </div>
         <div class="right">
@@ -23,7 +23,7 @@
                     <template v-if="column.key === 'target_name'">
                         <div style="display: flex;">
                             <div>
-                                <img style="width: 50px; " src="https://img03.sogoucdn.com/app/a/201025/b57f8208c4a3274b63d6a9108bc33573" alt="1">                        
+                                <img style="width: 60px; " src="https://img03.sogoucdn.com/app/a/201025/b57f8208c4a3274b63d6a9108bc33573" alt="1">                        
                             </div>
                             <div style="margin-left: 10px;">
                                 <div>{{ text }}</div>
@@ -112,6 +112,83 @@ const channelPagination = ref({
   total: 0,
   showTotal: (total) => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`
 })
+
+const gDatas = ref([
+    {
+        title: '一级目录',
+        key: '1',
+        children: [
+          {
+            title: 'parent 1-0',
+            key: '0-0-0',
+            children: [
+              {
+                title: 'leaf',
+                key: '0-0-0-0',
+              },
+              {
+                title: 'leaf',
+                key: '0-0-0-1',
+              },
+              {
+                title: 'leaf',
+                key: '0-0-0-2',
+              },
+            ],
+          },
+          {
+            title: 'parent 1-1',
+            key: '0-0-1',
+            children: [
+              {
+                title: 'leaf',
+                key: '0-0-1-0',
+                children: [{
+                    title: 'leaf1',
+                    key: '0-0-1-01',
+                },]
+              },             
+            ],
+          },          
+        ],
+    },
+    {
+        title: '一级目录',
+        key: '2',
+        children: [
+          {
+            title: 'parent 1-0',
+            key: '0-0-0',
+            children: [
+              {
+                title: 'leaf',
+                key: '0-0-0-0',
+              },
+              {
+                title: 'leaf',
+                key: '0-0-0-1',
+              },
+              {
+                title: 'leaf',
+                key: '0-0-0-2',
+              },
+            ],
+          },
+          {
+            title: 'parent 1-1',
+            key: '0-0-1',
+            children: [
+              {
+                title: 'leaf',
+                key: '0-0-1-0',
+              },
+            ],
+          },          
+        ],
+    },
+])
+
+/* 初始化 */
 onMounted(() => {
     getTableData()
 })
@@ -148,17 +225,17 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .inventory_manage_style{
+    margin-top: 14px;
     display: flex;
     .left{
         width: 280px;
-        border-right: 1px solid #eff2f4;
-        .btn{
+        border-right: 1px solid #eff2f4;  
+        .meun{
             margin-top: 15px;
-        }
+        }    
     }
     .right{
-        width: calc(100% - 280px);
-        padding-top: 20px;
+        width: calc(100% - 280px);        
         padding-left: 20px;
     }
 }
