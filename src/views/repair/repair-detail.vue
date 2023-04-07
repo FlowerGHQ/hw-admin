@@ -289,11 +289,15 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item textarea">
+                <!-- 备注 -->
+                <div style="margin-top: 10px;" class="form-item textarea">
                     <div class="key">{{ $t('r.remark_a') }}:</div>
-                    <div class="value">
-                        <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.input_remark')"
-                                    :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
+                    <div class="value" style="width: 350px;">
+                        <a-textarea 
+                            v-model:value="auditForm.audit_message" 
+                            :placeholder="$t('r.input_remark')"
+                            :auto-size="{ minRows: 2, maxRows: 6 }"
+                            :maxlength='99'/>
                     </div>
                 </div>
                 <!-- <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
