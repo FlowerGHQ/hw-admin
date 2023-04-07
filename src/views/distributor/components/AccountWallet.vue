@@ -5,7 +5,7 @@
                 <AccountBalance v-if="activeKey == 1" :id="detail.id" :name="detail.name" @changeTabToDetail="getTabInfo" />
             </a-tab-pane>
             <a-tab-pane key="2" :tab="$t('d.balance_details')">
-                <balanceDetails v-if="activeKey == 2"/>
+                <balanceDetails :org_id="detail.id" v-if="activeKey == 2"/>
             </a-tab-pane>
         </a-tabs>
     </div>
