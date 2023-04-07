@@ -105,7 +105,7 @@ const tableColumns = computed(() => {
 // 分页参数
 const channelPagination = ref({
   current: 1,
-  pageSizeOption: "['10', '20', '30', '40']",
+  pageSizeOptions: ['10', '20', '30', '40'],
   pageSize:10,
   showQuickJumper: true, // 是否可以快速跳转至某页
   showSizeChanger: true, // 是否可以改变 pageSize
