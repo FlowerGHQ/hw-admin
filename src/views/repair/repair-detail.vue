@@ -24,7 +24,7 @@
                         <i class="icon"/>{{ $t('r.repair_a') }}
                     </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
-                        <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
+                        <i class="icon i_settle"/>{{ $t('r.submit_review') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
