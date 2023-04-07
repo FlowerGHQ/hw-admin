@@ -375,7 +375,7 @@
                         <!-- <div class="tip">{{ $t('n.size') }}：800*800px</div>-->
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>

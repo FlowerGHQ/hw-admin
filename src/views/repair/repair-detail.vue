@@ -24,7 +24,7 @@
                         <i class="icon"/>{{ $t('r.repair_a') }}
                     </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
-                        <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
+                        <i class="icon i_settle"/>{{ $t('r.submit_review') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
@@ -192,7 +192,7 @@
                             <template v-if="column.dataIndex === 'sum_price'">
                                 {{$Util.priceUnitFilter(detail.currency)}} {{ $Util.countFilter(record.price * record.amount) }}
                             </template>
-                        </template>                     
+                        </template>
                     </a-table>
                     <!-- 总价 实付金额 -->
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px; font-size: 12px;">
@@ -214,7 +214,7 @@
                 </div>
                 <!-- 工单处理 -->
                 <div style="margin-top: 10px;">
-                    <h3>{{ $t('r.Work_order_processing') }}</h3>                    
+                    <h3>{{ $t('r.Work_order_processing') }}</h3>
                     <!-- 处理方式 -->
                     <div>
                         <div class="form-item">
@@ -240,7 +240,7 @@
                                             <span class="popovers">i</span>
                                         </a-popover>
                                     </template>
-                                </a-radio>                            
+                                </a-radio>
                             </a-radio-group>
                         </div>
                     </div>
@@ -259,13 +259,13 @@
                             <!-- 抵扣价格 -->
                             <!-- <div style="line-height: 50px;">
                                 <div class="form-item">
-                                    <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>                                
+                                    <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
                                     <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
                                     <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
                                 </div>
                             </div> -->
                             <!-- 赔付金额 -->
-                            
+
                                 <div>
                                     <div class="form-item" style="color:#9495a4">
                                         <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
@@ -274,7 +274,7 @@
                                         <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                                         <span>{{$Util.countFilter(sum_price)}}</span>
                                     </div>
-                                </div>                        
+                                </div>
                         </template>
                     <!-- </transition> -->
                 </div>
@@ -289,13 +289,24 @@
                         </a-radio-group>
                     </div>
                 </div>
+                <!-- 备注 -->
+                <div style="margin-top: 10px;" class="form-item textarea">
+                    <div class="key">{{ $t('r.remark_a') }}:</div>
+                    <div class="value" style="width: 350px;">
+                        <a-textarea 
+                            v-model:value="auditForm.audit_message" 
+                            :placeholder="$t('r.input_remark')"
+                            :auto-size="{ minRows: 2, maxRows: 6 }"
+                            :maxlength='99'/>
+                    </div>
+                </div>
                 <!-- <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
                     <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
-                </div> -->     
+                </div> -->
             </div>
             <template #footer>
                 <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
@@ -341,7 +352,7 @@ export default {
     },
     props: {},
     data() {
-        return {            
+        return {
             Core,
             orgType: Core.Data.getOrgType(),
             orgId: Core.Data.getOrgId(),
@@ -400,12 +411,11 @@ export default {
                 company_uid: undefined,
             },
             tableData:[],
-            faultMap: {},
             isAttachmentEmpty: true,
 
             // 工单处理方式
             TreatmentMode: Core.Const.REPAIR.COMPENSATION.COMPENSATION_METHOD
-            
+
         };
     },
     watch: {},
