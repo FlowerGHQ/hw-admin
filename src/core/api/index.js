@@ -474,6 +474,7 @@ const apiList = {
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
         calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
+	    vehicleAdd: ['PostJson', 'production-order/vehicle-add']
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],

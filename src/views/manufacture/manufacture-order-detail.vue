@@ -4,6 +4,7 @@
             <div class='title-area'>生产订单详情</div>
             <div class="btns-area">
 <!--                <a-button type="primary" ghost @click="handleSubmit" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>一键领料</a-button>-->
+                <a-button type="primary" ghost @click="handleAdd(id)" v-if="$auth('production-order.picking')">生产整车码</a-button>
                 <a-button type="primary" ghost @click="routerChange('picking')" v-if="$auth('production-order.picking')"><i class="icon i_goods"/>领料</a-button>
                 <a-button type="danger" ghost @click="handleCancel(id)" v-if="$auth('production-order.delete')"><i class="icon i_close_c"/>取消</a-button>
             </div>
@@ -94,6 +95,22 @@
                 </template>
             </a-modal>
         </template>-->
+        <template class="modal-container">
+            <a-modal v-model:visible="addVehicleShow" title="生成整车编码" :after-close='handleVehicleClose'>
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">数量:</div>
+                        <div class="value">
+                            <a-input-number v-model:value="form.amount" :min="0" :precision="0" placeholder="0"/>
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="handleVehicleClose">取消</a-button>
+                    <a-button @click="handleVehicleSubmit" type="primary" >确定</a-button>
+                </template>
+            </a-modal>
+        </template>
     </div>
 </template>
 
@@ -121,6 +138,11 @@ export default {
             item: {},   // 商品详情
             bom: {},    // BOM表详情
             warehouse: {},  // 仓库详情
+            addVehicleShow: false,
+            form:{
+                id: 0,
+                amount: 0,
+            },
             //标签页
             activeKey: '',
             // 上传
@@ -244,6 +266,26 @@ export default {
                         });
                 },
             });
+        },
+        handleAdd(id) {
+            this.form.id = id
+            this.addVehicleShow = true;
+        },
+        handleVehicleClose() {
+            this.addVehicleShow = false;
+        },
+        handleVehicleSubmit() {
+            Core.Api.ProductionOrder.vehicleAdd({
+                id: this.form.id,
+                amount: this.form.amount,
+            }).then(() => {
+                this.$message.success('生成完成');
+                this.getOrderDetail();
+                this.handleVehicleClose();
+            }).catch((err) => {
+                console.log('handleSubmit err', err);
+            });
+
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
