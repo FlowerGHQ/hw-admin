@@ -1,5 +1,6 @@
 <template>
 <div id="PurchaseOrderDetail">
+    <!-- 采购订单详情 -->
     <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.details')}}</div>
@@ -53,16 +54,17 @@
         </div>
         <div class="gray-panel">
             <div class="panel-content">
-                <MySteps :stepsList='stepsList' :current='currStep'></MySteps>
+                <MySteps :stepsList='stepsList' :current='currStep' :status="status" :payment_status="payment_status"></MySteps>
             </div>
         </div>
     </div>
+    <!-- 付款明细 -->
     <div class="list-container">
         <div class="title-container">
             <div class="title-area2">{{$t('p.payment_detail')}}</div>
             <div class="btns-area">
-                <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+                <!-- <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
             </div>
         </div>
         <div style="padding-left:20px">
@@ -190,12 +192,13 @@
                 </a-collapse>
         </div> -->
     </div>
+    <!-- 商品信息 -->
     <div class="list-container">
         <div class="title-container">
             <div class="title-area2">{{$t('i.product_information')}}</div>
             <div class="btns-area">
-                <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+                <!-- <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
             </div>
         </div>
         <div style="padding-left:20px">
@@ -243,76 +246,72 @@
             </a-table>
         </div>
     </div>
-    <div class="list-container">
-                            <!-- 发货记录 -->
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList"
-                                  ref="out_delivery"/>
-                    <!-- 收货记录 -->
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList"
-                                  ref="in_delivery"/>
-
-                    <!-- 上传附件 -->
-                    <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail'
-                                    @submit="getList" ref="AttachmentFile"/>
-
-                    <!-- 物流信息 -->
-                    <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')"
-                                      class="gray-collapse-panel">
-                        <a-row class="panel-content info-container">
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                                <div class="info-item">
-                                    <div class="key">{{ $t('n.consignee') }}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">
-                                        {{ detail.receive_info.name || '-' }}
-                                    </div>
-                                    <div class="value" v-else>-</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">{{ $t('n.phone') }}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">
-                                        {{ detail.receive_info.phone || '-' }}
-                                    </div>
-                                    <div class="value" v-else>-</div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="key">{{ $t('ad.shipping_address') }}</div>
-                                    <div class="value" v-if="detail.receive_info !=null">
-                                        {{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}
-                                    </div>
-                                    <div class="value" v-else>-</div>
-                                </div>
-                            </a-col>
-                            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                                <div class="info-item"
-                                     v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
-                                    <div class="key">{{ $t('p.delivery_method') }}</div>
-                                    <div class="value">
-                                        {{ $Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-') }}
-                                    </div>
-                                </div>
-                                <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
-                                    <div class="key">{{ $t('p.delivery_method') }}</div>
-                                    <div class="value">
-                                        {{ $Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-') }}
-                                    </div>
-                                </div>
-                                <div class="info-item" v-if="detail.waybill">
-                                    <div class="key">{{ $t('p.shipment_number') }}</div>
-                                    <div class="value">{{ detail.waybill || '-' }}</div>
-                                </div>
-                                <!-- <div class="info-item">
-                                    <div class="key">物流信息</div>
-                                    <div class="value">
-                                        <WaybillShow v-if="waybillInfo && showWaybill" @change="getWaybillDetail" :detail='waybill' :list='waybillInfo.list' :can-edit="$auth('ADMIN')" />
-                                        <template v-else>暂无物流信息</template>
-                                    </div>
-                                </div> -->
-                            </a-col>
-                        </a-row>
-                    </a-collapse-panel>
-
-                    <ActionLog :id='id' :detail='detail'
-                               :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
+    <!-- 发货记录、收货记录、合同、操作记录 -->
+    <div class="list-container2">
+        <div class="header">
+            <div class="header-tab" >
+                <div class="tab-items" :class="{ active:activeValue === item.value,maxwigth:this.$i18n.locale === 'en' }" v-for="item in nameList" :key="item.name" @click="handleClick(item.value)">{{this.$i18n.locale === 'zh'? item.zh:item.en}}</div>
+            </div>
+            <div class="btn-are">
+                <!-- <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
+            </div>
+        </div>
+        <div class="container-body">
+            <!-- 发货记录 -->
+            <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" ref="out_delivery" v-show="activeValue === 1"/>
+            <!-- 收货记录 -->
+            <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList" ref="in_delivery" v-show="activeValue === 2"/>
+            <!-- 上传附件 -->
+            <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile" v-if="activeValue === 3"/>
+            <!-- 操作记录 -->
+            <ActionLog :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER" v-if="activeValue === 4"/>
+        </div>
+    </div>
+    <!-- 收货信息 -->
+    <div class="list-container3">
+        <a-row>
+            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='8' class="info-block">
+                <div class="info-title">{{ $t('n.delivery_information') }}</div>
+                <div class="info-item">
+                    <div class="key">{{ $t('n.consignee') }}:</div>
+                    <div class="value" v-if="detail.receive_info !=null">
+                        {{ detail.receive_info.name || '-' }}
+                    </div>
+                    <div class="value" v-else>-</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('n.phone') }}:</div>
+                    <div class="value" v-if="detail.receive_info !=null">
+                        {{ detail.receive_info.phone || '-' }}
+                    </div>
+                    <div class="value" v-else>-</div>
+                </div>
+                <div class="info-item">
+                    <div class="key">{{ $t('ad.shipping_address') }}:</div>
+                    <div class="value" v-if="detail.receive_info !=null">
+                        {{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}
+                    </div>
+                    <div class="value" v-else>-</div>
+                </div>
+            </a-col>
+            <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
+                <div class="info-title">{{ $t('p.delivery_info') }}</div>
+                <div v-show="!$auth('purchase-order.supply-detail')">
+                    <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                        <div class="key">{{ $t('p.shipping_port')}}</div>
+                        <div class="value" >{{detail.port || '-'}}</div>
+                    </div>
+                    <div class="info-item" >
+                        <div class="key">{{ $t('p.partial_shipments')}}</div>
+                        <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.transshipment')}}</div>
+                                    <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
+                    </div>
+                </div>
+            </a-col>
+        </a-row>
     </div>
     <template class="modal-container">
         <!-- 确认收款 -->
@@ -558,10 +557,10 @@ import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import MySteps from "./components/MySteps.vue"
-import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import AttachmentFile from './components/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
-import ActionLog from '../repair/components/ActionLog.vue';
+import ActionLog from './components/ActionLog.vue';
 
 import EditItem from './components/EditItem.vue';
 import {message} from "ant-design-vue";
@@ -718,6 +717,31 @@ export default {
             giveOrderShow: false,
             createAuditShow: false,
             PIShow: false,
+            nameList:[
+                {
+                    zh:'发货记录',
+                    en:'Delivery Record',
+                    value:1
+                },
+                {
+                    zh:'收货记录',
+                    en:'Receiving Record',
+                    value:2
+                },
+                {
+                    zh:'合同信息',
+                    en:'Contract Information',
+                    value:3
+                },
+                {
+                    zh:'操作记录',
+                    en:'Record',
+                    value:4
+                },
+            ],
+            activeValue: 1,
+            status: this.$route.query.status,
+            payment_status: this.$route.query.payment_status,
         };
     },
     watch: {},
@@ -862,7 +886,6 @@ export default {
     },
     mounted() {
         this.getList();
-
         this.getWarehouseList();
         // this.getWaybillDetail()
     },
@@ -1523,6 +1546,9 @@ export default {
                 console.log('getTableData err', err)
             })
         },
+        handleClick(value){
+            this.activeValue = value
+        }
     }
 };
 </script>
@@ -1531,7 +1557,6 @@ export default {
 #PurchaseOrderDetail {
     .list-container{
         margin-bottom: 20px;
-
         .title-container{
             display: flex;
             justify-content: flex-start;
@@ -1555,7 +1580,7 @@ export default {
             border-radius: 6px;
             background: none;
             padding: 0;
-            height: 118px;
+            height: 100px;
             .panel-content{
             }
         }
@@ -1568,6 +1593,81 @@ export default {
                 line-height: 22px;
                 color: rgba(0, 0, 0, 0.85);
         }
+        }
+        // .header-tab{
+        //     width: 50%;
+        //     background: #F5F5F5;
+        //     border: 1px solid #EFEFEF;
+        //     border-radius: 2px;
+        //     display: flex;
+        // }
+
+    }
+    .list-container2{
+        padding: 24px 20px 20px 20px;
+        background-color: #ffffff;
+        margin-right: 8px;
+        margin-left: 8px;
+        border-radius: 6px;
+
+        .header{
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            .header-tab{
+            width: auto;
+            background: #F5F5F5;
+            border: 1px solid #EFEFEF;
+            border-radius: 2px;
+            display: flex;
+            padding:3px 4px;
+            .tab-items{
+                border-radius: 2px;
+                width: 78px;
+                height: 30px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                color: #595959;
+                font-size: 14px;
+            }
+            .maxwigth{
+                width: 140px;
+            }
+            .active{
+                background-color: #fff;
+                color: #006EF9;
+                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+            }
+        }
+        }
+
+
+    }
+    .list-container3{
+        background: #ffffff;
+        border-radius: 6px;
+        padding: 20px 0 20px 12px;
+        margin-top: 20px;
+        margin-left: 8px;
+        margin-right: 8px;
+        .info-title{
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 22px;
+            color: rgba(0, 0, 0, 0.85);
+            margin-bottom: 16px;
+        }
+        .info-item{
+            display: flex;
+            margin-bottom: 10px;
+            .key{
+                width: 80px;
+                font-size: 14px;
+                line-height: 22px;
+                color: rgba(0, 0, 0, 0.4);
+            }
         }
     }
 }

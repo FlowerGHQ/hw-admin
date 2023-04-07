@@ -909,6 +909,7 @@ const messages = {
             receiver: '接受人',
 	        pay_file_upload: '付款凭证未上传',
 	        create_audit: '订单审核',
+            receipt_message:'预计10-12天完成'
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3098,6 +3099,7 @@ const messages = {
             upload_payment_voucher: 'Upload payment voucher',
             payment_method:'payment method',
             export_purchase:'Export PI',
+            export_product_information:'Export Product Information',
             payment_term:'Collecting method',
             please_select_payment_method:'Please choose a payment method',
             apply_for_after_sales:'Apply for aftersales',
@@ -3147,6 +3149,7 @@ const messages = {
             receiver:'Recipient',
             pay_file_upload:'The payment voucher is not uploaded',
 	        create_audit: 'Order Review',
+            receipt_message:'Expected to be completed in 10-12 days'
         },
         s: {
             store_list:'Shop list',
