@@ -130,6 +130,13 @@ import { computed, getCurrentInstance, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
+const props = defineProps({
+    org_id: {
+        type: Number,
+        default: 0
+    }
+})
+
 const router = useRouter()
 // 来源
 const source_type = {
@@ -223,7 +230,9 @@ const walletListFetch = (params = {}) => {
     Core.Api.Distributor.walletMoneyList({
         ...params,
         page: balancePagination.value.currPage,
-        page_size: balancePagination.value.pageSize
+        page_size: balancePagination.value.pageSize,
+        org_id: props.org_id,
+        org_type: 15
     }).then(res => {
         balancePagination.value.total = res.count;
         console.log('walletListFetch res', res)
