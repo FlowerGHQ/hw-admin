@@ -11,13 +11,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='50'/>
+                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='60'/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_en_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='50'/>
+                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='60'/>
                     </div>
                 </div>
                 <div class="form-item">
