@@ -63,8 +63,7 @@
         <div class="title-container">
             <div class="title-area2">{{$t('p.payment_detail')}}</div>
             <div class="btns-area">
-                <!-- <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
+
             </div>
         </div>
         <div style="padding-left:20px">
@@ -197,8 +196,18 @@
         <div class="title-container">
             <div class="title-area2">{{$t('i.product_information')}}</div>
             <div class="btns-area">
-                <!-- <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
+                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
+                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
+                    <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
+                </template>
+                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
+                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                    <a-button @click="handleExportInfo">{{ $t('p.export_product_information')}}</a-button>
+                </template>
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
+                    <a-button type="primary" @click="handleExport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.export_as_supplier_report')}}</a-button>
+                </template>
             </div>
         </div>
         <div style="padding-left:20px">
@@ -235,7 +244,7 @@
                             <template #summary v-if="!$auth('purchase-order.supply-detail')">
                                 <a-table-summary  >
                                     <a-table-summary-row>
-                                        <a-table-summary-cell :index="0" :col-span="4">{{ $t('p.total')}}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="0" :col-span="8"><!-- {{ $t('p.total')}} --></a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
                                         <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
                                         <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>
@@ -253,7 +262,7 @@
                 <div class="tab-items" :class="{ active:activeValue === item.value,maxwigth:this.$i18n.locale === 'en' }" v-for="item in nameList" :key="item.name" @click="handleClick(item.value)">{{this.$i18n.locale === 'zh'? item.zh:item.en}}</div>
             </div>
             <div class="btn-are">
-                <!-- <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button> -->
+
             </div>
         </div>
         <div class="container-body">

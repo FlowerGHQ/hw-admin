@@ -45,10 +45,7 @@ export default {
         },
 
     },
-    mounted() {
-          console.log('hhh',this.status);
-          console.log('aaa',this.payment_status);
-    },
+    mounted() {},
     data(){
       return {
         Core,
