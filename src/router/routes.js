@@ -749,7 +749,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '工单列表',
-                    title_en: 'Warranty Claim list',
+                    title_en: 'Warranty Claim',
                     auth: ['repair-order.list'],
                 }
             },
