@@ -320,6 +320,21 @@
                         </a-select>
                     </div>
                 </div>
+                <!-- 分销商 账户余额 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.account_balance') }}:</div>
+                    <div class="value">
+                        <a-input-number
+                            v-model:value="form.accountBalance"
+                            style="width: 120px"
+                            min="0"
+                            :max="accountMoney"
+                            :precision="2"
+                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"                             
+                        />
+                    </div>
+                </div>
+                <!-- 金额 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('ac.money') }}：</div>
                     <div class="value">
@@ -327,16 +342,15 @@
                             v-model:value="form.payment"
                             style="width: 120px"
                             :min="0"
-                            :max="((detail.freight||0) + detail.price-detail.payment)/100"
+                            :max="(((detail.freight||0) + detail.price - detail.payment)/100 - form.accountBalance).toFixed(2)"
                             :precision="2"
                             :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
                             placeholder="0.00"
-                        />
-                        <!-- <span>{{$Util.priceUnitFilter(detail.currency)}}</span> -->
+                        />                        
                     </div>
                 </div>
-                <div class="form-item img-upload">
-                    <div class="key">xxx{{ $t('p.attachment') }}</div>
+                <div class="form-item img-upload required">
+                    <div class="key">{{ $t(/*上传付款凭证*/'p.upload_payment_voucher') }}</div>
                     <div class="value">
                         <!-- <a-upload name="file" class="image-uploader"-->
                         <!--     list-type="picture-card" accept='image/*'-->
@@ -361,7 +375,7 @@
                         <!-- <div class="tip">{{ $t('n.size') }}：800*800px</div>-->
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}：</div>
                     <div class="value">
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
@@ -670,7 +684,9 @@ export default {
                 audit_result: '',
                 target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
                 payment: '', // 收款金额
+                accountBalance: '', // 账户余额
             },
+            accountMoney: 0, // 账户的余额用来约束
             editForm: {
                 distributor_id: undefined,
             },
@@ -840,7 +856,7 @@ export default {
         this.getList();
 
         this.getWarehouseList();
-        // this.getWaybillDetail()
+        // this.getWaybillDetail()        
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -1074,10 +1090,13 @@ export default {
 
         // 弹出弹框
         handleModalShow(val) {
-            Object.assign(this.form, this.$options.data().form)
+            if(val != 'payment'){
+                Object.assign(this.form, this.$options.data().form)
+            }
             switch (val) {
                 case "payment":
                     this.paymentShow = true
+                    this.getWalletDetail()  // 钱包详情          
                     break;
                 case "out_stock":
                     this.outStockShow = true
@@ -1122,7 +1141,8 @@ export default {
             });
         },
         // 确认收款
-        handlePayment() {
+        handlePayment() {   
+            console.log(this.form);
             this.loading = true
             let form = Core.Util.deepCopy(this.form)
             if (!form.path) {
@@ -1131,7 +1151,7 @@ export default {
             if (!form.pay_method) {
                 return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
-            if (!form.payment) {
+            if (!form.payment && !form.accountBalance) {
                 return this.$message.warning(this.$t('p.enter_payment'))
             }
 
@@ -1140,10 +1160,11 @@ export default {
                 Core.Api.Purchase.payment({
                     id: this.id,
                     pay_method: form.pay_method,
-                    payment: form.payment * 100,
+                    payment: Core.Util.countFilter(form.payment, 100, 0,true),
                     imgs: form.path,
                     img_type: form.type,
-                    remark: form.remark
+                    remark: form.remark,
+                    wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0,true)
                 }).then(res => {
                     this.$message.success(this.$t('p.payment_success'))
                     this.getList()
@@ -1268,7 +1289,7 @@ export default {
             });
         },
         // 取消采购
-        handleCancel() {
+        handleCancel() {            
             let _this = this
             this.$confirm({
                 title: _this.$t('p.sure_cancel'),
@@ -1481,8 +1502,19 @@ export default {
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
+        },        
+        // 经销商钱包详情
+        getWalletDetail() {            
+            Core.Api.Distributor.detail({
+                id: Core.Data.getOrgId()
+            }).then(res => {
+                // console.log('getWalletDetail res', res)
+                this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance)  
+                this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
+            }).catch(err => {
+                console.log('getTableData err', err)
+            })
         },
-
     }
 };
 </script>

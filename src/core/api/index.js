@@ -177,6 +177,7 @@ const apiList = {
         listByPurchase: ['PostJson', 'invoice/list-by-purchase'],
         updatePI: ['PostJson', 'invoice/update-pi'], // 修改pi
         detailByItemUid: ['PostJson', 'invoice/detail-by-item-uid'], // 修改pi
+        generateMaterialRequisition: ['PostJson', 'invoice/generate-material-requisition'], // 一键领料
 
     },
     InvoiceItem: {
@@ -424,7 +425,10 @@ const apiList = {
         save: ['PostJson', 'distributor/save'],
         listAll: ['PostJson', 'distributor/list-name'], //选择用的 名称列表 无分页
         detail: ['PostJson', 'distributor/detail'],
+        detailUpdate: ['PostJson', 'distributor/detail-update'],
         updateStatus: ['PostJson', 'distributor/update-status'], //修改状态
+        walletMoneyList: ['PostJson', 'wallet-money/list'], //钱包余额明细列表
+        walletDetail: ['PostJson', 'wallet/detail'], //钱包详情
     },
     Fault: { // 产品故障管理
         list: ['PostJson', 'item-fault/list'],
@@ -471,6 +475,7 @@ const apiList = {
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
         calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
+	    vehicleAdd: ['PostJson', 'production-order/vehicle-add']
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],
@@ -646,6 +651,7 @@ const apiList = {
 		batchTransfer: ['PostJson', 'crm-customer/batch-transfer'],
 		checkPhone: ['PostJson', 'crm-customer/check-phone'],
 		checkEmail: ['PostJson', 'crm-customer/check-email'],
+        toDoList: ['PostJson', 'crm-customer/to-do-list'],
 	},
 	CRMBo:{//CRM 商机
 		save: ['PostJson', 'crm-bo/save'],//
@@ -659,6 +665,7 @@ const apiList = {
 		reactivation: ['PostJson', 'crm-bo/reactivation'],
 		batchTransfer: ['PostJson', 'crm-bo/batch-transfer'],
 		batchDelete: ['PostJson', 'crm-bo/batch-delete'],
+        toDoList: ['PostJson', 'crm-bo/to-do-list'],
 	},
 	CRMOrderIncome:{//CRM 回款单
 		save: ['PostJson', 'crm-order-income/save'],//
@@ -680,7 +687,7 @@ const apiList = {
 		delete: ['PostJson', 'crm-track-member/delete'],//
 		batchSave: ['PostJson', 'crm-track-member/batch-save'],//
 		getTargetByUserId: ['PostJson', 'crm-track-member/get-target-by-user-id'],//
-		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//                
+		savePermissions: ['PostJson', 'crm-track-member/save-permissions'],//
         joinUserList:['PostJson', 'crm-track-member/join-user-list'], // 负责人列表
 	},
 	CRMLabel:{//CRM 标签
@@ -766,7 +773,10 @@ const apiList = {
 		purchaseIntentStatistics: ['PostJson', 'crm-dashboard/purchase-intent-statistics'],// 商机统计
 		testDriveIntentStatistics: ['PostJson', 'crm-dashboard/test-drive-intent-statistics'],// 商机统计
 		performanceList: ['PostJson', 'crm-dashboard/performance-list'],// 业绩榜单
-
+		customerStatistics: ['PostJson', 'crm-dashboard/customer-statistics'],// 客户来源分布
+		carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
+		customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
+		transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
 
 		employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
 	},
@@ -777,7 +787,19 @@ const apiList = {
     },
     MoneyChange:{
         switch:['PostJson', 'crm-order/switch-currency']
+    },
+    Inventory:{
+        list: ['PostJson','inventory/list'], // 存货列表
+        save: ['PostJson','inventory/save'], // 新增存货档案
+        detail: ['PostJson','inventory/detail'], // 存货档案详情
+        delete: ['PostJson','inventory/delete'], // 删除存货档案
+    },
+    // CRM 试驾单
+    CRMTESTDRIVE:{
+        userEmail:['PostJson', 'crm-test-drive-order/reset-email-to-user'],
+        storeEmail:['PostJson', 'crm-test-drive-order/reset-email-to-store']
     }
+
 };
 
 export default new Api(baseUrl, apiList);

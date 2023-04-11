@@ -116,6 +116,9 @@
                         <a-tab-pane key="AttachmentsList" :tab="$t('n.attachment_list')">
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
+                        <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">
+                            <CrmCustomerDetail  v-if="id>0" :id="detail.customer_id" ref ="CrmCustomerDetail"/>
+                        </a-tab-pane>
                     </a-tabs>
                 </div>
             </a-col>
@@ -199,14 +202,14 @@ import dayjs from "dayjs";
 import {get} from "lodash";
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
 import CrmOrderIncome from '@/components/crm/panel/CrmOrderIncome.vue';
-
+import CrmCustomerDetail from '../../components/crm/panel/CrmCustomerDetail.vue';
 import {
     UserOutlined,
 } from '@ant-design/icons-vue';
 import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'OrderDetail',
-    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList},
+    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList,CrmCustomerDetail},
     props: {},
     data() {
         return {

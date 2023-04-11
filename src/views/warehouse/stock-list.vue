@@ -19,7 +19,7 @@
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('wa.product_type') }}:</div>
                     <div class="value">
-                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleSearch" allowClear>
+                        <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleTargetTypeSearch" allowClear>
                             <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">{{
                                     val[$i18n.locale]
                                 }}
@@ -41,6 +41,7 @@
                             @search="handleItemSearch"
                             @change="handleItemChange"
                             allowClear
+                            :disabled="searchForm.target_type === undefined"
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
                                 {{$t("p.code")+ ":" + item.code }}-{{$t("r.name")+ ":" + (item.name ? lang =='zh' ? item.name : item.name_en : '-')}}
@@ -61,6 +62,7 @@
                             :not-found-content="null"
                             @search="handleItemNameSearch"
                             @change="handleItemChange"
+                            :disabled="searchForm.target_type === undefined"
                             allowClear
                         >
                             <a-select-option v-for=" item in itemOptions" :key="item.id" :value="item.id">
@@ -242,7 +244,7 @@ export default {
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
-                        query: {id: item.material.id}
+                        query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -256,6 +258,10 @@ export default {
             console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
+        },
+        handleTargetTypeSearch(){
+            this.searchForm.target_id = undefined;
+            this.handleSearch()
         },
         handleSearch() {  // 搜索
             this.pageChange(1);
@@ -293,7 +299,7 @@ export default {
             })
         },
         handleItemChange(){
-            this.searchForm.target_type = undefined
+            // this.searchForm.target_type = undefined
         },
         handleExport() { // 订单导出
             this.exportDisabled = true;

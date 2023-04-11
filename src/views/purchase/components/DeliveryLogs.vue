@@ -203,7 +203,7 @@
                         </div>
                     </div>
                 </template>
-                <div class="form-item required">
+                <div class="form-item required" v-if="detail.type === PURCHASE.TYPE.PRE_SALES">
                     <div class="key">{{ $t('p.freight') }}:</div>
                     <div class="value">
                         <a-input-number
@@ -291,6 +291,7 @@ import Core from '../../../core';
 
 const USER_TYPE = Core.Const.USER.TYPE;
 const WAYBILL = Core.Const.WAYBILL;
+const PURCHASE = Core.Const.PURCHASE;
 
 import ItemTable from '@/components/table/ItemTable.vue';
 import dayjs from "dayjs";
@@ -314,6 +315,7 @@ export default {
         return {
             Core,
             USER_TYPE,
+            PURCHASE,
             // 加载
             loading: false,
             activeKey: [],
@@ -387,10 +389,13 @@ export default {
         },
         tableColumns() {
             let columns = [
-                {title: this.$t('n.name'), dataIndex: ['item', 'name'], key: 'detail'},
-                {title: this.$t('i.categories'), dataIndex: ['item', 'name']},
-                {title: this.$t('i.number'), dataIndex: ['item', 'category', 'name'], key: 'item'},
-                {title: this.$t('i.code'), dataIndex: ['item', 'code'], key: 'item'},
+                {title: this.$t('n.name'),dataIndex: 'item_name', key: 'name'},
+                // {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
+                // {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
+                // {title: this.$t('n.name'), dataIndex: ['item', 'name'], key: 'detail'},
+                // {title: this.$t('i.categories'), dataIndex: ['item', 'name']},
+                // {title: this.$t('i.number'), dataIndex: ['item', 'category', 'name'], key: 'item'},
+                {title: this.$t('i.code'), dataIndex: "item_code", key: 'item'},
 
                 {title: this.$t('i.deliver_amount'), dataIndex: 'amount', key: 'count'},
             ]
@@ -560,7 +565,7 @@ export default {
                     {key: 'port', msg: this.$t('p.enter_harbor')},
                     {key: 'delivery_address', msg: this.$t('p.fill_address')},
                     {key: 'delivery_time', msg: this.$t('wb.delivery_time')},
-                    {key: 'freight', msg: this.$t('p.enter_freight')},
+                    // {key: 'freight', msg: this.$t('p.enter_freight')},
                     {key: 'waybill', msg: this.$t('n.tracking_number')},
                     {key: 'entry_bill_no', msg: this.$t('wb.entry_bill_no')},
                     {key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no')},

@@ -11,13 +11,13 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='50'/>
+                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='60'/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_en_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='50'/>
+                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='60'/>
                     </div>
                 </div>
                 <div class="form-item">
@@ -28,7 +28,8 @@
                             :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
                     </div>
                 </div>
-                <div class="form-item">
+                <!-- 物料编码 -->
+                <div class="form-item required">
                     <div class="key">{{ $t('m.material_code') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.code" :placeholder="$t('n.enter')+$t('m.material_code')"/>
@@ -61,7 +62,8 @@
                         </a-upload>
                     </div>
                 </div>
-                <div class="form-item">
+                <!-- 装箱数 -->
+                <div class="form-item required">
                     <div class="key">{{ $t('m.boxes') }}</div>
                     <div class="value">
                         <a-input-number v-model:value="form.pack_count" :placeholder="$t('n.enter')" />{{ $t('m.pcs') }}
@@ -235,35 +237,17 @@ export default {
         // 保存时检查表单输入
         checkFormInput(form) {
             if (!form.name) {
-                return this.$message.warning('请输入物料名称')
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_name')}`)
             }
             if (!form.name_en) {
-                return this.$message.warning('请输入物料英文名')
-            }
-            if (!form.category_id) {
-                return this.$message.warning('请选择物料分类')
-            }
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_en_name')}`)
+            }       
             if (!form.code) {
-                return this.$message.warning('请输入物料编码')
-            }
-            if (!form.spec) {
-                return this.$message.warning('请输入物料规格')
-            }
-            if (!form.unit) {
-                return this.$message.warning('请输入单位')
-            }
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_code')}`)
+            }           
             if (!form.pack_count) {
-                return this.$message.warning('请输入最小装箱数')
-            }
-            if (!form.color) {
-                return this.$message.warning('请输入颜色')
-            }
-           /* if (!form.image) {
-                return this.$message.warning('请上传图片')
-            }*/
-          /*  if (!form.encapsulation) {
-                return this.$message.warning('请输入物料包装')
-            }*/
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.boxes')}`)
+            }                    
             return 0
         },
 

@@ -102,6 +102,7 @@ export default {
                     type: 'img',
                 },
             },
+            attachmentEmpty: true,
         };
     },
     computed: {
@@ -136,6 +137,13 @@ export default {
             }).then(res => {
                 console.log("AttachmentFile res", res)
                 this.tableData = res.list
+                if(res.list.length === 0) {
+                    this.attachmentEmpty = true
+                    this.$emit('attachmentEmpty',this.attachmentEmpty)
+                }else {
+                    this.attachmentEmpty = false
+                    this.$emit('attachmentEmpty',this.attachmentEmpty)
+                }
             }).catch(err => {
                 console.log('AttachmentFile err', err)
             }).finally(() => {

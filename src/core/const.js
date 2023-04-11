@@ -24,18 +24,21 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
         break;
 
-	case "10.0.0.207":
-		URL_POINT = 'http://10.0.0.207:8889'
+	case "10.0.0.213":
+		URL_POINT = 'http://10.0.0.213:8889'
 		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     case "10.0.0.107":
-        URL_POINT = 'http://10.0.0.107:8889'
+        URL_POINT = 'http://eos-dev-api.horwincloud.com'
+        break;
+    case "10.0.0.245":
+        URL_POINT = 'http://10.0.0.213:8889'
         break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-        // URL_POINT = 'http://10.0.0.205:8889'
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
+        // URL_POINT = 'http://10.0.0.131:8889' // yzy   
         break;
 }
 
@@ -281,6 +284,7 @@ let Const = {
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
             { zh: '开箱损', en: 'dead on arrival', value: 3 },
+            { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -386,6 +390,13 @@ let Const = {
             PASS: 1,
             REFUSE: 2
         },
+        // 工单审核
+        COMPENSATION:{
+            COMPENSATION_METHOD:{
+                '1' : { value: 1,}, // 赔付方式 赔付到配件
+                '2' : { value: 2,}, // 赔付方式 赔付到账户
+            }
+        }
     },
 	INVOICE_ITEM:{
 		TARGET_TYPE: {
@@ -886,6 +897,8 @@ let Const = {
         { list: [], select: [], key: 'material-purchase-order', name: '物料采购单'},
         { list: [], select: [], key: 'material', name: '物料' },
         { list: [], select: [], key: 'material-category', name: '物料分类' },
+	    { list: [], select: [], key: 'inventory', name: '存货档案' },
+	    { list: [], select: [], key: 'inventory-category', name: '存货分类' },
         { list: [], select: [], key: 'bom', name: 'BOM表' },
         { list: [], select: [], key: 'production-order', name: '生产单' },
         { list: [], select: [], key: 'message', name: '消息' },
@@ -935,6 +948,41 @@ let Const = {
 		    YES: 1,
 		    NO: 0,
 	    },
+    },
+    INVENTORY: {
+        TYPE: { //存货类型
+
+            FINISHED: 2, // 成品
+            ADVERTISING: 3, // 广宣产品
+            PERIPHERAL: 4, // 周边产品
+            EXPENSE: 5, // 费用
+	        INVENTORY_MATERIAL: 6, // 物料
+        },
+        TYPE_MAP: {
+
+            '2': { key: 2, zh: '成品', en: 'Finished product' },
+            '3': { key: 3, zh: '广宣产品', en: 'Advertising products'},
+            '4': { key: 4, zh: '周边产品',en: 'Peripheral products'},
+            '5': { key: 5, zh: '费用',en: 'Expense'},
+	        '6': { key: 6, zh: '物料', en: 'Material'},
+        },
+        IS_PRODUCTION_CONSUMPTION: { // 是否生产耗用
+		    YES: 1,
+		    NO: 0,
+	    },
+        IS_OUTSOURCING: { // 是否委外
+		    YES: 1,
+		    NO: 0,
+	    },
+        IS_BATCH: { // 是否有批次
+		    YES: 1,
+		    NO: 0,
+	    },
+        FEATURE: { // 特征选配
+		    YES: 1,
+		    NO: 0,
+	    },
+
     },
 	STOCK: {
 		TARGET_TYPE: {
@@ -1013,11 +1061,12 @@ let Const = {
         },
         SOURCE_TYPE_ADMIN_MAP: {
             '10': {key: 10, zh: '管理员操作', en: 'Admin action', color: 'yellow'},
+	        '15': {key: 15, zh: '生产单',en: 'Production order', color: 'yellow'},
 	        '20': {key: 20, zh: '采购单', en: 'Purchase order', color: 'orange'},
             '30': {key: 30, zh: '售后单', en: 'After-sale order', color: 'yellow'},
-            // '40': {key: 40, zh: '调货单', en: 'Transfer order', color: 'blue'},
+            '40': {key: 40, zh: '调货单', en: 'Transfer order', color: 'blue'},
             '50': {key: 50, zh: '维修单', en: 'Repair order', color: 'orange'},
-            // '60': {key: 60, text: '物料采购单', color: 'yellow'},
+            '60': {key: 60, zh: '物料采购单', en: 'Material purchase order', color: 'yellow'},
             '70': {key: 70, zh: '仓库调货单', en: 'Warehouse transfer order', color: 'blue'},
         },
         SOURCE_TYPE_MAP: {
@@ -1578,6 +1627,10 @@ let Const = {
 			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
 			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
 		},
+        CUSTOMER_MAP: {
+            '10': { key: 10, zh: '私人客户',en: 'Private client', value: 10 },
+			'40': { key: 40, zh: '公海客户',en: 'High seas customers', value: 40 },
+        },
         // PAID_MONEY_PROGRESS: {
         //     0_20: 1,        // 回款进度 0%-20%
         //     20_40: 2,       // 回款进度 20%-40%
@@ -1658,6 +1711,7 @@ let Const = {
             '70': { key: 70, zh: '已支付订金',en: 'Deposit paid', value: 70 },
             '80': { key: 80, zh: '已试驾',en: 'Test drive', value: 80 },
             '90': { key: 90, zh: '已购',en: 'Purchased', value: 90 },
+	        '100': { key: 100, zh: '预约试驾',en: 'Book a test drive', value: 100 },
         },
 		TARGET_TYPE: {
 			CUSTOMER: 1,
@@ -1666,6 +1720,16 @@ let Const = {
 			ORDER_INCOME:4,
 		},
 	},
+    CRM_TODO: {
+        STATUS: {
+            PENDING: 100,
+            TIME_OUT: 110,
+        },
+        STATUS_MAP: {
+            '100': { key: 100, zh: '待完成',en: 'Pending', value: 100 },
+            '110': { key: 110, zh: '超时',en: 'Time out', value: 110 },
+        },
+    },
 	CRM_TRACK_MEMBER: {
 		TARGET_TYPE: {
             CUSTOMER: 1,      // 1客户
@@ -2005,6 +2069,38 @@ let Const = {
         TYPE:{
             DOLLAR:1,
             EURO:2
+        }
+    },
+    // 语言
+    language:{
+        '1': { key: 1, zh: '中文', en: 'Chinese'},
+        '2': { key: 2, zh: '英文', en: 'English'},
+    },
+    // 试驾单
+    test_drive:{
+        test_drive_status: {
+            '0': { key: 0, zh: '未联系',en: 'uncontacted' },
+            '5': { key: 5, zh: '已联系',en: 'Have contacted' },
+            '10': { key: 10, zh: '预约试驾',en: 'Make drive' },
+            '20': { key: 20, zh: '试驾中',en: 'Appointment in progress' },
+            '30': { key: 30, zh: '已试驾',en: 'tested' },
+            '40': { key: 40, zh: '过期未试驾',en: 'No test drive due' },
+        },
+        appointment_channel:{
+            '10': { key: 10, zh: '销售录入', en: 'sales entry'},
+            '20': { key: 20, zh: '官网预约', en: 'appointment website'},
+        }
+    },
+    // 日期
+    DATATIMES:{
+        week:{
+            '1': { key: 1, zh: '周一',en: 'Monday' },
+            '2': { key: 2, zh: '周二',en: 'Tuesday' },
+            '3': { key: 3, zh: '周三',en: 'Wednesday' },
+            '4': { key: 4, zh: '周四',en: 'Thursday' },
+            '5': { key: 5, zh: '周五',en: 'Friday' },
+            '6': { key: 6, zh: '周六',en: 'Saturday' },
+            '7': { key: 7, zh: '周日',en: 'Sunday' },
         }
     }
 };

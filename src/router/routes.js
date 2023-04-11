@@ -749,7 +749,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '工单列表',
-                    title_en: 'Work order list',
+                    title_en: 'Warranty Claim',
                     auth: ['repair-order.list'],
                 }
             },
@@ -759,7 +759,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审工单',
-                    title_en: 'Pending work order',
+                    title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'audit',
                     auth: ['repair-order.audit'],
@@ -771,7 +771,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待改工单',
-                    title_en: 'Pending work order',
+                    title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     type: 'redit',
                     auth: ['repair-order.save'],
@@ -1465,6 +1465,53 @@ const routes = [
             },*/
         ]
     },
+    { // 存货管理
+        path: '/inventory',
+        component: Layout,
+        redirect: '/inventory/inventory-list',
+        name: 'InventoryManagement',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
+        meta: {
+            title: '存货管理',
+            title_en: 'Stock Control',
+            icon: 'i_s_warehouse',
+            roles: [LOGIN_TYPE.ADMIN],
+            auth: ['inventory.list'],
+        },
+        children: [
+            {
+                path: 'inventory-list',
+                name: 'InventoryList',
+                component: () => import('@/views/inventory/inventory-list.vue'),
+                meta: {
+                    title: '存货档案',
+                    title_en: 'Inventory Files',
+	                auth: ['inventory.list'],
+                }
+            },
+	        {
+		        path: 'inventory-category',
+		        name: 'InventoryCategory',
+		        component: () => import('@/views/inventory/inventory-category.vue'),
+		        meta: {
+			        title: '存货分类',
+			        title_en: 'Inventory Category',
+			        auth: ['inventory-category.list'],
+		        }
+	        },
+            {
+                path: 'inventory-edit',
+                name: 'InventoryEdit',
+                component: () => import('@/views/inventory/inventory-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '存货档案编辑',
+                    parent: '/inventory/inventory-edit',
+	                auth: ['inventory.edit'],
+                }
+            },
+        ]
+    },
     { // 账户管理
         path: '/wallet',
         component: Layout,
@@ -1605,7 +1652,7 @@ const routes = [
 			{
 				path: 'private-customer-list',
 				name: 'PrivateCustomerList',
-				component: () => import('@/views/crm-customer/customer-list.vue'),
+				component: () => import('@/views/crm-customer/customer-list-copy1.vue'),
 				meta: {
 					title: '我的客户',
 					title_en: 'My Customers',
@@ -1616,7 +1663,7 @@ const routes = [
 			{
 				path: 'customer-list',
 				name: 'CustomerList',
-				component: () => import('@/views/crm-customer/customer-list.vue'),
+				component: () => import('@/views/crm-customer/customer-list-copy2.vue'),
 				meta: {
 					title: '未分配客户',
 					title_en: 'Unassigned Customers',
@@ -1751,6 +1798,17 @@ const routes = [
                 }
             },
 			{
+				path: 'order-pool-list',
+				name: 'OrderPoolList',
+				component: () => import('@/views/crm-order/order-pool-list.vue'),
+				meta: {
+					title: '公海列表',
+					title_en: 'Pool List',
+					auth: ["crm-order.list"],
+				}
+			},
+
+			{
 				path: 'order-edit',
 				name: 'OrderEdit',
 				component: () => import('@/views/crm-order/order-edit.vue'),
@@ -1847,7 +1905,7 @@ const routes = [
 		},
 		children: [
 			{
-				path: 'order-income-list',
+				path: 'test-drive-list',
 				name: 'TestDriveList',
 				component: () => import('@/views/crm-test-drive-order/test-drive-list.vue'),
 				meta: {
@@ -1863,22 +1921,21 @@ const routes = [
 				meta: {
 					hidden: true,
 					title: '新建试驾单',
-					parent: '/crm-order-income/order-income-list',
+					parent: '/crm-test-drive-order/test-drive-list',
 					auth: ["crm-test-drive-order.save"],
 				}
 			},
-			// {
-			// 	path: 'test-drive-detail',
-			// 	name: 'TestDriveDetail',
-			// 	component: () => import('@/views/crm-order-income/test-drive-detail.vue'),
-			// 	meta: {
-			// 		hidden: true,
-			// 		title: '试驾单详情',
-			// 		title_en: 'Business opportunities phase',
-			// 		parent: '/crm-order-income/order-income-list',
-			// 		auth: ["crm-order-income.detail"],
-			// 	}
-			// },
+			{
+				path: 'test-drive-detail',
+				name: 'TestDriveDetail',
+				component: () => import('@/views/crm-test-drive-order/test-drive-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '试驾订单',
+					parent: '/crm-test-drive-order/test-drive-list',
+					auth: ["crm-test-drive-order.save"],
+				}
+			}
 		]
 	},
     { // 智能标签

@@ -620,7 +620,7 @@ const Util = {
 		return value[to] || '-'
 	},
     refundOrderStatusFilter(val, to='zh') {
-        const MAP = Const.REFUND.REFUND_STATUS_MAP
+        const MAP = Const.AFTERSALES.REFUND_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
@@ -691,6 +691,11 @@ const Util = {
     },
     warehouseTypeFilter(val, to='zh') {
         const MAP = Const.WAREHOUSE.TYPE_MAP
+        const item = MAP[val] || {}
+        return item[to] || '未知'
+    },
+    inventoryTypeFilter(val, to='zh') {
+        const MAP = Const.INVENTORY.TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
@@ -1119,13 +1124,25 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-
-
-
-
-
+    CRMTestDriveStatusCycFilter(val,  to='zh') {
+		const MAP = Const.test_drive.test_drive_status
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+    CRMTestDriveSourceFilter(val,  to='zh') {
+		const MAP = Const.test_drive.appointment_channel
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 
 	/* =============== 试驾单 ================ */
+    /* =============== 待办事项 ================ */
+    CRMToDoStatusFilter(val,  to='zh') {
+        const MAP = Const.CRM_TODO.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 待办事项 ================ */
     /* =============== 测试报告 ================ */
     testCaseNameFilter(id, type) {
         const TAR = Const.TEST.TYPE_CASE_MAP[type + ''] || {}

@@ -10,18 +10,21 @@
             <div class="title">{{ $t('n.information') }}</div>
         </div>
         <div class="form-content">
+            <!-- 名称 -->
             <div class="form-item required">
                 <div class="key">{{ $t('n.name') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
+            <!-- 英文名 -->
             <div class="form-item required">
                 <div class="key">{{ $t('n.name_en') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
+            <!-- 类型 -->
             <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('n.type') }}</div>
                 <div class="value">
@@ -30,6 +33,7 @@
                     </a-radio-group>
                 </div>
             </div>
+            <!-- 实例编码 -->
             <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('n.flag_entity') }}</div>
                 <div class="value">
@@ -38,18 +42,21 @@
                     </a-radio-group>
                 </div>
             </div>
+            <!-- 商品品号 -->
             <div class="form-item required" v-if="!indep_flag">
                 <div class="key">{{ $t('i.number') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.model" :placeholder="$t('def.input')"/>
                 </div>
             </div>
+            <!-- 商品编码 -->
             <div class="form-item required" v-if="specific.mode === 1 || indep_flag">
                 <div class="key">{{ $t('i.code') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.code" :placeholder="$t('def.input')"/>
                 </div>
             </div>
+            <!-- 商品分类 -->
             <div class="form-item required">
                 <div class="key">{{ $t('i.categories') }}</div>
                 <div class="value">
@@ -57,6 +64,7 @@
                         :category='item_category' :category-id='form.category_ids' v-if="form.id !== ''"/>
                 </div>
             </div>
+            <!-- 工时 -->
             <div class="form-item required">
                 <div class="key">{{ $t('i.hours') }}</div>
                 <div class="value input-number">
@@ -64,12 +72,20 @@
                     <span>hour</span>
                 </div>
             </div>
+            <!-- 销售区域 -->
             <div class="form-item required">
                 <div class="key">{{ $t('d.sales_area') }}</div>
                 <div class="value">
                     <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder="$t('def.select')">
                         <a-select-option v-for="(val,key) in salesList" :key="key" :value="val.id">{{ val.name }}</a-select-option>
                     </a-select>
+                </div>
+            </div>
+            <!-- 图面代号 -->
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('d.drawing_code') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
                 </div>
             </div>
             <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
@@ -412,7 +428,7 @@ export default {
                 id: '',
                 name: '',
                 name_en: '',
-                type:'',
+                type:1,
                 code: '',
                 model: '',
                 logo: '',
@@ -424,7 +440,8 @@ export default {
                 original_price: undefined,
                 config: '',
                 man_hour: '',
-                sales_area_ids: undefined,
+                sales_area_ids: [],
+                drawing_code: "",
                 fob_eur: '',
                 fob_usd: '',
                 accessory_id:'',
@@ -619,6 +636,7 @@ export default {
             // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
+            this.form.drawing_code = res.drawing_code
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
                 this.upload.coverList = logos.map((item, index) => ({
@@ -807,37 +825,52 @@ export default {
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
+            // 名称
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.name')})`)
             }
+            // 英文名
+            if (!form.name_en) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.name_en')})`)
+            }
+            // 类型
             if (!form.type) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.type')})`)
+            }            
+            // 实例编码 否 0 是 1
+            if (form.flag_entity != 0 && form.flag_entity != 1) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
             }
+            // 商品品号
             if (!form.model) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.number')})`)
             }
-            if (!form.category_ids) {
-                return this.$message.warning(this.$t('def.enter'))
+            // 商品编码
+            if (!form.code) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.code')})`)
+            }   
+            // 商品分类                 
+            if (!form.category_ids.length) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.categories')})`)
             }
-           /* if (!form.man_hour) {
-                return this.$message.warning('请输入工时')
-            }*/
-            if (!form.sales_area_ids) {
-                return this.$message.warning(this.$t('def.enter'))
+            // 工时
+            if (!form.man_hour) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.hours')})`)
             }
+            // 销售区域            
+            if (!form.sales_area_ids.length) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`)
+            }     
+            // 图面代号
+            if(form.type == 1){
+                if (!form.drawing_code) {
+                    return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
+                }
+            }   
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.code) {
                     return this.$message.warning(this.$t('def.enter'))
-                }
-                /* if (!form.price) {
-                    return this.$message.warning('请输入商品建议零售价')
-                }
-                if (!form.original_price) {
-                    return this.$message.warning('请输入商品成本价格')
-                }
-                if (form.original_price > form.price) {
-                    return this.$message.warning('商品成本价格应小于商品建议零售价')
-                } */
+                }         
                 if (!form.fob_eur) {
                     return this.$message.warning(this.$t('def.enter'))
                 }
@@ -864,16 +897,7 @@ export default {
                     const item = specData[i];
                     if (!item.code) {
                         return this.$message.warning(this.$t('def.enter'))
-                    }
-                    /* if (!item.price) {
-                        return this.$message.warning('请输入商品建议零售价')
-                    }
-                    if (!item.original_price) {
-                        return this.$message.warning('请输入商品成本价格')
-                    }
-                    if (item.original_price > item.price) {
-                        return this.$message.warning('商品成本价格应小于商品建议零售价')
-                    } */
+                    }                  
                     if (!item.fob_eur) {
                         return this.$message.warning(this.$t('def.enter'))
                     }

@@ -46,14 +46,14 @@
                     </a-radio-group>
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.warranty') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
-                        <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
+           <div class="form-item required">
+               <div class="key">{{ $t('r.warranty') }}</div>
+               <div class="value">
+                   <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
+                       <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
+                   </a-radio-group>
+               </div>
+           </div>
             <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
             <div class="form-item required">
                 <div class="key">{{ $t('r.repair_name') }}</div>
@@ -96,13 +96,14 @@
             <div class="form-item required">
                 <div class="key">{{ $t('search.vehicle_no') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>
-
+                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" />
+<!--                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>-->
                 </div>
-                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>
-                <span class="not_exist" v-else-if="isExist == 2"><i class="icon i_close_c"/>{{$t('r.vehicle_not_exist')}}</span>
+<!--                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>-->
+<!--                <span class="not_exist" v-else-if="isExist == 2"><i class="icon i_close_c"/>{{$t('r.vehicle_not_exist')}}</span>-->
             </div>
-            <div class="form-item" v-if="form.vehicle_no && isExist == 1">
+            <div class="form-item" v-if="form.vehicle_no ">
+<!--                <div class="form-item" v-if="form.vehicle_no && isExist == 1">-->
                 <div class="key">{{ $t('r.arrival_time') }}</div>
                 <div class="value" >
                     {{ $Util.timeFilter(arrival_time) }}
@@ -433,9 +434,9 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
                 return 0
             }
-            if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             if (form.id) {
                 if (!form.customer_id) {
                     return this.$message.warning(this.$t('def.enter'))

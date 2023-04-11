@@ -126,7 +126,10 @@ export default {
         },
         // 已经添加到物料表中的ids
         checkedIds() {
+            console.log('addData:', this.addData)
+
             let checkedIds = this.addData.map(i => i.item.id)
+            // let checkedIds = []
             console.log('checkedIds:', checkedIds)
             console.log('addData', this.addData)
             return checkedIds
