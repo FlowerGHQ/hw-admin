@@ -452,6 +452,7 @@ const apiList = {
     Attachment: { // 附件管理
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],
+        saveList: ['PostJson', 'attachment/save-list'],
         delete: ['PostJson', 'attachment/delete'],
     },
     Wallet: { // 账户管理
