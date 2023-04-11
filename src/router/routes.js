@@ -759,7 +759,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待审工单',
-                    title_en: 'Pending warranty Claim',
+                    title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                     type: 'audit',
                     auth: ['repair-order.audit'],
@@ -771,7 +771,7 @@ const routes = [
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
                     title: '待改工单',
-                    title_en: 'Pending warranty Claim',
+                    title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
                     type: 'redit',
                     auth: ['repair-order.save'],
