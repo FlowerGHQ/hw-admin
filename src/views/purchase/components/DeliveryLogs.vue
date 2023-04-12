@@ -62,7 +62,7 @@
                 </div>
             </a-collapse-panel>
         </a-collapse>
-        <a-modal v-model:visible="modalShow" :title="$t('n.delivery_logs')" width='860px'>
+        <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width='860px'>
             <div class="modal-content">
                 <div class="table-container">
                     <ItemTable :columns="tableColumns" :data-source="tableData" :loading='modalLoading' v-if="modalShow"/>
