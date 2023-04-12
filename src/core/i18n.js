@@ -2765,7 +2765,7 @@ const messages = {
             clear:'Empty point',
             save_a:'Add a new point',
             point:'This picture point has been changed. Do you want to save?',
-            cart:'Add to cart',
+            cart:'Add into shopping cart',
             added:'Added to cart',
             shopping:'shopping cart',
             look:'Check the cart',
