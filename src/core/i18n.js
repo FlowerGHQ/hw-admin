@@ -2182,6 +2182,7 @@ const messages = {
         },
         // 试驾
         dis:{
+            test_drive_ticket_id: "试驾单编号",
             test_dispose:"试驾配置",
             vehicle_dispose:"车型配置",
             mail_dispose:"邮件配置",
@@ -4350,6 +4351,7 @@ const messages = {
         },
         // 试驾
         dis:{
+            test_drive_ticket_id: 'Test drive ticket number',
             test_dispose:"test dispose",
             vehicle_dispose:"vehicle dispose",
             mail_dispose:"mail dispose",
