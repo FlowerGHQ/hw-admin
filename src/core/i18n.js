@@ -419,6 +419,7 @@ const messages = {
             total_account: '账户总资产',
             balance: '账户可用余额',
             available_balance: '质保金余额',
+            detailed: '明细',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2665,6 +2666,7 @@ const messages = {
             total_account: 'Total account assets',
             balance: 'Balance',
             available_balance: 'Available balance',
+            detailed: 'detailed'
         },
         e: {
             employee_list: 'employee list',

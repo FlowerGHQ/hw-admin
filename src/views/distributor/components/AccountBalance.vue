@@ -18,7 +18,7 @@
             <div id="TestDriveIntentionChartId" class="chart" ref='TestDriveIntentionChartId'></div>
             <div class="balance-num"> {{$Util.priceUnitFilter(walletDetail.currency)}}{{ accountBalance }}</div>
             <div class="balance-use-num"> {{$Util.priceUnitFilter(walletDetail.currency)}}{{ availableBalance }}</div>
-            <a-button type="link" class="detail-btn" @click="handleGetDetail">明细 </a-button> 
+            <a-button type="link" class="detail-btn" @click="handleGetDetail">{{ $t(/*明细*/'d.detailed') }}</a-button> 
         </div>
 
     </div>
