@@ -373,7 +373,7 @@ export default {
     tableColumns() {
       let columns = [                                                     
 		// id
-		{ title: "dis.test_drive_ticket_id", dataIndex: "id", key: "id" },
+		{ title: "dis.test_drive_ticket_id", dataIndex: "uid", key: "uid" },
 		// 订单来源
 		{ title: "dis.order_source", dataIndex: "channel", key: "channel" },
 		// 创建时间  
