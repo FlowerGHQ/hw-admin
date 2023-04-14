@@ -585,7 +585,7 @@ export default {
         }
       });
     }
-    if (Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId();
+    if (Core.Data.getGroupId() && !this.form.group_id) this.form.group_id = Core.Data.getGroupId();
 	
   },
   methods: {
@@ -629,6 +629,7 @@ export default {
           this.form.phone_country_code = this.detail.phone_country_code;
           this.form.group_id = this.detail.group_id || "";
           this.form.channel = this.detail?.channel? this.detail?.channel:this.detail?.crm_test_drive_order?.channel; // 订单来源
+		//   console.log("测试group_id", this.detail.group_id);
         })
         .catch((err) => {
           console.log("getCustomerDetail err", err);

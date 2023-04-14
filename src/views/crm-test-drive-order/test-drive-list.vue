@@ -392,9 +392,9 @@ export default {
           sorter: true,
         },
 		// 用户邮箱
-		{ title: "dis.user_email", dataIndex: "user_email", key: "email" },
+		{ title: "dis.user_email", dataIndex: ['customer', 'email'], key: "email" },
 		// 用户手机号
-		{ title: "dis.user_phone", dataIndex: "user_phone", key: "phone" },
+		{ title: "dis.user_phone", dataIndex: ['customer', 'phone'], key: "phone" },
 		// 门店邮箱是否发送			
 		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent_store", key: "flag_mail_sent_store" },	
 		// 用户邮箱是否发送			
