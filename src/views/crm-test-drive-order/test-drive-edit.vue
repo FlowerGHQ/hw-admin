@@ -628,6 +628,7 @@ export default {
           this.form.country_code = this.detail.country_code;
           this.form.phone_country_code = this.detail.phone_country_code;
           this.form.group_id = this.detail.group_id || "";
+          this.form.channel = this.detail?.channel? this.detail?.channel:this.detail?.crm_test_drive_order?.channel; // 订单来源
         })
         .catch((err) => {
           console.log("getCustomerDetail err", err);
@@ -717,17 +718,17 @@ export default {
 	// 确定	
     handleSubmit() {
 		let formCopy = Core.Util.deepCopy(this.form);
-	
-
+		
+		
 		formCopy.drive_time = formCopy.drive_time
-			? dayjs(formCopy.drive_time).unix()
-			: 0; // 日期转时间戳
-			formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
-
-		if(this.checkInput(formCopy)) return    
-		  Core.Api.CRMTestDriveOrder.save({
-		    ...formCopy,
-		  }).then(() => {
+		? dayjs(formCopy.drive_time).unix()
+		: 0; // 日期转时间戳
+		formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
+		
+		if(this.checkInput(formCopy)) return		
+		Core.Api.CRMTestDriveOrder.save({
+		  ...formCopy,
+		}).then(() => {
 			this.$message.success(this.$t("pop_up.save_success"));
 			this.routerChange("back");
 		})
