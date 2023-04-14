@@ -271,10 +271,10 @@ export default {
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
             }
-            if (this.$i18n.locale === 'en'){
-                searchForm.name_en = searchForm.name;
-                searchForm.name = "";
-            }
+            // if (this.$i18n.locale === 'en'){
+            //     searchForm.name_en = searchForm.name;
+            //     searchForm.name = "";
+            // }
             this.loading = true;
             Core.Api.Item.list({
                 flag_spread: 0,
