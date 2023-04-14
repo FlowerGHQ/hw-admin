@@ -113,15 +113,16 @@
         <div class="form-item required">
           <div class="key">{{ $t("crm_c.group") }}：</div>
           <div class="value">
+			<!-- 防止后面需要禁用(要使用禁用就要判断两种情况一种是官网进来，一种是系统创建) 
+				:disabled="
+                (form.id > 0 || form.customer_id > 0) && form.group_id > 0
+              " -->
             <a-tree-select
               class="CategoryTreeSelect"
               v-model:value="form.group_id"
               :placeholder="$t('def.select')"
               :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-              :tree-data="groupOptions"
-              :disabled="
-                (form.id > 0 || form.customer_id > 0) && form.group_id > 0
-              "
+              :tree-data="groupOptions"              
               tree-default-expand-all
               @select="setGroupId"
             />
@@ -199,7 +200,13 @@
 		<div class="form-item">
           <div class="key">{{$t("dis.business_hours") }}：</div>
           <div class="value">   
-				{{ storeDetail?.business_time || "-"}}
+				<span v-if="storeDetail.business_time">
+					{{ $t('dis.morning') }}: {{JSON.parse(storeDetail.business_time)?.time.morning.begin}} - {{JSON.parse(storeDetail.business_time)?.time.morning.end}}
+					{{ $t('dis.afternoon') }}: {{JSON.parse(storeDetail.business_time)?.time.afternoon.begin}} - {{JSON.parse(storeDetail.business_time)?.time.morning.end}}
+				</span>
+				<span v-else>
+					-
+				</span>
           </div>
         </div>
 		<!-- 门店地址 -->	
@@ -620,7 +627,7 @@ export default {
           this.form.email = this.detail.email;
           this.form.country_code = this.detail.country_code;
           this.form.phone_country_code = this.detail.phone_country_code;
-          this.form.group_id = this.detail.group_id;
+          this.form.group_id = this.detail.group_id || "";
         })
         .catch((err) => {
           console.log("getCustomerDetail err", err);
@@ -689,10 +696,10 @@ export default {
 
 		  // 有门店选择的话渲染门店下面的信息
 		  if(this.form.store_id && this.form.store_id != ''){
-			  this.storeDetail = this.storeList.find(el => {				
+			  	this.storeDetail = this.storeList.find(el => {
 				  return el.id == this.form.store_id
-				})						
-				console.log("进来", this.storeDetail, this.form.store_id );
+				})
+				console.log("进来", this.storeDetail.business_time );
 		  }
           console.log("customer_id", res);
           this.getCustomerDetail(); // 用户详情
