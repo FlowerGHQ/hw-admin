@@ -738,6 +738,7 @@ export default {
     },
     routerChange(type, item = {}) {
 		let routeUrl = ''
+    let windowName = `window_${Date.now()}`;
 		switch (type) {
 			case "detail": // 编辑          
 				if(!this.$Util.isEmptyObj(item)){
@@ -745,16 +746,16 @@ export default {
 				}			
 				routeUrl = this.$router.resolve({
 					path: "/crm-customer/customer-detail",
-					query: {id: item.id}
+					query: {id: item.id, window: windowName}
 				})
-				window.open(routeUrl.href, '_block')
+				window.open(routeUrl.href, windowName)
 				break;
 			case "edit": // 编辑			
 				routeUrl = this.$router.resolve({
 					path: "/crm-customer/customer-edit",
-					query: { id: item.id, status: this.searchForm.status },
+					query: { id: item.id, status: this.searchForm.status, window: windowName },
 				})
-				window.open(routeUrl.href, '_block')
+				window.open(routeUrl.href, windowName)
 				break;
 		}
     },
