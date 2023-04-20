@@ -212,7 +212,7 @@ export default {
                         path: "/system/user-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_block')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
