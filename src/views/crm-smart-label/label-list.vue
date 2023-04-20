@@ -257,7 +257,7 @@ export default {
             path: "/crm-customer/customer-detail",
             query: { id: item.target_id },
           });
-          window.open(routeUrl.href, "_block");
+          window.open(routeUrl.href, "_blank");
           break;
         case Core.Const.CRM_LABEL.CATEGORY.BO:
           routeUrl = this.$router.resolve({
