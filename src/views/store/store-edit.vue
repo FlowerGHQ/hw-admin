@@ -16,7 +16,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
+                <div class="form-item"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
                     <div class="key">{{ $t('n.agent') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" :placeholder="$t('search.select_agent')">
@@ -37,7 +37,7 @@
                         <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('d.pay_type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
@@ -45,21 +45,21 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.contact') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 手机号 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 邮箱号 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.mail_number')}}:</div>
                     <div class="value">                        
                         <a-input v-model:value="form.contact_email" :placeholder="$t('def.input')"/>
@@ -122,7 +122,7 @@
                     </div>
                 </div>
                 <!-- 官网地址 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.store_website')}}:</div>
                     <div class="value">
                         <a-input v-model:value="form.official_website" :placeholder="$t('def.input')"/>
@@ -440,9 +440,9 @@ export default {
             if (!formCopy.distributor_id && this.$auth('ADMIN')) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             if (!formCopy.name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -452,16 +452,16 @@ export default {
             if (!formCopy.short_name) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-            if (!formCopy.contact_name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!formCopy.contact_phone) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.contact_name) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
+            // if (!formCopy.contact_phone) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             // 邮箱
-            if (!formCopy.contact_email) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.contact_email) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             // 门店地址
             if(!formCopy.country){
                 if (!(Object.values(this.areaMap).filter(i => i).length)) {
@@ -470,10 +470,10 @@ export default {
             }
             // 营业时间            
             if(this.workTimeFilter(formCopy)) return true
-            // 门店官网
-            if (!formCopy.official_website) {
-                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
-            }           
+            // // 门店官网
+            // if (!formCopy.official_website) {
+            //     return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
+            // }           
             // 区域
             if (!formCopy.group_id) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('crm_c.group')})`)
