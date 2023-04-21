@@ -811,6 +811,7 @@ const messages = {
             select_source:'请选择来源',
             inbound_o: '入库单',
             outbound_o: '出库单',
+	        sync_id: 'erp编码',
         },
         p: { // 采购订单
             list: '采购订单列表',
@@ -3055,6 +3056,7 @@ const messages = {
             select_source:'Please select the source',
             inbound_o:'Warehousing bill',
             outbound_o:'Ex-warehousing bill',
+	        sync_id: 'Erp UID',
         },
         p: {
             list:'Purchase order list',
