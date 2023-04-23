@@ -89,7 +89,7 @@
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item">
+                <div class="form-item required">
                     <div class="key">{{ $t('n.country') }}:</div>
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea'/>
@@ -255,9 +255,9 @@ export default {
                     return this.$message.warning(requireList[index].msg);
                 }
             }
-            // if (!area.country) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
+            if (!area.country) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
             if (!form.currency) {
                 return this.$message.warning(this.$t('def.enter'))
             }
