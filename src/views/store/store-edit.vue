@@ -389,15 +389,15 @@ export default {
 
             // 地区显示
             if (!Core.Util.isEmptyObj(this.areaMap)) {                
-                formCopy.country = this.areaMap.country.name              
+                formCopy.country = this.$i18n.locale == 'en'?this.areaMap.country.name_en:this.areaMap.country.name
                 if (this.areaMap.province) {
-                    formCopy.province = this.areaMap.province.name
+                    formCopy.province = this.$i18n.locale == 'en'?this.areaMap.province.name_en:this.areaMap.province.name
                 }
                 if(this.areaMap.city){
-                    formCopy.city = this.areaMap.city.name
+                    formCopy.city = this.$i18n.locale == 'en'?this.areaMap.city.name_en:this.areaMap.city.name
                 }
                 if(this.areaMap.county){
-                    formCopy.county = this.areaMap.county.name
+                    formCopy.county = this.$i18n.locale == 'en'?this.areaMap.county.name_en:this.areaMap.county.name
                 }
             }
             
