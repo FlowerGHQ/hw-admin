@@ -293,8 +293,8 @@
                 <div style="margin-top: 10px;" class="form-item textarea">
                     <div class="key">{{ $t('r.remark_a') }}:</div>
                     <div class="value" style="width: 350px;">
-                        <a-textarea 
-                            v-model:value="auditForm.audit_message" 
+                        <a-textarea
+                            v-model:value="auditForm.audit_message"
                             :placeholder="$t('r.input_remark')"
                             :auto-size="{ minRows: 2, maxRows: 6 }"
                             :maxlength='99'/>
@@ -642,9 +642,14 @@ export default {
         },
         handleRepairEnd() {
             let form = Core.Util.deepCopy(this.repairForm)
+            if (form.results == 0){
+                _this.handleRepairEndClose()
+                return
+            }
             if (!form.results) {
                 return this.$message.warning(_this.$t('r.repair_result'))
             }
+
             let _this = this;
             Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
                 _this.$message.success(_this.$t('pop_up.save_success'))

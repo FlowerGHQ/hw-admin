@@ -419,6 +419,7 @@ const messages = {
             total_account: '账户总资产',
             balance: '账户可用余额',
             available_balance: '质保金余额',
+            detailed: '明细',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2182,6 +2183,7 @@ const messages = {
         },
         // 试驾
         dis:{
+            test_drive_ticket_id: "试驾单编号",
             test_dispose:"试驾配置",
             vehicle_dispose:"车型配置",
             mail_dispose:"邮件配置",
@@ -2664,6 +2666,7 @@ const messages = {
             total_account: 'Total account assets',
             balance: 'Balance',
             available_balance: 'Available balance',
+            detailed: 'detailed'
         },
         e: {
             employee_list: 'employee list',
@@ -2765,7 +2768,7 @@ const messages = {
             clear:'Empty point',
             save_a:'Add a new point',
             point:'This picture point has been changed. Do you want to save?',
-            cart:'Add to cart',
+            cart:'Add into shopping cart',
             added:'Added to cart',
             shopping:'shopping cart',
             look:'Check the cart',
@@ -3110,8 +3113,8 @@ const messages = {
             audit:'Review',
             logistics:'Logistics information',
             confirm_delivery:'Confirm the delivery',
-            confirm_the_take_delivery:'confirm the receipt of goods',
-            take_delivery_detail:'Receiving details',
+            confirm_the_take_delivery:'Confirm receipt',
+            take_delivery_detail:'Shipping details',
             parent_sn:'Upper order number',
             update:'revise Order',
             update_PI:'revise PI',
@@ -4350,6 +4353,7 @@ const messages = {
         },
         // 试驾
         dis:{
+            test_drive_ticket_id: 'Test drive ticket number',
             test_dispose:"test dispose",
             vehicle_dispose:"vehicle dispose",
             mail_dispose:"mail dispose",

@@ -159,7 +159,7 @@ export default {
                         path: "/system/notice-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_block')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
