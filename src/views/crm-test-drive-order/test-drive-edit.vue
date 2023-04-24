@@ -109,6 +109,22 @@
             </div>
           </div>
         </div>
+		<!-- 语言 -->
+		<div class="form-item required">
+          <div class="key">{{ $t("dis.language") }}：</div>
+          <div class="value">
+            <a-select
+              v-model:value="form.language"
+              :placeholder="$t('def.input')"			  
+            >
+			<template v-for="(item, index) in language" :key="index" >
+               <a-select-option v-if="item.key !== 1" :value="item.key">					
+					{{ lang === "zh" ? item.zh : item.en }}
+				</a-select-option>						
+			</template>
+            </a-select>
+          </div>
+        </div>
 		<!-- 区域 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_c.group") }}：</div>
@@ -495,6 +511,7 @@ export default {
         Core.Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP,
 
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+	  language: Core.Const.language,
       // 加载
       loading: false,
       detail: {},
@@ -514,6 +531,7 @@ export default {
         birthday: undefined, // 生日        
 		    drive_time: undefined, // 试驾时间
         store_id: undefined, // 门店选择
+		language: undefined, // 语言
        
         //用户画像
         customer_portrait_id: undefined,
@@ -718,7 +736,7 @@ export default {
     /* methods */
 	// 确定	
     handleSubmit() {
-		let formCopy = Core.Util.deepCopy(this.form);
+		let formCopy = Core.Util.deepCopy(this.form);		
 		
 		
 		formCopy.drive_time = formCopy.drive_time
@@ -728,7 +746,7 @@ export default {
 		
 		if(this.checkInput(formCopy)) return		
 		Core.Api.CRMTestDriveOrder.save({
-		  ...formCopy,
+		  ...Core.Util.searchFilter(formCopy),
 		}).then(() => {
 			this.$message.success(this.$t("pop_up.save_success"));
 			this.routerChange("back");
@@ -788,12 +806,14 @@ export default {
     },
 	// form表单检查
 	checkInput(formCopy){
-		
 		if (!formCopy.name) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.name")})`);
 		}
 		if (!formCopy.phone) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.phone")})`);
+		}	
+		if (!formCopy.language) {
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("dis.language")})`);
 		}	
 		if (!this.$Util.ifPhoneFilter(formCopy.phone)) {
 			return this.$message.warning(this.$t("def.error_phone"));
@@ -804,10 +824,10 @@ export default {
 		}
 
 		if (!formCopy.group_id) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")} (${this.$t("crm_c.group")})`);
 		}
 		if (!formCopy.drive_time) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")} (${this.$t("crm_d.test_drive_time")})`);
 		}
 
 		return false

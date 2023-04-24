@@ -38,7 +38,7 @@ switch (window.location.hostname) {
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        // URL_POINT = 'http://10.0.0.131:8889' // yzy   
+        // URL_POINT = 'http://10.0.0.10:8889' // yzy   
         break;
 }
 
@@ -2075,6 +2075,11 @@ let Const = {
     language:{
         '1': { key: 1, zh: '中文', en: 'Chinese'},
         '2': { key: 2, zh: '英文', en: 'English'},
+        '3': { key: 3, zh: '西班牙语', en: 'English'},
+        '4': { key: 4, zh: '意大利语', en: 'English'},
+        '5': { key: 5, zh: '德语', en: 'English'},
+        '6': { key: 6, zh: '法语', en: 'English'},
+        '7': { key: 7, zh: '葡萄牙语', en: 'English'},
     },
     // 试驾单
     test_drive:{
