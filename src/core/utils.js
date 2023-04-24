@@ -1149,6 +1149,20 @@ const Util = {
         return TAR[id + ''] || ''
     },
     /* =============== 测试报告 ================ */
+
+    /* ======== 搜索条件筛选null过滤掉去 
+    * obj { uid: null, status: null }
+    start========== */
+    searchFilter(obj) {
+        let _searchOptions = this.deepCopy(obj)  
+        for (let el in _searchOptions) {
+            if(!_searchOptions[el]){
+                Reflect.deleteProperty(_searchOptions,el)
+            }
+        }  
+        return _searchOptions
+    }  
+    /* ======== 搜索条件筛选 end ========== */
 }
 
 export default Util
