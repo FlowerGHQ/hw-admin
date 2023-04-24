@@ -489,21 +489,21 @@ export default {
             path: "/crm-order-income/order-income-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_block");
+          window.open(routeUrl.href, "_blank");
           break;
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-order-income/order-income-edit",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_block");
+          window.open(routeUrl.href, "_blank");
           break;
         case "detail-order": {
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-detail",
             query: { id: item.order.id },
           });
-          window.open(routeUrl.href, "_block");
+          window.open(routeUrl.href, "_blank");
           break;
         }
       }
