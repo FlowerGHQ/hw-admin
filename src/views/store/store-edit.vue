@@ -75,7 +75,7 @@
                             :def-area='showArea'
                             @select="addressSelect"
                             />  
-                        <a-input v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
+                        <a-input ref="input" v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
                 <!-- 营业时间 -->
@@ -515,17 +515,24 @@ export default {
         // 选择地址
         addressSelect(data){
             console.log("测试",data);
-            let address = data.country.name;
-            if(data.province){
-                address += data.province.name
-            }
-            if(data.city){
-                address += data.city.name
-            }
+            let address = ''
+            // 县 / 区
             if(data.county){
-                address += data.county.name
-            }        
-            this.form.address = address                    
+                address += (this.$i18n.locale == 'en'? data.county.name_en : data.county.name) + ','
+            }   
+            // 城市
+            if(data.city){
+                address += (this.$i18n.locale == 'en'? data.city.name_en : data.city.name) + ','
+            }
+            // 省份
+            if(data.province){
+                address += (this.$i18n.locale == 'en'? data.province.name_en : data.province.name) + ','
+            } 
+            // 国家
+            address += (this.$i18n.locale == 'en'? data.country.name_en : data.country.name)  
+            this.form.address = address   
+            
+            this.$refs.input.focus();
         }
     }
 }
