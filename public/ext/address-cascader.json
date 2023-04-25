@@ -24638,6 +24638,18 @@
                         "code": "ESP000ZMR",
                         "name": "萨莫拉",
                         "name_en": "Zamora"
+                    },
+                    {
+                        "id": "1234",
+                        "key": "city",                        
+                        "name": "直布罗陀",
+                        "name_en": "Gibraltar"
+                    },
+                    {
+                        "id": "1235",
+                        "key": "city",                        
+                        "name": "卡马戈",
+                        "name_en": "Camargo"
                     }
                 ]
             }
