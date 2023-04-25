@@ -420,6 +420,10 @@ const messages = {
             balance: '账户可用余额',
             available_balance: '质保金余额',
             detailed: '明细',
+	        color: '颜色',
+	        color_en: '颜色英文',
+	        net_weight: '净重',
+	        gross_weight: '毛重',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -2667,7 +2671,11 @@ const messages = {
             total_account: 'Total account assets',
             balance: 'Balance',
             available_balance: 'Available balance',
-            detailed: 'detailed'
+            detailed: 'detailed',
+	        color: 'color',
+	        color_en: 'color(English)',
+	        net_weight: 'Net weight',
+	        gross_weight: 'Gross weight',
         },
         e: {
             employee_list: 'employee list',

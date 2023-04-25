@@ -88,6 +88,34 @@
                     <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
                 </div>
             </div>
+            <!-- 颜色 -->
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('d.color') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.color" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <!-- 颜色英文 -->
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('d.color_en') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.color_en" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <!-- 净重 -->
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('d.net_weight') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
+            <!-- 毛重 -->
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <div class="key">{{ $t('d.gross_weight') }}</div>
+                <div class="value">
+                    <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                </div>
+            </div>
             <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('i.on_board_battery') }}</div>
                 <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
@@ -442,6 +470,11 @@ export default {
                 man_hour: '',
                 sales_area_ids: [],
                 drawing_code: "",
+                color: "",
+                color_en: "",
+                net_weight: "",
+                gross_weight: "",
+
                 fob_eur: '',
                 fob_usd: '',
                 accessory_id:'',
@@ -637,6 +670,10 @@ export default {
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
             this.form.drawing_code = res.drawing_code
+            this.form.color = res.color
+            this.form.color_en = res.color_en
+            this.form.net_weight = res.net_weight
+            this.form.gross_weight = res.gross_weight
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
                 this.upload.coverList = logos.map((item, index) => ({
@@ -836,7 +873,7 @@ export default {
             // 类型
             if (!form.type) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.type')})`)
-            }            
+            }
             // 实例编码 否 0 是 1
             if (form.flag_entity != 0 && form.flag_entity != 1) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
@@ -848,8 +885,8 @@ export default {
             // 商品编码
             if (!form.code) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.code')})`)
-            }   
-            // 商品分类                 
+            }
+            // 商品分类
             if (!form.category_ids.length) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.categories')})`)
             }
@@ -857,20 +894,20 @@ export default {
             if (!form.man_hour) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('i.hours')})`)
             }
-            // 销售区域            
+            // 销售区域
             if (!form.sales_area_ids.length) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`)
-            }     
+            }
             // 图面代号
             if(form.type == 1){
                 if (!form.drawing_code) {
                     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
                 }
-            }   
+            }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.code) {
                     return this.$message.warning(this.$t('def.enter'))
-                }         
+                }
                 if (!form.fob_eur) {
                     return this.$message.warning(this.$t('def.enter'))
                 }
@@ -897,7 +934,7 @@ export default {
                     const item = specData[i];
                     if (!item.code) {
                         return this.$message.warning(this.$t('def.enter'))
-                    }                  
+                    }
                     if (!item.fob_eur) {
                         return this.$message.warning(this.$t('def.enter'))
                     }
