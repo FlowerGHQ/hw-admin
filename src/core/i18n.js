@@ -1220,6 +1220,7 @@ const messages = {
             category_name:'分类名称',
             sure_delete_category_a:'确定要删分类',
             sure_delete_category_b:'吗？',
+            type:'类型',
         },
         wb:{ // 物流
             waybill_list:'物流列表',
@@ -3455,6 +3456,7 @@ const messages = {
             category_name:'classification name',
             sure_delete_category_a:'sure to delete the classification',
             sure_delete_category_b:'Are you sure?',
+            type:'type'
         },
         wb:{ // 物流
             waybill_list:'Logistics List',
