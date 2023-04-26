@@ -35,6 +35,17 @@
                         <a-input v-model:value="form.code" :placeholder="$t('n.enter')+$t('m.material_code')"/>
                     </div>
                 </div>
+                <!-- 类型 -->
+                <div class="form-item required">
+                    <div class="key">{{ $t('m.type') }}</div>
+                    <div class="value">
+                        <a-select v-model:value="form.type" :placeholder="$t('n.choose')+$t('m.type')">
+                            <a-select-option v-for="item in editMsgType" :key="item.key" :value="item.key">
+                                {{ item[$i18n.locale] }}
+                            </a-select-option>                                                  
+                        </a-select>
+                    </div>
+                </div>
                 <div class="form-item">
                     <div class="key">{{ $t('m.material_spec') }}</div>
                     <div class="value">
@@ -137,6 +148,7 @@ export default {
                 image: '',
                 color: '',
                 pack_count: '',
+                type: null
             },
             gross_weight: '',
             supplierList: [],
@@ -154,6 +166,7 @@ export default {
                     type: 'img',
                 },
             },
+            editMsgType:Core.Const.PRODUCTION.materialMsg.editMsg // 类型
         };
     },
     watch: {},
@@ -244,6 +257,9 @@ export default {
             }       
             if (!form.code) {
                 return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_code')}`)
+            }           
+            if (!form.type) {
+                return this.$message.warning(`${this.$t('n.choose')}${this.$t('m.type')}`)
             }           
             if (!form.pack_count) {
                 return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.boxes')}`)
