@@ -386,6 +386,7 @@ export default {
         handleCollectExport() { // 订单导出
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.ItemCollectExport({
+               locale: this.$i18n.locale
             })
             console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
