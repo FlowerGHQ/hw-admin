@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <!-- 营业时间 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.business_hours')}}:</div>
                     <div class="value">
                         <a-time-picker 
@@ -438,19 +438,16 @@ export default {
         // 表单检查
         checkInput(formCopy){   
             if (!formCopy.distributor_id && this.$auth('ADMIN')) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.distributor')})`)
             }
             // if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
             if (!formCopy.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!formCopy.currency) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.name')})`)
+            }            
             if (!formCopy.short_name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('d.short_name')})`)
             }
             // if (!formCopy.contact_name) {
             //     return this.$message.warning(this.$t('def.enter'))
@@ -469,7 +466,7 @@ export default {
                 }
             }
             // 营业时间            
-            if(this.workTimeFilter(formCopy)) return true
+            // if(this.workTimeFilter(formCopy)) return true
             // // 门店官网
             // if (!formCopy.official_website) {
             //     return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
@@ -477,6 +474,10 @@ export default {
             // 区域
             if (!formCopy.group_id) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('crm_c.group')})`)
+            }
+            if (!formCopy.currency) {
+                // 货币
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('p.currency')})`)
             }
 
             return false

@@ -1320,6 +1320,7 @@ let Const = {
             '2': {text: '物料'},
         }
     },
+    // 生产
     PRODUCTION: {
         STATUS: {
             INIT: 0,  // 待生产
@@ -1332,6 +1333,12 @@ let Const = {
             '100': { text: '生产中', color: 'orange' },
             '200': { text: '已完成', color: 'green' },
             '-100':{ text: '已取消', color: 'gray' },
+        },
+        materialMsg:{
+            editMsg:{
+                '0': {key:0, zh:'普通件', en:'Ordinary parts'},
+                '10': {key:10, zh:'电池', en:'battery'},
+            }
         }
     },
     SUPPLIER: { //供应商
