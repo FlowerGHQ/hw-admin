@@ -167,6 +167,7 @@ export default {
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             area: {
                 continent: '',
+                continent_en: '',
                 country: '',
                 country_en: '',
                 country_code: '',
@@ -231,6 +232,7 @@ export default {
                 console.log('this.areaList:', this.areaList)
                 area = {
                     continent: this.areaList[0].name,
+                    continent_en: this.areaList[0].name_en,
                     country: this.areaList[1].name,
                     country_en: this.areaList[1].name_en,
                     country_code: this.areaList[1].code,
