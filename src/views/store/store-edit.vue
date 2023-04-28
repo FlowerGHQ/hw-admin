@@ -225,22 +225,22 @@ export default {
                 agent_id: undefined, // 零售商
                 name: '', 
                 short_name: '', // 简称
-                pay_type: null, // 付款方式 
+                pay_type: undefined, // 付款方式 
                 contact_name: '', // 联系人
                 contact_phone: '', // 手机号
-                contact_email: null, // 邮箱
+                contact_email: undefined, // 邮箱
                 country: '', // 国家
                 province: '', // 省份           
                 city: '',   // 城市       
                 county:'', // 区      
                 address: "", // 详情地址
-                business_time: {}, // 营业时间            
+                business_time: undefined, // 营业时间            
                 business_time_remark: "", // 营业时间备注
-                official_website: null, // 门店官网                
-                group_id: null, // 区域
+                official_website: undefined, // 门店官网                
+                group_id: undefined, // 区域
                 currency: undefined, // 货币
                 logo: '', // logo
-                flag_stock_change_use_pda: null, // 启用PDA
+                flag_stock_change_use_pda: undefined, // 启用PDA
             },
             work:{
                 time:{
@@ -401,12 +401,14 @@ export default {
                 }
             }
             
-            console.log('formCopy:', formCopy, this.areaMap)
+            // console.log('formCopy:', formCopy, this.areaMap)
+            this.workTimeFilter(formCopy)
             if(this.checkInput(formCopy)) return            
-            console.log('formCopy完成:', formCopy)
+            // console.log('formCopy完成:', formCopy)
           
+            
             Core.Api.Store.save({
-                ...formCopy,
+                ...Core.Util.searchFilter(formCopy),
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -484,17 +486,17 @@ export default {
         },
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
-            console.log("时间1", this.work);
-            if (this.$Util.isEmptyObj(this.work.time.morning)) {                
-                return this.$message.warning(this.$t('dis.work_morning_go'))
-            }
-            if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                
-                return this.$message.warning(this.$t('dis.work_afternoon_end'))
-            }
+            // console.log("时间1", this.work);
+            // if (this.$Util.isEmptyObj(this.work.time.morning)) {                               
+            //     return this.$message.warning(this.$t('dis.work_morning_go'))
+            // }
+            // if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                                
+            //     return this.$message.warning(this.$t('dis.work_afternoon_end'))
+            // }
 
-            if (this.work.week_days.length == 0) {                
-                return this.$message.warning(this.$t('dis.week'))
-            }
+            // if (this.work.week_days.length == 0) {                                
+            //     return this.$message.warning(this.$t('dis.week'))
+            // }
             let works ={
                 time:{
                     morning:{},
