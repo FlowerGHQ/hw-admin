@@ -405,8 +405,7 @@ export default {
             this.workTimeFilter(formCopy)
             if(this.checkInput(formCopy)) return            
             // console.log('formCopy完成:', formCopy)
-          
-            
+                      
             Core.Api.Store.save({
                 ...Core.Util.searchFilter(formCopy),
             }).then(() => {
@@ -487,12 +486,14 @@ export default {
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
             // console.log("时间1", this.work);
-            // if (this.$Util.isEmptyObj(this.work.time.morning)) {                               
-            //     return this.$message.warning(this.$t('dis.work_morning_go'))
-            // }
-            // if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                                
-            //     return this.$message.warning(this.$t('dis.work_afternoon_end'))
-            // }
+            if (this.$Util.isEmptyObj(this.work.time.morning)) {                               
+                // return this.$message.warning(this.$t('dis.work_morning_go'))
+                return false
+            }
+            if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                                
+                // return this.$message.warning(this.$t('dis.work_afternoon_end'))
+                return false
+            }
 
             // if (this.work.week_days.length == 0) {                                
             //     return this.$message.warning(this.$t('dis.week'))
@@ -511,7 +512,7 @@ export default {
             works.time.afternoon.begin = dayjs(this.work.time.afternoon.begin).format('HH:mm')
             works.time.afternoon.end = dayjs(this.work.time.afternoon.end).format('HH:mm')
 
-            works.week_days = [...this.work.week_days]            
+            works.week_days = this.work.week_days.length?[...this.work.week_days]:undefined
             formCopy.business_time = JSON.stringify(works)           
             return false
         },
