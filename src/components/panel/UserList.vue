@@ -30,10 +30,10 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
+                    <template v-if="column.key === 'operation'">                    
                         <a-button type='link' @click="handleUserRole(record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('u.set_role') }}</a-button>
                         <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                        <a-button type="link" @click="handleReset(record)" v-if="$auth('user.save','MANAGER')"><i class="icon i_lock"/>{{ $t('u.reset') }}</a-button>
+                        <a-button type="link" @click="handleReset(record)" v-if="$UserAuth('admin1')"><i class="icon i_lock"/>{{ $t('u.reset') }}</a-button>
                         <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
@@ -132,7 +132,8 @@ export default {
                 id:"",
                 password:"",
                 new_password:"",
-            }
+            },
+            loginUsername: Core.Data.getUser()?.username // 只有admin1的账户能重置密码
         };
     },
     watch: {},

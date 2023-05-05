@@ -2112,6 +2112,10 @@ let Const = {
             '6': { key: 6, zh: '周六',en: 'Saturday' },
             '7': { key: 7, zh: '周日',en: 'Sunday' },
         }
+    },
+    // 用户判断
+    USERNAME:{
+        'admin1': true
     }
 };
 
