@@ -61,7 +61,7 @@ const apiList = {
         delete: ['PostJson', 'account/delete' ], // 账户删除
         resetPwd: ['PostJson', 'account/resetPwd' ], // 重置密码
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
-        ResetDetailPwd: ['PostJson', 'account/admin-reset-password' ], // 重置密码(分销商详情 门店详情 零售详情下的用户管理)
+        ResetDetailPwd: ['PostJson', 'account/reset-password' ], // 重置密码(1分销商详情 2门店详情 3零售详情下的用户管理)
     },
     Authority: { // 角色 & 权限
         roleList: ['PostJson', 'auth/role-list'], // 角色列表

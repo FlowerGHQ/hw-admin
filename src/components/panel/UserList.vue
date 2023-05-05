@@ -270,7 +270,7 @@ export default {
             if (resetForm.new_password !== resetForm.password) {
                 return this.$message.warning(this.$t('u.not'))
             }
-
+            resetForm.type = this.type
             Core.Api.Account.ResetDetailPwd(resetForm).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleEditClose();
