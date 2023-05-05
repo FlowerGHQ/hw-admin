@@ -518,7 +518,7 @@ export default {
         },
         // 选择地址
         addressSelect(data){
-            console.log("测试",data);
+            // console.log("测试",data);
             let address = ''
             // 县 / 区
             if(data.county){

@@ -133,7 +133,7 @@ export default {
                 user_id: userId,
                 user_type: userType
             }).then(res => {
-                console.log('res', res )
+                // console.log('authUserAll', res )
                 let list = res.list
                 // let list = []
                 for (const item of list) {
