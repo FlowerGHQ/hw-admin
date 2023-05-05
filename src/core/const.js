@@ -36,10 +36,10 @@ switch (window.location.hostname) {
         URL_POINT = 'http://10.0.0.213:8889'
         break;
     default:
-	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://10.0.0.131:8889' // yzy   
-        URL_POINT = 'http://10.0.0.213:8889' // xuwei   
+        // URL_POINT = 'http://10.0.0.213:8889' // xuwei   
         break;
 }
 
