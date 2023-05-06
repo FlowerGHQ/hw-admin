@@ -1142,7 +1142,7 @@ export default {
         },
         // 确认收款
         handlePayment() {   
-            console.log(this.form);
+            console.log(this.form,'this.form');
             this.loading = true
             let form = Core.Util.deepCopy(this.form)
             if (!form.path) {
@@ -1151,7 +1151,7 @@ export default {
             if (!form.pay_method) {
                 return this.$message.warning(this.$t('p.please_select_payment_method'))
             }
-            if (!form.payment && !form.accountBalance) {
+            if (!form.payment) {
                 return this.$message.warning(this.$t('p.enter_payment'))
             }
 
