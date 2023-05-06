@@ -20,7 +20,9 @@
                     <!-- <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
-                    <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver') " @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
+                    <template v-if="!outStockBtnShow">
+                        <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')" @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
+                    </template>
 <!--                    <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">-->
 <!--                        <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
 <!--                    </template>-->
@@ -712,6 +714,7 @@ export default {
             giveOrderShow: false,
             createAuditShow: false,
             PIShow: false,
+            outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
         };
     },
     watch: {},
@@ -1032,6 +1035,7 @@ export default {
                 this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = total_price
+                this.outStockBtnShow = this.itemList.every(item => item.residue_quantity === 0);
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
