@@ -381,7 +381,7 @@ export default {
                 columns.push(
                     {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
                     {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                    {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                    // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
                 )
             }
 
