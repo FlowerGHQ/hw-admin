@@ -132,7 +132,7 @@
                             <div v-show="!$auth('purchase-order.supply-detail')">
 
                                 <div class="info-item">
-                                    <div class="key">{{ $t('n.contact')}}</div>
+                                    <div class="key">{{ $t('p.contact')}}</div>
                                     <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
                                     <div class="value" v-else>-</div>
                                 </div>
@@ -273,7 +273,7 @@
                                 </div>
                             </a-col>
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                                <div class="info-item"
+                                <!-- <div class="info-item"
                                      v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
                                     <div class="key">{{ $t('p.delivery_method') }}</div>
                                     <div class="value">
@@ -285,7 +285,7 @@
                                     <div class="value">
                                         {{ $Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-') }}
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="info-item" v-if="detail.waybill">
                                     <div class="key">{{ $t('p.shipment_number') }}</div>
                                     <div class="value">{{ detail.waybill || '-' }}</div>
@@ -720,7 +720,7 @@ export default {
         itemColumns() {
             let columns = [
                 { title: this.$t('i.item'), dataIndex: 'item' },
-                { title: this.$t('i.number'),dataIndex: ['item', "model"] },
+                // { title: this.$t('i.number'),dataIndex: ['item', "model"] },
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] },
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
@@ -744,7 +744,7 @@ export default {
                 { title: this.$t('p.status'), dataIndex: 'status' ,key: 'status'},
                 { title: this.$t('p.pay_amount'), dataIndex: 'price', key: 'money'},
                 { title: this.$t('p.remark'), dataIndex: 'remark', key: 'item' },
-                { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('p.payment_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
             return columns
