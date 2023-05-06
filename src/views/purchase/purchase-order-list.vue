@@ -58,7 +58,7 @@
                 </div>
               </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                  <div class="key">{{ $t('p.payment_terms')}}:</div>
+                  <div class="key">{{ $t('p.payment_method')}}:</div>
                   <div class="value">
                     <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
                       <a-select-option v-for="(item,index) of PAY_TIME_LIST" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
@@ -266,7 +266,7 @@ export default {
                 { title: this.$t('p.number'), dataIndex: 'sn', },
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
-                { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
+                { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },
 
                 // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
                 // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },

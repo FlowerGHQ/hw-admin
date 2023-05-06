@@ -137,8 +137,10 @@
                                     <div class="value" v-else>-</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">{{ $t('p.payment_terms')}}</div>
-                                    <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
+                                    <div class="key">{{ $t('p.payment_method')}}</div>
+                                    <div class="value">
+                                        {{ $Util.purchasePayTypeFilter(detail.pay_type, $i18n.locale) }}                                        
+                                    </div>
                                 </div>
                                 <div class="info-item">
                                     <div class="key">{{ $t('p.remark')}}</div>

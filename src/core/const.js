@@ -203,13 +203,7 @@ let Const = {
         TYPE_MAP: {
             '1': { key: 1, zh: '国内', en: 'Internal' },
             '2': { key: 2, zh: '出口', en: 'Export' },
-        },
-        // PAY_TIME_LIST: [
-        //     { text: 'TT(30%定金,70%尾款)', value: 10 },
-        //     { text: 'OA 30天', value: 20 },
-        //     { text: 'OA 60天', value: 30 },
-        //     { text: 'OA 90天', value: 40 },
-        // ],
+        },       
 	    PAY_TIME: {
 		    PAYMENT_TYPE_ALL_PAYMENT: 10,
 		    PAYMENT_TYPE_DOWN_PAYMENT: 20,
