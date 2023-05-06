@@ -2270,6 +2270,10 @@ const messages = {
             week:"请选择周期",
             morning:"早上",
             afternoon:"下午",
+        },
+        // 限制提示文字
+        input:{
+            input_number: "最大输入99字"
         }
     },
 
@@ -4445,6 +4449,10 @@ const messages = {
             week:"sleect week",
             morning:"morning",
             afternoon:"afternoon",
+        },
+        // 限制提示文字
+        input:{
+            input_number: "Maximum input of 99 words"
         }
     },
 }

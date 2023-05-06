@@ -292,11 +292,11 @@
                 <!-- 备注 -->
                 <div style="margin-top: 10px;" class="form-item textarea">
                     <div class="key">{{ $t('r.remark_a') }}:</div>
-                    <div class="value" style="width: 350px;">
+                    <div class="value" style="width: 380px;">
                         <a-textarea
                             v-model:value="auditForm.audit_message"
-                            :placeholder="$t('r.input_remark')"
-                            :auto-size="{ minRows: 2, maxRows: 6 }"
+                            :placeholder="$t('input.input_number')" 
+                            rows="4"                           
                             :maxlength='99'/>
                     </div>
                 </div>
