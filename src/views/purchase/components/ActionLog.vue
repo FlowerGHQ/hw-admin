@@ -1,8 +1,5 @@
 <template>
-<!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right"> -->
-    <!-- <template #expandIcon ><i class="icon i_expan_l"/> </template> -->
-    <!-- <a-collapse-panel key="ActionLog" :header="$t('n.record')" class="gray-collapse-panel"> -->
-        <div class="panel-content">
+    <div class="panel-content">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :loading='loading' :pagination='false'>
                 <template #headerCell="{title}">
@@ -53,8 +50,8 @@
                     @showSizeChange="pageSizeChange"
                 />
             </div>
-        </div>
-        <a-modal v-model:visible="visible" title="详情" class="field-select-modal" :width="630" :after-close="handleClose">
+    </div>
+    <a-modal v-model:visible="visible" title="详情" class="field-select-modal" :width="630" :after-close="handleClose">
             <a-table :columns="contentColumns" :data-source="contentList" :scroll="{ x: true }"
                      :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text, record }">
@@ -66,9 +63,7 @@
             <template #footer>
                 <a-button @click="handleClose">{{ $t('def.cancel') }}</a-button>
             </template>
-        </a-modal>
-    <!-- </a-collapse-panel> -->
-<!-- </a-collapse> -->
+    </a-modal>
 </template>
 
 <script>

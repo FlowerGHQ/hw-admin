@@ -54,6 +54,7 @@
             </div>
         </div>
         <div class="form-container">
+            <!-- 赠送订单 -->
             <EditItem v-if="giveOrderShow" :order-id='id' :detail='detail' type='GIVE_ORDER' @submit="getList" @cancel='giveOrderShow = false'></EditItem>
 
             <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
@@ -172,6 +173,7 @@
                     </a-row>
                 </a-collapse-panel>
             </a-collapse>
+            
             <div v-show="!$auth('purchase-order.supply-detail')">
                 <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                     <!-- 明细列表 -->
@@ -222,13 +224,15 @@
                                             class="icon i_download"/>{{ $t('n.download') }}
                                         </a-button>
                                         <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
+                                            <a-button type='link' 
+                                                    v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                    @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
                                             </a-button>
                                         </template>
                                         <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
+                                            <a-button type='link' 
+                                                    v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
+                                                    @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
                                             </a-button>
                                         </template>
                                     </template>
@@ -247,8 +251,8 @@
                     <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail'
                                     @submit="getList" ref="AttachmentFile"/>
 
-                    <!-- 物流信息 -->
-                    <a-collapse-panel key="WaybillInfo" :header="$t('n.delivery_information')"
+                    <!-- 买家信息 -->
+                    <a-collapse-panel  key="WaybillInfo" :header="$t('n.delivery_information')"
                                       class="gray-collapse-panel">
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -302,12 +306,12 @@
                             </a-col>
                         </a-row>
                     </a-collapse-panel>
-
+                    
+                    <!-- 操作记录 -->
                     <ActionLog :id='id' :detail='detail'
                                :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"/>
                 </a-collapse>
             </div>
-
         </div>
     </div>
     <template class="modal-container">
@@ -1055,7 +1059,7 @@ export default {
 
                 })
                 this.payList = res.list
-                console.log("this.payList", this.payList)
+                // console.log("this.payList", this.payList)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {

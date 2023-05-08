@@ -1,12 +1,14 @@
 <template>
     <div class="DeliveryLogs">
-        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange">
+        <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange">
             <template #expandIcon><i class="icon i_expan_l"/></template>
             <a-collapse-panel key="DeliveryLogs"
                 :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')"
                 class="gray-collapse-panel">
-                <div class="panel-content table-container no-mg">
-                    <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+            </a-collapse-panel>                
+        </a-collapse> -->
+        <div class="panel-content table-container no-mg">
+            <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text , record }">
                             <template v-if="column.key === 'org'">
                                 {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
@@ -46,11 +48,13 @@
                                     </a-button>
                                 </template>
                                 <template v-if="authOrg(detail.org_id, detail.org_type)">
+                                    <!-- 确认收货 -->
                                     <a-button type='link'
                                               v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.DELIVERY"
                                               @click="handleTakeDeliverShow(record.id)">
                                         {{ $t('p.confirm_the_take_delivery') }}
                                     </a-button>
+                                    <!-- 收货明细 -->
                                     <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT"
                                               @click="handleModalShow(record.id)">{{ $t('p.take_delivery_detail') }}
                                     </a-button>
@@ -58,10 +62,8 @@
 
                             </template>
                         </template>
-                    </a-table>
-                </div>
-            </a-collapse-panel>
-        </a-collapse>
+            </a-table>
+        </div>
         <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width='860px'>
             <div class="modal-content">
                 <div class="table-container">
@@ -318,8 +320,7 @@ export default {
             PURCHASE,
             // 加载
             loading: false,
-            activeKey: [],
-            flagOpened: false,
+            activeKey: [],            
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
             invoiceList: [],
             loginType: Core.Data.getLoginType(),
@@ -403,17 +404,25 @@ export default {
         },
     },
     mounted() {
-        // this.getInvoiceList();
-        this.getWarehouseList();
+        this.getInvoiceList(); 
+        this.getWarehouseList()       
     },
     methods: {
-        handleCollapseChange(key) {
-            console.log('handleCollapseChangekey:', key)
-            if (key[0] && !this.flagOpened) {
-                this.flagOpened = true
-                this.getInvoiceList();
-            }
+        // handleCollapseChange(key) {
+        //     console.log('handleCollapseChangekey:', key)
+        //     if (key[0] && !this.flagOpened) {
+        //         this.flagOpened = true
+        //         this.getInvoiceList();
+        //     }
+        // },
+        /*== FETCH start==*/
+        // 仓库列表Fetch
+        getWarehouseList() {
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
         },
+        /*== FETCH end==*/
         routerChange(type, item = {}) {
             console.log(item)
             let routeUrl = ''
@@ -434,12 +443,7 @@ export default {
             } else {
                 return false
             }
-        },
-        getWarehouseList() {
-            Core.Api.Warehouse.listAll().then(res => {
-                this.warehouseList = res.list
-            })
-        },
+        },       
         getInvoiceList() {  // 获取 发货记录
             this.loading = true;
             console.log("getInvoiceList type", this.type)
@@ -461,8 +465,7 @@ export default {
                 this.loading = false;
             });
         },
-
-        //
+        
         handleModalShow(id) {
             this.modalShow = true;
             this.invoiceId = id
@@ -472,16 +475,11 @@ export default {
             this.deliverShow = true;
             this.form = Core.Util.deepCopy(item);
             this.form.freight = Core.Util.countFilter(this.form.freight)
-
             this.invoiceId = item.id
-            console.log(this.invoiceId)
-            this.pageChange(1)
         },
         handleTakeDeliverShow(id) {
             this.takeDeliverShow = true;
             this.invoiceId = id
-            console.log(this.invoiceId)
-            this.pageChange(1)
         },
 
         pageChange(curr) {  // 页码改变
@@ -489,18 +487,18 @@ export default {
             this.getTableData()
         },
         getTableData() {
-            console.log('getTableData: type', this.type)
+            // console.log('getTableData: type', this.type)
             this.modalLoading = true;
             Core.Api.InvoiceItem.list({
                 invoice_id: this.invoiceId,
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log('getTableData res', res)
+                // console.log('getTableData res', res)
                 this.total = res.count
                 this.tableData = res.list
             }).catch(err => {
-                console.log('getTableData err', err)
+                // console.log('getTableData err', err)
             }).finally(() => {
                 this.modalLoading = false;
             });

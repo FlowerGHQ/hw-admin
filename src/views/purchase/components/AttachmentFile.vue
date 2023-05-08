@@ -3,12 +3,14 @@
     <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right"> -->
         <!-- <template #expandIcon><i class="icon i_expan_l"/></template> -->
         <!-- <a-collapse-panel key="attachmentFile" :header="$t('n.upload_attachment')" class="gray-collapse-panel"> -->
-            <div class="panel-content table-container no-mg">
-                <div class="panel-header">
-                    <span class="name">{{ $t('n.attachment_list') }}</span>
-                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>
-                </div>
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+        <!-- </a-collapse-panel> -->
+    <!-- </a-collapse> -->
+    <div class="panel-content table-container no-mg">
+        <div class="panel-header">
+            <!-- <span class="name"></span> -->
+            <a-button type="primary" @click="handleModalShow">{{$t('n.upload_attachment')}}</a-button>
+        </div>
+        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
@@ -30,13 +32,11 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
-                </a-table>
-            </div>
-        <!-- </a-collapse-panel> -->
-    <!-- </a-collapse> -->
+        </a-table>
+    </div>
     <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
         <div class="form-title">
             <div class="form-item required">
@@ -123,13 +123,7 @@ export default {
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             return columns
-        },
-        can_upload() {
-            return true
-        },
-        can_delete() {
-            return true
-        },
+        }, 
     },
     mounted() {
         this.getTableData();
@@ -251,11 +245,6 @@ export default {
     .panel-header {
         .fsb();
         margin-bottom: 20px;
-        .name {
-            font-weight: 500;
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.85);
-        }
         .ant-btn {
             border-radius: 2px;
         }

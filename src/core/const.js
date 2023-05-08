@@ -705,7 +705,7 @@ let Const = {
 	    },
 	    PAY_STATUS:{
 			INIT: 0,
-		    WAIT_TO_AUDIT: 10,
+		    WAIT_TO_AUDIT: 10,  // 审核
 		    APPROVED: 20,
 		    CANCEL: -10,
 		    AUDIT_FAILED: -20,
