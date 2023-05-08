@@ -156,12 +156,12 @@
       </div>
       <div class="operate-container">
         <!-- <a-button type="primary" @click="handleBatch('distribute')" v-if="$auth('crm-customer.distribute')">{{ $t('crm_c.distribute') }}</a-button>-->
-        <a-button
+        <!-- <a-button
           type="danger"
           @click="handleBatchDelete"
           v-if="$auth('crm-customer.delete')"
           >{{ $t("crm_c.delete") }}</a-button
-        >
+        > -->
       </div>
       <div class="table-container">
         <a-table
@@ -373,7 +373,7 @@ export default {
     tableColumns() {
       let columns = [                                                     
 		// id
-		{ title: "id", dataIndex: "id", key: "id" },
+		{ title: "dis.test_drive_ticket_id", dataIndex: "uid", key: "uid" },
 		// 订单来源
 		{ title: "dis.order_source", dataIndex: "channel", key: "channel" },
 		// 创建时间  
@@ -392,9 +392,9 @@ export default {
           sorter: true,
         },
 		// 用户邮箱
-		{ title: "dis.user_email", dataIndex: "user_email", key: "email" },
+		{ title: "dis.user_email", dataIndex: ['customer', 'email'], key: "email" },
 		// 用户手机号
-		{ title: "dis.user_phone", dataIndex: "user_phone", key: "phone" },
+		{ title: "dis.user_phone", dataIndex: ['customer', 'phone'], key: "phone" },
 		// 门店邮箱是否发送			
 		{ title: "dis.store_is_send_mail", dataIndex: "flag_mail_sent_store", key: "flag_mail_sent_store" },	
 		// 用户邮箱是否发送			
@@ -549,8 +549,8 @@ export default {
       );
 
       this.loading = true;
-      Core.Api.CRMTestDriveOrder.list({
-        ...searchForm,
+      Core.Api.CRMTestDriveOrder.list({		
+        ...Core.Util.searchFilter(searchForm),
         page: 0,
       })
         .then((res) => {
@@ -612,28 +612,29 @@ export default {
           this.loading = false;
         });
     },
-    handleBatchDelete() {
-      if (this.selectedRowKeys.length === 0) {
-        return this.$message.warning(this.$t("crm_c.select"));
-      }
-      let _this = this;
-      this.$confirm({
-        title: this.$t("pop_up.sure_delete"),
-        okText: this.$t("def.sure"),
-        okType: "danger",
-        cancelText: this.$t("def.cancel"),
-        onOk() {
-          Core.Api.CRMCustomer.batchDelete({ id_list: _this.selectedRowKeys })
-            .then(() => {
-              _this.$message.success(_this.$t("pop_up.delete_success"));
-              _this.getTableData();
-            })
-            .catch((err) => {
-              console.log("handleDelete err", err);
-            });
-        },
-      });
-    },
+    // handleBatchDelete() {
+    //   if (this.selectedRowKeys.length === 0) {
+    //     return this.$message.warning(this.$t("crm_c.select"));
+    //   }
+    //   let _this = this;
+	//   console.log(_this.selectedRowKeys);
+    //   this.$confirm({
+    //     title: this.$t("pop_up.sure_delete"),
+    //     okText: this.$t("def.sure"),
+    //     okType: "danger",
+    //     cancelText: this.$t("def.cancel"),
+    //     onOk() {
+    //       Core.Api.CRMCustomer.batchDelete({ id_list: _this.selectedRowKeys })
+    //         .then(() => {
+    //           _this.$message.success(_this.$t("pop_up.delete_success"));
+    //           _this.getTableData();
+    //         })
+    //         .catch((err) => {
+    //           console.log("handleDelete err", err);
+    //         });
+    //     },
+    //   });
+    // },
     handleBatchObtain() {
       if (this.selectedRowKeys.length === 0) {
         return this.$message.warning(this.$t("crm_c.select"));
@@ -744,6 +745,7 @@ export default {
         type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
         status: Core.Const.CRM_DICT.STATUS.STATUS_NORM,
       }).then((res) => {
+		// console.log("测试", res.list);
         this.sourceList = res.list;
       });
     },

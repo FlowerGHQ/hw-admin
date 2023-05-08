@@ -16,7 +16,7 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
+                <div class="form-item"  v-if="$auth('ADMIN','DISTRIBUTOR') && !form.id">
                     <div class="key">{{ $t('n.agent') }}</div>
                     <div class="value">
                         <a-select v-model:value="form.agent_id" :placeholder="$t('search.select_agent')">
@@ -37,7 +37,7 @@
                         <a-input v-model:value="form.short_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('d.pay_type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
@@ -45,21 +45,21 @@
                         </a-select>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.contact') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_name" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 手机号 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
                 <!-- 邮箱号 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.mail_number')}}:</div>
                     <div class="value">                        
                         <a-input v-model:value="form.contact_email" :placeholder="$t('def.input')"/>
@@ -75,11 +75,11 @@
                             :def-area='showArea'
                             @select="addressSelect"
                             />  
-                        <a-input v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
+                        <a-input ref="input" v-model:value="form.address" style="margin-top: 10px;" :placeholder="$t('dis.input_detail_address')"/>
                     </div>
                 </div>
                 <!-- 营业时间 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.business_hours')}}:</div>
                     <div class="value">
                         <a-time-picker 
@@ -122,7 +122,7 @@
                     </div>
                 </div>
                 <!-- 官网地址 -->
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{$t('dis.store_website')}}:</div>
                     <div class="value">
                         <a-input v-model:value="form.official_website" :placeholder="$t('def.input')"/>
@@ -225,22 +225,22 @@ export default {
                 agent_id: undefined, // 零售商
                 name: '', 
                 short_name: '', // 简称
-                pay_type: null, // 付款方式 
+                pay_type: undefined, // 付款方式 
                 contact_name: '', // 联系人
                 contact_phone: '', // 手机号
-                contact_email: null, // 邮箱
+                contact_email: undefined, // 邮箱
                 country: '', // 国家
                 province: '', // 省份           
                 city: '',   // 城市       
                 county:'', // 区      
                 address: "", // 详情地址
-                business_time: {}, // 营业时间            
+                business_time: undefined, // 营业时间            
                 business_time_remark: "", // 营业时间备注
-                official_website: null, // 门店官网                
-                group_id: null, // 区域
+                official_website: undefined, // 门店官网                
+                group_id: undefined, // 区域
                 currency: undefined, // 货币
                 logo: '', // logo
-                flag_stock_change_use_pda: null, // 启用PDA
+                flag_stock_change_use_pda: undefined, // 启用PDA
             },
             work:{
                 time:{
@@ -389,24 +389,25 @@ export default {
 
             // 地区显示
             if (!Core.Util.isEmptyObj(this.areaMap)) {                
-                formCopy.country = this.areaMap.country.name              
+                formCopy.country = this.$i18n.locale == 'en'?this.areaMap.country.name_en:this.areaMap.country.name
                 if (this.areaMap.province) {
-                    formCopy.province = this.areaMap.province.name
+                    formCopy.province = this.$i18n.locale == 'en'?this.areaMap.province.name_en:this.areaMap.province.name
                 }
                 if(this.areaMap.city){
-                    formCopy.city = this.areaMap.city.name
+                    formCopy.city = this.$i18n.locale == 'en'?this.areaMap.city.name_en:this.areaMap.city.name
                 }
                 if(this.areaMap.county){
-                    formCopy.county = this.areaMap.county.name
+                    formCopy.county = this.$i18n.locale == 'en'?this.areaMap.county.name_en:this.areaMap.county.name
                 }
             }
             
-            console.log('formCopy:', formCopy, this.areaMap)
+            // console.log('formCopy:', formCopy, this.areaMap)
+            this.workTimeFilter(formCopy)
             if(this.checkInput(formCopy)) return            
-            console.log('formCopy完成:', formCopy)
-          
+            // console.log('formCopy完成:', formCopy)
+                      
             Core.Api.Store.save({
-                ...formCopy,
+                ...Core.Util.searchFilter(formCopy),
             }).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -438,30 +439,27 @@ export default {
         // 表单检查
         checkInput(formCopy){   
             if (!formCopy.distributor_id && this.$auth('ADMIN')) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.distributor')})`)
             }
-            if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.agent_id && this.$auth('ADMIN','DISTRIBUTOR') ) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             if (!formCopy.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!formCopy.currency) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('n.name')})`)
+            }            
             if (!formCopy.short_name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('d.short_name')})`)
             }
-            if (!formCopy.contact_name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!formCopy.contact_phone) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.contact_name) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
+            // if (!formCopy.contact_phone) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             // 邮箱
-            if (!formCopy.contact_email) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!formCopy.contact_email) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             // 门店地址
             if(!formCopy.country){
                 if (!(Object.values(this.areaMap).filter(i => i).length)) {
@@ -469,31 +467,37 @@ export default {
                 }
             }
             // 营业时间            
-            if(this.workTimeFilter(formCopy)) return true
-            // 门店官网
-            if (!formCopy.official_website) {
-                return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
-            }           
+            // if(this.workTimeFilter(formCopy)) return true
+            // // 门店官网
+            // if (!formCopy.official_website) {
+            //     return this.$message.warning(this.$t('def.enter') + `(${this.$t('dis.store_website')})`)
+            // }           
             // 区域
             if (!formCopy.group_id) {
                 return this.$message.warning(this.$t('def.enter') + `(${this.$t('crm_c.group')})`)
+            }
+            if (!formCopy.currency) {
+                // 货币
+                return this.$message.warning(this.$t('def.enter') + `(${this.$t('p.currency')})`)
             }
 
             return false
         },
         // 上班时间转化需要的样式
         workTimeFilter(formCopy){
-            console.log("时间1", this.work);
-            if (this.$Util.isEmptyObj(this.work.time.morning)) {                
-                return this.$message.warning(this.$t('dis.work_morning_go'))
+            // console.log("时间1", this.work);
+            if (this.$Util.isEmptyObj(this.work.time.morning)) {                               
+                // return this.$message.warning(this.$t('dis.work_morning_go'))
+                return false
             }
-            if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                
-                return this.$message.warning(this.$t('dis.work_afternoon_end'))
+            if (this.$Util.isEmptyObj(this.work.time.afternoon)) {                                
+                // return this.$message.warning(this.$t('dis.work_afternoon_end'))
+                return false
             }
 
-            if (this.work.week_days.length == 0) {                
-                return this.$message.warning(this.$t('dis.week'))
-            }
+            // if (this.work.week_days.length == 0) {                                
+            //     return this.$message.warning(this.$t('dis.week'))
+            // }
             let works ={
                 time:{
                     morning:{},
@@ -508,24 +512,31 @@ export default {
             works.time.afternoon.begin = dayjs(this.work.time.afternoon.begin).format('HH:mm')
             works.time.afternoon.end = dayjs(this.work.time.afternoon.end).format('HH:mm')
 
-            works.week_days = [...this.work.week_days]            
+            works.week_days = this.work.week_days.length?[...this.work.week_days]:undefined
             formCopy.business_time = JSON.stringify(works)           
             return false
         },
         // 选择地址
         addressSelect(data){
-            console.log("测试",data);
-            let address = data.country.name;
-            if(data.province){
-                address += data.province.name
-            }
-            if(data.city){
-                address += data.city.name
-            }
+            // console.log("测试",data);
+            let address = ''
+            // 县 / 区
             if(data.county){
-                address += data.county.name
-            }        
-            this.form.address = address                    
+                address += (this.$i18n.locale == 'en'? data.county.name_en : data.county.name) + ','
+            }   
+            // 城市
+            if(data.city){
+                address += (this.$i18n.locale == 'en'? data.city.name_en : data.city.name) + ','
+            }
+            // 省份
+            if(data.province){
+                address += (this.$i18n.locale == 'en'? data.province.name_en : data.province.name) + ','
+            } 
+            // 国家
+            address += (this.$i18n.locale == 'en'? data.country.name_en : data.country.name)  
+            this.form.address = address   
+            
+            this.$refs.input.focus();
         }
     }
 }

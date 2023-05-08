@@ -1,10 +1,10 @@
 <template>
     <div class="DeliveryLogs">
-        <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange"> -->
-            <!-- <template #expandIcon><i class="icon i_expan_l"/></template> -->
-            <!-- <a-collapse-panel key="DeliveryLogs" -->
-                <!-- :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')" -->
-                <!-- class="gray-collapse-panel"> -->
+        <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange">
+            <template #expandIcon><i class="icon i_expan_l"/></template>
+            <a-collapse-panel key="DeliveryLogs"
+                :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')"
+                class="gray-collapse-panel">
                 <div class="panel-content table-container no-mg">
                     <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, text , record }">
@@ -60,9 +60,9 @@
                         </template>
                     </a-table>
                 </div>
-            <!-- </a-collapse-panel> -->
-        <!-- </a-collapse> -->
-        <a-modal v-model:visible="modalShow" :title="$t('n.delivery_logs')" width='860px'>
+            </a-collapse-panel>
+        </a-collapse>
+        <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width='860px'>
             <div class="modal-content">
                 <div class="table-container">
                     <ItemTable :columns="tableColumns" :data-source="tableData" :loading='modalLoading' v-if="modalShow"/>
@@ -381,7 +381,7 @@ export default {
                 columns.push(
                     {title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item'},
                     {title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
-                    {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                    // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
                 )
             }
 

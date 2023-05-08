@@ -191,6 +191,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('in.sn'), dataIndex: 'uid', key: 'detail'},
+                {title: this.$t('in.sync_id'), dataIndex: 'sync_id', key: 'detail'},
                 {title: this.$t('n.state'), dataIndex: 'status'},
                 {title: this.$t('n.type'), dataIndex: 'type'},
                 {title: this.$t('in.category'), dataIndex: 'target_type',},

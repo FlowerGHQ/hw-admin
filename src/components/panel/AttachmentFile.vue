@@ -39,21 +39,16 @@
     </a-collapse>
     <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
         <div class="form-title">
-            <div class="form-item required">
-                <div class="key">{{ $t('n.name') }}:</div>
-                <div class="value">
-                    <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
-                </div>
-            </div>
             <div class="form-item required file-upload">
                 <div class="key">{{ $t('f.upload') }}:</div>
                 <div class="value">
                     <a-upload name="file" class="file-uploader"
+                              :multiple="true"
                         :file-list="upload.fileList" :action="upload.action"
                         :headers="upload.headers" :data='upload.data'
                         :before-upload="handleFileCheck"
                         @change="handleFileChange">
-                        <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
+                        <a-button type="primary" ghost class="file-upload-btn" >
                             <i class="icon i_upload"/> {{ $t('f.choose') }}
                         </a-button>
                     </a-upload>
@@ -92,9 +87,7 @@ export default {
 
             modalShow: false,
             form: {
-                name: '',
-                path: '',
-                type: ''
+                item_list: [],
             },
             submitDisabled: true,
 
@@ -171,11 +164,9 @@ export default {
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.form)
             console.log('handleLogin form:', form)
-            if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+
             this.loading = true;
-            Core.Api.Attachment.save({
+            Core.Api.Attachment.saveList({
                 ...form,
                 target_type: this.target_type,
                 target_id: this.target_id,
@@ -209,9 +200,14 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
-                this.form.path = file.response.data.filename
-                this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
+                const path = file.response.data.filename
+                const item ={
+                    "name": file.response.data.name,
+                    "path": path,
+                    "type": path.split('.').pop(),
+                }
+                this.form.item_list.push(item)
+                if (this.form.item_list.length > 0){
                     this.submitDisabled = false
                 }
             }

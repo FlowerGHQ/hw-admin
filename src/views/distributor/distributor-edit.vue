@@ -8,12 +8,12 @@
                 <div class="title">{{ $t('n.information') }}</div>
             </div>
             <div class="form-content">
-                <!-- <div class="form-item required">
+                <div class="form-item required">
                     <div class="key">{{ $t('d.code') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.code" :placeholder="$t('n.enter')"/>
                     </div>
-                </div> -->
+                </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('d.name') }}:</div>
                     <div class="value">
@@ -51,38 +51,39 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item required">
+                <!-- 公司名称 -->
+                <div class="form-item">
                     <div class="key">{{ $t('d.company') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.company_name" :placeholder="$t('d.company_name')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('d.id') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.tax_no" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
 
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('d.port') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.receive_port" :placeholder="$t('d.receipt')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.contact') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.contact" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.phone') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.phone" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('n.email') }}:</div>
                     <div class="value">
                         <a-input v-model:value="form.email" :placeholder="$t('def.input')"/>
@@ -145,7 +146,7 @@ export default {
 
             form: {
                 id: '',
-                // code: '',
+                code: '',
                 name: '',
                 short_name: '',
                 company_name: '',
@@ -166,6 +167,7 @@ export default {
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             area: {
                 continent: '',
+                continent_en: '',
                 country: '',
                 country_en: '',
                 country_code: '',
@@ -175,9 +177,9 @@ export default {
     watch: {},
     computed: {
          // 计算货币是否显示
-        // isDisabled(){
-        //     return this.monetaryList[this.form.currency] || null
-        // }
+        isDisabled(){
+            return this.monetaryList[this.form.currency] || null
+        }
     },
 
     mounted() {
@@ -230,22 +232,23 @@ export default {
                 console.log('this.areaList:', this.areaList)
                 area = {
                     continent: this.areaList[0].name,
+                    continent_en: this.areaList[0].name_en,
                     country: this.areaList[1].name,
                     country_en: this.areaList[1].name_en,
                     country_code: this.areaList[1].code,
                 }
             }
             const requireList = [
-                // { key: 'code', msg: this.$t('def.enter') },
+                { key: 'code', msg: this.$t('def.enter') },
                 { key: 'name', msg: this.$t('def.enter') },
                 { key: 'short_name', msg: this.$t('def.enter') },
                 { key: 'type', msg: this.$t('def.enter') },
-                { key: 'company_name', msg: this.$t('def.enter') },
-                { key: 'tax_no', msg: this.$t('def.enter') },
-                { key: 'receive_port', msg: this.$t('def.enter') },
-                { key: 'contact', msg: this.$t('def.enter') },
-                { key: 'phone', msg: this.$t('def.enter') },
-                { key: 'email', msg: this.$t('def.enter') },
+                // { key: 'company_name', msg: this.$t('def.enter') },
+                // { key: 'tax_no', msg: this.$t('def.enter') },
+                // { key: 'receive_port', msg: this.$t('def.enter') },
+                // { key: 'contact', msg: this.$t('def.enter') },
+                // { key: 'phone', msg: this.$t('def.enter') },
+                // { key: 'email', msg: this.$t('def.enter') },
                 // { key: 'country', msg: this.$t('def.enter') },
                 { key: 'sales_area_ids', msg: this.$t('def.enter') },
             ]

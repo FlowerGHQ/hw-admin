@@ -24638,6 +24638,18 @@
                         "code": "ESP000ZMR",
                         "name": "萨莫拉",
                         "name_en": "Zamora"
+                    },
+                    {
+                        "id": "1234",
+                        "key": "city",                        
+                        "name": "直布罗陀",
+                        "name_en": "Gibraltar"
+                    },
+                    {
+                        "id": "1235",
+                        "key": "city",                        
+                        "name": "卡马戈",
+                        "name_en": "Camargo"
                     }
                 ]
             }
@@ -24796,6 +24808,20 @@
                         "code": "FIN000VAT",
                         "name": "万塔",
                         "name_en": "Vantaa"
+                    },
+                    {
+                        "id": "1280",
+                        "key": "city",
+                        "code": "FIN000VAT",
+                        "name": "Niinikoski",
+                        "name_en": "Niinikoski"
+                    },
+                    {
+                        "id": "1281",
+                        "key": "city",
+                        "code": "FIN000VAT",
+                        "name": "Lempäälä",
+                        "name_en": "Lempäälä"
                     }
                 ]
             }
@@ -24975,6 +25001,30 @@
                         "code": "FRA000VAA",
                         "name": "瓦朗斯",
                         "name_en": "Valence"
+                    },
+                    {
+                        "id": "1303",
+                        "key": "city",
+                        "name": "方丹",
+                        "name_en": "Fontaine"
+                    },
+                    {
+                        "id": "1304",
+                        "key": "city",
+                        "name": "布洛涅－比扬古",
+                        "name_en": "Boulogne-Billancourt"
+                    },
+                    {
+                        "id": "1305",
+                        "key": "city",
+                        "name": "利夫里加尔冈",
+                        "name_en": "Livry-Gargan"
+                    },
+                    {
+                        "id": "1306",
+                        "key": "city",
+                        "name": "蒙斯维莱",
+                        "name_en": "Monswiller"
                     }
                 ]
             }
@@ -27639,8 +27689,6 @@
             }
         ]
     },
-
-
     {
         "id": "1",
         "key": "country",
@@ -27842,14 +27890,14 @@
         "id": "4",
         "key": "country",
         "name": "安圭拉",
-        "name_en": "",
+        "name_en": "Anguilla",
         "code": "AIA"
     },
     {
         "id": "5",
         "key": "country",
         "name": "奥兰群岛",
-        "name_en": "",
+        "name_en": "Aland Islands",
         "code": "ALA"
     },
     {
@@ -28429,14 +28477,14 @@
         "id": "12",
         "key": "country",
         "name": "阿森松岛",
-        "name_en": "",
+        "name_en": "Ascension Island",
         "code": "ASC"
     },
     {
         "id": "13",
         "key": "country",
         "name": "美属萨摩亚",
-        "name_en": "",
+        "name_en": "American Samoa",
         "code": "ASM",
         "children": [
             {
@@ -28545,14 +28593,14 @@
         "id": "14",
         "key": "country",
         "name": "南极洲",
-        "name_en": "",
+        "name_en": "Antarctica",
         "code": "ATA"
     },
     {
         "id": "15",
         "key": "country",
         "name": "法属南部领地",
-        "name_en": "",
+        "name_en": "French southern territory",
         "code": "ATF"
     },
     {
@@ -30747,7 +30795,7 @@
         "id": "41",
         "key": "country",
         "name": "科科斯群岛",
-        "name_en": "",
+        "name_en": "The Cocos Islands",
         "code": "CCK"
     },
     {
@@ -31565,7 +31613,7 @@
         "id": "55",
         "key": "country",
         "name": "圣诞岛",
-        "name_en": "",
+        "name_en": "Christmas Island",
         "code": "CXR"
     },
     {
@@ -31991,6 +32039,24 @@
                         "code": "DEU000WUG",
                         "name": "维尔茨堡",
                         "name_en": "Wuerzburg"
+                    },
+                    {
+                        "id": "1086",
+                        "key": "city",                        
+                        "name": "",
+                        "name_en": "Vechta"
+                    },
+                    {
+                        "id": "1087",
+                        "key": "city",                        
+                        "name": "",
+                        "name_en": "Osnabrück"
+                    },
+                    {
+                        "id": "1088",
+                        "key": "city",                        
+                        "name": "埃森",
+                        "name_en": "Essen"
                     }
                 ]
             }
@@ -33033,14 +33099,14 @@
         "id": "73",
         "key": "country",
         "name": "弗兰克群岛",
-        "name_en": "",
+        "name_en": "Frank islands",
         "code": "FLK"
     },
     {
         "id": "75",
         "key": "country",
         "name": "法罗群岛",
-        "name_en": "",
+        "name_en": "Faroe Islands",
         "code": "FRO"
     },
     {
@@ -33142,7 +33208,7 @@
         "id": "80",
         "key": "country",
         "name": "格恩西岛",
-        "name_en": "",
+        "name_en": "Guernsey",
         "code": "GGY"
     },
     {
@@ -33325,7 +33391,7 @@
         "id": "84",
         "key": "country",
         "name": "瓜德罗普",
-        "name_en": "",
+        "name_en": "Guadeloupe",
         "code": "GLP"
     },
     {
@@ -33634,14 +33700,14 @@
         "id": "91",
         "key": "country",
         "name": "法属圭亚那",
-        "name_en": "",
+        "name_en": "French Guiana",
         "code": "GUF"
     },
     {
         "id": "92",
         "key": "country",
         "name": "关岛",
-        "name_en": "",
+        "name_en": "Guam",
         "code": "GUM"
     },
     {
@@ -33736,7 +33802,7 @@
         "id": "94",
         "key": "country",
         "name": "赫德和麦克唐纳群岛",
-        "name_en": "",
+        "name_en": "Hurd and MacDonald Islands",
         "code": "HMD"
     },
     {
@@ -34438,7 +34504,7 @@
         "id": "100",
         "key": "country",
         "name": "曼岛",
-        "name_en": "",
+        "name_en": "Isle of Man",
         "code": "IMN"
     },
     {
@@ -34673,7 +34739,7 @@
         "id": "102",
         "key": "country",
         "name": "英属印度洋领地",
-        "name_en": "",
+        "name_en": "British Indian Ocean Territory",
         "code": "IOT"
     },
     {
@@ -35091,7 +35157,7 @@
         "id": "110",
         "key": "country",
         "name": "泽西岛",
-        "name_en": "",
+        "name_en": "Jersey",
         "code": "JEY"
     },
     {
@@ -38147,7 +38213,7 @@
         "id": "125",
         "key": "country",
         "name": "圣卢西亚",
-        "name_en": "",
+        "name_en": "Saint Lucia",
         "code": "LCA"
     },
     {
@@ -39917,7 +39983,7 @@
         "id": "144",
         "key": "country",
         "name": "北马里亚纳群岛",
-        "name_en": "",
+        "name_en": "The Northern Mariana Islands",
         "code": "MNP"
     },
     {
@@ -41232,7 +41298,7 @@
         "id": "156",
         "key": "country",
         "name": "诺福克",
-        "name_en": "",
+        "name_en": "Norfolk",
         "code": "NFK"
     },
     {
@@ -41429,7 +41495,7 @@
         "id": "159",
         "key": "country",
         "name": "纽埃",
-        "name_en": "",
+        "name_en": "Niue",
         "code": "NIU"
     },
     {
@@ -42058,7 +42124,7 @@
         "id": "168",
         "key": "country",
         "name": "皮特凯恩",
-        "name_en": "",
+        "name_en": "Pitcairn",
         "code": "PCN"
     },
     {
@@ -43862,7 +43928,7 @@
         "id": "186",
         "key": "country",
         "name": "塞尔维亚,黑山",
-        "name_en": "",
+        "name_en": "Serbia, Montenegro",
         "code": "SCG",
         "children": [
             {
@@ -44119,21 +44185,21 @@
         "id": "190",
         "key": "country",
         "name": "南乔治亚和南桑德威奇群岛",
-        "name_en": "",
+        "name_en": "South Georgia and South Sandwich Islands",
         "code": "SGS"
     },
     {
         "id": "191",
         "key": "country",
         "name": "圣赫勒拿",
-        "name_en": "",
+        "name_en": "Saint Helena",
         "code": "SHN"
     },
     {
         "id": "192",
         "key": "country",
         "name": "斯瓦尔巴和扬马廷",
-        "name_en": "",
+        "name_en": "Svalba and Janmateen",
         "code": "SJM"
     },
     {
@@ -45054,14 +45120,14 @@
         "id": "207",
         "key": "country",
         "name": "特里斯坦达昆哈",
-        "name_en": "",
+        "name_en": "Tristan da Kunha",
         "code": "TAA"
     },
     {
         "id": "208",
         "key": "country",
         "name": "特克斯和凯克特斯群岛",
-        "name_en": "",
+        "name_en": "Turks and Caittes Islands",
         "code": "TCA"
     },
     {
@@ -45787,7 +45853,7 @@
         "id": "213",
         "key": "country",
         "name": "托克劳",
-        "name_en": "",
+        "name_en": "Tokelau",
         "code": "TKL"
     },
     {
@@ -47033,7 +47099,7 @@
         "id": "224",
         "key": "country",
         "name": "美属外岛",
-        "name_en": "",
+        "name_en": "American outer islands",
         "code": "UMI"
     },
     {
@@ -49970,14 +50036,14 @@
         "id": "231",
         "key": "country",
         "name": "维尔京群岛，英属",
-        "name_en": "",
+        "name_en": "British Virgin Islands",
         "code": "VGB"
     },
     {
         "id": "232",
         "key": "country",
         "name": "维尔京群岛，美属",
-        "name_en": "",
+        "name_en": "Virgin Islands of the United States",
         "code": "VIR"
     },
     {
@@ -50083,7 +50149,7 @@
         "id": "235",
         "key": "country",
         "name": "瓦利斯和福图纳",
-        "name_en": "",
+        "name_en": "Wallis and Fortuna",
         "code": "WLF"
     },
     {

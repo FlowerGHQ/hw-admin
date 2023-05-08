@@ -1149,6 +1149,35 @@ const Util = {
         return TAR[id + ''] || ''
     },
     /* =============== 测试报告 ================ */
+
+    /* ======== 搜索条件筛选null过滤掉去 
+    * obj { uid: null, status: null }
+    start========== */
+    searchFilter(obj) {
+        let _searchOptions = this.deepCopy(obj)  
+        for (let el in _searchOptions) {
+            if(!_searchOptions[el]){
+                Reflect.deleteProperty(_searchOptions,el)
+            }
+        }  
+        return _searchOptions
+    },
+    /* ======== 搜索条件筛选 end ========== */
+
+    /* ======== 判断门店,分销商,零售商重置密码权限判断 start ========== */
+    userAuth(...arr){
+        if (!arr.length) {
+            return true
+        }
+        // console.log("数据", arr);
+        const rolesMap = Const.USERNAME;
+        const result = arr.some(key => {
+            return rolesMap[key];
+        });
+        // console.log("结果", result);
+        return result
+    }
+    /* ======== 判断门店,分销商,零售商重置密码权限判断 end ========== */
 }
 
 export default Util

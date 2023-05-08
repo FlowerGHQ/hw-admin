@@ -37,13 +37,8 @@ switch (window.location.hostname) {
         break;
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-        // URL_POINT = 'http://10.0.0.205:8889'
-        // URL_POINT = 'http://10.0.0.131:8889' // yzy
-        // URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        // URL_POINT = 'http://10.0.0.213:8889'
-        // URL_POINT = 'http://10.0.0.10:8889' // yzy
-        // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
+        // URL_POINT = 'http://10.0.0.131:8889' // yzy   
         break;
 }
 
@@ -208,13 +203,7 @@ let Const = {
         TYPE_MAP: {
             '1': { key: 1, zh: '国内', en: 'Internal' },
             '2': { key: 2, zh: '出口', en: 'Export' },
-        },
-        // PAY_TIME_LIST: [
-        //     { text: 'TT(30%定金,70%尾款)', value: 10 },
-        //     { text: 'OA 30天', value: 20 },
-        //     { text: 'OA 60天', value: 30 },
-        //     { text: 'OA 90天', value: 40 },
-        // ],
+        },       
 	    PAY_TIME: {
 		    PAYMENT_TYPE_ALL_PAYMENT: 10,
 		    PAYMENT_TYPE_DOWN_PAYMENT: 20,
@@ -289,7 +278,7 @@ let Const = {
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
             { zh: '开箱损', en: 'dead on arrival', value: 3 },
-	        { zh: '电池维修', en: 'battery', value: 4 },
+            { zh: '电池维修', en: 'battery', value: 4 },
         ],
         // 工单帐类
         SERVICE_TYPE: {
@@ -395,6 +384,13 @@ let Const = {
             PASS: 1,
             REFUSE: 2
         },
+        // 工单审核
+        COMPENSATION:{
+            COMPENSATION_METHOD:{
+                '1' : { value: 1,}, // 赔付方式 赔付到配件
+                '2' : { value: 2,}, // 赔付方式 赔付到账户
+            }
+        }
     },
 	INVOICE_ITEM:{
 		TARGET_TYPE: {
@@ -603,7 +599,7 @@ let Const = {
             '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
 	        '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},
-            '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Wait to pay'},
+            '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Waiting for payment'},
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
             '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
@@ -849,6 +845,8 @@ let Const = {
 		    TYPE_MAP: {
 			    '1': {key: 1, zh: '物料', en: 'Material'},
 			    '2': {key: 2, zh: '整车', en: 'vehicle',},
+			    '3': {key: 3, zh: '唛头整车', en: 'Mark Vehicle'},
+			    '4': {key: 4, zh: '唛头配件', en: 'Mark Accessories',},
 		    },
 	    },
         FILE: {
@@ -1318,6 +1316,7 @@ let Const = {
             '2': {text: '物料'},
         }
     },
+    // 生产
     PRODUCTION: {
         STATUS: {
             INIT: 0,  // 待生产
@@ -1330,6 +1329,12 @@ let Const = {
             '100': { text: '生产中', color: 'orange' },
             '200': { text: '已完成', color: 'green' },
             '-100':{ text: '已取消', color: 'gray' },
+        },
+        materialMsg:{
+            editMsg:{
+                '0': {key:0, zh:'普通件', en:'Ordinary parts'},
+                '10': {key:10, zh:'电池', en:'battery'},
+            }
         }
     },
     SUPPLIER: { //供应商
@@ -2100,6 +2105,10 @@ let Const = {
             '6': { key: 6, zh: '周六',en: 'Saturday' },
             '7': { key: 7, zh: '周日',en: 'Sunday' },
         }
+    },
+    // 用户判断
+    USERNAME:{
+        'admin1': true
     }
 };
 

@@ -109,19 +109,36 @@
             </div>
           </div>
         </div>
+		<!-- 语言 -->
+		<div class="form-item required">
+          <div class="key">{{ $t("dis.language") }}：</div>
+          <div class="value">
+            <a-select
+              v-model:value="form.language"
+              :placeholder="$t('def.input')"			  
+            >
+			<template v-for="(item, index) in language" :key="index" >
+               <a-select-option v-if="item.key !== 1" :value="item.key">					
+					{{ lang === "zh" ? item.zh : item.en }}
+				</a-select-option>						
+			</template>
+            </a-select>
+          </div>
+        </div>
 		<!-- 区域 -->
         <div class="form-item required">
           <div class="key">{{ $t("crm_c.group") }}：</div>
           <div class="value">
+			<!-- 防止后面需要禁用(要使用禁用就要判断两种情况一种是官网进来，一种是系统创建) 
+				:disabled="
+                (form.id > 0 || form.customer_id > 0) && form.group_id > 0
+              " -->
             <a-tree-select
               class="CategoryTreeSelect"
               v-model:value="form.group_id"
               :placeholder="$t('def.select')"
               :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-              :tree-data="groupOptions"
-              :disabled="
-                (form.id > 0 || form.customer_id > 0) && form.group_id > 0
-              "
+              :tree-data="groupOptions"              
               tree-default-expand-all
               @select="setGroupId"
             />
@@ -199,7 +216,13 @@
 		<div class="form-item">
           <div class="key">{{$t("dis.business_hours") }}：</div>
           <div class="value">   
-				{{ storeDetail?.business_time || "-"}}
+				<span v-if="storeDetail.business_time">
+					{{ $t('dis.morning') }}: {{JSON.parse(storeDetail.business_time)?.time.morning.begin}} - {{JSON.parse(storeDetail.business_time)?.time.morning.end}}
+					{{ $t('dis.afternoon') }}: {{JSON.parse(storeDetail.business_time)?.time.afternoon.begin}} - {{JSON.parse(storeDetail.business_time)?.time.morning.end}}
+				</span>
+				<span v-else>
+					-
+				</span>
           </div>
         </div>
 		<!-- 门店地址 -->	
@@ -488,6 +511,7 @@ export default {
         Core.Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP,
 
       defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+	  language: Core.Const.language,
       // 加载
       loading: false,
       detail: {},
@@ -507,6 +531,7 @@ export default {
         birthday: undefined, // 生日        
 		    drive_time: undefined, // 试驾时间
         store_id: undefined, // 门店选择
+		language: undefined, // 语言
        
         //用户画像
         customer_portrait_id: undefined,
@@ -578,7 +603,7 @@ export default {
         }
       });
     }
-    if (Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId();
+    if (Core.Data.getGroupId() && !this.form.group_id) this.form.group_id = Core.Data.getGroupId();
 	
   },
   methods: {
@@ -620,7 +645,9 @@ export default {
           this.form.email = this.detail.email;
           this.form.country_code = this.detail.country_code;
           this.form.phone_country_code = this.detail.phone_country_code;
-          this.form.group_id = this.detail.group_id;
+          this.form.group_id = this.detail.group_id || "";
+          this.form.channel = this.detail?.channel? this.detail?.channel:this.detail?.crm_test_drive_order?.channel; // 订单来源
+		//   console.log("测试group_id", this.detail.group_id);
         })
         .catch((err) => {
           console.log("getCustomerDetail err", err);
@@ -689,10 +716,10 @@ export default {
 
 		  // 有门店选择的话渲染门店下面的信息
 		  if(this.form.store_id && this.form.store_id != ''){
-			  this.storeDetail = this.storeList.find(el => {				
+			  	this.storeDetail = this.storeList.find(el => {
 				  return el.id == this.form.store_id
-				})						
-				console.log("进来", this.storeDetail, this.form.store_id );
+				})
+				console.log("进来", this.storeDetail.business_time );
 		  }
           console.log("customer_id", res);
           this.getCustomerDetail(); // 用户详情
@@ -709,18 +736,18 @@ export default {
     /* methods */
 	// 确定	
     handleSubmit() {
-		let formCopy = Core.Util.deepCopy(this.form);
-	
-
+		let formCopy = Core.Util.deepCopy(this.form);		
+		
+		
 		formCopy.drive_time = formCopy.drive_time
-			? dayjs(formCopy.drive_time).unix()
-			: 0; // 日期转时间戳
-			formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
-
-		if(this.checkInput(formCopy)) return    
-		  Core.Api.CRMTestDriveOrder.save({
-		    ...formCopy,
-		  }).then(() => {
+		? dayjs(formCopy.drive_time).unix()
+		: 0; // 日期转时间戳
+		formCopy.birthday = formCopy.birthday ? dayjs(formCopy.birthday).unix() : 0; // 日期转时间戳
+		
+		if(this.checkInput(formCopy)) return		
+		Core.Api.CRMTestDriveOrder.save({
+		  ...Core.Util.searchFilter(formCopy),
+		}).then(() => {
 			this.$message.success(this.$t("pop_up.save_success"));
 			this.routerChange("back");
 		})
@@ -779,12 +806,14 @@ export default {
     },
 	// form表单检查
 	checkInput(formCopy){
-		
 		if (!formCopy.name) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.name")})`);
 		}
 		if (!formCopy.phone) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.phone")})`);
+		}	
+		if (!formCopy.language) {
+			return this.$message.warning(`${this.$t("def.enter")}(${this.$t("dis.language")})`);
 		}	
 		if (!this.$Util.ifPhoneFilter(formCopy.phone)) {
 			return this.$message.warning(this.$t("def.error_phone"));
@@ -795,10 +824,10 @@ export default {
 		}
 
 		if (!formCopy.group_id) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")} (${this.$t("crm_c.group")})`);
 		}
 		if (!formCopy.drive_time) {
-			return this.$message.warning(this.$t("def.enter"));
+			return this.$message.warning(`${this.$t("def.enter")} (${this.$t("crm_d.test_drive_time")})`);
 		}
 
 		return false

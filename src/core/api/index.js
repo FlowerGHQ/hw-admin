@@ -61,6 +61,7 @@ const apiList = {
         delete: ['PostJson', 'account/delete' ], // 账户删除
         resetPwd: ['PostJson', 'account/resetPwd' ], // 重置密码
         statusUpdate: ['PostJson', 'account/status-update'], // 更新账户状态1=启用2=禁用
+        ResetDetailPwd: ['PostJson', 'account/reset-password' ], // 重置密码(1分销商详情 2门店详情 3零售详情下的用户管理)
     },
     Authority: { // 角色 & 权限
         roleList: ['PostJson', 'auth/role-list'], // 角色列表
@@ -456,6 +457,7 @@ const apiList = {
     Attachment: { // 附件管理
         list: ['PostJson', 'attachment/list'],
         save: ['PostJson', 'attachment/save'],
+        saveList: ['PostJson', 'attachment/save-list'],
         delete: ['PostJson', 'attachment/delete'],
     },
     Wallet: { // 账户管理
@@ -474,6 +476,7 @@ const apiList = {
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
         calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
+	    vehicleAdd: ['PostJson', 'production-order/vehicle-add']
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],

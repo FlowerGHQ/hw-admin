@@ -380,14 +380,14 @@ export default {
                         path: "/crm-customer/customer-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_block')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-customer/customer-edit",
                         query: {id: item.id, status: this.searchForm.status}
                     })
-                    window.open(routeUrl.href, '_block')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },

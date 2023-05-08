@@ -58,7 +58,7 @@
                 </div>
               </a-col>
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                  <div class="key">{{ $t('p.payment_terms')}}:</div>
+                  <div class="key">{{ $t('p.payment_method')}}:</div>
                   <div class="value">
                     <a-select v-model:value="searchForm.pay_type" @change="handleSearch" :placeholder="$t('def.select')">
                       <a-select-option v-for="(item,index) of PAY_TIME_LIST" :key="index" :value="item.key">{{ item[$i18n.locale] }}</a-select-option>
@@ -266,7 +266,7 @@ export default {
                 { title: this.$t('p.number'), dataIndex: 'sn', },
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
-                { title: this.$t('p.payment_terms'), dataIndex: 'pay_type', key: 'pay_type' },
+                { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },
 
                 // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
                 // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
@@ -308,7 +308,7 @@ export default {
             let columns = [
                 {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
                 {zh: '已拆单', en: 'Split orders', value: '0', color: 'yellow',  key: '50'},
-                {zh: '订单待审核', en: 'Order pending review', value: '0', color: 'yellow',  key: '60'},
+                {zh: '等待审核', en: 'Waiting for review', value: '0', color: 'yellow',  key: '60'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
                 {zh: '待审核', en: 'Wait to audit', value: '0', color: 'yellow',  key: '630'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},

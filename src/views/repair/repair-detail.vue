@@ -24,7 +24,7 @@
                         <i class="icon"/>{{ $t('r.repair_a') }}
                     </a-button>
                     <a-button type="primary" @click="handleSettlement()" v-if="detail.status == STATUS.REPAIR_END">
-                        <i class="icon i_settle"/>{{ $t('r.settle_accounts') }}
+                        <i class="icon i_settle"/>{{ $t('r.submit_review') }}
                     </a-button>
                 </template>
                 <a-button type="primary" @click="routerChange('invoice')" v-if="!haveSettle && $auth('repair-order.settlement')">
@@ -192,7 +192,7 @@
                             <template v-if="column.dataIndex === 'sum_price'">
                                 {{$Util.priceUnitFilter(detail.currency)}} {{ $Util.countFilter(record.price * record.amount) }}
                             </template>
-                        </template>                     
+                        </template>
                     </a-table>
                     <!-- 总价 实付金额 -->
                     <div style="width: 100%; display: flex; flex-direction: column; align-items: end; line-height:30px; margin-top: 20px; font-size: 12px;">
@@ -220,24 +220,26 @@
                         <div class="form-item">
                         <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Treatment_mode') }}:</div>
                             <a-radio-group v-model:value="auditForm.compensation_method">
-                                <a-radio value="1">{{ $t('r.Compensation_accessories') }}</a-radio>
-                                <a-radio value="2">
-                                    {{ $t('r.Allocated_account') }}
-                                    <a-popover color="#535353">
-                                        <template #content>
-                                            <div style="color: #fff; width:350px">
-                                                <p>
-                                                    {{ $t('r.Allocated_account') }}：
-                                                    <span>{{ $t('r.Allocated_account_Text') }}</span>
-                                                </p>
-                                                <p>
-                                                    {{ $t('r.Compensation_accessories') }}：
-                                                    <span>{{ $t('r.Compensation_accessories_text') }}</span>
-                                                </p>
-                                            </div>
-                                        </template>
-                                        <span class="popovers">i</span>
-                                    </a-popover>
+                                <a-radio v-for="($1,index) in TreatmentMode" :key="index" :value="$1.value">
+                                    <template v-if="$1.value == 1">{{ $t('r.Compensation_accessories') }}</template>
+                                    <template v-if="$1.value == 2">
+                                        {{ $t('r.Allocated_account') }}
+                                        <a-popover color="#535353">
+                                            <template #content>
+                                                <div style="color: #fff; width:350px">
+                                                    <p>
+                                                        {{ $t('r.Allocated_account') }}：
+                                                        <span>{{ $t('r.Allocated_account_Text') }}</span>
+                                                    </p>
+                                                    <p>
+                                                        {{ $t('r.Compensation_accessories') }}：
+                                                        <span>{{ $t('r.Compensation_accessories_text') }}</span>
+                                                    </p>
+                                                </div>
+                                            </template>
+                                            <span class="popovers">i</span>
+                                        </a-popover>
+                                    </template>
                                 </a-radio>
                             </a-radio-group>
                         </div>
@@ -257,13 +259,13 @@
                             <!-- 抵扣价格 -->
                             <!-- <div style="line-height: 50px;">
                                 <div class="form-item">
-                                    <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>                                
+                                    <div class="key" :class="{en_key: $i18n.locale == 'en'}">{{ $t('r.Deduction_price') }}:</div>
                                     <a-input style="width: 100px;"  placeholder="请输入" @change="typeChange" v-model:value="auditForm.compensation_money"/>
                                     <span style="margin-left:10px;">{{ auditForm.compensation_type == 1?'%': $Util.priceUnitFilter(detail.currency) }}</span>
                                 </div>
                             </div> -->
                             <!-- 赔付金额 -->
-                            
+
                                 <div>
                                     <div class="form-item" style="color:#9495a4">
                                         <div class="key" :class="{en_key: $i18n.locale == 'en'}" style="color:#9495a4">{{ $t('r.Compensation_amount') }}:</div>
@@ -272,7 +274,7 @@
                                         <span>{{$Util.priceUnitFilter(detail.currency)}}</span>
                                         <span>{{$Util.countFilter(sum_price)}}</span>
                                     </div>
-                                </div>                        
+                                </div>
                         </template>
                     <!-- </transition> -->
                 </div>
@@ -287,13 +289,24 @@
                         </a-radio-group>
                     </div>
                 </div>
+                <!-- 备注 -->
+                <div style="margin-top: 10px;" class="form-item textarea">
+                    <div class="key">{{ $t('r.remark_a') }}:</div>
+                    <div class="value" style="width: 380px;">
+                        <a-textarea
+                            v-model:value="auditForm.audit_message"
+                            :placeholder="$t('input.input_number')" 
+                            rows="4"                           
+                            :maxlength='99'/>
+                    </div>
+                </div>
                 <!-- <div class="form-item textarea required" v-if="auditForm.audit_result === 0">
                     <div class="key">{{ $t('n.reason') }}:</div>
                     <div class="value">
                         <a-textarea v-model:value="auditForm.audit_message" :placeholder="$t('r.fail_result')"
                             :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='99'/>
                     </div>
-                </div> -->     
+                </div> -->
             </div>
             <template #footer>
                 <a-button @click="repairAuditShow = false">{{ $t('def.cancel') }}</a-button>
@@ -339,7 +352,7 @@ export default {
     },
     props: {},
     data() {
-        return {            
+        return {
             Core,
             orgType: Core.Data.getOrgType(),
             orgId: Core.Data.getOrgId(),
@@ -370,7 +383,7 @@ export default {
             auditForm: {
                 audit_result: '',
                 audit_message: '',
-                compensation_method: '1', // 处理方式 1是赔付配件  2赔付至账户
+                compensation_method: 1, // 处理方式 1是赔付配件  2赔付至账户
                 // compensation_type: '1', // 抵扣方式 1是百分比 2金额
                 // compensation_money:'',//抵扣价格
                 // compensation_price:'0'//赔付金额
@@ -398,8 +411,11 @@ export default {
                 company_uid: undefined,
             },
             tableData:[],
-            faultMap: {},
             isAttachmentEmpty: true,
+
+            // 工单处理方式
+            TreatmentMode: Core.Const.REPAIR.COMPENSATION.COMPENSATION_METHOD
+
         };
     },
     watch: {},
@@ -614,7 +630,7 @@ export default {
         // 提交检测结果
         handleFaultSubmit() {
             if(this.isAttachmentEmpty) {
-                this.$message.warning(_this.$t('r.check_attachment'))
+                this.$message.warning(this.$t('r.check_attachment'))
             }else {
                 this.$refs.CheckFault.handleFaultSubmit();
             }
@@ -626,9 +642,14 @@ export default {
         },
         handleRepairEnd() {
             let form = Core.Util.deepCopy(this.repairForm)
+            if (form.results == 0){
+                _this.handleRepairEndClose()
+                return
+            }
             if (!form.results) {
                 return this.$message.warning(_this.$t('r.repair_result'))
             }
+
             let _this = this;
             Core.Api.Repair.repair({id: this.id, ...form}).then(() => {
                 _this.$message.success(_this.$t('pop_up.save_success'))
