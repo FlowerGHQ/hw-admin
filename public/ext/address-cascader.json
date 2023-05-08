@@ -24811,15 +24811,13 @@
                     },
                     {
                         "id": "1280",
-                        "key": "city",
-                        "code": "FIN000VAT",
+                        "key": "city",                        
                         "name": "Niinikoski",
                         "name_en": "Niinikoski"
                     },
                     {
                         "id": "1281",
-                        "key": "city",
-                        "code": "FIN000VAT",
+                        "key": "city",                        
                         "name": "Lempäälä",
                         "name_en": "Lempäälä"
                     }
@@ -32043,13 +32041,13 @@
                     {
                         "id": "1086",
                         "key": "city",                        
-                        "name": "",
+                        "name": "Vechta",
                         "name_en": "Vechta"
                     },
                     {
                         "id": "1087",
                         "key": "city",                        
-                        "name": "",
+                        "name": "Osnabrück",
                         "name_en": "Osnabrück"
                     },
                     {
