@@ -59,7 +59,6 @@
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
         <div class="category-container" v-if="firstLevelId">
             <a-button type="link" @click="handleCategoryChange(firstLevelId)" >
-
                 <div class="category-title" >{{ $i18n.locale =='zh' ? firstLevelName.name : firstLevelName.name_en}}</div>
             </a-button>
             <div class="category-content">
@@ -406,9 +405,8 @@ export default {
             })
         },
         changeDisplay(flag_display, item_id){
-
-            this.flag_display = flag_display;
             this.item_id = item_id
+            this.flag_display = flag_display;
             console.log("item_id", this.item_id)
         },
     }

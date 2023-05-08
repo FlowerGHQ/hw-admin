@@ -84,7 +84,8 @@ export default {
     props: {
         item_id: {
             type: Number,
-            default: 0},
+            default: 0
+        },
     },
     watch: {
         item_id: {
@@ -92,7 +93,7 @@ export default {
             handler(n) {
                 console.log("watch item_id",n)
                 this.id = n
-                this.getItemDetail();
+                // this.getItemDetail();
                 this.getAccessoryData();
                 this.getDownloadData()
             }
@@ -104,7 +105,7 @@ export default {
             // 加载
             loading: false,
             ATTACHMENT_TYPE: Core.Const.ATTACHMENT.TARGET_TYPE,
-            id: null,
+            id: undefined,
             detail: {
                 attr_list: {},
             },
@@ -132,8 +133,10 @@ export default {
     },
     mounted() {
         this.currency = Core.Data.getCurrency();
-        // this.id = Number(this.$route.query.id) || 0
-        // this.getItemDetail();
+        if(Number(this.$route.query.id)) {
+            this.id = Number(this.$route.query.id) || 0
+        }
+        this.getItemDetail();
         // this.getAccessoryData();
         // this.getDownloadData()
     },
