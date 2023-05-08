@@ -70,8 +70,8 @@
 <!--                    </div>-->
                 </div>
                 <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
-                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
-                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item?.item[priceKey + unitMap[currency].key])}}</span>
+                <span class="price">{{currency}} {{$Util.countFilter(item?.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
             </div>
 
             <div class="settle-item sum">
