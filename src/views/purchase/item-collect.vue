@@ -216,11 +216,6 @@ export default {
             }
         },
         settle(){
-            console.log(11111)
-            for(var i = 0 ; i< this.shopCartList.length ; i ++){}
-            this.shopCartList.forEach(it => {
-
-            });
             for (const it of this.shopCartList) {
                 console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
                 if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){

@@ -12,8 +12,8 @@
                 <li v-for="attr in detail.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
             </ul>
             <a-button type="primary" block class="btn" v-if="specList.length > 0 ">{{ $i18n.locale =='zh' ? '此商品 ' : 'This commodity has ' }}{{ specList.length }}{{ $i18n.locale =='zh' ? ' 种规格' : ' kinds of specifications' }}</a-button>
-            <a-button type="primary" v-if="specList.length <= 0  && !this.detail.in_shopping_cart" block class="btn-cart" @click="hanldeAddToShopCart(detail.id)" >{{$t('i.cart')}}</a-button>
-            <a-button type="primary" v-if="specList.length <= 0  && this.detail.in_shopping_cart" block class="btn" >{{$t('i.added')}}</a-button>
+            <a-button type="primary" v-if="specList.length <= 0" block class="btn-cart" @click="hanldeAddToShopCart(detail.id)" >{{$t('i.cart')}}</a-button>
+            <!-- <a-button type="primary" v-if="specList.length <= 0  && this.detail.in_shopping_cart" block class="btn" >{{$t('i.added')}}</a-button> -->
 
             <div class="price-list">
                 <div class="retail-price">
