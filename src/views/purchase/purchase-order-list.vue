@@ -328,6 +328,7 @@ export default {
         this.getDistributorListAll();
         this.getAgentListAll();
         this.getStoreListAll();
+        this.getStatusStat();
         this.timer = window.setInterval(() => {
             setTimeout(() => {
                 this.getDistributorListAll();
