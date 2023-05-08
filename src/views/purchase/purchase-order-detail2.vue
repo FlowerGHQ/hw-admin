@@ -58,139 +58,6 @@
             </div>
         </div>
     </div>
-    <!-- 付款明细 -->
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area2">{{$t('p.payment_detail')}}</div>
-            <div class="btns-area">
-
-            </div>
-        </div>
-        <div style="padding-left:20px">
-            <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
-                                     :row-key="record => record.id" :pagination='false'>
-                                <template #bodyCell="{ column, text, record }">
-                                    <template v-if="column.key === 'item'">
-                                        {{ text || '-' }}
-                                    </template>
-                                    <template v-if="column.dataIndex === 'attachment'">
-                                        <div class="table-img">
-                                            <a-image-preview-group class="image-group">
-                                                <a-image v-for="(path, index) in record.paths" :key="index"
-                                                         class="image" :width="55" :height="55"
-                                                         :src="$Util.imageFilter(path)" :fallback="$t('def.none')"/>
-                                            </a-image-preview-group>
-                                        </div>
-                                    </template>
-
-                                    <template v-if="column.key === 'detail'">
-                                        <div class="table-img">
-                                            <a-image :width="24" :height="24"
-                                                     :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)"
-                                                     :fallback="$t('def.none')"/>
-                                            <a-tooltip placement="top" :title='text'>
-                                                <p class="ell" style="max-width:120px;margin-left:12px;">
-                                                    {{ text || '-' }}</p>
-                                            </a-tooltip>
-                                        </div>
-                                    </template>
-
-                                    <template v-if="column.dataIndex === 'type'">
-                                        {{ $Util.purchasePayMethodFilter(text , $i18n.locale) }}
-                                    </template>
-                                    <template v-if="column.key === 'status'">
-                                        {{ $Util.purchasePayStatusFilter(text, $i18n.locale) }}
-                                    </template>
-                                    <template v-if="column.key === 'money'">
-                                        {{ $Util.priceUnitFilter(detail.currency) }} {{ $Util.countFilter(text) }}
-                                    </template>
-                                    <template v-if="column.key === 'time'">
-                                        {{ $Util.timeFilter(text) }}
-                                    </template>
-                                    <template v-if="column.key === 'operation'">
-                                        <a-button type='link' @click="handleDownload(record)"><i
-                                            class="icon i_download"/>{{ $t('n.download') }}
-                                        </a-button>
-                                        <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
-                                            </a-button>
-                                        </template>
-                                        <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </template>
-            </a-table>
-        </div>
-        <!-- <div v-show="!$auth('purchase-order.supply-detail')">
-                <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                    <a-collapse-panel key="PayInfo" :header="$t('p.payment_detail')" class="gray-collapse-panel" :showArrow="false" collapsible="disabled">
-                        <div class="panel-content">
-                            <a-table :columns="payColumns" :data-source="payList" :scroll="{ x: true }"
-                                     :row-key="record => record.id" :pagination='false'>
-                                <template #bodyCell="{ column, text, record }">
-                                    <template v-if="column.key === 'item'">
-                                        {{ text || '-' }}
-                                    </template>
-                                    <template v-if="column.dataIndex === 'attachment'">
-                                        <div class="table-img">
-                                            <a-image-preview-group class="image-group">
-                                                <a-image v-for="(path, index) in record.paths" :key="index"
-                                                         class="image" :width="55" :height="55"
-                                                         :src="$Util.imageFilter(path)" :fallback="$t('def.none')"/>
-                                            </a-image-preview-group>
-                                        </div>
-                                    </template>
-
-                                    <template v-if="column.key === 'detail'">
-                                        <div class="table-img">
-                                            <a-image :width="24" :height="24"
-                                                     :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)"
-                                                     :fallback="$t('def.none')"/>
-                                            <a-tooltip placement="top" :title='text'>
-                                                <p class="ell" style="max-width:120px;margin-left:12px;">
-                                                    {{ text || '-' }}</p>
-                                            </a-tooltip>
-                                        </div>
-                                    </template>
-
-                                    <template v-if="column.dataIndex === 'type'">
-                                        {{ $Util.purchasePayMethodFilter(text , $i18n.locale) }}
-                                    </template>
-                                    <template v-if="column.key === 'status'">
-                                        {{ $Util.purchasePayStatusFilter(text, $i18n.locale) }}
-                                    </template>
-                                    <template v-if="column.key === 'money'">
-                                        {{ $Util.priceUnitFilter(detail.currency) }} {{ $Util.countFilter(text) }}
-                                    </template>
-                                    <template v-if="column.key === 'time'">
-                                        {{ $Util.timeFilter(text) }}
-                                    </template>
-                                    <template v-if="column.key === 'operation'">
-                                        <a-button type='link' @click="handleDownload(record)"><i
-                                            class="icon i_download"/>{{ $t('n.download') }}
-                                        </a-button>
-                                        <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayAuditShow(record.id)">{{ $t('p.audit') }}
-                                            </a-button>
-                                        </template>
-                                        <template v-if="authOrg(detail.org_id, detail.org_type)">
-                                            <a-button type='link' v-if="record.status === PAY_STATUS.WAIT_TO_AUDIT"
-                                                      @click="handlePayCancel(record.id)">{{ $t('def.cancel') }}
-                                            </a-button>
-                                        </template>
-                                    </template>
-                                </template>
-                            </a-table>
-                        </div>
-                    </a-collapse-panel>
-                </a-collapse>
-        </div> -->
-    </div>
     <!-- 商品信息 -->
     <div class="list-container">
         <div class="title-container">
@@ -212,10 +79,15 @@
         </div>
         <div style="padding-left:20px">
             <a-table
-                                :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
-                                :row-key="record => record.id" :loading='loading' :pagination='false'
-                                :row-selection="rowSelection">
-                            <template #bodyCell="{ column, text, record}">
+                :columns="itemColumns" 
+                :data-source="itemList" 
+                :scroll="{ x: true }"
+                :row-key="record => record.id" 
+                :loading='loading' 
+                :pagination='false'
+                :row-selection="rowSelection"
+            >
+                <template #bodyCell="{ column, text, record}">
                                 <template v-if="column.dataIndex === 'item'">
                                     <div class="table-img">
                                         <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
@@ -240,8 +112,8 @@
                                 <template v-if="column.key === 'spec'">
                                     {{$Util.itemSpecFilter(text, $i18n.locale )}}
                                 </template>
-                            </template>
-                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
+                </template>
+                <template #summary v-if="!$auth('purchase-order.supply-detail')">
                                 <a-table-summary  >
                                     <a-table-summary-row>
                                         <a-table-summary-cell :index="0" :col-span="8"><!-- {{ $t('p.total')}} --></a-table-summary-cell>
@@ -251,33 +123,65 @@
                                         <!-- <a-table-summary-cell :index="5" :col-span="1">总金额:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.charge)}}</a-table-summary-cell> -->
                                     </a-table-summary-row>
                                 </a-table-summary>
-                            </template>
+                </template>
             </a-table>
         </div>
     </div>
     <!-- 发货记录、收货记录、合同、操作记录 -->
-    <div class="list-container2">
-        <div class="header">
-            <div class="header-tab" >
-                <div class="tab-items" :class="{ active:activeValue === item.value,maxwigth:this.$i18n.locale === 'en' }" v-for="item in nameList" :key="item.name" @click="handleClick(item.value)">{{this.$i18n.locale === 'zh'? item.zh:item.en}}</div>
+    <div class="list-container list-container2">     
+        <div class="title-container">
+            <div class="title-area" style="font-size: 14px;">
+                <eosTabs v-model:activeKey="activeValue" :tabsList="nameList">
+                </eosTabs>
             </div>
-            <div class="btn-are">
-
+            <div class="btns-area">                
             </div>
         </div>
         <div class="container-body">
             <!-- 发货记录 -->
-            <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" ref="out_delivery" v-show="activeValue === 1"/>
+            <template v-if="activeValue == 'delivery_record' ">            
+                <DeliveryLogs 
+                    ref="out_delivery"                     
+                    :order-id='id' 
+                    :detail='detail' 
+                    :type="STOCK_TYPE.OUT" 
+                    @submit="getList" 
+                />
+            </template>
+
             <!-- 收货记录 -->
-            <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList" ref="in_delivery" v-show="activeValue === 2"/>
-            <!-- 上传附件 -->
-            <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' :detail='detail' @submit="getList" ref="AttachmentFile" v-if="activeValue === 3"/>
+            <template v-if="activeValue == 'receiving_record' ">            
+                <DeliveryLogs 
+                    ref="in_delivery"
+                    :order-id='id' 
+                    :detail='detail' 
+                    :type="STOCK_TYPE.IN" 
+                    @submit="getList" 
+                />
+            </template>
+
+            <!-- 上传附件(合同信息) -->
+            <template v-if="activeValue == 'AttachmentFile' ">            
+                <AttachmentFile
+                    :target_id='id' 
+                    :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' 
+                    :detail='detail' 
+                    @submit="getList" 
+                />
+            </template>
+
             <!-- 操作记录 -->
-            <ActionLog :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER" v-if="activeValue === 4"/>
+            <template v-if="activeValue == 'ActionLog' ">            
+                <ActionLog 
+                    :id='id' 
+                    :detail='detail' 
+                    :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"
+                />
+            </template>
         </div>
     </div>
     <!-- 收货信息 -->
-    <div class="list-container3">
+    <!-- <div class="list-container3">
         <a-row>
             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='8' class="info-block">
                 <div class="info-title">{{ $t('n.delivery_information') }}</div>
@@ -321,7 +225,7 @@
                 </div>
             </a-col>
         </a-row>
-    </div>
+    </div> -->
     <template class="modal-container">
         <!-- 确认收款 -->
         <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
@@ -570,6 +474,7 @@ import AttachmentFile from './components/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import ActionLog from './components/ActionLog.vue';
+import eosTabs from '@/components/common/eos-tabs.vue'
 
 import EditItem from './components/EditItem.vue';
 import {message} from "ant-design-vue";
@@ -604,9 +509,8 @@ export default {
         MySteps,
         AuditHandle,
         ActionLog,
-
-    },
-    props: {},
+        eosTabs
+    },    
     data() {
         return {
             Core,
@@ -721,39 +625,16 @@ export default {
             selectedRowItemsAll: [],
             selectedRowKeys: [],
             selectedRowItems: [],
-
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false,
             createAuditShow: false,
-            PIShow: false,
-            nameList:[
-                {
-                    zh:'发货记录',
-                    en:'Delivery Record',
-                    value:1
-                },
-                {
-                    zh:'收货记录',
-                    en:'Receiving Record',
-                    value:2
-                },
-                {
-                    zh:'合同信息',
-                    en:'Contract Information',
-                    value:3
-                },
-                {
-                    zh:'操作记录',
-                    en:'Record',
-                    value:4
-                },
-            ],
-            activeValue: 1,
+            PIShow: false,                    
             status: this.$route.query.status,
             payment_status: this.$route.query.payment_status,
+
+            activeValue: 'delivery_record', // nameList的value
         };
-    },
-    watch: {},
+    },    
     computed: {
         itemColumns() {
             let columns = [
@@ -870,7 +751,6 @@ export default {
         lang() {
             return this.$store.state.lang
         },
-
         beforeDeliver() {
             switch (this.detail.type) {
                 case TYPE.GIVEAWAY:
@@ -892,30 +772,58 @@ export default {
                     return false;
             }
         },
+        // tabs切换
+        nameList(){
+            let arr = [
+                { weight:1, key: 'delivery_record', value: `${this.$t('p.delivery_record')}` }, // 发货记录 
+                { weight:2, key: 'receiving_record', value: `${this.$t('p.receiving_record')}` }, // 收货记录         
+                { weight:3, key: 'AttachmentFile', value: `${this.$t('p.contract_information')}` }, // 上传附件(合同信息) 
+                { weight:4, key: 'ActionLog', value: `${this.$t('p.record')}` }, // 操作记录 
+            ]
+            return arr.sort((a,b) => a.weight - b.weight)
+        }
     },
     mounted() {
         this.getList();
-        this.getWarehouseList();
-        // this.getWaybillDetail()
+        this.getWarehouseList();        
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
     },
     methods: {
-        getList(){
-            this.itemEditShow = false
-            this.giveOrderShow = false
-            this.getPurchaseItemList();
-            this.getPurchasePayList();
-            this.getPurchaseInfo();
-            this.$refs.in_delivery.getTableData();
-            this.$refs.out_delivery.getTableData();
+        /*== FETCH start==*/
+        // 获取 采购单订单信息
+        getPurchaseInfo() {
+            Core.Api.Purchase.detail({
+                id: this.id
+            }).then(res => {
+                this.detail = res.detail;
+                if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
+                    this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
+                }
+                this.total.freight = res.detail.freight || 0;
+                console.log('getPurchaseInfo res', res)
+                this.step();
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
+            });
         },
         getWarehouseList() {
             Core.Api.Warehouse.listAll().then(res => {
                 this.warehouseList = res.list
             })
         },
+        /*== FETCH end==*/
+        getList(){
+            this.itemEditShow = false
+            this.giveOrderShow = false
+            this.getPurchaseItemList();
+            this.getPurchasePayList();
+            this.getPurchaseInfo();
+            this.$refs?.in_delivery?.getTableData();
+            this.$refs?.out_delivery?.getTableData();
+        },       
         // 上传图片 start---
         // 校验图片
         handleImgCheck(file) {
@@ -991,7 +899,7 @@ export default {
         },
 
         authOrg(orgId, orgType) {
-            console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
+            // console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             } else{ return false }
@@ -1029,24 +937,7 @@ export default {
                     window.open(routeUrl.href, '_self')
                     break;
             }
-        },
-        // 获取 采购单详情
-        getPurchaseInfo() {
-            Core.Api.Purchase.detail({
-                id: this.id
-            }).then(res => {
-                this.detail = res.detail;
-                if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
-                    this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
-                }
-                this.total.freight = res.detail.freight || 0;
-                console.log('getPurchaseInfo res', res)
-                this.step();
-            }).catch(err => {
-                console.log('getPurchaseInfo err', err)
-            }).finally(() => {
-            });
-        },
+        },       
         // 获取 采购单 商品列表
         getPurchaseItemList() {
             Core.Api.Purchase.itemList({
@@ -1076,7 +967,7 @@ export default {
                 this.loading = false;
             });
         },
-        // 获取 采购单 payList列表
+        // 获取 采购单 付款明细列表
         getPurchasePayList() {
             Core.Api.Purchase.payList({
                 target_id: this.id
@@ -1554,10 +1445,7 @@ export default {
             }).catch(err => {
                 console.log('getTableData err', err)
             })
-        },
-        handleClick(value){
-            this.activeValue = value
-        }
+        }, 
     }
 };
 </script>
@@ -1613,45 +1501,6 @@ export default {
 
     }
     .list-container2{
-        padding: 24px 20px 20px 20px;
-        background-color: #ffffff;
-        margin-right: 8px;
-        margin-left: 8px;
-        border-radius: 6px;
-
-        .header{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            .header-tab{
-            width: auto;
-            background: #F5F5F5;
-            border: 1px solid #EFEFEF;
-            border-radius: 2px;
-            display: flex;
-            padding:3px 4px;
-            .tab-items{
-                border-radius: 2px;
-                width: 78px;
-                height: 30px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                color: #595959;
-                font-size: 14px;
-            }
-            .maxwigth{
-                width: 140px;
-            }
-            .active{
-                background-color: #fff;
-                color: #006EF9;
-                box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
-            }
-        }
-        }
-
 
     }
     .list-container3{

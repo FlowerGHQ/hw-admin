@@ -859,7 +859,6 @@ export default {
     },
     mounted() {
         this.getList();
-
         this.getWarehouseList();
         // this.getWaybillDetail()
     },

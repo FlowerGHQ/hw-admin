@@ -919,7 +919,11 @@ const messages = {
             receiver: '接受人',
 	        pay_file_upload: '付款凭证未上传',
 	        create_audit: '订单审核',
-            receipt_message:'预计10-12天完成'
+            receipt_message:'预计10-12天完成',
+            delivery_record: '发货记录',
+	        receiving_record: '收货记录',
+            contract_information: '合同信息',
+            record: '操作记录',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3176,7 +3180,11 @@ const messages = {
             receiver:'Recipient',
             pay_file_upload:'The payment voucher is not uploaded',
 	        create_audit: 'Order Review',
-            receipt_message:'Expected to be completed in 10-12 days'
+            receipt_message:'Expected to be completed in 10-12 days',
+            delivery_record: 'Delivery Record',
+	        receiving_record: 'Receiving Record',
+            contract_information: 'Contract Information',
+            record: 'Record',
         },
         s: {
             store_list:'Shop list',
