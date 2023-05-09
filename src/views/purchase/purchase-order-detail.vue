@@ -657,8 +657,8 @@ export default {
             giveOrderShow: false, // 赠送订单按钮 显隐
             createAuditShow: false, // 订单审核 model 显隐  
             PIShow: false,  // 修改pi model 显隐                 
-            status: this.$route.query.status,
-            payment_status: this.$route.query.payment_status,
+            status: undefined,
+            payment_status: undefined,
 
             activeValue: 'payment_detail', // nameList的value
         };
@@ -806,6 +806,8 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
+        this.status = this.$route.query.status
+        this.payment_status = this.$route.query.payment_status
     },
     methods: {
         /*== FETCH start==*/
@@ -1131,10 +1133,10 @@ export default {
                 this.$message.warning(this.$t('r.audit_result'))
                 return
             }
-
+            console.log("测试", this.id);
             Core.Api.Purchase.createAudit({
                 id:this.id,
-                ...form
+                ...Core.Util.searchFilter(form)
             }).then(res => {
                 this.$message.success(this.$t('pop_up.audited'))
                 this.createAuditShow = false
