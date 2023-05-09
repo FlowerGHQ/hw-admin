@@ -549,8 +549,8 @@ export default {
       );
 
       this.loading = true;
-      Core.Api.CRMTestDriveOrder.list({
-        ...searchForm,
+      Core.Api.CRMTestDriveOrder.list({		
+        ...Core.Util.searchFilter(searchForm),
         page: 0,
       })
         .then((res) => {
@@ -745,6 +745,7 @@ export default {
         type: Core.Const.CRM_DICT.TYPE.TYPE_TEST_MODEL,
         status: Core.Const.CRM_DICT.STATUS.STATUS_NORM,
       }).then((res) => {
+		// console.log("测试", res.list);
         this.sourceList = res.list;
       });
     },

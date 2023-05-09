@@ -70,8 +70,8 @@
 <!--                    </div>-->
                 </div>
                 <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
-                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key])}}</span>
-                <span class="price">{{currency}} {{$Util.countFilter(item.item[priceKey + unitMap[currency].key] * item.amount)}}</span>
+                <span class="price">{{currency}} {{item.item ? $Util.countFilter(item.item[priceKey + unitMap[currency].key]) : '-'}}</span>
+                <span class="price">{{currency}} {{item.item ? $Util.countFilter(item?.item[priceKey + unitMap[currency].key] * item.amount) : '-'}}</span>
             </div>
 
             <div class="settle-item sum">
@@ -170,7 +170,9 @@ export default {
             console.log('key',key)
             console.log('shopCartList',this.shopCartList)
             for (const item of this.shopCartList) {
-                sum += item.item[key] * item.amount
+                if(item.item) {
+                    sum += item.item[key] * item.amount
+                }
             }
             return Core.Util.countFilter(sum)
         },
@@ -194,6 +196,7 @@ export default {
     methods: {
 
         routerChange(type, item) {
+            console.log(item.id,'yxy');
             let routeUrl
             switch (type) {
                 case 'settle':  // 结算
@@ -216,11 +219,6 @@ export default {
             }
         },
         settle(){
-            console.log(11111)
-            for(var i = 0 ; i< this.shopCartList.length ; i ++){}
-            this.shopCartList.forEach(it => {
-
-            });
             for (const it of this.shopCartList) {
                 console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
                 if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
@@ -296,6 +294,7 @@ export default {
         handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
             let _this = this
+            console.log('yxy',item);
             this.$confirm({
                 title: _this.$t('pop_up.move_favorites'),
                 okText: _this.$t('def.sure'),

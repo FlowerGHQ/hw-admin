@@ -20,7 +20,9 @@
                     <!-- <a-button type="primary" v-if="detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" @click="handleModalShow('payment')"><i class="icon i_received"/>{{ $t('p.confirm_payment')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && (detail.type !== TYPE. || PAYMENT_STATUS.PAY_ALL)" @click="handleModalShow('deliver')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.ship')}}</a-button>-->
                     <!-- <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') && detail.type !== TYPE. && $auth('ADMIN')" @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
-                    <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver') " @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
+                    <template v-if="!outStockBtnShow">
+                        <a-button type="primary" v-if="(detail.status === STATUS.WAIT_DELIVER || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')" @click="handleModalShow('out_stock')" :disabled="exportDisabled"><i class="icon i_deliver"/>{{ $t('p.out_stock')}}</a-button>
+                    </template>
 <!--                    <template v-if="detail.type === FLAG_ORDER_TYPE.PRE_SALES">-->
 <!--                        <a-button type="primary" v-if="detail.status === STATUS.WAIT_DELIVER && $auth('purchase-order.deliver') " @click="handleModalShow('transfer')"><i class="icon i_deliver"/>{{ $t('n.transferred')}}</a-button>-->
 <!--                    </template>-->
@@ -130,13 +132,15 @@
                             <div v-show="!$auth('purchase-order.supply-detail')">
 
                                 <div class="info-item">
-                                    <div class="key">{{ $t('n.contact')}}</div>
+                                    <div class="key">{{ $t('p.contact')}}</div>
                                     <div class="value" v-if="detail.receive_info != null">{{detail.receive_info.phone || '-'}}</div>
                                     <div class="value" v-else>-</div>
                                 </div>
                                 <div class="info-item">
-                                    <div class="key">{{ $t('p.payment_terms')}}</div>
-                                    <div class="value">{{ DISTRIBUTOR.PAY_TIME_MAP[detail.pay_clause] || '-' }}</div>
+                                    <div class="key">{{ $t('p.payment_method')}}</div>
+                                    <div class="value">
+                                        {{ $Util.purchasePayTypeFilter(detail.pay_type, $i18n.locale) }}                                        
+                                    </div>
                                 </div>
                                 <div class="info-item">
                                     <div class="key">{{ $t('p.remark')}}</div>
@@ -271,7 +275,7 @@
                                 </div>
                             </a-col>
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                                <div class="info-item"
+                                <!-- <div class="info-item"
                                      v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
                                     <div class="key">{{ $t('p.delivery_method') }}</div>
                                     <div class="value">
@@ -283,7 +287,7 @@
                                     <div class="value">
                                         {{ $Util.purchaseExpressFilter(detail.express_type, $i18n.locale || '-') }}
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="info-item" v-if="detail.waybill">
                                     <div class="key">{{ $t('p.shipment_number') }}</div>
                                     <div class="value">{{ detail.waybill || '-' }}</div>
@@ -710,6 +714,7 @@ export default {
             giveOrderShow: false,
             createAuditShow: false,
             PIShow: false,
+            outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
         };
     },
     watch: {},
@@ -717,7 +722,7 @@ export default {
         itemColumns() {
             let columns = [
                 { title: this.$t('i.item'), dataIndex: 'item' },
-                { title: this.$t('i.number'),dataIndex: ['item', "model"] },
+                // { title: this.$t('i.number'),dataIndex: ['item', "model"] },
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] },
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
@@ -741,7 +746,7 @@ export default {
                 { title: this.$t('p.status'), dataIndex: 'status' ,key: 'status'},
                 { title: this.$t('p.pay_amount'), dataIndex: 'price', key: 'money'},
                 { title: this.$t('p.remark'), dataIndex: 'remark', key: 'item' },
-                { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
+                { title: this.$t('p.payment_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             ]
             return columns
@@ -1030,6 +1035,7 @@ export default {
                 this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = total_price
+                this.outStockBtnShow = this.itemList.every(item => item.residue_quantity === 0);
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {

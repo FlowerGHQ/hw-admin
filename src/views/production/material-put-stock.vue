@@ -298,7 +298,10 @@ export default {
         },
 
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name}).then(res => {
+            Core.Api.Warehouse.list({
+                name: name,
+                page_size: 100
+            }).then(res => {
                 this.warehouseOptions = res.list
             })
         },
