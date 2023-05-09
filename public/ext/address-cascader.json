@@ -25991,7 +25991,157 @@
                         "code": "ITA000VRL",
                         "name": "韦尔切利",
                         "name_en": "Vercelli"
-                    }
+                    },
+                    {
+                        "id": "1656",
+                        "key": "city",  
+                        "name": "翁布拉",
+                        "name_en": "Umbra"
+                    },
+                    {
+                        "id": "1657",
+                        "key": "city",
+                        "name": "兰恰诺",
+                        "name_en": "Lanciano"
+                    },
+                    {
+                        "id": "1658",
+                        "key": "city",
+                        "name": "格罗塔马雷",
+                        "name_en": "Grottammare"
+                    },
+                    {
+                        "id": "1659",
+                        "key": "city",
+                        "name": "福里奥",
+                        "name_en": "Forio"
+                    },
+                    {
+                        "id": "1700",
+                        "key": "city",
+                        "name": "雷卡纳蒂",
+                        "name_en": "RECANATI"
+                    },
+                    {
+                        "id": "1701",
+                        "key": "city",  
+                        "name": "卡普里",
+                        "name_en": "Capri"
+                    },
+                    {
+                        "id": "1702",
+                        "key": "city",
+                        "name": "皮翁比诺",
+                        "name_en": "Piombino"
+                    },
+                    {
+                        "id": "1703",
+                        "key": "city",
+                        "name": "费拉约港",
+                        "name_en": "Portoferraio"
+                    },
+                    {
+                        "id": "1704",
+                        "key": "city",
+                        "name": "塞尼加利亚",
+                        "name_en": "Senigallia"
+                    },
+                    {
+                        "id": "1705",
+                        "key": "city",
+                        "name": "里乔内",
+                        "name_en": "Riccione"
+                    },
+                    {
+                        "id": "1706",
+                        "key": "city",  
+                        "name": "里米尼",
+                        "name_en": "Rimini"
+                    },
+                    {
+                        "id": "1707",
+                        "key": "city",
+                        "name": "福尔林波波",
+                        "name_en": "Forlimpopoli"
+                    },
+                    {
+                        "id": "1708",
+                        "key": "city",
+                        "name": "拉马达莱娜",
+                        "name_en": "Maddalena"
+                    },
+                    {
+                        "id": "1709",
+                        "key": "city",
+                        "name": "维亚雷焦",
+                        "name_en": "Viareggio"
+                    },
+                    {
+                        "id": "1710",
+                        "key": "city",
+                        "name": "帕多瓦",
+                        "name_en": "Padova"
+                    },
+                    {
+                        "id": "1711",
+                        "key": "city",  
+                        "name": "西西里",
+                        "name_en": "Sicilia"
+                    },
+                    {
+                        "id": "1712",
+                        "key": "city",
+                        "name": "埃尔马斯",
+                        "name_en": "Elmas"
+                    },
+                    {
+                        "id": "1713",
+                        "key": "city",
+                        "name": "佩罗",
+                        "name_en": "Pero"
+                    },
+                    {
+                        "id": "1714",
+                        "key": "city",
+                        "name": "拉维斯",
+                        "name_en": "Lavis"
+                    },
+                    {
+                        "id": "1715",
+                        "key": "city",
+                        "name": "索里索莱",
+                        "name_en": "Sorisole"
+                    },
+                    {
+                        "id": "1716",
+                        "key": "city",  
+                        "name": "塞拉瓦莱",
+                        "name_en": "Serravalle"
+                    },
+                    {
+                        "id": "1717",
+                        "key": "city",
+                        "name": "因佩里亞",
+                        "name_en": "Imperia"
+                    },
+                    {
+                        "id": "1718",
+                        "key": "city",
+                        "name": "阿尔本加",
+                        "name_en": "Albenga"
+                    },
+                    {
+                        "id": "1719",
+                        "key": "city",
+                        "name": "维罗纳",
+                        "name_en": "Verona"
+                    },
+                    {
+                        "id": "1720",
+                        "key": "city",
+                        "name": "热那亚",
+                        "name_en": "Genova"
+                    } 
                 ]
             }
         ]
