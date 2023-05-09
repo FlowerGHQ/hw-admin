@@ -1,19 +1,26 @@
 <template>
-<div class="EditPurchaseItem">
-    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-        <template #expandIcon>
-            <div class="collapse-title-right" >
-                <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
-                <a-divider type="vertical" />
-                <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
-                <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>
-                <i class="icon i_expan_l"/>
+<div class="EditPurchaseItem">   
+    <div class="list-container">
+        <div class="title-container">
+            <div class="title-area2">{{title}}</div>
+            <div class="btns-area">     
+                <div class="collapse-title-right">
+                    <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
+                    <a-divider type="vertical" />
+                    <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
+                    <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>                    
+                </div>          
             </div>
-        </template>
-        <a-collapse-panel key="EditPurchaseItem" :header="title" class="gray-collapse-panel">
+        </div>
+        <div style="padding: 0 20px;">
             <div class="panel-content table-container no-mg">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
+                <a-table 
+                    :columns="tableColumns" 
+                    :data-source="tableData" 
+                    :scroll="{ x: true }"
+                    :row-key="record => record.id" 
+                    :pagination='false'
+                >
                     <template #bodyCell="{ column, text, record, index}">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
@@ -29,7 +36,6 @@
                             <a-input-number v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
-<!--                            {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(text)}}-->
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
                             {{$Util.countFilter(text)}}
                         </template>
@@ -42,8 +48,8 @@
                     </template>
                 </a-table>
             </div>
-        </a-collapse-panel>
-    </a-collapse>
+        </div>
+    </div>
 </div>
 </template>
 
@@ -72,10 +78,7 @@ export default {
     data() {
         return {
             title: '',
-            loading: false,
-
-            activeKey: ['EditPurchaseItem'],
-
+            loading: false,        
             tableData: [],
         };
     },
