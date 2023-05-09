@@ -222,7 +222,6 @@ export default {
             for (const it of this.shopCartList) {
                 console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
                 if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
-                    console.log(2222)
                     this.$message.error(this.$t('p.item_error'))
                     return ;
                 }
@@ -301,7 +300,7 @@ export default {
                 cancelText: _this.$t('def.cancel'),
                 async onOk() {
                     try {
-                        await Core.Api.Favorite.add({item_id: item.item_id,price: item.price})
+                        await Core.Api.Favorite.add({item_id: item.item_id, price: item?.item?.fob_eur})
                         await Core.Api.ShopCart.remove({id: item.id})
                         _this.$message.success(this.$t('pop_up.operate'))
                     } catch(err) {
