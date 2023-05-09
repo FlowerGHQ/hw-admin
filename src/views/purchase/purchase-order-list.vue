@@ -350,9 +350,7 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/purchase/purchase-order-detail",
                         query: {
-                            id: item.id,
-                            status:item.status,
-                            payment_status:item.payment_status
+                            id: item.id
                         }
                     })
                     window.open(routeUrl.href, '_self')

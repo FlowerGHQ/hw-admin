@@ -106,7 +106,12 @@
         <!-- 步骤条 -->
         <div class="gray-panel">
             <div class="panel-content">
-                <MySteps :stepsList='stepsList' :current='currStep' :status="status" :payment_status="payment_status"></MySteps>
+                <MySteps 
+                    :stepsList='stepsList' 
+                    :current='currStep' 
+                    :status="detail.status" 
+                    :payment_status="detail.payment_status">
+                </MySteps>
             </div>           
         </div>
          <!-- 订单信息 -->
@@ -162,11 +167,14 @@
                     <div v-show="!$auth('purchase-order.supply-detail')">
                         <div class="info-item">
                             <div class="key">{{ $t('p.pay_amount')}}</div>
-                            <div class="value" >{{detail.payment}}</div>
+                            <div class="value" > 
+                                <span>{{$Util.priceUnitFilter(detail.currency)}}</span>                               
+                                <span>{{$Util.countFilter(detail.payment)}} </span> 
+                            </div>
                         </div>
                         <div class="info-item" >
                             <div class="key">{{ $t('p.payment_type')}}</div>
-                            <div class="value">{{ $Util.purchasePayTypeFilter(detail.pay_type, $i18n.locale) }}</div>
+                            <div class="value">{{ $Util.purchasePayTypeFilter(detail.pay_type, $i18n.locale) }}</div>                            
                         </div>
                         <div class="info-item">
                             <div class="key">{{ $t('p.time_payment')}}</div>
@@ -656,9 +664,7 @@ export default {
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
             createAuditShow: false, // 订单审核 model 显隐  
-            PIShow: false,  // 修改pi model 显隐                 
-            status: undefined,
-            payment_status: undefined,
+            PIShow: false,  // 修改pi model 显隐                           
 
             activeValue: 'payment_detail', // nameList的value
         };
@@ -685,9 +691,8 @@ export default {
 
         },      
         currStep() {
-
+            // console.log("现在的状态", this.detail.status);
             for (let i = 0; i < this.stepsList.length; i++) {
-
                 const item = this.stepsList[i];
                 switch (this.detail.status){
                     case STATUS.CANCEL:
@@ -805,9 +810,7 @@ export default {
         this.getWarehouseList();        
     },
     created() {
-        this.id = Number(this.$route.query.id) || 0
-        this.status = this.$route.query.status
-        this.payment_status = this.$route.query.payment_status
+        this.id = Number(this.$route.query.id) || 0       
     },
     methods: {
         /*== FETCH start==*/
@@ -1231,7 +1234,7 @@ export default {
         },
         // 步骤条
         step(){
-            console.log("detail", this.detail)
+            // console.log("detail", this.detail)
             if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT ||  this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT){
                 this.stepsList = [
                     {status: '100', zh: '支付', en: 'Payment'},

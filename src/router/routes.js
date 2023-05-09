@@ -1320,8 +1320,8 @@ const routes = [
             {
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
-                // component: () => import('@/views/warehouse/warehouse-detail.vue'),
-                component: () => import('@/views/warehouse/warehouse-detail-copy.vue'),
+                component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                // component: () => import('@/views/warehouse/warehouse-detail-copy.vue'),
                 meta: {
                     hidden: true,
                     title: '仓库详情',

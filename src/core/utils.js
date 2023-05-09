@@ -624,6 +624,11 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
+    // 统一状态管理
+    StatusFilter(val, MAP, to = 'zh') {        
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 用户/账号/用户 ================ */

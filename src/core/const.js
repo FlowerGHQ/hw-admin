@@ -38,7 +38,7 @@ switch (window.location.hostname) {
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        // URL_POINT = 'http://10.0.0.131:8889' // yzy   
+        // URL_POINT = 'http://10.0.0.119:8889'
         break;
 }
 
@@ -624,10 +624,7 @@ let Const = {
             10: { value: 10, zh: '汇票', en: 'Draft'},
             20: { value: 20, zh: '银行转账', en: 'Bank transfer'},
         },
-        PAY_METHOD_LIST: [
-            // { name: '支付宝', value: '1' },
-            // { name: '微信', value: '2' },
-            // { name: '银行转账', value: '3' },
+        PAY_METHOD_LIST: [            
             { zh: '汇票', en: 'Draft', value: '10' },
             { zh: '银行转账', en: 'Bank transfer', value: '20' },
         ],
@@ -642,6 +639,18 @@ let Const = {
             '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
 	        '300': { key: 300, color: 'blue', zh: '部分付款', en: 'Part of the payment', value: '0'},
             '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
+        },
+        // 发货状态
+        goods_status:{
+            '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
+            '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
+            '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
+            '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},
+        },
+        // 审核状态
+        examine_status:{
+            '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},            
         },
         /* PAYMENT_COLOR_MAP: {
              '100': 'yellow',
