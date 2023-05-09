@@ -1,18 +1,19 @@
 <template>
-<div class="AttachmentFile">
-    <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right"> -->
-        <!-- <template #expandIcon><i class="icon i_expan_l"/></template> -->
-        <!-- <a-collapse-panel key="attachmentFile" :header="$t('n.upload_attachment')" class="gray-collapse-panel"> -->
-        <!-- </a-collapse-panel> -->
-    <!-- </a-collapse> -->
+<div class="AttachmentFile"> 
     <div class="panel-content table-container no-mg">
-        <div class="panel-header">
-            <!-- <span class="name"></span> -->
+        <!-- <div class="panel-header">
+            <span class="name"></span>
             <a-button type="primary" @click="handleModalShow">{{$t('n.upload_attachment')}}</a-button>
-        </div>
-        <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
+        </div> -->
+        <a-table 
+            :columns="tableColumns" 
+            :data-source="tableData" 
+            :scroll="{ x: true }"
+            :row-key="record => record.id"
+            :pagination="channelPagination"
+            @change="handleTableChange"
+        >
+            <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <div class="table-img">
                                 <a-image :width="24" :height="24" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" :fallback="$t('def.none')"/>
@@ -34,7 +35,7 @@
                             <a-button type='link' @click="handleDownload(record)"><i class="icon i_download"/>{{ $t('n.download') }}</a-button>
                             <a-button type='link' @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                         </template>
-                    </template>
+            </template>
         </a-table>
     </div>
     <a-modal v-model:visible="modalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal" :after-close="handleModalClose">
@@ -110,11 +111,20 @@ export default {
                 },
             },
             attachmentEmpty: true,
+            channelPagination: {
+                current: 1,
+                pageSizeOptions: ['20', '40', '60', '80', '100'],
+                pageSize: 20,
+                showQuickJumper: true, // 是否可以快速跳转至某页
+                showSizeChanger: true, // 是否可以改变 pageSize
+                total: 0,
+                showTotal: (total) => `${this.$t('n.all_total')} ${total} ${this.$t('in.total')}`
+            }, // 分页数据
         };
     },
     computed: {
         tableColumns() {
-            let columns = [
+            let columns = [                
                 { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
                 { title: this.$t('n.type'), dataIndex: 'type', key: 'item' },
                 { title: this.$t('n.uploader'), dataIndex: ['user', 'account', 'name'], key: 'item' },
@@ -129,14 +139,17 @@ export default {
         this.getTableData();
     },
     methods: {
-        getTableData() {  // 获取 表格 数据
+        getTableData(params = {}) {  // 获取 表格 数据
             this.loading = true;
             Core.Api.Attachment.list({
                 target_id: this.target_id,
-                target_type: this.target_type,
-                page: 0
+                target_type: this.target_type,           
+                page_size: this.channelPagination.pageSize,
+                page: this.channelPagination.current,
+                ...params
             }).then(res => {
-                console.log("AttachmentFile res", res)
+                // console.log("AttachmentFile res", res)
+                this.channelPagination.total = res.count
                 this.tableData = res.list
                 if(res.list.length === 0) {
                     this.attachmentEmpty = true
@@ -177,7 +190,7 @@ export default {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.$emit('Submit')
                 this.handleModalClose();
-                this.getTableData();
+                this.getTableData({ page: 1 });
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
@@ -223,7 +236,7 @@ export default {
                 onOk() {
                     Core.Api.Attachment.delete({id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getTableData();
+                        _this.getTableData({ page: 1 });
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     })
@@ -236,6 +249,20 @@ export default {
             let url = Core.Const.NET.FILE_URL_PREFIX + record.path
             window.open(url, '_self')
         },
+        // 分页事件
+        handleTableChange(pagination, filters, sorter){
+            const pager = { ...this.channelPagination }
+            pager.current = pagination.current
+            if (pagination.pageSize !== this.channelPagination.pageSize) {
+                pager.current = 1
+                pager.pageSize = pagination.pageSize
+            }
+            this.channelPagination = pager
+            this.getTableData({
+                page_size: this.channelPagination.pageSize,
+                page: this.channelPagination.current
+            })
+        }
     },
 }
 </script>

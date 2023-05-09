@@ -1,15 +1,15 @@
 <template>
-    <div class="DeliveryLogs">
-        <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right" @change="handleCollapseChange">
-            <template #expandIcon><i class="icon i_expan_l"/></template>
-            <a-collapse-panel key="DeliveryLogs"
-                :header="type == Core.Const.STOCK_RECORD.TYPE.OUT ? $t('n.delivery_logs'): $t('n.receiving_record')"
-                class="gray-collapse-panel">
-            </a-collapse-panel>                
-        </a-collapse> -->
+    <div class="DeliveryLogs">        
         <div class="panel-content table-container no-mg">
-            <a-table :columns="invoicColumns" :data-source="invoiceList" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
-                        <template #bodyCell="{ column, text , record }">
+            <a-table 
+                :columns="invoicColumns" 
+                :data-source="invoiceList" 
+                :scroll="{ x: true }" 
+                :row-key="record => record.id" 
+                :pagination="channelPagination"
+                @change="handleTableChange"
+            >
+                <template #bodyCell="{ column, text , record }">
                             <template v-if="column.key === 'org'">
                                 {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
                             </template>
@@ -61,7 +61,7 @@
                                 </template>
 
                             </template>
-                        </template>
+                </template>
             </a-table>
         </div>
         <a-modal v-model:visible="modalShow" :title="$t('p.take_delivery_detail')" width='860px'>
@@ -362,6 +362,16 @@ export default {
             warehouseList: [],
             PIShow: false,
             uid: '',
+
+            channelPagination: {
+                current: 1,
+                pageSizeOptions: ['20', '40', '60', '80', '100'],
+                pageSize: 20,
+                showQuickJumper: true, // 是否可以快速跳转至某页
+                showSizeChanger: true, // 是否可以改变 pageSize
+                total: 0,
+                showTotal: (total) => `${this.$t('n.all_total')} ${total} ${this.$t('in.total')}`
+            }, // 分页数据
         };
     },
     computed: {
@@ -385,7 +395,6 @@ export default {
                     // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
                 )
             }
-
             return columns
         },
         tableColumns() {
@@ -444,17 +453,20 @@ export default {
                 return false
             }
         },       
-        getInvoiceList() {  // 获取 发货记录
+        getInvoiceList(params = {}) {  // 获取 发货记录
             this.loading = true;
-            console.log("getInvoiceList type", this.type)
+            // console.log("getInvoiceList type", this.type)
             Core.Api.Invoice.listByPurchase({
                 source_id: this.orderId,
                 source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.PURCHASE,
                 type: this.type,
                 status: -1,
-                // source_type: Core.Const.STOCK_RECORD.SOURCE_TYPE.ITEM_PURCHASE,
+                page_size: this.channelPagination.pageSize,
+                page: this.channelPagination.current,
+                ...params                
             }).then(res => {
-                console.log("getInvoiceList res", this.type, res)
+                // console.log("getInvoiceList res", this.type, res)
+                this.channelPagination.total = res.count
                 this.invoiceList = res.list
                 if (this.invoiceList.length) {
                     this.activeKey = ['DeliveryLogs']
@@ -486,15 +498,14 @@ export default {
             this.currPage = curr
             this.getTableData()
         },
-        getTableData() {
-            // console.log('getTableData: type', this.type)
+        getTableData(params = {}) {            
             this.modalLoading = true;
             Core.Api.InvoiceItem.list({
                 invoice_id: this.invoiceId,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                // console.log('getTableData res', res)
+                page_size: this.pageSize,
+                ...params
+            }).then(res => {                
                 this.total = res.count
                 this.tableData = res.list
             }).catch(err => {
@@ -528,7 +539,7 @@ export default {
             Core.Api.Purchase.takeDeliver(param).then(res => {
                 this.$message.success(this.$t('p.received'))
                 this.takeDeliverShow = false
-                this.getInvoiceList();
+                this.getInvoiceList({page: 1});
                 this.$emit('Submit')
             }).catch(err => {
                 console.log('handleDeliver err', err)
@@ -539,7 +550,7 @@ export default {
         handleWaybillShow(id) {
             this.handleWaybillClear()
             this.target_id = id
-            this.getInvoiceList()
+            this.getInvoiceList({page: 1})
             this.waybillShow = true;
         },
         handleWaybillClear() {
@@ -589,7 +600,7 @@ export default {
             Core.Api.Purchase.deliver(param).then(res => {
                 this.$message.success(this.$t('p.shipped'))
                 this.deliverShow = false
-                this.getInvoiceList();
+                this.getInvoiceList({page: 1});
                 this.$emit('Submit')
                 this.handleWaybillClear()
             }).catch(err => {
@@ -627,7 +638,7 @@ export default {
             Core.Api.Invoice.updatePI(param).then(res => {
                 this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
-                this.getInvoiceList();
+                this.getInvoiceList({page: 1});
                 this.$emit('Submit')
                 this.handleWaybillClear()
 
@@ -689,7 +700,20 @@ export default {
           })
         },
 
-
+         // 分页事件
+         handleTableChange(pagination, filters, sorter){
+            const pager = { ...this.channelPagination }
+            pager.current = pagination.current
+            if (pagination.pageSize !== this.channelPagination.pageSize) {
+                pager.current = 1
+                pager.pageSize = pagination.pageSize
+            }
+            this.channelPagination = pager
+            this.getInvoiceList({
+                page_size: this.channelPagination.pageSize,
+                page: this.channelPagination.current
+            })
+        }
     },
 }
 </script>

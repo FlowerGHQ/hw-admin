@@ -933,6 +933,8 @@ const messages = {
             time_payment:'支付时间',
             buyer:'买家',
             buyer_message:'买家留言',
+            total:'共',
+            strip:'条',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3203,6 +3205,8 @@ const messages = {
             time_payment:'Time Payment',
             buyer:'Buyer',
             buyer_message:'Buyer Message',
+            total:'total',
+            strip:'strip',
         },
         s: {
             store_list:'Shop list',

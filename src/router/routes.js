@@ -435,7 +435,7 @@ const routes = [
             {
                 path: 'purchase-order-detail2',
                 name: 'PurchaseOrderDetail2',
-                component: () => import('@/views/purchase/purchase-order-detail2.vue'),
+                component: () => import('@/views/purchase/old/purchase-order-detail.vue'),
                 meta: {
                     hidden: true,
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],

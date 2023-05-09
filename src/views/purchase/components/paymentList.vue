@@ -5,7 +5,9 @@
                 :columns="payColumns" 
                 :data-source="payList" 
                 :scroll="{ x: true }"
-                :row-key="record => record.id"                 
+                :row-key="record => record.id" 
+                :pagination="channelPagination"
+                @change="handleTableChange"                
             >
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'item'">
@@ -152,17 +154,31 @@ const payAuditForm = ref({
     audit_remark: '',
 }) // form 提交表单
 const payAuditShow = ref(false) // model显隐
+// 分页数据
+const channelPagination = ref({
+  current: 1,
+  pageSizeOptions: ['20', '40', '60', '80', '100'],
+  pageSize: 20,
+  showQuickJumper: true, // 是否可以快速跳转至某页
+  showSizeChanger: true, // 是否可以改变 pageSize
+  total: 0,
+  showTotal: (total) => `${proxy.$t('p.total')} ${total} ${proxy.$t('p.strip')}`
+})  
 
 onMounted(() => {
     getPurchasePayList()
 })
 /*== FETCH start==*/
 // 获取 采购单 payList列表
-const getPurchasePayList = () => {
+const getPurchasePayList = (params = {}) => {
     loading.value = true
     Core.Api.Purchase.payList({
-        target_id: props.target_id
+        target_id: props.target_id,
+        page_size: channelPagination.value.pageSize,
+	    page: channelPagination.value.current,
+        ...params
     }).then(res => {
+        channelPagination.value.total = res.count
         res.list.forEach(it => {
             if (it.attachment !== null){
                 it.path = it.attachment.path.split(",")
@@ -249,6 +265,21 @@ const handlePayAuditClose = () => {
         audit_result: '',
         audit_remark: '',
     }
+}
+
+// 分页事件
+const handleTableChange = (pagination, filters, sorter) => {
+  const pager = { ...channelPagination.value }
+  pager.current = pagination.current
+  if (pagination.pageSize !== channelPagination.value.pageSize) {
+    pager.current = 1
+    pager.pageSize = pagination.pageSize
+  }
+  channelPagination.value = pager
+  getPurchasePayList({
+  	page_size: channelPagination.value.pageSize,
+	page: channelPagination.value.current
+  })
 }
 
 </script>
