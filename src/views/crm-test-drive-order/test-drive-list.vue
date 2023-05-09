@@ -87,7 +87,7 @@
             <div class="key">{{ $t("crm_d.crm_dict_id") }}：</div>
             <div class="value">
               <a-select
-                v-model:value="searchForm.item_id"
+                v-model:value="searchForm.crm_dict_id"
                 :placeholder="$t('def.select')"
                 @change="handleSearch"
               >
@@ -346,7 +346,7 @@ export default {
         end_time: "",
         type: "",
         status: 0,
-        item_id: 0,
+        crm_dict_id: 0,
       },
       batchForm: {
         own_user_id: "",
