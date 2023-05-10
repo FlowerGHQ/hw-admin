@@ -5,21 +5,21 @@
       <template #description>  
 		<!-- 审核 -->
         <template v-if="item.status === '60'">
-            <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(status,'color')" >				
-                <!-- {{$Util.StatusFilter(status, examine_status, $i18n.locale)}} -->
+            <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(status,'color')">                
+                {{$Util.StatusFilter(status, examine_status, $i18n.locale)}}
             </div>
         </template>
 		<!-- 支付 -->
         <template v-if="item.status === '100'">
-            <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(payment_status,'color')">				
+            <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(payment_status,'color')">
                 {{$Util.paymentStatusFilter(payment_status, $i18n.locale)}}
             </div>
         </template>
 		<!-- 发货 -->
        <template v-if="item.status === '200'">
-            <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(status,'color')">				
-                <!-- {{$Util.StatusFilter(status, goods_status, $i18n.locale)}} -->
-            </div>
+            <!-- <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(status,'color')">	                
+                {{ $Util.StatusFilter(status, goods_status, $i18n.locale, 'finally') }}
+            </div> -->
       </template>
 	  <!-- 收货 -->
       <template v-if="item.status === '300'">

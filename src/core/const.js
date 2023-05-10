@@ -634,6 +634,7 @@ let Const = {
             PAYING: 300, //部分付款
             PAY_ALL: 400,//全部付款
         },
+        // 支付状态
         PAYMENT_STATUS_MAP: {
             '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
             '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
@@ -644,13 +645,20 @@ let Const = {
         goods_status:{
             '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
             '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
-            '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},
+            '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},          
+            'finally': { color: 'green', zh: '已发货', en: 'Shipped'},
+        },
+        // 收货状态
+        Receive_goods:{
             '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
-            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},         
+            'finally': { color: 'green', zh: '预计10-12天工作日', en: 'Expected to be completed in 10-12 days'},
         },
         // 审核状态
         examine_status:{
             '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},            
+            '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
+            'finally': { color: 'green', zh: '审核完成', en: 'Audit completed'},            
         },
         /* PAYMENT_COLOR_MAP: {
              '100': 'yellow',

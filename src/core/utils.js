@@ -625,8 +625,8 @@ const Util = {
         return value[to] || '-'
     },
     // 统一状态管理
-    StatusFilter(val, MAP, to = 'zh') {        
-        let item = MAP[val + ''] || {}
+    StatusFilter(val, MAP, to = 'zh',final = 'finally') {        
+        let item = MAP[String(val)] || MAP[final]
         return item[to] || ''
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */

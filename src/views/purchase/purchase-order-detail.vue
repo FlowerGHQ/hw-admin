@@ -112,7 +112,7 @@
                     :status="detail.status" 
                     :payment_status="detail.payment_status">
                 </MySteps>
-            </div>           
+            </div>
         </div>
          <!-- 订单信息 -->
         <div class="list-container3">
@@ -160,28 +160,7 @@
                                         <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
                         </div>
                     </div>
-                </a-col>
-                <!-- 付款信息  -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='6' class="info-block">
-                    <div class="info-title">{{ $t('p.Payment_information') }}</div>
-                    <div v-show="!$auth('purchase-order.supply-detail')">
-                        <div class="info-item">
-                            <div class="key">{{ $t('p.pay_amount')}}</div>
-                            <div class="value" > 
-                                <span>{{$Util.priceUnitFilter(detail.currency)}}</span>                               
-                                <span>{{$Util.countFilter(detail.payment)}} </span> 
-                            </div>
-                        </div>
-                        <div class="info-item" >
-                            <div class="key">{{ $t('p.payment_type')}}</div>
-                            <div class="value">{{ $Util.purchasePayTypeFilter(detail.pay_type, $i18n.locale) }}</div>                            
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('p.time_payment')}}</div>
-                            <div class="value">{{$Util.timeFilter(detail.create_time) || '-'}}</div>
-                        </div>
-                    </div>
-                </a-col>
+                </a-col>             
                 <!-- 买家信息 -->
                 <a-col :xs='24' :sm='24' :lg='12' :xl='6' class="info-block">
                     <div class="info-title">{{ $t('p.delivery_information') }}</div>
@@ -191,8 +170,12 @@
                             <div class="value" >{{detail.user_name|| '-'}}</div>
                         </div>
                         <div class="info-item" >
-                            <div class="key">{{ $t('p.buyer_message')}}</div>
+                            <div class="key">{{ $t('p.remark')}}</div>
                             <div class="value">{{detail.remark || '-'}}</div>
+                        </div>                      
+                        <div class="info-item" >
+                            <div class="key">{{ $t('p.contact')}}</div>
+                            <div class="value">{{detail?.receive_info?.phone || '-'}}</div>
                         </div>                      
                     </div>
                 </a-col>
@@ -242,16 +225,52 @@
                                 </a-tooltip>
                             </div>
                         </template>
-                        <template v-if="column.dataIndex === 'amount'">
-                            {{record.amount}}
+                        <!-- 总数量 -->
+                        <template v-if="column.dataIndex === 'amount'">                          
+                            <span v-if="user_type">
+                                <a-input-number 
+                                    v-model:value="record.amount" 
+                                    style="width: 120px;" 
+                                    :min="0" :precision="0" 
+                                />
+                            </span>
+                            <span v-else>
+                                {{ text || '-' }}
+                            </span> 
                         </template>
                         <template v-if="column.dataIndex === 'deliver_amount'">
-                            <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0" :precision="0" :disabled="record.disabled"/>
+                            <!-- :disabled="record.disabled" -->
+                            <span v-if="user_type">
+                                <a-input-number 
+                                    v-model:value="record.deliver_amount" 
+                                    style="width: 120px;" 
+                                    :min="0" :precision="0" 
+                                />
+                            </span>
+                            <span v-else>
+                                {{ text || '-' }}
+                            </span>                                                     
                         </template>
-                        <template v-if="column.key === 'money'">
-                            <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
-                            {{$Util.countFilter(text)}}    
+                        <!-- 单价 -->
+                        <template v-if="column.key === 'unit_price'">
+                            <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
+                            <span>{{$Util.countFilter(text)}}</span>                           
                         </template>
+                        <!-- 总价 -->
+                        <template v-if="column.key === 'price'">
+                            <span v-if="user_type">
+                                <a-input-number 
+                                    :defaultValue="$Util.countFilter(text)"  
+                                    style="width: 120px;" 
+                                    :min="0" :precision="2" 
+                                />
+                            </span>
+                            <span v-else>
+                                <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
+                                <span>{{$Util.countFilter(text)}}</span>
+                            </span>                             
+                        </template>   
+                                             
                         <template v-if="column.key === 'spec'">
                             {{$Util.itemSpecFilter(text, $i18n.locale )}}
                         </template>
@@ -261,8 +280,13 @@
                             <a-table-summary-row>
                                 <a-table-summary-cell :index="0" :col-span="8"><!-- {{ $t('p.total')}} --></a-table-summary-cell>
                                 <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="1">{{ $t('i.total_quantity') }}:{{total.amount}}</a-table-summary-cell>
-                                <a-table-summary-cell :index="4" :col-span="1">{{ $t('i.total_price')}}:{{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</a-table-summary-cell>                                
+                                <a-table-summary-cell :index="1" :col-span="1">
+                                    {{ $t('i.total_quantity') }}:{{total.amount}}
+                                </a-table-summary-cell>
+                                <a-table-summary-cell :index="4" :col-span="1">                           
+                                    <span v-if="detail.status == '60'">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
+                                    <span v-else>{{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</span>
+                                </a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
                     </template>
@@ -666,25 +690,25 @@ export default {
             createAuditShow: false, // 订单审核 model 显隐  
             PIShow: false,  // 修改pi model 显隐                           
 
-            activeValue: 'payment_detail', // nameList的value
+            activeValue: 'payment_detail', // nameList的value           
         };
     },    
     computed: {
         itemColumns() {
             let columns = [
-                { title: this.$t('i.item'), dataIndex: 'item' },
-                { title: this.$t('i.number'),dataIndex: ['item', "model"] },
-                { title: this.$t('i.code'), dataIndex: ['item', "code"] },
-                { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' },
-                { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
-                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'},
-                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'},
-                { title: this.$t('i.remark'),dataIndex: "remark" },
+                { title: this.$t('i.item'), dataIndex: 'item' }, // 商品
+                { title: this.$t('i.number'),dataIndex: ['item', "model"] },  // 商品品号
+                { title: this.$t('i.code'), dataIndex: ['item', "code"] }, // 商品编码
+                { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' }, // 规格
+                { title: this.$t('i.total_quantity'), dataIndex: 'amount'}, // 总数量
+                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'}, // 代发货数量
+                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'}, // 发货数量
+                { title: this.$t('i.remark'),dataIndex: "remark" }, // 备注
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.push(
-                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
-                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price'}, // 单价
+                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'price'}, // 总价
                 )
             }
             return columns
@@ -727,21 +751,18 @@ export default {
             return true
         },
         rowSelection() {
-            return {
-                type: this.radioMode ? 'radio' : 'checkbox',
+            return {                
                 selectedRowKeys: this.selectedRowKeys,
                 preserveSelectedRowKeys: true,
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
-                    this.selectedRowKeys = selectedRowKeys
-                    // selectedRows.disabled = !selectedRows.disabled
+                    this.selectedRowKeys = selectedRowKeys                    
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
                     selectedRowKeys.forEach(id => {
                         let element = this.selectedRowItemsAll.find(i => i.id == id)
                         selectedRowItems.push(element)
                     });
-                    this.selectedRowItems = selectedRowItems
-                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
+                    this.selectedRowItems = selectedRowItems                    
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
                 onSelect:(record, selected, selectedRows) => {
@@ -760,13 +781,8 @@ export default {
                         } else {
                             it.deliver_amount = 0
                         }
-
                     })
-
-                },
-                // getCheckboxProps: record => ({
-                //     disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
-                // }),
+                },       
             };
         },
         lang() {
@@ -803,7 +819,11 @@ export default {
                 { weight:5, key: 'ActionLog', value: `${this.$t('p.record')}` }, // 操作记录 
             ]
             return arr.sort((a,b) => a.weight - b.weight)
-        }
+        },
+        // 权限(平台方还是分销商等)
+        user_type() {
+            return Core.Data.getLoginType() == Core.Const.LOGIN.TYPE.ADMIN
+        },
     },
     mounted() {
         this.getList();
