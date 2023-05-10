@@ -46,8 +46,8 @@
 <!--                        <div class="type-left">€{{$Util.countFilter(componentDetail[priceKey + 'eur'])}} | ${{$Util.countFilter(componentDetail[priceKey + 'usd'])}}</div>-->
                     </div>
                     <div class="edit-btn">
-                        <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button @click="hanldeAddToShopCart" v-else>{{ $t('i.cart') }}</a-button>
+                        <!-- <a-button class="disabled" v-if="componentDetail.in_shopping_cart">{{ $t('i.already') }}</a-button> -->
+                        <a-button @click="hanldeAddToShopCart">{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
             </transition>

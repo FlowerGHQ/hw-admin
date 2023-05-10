@@ -3,7 +3,7 @@
     <a-layout id="Layout" :class="lang">
         <a-layout-header class="layout-header">
             <div class="header-left" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo3.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
+                <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
             </div>
             <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
                 <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
@@ -419,6 +419,7 @@ export default {
             .fcc();
             img.logo {
                 height: 34px;
+                cursor: pointer;
             }
         }
 
