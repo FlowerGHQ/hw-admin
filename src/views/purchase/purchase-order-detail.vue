@@ -118,7 +118,7 @@
         <div class="list-container3">
             <a-row>
                 <!-- 收货人信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='6' class="info-block">
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
                     <!-- <div class="info-title">{{ $t('p.consignee_information') }}</div> -->
                     <div class="info-title">{{ $t('p.consignee_information') }}</div>
                     <div class="info-item">
@@ -138,13 +138,16 @@
                     <div class="info-item">
                         <div class="key">{{ $t('ad.shipping_address') }}:</div>
                         <div class="value" v-if="detail.receive_info !=null">
-                            {{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}
+                            <a-tooltip>
+                                <template #title>{{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}</template>
+                                <div class="one_spils" style="width: 250px;">{{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}</div>
+                            </a-tooltip>                            
                         </div>
                         <div class="value" v-else>-</div>
                     </div>
                 </a-col>
                 <!-- 配送信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='6' class="info-block">
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
                     <div class="info-title">{{ $t('p.delivery_info') }}</div>
                     <div v-show="!$auth('purchase-order.supply-detail')">
                         <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
@@ -162,7 +165,7 @@
                     </div>
                 </a-col>             
                 <!-- 买家信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='6' class="info-block">
+                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
                     <div class="info-title">{{ $t('p.delivery_information') }}</div>
                     <div>
                         <div class="info-item">
@@ -184,7 +187,7 @@
     </div>
 
     <!-- 赠送订单 -->
-    <div class="giftOrder">    
+    <div class="giftOrder" style="margin-bottom: 20px;">    
         <EditItem 
             v-if="giveOrderShow" 
             :order-id='id' 
@@ -227,7 +230,7 @@
                         </template>
                         <!-- 总数量 -->
                         <template v-if="column.dataIndex === 'amount'">                          
-                            <span v-if="user_type">
+                            <span v-if="user_type && detail.status === STATUS.WAIT_AUDIT">
                                 <a-input-number 
                                     v-model:value="record.amount" 
                                     style="width: 120px;" 
@@ -238,8 +241,8 @@
                                 {{ text || '-' }}
                             </span> 
                         </template>
-                        <template v-if="column.dataIndex === 'deliver_amount'">
-                            <!-- :disabled="record.disabled" -->
+                        <!-- 发货数量 -->
+                        <template v-if="column.dataIndex === 'deliver_amount'">                            
                             <span v-if="user_type">
                                 <a-input-number 
                                     v-model:value="record.deliver_amount" 
@@ -254,22 +257,22 @@
                         <!-- 单价 -->
                         <template v-if="column.key === 'unit_price'">
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
-                            <span>{{$Util.countFilter(text)}}</span>                           
+                            <span>{{text}}</span>                           
                         </template>
                         <!-- 总价 -->
                         <template v-if="column.key === 'price'">
-                            <span v-if="user_type">
+                            <span v-if="user_type && detail.status === STATUS.WAIT_AUDIT">
                                 <a-input-number 
-                                    :defaultValue="$Util.countFilter(text)"  
+                                    v-model:value="record.price"                                     
                                     style="width: 120px;" 
                                     :min="0" :precision="2" 
                                 />
                             </span>
                             <span v-else>
                                 <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
-                                <span>{{$Util.countFilter(text)}}</span>
+                                <span>{{text}}</span>
                             </span>                             
-                        </template>   
+                        </template>
                                              
                         <template v-if="column.key === 'spec'">
                             {{$Util.itemSpecFilter(text, $i18n.locale )}}
@@ -670,7 +673,7 @@ export default {
                 audit_result: '',
                 target_type: Core.Const.STOCK_RECORD.COMMODITY_TYPE.ITEM,
                 payment: '', // 收款金额
-                accountBalance: '', // 账户余额
+                accountBalance: '', // 账户余额                
             },
             accountMoney: 0, // 账户的余额用来约束
             editForm: {
@@ -752,9 +755,9 @@ export default {
         },
         rowSelection() {
             return {                
-                selectedRowKeys: this.selectedRowKeys,
-                preserveSelectedRowKeys: true,
+                selectedRowKeys: this.selectedRowKeys,                
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    // console.log("变化", selectedRowKeys);
                     this.selectedRowKeys = selectedRowKeys                    
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
@@ -762,27 +765,11 @@ export default {
                         let element = this.selectedRowItemsAll.find(i => i.id == id)
                         selectedRowItems.push(element)
                     });
-                    this.selectedRowItems = selectedRowItems                    
+                    // console.log("变化2", selectedRowItems);
+                    this.selectedRowItems = selectedRowItems   
+                    // 这句不知何用                 
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
-                },
-                onSelect:(record, selected, selectedRows) => {
-                    record.disabled = !record.disabled
-                    if (record.disabled === false){
-                        record.deliver_amount = record.residue_quantity
-                    } else {
-                        record.deliver_amount = 0
-                    }
-                },
-                onSelectAll:(selected, selectedRows, changeRows) =>{
-                    changeRows.forEach(it => {
-                        it.disabled = !it.disabled
-                        if (it.disabled === false){
-                            it.deliver_amount = it.residue_quantity
-                        } else {
-                            it.deliver_amount = 0
-                        }
-                    })
-                },       
+                }                      
             };
         },
         lang() {
@@ -886,6 +873,8 @@ export default {
                 let total_amount = 0,total_charge = 0,total_price = 0;
                 res.list.forEach(it =>{
                     it.disabled = true
+                    it.unit_price = this.$Util.countFilter(it.unit_price) // 单价
+                    it.price = this.$Util.countFilter(it.price) // 总价
                     it.deliver_amount = 0
                     total_amount += it.amount
                     total_charge += it.charge
@@ -938,6 +927,18 @@ export default {
             });
         }, 
 
+        // 订单审核fetch
+        createAuditFetch(params = {}){
+            Core.Api.Purchase.createAudit({
+                id:this.id,
+                ...params                
+            }).then(res => {
+                this.$message.success(this.$t('pop_up.audited'))
+                this.createAuditShow = false
+                this.getList()
+                this.getPurchaseInfo()
+            })
+        },
         /*== FETCH end==*/
 
         /*== header options start ==*/
@@ -999,7 +1000,7 @@ export default {
                         Core.Api.Purchase.cancel({
                             id: _this.id
                         }).then(res => {
-                            _this.$message.success(_this.$('pop_up.canceled'))
+                            _this.$message.success(_this.$t('pop_up.canceled'))
                             _this.routerChange('orderList')
                         }).catch(err => {
                             console.log('handleCancel err', err)
@@ -1150,24 +1151,39 @@ export default {
             // }
         },
         // 订单审核       
-        handleCreateAudit() {
-            let form = Core.Util.deepCopy(this.form)
-            if(!this.form.audit_result) {
+        handleCreateAudit() {            
+            let formObj = {
+                audit_result: this.form.audit_result,
+                remark: this.remark
+            }
+            // 通过是否
+            if(!formObj.audit_result) {
                 this.$message.warning(this.$t('r.audit_result'))
                 return
             }
-            console.log("测试", this.id);
-            Core.Api.Purchase.createAudit({
-                id:this.id,
-                ...Core.Util.searchFilter(form)
-            }).then(res => {
-                this.$message.success(this.$t('pop_up.audited'))
-                this.createAuditShow = false
-                this.getList()
-                this.getPurchaseInfo()
-            })
-        },
 
+            let item_list = []
+            // 选中的商品信息表格有数据的话进行
+            if(this.selectedRowItems.length){
+                this.selectedRowItems.forEach(el => {                    
+                    item_list.push({
+                        item_id: el.id,
+                        amount: el.amount,
+                        price: this.$Util.countFilter(el.price, 100, 2, true),
+                    })
+                })
+            }            
+            if(item_list.length){
+                this.createAuditFetch({
+                    ...Core.Util.searchFilter(formObj),
+                    item_list
+                })
+            }else{
+                this.createAuditFetch({
+                    ...Core.Util.searchFilter(formObj)                    
+                })
+            }
+        },        
         /*== model 事件  end ==*/  
 
         // 上传前检查文件
@@ -1210,7 +1226,7 @@ export default {
 
         /*== 确认收款model end ==*/
 
-        authOrg(orgId, orgType) {
+        authOrg(orgId, orgType) {            
             // console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
