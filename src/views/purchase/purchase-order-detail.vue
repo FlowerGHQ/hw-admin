@@ -50,9 +50,9 @@
                     </a-button>
                 </template>
                 <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                    <!-- 更换商品 -->
+                    <!-- 更换商品 (1.赠送订单(type = 40)不会显示按钮)-->
                     <a-button 
-                        v-if="beforeDeliver && !itemEditShow && $auth('purchase-order.save')" 
+                        v-if="detail.type !== FLAG_ORDER_TYPE.Gift_SALES && beforeDeliver && !itemEditShow && $auth('purchase-order.save')" 
                         type="primary" 
                         ghost 
                         @click="itemEditShow = true">
@@ -834,7 +834,8 @@ export default {
                     }
                     this.total.freight = res.detail.freight || 0;                    
                     this.step();
-                    if(res.detail.status != Core.Const.STATUS.CANCEL && type === 1) {
+                    if(type === 1 && res.detail.status == STATUS.CANCEL) {
+                        // 交易取消了提示信息(极端情况)                 
                         this.giveOrderShow = false
                         this.$message.warning(this.$t('p.cancel_msg'))
                     }
