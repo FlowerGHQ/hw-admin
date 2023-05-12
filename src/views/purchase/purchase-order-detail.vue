@@ -45,7 +45,7 @@
                         type="primary" 
                         ghost 
                         v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  
-                        @click="giveOrderShow = true">
+                        @click="handleGiveOrder">
                         {{ $t('p.give_order')}}
                     </a-button>
                 </template>
@@ -823,7 +823,7 @@ export default {
         /*== FETCH start==*/
 
         // 获取 采购单订单信息
-        getPurchaseInfo() {
+        getPurchaseInfo(type) {
                 Core.Api.Purchase.detail({
                     id: this.id
                 }).then(res => {
@@ -834,6 +834,12 @@ export default {
                     this.total.freight = res.detail.freight || 0;
                     // console.log('getPurchaseInfo res', res)
                     this.step();
+                    if(res.detail.type !== TYPE.GIVEAWAY) {
+                        this.giveOrderShow = false
+                    }
+                    if(type === 1) {
+                        this.$message.warning(this.$t('p.cancel_msg'))
+                    }
                 }).catch(err => {
                     console.log('getPurchaseInfo err', err)
                 }).finally(() => {
@@ -1310,6 +1316,12 @@ export default {
         // 合同上传ref事件
         attachmentEvent(){
             this.$refs.attachment.handleModalShow()
+        },
+        // 赠送订单事件
+        handleGiveOrder() {
+            // 传参type为1时做该订单已取消的提示
+            this.getPurchaseInfo(1)
+            this.giveOrderShow = true
         }    
     }
 };
