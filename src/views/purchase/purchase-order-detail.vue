@@ -326,8 +326,9 @@
                 <paymentList 
                     :target_id="id"
                     :order_detail="detail"
+                    @submit="getList"
                 />
-            </template>
+            </template> 
 
             <!-- 发货记录 -->
             <template v-if="activeValue == 'delivery_record'">            
@@ -1143,6 +1144,7 @@ export default {
                 }).then(res => {
                     this.$message.success(this.$t('p.payment_success'))
                     this.getList()
+                    this.getPurchaseInfo()
                     this.paymentShow = false
                 }).catch(err => {
                     console.log('getPurchaseInfo err', err)

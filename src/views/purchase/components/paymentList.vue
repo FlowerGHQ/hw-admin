@@ -123,7 +123,7 @@ const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
 
 
 const { proxy } = getCurrentInstance()
-
+const emits = defineEmits(['submit'])
 const props = defineProps({
     target_id:{
         type: [Number,String], 
@@ -186,7 +186,7 @@ const getPurchasePayList = (params = {}) => {
                 it.path = ""
             }
         })
-        payList.value = res.list        
+        payList.value = res.list
     }).catch(err => {
         console.log('getPurchaseInfo err', err)
     }).finally(() => {
@@ -199,6 +199,7 @@ const payAuditFetch = (params = {}) => {
         ...params
     }).then(res => {
         proxy.$message.success(proxy.$t('pop_up.audited'))
+        emits("submit");
         handlePayAuditClose()
         getPurchasePayList()
     })
