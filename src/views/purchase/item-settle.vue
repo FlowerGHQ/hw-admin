@@ -241,6 +241,9 @@ export default {
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
                     Core.Api.Receive.delete({id: item.id}).then(() => {
+                        if(item.id === _this.selectIndex) {
+                            _this.selectIndex = ''
+                        }
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getReceiveList();
                     }).catch(err => {

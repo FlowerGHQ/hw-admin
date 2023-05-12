@@ -327,6 +327,7 @@
                     :target_id="id"
                     :order_detail="detail"
                     @submit="getList"
+                    ref="payment"
                 />
             </template> 
 
@@ -853,7 +854,8 @@ export default {
             this.itemEditShow = false
             this.giveOrderShow = false
             this.getPurchaseItemList();            
-            this.getPurchaseInfo();          
+            this.getPurchaseInfo();
+            this.$refs.payment.getPurchasePayList()
         },
 
         // 经销商钱包详情

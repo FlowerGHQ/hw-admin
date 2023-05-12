@@ -282,6 +282,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 	page: channelPagination.value.current
   })
 }
+defineExpose({
+    getPurchasePayList
+})
 
 </script>
 
