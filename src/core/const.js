@@ -705,8 +705,10 @@ let Const = {
 		    40: '赠品单',
 	    },
 	    FLAG_ORDER_TYPE: {
-		    PRE_SALES: 10,
-			AFTER_SALES: 20,
+		    PRE_SALES: 10,  // 售前订单
+			AFTER_SALES: 20, // 售后订单
+            Mix_SALES: 30, // 混合订单
+            Gift_SALES: 40, // 赠送订单
 	    },
 	    PAY_STATUS_LIST: {
 		    '0': { key: 10, zh: '初始', en: 'Init'},
