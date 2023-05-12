@@ -302,13 +302,13 @@ export default {
                 cancelText: _this.$t('def.cancel'),
                 async onOk() {
                     try {
-                        if(!this.paramPrice) {
+                        if(!_this.paramPrice) {
                             await Core.Api.Favorite.add({item_id: item.item_id, price: item?.item?.fob_eur})
                         }else {
                             await Core.Api.Favorite.add({item_id: item.item_id, price: item?.item?.fob_usd})
                         }
                         // await Core.Api.ShopCart.remove({id: item.id})
-                        _this.$message.success(this.$t('pop_up.operate'))
+                        _this.$message.success(_this.$t('pop_up.operate'))
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {
