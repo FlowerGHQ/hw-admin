@@ -81,6 +81,7 @@
                             <i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}
                     </a-button>
                 </template>
+                <!-- 支付审核 -->
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.type !== TYPE.MIX && $auth('purchase-order.audit')">
                     <AuditHandle
                         btnType='primary' 
@@ -834,10 +835,8 @@ export default {
                     this.total.freight = res.detail.freight || 0;
                     // console.log('getPurchaseInfo res', res)
                     this.step();
-                    if(res.detail.type !== TYPE.GIVEAWAY) {
+                    if(res.detail.status !== -100 && type === 1) {
                         this.giveOrderShow = false
-                    }
-                    if(type === 1) {
                         this.$message.warning(this.$t('p.cancel_msg'))
                     }
                 }).catch(err => {
