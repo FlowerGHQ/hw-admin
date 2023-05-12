@@ -833,17 +833,15 @@ export default {
                     if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
                         this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
                     }
-                    this.total.freight = res.detail.freight || 0;
-                    // console.log('getPurchaseInfo res', res)
+                    this.total.freight = res.detail.freight || 0;                    
                     this.step();
-                    if(res.detail.status !== -100 && type === 1) {
+                    if(res.detail.status != Core.Const.STATUS.CANCEL && type === 1) {
                         this.giveOrderShow = false
                         this.$message.warning(this.$t('p.cancel_msg'))
                     }
                 }).catch(err => {
                     console.log('getPurchaseInfo err', err)
-                }).finally(() => {
-                });
+                })
         },
         getWarehouseList() {
                 Core.Api.Warehouse.listAll().then(res => {
