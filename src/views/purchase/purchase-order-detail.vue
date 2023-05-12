@@ -1217,7 +1217,7 @@ export default {
         //删除文件
         handleremove(){
             console.log(this.upload.fileList)
-            // this.form.path = ''
+            this.form.path = ''
         },
         // 上传文件
         handleFileChange({file, fileList}) {
