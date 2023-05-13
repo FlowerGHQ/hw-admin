@@ -136,7 +136,7 @@
                             </a-table>
                         </div>
                     </a-collapse-panel>
-                    <a-collapse-panel key="WaybillInInfo" :header="$t('af.logistics')" class="gray-collapse-panel" v-if="needItemIn">
+<!--                    <a-collapse-panel key="WaybillInInfo" :header="$t('af.logistics')" class="gray-collapse-panel" v-if="needItemIn">
                         <a-row class="panel-content info-container">
                             <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
                                 <div class="info-item">
@@ -152,7 +152,7 @@
                                     <div class="value">{{waybillIn.receiver_phone || '-'}}</div>
                                 </div>
                             </a-col>
-<!--                            <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
+&lt;!&ndash;                            <a-col :xs='24' :sm='24' :lg='12' :xl='16' :xxl='12' class="info-block">
                                 <div class="info-item">
                                     <div class="key">物流状态</div>
                                     <div class="value">{{AFTERSALES.WAYBILL_STATUS_MAP[detail.sales_return_status] || '-'}}</div>
@@ -164,9 +164,9 @@
                                         <template v-else>暂无物流信息</template>
                                     </div>
                                 </div>
-                            </a-col>-->
+                            </a-col>&ndash;&gt;
                         </a-row>
-                    </a-collapse-panel>
+                    </a-collapse-panel>-->
                 </template>
                 <template v-if="needItemOut">
                     <a-collapse-panel key="ItemOutInfo" :header="$Util.aftersalesTypeFilter(detail.type, $i18n.locale) + $t('af.commodity')" class="gray-collapse-panel">

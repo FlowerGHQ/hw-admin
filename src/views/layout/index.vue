@@ -247,6 +247,10 @@ export default {
     mounted() {
         this.loginType = Core.Data.getLoginType()
         this.getUnreadCount();
+        if (Core.Data.getLang() === "" || Core.Data.getLang() === null){
+            Core.Data.setLang("zh")
+        }
+        console.log("Core.Data.getLang()",Core.Data.getLang())
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1
@@ -376,9 +380,9 @@ export default {
 
 
         handleWindowResize(e) {
-            console.log('handleWindowResize e:', e)
+            // console.log('handleWindowResize e:', e)
 
-            console.log('window.innerWidth:', window.innerWidth)
+            // console.log('window.innerWidth:', window.innerWidth)
             if (window.innerWidth <= 830) {
                 this.collapsed = true
             }

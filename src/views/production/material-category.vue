@@ -7,6 +7,7 @@
                     <a-button type="primary" @click="handleModalShow({})" v-if="$auth('material-category.save')"><i class="icon i_add"/>{{ $t('m.new_category') }}</a-button>
                 </div>
             </div>
+
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'
@@ -71,6 +72,7 @@ export default {
                 id: '',
                 parent_id: '',
                 name: '',
+                type: 1,
             },
         };
     },
@@ -98,6 +100,7 @@ export default {
             Core.Api.MaterialCategory.tree({
                 page: 0,
                 parent_id: parent_id,
+                type: 1,
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
@@ -123,6 +126,7 @@ export default {
             Core.Api.MaterialCategory.tree({
                 page: 0,
                 id: id,
+                type: 1,
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
@@ -158,6 +162,7 @@ export default {
                 id: id,
                 name: name,
                 parent_id: parent_id,
+                type: 1,
             }
             console.log('this.editForm:', this.editForm)
             this.parentNode = parent

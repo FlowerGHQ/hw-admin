@@ -61,9 +61,9 @@
                         <div class="form-item file-upload">
                             <ItemSelect @select="handleAddFailItem"
                                         :disabled-checked='tableData.map(i => i.item_id)'
-                                        :dis="moneyType"
+                                        :disabled="!!form.currency"
                                         btn-type='primary' :btn-text="$t('crm_b.interested_models')" btn-class="fault-btn"/>
-                                        <a-select v-model:value="moneyType"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
+                                        <a-select v-model:value="form.currency"  style="width:120px;margin-left:20px" @change="moneyChange" :placeholder="$t('def.select')">
                                         <a-select-option v-for="item of MoneyTypeList" :key="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                                     </a-select>
                         </div>
@@ -250,6 +250,7 @@ export default {
             customer_id: '',
             form: {
                 id: '',
+                currency: undefined,
                 customer_id: '',
                 customer_name: '',
                 name: '',
@@ -267,7 +268,6 @@ export default {
             itemOptions: [],
             labelList: [],
             labelIdList: [],
-            moneyType:undefined,
             MoneyTypeList:Core.Const.MONEYTYPE.TYPE_MAP,
 
         };
@@ -288,7 +288,7 @@ export default {
             return this.$store.state.lang
         },
         moneyT(){
-            switch(this.moneyType){
+            switch(this.form.currency){
                 case 'usd': return '$';break;
                 case 'eur': return '€';break;
             }
@@ -325,7 +325,7 @@ export default {
     methods: {
         moneyChange(){  //货币切换
          Core.Api.MoneyChange.switch({
-            currency:this.moneyType,
+            currency:this.form.currency,
             item_bind_list:this.tableData
          }).then(res=>{
            res.list.forEach(it =>{
@@ -335,7 +335,7 @@ export default {
               it.discount_price = it.discount_price / 100
            })
            this.tableData = res.list
-            console.log(this.moneyType,this.tableData);
+            console.log(this.form.currency,this.tableData);
          }).catch(err=>{
             console.log(err);
          })
@@ -390,6 +390,7 @@ export default {
                 source_type: Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO,
             }).then(res => {
                 res.list.forEach(it => {
+                    it.price = Core.Util.countFilter(it.price)
                     it.discount_price = it.price * it.discount / 100
                 })
                 this.tableData = res.list
@@ -436,16 +437,14 @@ export default {
             // }
             form.item_bind_list = this.$Util.deepCopy(this.tableData)
             form.item_bind_list.forEach(it =>{
-                it.discount_price = it.discount_price * 100
-                it.total_price = it.total_price * 100
+                it.price = it.price * 100
             })
             form.money = this.form.money * 100
 
             Core.Api.CRMBo.save({
                 ...form,
-                currency:this.moneyType,
                 money: this.form.money * 100,
-                item_bind_list: this.tableData,
+                // item_bind_list: this.tableData,
                 label_id_list: this.labelIdList,
             }).then((res) => {
                 this.form.id = res.detail.id
@@ -460,7 +459,7 @@ export default {
         async handleAddFailItem(ids, items) {
             for (let i = 0; i < items.length; i++) {
                 const element = items[i];
-                switch(this.moneyType){
+                switch(this.form.currency){
                     case 'usd': element.price = element.fob_usd / 100;break;
                     case 'eur': element.price = element.fob_eur / 100;break;
                 }

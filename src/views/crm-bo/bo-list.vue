@@ -21,16 +21,35 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <!-- 负责人 -->
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
+                            <a-select
+                                v-model:value="searchForm.own_user_id"
+                                show-search
+                                :placeholder="$t('def.input')"
+                                :default-active-first-option="false"
+                                :show-arrow="false"
+                                :filter-option="false"
+                                :not-found-content="null"
+                                allowClear
+                                @search="handleOwnUserSearch"
+                            >
+                                <a-select-option
+                                v-for="item in ownUserOptions"
+                                :key="item.user_id"
+                                :value="item.user_id"
+                                >
+                                {{ item.name }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_b.status') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" @change="handleSearch">
+                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" allowClear @change="handleSearch">
                                 <a-select-option v-for="(item,index) of groupStatusTableData" :key="index" :value="index">{{ lang==='zh' ? item.zh: item.en }}</a-select-option>
                             </a-select>
                         </div>
@@ -62,7 +81,8 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
+                                <a-button type="link" @click="routerChange('detail', record)"><span :class="{nameStyle: nameBoolean(record)}">{{text || "-"}}
+                  </span></a-button>
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'item'">
@@ -169,7 +189,7 @@
 <script>
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
-
+import { take, uniqBy } from 'lodash'
 export default {
     name: 'CustomerList',
     components: {
@@ -196,6 +216,7 @@ export default {
                 begin_time: '',
                 end_time: '',
                 type: '',
+                own_user_id: undefined
             },
             batchForm: {
                 own_user_id: '',
@@ -211,9 +232,35 @@ export default {
             detail: [],
             groupOptions: [],
             group_id: undefined,
+            ownUserOptions: [], // 负责人
+            nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
         };
     },
-    watch: {},
+    watch: {
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newRoute) {
+                let type = newRoute.meta ? newRoute.meta.type : "";
+                this.operMode = type;
+                // 这两句刷新页面的时候，页数在之前的页数
+                this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+                this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+                this.getTableData();
+                // this.handleSearchReset(false);
+                // this.getUserData();
+            },
+        },
+        searchForm:{
+            deep:true,
+            handler(oldValue,newValue) {
+                if(oldValue === newValue){
+                    this.currPage = 1
+                    this.pageSize = 20
+                }
+            },
+        }
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -259,41 +306,78 @@ export default {
     mounted() {
         this.getGroupStatusDetail()
         this.getTableData();
+        this.ownUserFetch()
     },
     methods: {
+        /* 接口 */
+        // 负责人接口
+        ownUserFetch(params = {}){
+            Core.Api.CRMTrackMember.joinUserList({
+                type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
+                target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO,
+                ...params
+            }).then((res) => {
+                console.log('测试', res);
+                if(this.$Util.isEmptyObj(params)){                                    
+                    this.ownUserOptions = take(res.list, 50);
+                }else{
+                    this.ownUserOptions = res.list;          
+                }          
+            });
+        },
+        /*methods*/
+        // 负责人事件
+         handleOwnUserSearch(name) {             
+            this.ownUserFetch({
+                name: name,
+            })
+        },
         moreSearch(){
             this.show = !this.show
+        },
+        nameBoolean(v){
+            const arr = this.nameColor.filter((el) => {
+                return el.id == v.id
+            })
+            return arr.length?true:false
         },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
                 case 'detail':    // 编辑
+                    if(!this.$Util.isEmptyObj(item)){
+                        this.nameColor.push({ id: item.id})
+                    }
                     routeUrl = this.$router.resolve({
                         path: "/crm-bo/bo-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit':    // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-bo/bo-edit",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
-        pageChange(curr) {    // 页码改变
-            this.currPage = curr
-            this.getTableData()
+        pageChange(page) {          
+            // 页码改变
+            this.currPage = page;
+            Core.Data.setItem('currPage',page)
+            this.getTableData();
         },
-        pageSizeChange(current, size) {    // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
+        pageSizeChange(current, size) {
+            // 页码尺寸改变
+            this.pageSize = size;
+            Core.Data.setItem('pageSize',size)
+            this.getTableData();
         },
-        handleSearch() {    // 搜索
-            this.pageChange(1);
+        handleSearch() {
+            // 搜索
+            this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
         },
         handleOtherSearch(params) { // 时间等组件化的搜索
             for (const key in params) {
@@ -455,5 +539,8 @@ export default {
     margin-left: 30px;
     color: #006EF9;
     cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>

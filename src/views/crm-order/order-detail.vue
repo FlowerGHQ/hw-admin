@@ -30,8 +30,10 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>
-                        <span class="value">{{ detail.customer_name || '-'   || '-'  }}</span>
+                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>                        
+                        <router-link target="_blank" :to="{ path: '/crm-customer/customer-detail', query: { id: detail.customer_id } }">
+                            {{ detail.customer_name || '-'   || '-'  }}
+                        </router-link> 
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.contract_no') }}：</span>
@@ -106,13 +108,16 @@
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane> -->
                         <a-tab-pane key="salesinfo" :tab="$t('crm_o.sales_info')">
-                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :currency="detail.currency" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
                         </a-tab-pane>
                         <a-tab-pane key="RemittanceList" :tab="$t('crm_oi.list')">
                             <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
                         </a-tab-pane>
                         <a-tab-pane key="AttachmentsList" :tab="$t('n.attachment_list')">
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
+                        </a-tab-pane>
+                        <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">
+                            <CrmCustomerDetail  v-if="id>0" :id="detail.customer_id" ref ="CrmCustomerDetail"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -197,14 +202,14 @@ import dayjs from "dayjs";
 import {get} from "lodash";
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
 import CrmOrderIncome from '@/components/crm/panel/CrmOrderIncome.vue';
-
+import CrmCustomerDetail from '../../components/crm/panel/CrmCustomerDetail.vue';
 import {
     UserOutlined,
 } from '@ant-design/icons-vue';
 import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'OrderDetail',
-    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList},
+    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList,CrmCustomerDetail},
     props: {},
     data() {
         return {

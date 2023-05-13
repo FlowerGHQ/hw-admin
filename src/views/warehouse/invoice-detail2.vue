@@ -30,7 +30,7 @@
                               accept=".xlsx,.xls"
                               @change="handleFileUpload">
                         <a-button type="primary" ghost class="panel-btn">
-                            <i class="icon i_add"/> {{ $t('i.import') }}
+                            <i class="icon i_add"/> {{ $t('i.import_storage') }}
                         </a-button>
                     </a-upload>
                     <!--                    <a-button type="primary" @click="routerChange('edit')" v-if="$auth('invoice.save')"><i class="icon i_add"/>{{ $t('i.import') }}</a-button>-->

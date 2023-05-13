@@ -26,6 +26,10 @@ export default {
         category: {
             type: Object,
         },
+        inventoryType: {
+            type: Number,
+            default: 1,
+        },
        /* placeholder: {
             type: String,
         },*/
@@ -40,6 +44,7 @@ export default {
             treeData: [],
             fieldNames:{},
             value: undefined,
+            form:{},
         }
     },
     watch: {
@@ -54,6 +59,10 @@ export default {
                 this.value = this.categoryId
             }
         },
+        inventoryType(n) {
+            this.getFirstItemCategory()
+        },
+
         '$i18n.locale': {
             deep: true,
             immediate: true,
@@ -80,10 +89,19 @@ export default {
         getFirstItemCategory() {
             let key = ''
             switch (this.type) {
-                case 'item': key = 'ItemCategory'; break
-                case 'material': key = 'MaterialCategory'; break
+                case 'item':
+                    key = 'ItemCategory'
+                    this.form = {parent_id: this.parentId}
+                    ; break
+                case 'material':
+                    key = 'MaterialCategory'
+                    this.form = {
+                        parent_id: this.parentId,
+                        type: this.inventoryType,
+                    }
+                    ; break
             }
-            Core.Api[key].tree({parent_id: this.parentId}).then(res => {
+            Core.Api[key].tree({...this.form}).then(res => {
                 // let list = res.list.map(item => (
                 //     // id: item.id,
                 //     // parent_id: this.parentId,

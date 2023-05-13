@@ -8,18 +8,21 @@
             <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
+                    <!-- 名称 -->
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!selectCustomer">
                         <div class="key"><span>{{ $t('n.name') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <!-- 邮箱 -->
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('n.phone') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <!-- 邮箱 -->
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('n.email') }}:</span></div>
                         <div class="value">
@@ -197,7 +200,7 @@ export default {
     created() {
     },
     mounted() {
-        console.log('this.disabledChecked:', this.disabledChecked)
+        // console.log('SSS', this.targetId)
         if (this.phone !== ''){
             this.searchForm.phone = this.phone;
         }
@@ -223,17 +226,20 @@ export default {
         },
 
         getTableData() {
-            if (this.selectCustomer && this.searchForm.phone === ""){
+            if (this.selectCustomer && this.searchForm.phone === "" && this.searchForm.email === ""){
                 return
             }
-            Core.Api.CRMCustomer.list({
+            let obj = {
                 name: this.searchForm.name,
                 phone: this.searchForm.phone,
                 email: this.searchForm.email,
                 target_id: this.targetId,
                 target_type: this.targetType,
+            }
+            Core.Api.CRMCustomer.list({                
                 page: this.currPage,
                 pageSize: this.pageSize,
+                ...Core.Util.searchFilter(obj)
             }).then(res => {
                 this.tableData = res.list
                 this.total = res.count
@@ -253,9 +259,9 @@ export default {
         },
         handleSearchReset() {
             this.searchForm.phone = ''
-            this.searchForm.emial = ''
+            this.searchForm.email = ''
             this.searchForm.name = ''
-            this.pageChange(1)
+            this.tableData = []
         },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)

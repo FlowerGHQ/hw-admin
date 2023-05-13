@@ -8,37 +8,37 @@
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_customer_count") }}</span>
-                        <span class="form-value">{{  this.form.new_customer_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.new_customer_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_contact_count") }}</span>
-                        <span class="form-value">{{  this.form.new_contact_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.new_contact_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_order_count") }}</span>
-                        <span class="form-value">{{  this.form.new_order_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.new_order_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_bo_count") }}</span>
-                        <span class="form-value">{{  this.form.new_bo_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.new_bo_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.win_bo_count") }}</span>
-                        <span class="form-value">{{  this.form.win_bo_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.win_bo_count || '-' }}</span>
                     </div>
                 </a-col>
                 <a-col :xs='24' :sm='12' :xl="12" :xxl='12'>
                     <div class="form-item">
                         <span class="form-label"><i class="icon i_s_customer" style="margin-right:16px"/>{{ $t("crm_dash.new_test_driver_count") }}</span>
-                        <span class="form-value">{{  this.form.new_test_driver_count || '-' }}</span>
+                        <span class="form-value" @click="routerChange">{{  this.form.new_test_driver_count || '-' }}</span>
                     </div>
                 </a-col>
             </a-row>
@@ -104,6 +104,9 @@ export default {
                 this.form.new_test_driver_count = res.new_test_driver_count
 
             })
+        },
+        routerChange(){
+            
         },
     }
 };

@@ -620,7 +620,7 @@ const Util = {
 		return value[to] || '-'
 	},
     refundOrderStatusFilter(val, to='zh') {
-        const MAP = Const.REFUND.REFUND_STATUS_MAP
+        const MAP = Const.AFTERSALES.REFUND_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
@@ -691,6 +691,11 @@ const Util = {
     },
     warehouseTypeFilter(val, to='zh') {
         const MAP = Const.WAREHOUSE.TYPE_MAP
+        const item = MAP[val] || {}
+        return item[to] || '未知'
+    },
+    inventoryTypeFilter(val, to='zh') {
+        const MAP = Const.INVENTORY.TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
@@ -884,20 +889,27 @@ const Util = {
 	},
 	CRMCustomerLevelFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.LEVEL_MAP
-		let item = MAP[val + ''] || {}
-		console.log("item",val)
+		let item = MAP[val + ''] || {}		
 		return item[to] || ''
 	},
 	CRMCustomerPurchaseIntentFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP
-		let item = MAP[val + ''] || {}
-		console.log("item",val)
+		let item = MAP[val + ''] || {}		
 		return item[to] || ''
 	},
 	CRMCustomerTestDriveIntentFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP
-		let item = MAP[val + ''] || {}
-		console.log("item",val)
+		let item = MAP[val + ''] || {}		
+		return item[to] || ''
+	},
+	CRMCustomerPurchaseIntentChartFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_CHART_MAP
+		let item = MAP[val + ''] || {}		
+		return item[to] || ''
+	},
+	CRMCustomerTestDriveIntentChartFilter(val,  to='zh') {
+		const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_CHART_MAP
+		let item = MAP[val + ''] || {}		
 		return item[to] || ''
 	},
 	CRMCustomerSourceFilter(val,  to='zh') {
@@ -932,8 +944,7 @@ const Util = {
 	},
 	CRMCustomerSourceTypeFilter(val,  to='zh') {
 		const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
-		let item = MAP[val + ''] || {}
-		console.log("item",val)
+		let item = MAP[val + ''] || {}		
 		return item[to] || ''
 	},
 
@@ -958,8 +969,12 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-	CRMTrackRecordIntentFilter(val,  to='zh') {
-		const MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+	CRMTrackRecordIntentFilter(val,  to='zh',selectList) {
+        /* selectList 传需要转换的数据*/
+		let MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+        if(selectList){
+            MAP = selectList
+        }
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
@@ -1109,19 +1124,60 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-
-
-
-
-
+    CRMTestDriveStatusCycFilter(val,  to='zh') {
+		const MAP = Const.test_drive.test_drive_status
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+    CRMTestDriveSourceFilter(val,  to='zh') {
+		const MAP = Const.test_drive.appointment_channel
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
 
 	/* =============== 试驾单 ================ */
+    /* =============== 待办事项 ================ */
+    CRMToDoStatusFilter(val,  to='zh') {
+        const MAP = Const.CRM_TODO.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 待办事项 ================ */
     /* =============== 测试报告 ================ */
     testCaseNameFilter(id, type) {
         const TAR = Const.TEST.TYPE_CASE_MAP[type + ''] || {}
         return TAR[id + ''] || ''
     },
     /* =============== 测试报告 ================ */
+
+    /* ======== 搜索条件筛选null过滤掉去 
+    * obj { uid: null, status: null }
+    start========== */
+    searchFilter(obj) {
+        let _searchOptions = this.deepCopy(obj)  
+        for (let el in _searchOptions) {
+            if(!_searchOptions[el]){
+                Reflect.deleteProperty(_searchOptions,el)
+            }
+        }  
+        return _searchOptions
+    },
+    /* ======== 搜索条件筛选 end ========== */
+
+    /* ======== 判断门店,分销商,零售商重置密码权限判断 start ========== */
+    userAuth(...arr){
+        if (!arr.length) {
+            return true
+        }
+        // console.log("数据", arr);
+        const rolesMap = Const.USERNAME;
+        const result = arr.some(key => {
+            return rolesMap[key];
+        });
+        // console.log("结果", result);
+        return result
+    }
+    /* ======== 判断门店,分销商,零售商重置密码权限判断 end ========== */
 }
 
 export default Util

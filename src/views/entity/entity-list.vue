@@ -101,6 +101,18 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'vehicle_uid'">
+                            {{ record.vehicle ? record.vehicle.vehicle_uid : '-' }}
+                        </template>
+                        <template v-if="column.key === 'battery_uid'">
+                            {{ record.vehicle ? record.vehicle.battery_uid : '-' }}
+                        </template>
+                        <template v-if="column.key === 'motor_uid'">
+                            {{ record.vehicle ? record.vehicle.motor_uid : '-' }}
+                        </template>
+                        <template v-if="column.key === 'vcu_uid'">
+                            {{ record.vehicle ? record.vehicle.vcu_uid : '-' }}
+                        </template>
                         <template v-if="column.key === 'attr'">
                             {{ record.attr_desc || ' ' }}
                         </template>
@@ -275,7 +287,7 @@ export default {
             },
             viewType: '',
             title: '整车',
-            titleType: ''
+            titleType: '',
         };
     },
     watch: {
@@ -311,6 +323,10 @@ export default {
             let columns = [
                 {title: 'n.name', dataIndex: 'name', key: 'detail'},
                 {title: 'p.code', dataIndex: 'code', key: 'code'},
+                {title: 'search.vehicle_no', dataIndex: 'vehicle_uid', key: 'vehicle_uid'},
+                {title: 'v.battery_code', dataIndex: 'battery_uid', key: 'battery_uid'},
+                {title: 'v.motor_coding', dataIndex: 'motor_uid', key: 'motor_uid'},
+                {title: 'v.control_code', dataIndex: 'vcu_uid', key: 'vcu_uid'},
                 {title: 'v.number', dataIndex: 'uid', key: 'item'},
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},

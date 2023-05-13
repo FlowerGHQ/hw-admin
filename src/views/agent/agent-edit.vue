@@ -42,7 +42,7 @@
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('d.pay_type') }}:</div>
-                <div class="value">
+                <div class="value">                
                     <a-select v-model:value="form.pay_type" :placeholder="$t('def.select_payment_term')">
                         <a-select-option v-for="(val, key) in PAY_TIME_LIST" :key="val['key']" :value="val['key']">{{ val[$i18n.locale]  }}</a-select-option>
                     </a-select>
@@ -50,8 +50,8 @@
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('p.currency') }}:</div>
-                <div class="value">
-                    <a-select v-model:value="form.currency" :placeholder="$t('def.input')">
+                <div class="value">                    
+                    <a-select v-model:value="form.currency" :disabled="isDisabled" :placeholder="$t('def.input')">
                         <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ key }}</a-select-option>
                     </a-select>
                 </div>
@@ -121,6 +121,7 @@ export default {
                 parent_id: '',
                 name: '',
                 short_name: '',
+                pay_type: null,
                 contact: '',
                 currency: undefined,
                 phone: '',
@@ -143,7 +144,12 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        // 计算货币是否显示
+        isDisabled(){            
+            return this.monetaryList[this.form.currency] || null
+        }
+    },
 
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0

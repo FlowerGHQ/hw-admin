@@ -16,6 +16,7 @@
       </div>
       <div class="search-container">
         <a-row class="search-area">
+          <!-- 名称 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.name") }}：</div>
             <div class="value">
@@ -26,6 +27,7 @@
               />
             </div>
           </a-col>
+          <!-- 手机号 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.phone") }}：</div>
             <div class="value">
@@ -36,6 +38,7 @@
               />
             </div>
           </a-col>
+          <!-- 客户类型 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -63,6 +66,7 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 创建人 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -80,7 +84,8 @@
                 :default-active-first-option="false"
                 :show-arrow="false"
                 :filter-option="false"
-                :not-found-content="null"
+                :not-found-content="null"    
+                allowClear            
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -93,6 +98,7 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 客户级别 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -120,6 +126,77 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 区域 -->
+          <a-col 
+            v-if="show" 
+            :xs='24' 
+            :sm='24' 
+            :xl="8" 
+            :xxl='6'  
+            class="search-item">
+              <div class="key">{{ $t('crm_c.group') }}：</div>
+              <div class="value">
+                  <a-tree-select
+                    v-model:value="searchForm.group_id"
+                    :placeholder="$t('def.select')"
+                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+                    :tree-data="groupOptions"
+                    tree-default-expand-all
+                    allowClear
+                  />                  
+              </div>
+          </a-col>
+          <!-- 意向程度 -->
+          <a-col 
+           v-if="show" 
+           :xs='24' 
+           :sm='24' 
+           :xl="8" 
+           :xxl='6'  
+           class="search-item">
+            <div class="key">{{$t('crm_t.intent')}}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.purchase_intent"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <a-select-option
+                  v-for="item of DEGREE_INTENT"
+                  :key="item.key"
+                  :value="item.value"
+                  >
+                  {{ lang === "zh" ? item.zh : item.en }}
+                </a-select-option>
+              </a-select>
+            </div>       
+          </a-col>
+          <!-- 来源类型 -->
+          <a-col 
+           v-if="show" 
+           :xs='24' 
+           :sm='24' 
+           :xl="8" 
+           :xxl='6'  
+           class="search-item">
+            <div class="key">{{$t('crm_c.source_type')}}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.source_type"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <a-select-option
+                  v-for="item of SOURCE_TYPE_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >
+                  {{ lang === "zh" ? item.zh : item.en }}
+                </a-select-option>
+              </a-select>
+            </div>       
+          </a-col>
+          <!-- 创建时间 -->
           <a-col
             :xs="24"
             :sm="24"
@@ -133,6 +210,7 @@
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
             </div>
           </a-col>
+          <!-- 高级搜索按钮           -->
           <a-col
             :xs="24"
             :sm="24"
@@ -155,9 +233,7 @@
           </a-col>
         </a-row>
         <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
+          <a-button @click="handleSearch" type="primary">{{$t("def.search")}}</a-button>
           <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
         </div>
       </div>
@@ -200,7 +276,7 @@
       </div>
       <div class="table-container">
         <a-table
-          :columns="tableColumns"
+          :columns="columnOptions.length === 0? tableColumns:columnOptions"
           :data-source="tableData"
           :scroll="{ x: true }"
           :row-key="(record) => record.id"
@@ -208,15 +284,22 @@
           :row-selection="rowSelection"
           @change="getTableDataSorter"
         >
-          <template #headerCell="{ title }">
+          <template #headerCell="{ column,title }">
             {{ $t(title) }}
+            <template v-if="column.key == 'operation'">   
+              <span class="config-icon" @click="OnConfiguration">
+                <SettingOutlined />
+              </span>      
+            </template>
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
               <a-tooltip placement="top" :title="text">
-                <a-button type="link" @click="routerChange('detail', record)">{{
-                  text || "-"
-                }}</a-button>
+                <a-button type="link" @click="routerChange('detail', record)">
+                  <span :class="{nameStyle: nameBoolean(record)}">                    
+                    {{text || "-"}}
+                  </span>
+                </a-button>
               </a-tooltip>
             </template>
             <template v-if="column.key === 'item'">
@@ -280,7 +363,13 @@
                 >{{ lang === "zh" ? item.label : item.label_en }}</a-tag
               >
             </template>
-
+            <!-- 意向程度 -->
+            <template v-if="column.name === 'intent'">
+              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) || '_' }}
+            </template>
+            <template v-if="column.key === 'time'">
+              {{ $Util.timeFilter(text) }}
+            </template>
             <template v-if="column.type === 'time'">
               {{ $Util.timeFilter(text) }}
             </template>
@@ -311,11 +400,14 @@
             </template>
           </template>
         </a-table>
+        <!-- 表格列配置项选项 -->
+        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>		
       </div>
+      <!-- 分页 -->
       <div class="paging-container with-operate">
         <div class="tip">
           {{
-            $t("in.selected") + ` ${selectedRowItems.length} ` + $t("in.total")
+            $t("in.selected") + ` ${selectedRowKeys.length} ` + $t("in.total")
           }}
         </div>
         <a-pagination
@@ -424,12 +516,18 @@
 </template>
 
 <script>
+import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
+import { CaretUpOutlined, SettingOutlined  } from '@ant-design/icons-vue';
+import { ColumnConfiguration } from './components/index.js'
 export default {
   name: "CustomerList",
   components: {
     TimeSearch,
+    CaretUpOutlined,
+    SettingOutlined,
+    ColumnConfiguration      
   },
   props: {},
   data() {
@@ -446,6 +544,8 @@ export default {
       CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
+      DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, 
       total: 0,
       orderByFields: {},
       // 搜索
@@ -458,6 +558,9 @@ export default {
         type: 0,
         status: undefined,
         search_type: undefined,
+        group_id: undefined,
+        create_user_id: undefined,
+        purchase_intent: undefined
       },
       batchForm: {
         group_id: undefined,
@@ -476,6 +579,9 @@ export default {
       group_id: undefined,
       groupOptions: [],
       detail: {},
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
+      ConfigurationBool: false, // 配置项的显示隐藏
+      columnOptions: []
     };
   },
   watch: {
@@ -485,11 +591,23 @@ export default {
       handler(newRoute) {
         let type = newRoute.meta ? newRoute.meta.type : "";
         this.operMode = type;
-        this.handleSearchReset(false);
-        // this.getUserData()
-        // this.getTableData();
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
       },
     },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
   },
   computed: {
     tableColumns() {
@@ -553,6 +671,13 @@ export default {
           key: "source_type",
           sorter: true,
         },
+        // 意向程度
+        {
+          title:"crm_t.intent",
+          dataIndex: "purchase_intent",
+          key:'intent',
+          name:'intent'
+        },
         {
           title: "d.update_time",
           dataIndex: "update_time",
@@ -575,72 +700,79 @@ export default {
       return {
         type: "checkbox",
         selectedRowKeys: this.selectedRowKeys,
-        preserveSelectedRowKeys: true,
-        onChange: (selectedRowKeys, selectedRows) => {
+        onChange: (selectRowKeys, selectedRows) => {
           // 表格 选择 改变
-          this.selectedRowKeys = selectedRowKeys;
-          this.selectedRowItemsAll.push(...selectedRows);
-          let selectedRowItems = [];
-          selectedRowKeys.forEach((id) => {
-            let element = this.selectedRowItemsAll.find((i) => i.id == id);
-            selectedRowItems.push(element);
-          });
-          this.selectedRowItems = selectedRowItems;
-          console.log(
-            "rowSelection this.selectedRowKeys:",
-            this.selectedRowKeys,
-            "selectedRowItems:",
-            selectedRowItems
-          );
-          // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
+          // 修改的代码
+          this.selectedRowKeys = selectRowKeys;
+          // 原先的代码
+          // this.selectedRowKeys = selectRowKeys;
+          // this.selectedRowItemsAll.push(...selectedRows);
+          // let selectedRowItem = [];
+          // selectedRowKeys.forEach((id) => {
+          //   let element = this.selectedRowItemsAll.find((i) => i.id == id);
+          //   selectedRowItem.push(element);
+          // });
+          // this.selectedRowItems = selectedRowItem;
         },
       };
     },
     lang() {
       return this.$store.state.lang;
-    },
+    }
   },
-  mounted() {
+  mounted() {      
     this.getUserData();
-    this.getTableData();
+    this.createUserFetch(); // 创建人数据初始化  
+    this.getTableData(); 
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
     moreSearch() {
       this.show = !this.show;
+      this.handleGroupTree()
     },
     routerChange(type, item = {}) {
-      let routeUrl = "";
-      switch (type) {
-        case "detail": // 编辑
-          routeUrl = this.$router.resolve({
-            path: "/crm-customer/customer-detail",
-            query: { id: item.id },
-          });
-          window.open(routeUrl.href, "_self");
-          break;
-        case "edit": // 编辑
-          routeUrl = this.$router.resolve({
-            path: "/crm-customer/customer-edit",
-            query: { id: item.id, status: this.searchForm.status },
-          });
-          window.open(routeUrl.href, "_self");
-          break;
-      }
+		let routeUrl = ''
+		switch (type) {
+			case "detail": // 编辑          
+				if(!this.$Util.isEmptyObj(item)){
+					this.nameColor.push({ id: item.id})
+				}			
+				routeUrl = this.$router.resolve({
+					path: "/crm-customer/customer-detail",
+					query: {id: item.id}
+				})
+				window.open(routeUrl.href, '_blank')
+				break;
+			case "edit": // 编辑			
+				routeUrl = this.$router.resolve({
+					path: "/crm-customer/customer-edit",
+					query: { id: item.id, status: this.searchForm.status },
+				})
+				window.open(routeUrl.href, '_blank')
+				break;
+		}
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -649,8 +781,8 @@ export default {
       }
       this.pageChange(1);
     },
+    // 重置搜索
     handleSearchReset() {
-      // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       if (this.operMode === "private") {
         this.searchForm.status = this.CRM_STATUS.CUSTOMER;
@@ -680,10 +812,11 @@ export default {
         page: this.currPage,
         page_size: this.pageSize,
       })
-        .then((res) => {
-          console.log("getTableData res:", res);
+        .then((res) => {          
           this.total = res.count;
           this.tableData = res.list;
+          // 切换的时候清除 // table的选择
+          this.selectedRowKeys = [];
         })
         .catch((err) => {
           console.log("getTableData err:", err);
@@ -732,7 +865,6 @@ export default {
         org_type: Core.Const.LOGIN.ORG_TYPE.ADMIN,
       })
         .then((res) => {
-          console.log("getTableData res:", res);
           this.userData = res.list;
         })
         .catch((err) => {
@@ -904,17 +1036,14 @@ export default {
       }
     },
     handleCreateUserSearch(name) {
-      // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
+      // 创建人条件搜索 下拉框    
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleGroupTree() {
       Core.Api.CRMGroupMember.structureByUser({}).then((res) => {
         this.groupOptions = res.list;
-        console.log(res);
       });
     },
     handleChecking(item) {
@@ -924,8 +1053,37 @@ export default {
         item.phone = res.detail.phone;
         item.email = res.detail.email;
         item.flag_eyes = true;
-        console.log(res);
       });
+    },
+
+    /*接口*/
+    // 创建人条件数据
+    createUserFetch(params = {}){
+      Core.Api.CRMOrder.createUser({
+        ...params
+      }).then((res) => {
+        if(this.$Util.isEmptyObj(params)){
+          this.createUserOptions = take(res.list, 50);
+        }else{
+          this.createUserOptions = res.list;          
+        }
+      });
+    },
+    /*methods*/
+    // 配置表格列的名称
+    OnConfiguration(){
+      if(this.ConfigurationBool === false){
+        // this.columnOptions = this.tableColumns
+        this.ConfigurationBool = true
+      } else
+      if(this.ConfigurationBool === true){
+        // this.columnOptions = []
+        this.ConfigurationBool = false
+      }
+    },
+    getConfigOptions(val){
+      this.columnOptions = val
+      this.ConfigurationBool = false
     },
   },
 };
@@ -950,6 +1108,22 @@ export default {
 .search-text {
   margin-left: 30px;
   color: #006ef9;
+  cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
+}
+
+// 配置项组件自定义位置
+.Configuration-style{
+   position:absolute;
+   top: 40px;
+   bottom: 0;  
+   right: 0px;   
+   z-index: 999;
+}
+.config-icon{
+  font-size: 14px;
   cursor: pointer;
 }
 </style>

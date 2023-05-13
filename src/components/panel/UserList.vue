@@ -30,9 +30,10 @@
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
+                    <template v-if="column.key === 'operation'">                    
                         <a-button type='link' @click="handleUserRole(record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('u.set_role') }}</a-button>
                         <a-button type='link' @click="routerChange('edit', record)" v-if="$auth('user.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                        <a-button type="link" @click="handleReset(record)" v-if="$UserAuth(loginUsername)"><i class="icon i_lock"/>{{ $t('u.reset') }}</a-button>
                         <a-button type='link' class="danger" @click="handleDelete(record.id)" v-if="$auth('user.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                     </template>
                 </template>
@@ -53,10 +54,35 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
-        <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
+        <a-modal v-model:visible="userRoleShow" :title="$t('p.financial_audit')" :after-close='handleRoleClose'>
             <UserRole v-if="userRoleShow" :user-id="userId" :detail="userDetail"></UserRole>
             <template #footer>
                 <a-button @click="handleRoleClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
+        <!-- 重置密码 -->
+        <a-modal 
+            v-model:visible="passShow" 
+            :title="$t('u.reset')" 
+            class="password-edit-modal" 
+        >
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.new') }}:</div>
+                    <div class="value">
+                        <a-input-password v-model:value="resetForm.password" :placeholder="$t('def.input')" />
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.double') }}:</div>
+                    <div class="value">
+                        <a-input-password v-model:value="resetForm.new_password" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
+                <a-button @click="handleEditClose">{{ $t('def.cancel') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -101,6 +127,13 @@ export default {
 
             userId: '',
             userDetail: '',
+            passShow: false, // 重置密码model
+            resetForm:{
+                id:"",
+                password:"",
+                new_password:"",
+            },
+            loginUsername: Core.Data.getUser()?.username // 只有admin1的账户能重置密码
         };
     },
     watch: {},
@@ -161,7 +194,7 @@ export default {
                         query: {id: item.id}
                     })
                     window.open(routeUrl.href, '_blank')
-                    break;
+                break;
             }
         },
         pageChange(curr) {    // 页码改变
@@ -218,6 +251,40 @@ export default {
             this.userId = '';
             this.userDetail = '';
             this.userRoleShow = false;
+        },
+        // 重置密码
+        handleReset(record){
+            this.resetForm.id = record.account_id
+            this.passShow = true;
+        },
+        // 重置密码model 提交
+        handleEditSubmit(){
+            let resetForm = Core.Util.deepCopy(this.resetForm)
+
+            if (!resetForm.password) {
+                return this.$message.warning(this.$t('u.new_password'))
+            }
+            if (!resetForm.new_password) {
+                return this.$message.warning(this.$t('u.again'))
+            }
+            if (resetForm.new_password !== resetForm.password) {
+                return this.$message.warning(this.$t('u.not'))
+            }
+            resetForm.type = this.type
+            Core.Api.Account.ResetDetailPwd(resetForm).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                this.handleEditClose();
+            }).catch(err => {
+                console.log('handleSubmit err:', err)
+            })
+        },
+        // 重置密码model 取消
+        handleEditClose() {
+            this.passShow = false;  
+            this.resetForm = {
+                password:"",
+                new_password:"",
+            }         
         },
     }
 };

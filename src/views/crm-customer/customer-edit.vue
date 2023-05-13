@@ -21,7 +21,7 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('n.name') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('def.input')" :disabled="form.id > 0"/>
+                        <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
 
                 </div>
@@ -38,10 +38,11 @@
                         </a-select>
                     </div>
                 </div>
+                <!-- 手机号 -->
                 <div class="form-item required with-btn" >
                     <div class="key">{{ $t('n.phone') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && detail.phone != undefined) ||  form.country_code == undefined"/>
+                        <a-input v-model:value="form.phone" :placeholder="$t('def.input')" @blur="handleCustomerPhoneBlur" :disabled="(form.id > 0 && detail.phone) ||  form.country_code == undefined"/>
 
                         <div class="btn">
                             <span v-if="isExistPhone == 1"><i class="icon i_confirm"/></span>
@@ -52,10 +53,11 @@
                         </div>
                     </div>
                 </div>
+                <!-- 邮箱 -->
                 <div class="form-item required with-btn">
                     <div class="key">{{ $t('n.email') }}：</div>
                     <div class="value">
-                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && detail.email != undefined"/>
+                        <a-input v-model:value="form.email" :placeholder="$t('def.input')" @blur="handleCustomerEmailBlur" :disabled="form.id > 0 && detail.email ||  form.country_code == undefined"/>
                         <div class="btn">
                             <span v-if="isExistEmail == 1"><i class="icon i_confirm"/></span>
                             <span v-else-if="isExistEmail == 2"><i class="icon i_close_c"/></span>
@@ -103,38 +105,61 @@
                 <div class="title-colorful">{{ $t('crm_c.extended_information') }}</div>
             </div>
             <div class="form-content key130">
+                <!-- 客户级别 -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.level') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.level" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
-
                 </div>
+
+                <!-- 意向程度 -->                
                 <div class="form-item">
+                    <div class="key">{{ $t("crm_t.intent") }}</div>
+                    <div class="value">
+                        <a-select  
+                            v-model:value="form.purchase_intent"                      
+                            :placeholder="$t('def.select')"
+                            allowClear
+                        >
+                            <a-select-option
+                                v-for="item of DEGREE_INTENT"
+                                :key="item.key"
+                                :value="item.value"
+                                >
+                                {{ lang === "zh" ? item.zh : item.en }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
+
+                <!-- 购物意向 -->
+                <!-- <div class="form-item">
                     <div class="key">{{ $t('crm_c.purchase_intent') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.purchase_intent" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_PURCHASE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
+                </div> -->
 
-                </div>
+                <!-- 试驾意向 -->
                 <div class="form-item">
                     <div class="key">{{ $t('crm_c.test_drive_intent') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.test_drive_intent" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.test_drive_intent" :placeholder="$t('def.input')" allowClear >
                             <a-select-option v-for="item of CRM_TEST_DRIVE_INTENT_MAP" :key="item.value" :value="item.value">{{lang === 'zh' ? item.zh: item.en}}</a-select-option>
                         </a-select>
                     </div>
 
                 </div>
-
+                <!-- 客户来源 -->
                 <div class="form-item with-btn">
                     <div class="key">{{ $t('crm_c.crm_dict_id') }}：</div>
                     <div class="value">
-                        <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" >
+                        <a-select v-model:value="form.crm_dict_id" :placeholder="$t('def.input')" allowClear>
                             <a-select-option v-for="item of sourceList" :key="item.id" :value="item.id">{{lang === 'zh' ? item.name: item.name_en}}</a-select-option>
                         </a-select>
                         <div class="btn">
@@ -246,10 +271,223 @@
                 </div>
             </div>
         </div>
+        <!-- 用户画像 -->
+        <div class="form-block">
+        <div class="form-title">
+            <div class="title-colorful">{{ $t("crm_d.user_portrait") }}</div>
+        </div>
+        <a-row class="form-content long-key">
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.buy_type") }}：</div>
+                <div class="value">
+                <a-select
+                    v-model:value="form.buy_type"
+                    :placeholder="$t('def.input')"
+                >
+                    <a-select-option
+                    v-for="item of BUY_TYPE_MAP"
+                    :key="item.key"
+                    :value="item.key"
+                    >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                    >
+                </a-select>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.rental_demand") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.rental_demand">
+                    <a-radio v-for="item in RENTAL_DEMAND_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.city") }}：</div>
+                <div class="value">
+                <a-input
+                    v-model:value="form.city"
+                    :placeholder="$t('def.input')"
+                />
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.travel_range") }}：</div>
+                <div class="value">
+                <a-select
+                    v-model:value="form.travel_range"
+                    :placeholder="$t('def.input')"
+                >
+                    <a-select-option
+                    v-for="item of TRAVEL_RANGE_MAP"
+                    :key="item.key"
+                    :value="item.key"
+                    >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                    >
+                </a-select>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.other_brand_model") }}：</div>
+                <div class="value">
+                <a-input
+                    v-model:value="form.other_brand_model"
+                    :placeholder="$t('def.input')"
+                />
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.park_and_charging_pile") }}：</div>
+                <div class="value">
+                <a-input
+                    v-model:value="form.park_and_charging_pile"
+                    :placeholder="$t('def.input')"
+                />
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.family_member") }}：</div>
+                <div class="value">
+                <a-input
+                    v-model:value="form.family_member"
+                    :placeholder="$t('def.input')"
+                />
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.green_car_owner") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.green_car_owner">
+                    <a-radio v-for="item in GREEN_CAR_OWNER_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.driver_license") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.driver_license">
+                    <a-radio v-for="item in DRIVER_LICENSE_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.ride_exp") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.ride_exp">
+                    <a-radio v-for="item in RIDE_EXP_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.moto_exp") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.moto_exp">
+                    <a-radio v-for="item in MOTO_EXP_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.moto_tour_intention") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.moto_tour_intention">
+                    <a-radio
+                    v-for="item in MOTO_TOUR_INTENTION_MAP"
+                    :value="item.key"
+                    >
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.pay_attention_to") }}：</div>
+                <div class="value">
+                <a-radio-group v-model:value="form.pay_attention_to">
+                    <a-radio v-for="item in PAY_ATTENTION_TO_MAP" :value="item.key">
+                    {{ lang === "zh" ? item.zh : item.en }}
+                    </a-radio>
+                </a-radio-group>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">{{ $t("crm_c_p.green_energy_understand") }}：</div>
+                <div class="value">
+                <a-select
+                    v-model:value="form.green_energy_understand"
+                    :placeholder="$t('def.input')"
+                >
+                    <a-select-option
+                    v-for="item of GREEN_ENERGY_UNDERSTAND_MAP"
+                    :key="item.key"
+                    :value="item.key"
+                    >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                    >
+                </a-select>
+                </div>
+            </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :md="24" :lg="12">
+            <div class="form-item">
+                <div class="key">
+                {{ $t("crm_c_p.electric_two_wheeler_understand") }}：
+                </div>
+                <div class="value">
+                <a-select
+                    v-model:value="form.electric_two_wheeler_understand"
+                    :placeholder="$t('def.input')"
+                >
+                    <a-select-option
+                    v-for="item of ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP"
+                    :key="item.key"
+                    :value="item.key"
+                    >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                    >
+                </a-select>
+                </div>
+            </div>
+            </a-col>
+        </a-row>
+        </div>
 
         <div class="form-btns">
             <a-button @click="handleSubmit" type="primary" v-if="$auth('crm-customer.save')">{{ $t('def.sure') }}</a-button>
-            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="routerChange('back')" type="primary" ghost="">{{ $t('def.cancel') }}</a-button>           
         </div>
         <template class="modal-container">
             <a-modal v-model:visible="sourceModalShow" :title="sourceForm.id ? $t('crm_set.edit') : $t('crm_set.save')" :after-close="handleSourceModalClose">
@@ -300,12 +538,12 @@ export default {
     components: { ChinaAddressCascader, CountryCascader, AddressCascader, CustomerSelect, LabelSelect},
     props: {},
     data() {
-        return {
+        return {            
             CATEGORY: Core.Const.CRM_LABEL.CATEGORY,
             loginType: Core.Data.getLoginType(),
             CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
-            CRM_PURCHASE_INTENT_MAP: Core.Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP,
+            // CRM_PURCHASE_INTENT_MAP: Core.Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP, // 购买意向
             CRM_TEST_DRIVE_INTENT_MAP: Core.Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP,
             CRM_SOURCE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_MAP,
             CRM_INDUSTRY_MAP: Core.Const.CRM_CUSTOMER.INDUSTRY_MAP,
@@ -313,8 +551,24 @@ export default {
             CRM_MARITAL_STATUS_MAP: Core.Const.CRM_CUSTOMER.MARITAL_STATUS_MAP,
             CRM_TYPE: Core.Const.CRM_CUSTOMER.TYPE,
             CRM_COMPANY_SIZE_MAP: Core.Const.CRM_CUSTOMER.COMPANY_SIZE_MAP,
-
+            DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
+            CRM_TYPE_MAP: Core.Const.CRM_CUSTOMER.TYPE_MAP,
+            CRM_GENDER_MAP: Core.Const.CRM_CUSTOMER.GENDER_MAP,
+            BUY_TYPE_MAP: Core.Const.CRM_TEST_DRIVE.BUY_TYPE_MAP,
+            RENTAL_DEMAND_MAP: Core.Const.CRM_TEST_DRIVE.RENTAL_DEMAND_MAP,
+            TRAVEL_RANGE_MAP: Core.Const.CRM_TEST_DRIVE.TRAVEL_RANGE_MAP,
+            GREEN_CAR_OWNER_MAP: Core.Const.CRM_TEST_DRIVE.GREEN_CAR_OWNER_MAP,
+            DRIVER_LICENSE_MAP: Core.Const.CRM_TEST_DRIVE.DRIVER_LICENSE_MAP,
+            RIDE_EXP_MAP: Core.Const.CRM_TEST_DRIVE.RIDE_EXP_MAP,
+            MOTO_EXP_MAP: Core.Const.CRM_TEST_DRIVE.MOTO_EXP_MAP,
+            MOTO_TOUR_INTENTION_MAP:
+            Core.Const.CRM_TEST_DRIVE.MOTO_TOUR_INTENTION_MAP,
+            PAY_ATTENTION_TO_MAP: Core.Const.CRM_TEST_DRIVE.PAY_ATTENTION_TO_MAP,
+            GREEN_ENERGY_UNDERSTAND_MAP:
+            Core.Const.CRM_TEST_DRIVE.GREEN_ENERGY_UNDERSTAND_MAP,
+            ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP:
+            Core.Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP,
             // 加载
             loading: false,
             form: {
@@ -324,7 +578,7 @@ export default {
                 phone: '',
                 level: '',
                 group_id: '',
-                purchase_intent: '',
+                // purchase_intent: '',
                 test_drive_intent: '',
                 crm_dict_id: '',
                 company_size: '',
@@ -341,6 +595,31 @@ export default {
                 address: '',
                 country_code: '',
                 phone_country_code: '',
+                email:'',
+                purchase_intent:'',
+                
+                // 用户画像
+                customer_portrait_id: undefined,
+                buy_type: undefined,
+                rental_demand: undefined,
+                country: undefined,
+                province: undefined,
+                city: undefined,
+                country_en: undefined,
+                province_en: undefined,
+                city_en: undefined,
+                travel_range: undefined,
+                other_brand_model: undefined,
+                park_and_charging_pile: undefined,
+                family_member: undefined,
+                green_car_owner: undefined,
+                driver_license: undefined,
+                ride_exp: undefined,
+                moto_exp: undefined,
+                moto_tour_intention: undefined,
+                pay_attention_to: undefined,
+                green_energy_understand: undefined,
+                electric_two_wheeler_understand: undefined,
             },
             detail: {
                 id: '',
@@ -348,8 +627,7 @@ export default {
                 name: '',
                 phone: '',
                 level: '',
-                group_id: '',
-                purchase_intent: '',
+                group_id: '',                
                 test_drive_intent: '',
                 crm_dict_id: '',
                 company_size: '',
@@ -364,7 +642,7 @@ export default {
                 remark: '',
                 status: Core.Const.CRM_CUSTOMER.STATUS.POOL,
                 address: '',
-
+                purchase_intent:'',
                 phone_country_code: ''
             },
             defAddr: [],
@@ -407,7 +685,7 @@ export default {
             labelIdList: [],
             groupOptions: [],
 
-            phoneCountryCodeList: []  //手机号地区
+            phoneCountryCodeList: [],  //手机号地区            
         };
     },
     watch: {},
@@ -440,12 +718,12 @@ export default {
         if(Core.Data.getGroupId()) this.form.group_id = Core.Data.getGroupId()
     },
     methods: {
-        routerChange(type, item) {
+        routerChange(type) {                    
             switch (type) {
                 case 'back':    // 详情
                     this.$router.go(-1)
             }
-        },
+        },     
         getCustomerDetail() {
             this.loading = true;
             Core.Api.CRMCustomer.detail({
@@ -467,7 +745,6 @@ export default {
                 this.handleContinentSelect(this.defAreaContinent);
                 this.handleAddressSelect(this.defAddr);
 
-
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -487,7 +764,7 @@ export default {
                 }
             }
 
-            console.log("areaContinent", areaContinent)
+            // console.log("areaContinent", areaContinent)
             if (!form.country_code) {
                 return this.$message.warning(this.$t('n.choose') + ":" + this.$t('crm_c.phone_country_code') )
             }
@@ -509,7 +786,7 @@ export default {
             }*/
             form.birthday = form.birthday ? dayjs(form.birthday).unix() : 0 // 日期转时间戳
 
-            console.log('form',this.form)
+            // console.log('form',this.form)
             // if (!Core.Util.isEmptyObj(this.defAddr)) {
             //     console.log('areaMap2222',this.defAddr)
             //     area.country = this.defAddr.country
@@ -527,7 +804,7 @@ export default {
                 ...areaContinent,
                 label_id_list: this.labelIdList,
             }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
+                this.$message.success(this.$t('pop_up.save_success'))                              
                 this.routerChange('back')
             }).catch(err => {
                 console.log('handleSubmit err:', err)
@@ -739,6 +1016,25 @@ export default {
     }
     .key {
         width: 120px;
+    }
+}
+
+.form-content.long-key {
+    .key {
+      width: 145px;
+    }
+    .value {
+      width: calc(100% - 120px);
+    }
+  }
+  &.en {
+    .form-content.long-key {
+      .key {
+        width: 200px;
+      }
+      .value {
+        width: calc(100% - 200px);
+      }
     }
 }
 </style>

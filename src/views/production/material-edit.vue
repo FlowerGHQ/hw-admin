@@ -11,16 +11,16 @@
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='50'/>
+                        <a-input v-model:value="form.name" :placeholder="$t('m.enter_material')" :maxlength='60'/>
                     </div>
                 </div>
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_en_name') }}</div>
                     <div class="value">
-                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='50'/>
+                        <a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength='60'/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_category') }}</div>
                     <div class="value">
                         <CategoryTreeSelect @change="handleCategorySelect"
@@ -28,25 +28,37 @@
                             :placeholder="$t('n.choose') + $t('m.material_category')" type="material"/>
                     </div>
                 </div>
+                <!-- 物料编码 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('m.material_code') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.code" :placeholder="$t('n.enter')+$t('m.material_code')"/>
                     </div>
                 </div>
+                <!-- 类型 -->
                 <div class="form-item required">
+                    <div class="key">{{ $t('m.type') }}</div>
+                    <div class="value">
+                        <a-select v-model:value="form.type" :placeholder="$t('n.choose')+$t('m.type')">
+                            <a-select-option v-for="item in editMsgType" :key="item.key" :value="item.key">
+                                {{ item[$i18n.locale] }}
+                            </a-select-option>                                                  
+                        </a-select>
+                    </div>
+                </div>
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_spec') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.spec" :placeholder="$t('n.enter')+$t('m.material_spec')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.unit') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.unit" :placeholder="$t('n.enter')+$t('m.unit')"/>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.material_picture') }}</div>
                     <div class="value">
                         <a-upload name="file" class="image-uploader"
@@ -61,13 +73,14 @@
                         </a-upload>
                     </div>
                 </div>
+                <!-- 装箱数 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('m.boxes') }}</div>
                     <div class="value">
                         <a-input-number v-model:value="form.pack_count" :placeholder="$t('n.enter')" />{{ $t('m.pcs') }}
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('m.color') }}</div>
                     <div class="value">
                         <a-input v-model:value="form.color" :placeholder="$t('n.enter')" />
@@ -135,6 +148,7 @@ export default {
                 image: '',
                 color: '',
                 pack_count: '',
+                type: null
             },
             gross_weight: '',
             supplierList: [],
@@ -152,6 +166,7 @@ export default {
                     type: 'img',
                 },
             },
+            editMsgType:Core.Const.PRODUCTION.materialMsg.editMsg // 类型
         };
     },
     watch: {},
@@ -235,35 +250,20 @@ export default {
         // 保存时检查表单输入
         checkFormInput(form) {
             if (!form.name) {
-                return this.$message.warning('请输入物料名称')
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_name')}`)
             }
             if (!form.name_en) {
-                return this.$message.warning('请输入物料英文名')
-            }
-            if (!form.category_id) {
-                return this.$message.warning('请选择物料分类')
-            }
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_en_name')}`)
+            }       
             if (!form.code) {
-                return this.$message.warning('请输入物料编码')
-            }
-            if (!form.spec) {
-                return this.$message.warning('请输入物料规格')
-            }
-            if (!form.unit) {
-                return this.$message.warning('请输入单位')
-            }
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_code')}`)
+            }           
+            if (!form.type) {
+                return this.$message.warning(`${this.$t('n.choose')}${this.$t('m.type')}`)
+            }           
             if (!form.pack_count) {
-                return this.$message.warning('请输入最小装箱数')
-            }
-            if (!form.color) {
-                return this.$message.warning('请输入颜色')
-            }
-           /* if (!form.image) {
-                return this.$message.warning('请上传图片')
-            }*/
-          /*  if (!form.encapsulation) {
-                return this.$message.warning('请输入物料包装')
-            }*/
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.boxes')}`)
+            }                    
             return 0
         },
 

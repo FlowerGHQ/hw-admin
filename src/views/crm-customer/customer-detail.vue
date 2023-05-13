@@ -70,10 +70,57 @@
                         <span class="key">{{ $t('n.time') }}：</span>
                         <span class="value">{{ $Util.timeFilter(detail.create_time) }}</span>
                     </a-col>
+                    <!-- 订单来源 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.order_source') }}：</span>
+                        <span class="value">
+                            {{ $Util.CRMTestDriveSourceFilter(detail.crm_test_drive_order?.channel, $i18n.locale) || "-" }}
+                        </span>
+                    </a-col>
+                    <!-- 试驾车型 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.crm_dict_id') }}：</span>
+                        <span class="value">
+                            {{ detail.crm_test_drive_order?.item_name || "-" }}
+                        </span>
+                    </a-col>
+                    <!-- 标签展示 -->
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
-                        <span class="value">
+                        <span class="value" style="overflow: initial; white-space: normal;">
                             <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.CUSTOMER"/>
+                        </span>
+                    </a-col>
+                    <!-- 门店邮件是否发送 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.store_is_send_mail') }}：</span>
+                        <span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_mail_sent_store">-</span>
+                            <!-- 1已发 2未发-->
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent_store == 1">
+                                {{ $t('dis.been_sent') }}
+                                <!-- ({{ $t('dis.mail') }}:1234) -->
+                            </span>
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent_store == 2">
+                                <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
+                                <a-button type="link" style="margin-left: 8px;" @click="resetEmailEvent('store')">{{ $t('dis.fagain_send') }}</a-button>
+                            </span>
+                        </span>
+                    </a-col>
+                    <!-- 用户邮件是否发送 -->
+                   <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span style="color:#8b9aae">{{ $t('dis.user_is_send_mail') }}：</span>
+                        <span>
+                            <span v-if="!detail.crm_test_drive_order?.flag_mail_sent_user">-</span>
+                            <!-- 1已发 2未发 -->
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent_user == 1">
+                                {{ $t('dis.been_sent') }}
+                                <!-- ({{ $t('dis.mail') }}:1234) -->
+                            </span>
+                            <span v-else-if="detail.crm_test_drive_order?.flag_mail_sent_user == 2">
+                                <span style="color: #f31c12;">{{ $t('dis.fail_send') }}</span>
+                                <a-button type="link" style="margin-left: 8px;" @click="resetEmailEvent('user')">{{ $t('dis.fagain_send') }}</a-button>
+                            </span>
                         </span>
                     </a-col>
 
@@ -103,34 +150,98 @@
                     </a-col>
                 </a-row>
             </div>
+            <div v-if="false" class="panel-content desc-container">
+                <div class="desc-title">
+                    <div class="title-area">
+                        <span class="title">{{ $t('dis.subscribe_store') }}</span>
+                    </div>
+                </div>
+                <a-row class="desc-detail">
+                    <!-- 门店名称 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_name') }}：</span>
+                        <span class="value">
+                            {{storeDetail.name || "-"}}
+                        </span>
+                    </a-col>
+                    <!-- 门店手机号 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_phone') }}：</span>
+                        <span class="value">
+                            {{storeDetail.contact_phone || "-"}}
+                        </span>
+                    </a-col>
+                    <!-- 门店邮箱 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_email') }}：</span>
+                        <span class="value">
+                            {{storeDetail.contact_email || "-"}}
+                        </span>
+                    </a-col>
+                    <!-- 营业时间 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.business_hours') }}：</span>
+                        <span class="value">
+                            <span v-if="storeDetail.business_time">
+                                {{ $t('dis.morning') }}: {{storeDetail.business_time?.time.morning.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                                {{ $t('dis.afternoon') }}: {{storeDetail.business_time?.time.afternoon.begin}} - {{storeDetail.business_time?.time.morning.end}}
+                            </span>
+                            <span v-else>
+                                -
+                            </span>
+                        </span>
+                    </a-col>
+                    <!-- 门店地址 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_address') }}：</span>
+                        <span class="value">
+                            {{storeDetail.address || "-"}}
+                        </span>
+                    </a-col>
+                    <!-- 门店官网 -->
+                    <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('dis.store_website') }}：</span>
+                        <span class="value">
+                            <a :href="storeDetail.official_website">{{storeDetail.official_website || "-"}}  </a>
+                        </span>
+                    </a-col>
+                </a-row>
+            </div>
         </div>
+
         <a-row >
             <a-col :xs='24' :sm='24' :lg='16' >
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
+                        <!-- 跟进记录 tab -->
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
                             <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord">
                                 <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
                             </CRMTrackRecord>
                         </a-tab-pane>
+                        <!-- 资料 tab -->
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
                             <CustomerSituation :detail="detail"/>
                         </a-tab-pane>
+                        <!-- 试驾单列表 tab -->
                         <a-tab-pane key="TestDriveList" :tab="$t('crm_d.list')">
                             <CRMTestDrive  v-if="id>0" :detail="detail" :customerId="detail.id" ref="CRMTestDrive">
                                 <a-button type="primary" @click="routerChange('test-drive')" v-if="$auth('crm-customer.save')">{{ $t('crm_d.save') }}</a-button>
                             </CRMTestDrive>
                         </a-tab-pane>
+                        <!-- 联系人 tab -->
                         <a-tab-pane key="ContacPerson" :tab="$t('crm_t.contact_customer')">
                             <CRMContact  v-if="id>0" :detail="detail" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER" :flagOWN="trackMemberDetail != null ?trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN: false" ref="CRMContact">
                                 <CustomerAdd :btnText="$t('crm_c.add')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id"  @select="getCRMContactList" />
                             </CRMContact>
                         </a-tab-pane>
+                        <!-- 商机 tab -->
                         <a-tab-pane key="Opportunity" :tab="$t('crm_b.new_bo')">
                             <CRMBo  v-if="id>0" :detail="detail" :customerId="detail.id" ref ="CRMBo">
                                 <a-button type="primary" @click="routerChange('add-crm-bo')" v-if="$auth('crm-bo.save')"><i class="icon i_add"/>{{ $t('crm_b.save') }}</a-button>
                             </CRMBo>
                         </a-tab-pane>
+                        <!-- 合同 -->
                         <a-tab-pane key="ContractList" :tab="$t('crm_o.list')">
                             <CRMOrder   v-if="id>0" :detail="detail" :customerId="detail.id"  ref ="CRMOrder">
                                 <a-button type="primary" @click="routerChange('add-order')" v-if="$auth('crm-order.save')"><i class="icon i_add"/>{{ $t('crm_o.save') }}</a-button>
@@ -235,7 +346,9 @@ export default {
             loading: false,
             activeKey: 'TrackRecord',
             tabActiveKey: 'CustomerSituation',
-            detail: {},
+            detail: {
+                crm_test_drive_order: null
+            },
             batchForm: {
                 own_user_id: '',
             },
@@ -245,6 +358,7 @@ export default {
             groupOptions: [],
             group_id: undefined,
             id: '',
+            storeDetail: {}, // 门店详情
         };
     },
     watch: {},
@@ -257,14 +371,31 @@ export default {
         this.id = Number(this.$route.query.id) || 0
     },
     mounted() {
-        // this.id = Number(this.$route.query.id) || 0
         if (this.id) {
             this.getCustomerDetail();
             this.getTargetByUserId();
         }
-
+        if(Number(this.$route.query.store_id)){
+            this.storeFetch()
+            // this.storeFetch()
+        }
     },
     methods: {
+        /* Fetch */
+        // 门店详情
+        storeFetch(params = {}){
+            Core.Api.Store.detail({
+                ...params,
+                id: Number(this.$route.query.store_id),
+            }).then(res => {
+                console.log("获取门店详情", res)
+                this.storeDetail = res.detail
+                this.storeDetail.business_time = JSON.parse(this.storeDetail.business_time)
+                console.log("测试", this.storeDetail);
+            }).catch(err => {
+                console.log('获取门店列表失败', err)
+            })
+        },
         routerChange(type, item) {
             let routeUrl = ""
             switch (type) {
@@ -481,11 +612,10 @@ export default {
                 target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.CUSTOMER,
             }).then(res => {
                 this.trackMemberDetail = res.detail
-                console.log("trackMemberDetail", this.trackMemberDetail);
+                // console.log("trackMemberDetail", this.trackMemberDetail);
             })
         },
         getCRMTrackRecord(){
-            console.log("getTrackRecord");
             this.$refs.CRMTrackRecord.getTableData();
         },
         getCrmActionRecordTableData(){
@@ -512,6 +642,27 @@ export default {
 
             })
         },
+        // 重新发送
+        resetEmailEvent(type){
+            // 用户
+            if(type == "user"){
+                Core.Api.CRMTESTDRIVE.userEmail({
+                    id: this.detail.crm_test_drive_order.id
+                }).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+            } else if(type == "store") {
+                Core.Api.CRMTESTDRIVE.storeEmail({
+                    id: this.detail.crm_test_drive_order.id
+                }).then(res => {
+                    console.log(res);
+                }).catch(err => {
+                    console.log(err);
+                })
+            }
+        }
 
     }
 };

@@ -15,7 +15,7 @@
                         <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item" v-if="$auth('ADMIN')">
                     <div class="key">{{ $t('crm_c.group') }}：</div> <!--区域 -->
                     <div class="value">
                         <a-tree-select class="CategoryTreeSelect"
@@ -35,7 +35,7 @@
                             <a-select-option :value="USER_TYPE.WORKER">维修工</a-select-option>
                         </a-select>
                     </div>
-                </a-col>-->
+                </a-col> -->
                 <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
                     <div class="key">{{ $t('d.create_time') }}:</div>
                     <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
@@ -187,7 +187,9 @@ export default {
     computed: {},
     mounted() {
         this.getTableData();
-        this.handleGroupTree()
+        if(this.$auth('ADMIN')){
+            this.handleGroupTree()
+        }
     },
     methods: {
         routerChange(type, item = {}) {
@@ -210,7 +212,7 @@ export default {
                         path: "/system/user-detail",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },

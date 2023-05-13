@@ -55,14 +55,15 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleOwnUserSearch"
               >
                 <a-select-option
                   v-for="item in ownUserOptions"
-                  :key="item.user.id"
-                  :value="item.user.id"
+                   :key="item.user_id"
+                  :value="item.user_id"
                 >
-                  {{ item.user.account.name }}
+                  {{ item.name }}
                 </a-select-option>
               </a-select>
             </div>
@@ -142,6 +143,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -224,7 +226,9 @@
                   type="link"
                   @click="routerChange('detail', record)"
                   v-if="$auth('crm-order.detail')"
-                  >{{ text || "-" }}</a-button
+                  ><span :class="{nameStyle: nameBoolean(record)}">                    
+                    {{text || "-"}}
+                  </span></a-button
                 >
               </a-tooltip>
             </template>
@@ -321,7 +325,7 @@
 <script>
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
-
+import { take } from 'lodash'
 export default {
   name: "OrderList",
   components: {
@@ -367,9 +371,32 @@ export default {
       selectedRowKeys: [],
       selectedRowItems: [],
       selectedRowItemsAll: [],
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
     };
   },
-  watch: {},
+  watch: {
+    $route: {
+      deep: true,
+      immediate: true,
+      handler() {
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
+      },
+    },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -464,8 +491,44 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.createUserFetch();
+    this.ownUserFetch();
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
+    /*接口*/
+    // 负责人接口
+    ownUserFetch(params = {}){
+        Core.Api.CRMTrackMember.joinUserList({
+          type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
+          target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.ownUserOptions = take(res.list, 50);
+            }else{
+                this.ownUserOptions = res.list;          
+            }          
+        });
+    },
+    // 创建人接口
+    createUserFetch(params = {}){       
+        Core.Api.CRMOrder.createUser({
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.createUserOptions = take(res.list, 50);
+            }else{
+                this.createUserOptions = res.list;          
+            }          
+        });
+    },
+    // 负责人接口
     moreSearch() {
       this.show = !this.show;
     },
@@ -473,35 +536,39 @@ export default {
       let routeUrl = "";
       switch (type) {
         case "detail": // 详情
+          if(!this.$Util.isEmptyObj(item)){
+            this.nameColor.push({ id: item.id})
+          }
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-edit",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
       }
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -557,21 +624,15 @@ export default {
     },
     handleOwnUserSearch(name) {
       // 负责人条件搜索 下拉框
-      Core.Api.CRMTrackMember.list({
-        type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
-        target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
-        name: name,
-      }).then((res) => {
-        this.ownUserOptions = res.list;
-      });
+      this.ownUserFetch({
+        name: name
+      })
     },
     handleCreateUserSearch(name) {
       // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
-        create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      this.createUserFetch({
+        create_user_name: name
+      })
     },
     handleDelete(id) {
       let _this = this;
@@ -676,5 +737,8 @@ export default {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>

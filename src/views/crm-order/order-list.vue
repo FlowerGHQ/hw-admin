@@ -70,14 +70,15 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleOwnUserSearch"
               >
                 <a-select-option
                   v-for="item in ownUserOptions"
-                  :key="item.user.id"
-                  :value="item.user.id"
+                  :key="item.user_id"
+                  :value="item.user_id"
                 >
-                  {{ item.user.account.name }}
+                  {{ item.name }}
                 </a-select-option>
               </a-select>
             </div>
@@ -146,6 +147,31 @@
             class="search-item"
             v-if="show"
           >
+            <div class="key">{{ $t("crm_o.customer_status") }}：</div>
+            <!-- 客户状态 -->
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.search_type"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option
+                  v-for="item of CRM_CUSTOMER_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="search-item"
+            v-if="show"
+          >
             <div class="key">{{ $t("crm_o.create_user") }}：</div>
             <!-- 创建人 -->
             <div class="value">
@@ -157,6 +183,7 @@
                 :show-arrow="false"
                 :filter-option="false"
                 :not-found-content="null"
+                allowClear
                 @search="handleCreateUserSearch"
               >
                 <a-select-option
@@ -239,8 +266,7 @@
                   type="link"
                   @click="routerChange('detail', record)"
                   v-if="$auth('crm-order.detail')"
-                  >{{ text || "-" }}</a-button
-                >
+                  ><span :class="{nameStyle: nameBoolean(record)}">{{text || "-"}}</span></a-button>
               </a-tooltip>
             </template>
             <template v-if="column.key === 'item'">
@@ -371,7 +397,7 @@
 <script>
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
-
+import { take } from 'lodash'
 export default {
   name: "OrderList",
   components: {
@@ -391,6 +417,7 @@ export default {
       CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
       CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
       CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
+      CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,
       total: 0,
       orderByFields: {},
       // 搜索
@@ -404,6 +431,8 @@ export default {
         begin_time: "",
         end_time: "",
         type: "",
+        create_user_id:undefined,
+        search_type: 10
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
@@ -430,9 +459,32 @@ export default {
           type: "xlsx",
         },
       },
+      nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
     };
   },
-  watch: {},
+  watch: {
+    $route: {
+      deep: true,
+      immediate: true,
+      handler() {
+        // 这两句刷新页面的时候，页数在之前的页数
+        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
+        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.getTableData();
+        // this.handleSearchReset(false);
+        // this.getUserData();
+      },
+    },
+    searchForm:{
+      deep:true,
+      handler(oldValue,newValue) {
+        if(oldValue === newValue){
+            this.currPage = 1
+            this.pageSize = 20
+        }
+      },
+    }
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -486,11 +538,17 @@ export default {
         },
 
         {
-          title: "d.create_time",
-          dataIndex: "create_time",
+          title: "crm_o.signing_date",
+          dataIndex: "date",
           key: "time",
           sorter: true,
         },
+          {
+              title: "d.create_time",
+              dataIndex: "create_time",
+              key: "time",
+              sorter: true,
+          },
         { title: "def.operate", key: "operation", fixed: "right" },
       ];
       return columns;
@@ -526,8 +584,43 @@ export default {
   },
   mounted() {
     this.getTableData();
+    this.ownUserFetch()
+    this.createUserFetch()
   },
   methods: {
+    nameBoolean(v){
+      const arr = this.nameColor.filter((el) => {
+        return el.id == v.id
+      })
+      return arr.length?true:false
+    },
+    /* 接口 */
+    // 负责人接口
+    ownUserFetch(params = {}){
+        Core.Api.CRMTrackMember.joinUserList({
+          type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
+          target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.ownUserOptions = take(res.list, 50);
+            }else{
+                this.ownUserOptions = res.list;          
+            }          
+        });
+    },
+    // 创建人接口
+    createUserFetch(params = {}){       
+        Core.Api.CRMOrder.createUser({
+            ...params         
+        }).then((res) => {
+            if(this.$Util.isEmptyObj(params)){
+                this.createUserOptions = take(res.list, 50);
+            }else{
+                this.createUserOptions = res.list;          
+            }          
+        });
+    },
     moreSearch() {
       this.show = !this.show;
     },
@@ -535,35 +628,39 @@ export default {
       let routeUrl = "";
       switch (type) {
         case "detail": // 详情
+          if(!this.$Util.isEmptyObj(item)){
+            this.nameColor.push({ id: item.id})
+          }
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-detail",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
         case "edit": // 编辑
           routeUrl = this.$router.resolve({
             path: "/crm-order/order-edit",
             query: { id: item.id },
           });
-          window.open(routeUrl.href, "_self");
+          window.open(routeUrl.href, "_blank");
           break;
       }
     },
-    pageChange(curr) {
+    pageChange(page) {          
       // 页码改变
-      this.currPage = curr;
+      this.currPage = page;
+      Core.Data.setItem('currPage',page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
+      Core.Data.setItem('pageSize',size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(1);
+      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -585,7 +682,6 @@ export default {
       Core.Api.CRMOrder.list({
         ...this.searchForm,
         order_by_fields: this.orderByFields,
-        search_type: 10,
         page: this.currPage,
         page_size: this.pageSize,
       })
@@ -629,21 +725,15 @@ export default {
     },
     handleOwnUserSearch(name) {
       // 负责人条件搜索 下拉框
-      Core.Api.CRMTrackMember.list({
-        type: Core.Const.CRM_TRACK_MEMBER.TYPE.OWN,
-        target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
+      this.ownUserFetch({        
         name: name,
-      }).then((res) => {
-        this.ownUserOptions = res.list;
-      });
+      })
     },
     handleCreateUserSearch(name) {
       // 创建人条件搜索 下拉框
-      Core.Api.CRMOrder.createUser({
+      this.createUserFetch({
         create_user_name: name,
-      }).then((res) => {
-        this.createUserOptions = res.list;
-      });
+      })
     },
     handleDelete(id) {
       let _this = this;
@@ -771,5 +861,8 @@ export default {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
+}
+.nameStyle{
+  color: #9000f0;
 }
 </style>

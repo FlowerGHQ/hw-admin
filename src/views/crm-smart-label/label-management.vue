@@ -47,7 +47,7 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-dropdown type="link" :trigger="['']" v-model:visible="menuShow[index]" @click="handleMenuShow(index)">
+                            <a-dropdown type="link" :trigger="['']" v-model:visible="menuShow[index]" @click="handleMenuShow(index)" v-if="(record.type !== 1)">
                                 <a class="ant-dropdown-link operation-a" @click.prevent >
                                     {{$t('sl.synchronize')}}
                                     <DownOutlined />
@@ -71,7 +71,7 @@
                             </a-dropdown>
                             <a-button type="link" @click="handleModalShow(record, true)" v-if="record.type !== 1 && $auth('crm-label.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="record.type !== 1 && $auth('crm-label.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
-                            <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button>
+                            <!-- <a-button type="link" @click="handlePreset(record.id, record.type)" v-if="$auth('crm-dict.set')"><i :class="record.category === 1 ? 'icon i_close_c' : 'icon i_confirm'"/>{{ record.type === 1 ? $t('crm_set.cancel_pre') : $t('crm_set.set_pre') }}</a-button> -->
                         </template>
                     </template>
                 </a-table>
@@ -181,7 +181,7 @@ export default {
                 {title: this.$t('n.type'), dataIndex: 'type'},
                 {title: this.$t('crm_c.create_user'), dataIndex: 'create_user_name'},
                 {title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time'},
-                {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
+                {title: this.$t('def.operate'), key: 'operation', fixed: 'right', width:'260px' },
             ]
             return columns
         },

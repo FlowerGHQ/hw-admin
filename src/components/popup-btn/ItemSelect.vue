@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="!dis">
+    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
@@ -102,7 +102,7 @@ export default {
 
         faultName: {
             type: String,
-            default: ''
+            default: 'false'
         },
         warehouseId: {
             type: Number,
@@ -112,7 +112,7 @@ export default {
             type: Number,
             default: 0
         },
-        dis:{
+        disabled:{
             type:String,
             default:''
         }

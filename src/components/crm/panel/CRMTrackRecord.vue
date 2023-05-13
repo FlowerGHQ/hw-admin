@@ -17,7 +17,7 @@
                             <div class="top">
                                 <span class="item-title">{{$Util.CRMTrackRecordFilter(item.type, $i18n.locale) || '-'  }}</span>
                                 <span class="item-time" v-if="item.create_user_id === user.id">
-                                    <FollowUpShow btnType="link" :targetId="targetId" :targetType="targetType" :detail="item" @submit="getTableData"><i class="icon i_edit"  /></FollowUpShow>
+                                    <FollowUpShow ref="followUp" btnType="link" :targetId="targetId" :targetType="targetType" :detail="item" @submit="getTableData"><i class="icon i_edit"  /></FollowUpShow>
                                     <a class="button" @click="handleDelete(item.id)"><i class="icon i_delete"/></a>
                                 </span>
                             </div>
@@ -28,10 +28,11 @@
                                         <div class="line">{{ item.content }}</div>
                                     </div>
                                 </a-col>
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intent != undefined">
-                                    <div class="content">
+                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intent">
+                                <!-- 意向程度 -->
+                                    <div class="content">                                        
                                         <div class="line grey">{{$t('crm_t.intent')}}:</div>
-                                        <div class="line">{{$Util.CRMTrackRecordIntentFilter( item.intent) }}</div>
+                                        <div class="line">{{$Util.CRMTrackRecordIntentFilter( item.intent,lang,DEGREE_INTENT) }}</div>
                                     </div>
                                 </a-col>
                             </a-row>
@@ -126,7 +127,7 @@ export default {
     },
     data() {
         return {
-
+            DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
             loginType: Core.Data.getLoginType(),
             user: Core.Data.getUser(),
             // 加载
@@ -235,6 +236,10 @@ export default {
             let url = Core.Const.NET.FILE_URL_PREFIX + record.path
             window.open(url, '_self')
         },
+        // 父组件调用刷新数据
+        onUpdate(){
+
+        }
     }
 };
 </script>

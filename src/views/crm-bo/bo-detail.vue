@@ -25,9 +25,12 @@
                     </div>
                 </div>
                 <a-row class="desc-detail">
+                    <!-- 客户名称 -->
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.customer_name') }}：</span>
-                        <span class="value">{{detail.customer_name}}</span>
+                        <router-link target="_blank" :to="{ path: '/crm-customer/customer-detail', query: { id: detail.customer_id } }">
+                            {{detail.customer_name}}
+                        </router-link>                        
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_b.money') }}：</span>
@@ -79,7 +82,7 @@
                             <CustomerSituation  v-if="id>0" :detail="detail" :currentStepText="currentStepText"/>
                         </a-tab-pane>
                         <a-tab-pane key="SalesInformation" :tab="$t('crm_b.select_item')">
-                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
+                            <CRMItem :detail="detail"  v-if="id>0" :sourceId="detail.id" :currency="detail.currency" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.BO" ref ="CRMItem"></CRMItem>
                         </a-tab-pane>
                         <a-tab-pane key="ContactPerson" :tab="$t('crm_t.contact_customer')">
                             <CRMContact :detail="detail" v-if="id>0"  :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" :flagOWN="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN"  ref ="CRMContact">
@@ -90,6 +93,9 @@
                             <CRMOrder :detail="detail" v-if="id>0" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.BO" ref ="CRMOrder">
                                 <a-button type="primary" @click="routerChange('order-save')" v-if="$auth('crm-order.save')">{{ $t('crm_o.save') }}</a-button>
                             </CRMOrder>
+                        </a-tab-pane>
+                        <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">
+                            <CrmCustomerDetail  v-if="id>0" :id="detail.customer_id" ref ="CrmCustomerDetail"/>
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -176,13 +182,13 @@ import Group from '@/components/crm/panel/Group.vue';
 import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import CRMTrackRecord from '@/components/crm/panel/CRMTrackRecord.vue';
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
-
+import CrmCustomerDetail from '../../components/crm/panel/CrmCustomerDetail.vue';
 import LabelList from '@/components/crm/common/LabelList.vue';
 
 
 export default {
     name: 'CustomerEdit',
-    components: { FollowUpShow, CustomerAdd, CustomerSelect, NewMySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem,LabelList},
+    components: { FollowUpShow, CustomerAdd, CustomerSelect, NewMySteps, CRMContact, CRMOrder, ActionRecord, CustomerSituation,Group, CRMTrackRecord, CRMItem,LabelList,CrmCustomerDetail},
     props: {},
     data() {
         return {

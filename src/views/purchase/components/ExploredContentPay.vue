@@ -5,7 +5,7 @@
         <div class="explore-content">
             <div class="carousel-list">
                 <div class="carousel-item" v-for="(item,i) of tabsArray" :key="i">
-                    <img :src="$Util.imageFilter(item.img)"/>
+                    <img :class="{carouselImg: mediaWidth}" :src="$Util.imageFilter(item.img)"/>
                     <canvas :ref="`exploreCanvas${i}`"></canvas>
                     <div
                         class="point-start"
@@ -93,6 +93,10 @@ export default {
         this.getItemExploreList(this.id)
         this.exploredList = this.data
         this.currency = Core.Data.getCurrency();
+        // 适配
+        if(window.screen.width <= 1280 ){
+            this.mediaWidth = '700px'
+        }
     },
     watch: {
         id: function(newVal,oldVal) {
@@ -133,7 +137,8 @@ export default {
                 i: null,
                 j: null
             },
-            currency: '',
+            currency: '',            
+            mediaWidth: null
         }
     },
     methods: {
@@ -143,16 +148,16 @@ export default {
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
-            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY }).then((res)=>{
+            Core.Api.Item.getItemComponent({ target_id: id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY }).then((res)=>{                
                 this.tabsArray = get(res, "list.list" , []);
                 this.parsePoint();
                 ths.$nextTick(()=>{
                     ths.tabsArray.forEach((item, index) => {
                         ths.loadImage(item.img, index);
                     })
-                })
+                })                
                 // 无爆炸图数据
-                console.log('getItemExploreList res', res);
+                // console.log('getItemExploreList res', res);
                 if(res.list.count) {
                     this.$emit('noData',false)
                 }
@@ -180,7 +185,7 @@ export default {
             };
             img.src = this.$Util.imageFilter(url);
         },
-        imageLoadCallback(width, height, index) {
+        imageLoadCallback(width, height, index) {            
             let cvs = this.$refs[`exploreCanvas${index}`];
             if(!cvs) return;
             // if(cvs.length > 0) return;
@@ -189,8 +194,14 @@ export default {
             }
             this.canvasGroup[index] = cvs
             // if(cvs.length > 0) this.canvasGroup[index] = cvs;
-            // else return;
-            let rate = width > 800 ? 1 : 800 / width;
+            // else return;     
+            let rate = null
+            // 适配照片的
+            if(this.mediaWidth){                                                
+                rate = this.mediaWidth.replace(/['px']/g,'') / 800;
+            }else{
+                rate = width > 800 ? 1 : 800 / width;
+            }       
             cvs.forEach(canvas=>{
                 canvas.width = 800;
                 canvas.height = height / width * 800;
@@ -211,7 +222,7 @@ export default {
                 ctx.moveTo(get(item,'start.x', 0) * rate , get(item,'start.y', 0) * rate);
                 ctx.lineTo(get(item,'end.x', 0) * rate, get(item,'end.y', 0) * rate);
             })
-            ctx.stroke();
+            ctx.stroke();            
         },
         /** 显示点位详情 */
         showDetail(i, j) {
@@ -454,5 +465,9 @@ export default {
 
 .mt {
     margin-top: 40px !important;
+}
+// 图片适配
+.carouselImg{
+    width: v-bind('mediaWidth') !important;
 }
 </style>

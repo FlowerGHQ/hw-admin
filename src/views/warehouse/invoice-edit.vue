@@ -43,16 +43,18 @@
             <div class="form-item required" v-if="!$auth('ADMIN')">
                 <div class="key">{{ $t('n.source') }}：</div>
                 <div class="value">
+
                     <a-select v-model:value="form.source_type" :placeholder="$t('def.select')" @change="handleSelectChange">
                         <a-select-option v-for="item of sourceTypeMap" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-select-option>
+
                     </a-select>
                 </div>
             </div>
             <div class="form-item required" v-if="needUid">
-                <div class="key" v-if="$auth('ADMIN')">{{sourceTypeAdminMap[form.source_type].text}}号：</div>
+                <div class="key" v-if="$auth('ADMIN')">{{$i18n.locale === 'zh'? sourceTypeAdminMap[form.source_type].zh:sourceTypeAdminMap[form.source_type].en}}号：</div>
                 <div class="key" v-if="!$auth('ADMIN')">{{ $t('in.order_number') }}：</div>
                 <div class="value">
-                    <a-input v-if="$auth('ADMIN')" v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeAdminMap[form.source_type].text, $i18n.locale}号`" @blur="handleSelectBlur()">
+                    <a-input v-if="$auth('ADMIN')" v-model:value="sourceUid" :placeholder="`请输入相关的${sourceTypeAdminMap[form.source_type].zh, $i18n.locale}号`" @blur="handleSelectBlur()">
                         <template #suffix>
                             <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
                             <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
@@ -291,7 +293,7 @@ export default {
             console.log('setInvoiceSource source:', source)
             let form = source.form
             for (const key in form) {
-                this.form[key] = form[key] + ''
+                this.form[key] = form[key]
             }
             this.form.warehouse_id = Number(this.form.warehouse_id) || ''
             this.sourceUid = source.sourceUid

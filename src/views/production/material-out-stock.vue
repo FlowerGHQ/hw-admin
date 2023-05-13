@@ -13,12 +13,7 @@
                     <div class="value">
                         <a-select
                             v-model:value="warehouse_id"
-                            show-search
                             :placeholder="$t('def.input')+$t('n.warehouse')"
-                            :default-active-first-option="false"
-                            :show-arrow="false"
-                            :filter-option="false"
-                            :not-found-content="null"
                             @search="handleWarehouseSearch"
                             @change="handleWarehouseChange"
                         >
@@ -195,6 +190,7 @@ export default {
     created() {
     },
     mounted() {
+        this.handleWarehouseSearch();
     },
     methods: {
         routerChange(type, item) {
@@ -275,7 +271,7 @@ export default {
                 target_type: this.form.stock_target_type,
             }).then(res => {
                 console.log("res.stock",res.stock)
-                this.form.stock.stock = res.stock
+                this.form.stock.stock = res.stock.stock
                 this.form.stock.updateTime = this.$Util.timeFormat(res.stock.updateTime != undefined ? res.stock.updateTime: res.stock.createTime)
             })
         },
@@ -299,7 +295,7 @@ export default {
         },
 
         handleWarehouseSearch(name) {
-            Core.Api.Warehouse.list({name: name}).then(res => {
+            Core.Api.Warehouse.list({name: name, page_size: 100}).then(res => {
                 this.warehouseOptions = res.list
             })
         },
