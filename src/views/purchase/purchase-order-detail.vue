@@ -236,6 +236,7 @@
                                     v-model:value="record.amount" 
                                     style="width: 120px;" 
                                     :min="0" :precision="0" 
+                                    @change="inputChange(record,'amount')"
                                 />
                             </span>
                             <span v-else>
@@ -244,7 +245,7 @@
                         </template>
                         <!-- 发货数量 -->
                         <template v-if="column.dataIndex === 'deliver_amount'">                            
-                            <span v-if="user_type">
+                            <span v-if="user_type && (detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER)">
                                 <a-input-number 
                                     v-model:value="record.deliver_amount" 
                                     style="width: 120px;" 
@@ -252,7 +253,7 @@
                                 />
                             </span>
                             <span v-else>
-                                {{ record.deliver_amount || '-' }}
+                                {{ record.deliver_amount }}
                             </span>                                                     
                         </template>
                         <!-- 备注 -->
@@ -271,6 +272,7 @@
                                     v-model:value="record.price"                                     
                                     style="width: 120px;" 
                                     :min="0" :precision="2" 
+                                    @change="inputChange(record,'price')"
                                 />
                             </span>
                             <span v-else>
@@ -292,7 +294,7 @@
                                     {{ $t('i.total_quantity') }}:{{total.amount}}
                                 </a-table-summary-cell>
                                 <a-table-summary-cell :index="4" :col-span="1">                           
-                                    <span v-if="detail.status == '60' && !user_type">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
+                                    <span v-if="detail.status === STATUS.WAIT_AUDIT && !user_type">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
                                     <span v-else>{{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</span>
                                 </a-table-summary-cell>
                             </a-table-summary-row>
@@ -896,9 +898,9 @@ export default {
                     }
                 })
                 this.itemList = res.list
-                this.total.amount = total_amount
+                this.total.amount = this.$Util.countFilter(total_amount, 100, 2, true)
                 this.total.charge = total_charge
-                this.total.price  = total_price
+                this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -1178,25 +1180,20 @@ export default {
 
             let item_list = []
             // 选中的商品信息表格有数据的话进行
-            if(this.selectedRowItems.length){
-                this.selectedRowItems.forEach(el => {                    
+            if(this.itemList.length){
+                this.itemList.forEach(el => {
                     item_list.push({
                         item_id: el.id,
                         amount: el.amount,
                         price: this.$Util.countFilter(el.price, 100, 2, true),
                     })
                 })
-            }            
-            if(item_list.length){
-                this.createAuditFetch({
-                    ...Core.Util.searchFilter(formObj),
-                    item_list
-                })
-            }else{
-                this.createAuditFetch({
-                    ...Core.Util.searchFilter(formObj)                    
-                })
-            }
+            }              
+            // 不管怎么审核都提交                      
+            this.createAuditFetch({
+                ...Core.Util.searchFilter(formObj),
+                item_list
+            })           
         },        
         /*== model 事件  end ==*/  
 
@@ -1330,7 +1327,29 @@ export default {
             // 传参type为1时做该订单已取消的提示
             this.getPurchaseInfo(1)
             this.giveOrderShow = true
-        }    
+        },
+        // 等待状态下审核订单修改总数量和总价格时候改变
+        inputChange(record,type){                
+            const i = this.itemList.findIndex((el) => {
+                return el.id == record.id
+            })            
+            // 修改的是总数量
+            if(type == 'amount'){                
+                this.itemList[i].price = this.itemList[i].amount * this.itemList[i].unit_price
+            }
+            // 修改的是总价
+            if(type == 'price'){
+                this.itemList[i].unit_price = this.itemList[i].price / this.itemList[i].amount
+            }
+
+            let total_amount = 0,total_price = 0;
+            this.itemList.forEach((el) => {
+                total_amount += el.amount                
+                total_price += el.price
+            })
+            this.total.amount = this.$Util.countFilter(total_amount, 100, 2, true)          
+            this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
+        },    
     }
 };
 </script>
@@ -1415,3 +1434,6 @@ export default {
     }
 }
 </style>
+
+
+
