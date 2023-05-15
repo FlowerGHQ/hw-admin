@@ -252,8 +252,12 @@
                                 />
                             </span>
                             <span v-else>
-                                {{ text || '-' }}
+                                {{ record.deliver_amount || '-' }}
                             </span>                                                     
+                        </template>
+                        <!-- 备注 -->
+                        <template v-if="column.key === 'remark'">
+                            <span>{{ record.remark || '-' }}</span>                           
                         </template>
                         <!-- 单价 -->
                         <template v-if="column.key === 'unit_price'">
@@ -288,7 +292,7 @@
                                     {{ $t('i.total_quantity') }}:{{total.amount}}
                                 </a-table-summary-cell>
                                 <a-table-summary-cell :index="4" :col-span="1">                           
-                                    <span v-if="detail.status == '60'">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
+                                    <span v-if="detail.status == '60' && !user_type">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
                                     <span v-else>{{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</span>
                                 </a-table-summary-cell>
                             </a-table-summary-row>
@@ -529,7 +533,6 @@
                         <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-
             </div>
         </a-modal>
     </template>
@@ -707,9 +710,9 @@ export default {
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] }, // 商品编码
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' }, // 规格
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'}, // 总数量
-                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'}, // 代发货数量
+                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'}, // 待发货数量
                 { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'}, // 发货数量
-                { title: this.$t('i.remark'),dataIndex: "remark" }, // 备注
+                { title: this.$t('i.remark'),dataIndex: "remark", key: 'remark' }, // 备注
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.push(
@@ -882,7 +885,7 @@ export default {
                     it.disabled = true
                     it.unit_price = this.$Util.countFilter(it.unit_price) // 单价
                     it.price = this.$Util.countFilter(it.price) // 总价
-                    it.deliver_amount = 0
+                    // it.deliver_amount = 0
                     total_amount += it.amount
                     total_charge += it.charge
                     total_price += it.price
