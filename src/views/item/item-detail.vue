@@ -148,6 +148,7 @@
                         </a-table>
                     </div>
                 </a-collapse-panel>
+                <!-- 上传配件 -->
                 <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                @submit="getItemDetail" ref="AttachmentFile"/>
                 <!-- 上传附件 -->
@@ -221,8 +222,12 @@ export default {
             return column
         }
     },
-    mounted() {
+    created() {
         this.id = Number(this.$route.query.id) || 0
+        console.log('this route id',this.id);
+    },
+    mounted() {
+        // this.id = Number(this.$route.query.id) || 0
         this.indep_flag = Number(this.$route.query.indep_flag) || 0
 
         this.getItemDetail();

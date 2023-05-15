@@ -149,7 +149,7 @@ export default {
             });
         },
         getTableData() {
-            Core.Api.ItemAccessory.list({item_id: this.detail.id}).then(res => {
+            Core.Api.ItemAccessory.list({item_id: this.item_id}).then(res => {
                 this.tableData = res.list
             })
         },
