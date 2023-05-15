@@ -25384,6 +25384,54 @@
                         "code": "GBRENGYOR",
                         "name": "约克",
                         "name_en": "York"
+                    },
+                    {
+                        "id": "1361",
+                        "key": "city",
+                        "name": "多尔切斯特",
+                        "name_en": "Dorchester"
+                    },
+                    {
+                        "id": "1362",
+                        "key": "city",
+                        "name": "斯文顿",
+                        "name_en": "Swindon"
+                    },
+                    {
+                        "id": "1363",
+                        "key": "city",
+                        "name": "吉尔福德",
+                        "name_en": "Guildford"
+                    },
+                    {
+                        "id": "1364",
+                        "key": "city",
+                        "name": "梅德斯通",
+                        "name_en": "Maidstone"
+                    },
+                    {
+                        "id": "1365",
+                        "key": "city",
+                        "name": "Swadlincote",
+                        "name_en": "Swadlincote"
+                    },
+                    {
+                        "id": "1366",
+                        "key": "city",
+                        "name": "柴郡",
+                        "name_en": "Cheshire"
+                    },
+                    {
+                        "id": "1367",
+                        "key": "city",
+                        "name": "Kintbury",
+                        "name_en": "Kintbury"
+                    },
+                    {
+                        "id": "1368",
+                        "key": "city",
+                        "name": "黑麦",
+                        "name_en": "Rye"
                     }
                 ]
             },
@@ -25472,6 +25520,18 @@
                         "code": "GBRSCTSTG",
                         "name": "斯特灵",
                         "name_en": "Stirling"
+                    },
+                    {
+                        "id": "1371",
+                        "key": "city",                        
+                        "name": "Avenue",
+                        "name_en": "Avenue"
+                    },
+                    {
+                        "id": "1372",
+                        "key": "city",                        
+                        "name": "Avenue",
+                        "name_en": "Avenue"
                     }
                 ]
             },
@@ -25509,6 +25569,18 @@
                         "code": "GBRWLSSWA",
                         "name": "斯旺西",
                         "name_en": "Swansea"
+                    },
+                    {
+                        "id": "1375",
+                        "key": "city",                        
+                        "name": "Clwyd",
+                        "name_en": "Clwyd"
+                    },
+                    {
+                        "id": "1376",
+                        "key": "city",                        
+                        "name": "Flintshire",
+                        "name_en": "Flintshire"
                     }
                 ]
             }
