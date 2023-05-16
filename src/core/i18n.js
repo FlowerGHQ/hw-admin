@@ -937,7 +937,8 @@ const messages = {
             strip:'条',
             quotation:'报价',
             auditText:'最终价格和数量由销售审核后确定',
-            cancel_msg: '该订单已取消',            
+            cancel_msg: '该订单已取消',
+            item_msg_err: '已下架商品不支持结算',            
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3212,7 +3213,8 @@ const messages = {
             strip:'strip',
             quotation:'quotation',
             auditText:'The final price and quantity shall be determined after sales review',
-            cancel_msg: 'The order has been cancelled'
+            cancel_msg: 'The order has been cancelled',
+            item_msg_err: 'Goods that have been removed from the shelves do not support settlement'
         },
         s: {
             store_list:'Shop list',

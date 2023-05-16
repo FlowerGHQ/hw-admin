@@ -97,7 +97,7 @@
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
                         <!-- <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button> -->
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)">{{ $t('i.cart') }}</a-button>
+                        <a-button type="primary" ghost v-if="item.item.status !== -1" @click="handleMoveToShopCart(item)">{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -199,7 +199,6 @@ export default {
     methods: {
 
         routerChange(type, item) {
-            console.log(item.id,'yxy');
             let routeUrl
             switch (type) {
                 case 'settle':  // 结算
@@ -228,6 +227,13 @@ export default {
                     this.$message.error(this.$t('p.item_error'))
                     return ;
                 }
+                this.shopCartList.forEach((val) => {
+                    if(val.item.status !== 0 ) {
+                        this.getShopCartList()
+                        return this.$message.warn(this.$t('p.item_msg_err'));
+                    }
+                })
+                return
             }
             var routeUrl = this.$router.resolve({
                 path: "/purchase/item-settle",
