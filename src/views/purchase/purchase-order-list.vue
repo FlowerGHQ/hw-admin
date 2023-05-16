@@ -286,7 +286,7 @@ export default {
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)
 
                 columns.push(
-                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                    // { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                     { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
                 )
             }
