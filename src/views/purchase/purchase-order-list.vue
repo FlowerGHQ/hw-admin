@@ -246,7 +246,7 @@ export default {
                 let search_type = newRoute.meta ? newRoute.meta.search_type : 0
                 this.search_type = search_type
                 this.handleSearchReset(false);
-                this.getStatusStat();
+                this.getStatusStat();                
             }
         },
 
@@ -335,7 +335,7 @@ export default {
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);
-        }, 5*1000);
+        }, 20000);
 
     },
     beforeUnmount(){
