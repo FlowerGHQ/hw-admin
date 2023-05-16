@@ -6,9 +6,14 @@
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
                     <span class="name">{{ $t('i.item_accessory_list') }}</span>
-                    <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn"
-                                @select="handleSelectItem" :radioMode="true"/>
-<!--                    <a-button type="primary" @click="handleModalShow" v-if="can_upload">{{$t('n.upload_attachment')}}</a-button>-->
+                    <div>
+                        <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn" @select="handleSelectItem" :radioMode="true"/>          
+                        <!-- 确认更改 -->
+                        <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
+                            <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
+                            <a-button >{{$t('i.confirm_changes')}}</a-button>                            
+                        </a-popconfirm>
+                    </div>
                 </div>
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
@@ -21,6 +26,14 @@
                         </template>
                         <template v-if="column.key === 'type'">
                             {{ $Util.itemTypeFilter(text, $i18n.locale) }}
+                        </template>
+                        <template v-if="column.key === 'amount'">
+                            <a-input-number 
+                                v-model:value="record.amount" 
+                                style="width: 120px;" 
+                                :min="0" 
+                                :precision="0"
+                            />
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -88,6 +101,7 @@ export default {
                 { title: this.$t('n.name'), dataIndex: 'target_name', key: 'detail' },
                 { title: this.$t('i.code'), dataIndex: 'target_uid', key: 'item' },
                 { title: this.$t('n.type'), dataIndex: 'type', key: 'type' },
+                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'amount' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
@@ -104,6 +118,18 @@ export default {
         this.getTableData();
     },
     methods: {
+        /*== Fetch start==*/
+        confirmChangeFetch(params = {}){
+            Core.Api.Item.ItemAccessoryModify({                
+                ...params
+            }).then(res => {
+                console.log("修改成功", res);
+                this.getTableData()
+            }).catch(err => {
+                console.log('修改失败', err)
+            })
+        },
+        /*== Fetch end==*/
 
         handleModalClose() {
             this.modalShow = false;
@@ -166,6 +192,22 @@ export default {
                 console.log("handleDelete err", err);
             })
         },
+        // 确认更改
+        confirmEvent(){            
+            if(this.tableData.length){                
+                let ItemAccessoryList = []
+                this.tableData.forEach(el => {
+                    ItemAccessoryList.push({
+                        id:el.id,                                            
+                        amount: el.amount,
+                    })
+                })
+                // console.log("数据", ItemAccessoryList);
+                this.confirmChangeFetch({                    
+                    item_accessory_list: ItemAccessoryList,
+                })      
+            }
+        }
     },
 }
 </script>

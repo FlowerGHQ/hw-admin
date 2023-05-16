@@ -594,7 +594,7 @@ const messages = {
 	        home_page_redirect_number: '首页跳转序号',
 	        on_board_battery: '随车电池',
 			clear_shop_car: '清空购物车',
-
+            confirm_changes: '确认更改',
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -2875,6 +2875,7 @@ const messages = {
             home_page_redirect_number: 'Home Redirect',
             on_board_battery: 'Battery',
             clear_shop_car: 'Clear shop car',
+            confirm_changes:'Confirm Changes'
         },
         fe:{
             feedback:'Feedback',
