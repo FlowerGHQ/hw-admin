@@ -124,6 +124,7 @@ export default {
                 ...params
             }).then(res => {
                 console.log("修改成功", res);
+                this.$message.warning(this.$t('p.modify_success'))
                 this.getTableData()
             }).catch(err => {
                 console.log('修改失败', err)
