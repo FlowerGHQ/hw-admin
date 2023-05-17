@@ -898,7 +898,7 @@ export default {
                     }
                 })
                 this.itemList = res.list
-                this.total.amount = this.$Util.countFilter(total_amount, 100, 2, true)
+                this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
             }).catch(err => {
@@ -1347,7 +1347,7 @@ export default {
                 total_amount += el.amount                
                 total_price += el.price
             })
-            this.total.amount = this.$Util.countFilter(total_amount, 100, 2, true)          
+            this.total.amount = total_amount          
             this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
         },    
     }
