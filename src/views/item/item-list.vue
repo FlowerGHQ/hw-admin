@@ -462,14 +462,16 @@ export default {
         },
         handleRepairExport() { // 订单导出
             this.exportDisabled = true;
-
             let form = Core.Util.deepCopy(this.searchForm);
 
             for (const key in form) {
                 form[key] = form[key] || ''
             }
             // console.log('form',form)
-            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            let exportUrl = Core.Api.Export.exportItemPrice({
+                form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_self')
             this.exportDisabled = false;
