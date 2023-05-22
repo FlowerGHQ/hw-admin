@@ -552,7 +552,7 @@ export default {
                 form[key] = form[key] || ''
             }
             let exportUrl = Core.Api.Export.repairExport({
-                form,
+                ...form,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport exportUrl", exportUrl)
