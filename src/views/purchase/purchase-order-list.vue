@@ -504,7 +504,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.purchaseExport({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
@@ -567,7 +568,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.exportSalesStatement({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
@@ -581,7 +583,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.exportSalesQuantityStatistics({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')

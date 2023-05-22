@@ -586,6 +586,7 @@ export default {
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.materialPurchaseExport({
                 material_purchase_order_id: this.id,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log('material_purchase_order_id',this.id)
             console.log("handlePurchaseExport _exportUrl", exportUrl)
