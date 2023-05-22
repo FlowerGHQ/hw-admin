@@ -56,6 +56,7 @@ export default {
         sRefuse: {},
         sBack: {},
         apiList: {},
+        item_list: [], // 采购订单 待审核 的审核条件
     },
     data() {
         return {
@@ -80,11 +81,29 @@ export default {
             this.modalShow = false
         },
         handleConfirm() {
-            Core.Api[this.apiList[0]][this.apiList[1]]({
+            let params = {
                 id: this.id,
-                ...this.form,
                 current_audit_process_id: this.currentAuditProcessId,
-            }).then(res => {
+                ...this.form,
+            }
+
+            // 采购订单 待审核 的审核条件
+            if(this.apiList[1] == 'reviseAudit'){
+                let AuditList = []
+                // 选中的商品信息表格有数据的话进行
+                if(this.item_list.length){
+                    this.item_list.forEach(el => {
+                        AuditList.push({
+                            item_id: el.id,
+                            amount: el.amount,
+                            price: this.$Util.countFilter(el.price, 100, 2, true),
+                        })
+                    })
+                } 
+                params['item_list'] = AuditList
+            }
+            
+            Core.Api[this.apiList[0]][this.apiList[1]](Core.Util.searchFilter(params)).then(res => {
                 console.log('handleAuditSubmit res', res)
                 this.handleModalClose()
                 this.$emit('submit')
