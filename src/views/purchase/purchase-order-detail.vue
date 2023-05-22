@@ -81,16 +81,18 @@
                             <i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}
                     </a-button>
                 </template>
-                <!-- 支付审核 -->
+                <!-- 待审核中的审核 -->
                 <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.type !== TYPE.MIX && $auth('purchase-order.audit')">
                     <AuditHandle
                         btnType='primary' 
                         :api-list="['Purchase', 'reviseAudit']" 
                         :id="detail.id" 
-                        @submit="getList"
                         :s-pass="FLAG.YES" 
                         :s-refuse="FLAG.NO" 
-                        no-refuse>
+                        no-refuse
+                        :item_list="itemList"
+                        @submit="getList"
+                        >
                             <i class="icon i_audit"/>{{ $t('n.audit') }}
                     </AuditHandle>
                 </template>
@@ -231,7 +233,7 @@
                         </template>
                         <!-- 总数量 -->
                         <template v-if="column.dataIndex === 'amount'">                          
-                            <span v-if="user_type && detail.status === STATUS.WAIT_AUDIT">
+                            <span v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
                                 <a-input-number 
                                     v-model:value="record.amount" 
                                     style="width: 120px;" 
@@ -267,7 +269,7 @@
                         </template>
                         <!-- 总价 -->
                         <template v-if="column.key === 'price'">
-                            <span v-if="user_type && detail.status === STATUS.WAIT_AUDIT">
+                            <span v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">  
                                 <a-input-number 
                                     v-model:value="record.price"                                     
                                     style="width: 120px;" 
@@ -294,7 +296,7 @@
                                     {{ $t('i.total_quantity') }}:{{total.amount}}
                                 </a-table-summary-cell>
                                 <a-table-summary-cell :index="4" :col-span="1">                           
-                                    <span v-if="detail.status === STATUS.WAIT_AUDIT && !user_type">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
+                                    <span v-if="!user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
                                     <span v-else>{{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</span>
                                 </a-table-summary-cell>
                             </a-table-summary-row>
@@ -701,7 +703,7 @@ export default {
             createAuditShow: false, // 订单审核 model 显隐  
             PIShow: false,  // 修改pi model 显隐                           
 
-            activeValue: 'payment_detail', // nameList的value           
+            activeValue: 'payment_detail', // nameList的value
         };
     },    
     computed: {
