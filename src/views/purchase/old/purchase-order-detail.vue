@@ -1331,7 +1331,8 @@ export default {
             const params = {
                 id: this.id, // 订单id
                 currency: this.detail.currency, // 货币类型
-                id_type:0
+                id_type:0,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             };
 
             this.exportDisabled = true;
@@ -1344,6 +1345,7 @@ export default {
             const params = {
                 id: this.id, // 订单id
                 currency: this.detail.currency, // 货币类型
+                language: this.$i18n.locale === 'en' ? 1 : 0
             };
 
             this.exportDisabled = true;
@@ -1505,7 +1507,8 @@ export default {
         handleExportAccessoriesOrder() { // 订单导出
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.exportAccessoriesOrder({
-                id: this.detail.id
+                id: this.detail.id,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')

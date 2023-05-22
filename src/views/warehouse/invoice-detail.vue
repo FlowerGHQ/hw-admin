@@ -997,6 +997,7 @@ export default {
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.invoiceOutExport({
                invoice_id: this.id,
+               language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
@@ -1017,6 +1018,7 @@ export default {
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.invoiceInExport({
                 invoice_id: this.id,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')

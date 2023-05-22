@@ -385,7 +385,10 @@ export default {
             for (const key in form) {
                 form[key] = form[key] || ''
             }
-            let exportUrl = Core.Api.Export.exportOrderPrice(form)
+            let exportUrl = Core.Api.Export.exportOrderPrice({
+                form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;

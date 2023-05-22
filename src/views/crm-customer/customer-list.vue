@@ -647,7 +647,7 @@ export default {
         },
         {
           title: "crm_c.last_track_time",
-          dataIndex: "last_track_time",
+          dataIndex: "update_time",
           key: "last_track_time",
           type: 'time',
           sorter: true,
@@ -789,7 +789,7 @@ export default {
       } else {
         this.searchForm.status = this.CRM_STATUS.POOL;
       }
-      this.$refs.TimeSearch.handleReset()
+      this.$refs.TimeSearch?.handleReset()
       this.orderByFields = {};
       this.pageChange(1);
     },

@@ -669,7 +669,8 @@ export default {
             const params = {
                 id: id, // 订单id
                 currency: '',
-                id_type: 1
+                id_type: 1,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             };
 
             this.exportDisabled = true;
