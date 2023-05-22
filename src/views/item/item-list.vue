@@ -469,7 +469,7 @@ export default {
             }
             // console.log('form',form)
             let exportUrl = Core.Api.Export.exportItemPrice({
-                form,
+                ...form,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport exportUrl", exportUrl)
