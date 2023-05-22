@@ -34,6 +34,13 @@
 						<a-input v-model:value="form.code" :placeholder="$t('n.enter') + $t('m.material_code')" />
 					</div>
 				</div>
+				<!-- 图面代号 -->
+				<div class="form-item required">
+					<div class="key">{{ $t('d.drawing_code') }}</div>
+					<div class="value">
+						<a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
+					</div>
+				</div>
 				<!-- 类型 -->
 				<div class="form-item required">
 					<div class="key">{{ $t('m.type') }}</div>
@@ -149,6 +156,7 @@
 					color: '',
 					pack_count: '',
 					type: null,
+					drawing_code: null, // 图面代号
 				},
 				gross_weight: '',
 				supplierList: [],
@@ -230,8 +238,7 @@
 			// 保存、新建 物料
 			handleSubmit() {
 				let form = Core.Util.deepCopy(this.form);
-				// form.image = this.upload.coverList[0].short_path || this.upload.coverList[0].response.data.filename
-				console.log('form:', form);
+								
 				if (this.upload.coverList.length) {
 					let file_url = this.upload.coverList.map(item => {
 						return item.short_path || item.response.data.filename;
@@ -244,20 +251,26 @@
 					return;
 				}
 				console.log('handleSubmit form:', form);
-				Core.Api.Material.save({
-					...form,
+
+				let params = {
 					gross_weight: Math.round(this.gross_weight * 100),
+					...form,
+				}
+
+				Core.Api.Material.save(Core.Util.searchFilter(params)).then(() => {
+					this.$message.success(this.$t('pop_up.save_success'));
+					this.routerChange('back');
 				})
-					.then(() => {
-						this.$message.success(this.$t('pop_up.save_success'));
-						this.routerChange('back');
-					})
-					.catch(err => {
-						console.log('handleSubmit err:', err);
-					});
+				.catch(err => {
+					console.log('handleSubmit err:', err);
+				});
 			},
 			// 保存时检查表单输入
 			checkFormInput(form) {
+				if (!form.drawing_code) {
+					// 图面代号
+					return this.$message.warning(`${this.$t('n.enter')}${this.$t('d.drawing_code')}`);
+				}
 				if (!form.name) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_name')}`);
 				}
