@@ -349,7 +349,7 @@ let Const = {
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
             '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
-	        '45': { key: 40, color: 'blue', zh: '维修结束', en: 'Under repair'},
+	        '45': { key: 40, color: 'blue', zh: '待结算', en: 'Waiting settlement'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},

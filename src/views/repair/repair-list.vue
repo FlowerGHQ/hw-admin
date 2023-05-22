@@ -344,11 +344,11 @@ export default {
                 {zh: '分销商审核通过',en: 'Distributor approved', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
                 {zh: '平台方审核通过',en: 'Platform approved', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
                 {zh: '分销商已入库', en: 'Distributor has stocked in warehouse', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
-                {zh: '平台方审核故障件', en: 'Platform audits the faulty parts', value: '0', color: 'blue',  key: STATUS.FAULT_ENTITY_AUDIT},
+                // {zh: '平台方审核故障件', en: 'Platform audits the faulty parts', value: '0', color: 'blue',  key: STATUS.FAULT_ENTITY_AUDIT},
                 {zh: '平台方已入库', en: 'Platform has stocked in warehouse', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
                 {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
                 {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
+                // {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
                 // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ]
