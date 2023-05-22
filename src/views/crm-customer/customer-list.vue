@@ -789,7 +789,7 @@ export default {
       } else {
         this.searchForm.status = this.CRM_STATUS.POOL;
       }
-      // this.$refs.TimeSearch.handleReset()
+      this.$refs.TimeSearch.handleReset()
       this.orderByFields = {};
       this.pageChange(1);
     },
