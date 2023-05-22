@@ -171,6 +171,11 @@ export default {
             this.modalShow = false
             this.selectItemIds = []
             this.selectItems = []
+            this.searchForm = {
+                code: '',
+                name: '',
+                category_id: '',
+            }
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
