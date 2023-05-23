@@ -287,7 +287,7 @@ export default {
 
                 columns.push(
                     // { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
-                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                    // { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
                 )
             }
             columns.push(

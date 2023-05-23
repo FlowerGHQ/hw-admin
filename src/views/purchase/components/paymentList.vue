@@ -18,7 +18,7 @@
                         <div class="table-img">
                             <a-image-preview-group class="image-group">
                                 <a-image 
-                                    v-for="(path, index) in record.paths" :key="index"
+                                    v-for="(path, index) in record.path" :key="index"
                                     class="image" 
                                     :width="55" 
                                     :height="55"

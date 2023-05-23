@@ -33,13 +33,15 @@
                             {{$t('def.export_as_supplier_report')}}
                     </a-button>
                     <!-- 出库 -->
-                    <a-button 
-                        v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')" 
-                        type="primary" 
-                        @click="handleModalShow('out_stock')" 
-                        :disabled="exportDisabled">
-                            <i class="icon i_deliver"/>{{ $t('p.out_stock')}}
-                    </a-button>
+                    <template v-if="!outStockBtnShow">
+                        <a-button 
+                            v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')" 
+                            type="primary" 
+                            @click="handleModalShow('out_stock')" 
+                            :disabled="exportDisabled">
+                                <i class="icon i_deliver"/>{{ $t('p.out_stock')}}
+                        </a-button>
+                    </template>
                     <!-- 赠送订单 -->
                     <a-button 
                         type="primary" 
@@ -704,6 +706,8 @@ export default {
             PIShow: false,  // 修改pi model 显隐                           
 
             activeValue: 'payment_detail', // nameList的value
+            outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
+            
         };
     },    
     computed: {
@@ -903,6 +907,7 @@ export default {
                 this.total.amount = total_amount
                 this.total.charge = total_charge
                 this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
+                this.outStockBtnShow = this.itemList.every(item => item.residue_quantity === 0);
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
