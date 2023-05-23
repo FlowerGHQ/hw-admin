@@ -749,10 +749,10 @@ export default {
         this.sourceList = res.list;
       });
     },
-    getListData(value) {    
+    getListData(value) {
       let listData = [];
-      this.tableTimeData.forEach((res) => {		
-        let date = new Date(res.drive_time * 1000);       
+      this.tableTimeData.forEach((res) => {
+        let date = new Date(res.drive_time * 1000);
         if (value.month() === date.getMonth() &&value.date() === date.getDate()) {
           let content =
             (res.customer !== null ? res.customer.name : "-") 

@@ -94,7 +94,7 @@
                         </a-radio-group>
                     </div>
                 </div>
-                <div class="form-item required">
+                <div class="form-item">
                     <div class="key">{{ $t('def.remark') }}：</div>
                     <div class="value">
                         <a-textarea 
@@ -256,12 +256,8 @@ const handlePayAudit = () => {
     if(!payAuditForm.value.audit_result) {
         proxy.$message.warning(proxy.$t('r.audit_result'))
         return
-    }
-    if(!payAuditForm.value.audit_remark) {
-        proxy.$message.warning(proxy.$t('p.remark'))
-        return
-    }    
-    payAuditFetch(payAuditForm.value)    
+    }        
+    payAuditFetch(payAuditForm.value)
 }
 // model取消按钮
 const handlePayAuditClose = () => {
