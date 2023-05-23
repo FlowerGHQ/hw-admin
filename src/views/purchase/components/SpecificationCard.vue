@@ -110,7 +110,7 @@ export default {
             }
             Core.Api.Favorite.add({
                 item_id: this.data.id,
-                price: this.data.purchase_price
+                price: this.data.fob_eur
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
                 this.$message.success(this.$t('i.favorite_success'))

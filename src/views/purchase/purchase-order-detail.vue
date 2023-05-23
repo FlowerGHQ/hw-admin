@@ -336,6 +336,7 @@
                 <paymentList 
                     :target_id="id"
                     :order_detail="detail"
+                    :sn="detail.sn"
                     @submit="getList"
                     ref="payment"
                 />
