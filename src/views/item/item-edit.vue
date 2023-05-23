@@ -82,12 +82,12 @@
                 </div>
             </div>
             <!-- 图面代号 -->
-            <!-- <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('d.drawing_code') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
                 </div>
-            </div> -->
+            </div>
             <!-- 颜色 -->
             <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('d.color') }}</div>
@@ -469,7 +469,7 @@ export default {
                 config: '',
                 man_hour: '',
                 sales_area_ids: [],
-                // drawing_code: "",
+                drawing_code: "",
                 color: "",
                 color_en: "",
                 net_weight: "",
@@ -899,11 +899,11 @@ export default {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`)
             }
             // 图面代号
-            // if(form.type == 1){
-            //     if (!form.drawing_code) {
-            //         return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
-            //     }
-            // }
+            if(form.type == 1){
+                if (!form.drawing_code) {
+                    return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
+                }
+            }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.code) {
                     return this.$message.warning(this.$t('def.enter'))

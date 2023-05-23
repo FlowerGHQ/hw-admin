@@ -35,12 +35,12 @@
 					</div>
 				</div>
 				<!-- 图面代号 -->
-				<div class="form-item required">
+				<!-- <div class="form-item required">
 					<div class="key">{{ $t('d.drawing_code') }}</div>
 					<div class="value">
 						<a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
 					</div>
-				</div>
+				</div> -->
 				<!-- 类型 -->
 				<div class="form-item required">
 					<div class="key">{{ $t('m.type') }}</div>
@@ -156,7 +156,7 @@
 					color: '',
 					pack_count: '',
 					type: null,
-					drawing_code: null, // 图面代号
+					// drawing_code: null, // 图面代号
 				},
 				gross_weight: '',
 				supplierList: [],
@@ -267,10 +267,6 @@
 			},
 			// 保存时检查表单输入
 			checkFormInput(form) {
-				if (!form.drawing_code) {
-					// 图面代号
-					return this.$message.warning(`${this.$t('n.enter')}${this.$t('d.drawing_code')}`);
-				}
 				if (!form.name) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_name')}`);
 				}
@@ -286,6 +282,10 @@
 				if (!form.pack_count) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.boxes')}`);
 				}
+				// if (!form.drawing_code) {
+				// 	// 图面代号
+				// 	return this.$message.warning(`${this.$t('n.enter')}${this.$t('d.drawing_code')}`);
+				// }
 				return 0;
 			},
 
