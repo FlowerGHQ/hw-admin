@@ -7,8 +7,7 @@ import defult_file from '@images/defult_file.png'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
-// let URL_POINT = 'http://eos-dev-api.horwincloud.com'
-let URL_POINT = 'http://eos-dev-api.horwincloud.com'
+let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
 
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
@@ -23,6 +22,10 @@ switch (window.location.hostname) {
     case 'eos-dev.hw.innotick.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
         break;
+    case 'eos-release.horwincloud.com':
+        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
+        break;
+
 
 	case "10.0.0.213":
 		URL_POINT = 'http://10.0.0.213:8889'
