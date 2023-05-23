@@ -132,6 +132,10 @@ const props = defineProps({
     order_detail:{
         type: Object, 
     },
+    // 订单编号
+    sn:{
+        type: String
+    }
 })
 /*== 计算属性 ==*/
 const payColumns = computed(() => {
@@ -228,14 +232,15 @@ const handlePayAuditShow = (value) => {
     payAuditShow.value = true
 }
 // table操作取消按钮
-const handlePayCancel = (id) =>{    
+const handlePayCancel = (id) =>{
     proxy.$confirm({
         title: proxy.$t('p.determine_cancel'),
         okText: proxy.$t('def.sure'),
         cancelText: proxy.$t('def.cancel'),
         onOk() {
             Core.Api.Purchase.delete({
-                    id: id
+                    id: id,
+                    sn: props.sn
                 }).then((res)=>{
                     proxy.$message.success(proxy.$t('pop_up.canceled'));
                     getPurchasePayList()
