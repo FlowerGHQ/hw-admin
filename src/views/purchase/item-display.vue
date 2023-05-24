@@ -176,8 +176,8 @@ export default {
                 status: 0,
 
             }).then(res => {
-                console.log('getSpecList this.specific.data:', res)
                 this.specList = res.list;
+                console.log('getSpecList res', this.specList)
             }).catch(err => {
                 console.log('getSpecList err', err)
             }).finally(() => {

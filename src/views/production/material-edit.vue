@@ -42,7 +42,7 @@
 					</div>
 				</div> -->
 				<!-- 类型 -->
-				<div class="form-item required">
+				<div class="form-item">
 					<div class="key">{{ $t('m.type') }}</div>
 					<div class="value">
 						<a-select v-model:value="form.type" :placeholder="$t('n.choose') + $t('m.type')">
@@ -276,9 +276,9 @@
 				if (!form.code) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_code')}`);
 				}
-				if (!form.type && form.type !== 0) {
-					return this.$message.warning(`${this.$t('n.choose')}${this.$t('m.type')}`);
-				}
+				// if (!form.type && form.type !== 0) {
+				// 	return this.$message.warning(`${this.$t('n.choose')}${this.$t('m.type')}`);
+				// }
 				if (!form.pack_count) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.boxes')}`);
 				}

@@ -200,6 +200,7 @@ export default {
                 begin_time: '',
                 end_time: '',
                 type: undefined,
+                status: 0,
             },
             itemTypeMap: ITEM.TYPE_MAP,
             // 表格
@@ -237,7 +238,7 @@ export default {
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
                 { title: this.$t('i.status'), dataIndex: 'status',
-                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
                 { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
                 { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
