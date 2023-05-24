@@ -251,7 +251,8 @@ const apiList = {
 
     },
 	ItemAccessory: { // 商品
-		save: ['PostJson', 'item-accessory/save'],
+		// save: ['PostJson', 'item-accessory/save'],
+		save: ['PostJson', 'item-accessory/save-list'],
 		list: ['PostJson', 'item-accessory/list'],
 		delete: ['PostJson', 'item-accessory/delete'],
 	},
