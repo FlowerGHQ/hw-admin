@@ -7,7 +7,12 @@
                 <div class="panel-header">
                     <span class="name">{{ $t('i.item_accessory_list') }}</span>
                     <div>
-                        <ItemSelect btnType='primary' :btnText="$t('i.select_item')" btnClass="item-select-btn" @select="handleSelectItem" :radioMode="true"/>          
+                        <ItemSelect 
+                            btnType='primary' 
+                            :btnText="$t('i.select_item')" 
+                            btnClass="item-select-btn"
+                            @select="handleSelectItem" 
+                        />          
                         <!-- 确认更改 -->
                         <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
                             <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
@@ -35,6 +40,10 @@
                                 :precision="0"
                             />
                         </template>
+                        <!-- 单价 -->
+                        <!-- <template v-if="column.key === 'unit_price'">
+                            {{ $Util.countFilter(text) }}
+                        </template> -->
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -102,6 +111,7 @@ export default {
                 { title: this.$t('i.code'), dataIndex: 'target_uid', key: 'item' },
                 { title: this.$t('n.type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'amount' },
+                // { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price' },
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' },
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
@@ -181,12 +191,21 @@ export default {
             })
         },
         handleSelectItem(ids, items) {
-            console.log('handleSelectItem ids, items:', ids, items)
-            this.selectItem = ids
-            Core.Api.ItemAccessory.save({
-                item_id: this.detail.id, target_id: ids[0],
-                target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM
-            }).then(() => {
+            console.log('handleSelectItem ids, items:', ids, items)            
+
+            let params = {
+                item_id: this.detail.id,
+                target_list: [],
+            }
+
+            ids.forEach(el => {
+                params.target_list.push({
+                    target_id: el,
+                    target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM
+                })
+            })
+
+            Core.Api.ItemAccessory.save(params).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'));
                 this.getTableData();
             }).catch(err => {
