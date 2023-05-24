@@ -131,7 +131,8 @@ const Util = {
      * @param {Number} type 预设时间格式对应的数字
      */
     timeFilter(value, type = 1) {
-        if (value == null) return '';
+        console.log("输出", value);
+        if (value == null || value == '') return '-';
         if (value.toString() === '0') return '-';
         switch (type) {
             case 1:
