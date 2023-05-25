@@ -100,8 +100,14 @@
                     <template v-if="column.dataIndex === 'channel'">
                         {{$Util.repairChannelFilter(text, $i18n.locale)}}
                     </template>
+                    <!-- 维修类别 -->
                     <template v-if="column.dataIndex === 'repair_method'">
-                        {{$Util.repairMethodFilter(text, $i18n.locale)}}
+                        <span v-if="record.device_type == DEVICE_MAP.vehicle">                        
+                            {{$Util.repairMethodFilter(text, $i18n.locale)}}
+                        </span>
+                        <span v-else>
+                            -
+                        </span>
                     </template>
                     <template v-if="column.dataIndex === 'service_type'">
                         {{$Util.repairServiceFilter(text, $i18n.locale)}}
@@ -288,6 +294,7 @@ export default {
                 // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
                 {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
             ], // 状态
+            DEVICE_MAP: REPAIR.DEVICE_MAP // 整车还是零配件
         };
     },
     watch: {
@@ -316,7 +323,7 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' },
-                { title: this.$t('r.device_classify'), dataIndex: 'device_type',key: 'device_type'},
+                { title: this.$t('r.device_classify'), dataIndex: 'device_type',key: 'device_type'},  // 工单类型
                 { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no',key: 'item'},
                 { title: this.$t('r.repair_name'), dataIndex: 'name', key: 'tip_item' },
                 { title: this.$t('r.urgency'), dataIndex: 'priority' },
@@ -325,8 +332,13 @@ export default {
                     filters: this.$Util.tableFilterFormat(REPAIR.SERVICE_TYPE_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.service_type || null },
                 { title: this.$t('r.repair_way'), dataIndex: 'channel',
                     filters: this.$Util.tableFilterFormat(REPAIR.CHANNEL_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.channel || null },
-                { title: this.$t('r.repair_category'), dataIndex: 'repair_method',
-                    filters: this.$Util.tableFilterFormat(REPAIR.METHOD_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.repair_method || null },
+                { 
+                    title: this.$t('r.repair_category'), 
+                    dataIndex: 'repair_method',
+                    filters: this.$Util.tableFilterFormat(REPAIR.METHOD_LIST, this.$i18n.locale), 
+                    filterMultiple: false, 
+                    filteredValue: filteredInfo.repair_method || null 
+                },  // 维修类别
                 { title: this.$t('r.repair_unit'), dataIndex: 'repair_name', key: 'item' },
                 { title: this.$t('r.repair_phone'), dataIndex: 'repair_phone', key: 'item' },
                 { title: this.$t('r.creator_name'),   dataIndex: 'user_name', key: 'item' },
