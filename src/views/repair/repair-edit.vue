@@ -284,13 +284,13 @@ export default {
                     window.open(routeUrl.href, '_blank')
                     break;
                 case 'detail':  // 维修单详情
-                    routeUrl = this.$router.resolve({
+                    routeUrl = this.$router.replace({
                         path: "/repair/repair-detail",
                         query: {
                             id: item.id
                         }
                     })
-                    window.open(routeUrl.href, '_blank')
+                    // window.open(routeUrl.href, '_blank')
                     break;
             }
         },
