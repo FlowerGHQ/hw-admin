@@ -119,6 +119,17 @@
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
+                    <!-- 来源 -->
+                    <template v-if="column.key === 'source_type'">
+                        <div class="source_eos" :class="{source_erp: SOURCE_TYPE[text] == 'ERP'}">                        
+                            <span>
+                                {{$t('i.source_type')}}:
+                            </span>
+                            <span>
+                                {{ SOURCE_TYPE[text] }}
+                            </span>                        
+                        </div>
+                    </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
@@ -175,6 +186,7 @@ import Core from '../../core';
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+import { Time } from '@antv/scale';
 const ITEM = Core.Const.ITEM
 export default {
     name: 'ItemList',
@@ -203,6 +215,7 @@ export default {
                 status: 0,
             },
             itemTypeMap: ITEM.TYPE_MAP,
+            SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
             // 表格
             tableData: [],
             expandedRowKeys: [],
@@ -223,11 +236,6 @@ export default {
                     type: 'xlsx',
                 },
             },
-
-            // // 对话框显示
-            // visible: false,
-            // // 导出方式
-            // value: '',
         };
     },
     watch: {},
@@ -237,18 +245,17 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
-                { title: this.$t('i.status'), dataIndex: 'status',
-                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },                
+                { title: this.$t('i.status'), dataIndex: 'status', filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
                 { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
                 { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
-                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
-                // { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
                 { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
-                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                { title: this.$t('i.source_type'), dataIndex: 'source_type', key: 'source_type' }, // 来源
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'}, // 工时
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return tableColumns
@@ -520,9 +527,21 @@ export default {
         }
     }
 }
-// .ant-modal {
-//     // top: 50% !important;
-//     // transform: translateY(-50%);
-//     color: red;
-// }
+
+.source_eos{
+    display: inline;
+    padding: 5px 5px;    
+    background-color: #326eee;
+    color: #fff;
+    border-radius: 15px;
+    font-size: 14px;
+}
+.source_erp{
+    display: inline;
+    padding: 5px 5px;        
+    background-color: #e34532;
+    color: #fff;
+    border-radius: 15px;
+    font-size: 14px;
+}
 </style>

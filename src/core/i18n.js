@@ -595,6 +595,7 @@ const messages = {
 	        on_board_battery: '随车电池',
 			clear_shop_car: '清空购物车',
             confirm_changes: '确认更改',
+            source_type:'来源',
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -2717,6 +2718,7 @@ const messages = {
             select_warehouse: 'Please select the warehouse',
             select_employees: 'Please select employees',
         },
+        // 商品
         i: {
             commodity_management: 'Product management',
             categories: 'Product category',
@@ -2877,7 +2879,8 @@ const messages = {
             home_page_redirect_number: 'Home Redirect',
             on_board_battery: 'Battery',
             clear_shop_car: 'Clear shop car',
-            confirm_changes:'Confirm Changes'
+            confirm_changes:'Confirm Changes',
+            source_type:'source',
         },
         fe:{
             feedback:'Feedback',

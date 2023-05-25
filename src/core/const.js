@@ -568,6 +568,11 @@ let Const = {
             '1': {key: 1, zh: '名称', en: 'name'},
             '2': {key: 2, zh: '编码', en: 'code'}
         },
+        // 商品列表-来源类型
+        SOURCE_TYPE:{
+            1: 'EOS',
+            2: 'ERP',
+        }
     },
 	ITEM_ACCESSORY: {
 		TARGET_TYPE_MAP: {
