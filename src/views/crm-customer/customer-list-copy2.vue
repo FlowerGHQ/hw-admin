@@ -56,9 +56,17 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col :xs='24' :sm='24' :xl="14" :xxl='14' class="search-item" v-if="show">
+                    <!-- 创建时间 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item" v-if="show">
                         <div class="key">{{ $t('d.create_time') }}：</div>
                         <div class="value"><TimeSearch @search="handleOtherSearch" ref='TimeSearch'/></div>
+                    </a-col>
+                    <!-- 更新时间 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="8" class="search-item" v-if="show">
+                        <div class="key">{{ $t("d.update_time") }}：</div>
+                        <div class="value">
+                        <TimeSearch @search="handleOtherSearch" :keys="dateTime" ref="updateTimeSearch" />
+                        </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="2" :xxl='3' class="search-item search-text" @click="moreSearch">
                         {{search_text}}<span :class="{'collapsed-title': show}"></span>
@@ -299,6 +307,7 @@ export default {
             detail: {
 
             },
+            dateTime: ["update_begin_time", "update_end_time"], // 更新时间筛选
         };
     },
     watch: {
@@ -416,7 +425,8 @@ export default {
             } else {
                 this.searchForm.status = this.CRM_STATUS.POOL
             }
-            // this.$refs.TimeSearch.handleReset()
+            this.$refs.TimeSearch?.handleReset()
+            this.$refs.updateTimeSearch?.handleReset()
             this.orderByFields = {}
             this.pageChange(1);
         },

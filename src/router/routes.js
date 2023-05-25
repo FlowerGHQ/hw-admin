@@ -432,6 +432,17 @@ const routes = [
 	                auth: ["purchase-order.detail"],
                 }
             },
+            {
+                path: 'purchase-order-detail2',
+                name: 'PurchaseOrderDetail2',
+                component: () => import('@/views/purchase/old/purchase-order-detail.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '采购订单详情',
+	                auth: ["purchase-order.detail"],
+                }
+            },
         ]
     },
     { //商品管理 - 平台端
@@ -1310,12 +1321,12 @@ const routes = [
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
                 component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                // component: () => import('@/views/warehouse/warehouse-detail-copy.vue'),
                 meta: {
                     hidden: true,
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
                     auth: ['warehouse.detail'],
-
                 }
             },
 	        {

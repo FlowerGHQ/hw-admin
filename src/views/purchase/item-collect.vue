@@ -96,8 +96,8 @@
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
-                        <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button>
-                        <a-button type="primary" ghost @click="handleMoveToShopCart(item)" v-else>{{ $t('i.cart') }}</a-button>
+                        <!-- <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button> -->
+                        <a-button type="primary" ghost v-if="item.item.status !== -1" @click="handleMoveToShopCart(item)">{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -156,6 +156,7 @@ export default {
             //  备注
             labelCol: { style: { width: '40px' } },
             wrapperCol: { span: 14 },
+            paramPrice: false,
         };
     },
     watch: {},
@@ -187,8 +188,10 @@ export default {
     mounted() {
         if (Core.Data.getCurrency() === 'EUR'){
             this.currency =  "€"
+            this.paramPrice = false
         } else {
             this.currency =  "$"
+            this.paramPrice = true
         }
 
         this.getList()
@@ -196,7 +199,6 @@ export default {
     methods: {
 
         routerChange(type, item) {
-            console.log(item.id,'yxy');
             let routeUrl
             switch (type) {
                 case 'settle':  // 结算
@@ -220,13 +222,19 @@ export default {
         },
         settle(){
             for (const it of this.shopCartList) {
-                console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
+                // console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
                 if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
-                    console.log(2222)
                     this.$message.error(this.$t('p.item_error'))
                     return ;
                 }
+                this.shopCartList.forEach((val) => {
+                    if(val.item.status !== 0 ) {
+                        this.getShopCartList()
+                        return this.$message.warn(this.$t('p.item_msg_err'));
+                    }
+                })                
             }
+            
             var routeUrl = this.$router.resolve({
                 path: "/purchase/item-settle",
                 query: {
@@ -294,16 +302,19 @@ export default {
         handleMoveToFavorite(item) {
             console.log("handleMoveToFavorite item", item)
             let _this = this
-            console.log('yxy',item);
             this.$confirm({
                 title: _this.$t('pop_up.move_favorites'),
                 okText: _this.$t('def.sure'),
                 cancelText: _this.$t('def.cancel'),
                 async onOk() {
                     try {
-                        await Core.Api.Favorite.add({item_id: item.item_id,price: item.price})
-                        await Core.Api.ShopCart.remove({id: item.id})
-                        _this.$message.success(this.$t('pop_up.operate'))
+                        if(!_this.paramPrice) {
+                            await Core.Api.Favorite.add({item_id: item.item_id, price: item?.item?.fob_eur})
+                        }else {
+                            await Core.Api.Favorite.add({item_id: item.item_id, price: item?.item?.fob_usd})
+                        }
+                        // await Core.Api.ShopCart.remove({id: item.id})
+                        _this.$message.success(_this.$t('pop_up.operate'))
                     } catch(err) {
                         console.log('handleMoveToFavorite err:', err)
                     } finally {

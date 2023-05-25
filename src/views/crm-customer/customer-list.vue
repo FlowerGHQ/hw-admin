@@ -4,14 +4,10 @@
       <div class="title-container">
         <div class="title-area">{{ $t("c.list") }}</div>
         <div class="btns-area">
-          <a-button
-            type="primary"
-            @click="routerChange('edit')"
-            v-if="$auth('crm-customer.save')"
-            ><i class="icon i_add" />{{
-              operMode === "private" ? $t("c.save") : $t("crm_c.new_pool_c")
-            }}</a-button
-          >
+          <a-button type="primary" @click="routerChange('edit')" v-if="$auth('crm-customer.save')"><i
+              class="icon i_add" />{{
+                operMode === "private" ? $t("c.save") : $t("crm_c.new_pool_c")
+              }}</a-button>
         </div>
       </div>
       <div class="search-container">
@@ -20,284 +16,148 @@
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.name") }}：</div>
             <div class="value">
-              <a-input
-                :placeholder="$t('def.input')"
-                v-model:value="searchForm.name"
-                @keydown.enter="handleSearch"
-              />
+              <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter="handleSearch" />
             </div>
           </a-col>
           <!-- 手机号 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
             <div class="key">{{ $t("n.phone") }}：</div>
             <div class="value">
-              <a-input
-                :placeholder="$t('def.input')"
-                v-model:value="searchForm.phone"
-                @keydown.enter="handleSearch"
-              />
+              <a-input :placeholder="$t('def.input')" v-model:value="searchForm.phone" @keydown.enter="handleSearch" />
             </div>
           </a-col>
           <!-- 客户类型 -->
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="8"
-            :xxl="6"
-            class="search-item"
-            v-if="show"
-          >
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
             <div class="key">{{ $t("crm_c.type") }}：</div>
             <div class="value">
-              <a-select
-                v-model:value="searchForm.type"
-                :placeholder="$t('def.select')"
-                @change="handleSearch"
-              >
+              <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" @change="handleSearch">
                 <a-select-option :value="0">
                   {{ lang === "zh" ? "全部" : "all" }}
                 </a-select-option>
-                <a-select-option
-                  v-for="item of CRM_TYPE_MAP"
-                  :key="item.key"
-                  :value="item.value"
-                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
-                >
+                <a-select-option v-for="item of CRM_TYPE_MAP" :key="item.key" :value="item.value">{{ lang === "zh" ?
+                  item.zh : item.en }}</a-select-option>
               </a-select>
             </div>
           </a-col>
           <!-- 创建人 -->
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="8"
-            :xxl="6"
-            class="search-item"
-            v-if="show"
-          >
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
             <div class="key">{{ $t("crm_o.create_user") }}：</div>
             <div class="value">
-              <a-select
-                v-model:value="searchForm.create_user_id"
-                show-search
-                :placeholder="$t('def.input')"
-                :default-active-first-option="false"
-                :show-arrow="false"
-                :filter-option="false"
-                :not-found-content="null"    
-                allowClear            
-                @search="handleCreateUserSearch"
-              >
-                <a-select-option
-                  v-for="item in createUserOptions"
-                  :key="item.create_user_id"
-                  :value="item.create_user_id"
-                >
+              <a-select v-model:value="searchForm.create_user_id" show-search :placeholder="$t('def.input')"
+                :default-active-first-option="false" :show-arrow="false" :filter-option="false" :not-found-content="null"
+                allowClear @search="handleCreateUserSearch">
+                <a-select-option v-for="item in createUserOptions" :key="item.create_user_id"
+                  :value="item.create_user_id">
                   {{ item.create_user_name }}
                 </a-select-option>
               </a-select>
             </div>
           </a-col>
           <!-- 客户级别 -->
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="8"
-            :xxl="6"
-            class="search-item"
-            v-if="show"
-          >
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
             <div class="key">{{ $t("crm_c.level") }}：</div>
             <div class="value">
-              <a-select
-                v-model:value="searchForm.level"
-                :placeholder="$t('def.select')"
-                @change="handleSearch"
-              >
+              <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" @change="handleSearch">
                 <a-select-option :value="0">
                   {{ lang === "zh" ? "全部" : "all" }}
                 </a-select-option>
-                <a-select-option
-                  v-for="item of CRM_LEVEL_MAP"
-                  :key="item.key"
-                  :value="item.value"
-                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
-                >
+                <a-select-option v-for="item of CRM_LEVEL_MAP" :key="item.key" :value="item.value">{{ lang === "zh" ?
+                  item.zh : item.en }}</a-select-option>
               </a-select>
             </div>
           </a-col>
           <!-- 区域 -->
-          <a-col 
-            v-if="show" 
-            :xs='24' 
-            :sm='24' 
-            :xl="8" 
-            :xxl='6'  
-            class="search-item">
-              <div class="key">{{ $t('crm_c.group') }}：</div>
-              <div class="value">
-                  <a-tree-select
-                    v-model:value="searchForm.group_id"
-                    :placeholder="$t('def.select')"
-                    :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                    :tree-data="groupOptions"
-                    tree-default-expand-all
-                    allowClear
-                  />                  
-              </div>
+          <a-col v-if="show" :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+            <div class="key">{{ $t('crm_c.group') }}：</div>
+            <div class="value">
+              <a-tree-select v-model:value="searchForm.group_id" :placeholder="$t('def.select')"
+                :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
+                tree-default-expand-all allowClear />
+            </div>
           </a-col>
           <!-- 意向程度 -->
-          <a-col 
-           v-if="show" 
-           :xs='24' 
-           :sm='24' 
-           :xl="8" 
-           :xxl='6'  
-           class="search-item">
-            <div class="key">{{$t('crm_t.intent')}}:</div>
+          <a-col v-if="show" :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+            <div class="key">{{ $t('crm_t.intent') }}:</div>
             <div class="value">
-              <a-select
-                v-model:value="searchForm.purchase_intent"
-                :placeholder="$t('def.select')"
-                allowClear
-              >
-                <a-select-option
-                  v-for="item of DEGREE_INTENT"
-                  :key="item.key"
-                  :value="item.value"
-                  >
+              <a-select v-model:value="searchForm.purchase_intent" :placeholder="$t('def.select')" allowClear>
+                <a-select-option v-for="item of DEGREE_INTENT" :key="item.key" :value="item.value">
                   {{ lang === "zh" ? item.zh : item.en }}
                 </a-select-option>
               </a-select>
-            </div>       
+            </div>
           </a-col>
           <!-- 来源类型 -->
-          <a-col 
-           v-if="show" 
-           :xs='24' 
-           :sm='24' 
-           :xl="8" 
-           :xxl='6'  
-           class="search-item">
-            <div class="key">{{$t('crm_c.source_type')}}:</div>
+          <a-col v-if="show" :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+            <div class="key">{{ $t('crm_c.source_type') }}:</div>
             <div class="value">
-              <a-select
-                v-model:value="searchForm.source_type"
-                :placeholder="$t('def.select')"
-                allowClear
-              >
-                <a-select-option
-                  v-for="item of SOURCE_TYPE_MAP"
-                  :key="item.key"
-                  :value="item.value"
-                  >
+              <a-select v-model:value="searchForm.source_type" :placeholder="$t('def.select')" allowClear>
+                <a-select-option v-for="item of SOURCE_TYPE_MAP" :key="item.key" :value="item.value">
                   {{ lang === "zh" ? item.zh : item.en }}
                 </a-select-option>
               </a-select>
-            </div>       
+            </div>
           </a-col>
           <!-- 创建时间 -->
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="14"
-            :xxl="14"
-            class="search-item"
-            v-if="show"
-          >
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="8 " class="search-item" v-if="show">
             <div class="key">{{ $t("d.create_time") }}：</div>
             <div class="value">
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
             </div>
           </a-col>
+          <!-- 更新时间 -->
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="8" class="search-item" v-if="show">
+            <div class="key">{{ $t("d.update_time") }}：</div>
+            <div class="value">
+              <TimeSearch @search="handleOtherSearch" :keys="dateTime" ref="updateTimeSearch" />
+            </div>
+          </a-col>
           <!-- 高级搜索按钮           -->
-          <a-col
-            :xs="24"
-            :sm="24"
-            :xl="2"
-            :xxl="3"
-            class="search-item search-text"
-            @click="moreSearch"
-          >
+          <a-col :xs="24" :sm="24" :xl="2" :xxl="3" class="search-item search-text" @click="moreSearch">
             {{ show ? $t("search.stow") : $t("search.advanced_search") }}
-            <i
-              class="icon i_xialajiantouxiao"
-              style="margin-left: 5px"
-              v-if="!show"
-            ></i>
-            <i
-              class="icon i_shouqijiantouxiao"
-              style="margin-left: 5px"
-              v-else
-            ></i>
+            <i class="icon i_xialajiantouxiao" style="margin-left: 5px" v-if="!show"></i>
+            <i class="icon i_shouqijiantouxiao" style="margin-left: 5px" v-else></i>
           </a-col>
         </a-row>
         <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{$t("def.search")}}</a-button>
+          <a-button @click="handleSearch" type="primary">{{ $t("def.search") }}</a-button>
           <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
         </div>
       </div>
       <div class="operate-container" v-if="operMode === 'high_seas'">
-        <a-button
-          type="primary"
-          @click="handleBatchObtain"
-          v-if="$auth('crm-customer.obtain')"
-          >{{ $t("crm_c.obtain") }}</a-button
-        >
+        <a-button type="primary" @click="handleBatchObtain" v-if="$auth('crm-customer.obtain')">{{ $t("crm_c.obtain")
+        }}</a-button>
 
-        <a-button
-          type="primary"
-          @click="handleBatchGroup('group')"
-          v-if="$auth('crm-customer.save')"
-          >{{ $t("crm_c.group") }}</a-button
-        >
+        <a-button type="primary" @click="handleBatchGroup('group')" v-if="$auth('crm-customer.save')">{{ $t("crm_c.group")
+        }}</a-button>
 
-        <a-button
-          type="danger"
-          @click="handleBatchDelete"
-          v-if="$auth('crm-customer.delete')"
-          >{{ $t("crm_c.delete") }}</a-button
-        >
+        <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t("crm_c.delete")
+        }}</a-button>
       </div>
       <div class="operate-container" v-if="operMode === 'private'">
-        <a-button
-          type="primary"
-          @click="handleBatchReturnPool"
-          v-if="$auth('crm-customer.return-pool')"
-          >{{ $t("crm_c.return_pool") }}</a-button
-        >
+        <a-button type="primary" @click="handleBatchReturnPool" v-if="$auth('crm-customer.return-pool')">{{
+          $t("crm_c.return_pool") }}</a-button>
         <!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-customer.transfer')">{{ $t('crm_c.transfer') }}</a-button>-->
-        <a-button
-          type="danger"
-          @click="handleBatchDelete"
-          v-if="$auth('crm-customer.delete')"
-          >{{ $t("crm_c.delete") }}</a-button
-        >
+        <a-button type="danger" @click="handleBatchDelete" v-if="$auth('crm-customer.delete')">{{ $t("crm_c.delete")
+        }}</a-button>
       </div>
       <div class="table-container">
-        <a-table
-          :columns="columnOptions.length === 0? tableColumns:columnOptions"
-          :data-source="tableData"
-          :scroll="{ x: true }"
-          :row-key="(record) => record.id"
-          :pagination="false"
-          :row-selection="rowSelection"
-          @change="getTableDataSorter"
-        >
-          <template #headerCell="{ column,title }">
+        <a-table :columns="columnOptions.length === 0 ? tableColumns : columnOptions" :data-source="tableData"
+          :scroll="{ x: true }" :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection"
+          @change="getTableDataSorter">
+          <template #headerCell="{ column, title }">
             {{ $t(title) }}
-            <template v-if="column.key == 'operation'">   
+            <template v-if="column.key == 'operation'">
               <span class="config-icon" @click="OnConfiguration">
                 <SettingOutlined />
-              </span>      
+              </span>
             </template>
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
               <a-tooltip placement="top" :title="text">
                 <a-button type="link" @click="routerChange('detail', record)">
-                  <span :class="{nameStyle: nameBoolean(record)}">                    
-                    {{text || "-"}}
+                  <span :class="{ nameStyle: nameBoolean(record) }">
+                    {{ text || "-" }}
                   </span>
                 </a-button>
               </a-tooltip>
@@ -308,13 +168,8 @@
             <template v-if="column.key === 'phone'">
               <div v-if="text !== ''" class="phone-hover">
                 {{ record.phone_country_code }} {{ text || "-" }}
-                <a-button
-                  type="link"
-                  v-if="!record.flag_eyes"
-                  class="switch"
-                  @click="handleChecking(record)"
-                  ><i class="icon i_eyes"
-                /></a-button>
+                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i
+                    class="icon i_eyes" /></a-button>
               </div>
               <template v-else>
                 {{ text || "-" }}
@@ -323,13 +178,8 @@
             <template v-if="column.key === 'email'">
               <div v-if="text !== ''" class="phone-hover">
                 {{ text || "-" }}
-                <a-button
-                  type="link"
-                  v-if="!record.flag_eyes"
-                  class="switch"
-                  @click="handleChecking(record)"
-                  ><i class="icon i_eyes"
-                /></a-button>
+                <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i
+                    class="icon i_eyes" /></a-button>
               </div>
               <template v-else>
                 {{ text || "-" }}
@@ -355,17 +205,12 @@
               {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
             </template>
             <template v-if="column.dataIndex === 'label_list'">
-              <a-tag
-                v-for="(item, index) in record.label_list"
-                :key="index"
-                color="blue"
-                class="customer-tag"
-                >{{ lang === "zh" ? item.label : item.label_en }}</a-tag
-              >
+              <a-tag v-for="(item, index) in record.label_list" :key="index" color="blue" class="customer-tag">{{ lang ===
+                "zh" ? item.label : item.label_en }}</a-tag>
             </template>
             <!-- 意向程度 -->
             <template v-if="column.name === 'intent'">
-              {{$Util.CRMTrackRecordIntentFilter(text,lang,DEGREE_INTENT) || '_' }}
+              {{ $Util.CRMTrackRecordIntentFilter(text, lang, DEGREE_INTENT) || '_' }}
             </template>
             <template v-if="column.key === 'time'">
               {{ $Util.timeFilter(text) }}
@@ -374,34 +219,21 @@
               {{ $Util.timeFilter(text) }}
             </template>
             <template v-if="column.key === 'operation'">
-              <a-button
-                type="link"
-                @click="handleBatch('distribute', record)"
-                v-if="
-                  $auth('crm-customer.distribute') && operMode === 'high_seas'
-                "
-                >{{ $t("crm_c.distribute") }}</a-button
-              >
-              <a-button
-                type="link"
-                @click="handleBatch('transfer', record)"
-                v-if="$auth('crm-customer.transfer') && operMode === 'private'"
-                >{{ $t("crm_c.transfer") }}</a-button
-              >
+              <a-button type="link" @click="handleBatch('distribute', record)" v-if="$auth('crm-customer.distribute') && operMode === 'high_seas'
+                ">{{ $t("crm_c.distribute") }}</a-button>
+              <a-button type="link" @click="handleBatch('transfer', record)"
+                v-if="$auth('crm-customer.transfer') && operMode === 'private'">{{ $t("crm_c.transfer") }}</a-button>
 
-              <a-button
-                type="link"
-                @click="routerChange('detail', record)"
-                v-if="$auth('crm-customer.detail')"
-                ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
-              >
+              <a-button type="link" @click="routerChange('detail', record)" v-if="$auth('crm-customer.detail')"><i
+                  class="icon i_detail" />{{ $t("def.detail") }}</a-button>
               <!--                            <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('crm-customer.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>-->
               <!--                            <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('crm-customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
             </template>
           </template>
         </a-table>
         <!-- 表格列配置项选项 -->
-        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions" :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>		
+        <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions"
+          :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -410,28 +242,13 @@
             $t("in.selected") + ` ${selectedRowKeys.length} ` + $t("in.total")
           }}
         </div>
-        <a-pagination
-          v-model:current="currPage"
-          :page-size="pageSize"
-          :total="total"
-          show-quick-jumper
-          show-size-changer
-          show-less-items
-          :show-total="
-            (total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
-          "
-          :hide-on-single-page="false"
-          :pageSizeOptions="['10', '20', '30', '40']"
-          @change="pageChange"
-          @showSizeChange="pageSizeChange"
-        />
+        <a-pagination v-model:current="currPage" :page-size="pageSize" :total="total" show-quick-jumper show-size-changer
+          show-less-items :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
+            " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
+          @showSizeChange="pageSizeChange" />
       </div>
     </div>
-    <a-modal
-      v-model:visible="batchShow"
-      :title="$t('crm_c.distribute_customer')"
-      :after-close="handleBatchClose"
-    >
+    <a-modal v-model:visible="batchShow" :title="$t('crm_c.distribute_customer')" :after-close="handleBatchClose">
       <div class="form-item required">
         <div class="key">{{ $t("crm_b.customer_name") }}：</div>
         <div class="value">
@@ -441,36 +258,19 @@
       <div class="form-item required">
         <div class="key">{{ $t("crm_group.name") }}：</div>
         <div class="value">
-          <a-tree-select
-            class="CategoryTreeSelect"
-            v-model:value="group_id"
-            :placeholder="$t('def.select')"
-            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-            :tree-data="groupOptions"
-            @change="getUserData('')"
-            tree-default-expand-all
-          />
+          <a-tree-select class="CategoryTreeSelect" v-model:value="group_id" :placeholder="$t('def.select')"
+            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions" @change="getUserData('')"
+            tree-default-expand-all />
         </div>
       </div>
       <div class="form-item required">
         <div class="key">{{ $t("crm_b.own_user_name") }}：</div>
         <div class="value">
-          <a-select
-            v-model:value="batchForm.own_user_id"
-            show-search
-            :placeholder="$t('def.select') + $t('crm_b.own_user_name')"
-            :default-active-first-option="false"
-            :show-arrow="false"
-            :filter-option="false"
-            :not-found-content="null"
-            @search="getUserData"
-            :disabled="!group_id"
-          >
-            <a-select-option
-              v-for="item in userData"
-              :key="item.id"
-              :value="item.id"
-            >
+          <a-select v-model:value="batchForm.own_user_id" show-search
+            :placeholder="$t('def.select') + $t('crm_b.own_user_name')" :default-active-first-option="false"
+            :show-arrow="false" :filter-option="false" :not-found-content="null" @search="getUserData"
+            :disabled="!group_id">
+            <a-select-option v-for="item in userData" :key="item.id" :value="item.id">
               {{ item.account ? item.account.name : "-" }}
             </a-select-option>
           </a-select>
@@ -484,23 +284,13 @@
       </template>
     </a-modal>
 
-    <a-modal
-      v-model:visible="batchGroupShow"
-      :title="$t('crm_c.distribute_customer')"
-      :after-close="handleBatchClose"
-    >
+    <a-modal v-model:visible="batchGroupShow" :title="$t('crm_c.distribute_customer')" :after-close="handleBatchClose">
       <div class="form-item required">
         <div class="key">{{ $t("crm_group.name") }}：</div>
         <div class="value">
-          <a-tree-select
-            class="CategoryTreeSelect"
-            v-model:value="batchForm.group_id"
-            :placeholder="$t('def.select')"
-            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-            :tree-data="groupOptions"
-            @change="getUserData('')"
-            tree-default-expand-all
-          />
+          <a-tree-select class="CategoryTreeSelect" v-model:value="batchForm.group_id" :placeholder="$t('def.select')"
+            :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions" @change="getUserData('')"
+            tree-default-expand-all />
         </div>
       </div>
       <template #footer>
@@ -519,7 +309,7 @@
 import { take } from 'lodash'
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
-import { CaretUpOutlined, SettingOutlined  } from '@ant-design/icons-vue';
+import { CaretUpOutlined, SettingOutlined } from '@ant-design/icons-vue';
 import { ColumnConfiguration } from './components/index.js'
 export default {
   name: "CustomerList",
@@ -527,7 +317,7 @@ export default {
     TimeSearch,
     CaretUpOutlined,
     SettingOutlined,
-    ColumnConfiguration      
+    ColumnConfiguration
   },
   props: {},
   data() {
@@ -545,7 +335,7 @@ export default {
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
       DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
-      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP, 
+      SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP,
       total: 0,
       orderByFields: {},
       // 搜索
@@ -581,7 +371,8 @@ export default {
       detail: {},
       nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
       ConfigurationBool: false, // 配置项的显示隐藏
-      columnOptions: []
+      columnOptions: [],
+      dateTime: ["update_begin_time", "update_end_time"], // 更新时间筛选
     };
   },
   watch: {
@@ -592,19 +383,19 @@ export default {
         let type = newRoute.meta ? newRoute.meta.type : "";
         this.operMode = type;
         // 这两句刷新页面的时候，页数在之前的页数
-        this.currPage = Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1
-        this.pageSize = Core.Data.getItem('pageSize')?Core.Data.getItem('pageSize'): 20
+        this.currPage = Core.Data.getItem('currPage') ? Core.Data.getItem('currPage') : 1
+        this.pageSize = Core.Data.getItem('pageSize') ? Core.Data.getItem('pageSize') : 20
         this.getTableData();
         // this.handleSearchReset(false);
         // this.getUserData();
       },
     },
-    searchForm:{
-      deep:true,
-      handler(oldValue,newValue) {
-        if(oldValue === newValue){
-            this.currPage = 1
-            this.pageSize = 20
+    searchForm: {
+      deep: true,
+      handler(oldValue, newValue) {
+        if (oldValue === newValue) {
+          this.currPage = 1
+          this.pageSize = 20
         }
       },
     }
@@ -645,13 +436,13 @@ export default {
           type: 'time',
           sorter: true,
         },
-        {
-          title: "crm_c.last_track_time",
-          dataIndex: "last_track_time",
-          key: "last_track_time",
-          type: 'time',
-          sorter: true,
-        },
+        // {
+        //   title: "crm_c.last_track_time",
+        //   dataIndex: "update_time",
+        //   key: "last_track_time",
+        //   type: 'time',
+        //   sorter: true,
+        // },
         {
           title: "crm_c.next_track_time",
           dataIndex: "next_track_time",
@@ -673,11 +464,12 @@ export default {
         },
         // 意向程度
         {
-          title:"crm_t.intent",
+          title: "crm_t.intent",
           dataIndex: "purchase_intent",
-          key:'intent',
-          name:'intent'
+          key: 'intent',
+          name: 'intent'
         },
+        // 更新时间
         {
           title: "d.update_time",
           dataIndex: "update_time",
@@ -720,59 +512,59 @@ export default {
       return this.$store.state.lang;
     }
   },
-  mounted() {      
+  mounted() {
     this.getUserData();
     this.createUserFetch(); // 创建人数据初始化  
-    this.getTableData(); 
+    this.getTableData();
   },
   methods: {
-    nameBoolean(v){
+    nameBoolean(v) {
       const arr = this.nameColor.filter((el) => {
         return el.id == v.id
       })
-      return arr.length?true:false
+      return arr.length ? true : false
     },
     moreSearch() {
       this.show = !this.show;
       this.handleGroupTree()
     },
     routerChange(type, item = {}) {
-		let routeUrl = ''
-		switch (type) {
-			case "detail": // 编辑          
-				if(!this.$Util.isEmptyObj(item)){
-					this.nameColor.push({ id: item.id})
-				}			
-				routeUrl = this.$router.resolve({
-					path: "/crm-customer/customer-detail",
-					query: {id: item.id}
-				})
-				window.open(routeUrl.href, '_blank')
-				break;
-			case "edit": // 编辑			
-				routeUrl = this.$router.resolve({
-					path: "/crm-customer/customer-edit",
-					query: { id: item.id, status: this.searchForm.status },
-				})
-				window.open(routeUrl.href, '_blank')
-				break;
-		}
+      let routeUrl = ''
+      switch (type) {
+        case "detail": // 编辑          
+          if (!this.$Util.isEmptyObj(item)) {
+            this.nameColor.push({ id: item.id })
+          }
+          routeUrl = this.$router.resolve({
+            path: "/crm-customer/customer-detail",
+            query: { id: item.id }
+          })
+          window.open(routeUrl.href, '_blank')
+          break;
+        case "edit": // 编辑			
+          routeUrl = this.$router.resolve({
+            path: "/crm-customer/customer-edit",
+            query: { id: item.id, status: this.searchForm.status },
+          })
+          window.open(routeUrl.href, '_blank')
+          break;
+      }
     },
-    pageChange(page) {          
+    pageChange(page) {
       // 页码改变
       this.currPage = page;
-      Core.Data.setItem('currPage',page)
+      Core.Data.setItem('currPage', page)
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
       this.pageSize = size;
-      Core.Data.setItem('pageSize',size)
+      Core.Data.setItem('pageSize', size)
       this.getTableData();
     },
     handleSearch() {
       // 搜索
-      this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
+      this.pageChange(Core.Data.getItem('currPage') ? Core.Data.getItem('currPage') : 1);
     },
     handleOtherSearch(params) {
       // 时间等组件化的搜索
@@ -789,7 +581,8 @@ export default {
       } else {
         this.searchForm.status = this.CRM_STATUS.POOL;
       }
-      // this.$refs.TimeSearch.handleReset()
+      this.$refs.TimeSearch?.handleReset()
+      this.$refs.updateTimeSearch?.handleReset()
       this.orderByFields = {};
       this.pageChange(1);
     },
@@ -812,7 +605,7 @@ export default {
         page: this.currPage,
         page_size: this.pageSize,
       })
-        .then((res) => {          
+        .then((res) => {
           this.total = res.count;
           this.tableData = res.list;
           // 切换的时候清除 // table的选择
@@ -1058,30 +851,30 @@ export default {
 
     /*接口*/
     // 创建人条件数据
-    createUserFetch(params = {}){
+    createUserFetch(params = {}) {
       Core.Api.CRMOrder.createUser({
         ...params
       }).then((res) => {
-        if(this.$Util.isEmptyObj(params)){
+        if (this.$Util.isEmptyObj(params)) {
           this.createUserOptions = take(res.list, 50);
-        }else{
-          this.createUserOptions = res.list;          
+        } else {
+          this.createUserOptions = res.list;
         }
       });
     },
     /*methods*/
     // 配置表格列的名称
-    OnConfiguration(){
-      if(this.ConfigurationBool === false){
+    OnConfiguration() {
+      if (this.ConfigurationBool === false) {
         // this.columnOptions = this.tableColumns
         this.ConfigurationBool = true
       } else
-      if(this.ConfigurationBool === true){
-        // this.columnOptions = []
-        this.ConfigurationBool = false
-      }
+        if (this.ConfigurationBool === true) {
+          // this.columnOptions = []
+          this.ConfigurationBool = false
+        }
     },
-    getConfigOptions(val){
+    getConfigOptions(val) {
       this.columnOptions = val
       this.ConfigurationBool = false
     },
@@ -1094,10 +887,12 @@ export default {
   .i_eyes {
     font-size: 12px;
   }
+
   .phone-hover {
     .switch {
       opacity: 0;
     }
+
     &:hover {
       .switch {
         opacity: 1;
@@ -1105,24 +900,27 @@ export default {
     }
   }
 }
+
 .search-text {
   margin-left: 30px;
   color: #006ef9;
   cursor: pointer;
 }
-.nameStyle{
+
+.nameStyle {
   color: #9000f0;
 }
 
 // 配置项组件自定义位置
-.Configuration-style{
-   position:absolute;
-   top: 40px;
-   bottom: 0;  
-   right: 0px;   
-   z-index: 999;
+.Configuration-style {
+  position: absolute;
+  top: 40px;
+  bottom: 0;
+  right: 0px;
+  z-index: 999;
 }
-.config-icon{
+
+.config-icon {
   font-size: 14px;
   cursor: pointer;
 }

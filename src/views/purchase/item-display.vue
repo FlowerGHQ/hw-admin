@@ -122,6 +122,7 @@ export default {
             // 下载数据
             downloadData: [],
             currency:'',
+            paramPrice: false,
         };
     },
     computed: {
@@ -133,6 +134,11 @@ export default {
     },
     mounted() {
         this.currency = Core.Data.getCurrency();
+        if(this.currency === 'EUR') {
+            this.paramPrice = false
+        }else {
+            this.paramPrice = true
+        }
         if(Number(this.$route.query.id)) {
             this.id = Number(this.$route.query.id) || 0
         }
@@ -170,8 +176,8 @@ export default {
                 status: 0,
 
             }).then(res => {
-                console.log('getSpecList this.specific.data:', res)
                 this.specList = res.list;
+                console.log('getSpecList res', this.specList)
             }).catch(err => {
                 console.log('getSpecList err', err)
             }).finally(() => {
@@ -193,14 +199,25 @@ export default {
             if (this.detail.in_favorite) {
                 return this.$message.warning(_this.$t('i.item_favorite'))
             }
-            Core.Api.Favorite.add({
-                item_id: this.detail.id,
-                price: this.detail.purchase_price
-            }).then(res => {
-                console.log('hanldeAddToFavorite res:', res)
-                this.$message.success(_this.$t('i.favorite_success'))
-                this.getItemDetail();
-            })
+            if(!this.paramPrice) {
+                Core.Api.Favorite.add({
+                    item_id: this.detail.id,
+                    price: this.detail.fob_eur
+                }).then(res => {
+                    console.log('hanldeAddToFavorite res:', res)
+                    this.$message.success(_this.$t('i.favorite_success'))
+                    this.getItemDetail();
+                })
+            }else {
+                Core.Api.Favorite.add({
+                    item_id: this.detail.id,
+                    price: this.detail.fob_usd
+                }).then(res => {
+                    console.log('hanldeAddToFavorite res:', res)
+                    this.$message.success(_this.$t('i.favorite_success'))
+                    this.getItemDetail();
+                })
+            }
         },
         // 添加到购物车
         hanldeAddToShopCart(id) {
@@ -395,6 +412,7 @@ export default {
             padding: 10px 0;
             font-weight: 400;
             font-size: @fz_bs;
+            cursor: pointer;
             .star-text {
                 margin-left: 7px;
             }

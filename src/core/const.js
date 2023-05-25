@@ -41,7 +41,8 @@ switch (window.location.hostname) {
     default:
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        // URL_POINT = 'http://10.0.0.131:8889' // yzy   
+        // URL_POINT = 'http://10.0.0.105:8889'
+        // URL_POINT = 'http://10.0.0.213:8889'
         break;
 }
 
@@ -351,7 +352,7 @@ let Const = {
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
             '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
-	        '45': { key: 40, color: 'blue', zh: '维修结束', en: 'Under repair'},
+	        '45': { key: 40, color: 'blue', zh: '待结算', en: 'Waiting settlement'},
             '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
             '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
             '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
@@ -583,23 +584,23 @@ let Const = {
     PURCHASE: { // 采购订单
         // 状态
         STATUS: {
-            INIT: 0,
-	        SPLIT: 50,
-	        WAIT_AUDIT: 60,
-            WAIT_PAY: 100,
-            WAIT_DELIVER: 200,
-	        ORDER_TRANSFERRED: 250,
-            WAIT_TAKE_DELIVER: 300,
-            TAKE_DELIVER: 330,
-            ALL_TAKE_DELIVER: 360,
-            DEAL_SUCCESS: 400,
+            INIT: 0, // 未知
+	        SPLIT: 50, // 已拆单
+	        WAIT_AUDIT: 60,  // 等待审核
+            WAIT_PAY: 100, // 待支付
+            WAIT_DELIVER: 200, // 待发货
+	        ORDER_TRANSFERRED: 250, // 已转单
+            WAIT_TAKE_DELIVER: 300, // 已发货
+            TAKE_DELIVER: 330, // 部分收货
+            ALL_TAKE_DELIVER: 360, // 全部收货
+            DEAL_SUCCESS: 400, // 交易完成
 	        REVISE: 600,
-            REVISE_AUDIT: 630,
-            CANCEL: -100,
+            REVISE_AUDIT: 630, // 待审核
+            CANCEL: -100, // 交易关闭
 	        RE_REVISE: -200,
         },
         STATUS_MAP: {
-            '0':   { value: '0', key: 0,    color: 'red',    zh: '未知', en: 'Unknown'},
+            '0':   { value: '0', key: 0,    color: 'red', zh: '未知', en: 'Unknown'},
 	        '50': { value: '0', key: 50,  color: 'green', zh: '已拆单', en: 'Separate bill'},
 	        '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},
             '100': { value: '0', key: 100,  color: 'orange', zh: '待支付', en: 'Waiting for payment'},
@@ -611,14 +612,7 @@ let Const = {
             '400': { value: '0', key: 400,  color: 'green',  zh: '交易完成', en: 'Order completed'},
 	        '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
             '-100':{ value: '0', key: -100, color: 'gray',   zh: '交易关闭', en: 'Canceled'},
-        },
-        /* STATUS_COLOR_MAP: {
-            '0': 'red',
-            '200': 'orange',
-            '300': 'blue',
-            '350': 'yellow',
-            '400': 'green',
-        },*/
+        },    
         // 支付方式
         PAY_METHOD: {
             // 1: "支付宝",
@@ -627,10 +621,7 @@ let Const = {
             10: { value: 10, zh: '汇票', en: 'Draft'},
             20: { value: 20, zh: '银行转账', en: 'Bank transfer'},
         },
-        PAY_METHOD_LIST: [
-            // { name: '支付宝', value: '1' },
-            // { name: '微信', value: '2' },
-            // { name: '银行转账', value: '3' },
+        PAY_METHOD_LIST: [            
             { zh: '汇票', en: 'Draft', value: '10' },
             { zh: '银行转账', en: 'Bank transfer', value: '20' },
         ],
@@ -639,12 +630,34 @@ let Const = {
 	        WAIT_AUDIT: 200, //部分付款
             PAYING: 300, //部分付款
             PAY_ALL: 400,//全部付款
+            FAIL_PAY: 500, // 审核未通过
         },
+        // 支付状态
         PAYMENT_STATUS_MAP: {
             '100': { key: 100, color: 'yellow', zh: '待支付', en: 'Wait to pay', value: '0'},
             '200': { key: 200, color: 'orange', zh: '待审核', en: 'Wait to audit', value: '0'},
 	        '300': { key: 300, color: 'blue', zh: '部分付款', en: 'Part of the payment', value: '0'},
             '400': { key: 400, color: 'green', zh: '全额付款',en: 'Full payment', value: '0'},
+            '500': { key: 500, color: 'red', zh: '审核未通过',en: 'Audit failed', value: '0'},
+        },
+        // 发货状态
+        goods_status:{
+            '200': { value: '0', key: 200,  color: 'orange', zh: '待发货', en: 'Wait for delivery'},
+            '250': { value: '0', key: 400,  color: 'blue',   zh: '已转单', en: 'Order transferred'},
+            '300': { value: '0', key: 300,  color: 'blue',   zh: '已发货', en: 'Shipped'},          
+            'finally': { color: 'green', zh: '已发货', en: 'Shipped'},
+        },
+        // 收货状态
+        Receive_goods:{
+            '330': { value: '0', key: 330,  color: 'yellow', zh: '部分收货', en: 'Received'},
+            '360': { value: '0', key: 360,  color: 'yellow', zh: '全部收货', en: 'Received'},         
+            'finally': { color: 'green', zh: '预计10-12天工作日', en: 'Expected to be completed in 10-12 days'},
+        },
+        // 审核状态
+        examine_status:{
+            '60': { value: '0', key: 60,  color: 'green', zh: '等待审核', en: 'Waiting for audit'},            
+            '630': { value: '0', key: 630,  color: 'yellow',  zh: '待审核', en: 'To audit'},
+            'finally': { color: 'green', zh: '审核完成', en: 'Audit completed'},            
         },
         /* PAYMENT_COLOR_MAP: {
              '100': 'yellow',
@@ -696,8 +709,10 @@ let Const = {
 		    40: '赠品单',
 	    },
 	    FLAG_ORDER_TYPE: {
-		    PRE_SALES: 10,
-			AFTER_SALES: 20,
+		    PRE_SALES: 10,  // 售前订单
+			AFTER_SALES: 20, // 售后订单
+            Mix_SALES: 30, // 混合订单
+            Gift_SALES: 40, // 赠送订单
 	    },
 	    PAY_STATUS_LIST: {
 		    '0': { key: 10, zh: '初始', en: 'Init'},
@@ -708,7 +723,7 @@ let Const = {
 	    },
 	    PAY_STATUS:{
 			INIT: 0,
-		    WAIT_TO_AUDIT: 10,
+		    WAIT_TO_AUDIT: 10,  // 审核
 		    APPROVED: 20,
 		    CANCEL: -10,
 		    AUDIT_FAILED: -20,

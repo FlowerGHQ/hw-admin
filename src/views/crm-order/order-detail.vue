@@ -62,11 +62,15 @@
                         </template> -->
 
                     </a-col>
-                    <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
+                    <a-col :xs='24' :sm='24' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
                         <span class="value">
                             <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER"/>
                         </span>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :lg='8' class='detail-item'>
+                        <span class="key">{{ $t('crm_o.pay_address') }}：</span>
+                        <span class="value">{{ detail.payAddress }}</span>
                     </a-col>
                 </a-row>
 
@@ -362,6 +366,7 @@ export default {
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.detail = d
+                this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
                 this.auditUserList = res.detail.audit_user_list
                 this.audit = Core.Util.deepCopy(this.$options.data().audit)
                 this.auditUserList.forEach(item => {

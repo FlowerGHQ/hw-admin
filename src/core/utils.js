@@ -131,7 +131,8 @@ const Util = {
      * @param {Number} type 预设时间格式对应的数字
      */
     timeFilter(value, type = 1) {
-        if (value == null) return '';
+        console.log("输出", value);
+        if (value == null || value == '') return '-';
         if (value.toString() === '0') return '-';
         switch (type) {
             case 1:
@@ -623,6 +624,11 @@ const Util = {
         const MAP = Const.AFTERSALES.REFUND_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
+    },
+    // 统一状态管理
+    StatusFilter(val, MAP, to = 'zh',final = 'finally') {        
+        let item = MAP[String(val)] || MAP[final]
+        return item[to] || ''
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 

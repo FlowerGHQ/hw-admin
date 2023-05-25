@@ -273,7 +273,24 @@ export default {
                 id: '',
                 warehouse_id: undefined,
                 fault_entity_uid: undefined,
-            }
+            },
+            statusStatus: [
+                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
+                {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
+                {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
+                {zh: '待结算', en: 'Pending settlement',value: '0', color: 'blue',    key: STATUS.REPAIR_END },
+                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
+                {zh: '分销商审核通过',en: 'Distributor approved', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
+                {zh: '平台方审核通过',en: 'Platform approved', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
+                {zh: '分销商已入库', en: 'Distributor has stocked in warehouse', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
+                // {zh: '平台方审核故障件', en: 'Platform audits the faulty parts', value: '0', color: 'blue',  key: STATUS.FAULT_ENTITY_AUDIT},
+                {zh: '平台方已入库', en: 'Platform has stocked in warehouse', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
+                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
+                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
+                // {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
+                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
+                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
+            ], // 状态
         };
     },
     watch: {
@@ -335,30 +352,7 @@ export default {
             return columns
         },
         statusList() {
-            let columns = [
-                {zh: '全  部',en: 'All', value: '0', color: 'primary', key: '-1'},
-                {zh: '待检测',en: 'Waiting detect', value: '0', color: 'yellow',  key: STATUS.WAIT_DETECTION },
-                {zh: '维修中', en: 'Under repair',value: '0', color: 'blue',    key: STATUS.WAIT_REPAIR },
-                {zh: '待结算', en: 'Pending settlement',value: '0', color: 'blue',    key: STATUS.REPAIR_END },
-                {zh: '已结算待审核',en: 'Settled accounts and awaiting audit', value: '0', color: 'orange',  key: 65 },
-                {zh: '分销商审核通过',en: 'Distributor approved', value: '0', color: 'purple',  key: STATUS.DISTRIBUTOR_AUDIT_SUCCESS },
-                {zh: '平台方审核通过',en: 'Platform approved', value: '0', color: 'purple',  key: STATUS.AUDIT_SUCCESS },
-                {zh: '分销商已入库', en: 'Distributor has stocked in warehouse', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE},
-                {zh: '平台方审核故障件', en: 'Platform audits the faulty parts', value: '0', color: 'blue',  key: STATUS.FAULT_ENTITY_AUDIT},
-                {zh: '平台方已入库', en: 'Platform has stocked in warehouse', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE},
-                {zh: '已完成',en: 'Finished settle accounts', value: '0', color: 'blue',  key: STATUS.FINISH },
-                {zh: '工单审核未通过', en: 'Failed audit',value: '0', color: 'red',  key: STATUS.AUDIT_FAIL },
-                {zh: '故障件审核未通过', en: 'Failed parts audit failed', value: '0', color: 'red',  key: STATUS.FAULT_ENTITY_AUDIT_FAIL },
-                // {zh: '入库完成', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },
-                {zh: '已取消',en: 'Cancelled', value: '0', color: 'gray',  key: STATUS.CLOSE },
-            ]
-           /* if (this.$auth('ADMIN')) {
-                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.SAVE_TO_INVOICE },)
-            }
-            if (this.$auth('DISTRIBUTOR')) {
-                columns.splice(7, 0, {zh: '已入库', value: '0', color: 'green',  key: STATUS.DISTRIBUTOR_WAREHOUSE },)
-            }*/
-            return columns
+            return this.statusStatus
         }
 
     },
@@ -514,18 +508,18 @@ export default {
                 console.log("getStatusStat res:", res)
                 let total = 0
 
-                this.statusList.forEach(statusItem => {
+                this.statusStatus.forEach(statusItem => {
                     res.status_list.forEach(item => {
-                        if ( statusItem.key == item.status) {
+                        if (statusItem.key == item.status) {
                             statusItem.value = item.amount
                         }
                     })
-                })
+                })                
 
                 res.status_list.forEach(item => {
                     total += item.amount
                 })
-                this.statusList[0].value = total
+                this.statusStatus[0].value = total
             }).catch(err => {
                 console.log('getStatusStat err:', err)
             }).finally(() => {
@@ -551,7 +545,10 @@ export default {
             for (const key in form) {
                 form[key] = form[key] || ''
             }
-            let exportUrl = Core.Api.Export.repairExport(form)
+            let exportUrl = Core.Api.Export.repairExport({
+                ...form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
