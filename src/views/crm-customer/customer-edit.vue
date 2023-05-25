@@ -282,7 +282,7 @@
                 <div class="key">{{ $t("crm_c_p.buy_type") }}：</div>
                 <div class="value">
                 <a-select
-                    v-model:value="form.buy_type"
+                    v-model:value="userPortraitForm.buy_type"
                     :placeholder="$t('def.input')"
                 >
                     <a-select-option
@@ -299,7 +299,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.rental_demand") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.rental_demand">
+                <a-radio-group v-model:value="userPortraitForm.rental_demand">
                     <a-radio v-for="item in RENTAL_DEMAND_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -312,7 +312,7 @@
                 <div class="key">{{ $t("crm_c_p.city") }}：</div>
                 <div class="value">
                 <a-input
-                    v-model:value="form.city"
+                    v-model:value="userPortraitForm.city"
                     :placeholder="$t('def.input')"
                 />
                 </div>
@@ -323,7 +323,7 @@
                 <div class="key">{{ $t("crm_c_p.travel_range") }}：</div>
                 <div class="value">
                 <a-select
-                    v-model:value="form.travel_range"
+                    v-model:value="userPortraitForm.travel_range"
                     :placeholder="$t('def.input')"
                 >
                     <a-select-option
@@ -341,7 +341,7 @@
                 <div class="key">{{ $t("crm_c_p.other_brand_model") }}：</div>
                 <div class="value">
                 <a-input
-                    v-model:value="form.other_brand_model"
+                    v-model:value="userPortraitForm.other_brand_model"
                     :placeholder="$t('def.input')"
                 />
                 </div>
@@ -352,7 +352,7 @@
                 <div class="key">{{ $t("crm_c_p.park_and_charging_pile") }}：</div>
                 <div class="value">
                 <a-input
-                    v-model:value="form.park_and_charging_pile"
+                    v-model:value="userPortraitForm.park_and_charging_pile"
                     :placeholder="$t('def.input')"
                 />
                 </div>
@@ -363,7 +363,7 @@
                 <div class="key">{{ $t("crm_c_p.family_member") }}：</div>
                 <div class="value">
                 <a-input
-                    v-model:value="form.family_member"
+                    v-model:value="userPortraitForm.family_member"
                     :placeholder="$t('def.input')"
                 />
                 </div>
@@ -373,7 +373,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.green_car_owner") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.green_car_owner">
+                <a-radio-group v-model:value="userPortraitForm.green_car_owner">
                     <a-radio v-for="item in GREEN_CAR_OWNER_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -385,7 +385,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.driver_license") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.driver_license">
+                <a-radio-group v-model:value="userPortraitForm.driver_license">
                     <a-radio v-for="item in DRIVER_LICENSE_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -397,7 +397,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.ride_exp") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.ride_exp">
+                <a-radio-group v-model:value="userPortraitForm.ride_exp">
                     <a-radio v-for="item in RIDE_EXP_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -409,7 +409,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.moto_exp") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.moto_exp">
+                <a-radio-group v-model:value="userPortraitForm.moto_exp">
                     <a-radio v-for="item in MOTO_EXP_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -421,7 +421,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.moto_tour_intention") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.moto_tour_intention">
+                <a-radio-group v-model:value="userPortraitForm.moto_tour_intention">
                     <a-radio
                     v-for="item in MOTO_TOUR_INTENTION_MAP"
                     :value="item.key"
@@ -436,7 +436,7 @@
             <div class="form-item">
                 <div class="key">{{ $t("crm_c_p.pay_attention_to") }}：</div>
                 <div class="value">
-                <a-radio-group v-model:value="form.pay_attention_to">
+                <a-radio-group v-model:value="userPortraitForm.pay_attention_to">
                     <a-radio v-for="item in PAY_ATTENTION_TO_MAP" :value="item.key">
                     {{ lang === "zh" ? item.zh : item.en }}
                     </a-radio>
@@ -449,7 +449,7 @@
                 <div class="key">{{ $t("crm_c_p.green_energy_understand") }}：</div>
                 <div class="value">
                 <a-select
-                    v-model:value="form.green_energy_understand"
+                    v-model:value="userPortraitForm.green_energy_understand"
                     :placeholder="$t('def.input')"
                 >
                     <a-select-option
@@ -469,7 +469,7 @@
                 </div>
                 <div class="value">
                 <a-select
-                    v-model:value="form.electric_two_wheeler_understand"
+                    v-model:value="userPortraitForm.electric_two_wheeler_understand"
                     :placeholder="$t('def.input')"
                 >
                     <a-select-option
@@ -597,17 +597,18 @@ export default {
                 phone_country_code: '',
                 email:'',
                 purchase_intent:'',
-                
+            },
+            userPortraitForm: {
                 // 用户画像
-                customer_portrait_id: undefined,
+                customer_id: undefined,
                 buy_type: undefined,
                 rental_demand: undefined,
-                country: undefined,
-                province: undefined,
-                city: undefined,
-                country_en: undefined,
-                province_en: undefined,
-                city_en: undefined,
+                // country: undefined,
+                // province: undefined,
+                // city: undefined,
+                // country_en: undefined,
+                // province_en: undefined,
+                // city_en: undefined,
                 travel_range: undefined,
                 other_brand_model: undefined,
                 park_and_charging_pile: undefined,
@@ -698,10 +699,11 @@ export default {
         // console.log('111',phoneCountryCode);
         this.phoneCountryCodeList = phoneCountryCode
         this.form.id = Number(this.$route.query.id) || 0
+        this.userPortraitForm.customer_id = Number(this.$route.query.id) || 0
         if (this.form.id) {
             this.getCustomerDetail();
+            this.getPortraitDetail();
             this.getLabelList()
-
         } else {
             this.form.status = Number(this.$route.query.status) || 0
         }
@@ -747,6 +749,24 @@ export default {
 
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        getPortraitDetail() {
+            this.loading = true;
+            Core.Api.CRMCustomerPortrait.detailCustomerId({
+                customer_id: this.userPortraitForm.customer_id
+            }).then(res => {
+                this.userPortraitForm = res.detail
+                console.log('getPortraitDetail res', res);
+                for (const key in this.userPortraitForm) {
+                    if(this.userPortraitForm[key] === 0) {
+                        this.userPortraitForm[key] = ''
+                    }
+                }
+            }).catch(err => {
+                console.log('getPortraitDetail err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -799,6 +819,15 @@ export default {
             //     }
             //     console.log('area1234556',area)
             // }
+            let userPortraitForm = Core.Util.deepCopy(this.userPortraitForm)
+            Core.Api.CRMCustomerPortrait.save({
+                ...userPortraitForm,
+                ...areaContinent,
+            }).then( res =>{
+                console.log('CRMCustomerPortrait res', res);
+            }).catch(err => {
+                console.log('CRMCustomerPortrait err:', err)
+            })
             Core.Api.CRMCustomer.save({
                 ...form,
                 ...areaContinent,
