@@ -281,7 +281,7 @@ const messages = {
             name: '名称',
             repair_content: '工单内容',
             repair_classify: '工单分类',
-            category: '类别',
+            category: '维修类别',
             urgency: '紧急程度',
             warranty: '工单帐类',
             enter_name: '请输入工单名称(最多输入50个字符)',

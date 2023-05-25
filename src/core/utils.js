@@ -490,7 +490,7 @@ const Util = {
         return value[to] || '-'
     },
     repairTypeFilter(val, to = 'key') {
-        const MAP = Const.REPAIR.TYPE_MAP
+        const MAP = Const.REPAIR.DEVICE_LIST_OBJ
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
@@ -515,8 +515,8 @@ const Util = {
         return value[to] || '-'
     },
 
-	deviceTypeFilter(val, to = 'zh') {
-		const MAP = Const.REPAIR.DEVICE_LIST
+	deviceTypeFilter(val, to = 'zh') {        
+		const MAP = Const.REPAIR.DEVICE_LIST_OBJ
 		let value = MAP[val + ''] || {}
 		return value[to] || '-'
 	},

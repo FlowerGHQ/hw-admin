@@ -243,6 +243,10 @@ let Const = {
             { zh: '整车', en: 'finished automobile', value: 1 },
             { zh: '零部件', en: 'components and parts', value: 2 },
         ],
+        DEVICE_LIST_OBJ: {
+            1: { zh: '整车', en: 'finished automobile', value: 1 },
+            2: { zh: '零部件', en: 'components and parts', value: 2 },
+        },
         DEVICE_MAP: {
             1: '整车',
             2: '零部件',
@@ -317,6 +321,8 @@ let Const = {
         METHOD_MAP: {
             '1' : { zh: '维修', en: 'Repair'},
             '2' : { zh: '更换', en: 'Replace'},
+            '3' : { zh: '开箱损', en: 'unpacking damage'},
+            '4' : { zh: '电池维修', en: 'battery'},
         },
         // 优先级
         PRIORITY_LIST: [
