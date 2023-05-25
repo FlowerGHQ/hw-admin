@@ -515,7 +515,7 @@ const Util = {
         return value[to] || '-'
     },
 
-	deviceTypeFilter(val, to = 'zh') {        
+	deviceTypeFilter(val, to = 'zh') {
 		const MAP = Const.REPAIR.DEVICE_LIST_OBJ
 		let value = MAP[val + ''] || {}
 		return value[to] || '-'

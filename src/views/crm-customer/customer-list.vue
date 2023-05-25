@@ -619,7 +619,6 @@ export default {
         });
     },
     getTableDataSorter(paginate, sort, filter) {
-      console.log('getTableDataSorter filter:', filter)
       this.orderByFields = {};
       switch (filter.order) {
         case "ascend":
