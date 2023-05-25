@@ -108,6 +108,30 @@ const routes = [
         },
         children: [
             {
+                path: 'purchase-order-list',
+                name: 'AdminPurchaseOrderListAll',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '订单列表',
+                    title_en: 'Order List',
+                    search_type: PURCHASE_SEARCH_TYPE.ALL,
+                    roles: [LOGIN_TYPE.ADMIN],
+	                auth: ["purchase-order.list"],
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'AdminPurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '供货订单',
+                    title_en: 'Supply order',
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
+                    roles: [LOGIN_TYPE.ADMIN],
+	                auth: ["purchase-order.list"],
+                }
+            },
+            {
                 path: 'distributor-list',
                 name: 'DistributorList',
                 component: () => import('@/views/distributor/distributor-list.vue'),
@@ -244,30 +268,6 @@ const routes = [
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.STORE],
 	                auth: ["store.detail"],
-                }
-            },
-            {
-                path: 'purchase-order-list',
-                name: 'AdminPurchaseOrderListAll',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '订单列表',
-                    title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["purchase-order.list"],
-                }
-            },
-            {
-                path: 'purchase-order-children',
-                name: 'AdminPurchaseOrderListChildren',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '供货订单',
-                    title_en: 'Supply order',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
-                    roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["purchase-order.list"],
                 }
             },
             {

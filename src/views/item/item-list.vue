@@ -72,17 +72,29 @@
                 :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange" :row-selection="rowSelection"
                      :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
+                    <!-- 名称 -->
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
                             <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
-                            <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
-                                <div class="info">
-                                    <a-button type="link" @click="routerChange('detail', record)">
-                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
-                                    </a-button>
-                                    <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.attr_list)}}</p>
-                                </div>
-                            </a-tooltip>
+                            <!-- :title='$Util.itemSpecFilter(record.attr_list)' -->
+                            <div class="info">
+                                <a-button type="link" @click="routerChange('detail', record)">
+                                    <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
+                                </a-button>
+                                <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
+                                    {{$Util.itemSpecFilter(record.attr_list)}}
+                                </div>                                                                      
+                                <!-- 来源 -->
+                                <div 
+                                    v-if="SOURCE_TYPE[record.source_type].value == 'ERP'"
+                                    class="source-erp" 
+                                    :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record.sync_time) || '-' )"
+                                >
+                                    <span>
+                                        {{ SOURCE_TYPE[record.source_type].value }}
+                                    </span>                        
+                                </div>                                    
+                            </div>
                         </div>
                     </template>
                     <template v-if="column.key === 'type'">
@@ -121,18 +133,7 @@
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
-                    </template>
-                    <!-- 来源 -->
-                    <template v-if="column.key === 'source_type'">
-                        <div class="source_eos" :class="{source_erp: SOURCE_TYPE[text].value == 'ERP'}">                        
-                            <span>
-                                {{$t('i.source_type')}}:
-                            </span>
-                            <span>
-                                {{ SOURCE_TYPE[text].value }}
-                            </span>                        
-                        </div>
-                    </template>
+                    </template>        
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
@@ -191,6 +192,7 @@ import TimeSearch from '@/components/common/TimeSearch.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
 import { Time } from '@antv/scale';
 const ITEM = Core.Const.ITEM
+
 export default {
     name: 'ItemList',
     components: {
@@ -257,8 +259,7 @@ export default {
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
-                { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
-                { title: this.$t('i.source_type'), dataIndex: 'source_type', key: 'source_type' }, // 来源
+                { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },                
                 { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'}, // 工时
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
@@ -289,7 +290,12 @@ export default {
                 case 'detail':  // 商品详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
+                        query: { 
+                            id: item.default_item_id || item.id, 
+                            set_id: item.set_id,
+                            source_type: item.source_type,
+                            sync_time: item.sync_time
+                        }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -519,33 +525,29 @@ export default {
         }
     }
     .table-container{
-        .info{
+        .info{            
+            display: inline-flex;
+            flex-direction: column;            
+            
             .sub-info{
                 width: 20em;
                 overflow: hidden; /*超出长度的文字隐藏*/
-
                 text-overflow:ellipsis;/*文字隐藏以后添加省略号*/
-
                 white-space: nowrap; /*强制不换行*/
+            }
+            .source-erp{                
+                width: 36px;
+                height: 18px;
+                line-height: 18px;
+                text-align: center;                    
+                background-color: #ffebea;
+                color: #F92E25;
+                border-radius: 30px;
+                font-size: 12px;     
+                cursor: pointer;  
+                margin-top: 5px;         
             }
         }
     }
-}
-
-.source_eos{
-    display: inline;
-    padding: 5px 5px;    
-    background-color: #326eee;
-    color: #fff;
-    border-radius: 15px;
-    font-size: 14px;
-}
-.source_erp{
-    display: inline;
-    padding: 5px 5px;        
-    background-color: #e34532;
-    color: #fff;
-    border-radius: 15px;
-    font-size: 14px;
 }
 </style>
