@@ -48,7 +48,7 @@
                 <div class="info-item">
                     <div class="key">{{ $t('r.item_name') }}</div>
                     <div class="value">
-                        <a-button type="link" @click="routerChange()" style="height: 1em;" v-if="itemDetail.id">
+                        <a-button type="link" @click="routerChange(itemDetail.id)" style="height: 1em;" v-if="itemDetail.id">
                             {{itemDetail.name || '-'}}
                         </a-button>
                         <template v-else>-</template>
@@ -124,7 +124,7 @@ export default {
     },
     methods: {
         routerChange() {
-            let routeUrl = routeUrl = this.$router.resolve({
+            let routeUrl = this.$router.resolve({
                 path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
                 query: { id: this.itemDetail.id }
             })
