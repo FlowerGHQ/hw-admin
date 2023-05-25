@@ -84,9 +84,9 @@
                                 <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
                                     {{$Util.itemSpecFilter(record.attr_list)}}
                                 </div>                                                                      
-                                <!-- 来源 -->
+                                <!-- 来源 -->                                
                                 <div 
-                                    v-if="SOURCE_TYPE[record.source_type].value == 'ERP'"
+                                    v-if="SOURCE_TYPE[record.source_type]?.value == 'ERP'"
                                     class="source-erp" 
                                     :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record.sync_time) || '-' )"
                                 >

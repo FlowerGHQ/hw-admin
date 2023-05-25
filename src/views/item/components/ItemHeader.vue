@@ -7,13 +7,13 @@
                 <span>                
                     {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
                 </span>
-                <span v-if="SOURCE_TYPE[$route.query.source_type].value == 'ERP'" class="source-erp">
+                <span v-if="SOURCE_TYPE[$route.query.source_type]?.value == 'ERP'" class="source-erp">
                     {{ SOURCE_TYPE[$route.query.source_type].value }}
                 </span>
             </div>
             <div class="model">
                 <span>{{ $t('i.number') }}：{{detail.model}}</span>
-                <span v-if="SOURCE_TYPE[$route.query.source_type].value == 'ERP'" style="margin-left: 25px;">
+                <span v-if="SOURCE_TYPE[$route.query.source_type]?.value == 'ERP'" style="margin-left: 25px;">
                     {{ $t("i.synchronization_time") }}：{{ $Util.timeFilter($route.query.sync_time) || "-" }}
                 </span>
             </div>

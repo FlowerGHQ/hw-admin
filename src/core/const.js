@@ -582,6 +582,11 @@ let Const = {
         SOURCE_TYPE:{
             '1': {id:1, value:'EOS'},
             '2': {id:2, value:'ERP'}
+        },
+        // 仓库来源判断
+        SOURCE_STOCK_TYPE:{
+            '1': {id:2, value:'ERP'},
+            '2': {id:1, value:'EOS'},
         }
     },
 	ITEM_ACCESSORY: {
