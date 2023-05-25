@@ -89,19 +89,6 @@
                     <div class="key">{{ $t('r.remark_a') }}</div>
                     <div class="value">{{ detail.remark }}</div>
                 </div>
-
-                <!-- <div class="info-item">
-                    <div class="key">计划时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
-                </div>
-                <div class="info-item" v-if="detail.audit_message != ''">
-                    <div class="key">未通过原因</div>
-                    <div class="value">{{ detail.audit_message || '-' }}</div>
-                </div>-->
             </div>
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>

@@ -88,12 +88,9 @@
                             </a-tooltip>
                         </div>
                     </template>
-
+                    <!-- 工单类型 -->
                     <template v-if="column.dataIndex === 'device_type'">
-                        {{$Util.deviceTypeFilter(text, $i18n.locale)}}
-                    </template>
-                    <template v-if="column.dataIndex === 'type'">
-                        {{$Util.repairTypeFilter(text, $i18n.locale)}}
+                        {{$Util.deviceTypeFilter(text, $i18n.locale)}}                    
                     </template>
                     <template v-if="column.dataIndex === 'priority'">
                         <div class="status status-bg status-tag smell" :class="$Util.repairPriorityFilter(text,'color')">

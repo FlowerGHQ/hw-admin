@@ -12,9 +12,10 @@
                     <div class="key">{{ $t('r.repair_name') }}</div>
                     <div class="value">{{detail.name || '-'}}</div>
                 </div>
+                <!-- 工单类别 -->
                 <div class="info-item">
-                    <div class="key">{{ $t('n.type') }}</div>
-                    <div class="value">{{$Util.repairTypeFilter(detail.type, $i18n.locale)}}</div>
+                    <div class="key">{{ $t('r.device_classify') }}</div>
+                    <div class="value">{{$Util.repairTypeFilter(detail.device_type, $i18n.locale)}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.remark') }}</div>
