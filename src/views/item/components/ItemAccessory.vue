@@ -11,6 +11,7 @@
                             btnType='primary' 
                             :btnText="$t('i.select_item')" 
                             btnClass="item-select-btn"
+                            :radioMode="true"
                             @select="handleSelectItem" 
                         />          
                         <!-- 确认更改 -->
@@ -192,18 +193,25 @@ export default {
         },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)            
+            // 多选操作
+            // let params = {
+            //     item_id: this.detail.id,
+            //     target_list: [],
+            // }
+            
+            // ids.forEach(el => {
+            //     params.target_list.push({
+            //         target_id: el,
+            //         target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM
+            //     })
+            // })
 
+            // 单选操作
             let params = {
-                item_id: this.detail.id,
-                target_list: [],
+                item_id: this.detail.id, 
+                target_id: ids[0],
+                target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM
             }
-
-            ids.forEach(el => {
-                params.target_list.push({
-                    target_id: el,
-                    target_type: Core.Const.ITEM_ACCESSORY.TARGET_TYPE_MAP.ITEM
-                })
-            })
 
             Core.Api.ItemAccessory.save(params).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'));
