@@ -7,14 +7,14 @@
                 <span>                
                     {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
                 </span>
-                <span v-if="SOURCE_TYPE[$route.query.source_type]?.value == 'ERP'" class="source-erp">
-                    {{ SOURCE_TYPE[$route.query.source_type].value }}
+                <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
+                    {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
                 </span>
             </div>
             <div class="model">
                 <span>{{ $t('i.number') }}：{{detail.model}}</span>
-                <span v-if="SOURCE_TYPE[$route.query.source_type]?.value == 'ERP'" style="margin-left: 25px;">
-                    {{ $t("i.synchronization_time") }}：{{ $Util.timeFilter($route.query.sync_time) || "-" }}
+                <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" style="margin-left: 25px;">
+                    {{ $t("i.synchronization_time") }}：{{ $Util.timeFilter(detail.sync_time) || "-" }}
                 </span>
             </div>
             <div v-if="showSpec" class="spec" ><span>{{ $t('i.spec') }}：</span>{{attr_str}}</div>
@@ -45,7 +45,7 @@ export default {
     },
     data() {
         return {
-            SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
+            SOURCE_STOCK_TYPE: ITEM.SOURCE_STOCK_TYPE, // 来源类型
         }
     },
     computed: {

@@ -292,9 +292,7 @@ export default {
                         path: "/item/item-detail",
                         query: { 
                             id: item.default_item_id || item.id, 
-                            set_id: item.set_id,
-                            source_type: item.source_type,
-                            sync_time: item.sync_time
+                            set_id: item.set_id                         
                         }
                     })
                     window.open(routeUrl.href, '_blank')

@@ -130,7 +130,7 @@
                     <template v-if="record.target_type === 2 && record.material">
                         <template v-if="column.type === 'name'">
                             <a-tooltip placement="top" :title="lang === 'zh'? record.material.name || '-': record.material.name_en || '-' ">
-                                <a-button type="link" @click="routerChange('material', record)">
+                                <a-button type="link" @click="routerChange('material', record.material)">
                                     {{ lang === 'zh'? record.material.name: record.material.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
@@ -247,10 +247,10 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
-                case 'item':
+                case 'item':                                    
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: {id: item.id}
+                        query: {id: item?.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -264,7 +264,7 @@ export default {
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
-                        query: {id: item.id}
+                        query: {id: item?.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;

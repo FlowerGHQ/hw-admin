@@ -42,7 +42,7 @@ switch (window.location.hostname) {
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.105:8889'
+        // URL_POINT = 'http://10.0.0.109:8889'
         // URL_POINT = 'http://10.0.0.213:8889'
         break;
 }
