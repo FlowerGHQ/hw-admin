@@ -441,7 +441,7 @@ export default {
             // if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
-            if (form.id) {
+            if (form.id && form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 if (!form.customer_id) {
                     return this.$message.warning(this.$t('def.enter'))
                     return 0
