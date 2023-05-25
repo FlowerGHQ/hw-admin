@@ -570,8 +570,8 @@ let Const = {
         },
         // 商品列表-来源类型
         SOURCE_TYPE:{
-            1: 'EOS',
-            2: 'ERP',
+            '1': {id:1, value:'EOS'},
+            '2': {id:2, value:'ERP'}
         }
     },
 	ITEM_ACCESSORY: {

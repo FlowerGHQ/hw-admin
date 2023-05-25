@@ -4,14 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
-                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
-                <!-- <a-button class="download" type="primary" @click="showModal"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
-                <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
-                    <a-radio-group v-model:value="value">
-                        <a-radio-button value="1">Hangzhou</a-radio-button>
-                        <a-radio-button value="2">Shanghai</a-radio-button>
-                    </a-radio-group>
-                </a-modal> -->
+                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>                
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
@@ -34,11 +27,21 @@
                         <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
+                <!-- 类型 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
                             <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <!-- 来源 -->
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">{{ $t('i.source_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.source_type" :placeholder="$t('def.select')">
+                            <a-select-option v-for="(val, index) in SOURCE_TYPE" :key="index" :value="val.id">{{ val.value  }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -121,12 +124,12 @@
                     </template>
                     <!-- 来源 -->
                     <template v-if="column.key === 'source_type'">
-                        <div class="source_eos" :class="{source_erp: SOURCE_TYPE[text] == 'ERP'}">                        
+                        <div class="source_eos" :class="{source_erp: SOURCE_TYPE[text].value == 'ERP'}">                        
                             <span>
                                 {{$t('i.source_type')}}:
                             </span>
                             <span>
-                                {{ SOURCE_TYPE[text] }}
+                                {{ SOURCE_TYPE[text].value }}
                             </span>                        
                         </div>
                     </template>
@@ -213,6 +216,7 @@ export default {
                 end_time: '',
                 type: undefined,
                 status: 0,
+                source_type: undefined
             },
             itemTypeMap: ITEM.TYPE_MAP,
             SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
@@ -340,7 +344,7 @@ export default {
                 flag_spread = 1
             }
             Core.Api.Item.list({
-                ...this.searchForm,
+                ...Core.Util.searchFilter(this.searchForm),
                 flag_spread,
                 page: this.currPage,
                 page_size: this.pageSize
