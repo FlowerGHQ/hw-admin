@@ -165,7 +165,7 @@
                         </div>
                         <div class="info-item">
                             <div class="key">{{ $t('p.transshipment')}}</div>
-                                        <div class="value">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
+                            <div class="value" style="margin-left: 10px;">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
                         </div>
                     </div>
                 </a-col>             
@@ -1436,10 +1436,16 @@ export default {
             display: flex;
             margin-bottom: 10px;
             .key{
-                width: 80px;
+                width: 100px;
                 font-size: 14px;
                 line-height: 22px;
                 color: rgba(0, 0, 0, 0.4);
+            }
+            .value{
+                margin-left: 10px;
+                width: 140px;
+                font-size: 14px;
+                line-height: 22px;
             }
         }
     }
