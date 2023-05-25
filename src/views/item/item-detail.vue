@@ -9,8 +9,7 @@
                     </a-button>
                     <a-button type="primary" ghost @click="routerChange('edit')"><i
                         class="icon i_edit"/>{{ $t('def.edit') }}
-                    </a-button>
-                    <!-- <a-button danger @click="handleDelete()"><i class="icon i_delete"/>删除</a-button> -->
+                    </a-button>                    
                     <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
                         <template v-if="detail.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}
                         </template>
@@ -52,7 +51,7 @@
                                 <div class="key">{{ $t('d.sales_area') }}</div>
                                 <div class="value">{{ detail.sales_area_name }}</div>
                             </div>
-                        </a-col>
+                        </a-col>                        
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
                             <div class="info-item">
                                 <div class="key">{{ $t('i.cost_price') }}</div>
@@ -139,10 +138,7 @@
                                         <a-button type="link" @click="routerChange('detail-indep', record)"><i
                                             class="icon i_detail"/>{{ $t('def.detail') }}
                                         </a-button>
-                                    </template>
-                                    <!-- <template v-if="index > 0">
-                                        <a-button type="link" @click="handleDelete(record.id)" class="danger"><i class="icon i_delete"/>删除</a-button>
-                                    </template>-->
+                                    </template>                    
                                 </template>
                             </template>
                         </a-table>

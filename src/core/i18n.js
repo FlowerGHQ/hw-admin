@@ -281,7 +281,7 @@ const messages = {
             name: '名称',
             repair_content: '工单内容',
             repair_classify: '工单分类',
-            category: '维修类别',
+            category: '工单类别',
             urgency: '紧急程度',
             warranty: '工单帐类',
             enter_name: '请输入工单名称(最多输入50个字符)',
@@ -596,6 +596,7 @@ const messages = {
 			clear_shop_car: '清空购物车',
             confirm_changes: '确认更改',
             source_type:'来源',
+            synchronization_time:'同步时间'
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -2881,6 +2882,7 @@ const messages = {
             clear_shop_car: 'Clear shop car',
             confirm_changes:'Confirm Changes',
             source_type:'source',
+            synchronization_time:'Synchronization Time'
         },
         fe:{
             feedback:'Feedback',

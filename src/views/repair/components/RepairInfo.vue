@@ -27,18 +27,22 @@
                     <div class="key">{{ $t('r.repair_way') }}</div>
                     <div class="value">{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</div>
                 </div>
+                <!-- 维修类别 -->
                 <div class="info-item">
                     <div class="key">{{ $t('r.repair_category') }}</div>
-                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method, $i18n.locale) || '-'}}</div>
+                    <div class="value">
+                        <span v-if="detail?.device_type == DEVICE_MAP.vehicle">
+                            {{$Util.repairMethodFilter(detail?.repair_method, $i18n.locale) || '-'}}
+                        </span>
+                        <span v-else>
+                            {{ '-' }}
+                        </span>
+                    </div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.description') }}</div>
                     <div class="value">{{detail.desc || '-'}}</div>
                 </div>
-<!--                <div class="info-item">
-                    <div class="key">维修信息</div>
-                    <div class="value">{{detail.repair_message || '-'}}</div>
-                </div>-->
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
                 <div class="info-item">
@@ -88,6 +92,9 @@
 
 <script>
 import Core from '../../../core';
+
+
+const REPAIR = Core.Const.REPAIR
 export default {
     name: 'RepairInfo',
     components: {},
@@ -108,6 +115,8 @@ export default {
             activeKey: 'RepairInfo',
 
             itemDetail: {},
+
+            DEVICE_MAP: REPAIR.DEVICE_MAP // 整车还是零配件
         };
     },
     watch: {

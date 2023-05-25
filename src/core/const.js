@@ -252,8 +252,8 @@ let Const = {
             2: { zh: '零部件', en: 'components and parts', value: 2 },
         },
         DEVICE_MAP: {
-            1: '整车',
-            2: '零部件',
+            vehicle: 1, // 整车
+            Parts: 2,  // 零部件
         },
 	    DEVICE: {
 		    FINISHED_AUTOMOBILE: 1,

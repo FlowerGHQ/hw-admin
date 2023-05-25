@@ -356,11 +356,8 @@ export default {
                     area.county_en = ""
                 }
             }
-            console.log('handleSubmit area:', area)
-            console.log('handleSubmit areaMap:', this.areaMap)
-            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
-            // form.finish_time = form.finish_time ? dayjs(form.finish_time).unix() : 0
-            console.log('handleSubmit form:', form)
+            
+            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0            
 
             let checkRes = this.checkFormInput(form);
             if (!checkRes) {
