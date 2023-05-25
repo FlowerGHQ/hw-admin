@@ -368,6 +368,12 @@ export default {
             }
             let apiName = form.id ? 'update' : 'create'
             console.log('area27249534',area)
+            if(form.device_type !== REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+                form.customer_address = ''
+                form.customer_email = ''
+                form.customer_name = ''
+                form.customer_phone = ''
+            }
             await Core.Api.Repair[apiName]({
                 ...form,
                 ...area,
@@ -376,6 +382,7 @@ export default {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('detail', res.detail)
             }).catch(err => {
+                console.log();
                 console.log('handleSubmit err:', err)
             })
         },
@@ -474,9 +481,9 @@ export default {
         handleCustomerSelect(id) {
             let item = this.customerList.find(i => i.id === id)
             console.log('customerList',this.customerList)
-            this.form.customer_name = item.name
-            this.form.customer_phone = item.phone
-            this.form.customer_email = item.email
+            this.form.customer_name = item.name ? item.name : ''
+            this.form.customer_phone = item.phone ? item.phone : ''
+            this.form.customer_email = item.email ? item.email : ''
             this.area.country = item.country
             this.area.country_en = item.country_en
             this.area.province = item.province
@@ -484,7 +491,7 @@ export default {
             this.area.city = item.city
             this.area.city_en = item.city_en
             this.area.county = item.county
-            this.form.customer_address = item.address
+            this.form.customer_address = item.address ? item.address : ''
             // this.defAddr = [item.country,item.province, item.city, item.county]
             console.log('this.addr', this.defAddr)
 
