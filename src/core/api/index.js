@@ -247,10 +247,12 @@ const apiList = {
         bindItemComponent: ['PostJson', 'item/bind-item-component'], // 绑定零部件
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
 	    saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
+	    ItemAccessoryModify: ['PostJson', 'item-accessory/modify'], // 商品详情上传配件修改数量
 
     },
 	ItemAccessory: { // 商品
-		save: ['PostJson', 'item-accessory/save'],
+		save: ['PostJson', 'item-accessory/save'],   // 当选
+		// save: ['PostJson', 'item-accessory/save-list'],  // 多选
 		list: ['PostJson', 'item-accessory/list'],
 		delete: ['PostJson', 'item-accessory/delete'],
 	},

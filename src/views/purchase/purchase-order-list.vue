@@ -246,7 +246,7 @@ export default {
                 let search_type = newRoute.meta ? newRoute.meta.search_type : 0
                 this.search_type = search_type
                 this.handleSearchReset(false);
-                this.getStatusStat();
+                this.getStatusStat();                
             }
         },
 
@@ -286,8 +286,8 @@ export default {
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)
 
                 columns.push(
-                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
-                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
+                    // { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
+                    // { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
                 )
             }
             columns.push(
@@ -335,7 +335,7 @@ export default {
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);
-        }, 5*1000);
+        }, 20000);
 
     },
     beforeUnmount(){
@@ -504,7 +504,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.purchaseExport({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
@@ -567,7 +568,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.exportSalesStatement({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
@@ -581,7 +583,8 @@ export default {
             }
             let exportUrl = Core.Api.Export.exportSalesQuantityStatistics({
                 ...form,
-                search_type: this.search_type
+                search_type: this.search_type,
+                language: this.$i18n.locale === 'en' ? 1 : 0
             })
             console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')

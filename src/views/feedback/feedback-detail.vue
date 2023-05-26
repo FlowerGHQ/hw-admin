@@ -628,6 +628,7 @@ export default {
         handleExportIn() {
             const params = {
                 id: this.detail.id, // 订单i
+                language: this.$i18n.locale === 'en' ? 1 : 0
             };
 
             this.exportDisabled = true;

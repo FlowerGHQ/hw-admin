@@ -4,14 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{ $t('i.item_list') }} </div>
             <div class="btns-area">
-                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
-                <!-- <a-button class="download" type="primary" @click="showModal"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>
-                <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
-                    <a-radio-group v-model:value="value">
-                        <a-radio-button value="1">Hangzhou</a-radio-button>
-                        <a-radio-button value="2">Shanghai</a-radio-button>
-                    </a-radio-group>
-                </a-modal> -->
+                <a-button class="download" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('i.export') }}</a-button>                
                 <a-upload name="file" class="file-uploader"
                     :file-list="upload.fileList" :action="upload.action"
                     :show-upload-list='false'
@@ -34,11 +27,21 @@
                         <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                     </div>
                 </a-col>
+                <!-- 类型 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('n.type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')">
                             <a-select-option v-for="(val, key) in itemTypeMap" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
+                        </a-select>
+                    </div>
+                </a-col>
+                <!-- 来源 -->
+                <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                    <div class="key">{{ $t('i.source_type') }}:</div>
+                    <div class="value">
+                        <a-select v-model:value="searchForm.source_type" :placeholder="$t('def.select')">
+                            <a-select-option v-for="(val, index) in SOURCE_TYPE" :key="index" :value="val.id">{{ val.value  }}</a-select-option>
                         </a-select>
                     </div>
                 </a-col>
@@ -69,17 +72,29 @@
                 :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange" :row-selection="rowSelection"
                      :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
                 <template #bodyCell="{ column, text , record }">
+                    <!-- 名称 -->
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
                             <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
-                            <a-tooltip placement="top" :title='$Util.itemSpecFilter(record.attr_list)' destroy-tooltip-on-hide>
-                                <div class="info">
-                                    <a-button type="link" @click="routerChange('detail', record)">
-                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
-                                    </a-button>
-                                    <p class="sub-info" v-if="record.attr_list && record.attr_list.length">{{$Util.itemSpecFilter(record.attr_list)}}</p>
-                                </div>
-                            </a-tooltip>
+                            <!-- :title='$Util.itemSpecFilter(record.attr_list)' -->
+                            <div class="info">
+                                <a-button type="link" @click="routerChange('detail', record)">
+                                    <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
+                                </a-button>
+                                <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
+                                    {{$Util.itemSpecFilter(record.attr_list)}}
+                                </div>                                                                      
+                                <!-- 来源 -->                                
+                                <div 
+                                    v-if="SOURCE_TYPE[record.source_type]?.value == 'ERP'"
+                                    class="source-erp" 
+                                    :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record.sync_time) || '-' )"
+                                >
+                                    <span>
+                                        {{ SOURCE_TYPE[record.source_type].value }}
+                                    </span>                        
+                                </div>                                    
+                            </div>
                         </div>
                     </template>
                     <template v-if="column.key === 'type'">
@@ -118,7 +133,7 @@
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
-                    </template>
+                    </template>        
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
@@ -175,7 +190,9 @@ import Core from '../../core';
 
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+import { Time } from '@antv/scale';
 const ITEM = Core.Const.ITEM
+
 export default {
     name: 'ItemList',
     components: {
@@ -200,8 +217,11 @@ export default {
                 begin_time: '',
                 end_time: '',
                 type: undefined,
+                status: 0,
+                source_type: undefined
             },
             itemTypeMap: ITEM.TYPE_MAP,
+            SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
             // 表格
             tableData: [],
             expandedRowKeys: [],
@@ -222,11 +242,6 @@ export default {
                     type: 'xlsx',
                 },
             },
-
-            // // 对话框显示
-            // visible: false,
-            // // 导出方式
-            // value: '',
         };
     },
     watch: {},
@@ -236,18 +251,16 @@ export default {
             filteredInfo = filteredInfo || {};
             let tableColumns = [
                 { title: this.$t('n.name'), dataIndex: 'name', key: 'detail' },
-                { title: this.$t('i.status'), dataIndex: 'status',
-                    filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [1] },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },                
+                { title: this.$t('i.status'), dataIndex: 'status', filters: this.$Util.tableFilterFormat(ITEM.STATUS_LIST, this.$i18n.locale), filterMultiple: false, filteredValue: filteredInfo.status || [0] },
                 { title: this.$t('n.type'), dataIndex: ['type'], key: 'type' },
                 { title: this.$t('n.flag_entity'), dataIndex: 'flag_entity', key: 'flag_entity' },
                 { title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
                 { title: this.$t('i.number'), dataIndex: 'model', key: 'item' },
-                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
-                // { title: this.$t('i.cost_price'), dataIndex: 'original_price' ,key: 'money'},
                 { title: 'FOB(EUR)', dataIndex: 'fob_eur', key: 'fob_money', unit: '€'},
                 { title: 'FOB(USD)', dataIndex: 'fob_usd', key: 'fob_money', unit: '$'},
-                { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },
-                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'},
+                { title: this.$t('i.hours'), dataIndex: 'man_hour', key: 'man_hour' },                
+                { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time'}, // 工时
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 180 }
             ]
             return tableColumns
@@ -277,7 +290,10 @@ export default {
                 case 'detail':  // 商品详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
+                        query: { 
+                            id: item.default_item_id || item.id, 
+                            set_id: item.set_id                         
+                        }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -332,7 +348,7 @@ export default {
                 flag_spread = 1
             }
             Core.Api.Item.list({
-                ...this.searchForm,
+                ...Core.Util.searchFilter(this.searchForm),
                 flag_spread,
                 page: this.currPage,
                 page_size: this.pageSize
@@ -462,14 +478,16 @@ export default {
         },
         handleRepairExport() { // 订单导出
             this.exportDisabled = true;
-
             let form = Core.Util.deepCopy(this.searchForm);
 
             for (const key in form) {
                 form[key] = form[key] || ''
             }
             // console.log('form',form)
-            let exportUrl = Core.Api.Export.exportItemPrice(form)
+            let exportUrl = Core.Api.Export.exportItemPrice({
+                ...form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_self')
             this.exportDisabled = false;
@@ -505,21 +523,29 @@ export default {
         }
     }
     .table-container{
-        .info{
+        .info{            
+            display: inline-flex;
+            flex-direction: column;            
+            
             .sub-info{
                 width: 20em;
                 overflow: hidden; /*超出长度的文字隐藏*/
-
                 text-overflow:ellipsis;/*文字隐藏以后添加省略号*/
-
                 white-space: nowrap; /*强制不换行*/
+            }
+            .source-erp{                
+                width: 36px;
+                height: 18px;
+                line-height: 18px;
+                text-align: center;                    
+                background-color: #ffebea;
+                color: #F92E25;
+                border-radius: 30px;
+                font-size: 12px;     
+                cursor: pointer;  
+                margin-top: 5px;         
             }
         }
     }
 }
-// .ant-modal {
-//     // top: 50% !important;
-//     // transform: translateY(-50%);
-//     color: red;
-// }
 </style>

@@ -108,6 +108,30 @@ const routes = [
         },
         children: [
             {
+                path: 'purchase-order-list',
+                name: 'AdminPurchaseOrderListAll',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '订单列表',
+                    title_en: 'Order List',
+                    search_type: PURCHASE_SEARCH_TYPE.ALL,
+                    roles: [LOGIN_TYPE.ADMIN],
+	                auth: ["purchase-order.list"],
+                }
+            },
+            {
+                path: 'purchase-order-children',
+                name: 'AdminPurchaseOrderListChildren',
+                component: () => import('@/views/purchase/purchase-order-list.vue'),
+                meta: {
+                    title: '供货订单',
+                    title_en: 'Supply order',
+                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
+                    roles: [LOGIN_TYPE.ADMIN],
+	                auth: ["purchase-order.list"],
+                }
+            },
+            {
                 path: 'distributor-list',
                 name: 'DistributorList',
                 component: () => import('@/views/distributor/distributor-list.vue'),
@@ -244,30 +268,6 @@ const routes = [
                     title_en: 'Details',
                     roles: [LOGIN_TYPE.STORE],
 	                auth: ["store.detail"],
-                }
-            },
-            {
-                path: 'purchase-order-list',
-                name: 'AdminPurchaseOrderListAll',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '订单列表',
-                    title_en: 'Order List',
-                    search_type: PURCHASE_SEARCH_TYPE.ALL,
-                    roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["purchase-order.list"],
-                }
-            },
-            {
-                path: 'purchase-order-children',
-                name: 'AdminPurchaseOrderListChildren',
-                component: () => import('@/views/purchase/purchase-order-list.vue'),
-                meta: {
-                    title: '供货订单',
-                    title_en: 'Supply order',
-                    search_type: PURCHASE_SEARCH_TYPE.CHILDREN,
-                    roles: [LOGIN_TYPE.ADMIN],
-	                auth: ["purchase-order.list"],
                 }
             },
             {
@@ -425,6 +425,17 @@ const routes = [
                 path: 'purchase-order-detail',
                 name: 'PurchaseOrderDetail',
                 component: () => import('@/views/purchase/purchase-order-detail.vue'),
+                meta: {
+                    hidden: true,
+                    roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+                    title: '采购订单详情',
+	                auth: ["purchase-order.detail"],
+                }
+            },
+            {
+                path: 'purchase-order-detail2',
+                name: 'PurchaseOrderDetail2',
+                component: () => import('@/views/purchase/old/purchase-order-detail.vue'),
                 meta: {
                     hidden: true,
                     roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -1310,12 +1321,12 @@ const routes = [
                 path: 'warehouse-detail',
                 name: 'WarehouseDetail',
                 component: () => import('@/views/warehouse/warehouse-detail.vue'),
+                // component: () => import('@/views/warehouse/warehouse-detail-copy.vue'),
                 meta: {
                     hidden: true,
                     title: '仓库详情',
                     parent: '/warehouse/warehouse-list',
                     auth: ['warehouse.detail'],
-
                 }
             },
 	        {

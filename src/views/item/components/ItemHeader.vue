@@ -3,10 +3,22 @@
     <div class="panel-content">
         <img :src="$Util.imageFilter(detail.logo ? detail.logo : '', 2)" />
         <div class="info-block">
-            <p class="name">{{$i18n.locale =='zh' ? detail.name: detail.name_en}}</p>
-            <p class="model">{{ $t('i.number') }}：{{detail.model}}</p>
-            <p class="spec" v-if="showSpec"><span>{{ $t('i.spec') }}：</span>{{attr_str}}</p>
-            <p class="price">{{ $t('i.cost_price') }}：{{$Util.priceUnitFilter(detail.original_price_currency)}}{{$Util.countFilter(detail.original_price)}}</p>
+            <div class="name">
+                <span>                
+                    {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
+                </span>
+                <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
+                    {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
+                </span>
+            </div>
+            <div class="model">
+                <span>{{ $t('i.number') }}：{{detail.model}}</span>
+                <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" style="margin-left: 25px;">
+                    {{ $t("i.synchronization_time") }}：{{ $Util.timeFilter(detail.sync_time) || "-" }}
+                </span>
+            </div>
+            <div v-if="showSpec" class="spec" ><span>{{ $t('i.spec') }}：</span>{{attr_str}}</div>
+            <div class="price">{{ $t('i.cost_price') }}：{{$Util.priceUnitFilter(detail.original_price_currency)}}{{$Util.countFilter(detail.original_price)}}</div>
         </div>
         <div class="status status-bg status-tag" :class="detail.status === 0 ? 'green' : 'red'">
             {{detail.status === 0 ? $t('i.active') : $t('i.inactive') }}
@@ -17,6 +29,7 @@
 
 <script>
 import Core from '../../../core';
+const ITEM = Core.Const.ITEM
 
 export default {
     components: {},
@@ -31,7 +44,9 @@ export default {
         },
     },
     data() {
-        return {}
+        return {
+            SOURCE_STOCK_TYPE: ITEM.SOURCE_STOCK_TYPE, // 来源类型
+        }
     },
     computed: {
         attr_str() {
@@ -88,8 +103,7 @@ export default {
                 margin-top: 6px;
                 height: 26px;
                 background: #F9F9F9;
-                border-radius: 2px;
-                padding: 0 10px;
+                border-radius: 2px;                
                 span {
                     color: #111111;
                 }
@@ -97,7 +111,20 @@ export default {
             .price {
                 font-weight: 500;
                 color: #F4752E;
-                margin-top: 20px;
+                margin-top: 6px;
+            }
+
+            .source-erp{           
+                display: inline-block;     
+                width: 36px;
+                height: 18px;
+                line-height: 18px;
+                text-align: center;
+                background-color: #ffebea;
+                color: #F92E25;
+                border-radius: 30px;
+                font-size: 12px; 
+                margin-left: 5px;               
             }
         }
     }

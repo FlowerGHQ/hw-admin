@@ -116,7 +116,7 @@
                     <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
                 </div>
             </div>
-            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+            <!-- <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('i.on_board_battery') }}</div>
                 <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
                     <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
@@ -130,14 +130,14 @@
                         </ItemSelect>
                         <a-button type="link" @click="handleDeleteItem"><i class="icon i_delete"/>删除</a-button>
                 </div>
-            </div>
-            <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+            </div> -->
+            <!-- <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <div class="key">{{ $t('i.on_board_battery') }}{{ $t('i.amount') }}</div>
                 <div class="value input-number" v-if="form.accessory_code !== '' && form.accessory_code !== undefined">
                     <a-input-number v-model:value="form.accessory_amount" :min="0" :precision="0" placeholder="0"/>
                     <span>{{ $t('i.pcs2') }}</span>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="form-block"> <!-- 图片信息 -->
@@ -669,7 +669,7 @@ export default {
             // this.form.type = JSON.stringify(res.type)
             this.form.original_price = Core.Util.countFilter(res.original_price)
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
-            this.form.drawing_code = res.drawing_code
+            // this.form.drawing_code = res.drawing_code
             this.form.color = res.color
             this.form.color_en = res.color_en
             this.form.net_weight = res.net_weight

@@ -110,7 +110,7 @@ export default {
             }
             Core.Api.Favorite.add({
                 item_id: this.data.id,
-                price: this.data.purchase_price
+                price: this.data.fob_eur
             }).then(res => {
                 console.log('hanldeAddToFavorite res:', res)
                 this.$message.success(this.$t('i.favorite_success'))
@@ -242,7 +242,9 @@ export default {
                     .icon {
                         background-color: #D9D9D9;
                         width: 26px;
-                        .fcc()
+                        .fcc();
+                        cursor: pointer;
+
                     }
                     .num {
                         flex: 1;
@@ -260,6 +262,8 @@ export default {
                         padding: 0;
                         width: 100%;
                         height: 100%;
+                    cursor: pointer;
+
                         .fcc()
                     }
                 }
@@ -271,6 +275,7 @@ export default {
                 font-weight: 400;
                 .star-text {
                     margin-left: 6px;
+                    cursor: pointer;
                 }
             }
         }

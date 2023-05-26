@@ -99,6 +99,7 @@
                             </a-button>
                         </a-tooltip>
                     </template>
+                    <!-- 商品 -->
                     <template v-if="record.target_type === 1 && record.item">
                         <template v-if="column.type === 'name'">
                             <a-tooltip placement="top" :title="lang === 'zh'? record.item.name || '-': record.item.name_en || '-' ">
@@ -106,6 +107,14 @@
                                     {{ lang === 'zh'? record.item.name || '-': record.item.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
+
+                            <div 
+                                v-if="record?.item && SOURCE_STOCK_TYPE[record?.item?.sync_type]?.value == 'ERP'"
+                                class="source-erp" 
+                                :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record?.item?.sync_time) || '-' )"
+                            >
+                                {{ SOURCE_STOCK_TYPE[record?.item?.sync_type]?.value }}
+                            </div>
                         </template>
                         <template v-if="column.type === 'target'">
                             {{ record.item[column.key] }}
@@ -117,13 +126,22 @@
                             {{ $Util.itemSpecFilter(record.item.attr_list, lang) }}
                         </template>
                     </template>
+                    <!-- 物料 -->
                     <template v-if="record.target_type === 2 && record.material">
                         <template v-if="column.type === 'name'">
                             <a-tooltip placement="top" :title="lang === 'zh'? record.material.name || '-': record.material.name_en || '-' ">
-                                <a-button type="link" @click="routerChange('material', record)">
+                                <a-button type="link" @click="routerChange('material', record.material)">
                                     {{ lang === 'zh'? record.material.name: record.material.name_en || '-' }}
                                 </a-button>
                             </a-tooltip>
+                  
+                            <div 
+                                v-if="record?.material && SOURCE_STOCK_TYPE[record?.material?.sync_type]?.value == 'ERP'" 
+                                class="source-erp"
+                                :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record?.material?.sync_time) || '-' )"
+                            >
+                                {{ SOURCE_STOCK_TYPE[record?.material?.sync_type]?.value }}
+                            </div>
                         </template>
                         <template v-if="column.type === 'target'">
                             {{ record.material[column.key] || '-' }}
@@ -172,6 +190,7 @@
 
 <script>
 import Core from '../../core'
+const ITEM = Core.Const.ITEM
 
 export default {
     components: {},
@@ -197,14 +216,15 @@ export default {
                 warehouse_id: undefined,
             },
             tableData: [],
+            SOURCE_STOCK_TYPE: ITEM.SOURCE_STOCK_TYPE, // 来源类型
         }
     },
     watch: {},
     computed: {
         tableColumns() {
             let columns = [
-                {title: this.$t('n.type'), dataIndex: 'target_type'},
                 {title: this.$t('n.name'), type: 'name'},
+                {title: this.$t('n.type'), dataIndex: 'target_type'},
                 {title: this.$t('wa.codes'), type: 'target', key: 'code'},
                 {title: this.$t('wa.related'), dataIndex: ['warehouse', 'name'], key: 'warehouse'},
                 {title: this.$t('wa.quantity'), dataIndex: 'stock', key: 'count'},
@@ -227,10 +247,10 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
-                case 'item':
+                case 'item':                                    
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: {id: item.id}
+                        query: {id: item?.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -244,7 +264,7 @@ export default {
                 case 'material':
                     routeUrl = this.$router.resolve({
                         path: "/production/material-detail",
-                        query: {id: item.id}
+                        query: {id: item?.id}
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -309,7 +329,10 @@ export default {
             for (const key in form) {
                 form[key] = form[key] || 0
             }
-            let exportUrl = Core.Api.Export.exportStock(form)
+            let exportUrl = Core.Api.Export.exportStock({
+                ...form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
             console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
@@ -323,6 +346,20 @@ export default {
 #StockList {
     .ant-btn.ant-btn-primary {
         margin-left: 15px;
+    }
+
+    .source-erp{           
+        display: inline-block;     
+        width: 36px;
+        height: 18px;
+        line-height: 18px;
+        text-align: center;
+        background-color: #ffebea;
+        color: #F92E25;
+        border-radius: 30px;
+        font-size: 12px; 
+        margin-left: 5px;   
+        cursor: pointer;            
     }
 }
 </style>

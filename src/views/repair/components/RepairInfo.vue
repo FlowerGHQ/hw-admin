@@ -12,9 +12,10 @@
                     <div class="key">{{ $t('r.repair_name') }}</div>
                     <div class="value">{{detail.name || '-'}}</div>
                 </div>
+                <!-- 工单类别 -->
                 <div class="info-item">
-                    <div class="key">{{ $t('n.type') }}</div>
-                    <div class="value">{{$Util.repairTypeFilter(detail.type, $i18n.locale)}}</div>
+                    <div class="key">{{ $t('r.device_classify') }}</div>
+                    <div class="value">{{$Util.repairTypeFilter(detail.device_type, $i18n.locale)}}</div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.remark') }}</div>
@@ -26,18 +27,22 @@
                     <div class="key">{{ $t('r.repair_way') }}</div>
                     <div class="value">{{$Util.repairChannelFilter(detail.channel, $i18n.locale)}}</div>
                 </div>
+                <!-- 维修类别 -->
                 <div class="info-item">
                     <div class="key">{{ $t('r.repair_category') }}</div>
-                    <div class="value">{{$Util.repairMethodFilter(detail.repair_method, $i18n.locale) || '-'}}</div>
+                    <div class="value">
+                        <span v-if="detail?.device_type == DEVICE_MAP.vehicle">
+                            {{$Util.repairMethodFilter(detail?.repair_method, $i18n.locale) || '-'}}
+                        </span>
+                        <span v-else>
+                            {{ '-' }}
+                        </span>
+                    </div>
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.description') }}</div>
                     <div class="value">{{detail.desc || '-'}}</div>
                 </div>
-<!--                <div class="info-item">
-                    <div class="key">维修信息</div>
-                    <div class="value">{{detail.repair_message || '-'}}</div>
-                </div>-->
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
                 <div class="info-item">
@@ -47,7 +52,7 @@
                 <div class="info-item">
                     <div class="key">{{ $t('r.item_name') }}</div>
                     <div class="value">
-                        <a-button type="link" @click="routerChange()" style="height: 1em;" v-if="itemDetail.id">
+                        <a-button type="link" @click="routerChange(itemDetail.id)" style="height: 1em;" v-if="itemDetail.id">
                             {{itemDetail.name || '-'}}
                         </a-button>
                         <template v-else>-</template>
@@ -87,6 +92,9 @@
 
 <script>
 import Core from '../../../core';
+
+
+const REPAIR = Core.Const.REPAIR
 export default {
     name: 'RepairInfo',
     components: {},
@@ -107,6 +115,8 @@ export default {
             activeKey: 'RepairInfo',
 
             itemDetail: {},
+
+            DEVICE_MAP: REPAIR.DEVICE_MAP // 整车还是零配件
         };
     },
     watch: {
@@ -123,7 +133,7 @@ export default {
     },
     methods: {
         routerChange() {
-            let routeUrl = routeUrl = this.$router.resolve({
+            let routeUrl = this.$router.resolve({
                 path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
                 query: { id: this.itemDetail.id }
             })

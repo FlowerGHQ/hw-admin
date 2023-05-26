@@ -89,19 +89,6 @@
                     <div class="key">{{ $t('r.remark_a') }}</div>
                     <div class="value">{{ detail.remark }}</div>
                 </div>
-
-                <!-- <div class="info-item">
-                    <div class="key">计划时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.plan_time) || '-' }}</div>
-                </div>
-                <div class="info-item">
-                    <div class="key">实施时间</div>
-                    <div class="value">{{ $Util.timeFilter(detail.finish_time) || '-' }}</div>
-                </div>
-                <div class="info-item" v-if="detail.audit_message != ''">
-                    <div class="key">未通过原因</div>
-                    <div class="value">{{ detail.audit_message || '-' }}</div>
-                </div>-->
             </div>
         </div>
         <MySteps :stepsList='stepsList' :current='currStep' v-if="detail.status != STATUS.CLOSE"/>
@@ -112,7 +99,7 @@
             <AttachmentFile @attachmentEmpty="getAttachmentEmpty" :detail='detail' :target_id='id' :target_type='ATTACHMENT_TARGET_TYPE.REPAIR_ORDER'/>
             <WaybillInfo :id='id' :detail='detail' v-if="hasTransfer" @needDelivery='needDelivery = true' ref="WaybillInfo"/>
             <ActionLog   :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.REPAIR_ORDER"/>
-            <FeedbackLog   :id='id' :detail='detail' :sourceType="Core.Const.FEEDBACK.SOURCE_TYPE.REPAIR_ORDER"/>
+            <!-- <FeedbackLog   :id='id' :detail='detail' :sourceType="Core.Const.FEEDBACK.SOURCE_TYPE.REPAIR_ORDER"/> -->
 
         </div>
     </div>

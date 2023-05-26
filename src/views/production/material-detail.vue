@@ -12,7 +12,13 @@
                 <div class="desc-title">
                     <div class="title-area">
                         <img :src="$Util.imageFilter(detail.image, 3)" />
-                        <span class="title">{{  lang==='zh' ?detail.name : detail.name_en }}</span>
+                        <span class="title">{{ lang==='zh' ?detail.name : detail.name_en }}</span>
+                        <span 
+                            v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" 
+                            class="source-erp"
+                        >
+                            {{ SOURCE_STOCK_TYPE[detail?.sync_type]?.value }}
+                        </span>
                     </div>
                 </div>
                 <a-row class="desc-detail">
@@ -50,10 +56,12 @@
                             <a-tag>{{ item.short_name }}</a-tag>
                         </template>
                     </a-col>
-<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">价格：</span>
-                        <span class="value">{{ detail.price }}</span>
-                    </a-col>-->
+                   <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">{{ $t('i.synchronization_time') }}：</span>
+                        <span class="value">
+                            {{ $Util.timeFilter(detail?.sync_time) || '-' }}
+                        </span>                        
+                    </a-col>
                 </a-row>
             </div>
         </div>
@@ -74,6 +82,8 @@
 import Core from '../../core';
 import StockWarehouseList from './components/StockWarehouseList.vue'
 import MaterialStockRecord from './components/MaterialStockRecord.vue'
+const ITEM = Core.Const.ITEM
+
 export default {
     name: 'MaterialDetail',
     components: {
@@ -89,6 +99,7 @@ export default {
             detail: {}, // 详情
             activeKey: '',
             category_name: '',
+            SOURCE_STOCK_TYPE: ITEM.SOURCE_STOCK_TYPE, // 来源类型
         };
     },
     watch: {},
@@ -160,4 +171,17 @@ export default {
 
 <style lang="less" scoped>
 // #MaterialDetail {}
+
+.source-erp{           
+    display: inline-block;     
+    width: 36px;
+    height: 18px;
+    line-height: 18px;
+    text-align: center;
+    background-color: #ffebea;
+    color: #F92E25;
+    border-radius: 30px;
+    font-size: 12px; 
+    margin-left: 5px;
+}
 </style>

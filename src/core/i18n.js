@@ -281,7 +281,7 @@ const messages = {
             name: '名称',
             repair_content: '工单内容',
             repair_classify: '工单分类',
-            category: '类别',
+            category: '工单类别',
             urgency: '紧急程度',
             warranty: '工单帐类',
             enter_name: '请输入工单名称(最多输入50个字符)',
@@ -594,7 +594,9 @@ const messages = {
 	        home_page_redirect_number: '首页跳转序号',
 	        on_board_battery: '随车电池',
 			clear_shop_car: '清空购物车',
-
+            confirm_changes: '确认更改',
+            source_type:'来源',
+            synchronization_time:'同步时间'
         },
 	    fe:{ // 反馈单
             feedback: '反馈',
@@ -731,6 +733,9 @@ const messages = {
 	        location_detail: '查看库位库存',
 	        open_adjust: '开启调库',
 	        close_adjust: '关闭调库',
+            operation_record:'操作记录',
+            inventory_alarm:'库存告警',
+            inert_material:'呆滞物料',
         },
         inv:{
             file_list:'档案列表',
@@ -916,6 +921,26 @@ const messages = {
             receiver: '接受人',
 	        pay_file_upload: '付款凭证未上传',
 	        create_audit: '订单审核',
+            receipt_message:'预计10-12天工作日',
+            delivery_record: '发货记录',
+	        receiving_record: '收货记录',
+            contract_information: '合同信息',
+            record: '操作记录',
+            Payment_information:'付款信息',
+            delivery_information: '买家信息',
+            consignee_information:'收货人信息',
+            Telephone:'联系电话',
+            consignee:'收货人',
+            pay_amount:'实付金额',            
+            time_payment:'支付时间',
+            buyer:'买家',
+            marker:'备注',
+            total:'共',
+            strip:'条',
+            quotation:'报价',
+            auditText:'最终价格和数量由销售审核后确定',
+            cancel_msg: '该订单已取消',
+            item_msg_err: '已下架商品不支持结算',            
         },
         s: { // 门店
             store_list: '门店列表',
@@ -1453,6 +1478,7 @@ const messages = {
             refunded_amount: '已退款',
 		    info: '订单信息',
             customer_detail: '客户详情',
+            pay_address: '支付地址',
 	    },
 	    crm_oi: {
 			list: '回款单列表',
@@ -2693,6 +2719,7 @@ const messages = {
             select_warehouse: 'Please select the warehouse',
             select_employees: 'Please select employees',
         },
+        // 商品
         i: {
             commodity_management: 'Product management',
             categories: 'Product category',
@@ -2853,6 +2880,9 @@ const messages = {
             home_page_redirect_number: 'Home Redirect',
             on_board_battery: 'Battery',
             clear_shop_car: 'Clear shop car',
+            confirm_changes:'Confirm Changes',
+            source_type:'source',
+            synchronization_time:'Synchronization Time'
         },
         fe:{
             feedback:'Feedback',
@@ -2986,6 +3016,9 @@ const messages = {
             out_item:'Transfer out products',
             warehouse_name: 'Warehouse Name',
 	        location_detail: 'Check the inventory location',
+            operation_record:'operation record',
+            inventory_alarm:'inventory alarm',
+            inert_material:'inert material',
         },
         inv: {
             file_list:'File List',
@@ -3119,6 +3152,7 @@ const messages = {
             upload_payment_voucher: 'Upload payment voucher',
             payment_method:'Payment Method',
             export_purchase:'Export PI',
+            export_product_information:'Export Product Information',
             payment_term:'Collecting method',
             please_select_payment_method:'Please choose a payment method',
             apply_for_after_sales:'Apply for aftersales',
@@ -3168,6 +3202,26 @@ const messages = {
             receiver:'Recipient',
             pay_file_upload:'The payment voucher is not uploaded',
 	        create_audit: 'Order Review',
+            receipt_message:'Expected to be completed in 10-12 days',
+            delivery_record: 'Delivery Record',
+	        receiving_record: 'Receiving Record',
+            contract_information: 'Contract Information',
+            record: 'Record',
+            Payment_information:'Payment Information',
+            delivery_information: 'Delivery Information',
+            consignee_information:'Consignee Information',
+            Telephone:'Telephone',
+            consignee:'consignee',
+            pay_amount:'Pay Amount',            
+            time_payment:'Time Payment',
+            buyer:'Buyer',
+            remark:'remark',
+            total:'total',
+            strip:'strip',
+            quotation:'quotation',
+            auditText:'The final price and quantity shall be determined after sales review',
+            cancel_msg: 'The order has been cancelled',
+            item_msg_err: 'Goods that have been removed from the shelves do not support settlement'
         },
         s: {
             store_list:'Shop list',
@@ -3677,7 +3731,8 @@ const messages = {
 		    audit_list: 'List of Pending Contracts',
 		    income_money: 'Money Received',
 		    refunded_amount: 'Refunded',
-            customer_detail: 'Customer Detail'
+            customer_detail: 'Customer Detail', 
+            pay_address: 'Payment Address'
 	    },
 	    crm_oi: {
 		    list: 'Collection Slip List',
