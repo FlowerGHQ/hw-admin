@@ -1163,7 +1163,9 @@ const Util = {
         let _searchOptions = this.deepCopy(obj)  
         for (let el in _searchOptions) {
             if(!_searchOptions[el]){
-                Reflect.deleteProperty(_searchOptions,el)
+                if(_searchOptions[el] === "" || _searchOptions[el] === null || _searchOptions[el] === undefined){
+                    Reflect.deleteProperty(_searchOptions,el)
+                }
             }
         }  
         return _searchOptions
@@ -1182,8 +1184,20 @@ const Util = {
         });
         // console.log("结果", result);
         return result
-    }
+    },
     /* ======== 判断门店,分销商,零售商重置密码权限判断 end ========== */
+
+    /* ======== 传参数的时候删除自己不需要的字段 ========== */
+    deleteParamsFilter(_options, deleteValue = []){             
+        deleteValue.forEach(el => {
+            if(Reflect.has(_options, el)){
+                Reflect.deleteProperty(_options, el);
+            }
+        });
+    
+       return _options
+    }
+    /* ======== 传参数的时候删除自己不需要的字段 ========== */
 }
 
 export default Util

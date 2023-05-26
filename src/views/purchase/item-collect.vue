@@ -11,9 +11,6 @@
             <i class="icon i_add"/> {{$t('i.bulk_import')}}
         </a-button>
     </a-upload>
-<!--    <a-select v-model:value="currency" class="monetary-select">-->
-<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
-<!--    </a-select>-->
 
     <div class="list-container shop-cart-container">
         <div class="title-area">
@@ -65,9 +62,6 @@
             <div class="settle-item" v-for="item of shopCartList" :key="item.id">
                 <div class="name">
                     {{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}
-<!--                    <div class="spec" v-if='item.item && item.item.attr_list'>-->
-<!--                        {{$Util.itemSpecFilter(item.item.attr_list)}}-->
-<!--                    </div>-->
                 </div>
                 <span class="price">{{item.amount}}{{$t('i.pcs')}}</span>
                 <span class="price">{{currency}} {{item.item ? $Util.countFilter(item.item[priceKey + unitMap[currency].key]) : '-'}}</span>
@@ -76,7 +70,6 @@
 
             <div class="settle-item sum">
                 <p class="name">{{ $t('p.total') }}</p>
-
                 <span class="price">{{currency}} {{sum_price}}</span>
             </div>
             <a-button type="primary" ghost @click="settle('settle')">{{ $t('i.settle') }}</a-button>

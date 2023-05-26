@@ -269,7 +269,7 @@ export default {
                 if (element.children[i].children != null){
                     this.isBomChildren(element.children[i], id);
                 }
-                console.log("element.id",element.children[i].id)
+                // console.log("element.id",element.children[i].id)
                 console.log("id",id)
                 if(element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
