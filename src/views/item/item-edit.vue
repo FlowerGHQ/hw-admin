@@ -53,7 +53,7 @@
             <div class="form-item required" v-if="specific.mode === 1 || indep_flag">
                 <div class="key">{{ $t('i.code') }}</div>
                 <div class="value">
-                    <a-input v-model:value="form.code" :placeholder="$t('def.input')"/>
+                    <a-input v-model:value="form.code" :placeholder="$t('def.input')" :disabled="$route.query?.edit"/>                    
                 </div>
             </div>
             <!-- 商品分类 -->
@@ -81,63 +81,43 @@
                     </a-select>
                 </div>
             </div>
-            <!-- 图面代号 -->
-            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('d.drawing_code') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
+            <template v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <!-- 图面代号 -->
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.drawing_code') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.drawing_code" :placeholder="$t('def.input')"/>
+                    </div>
                 </div>
-            </div>
-            <!-- 颜色 -->
-            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('d.color') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.color" :placeholder="$t('def.input')"/>
+                <!-- 颜色 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.color') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.color" :placeholder="$t('def.input')"/>
+                    </div>
                 </div>
-            </div>
-            <!-- 颜色英文 -->
-            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('d.color_en') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.color_en" :placeholder="$t('def.input')"/>
+                <!-- 颜色英文 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.color_en') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.color_en" :placeholder="$t('def.input')"/>
+                    </div>
                 </div>
-            </div>
-            <!-- 净重 -->
-            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('d.net_weight') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')"/>
+                <!-- 净重 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.net_weight') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')"/>
+                    </div>
                 </div>
-            </div>
-            <!-- 毛重 -->
-            <div class="form-item required" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('d.gross_weight') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
-                </div>
-            </div>
-            <!-- <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('i.on_board_battery') }}</div>
-                <div class="value" v-if="form.accessory_code === '' || form.accessory_code === undefined">{{form.accessory_code}}
-                    <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
-                        <i class="icon i_add"/> {{ $t('i.add') }}
-                    </ItemSelect>
-                </div>
-                <div class="value" v-else>
-                        {{form.accessory_code}} {{form.accessory_name}}
-                        <ItemSelect @select="handleAddItemShow" :radioMode="true" btn-class="select-item-btn" btnType='link'>
-                            <i class="icon i_edit"/> {{ $t('def.edit') }}
-                        </ItemSelect>
-                        <a-button type="link" @click="handleDeleteItem"><i class="icon i_delete"/>删除</a-button>
-                </div>
-            </div> -->
-            <!-- <div class="form-item" v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
-                <div class="key">{{ $t('i.on_board_battery') }}{{ $t('i.amount') }}</div>
-                <div class="value input-number" v-if="form.accessory_code !== '' && form.accessory_code !== undefined">
-                    <a-input-number v-model:value="form.accessory_amount" :min="0" :precision="0" placeholder="0"/>
-                    <span>{{ $t('i.pcs2') }}</span>
-                </div>
-            </div> -->
+                <!-- 毛重 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.gross_weight') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>    
+            </template>   
         </div>
     </div>
     <div class="form-block"> <!-- 图片信息 -->
@@ -359,19 +339,7 @@
                                 </div>
                             </template>
                             <a-button type="link">FOB(USD)</a-button>
-                        </a-popover>
-                        <!-- <a-popover v-model:visible="batchSet.priceVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseBatchSet()}'>
-                            <template #content>
-                                <div class="batch-set-edit-popover">
-                                    <a-input-number v-model:value="batchSet.price" placeholder="请输入建议零售价" @keydown.enter="handleBatchSpec('price')" :min='0' :autofocus='true' :precision="2"/>
-                                    <div class="btns">
-                                        <a-button type="primary" ghost @click="handleCloseBatchSet">取消</a-button>
-                                        <a-button type="primary" @click="handleBatchSpec('price')">确定</a-button>
-                                    </div>
-                                </div>
-                            </template>
-                            <a-button type="link">建议零售价</a-button>
-                        </a-popover> -->
+                        </a-popover>                      
                     </div>
                     <a-button class="spec-add" type="primary" ghost @click="handleAddSpecItem"><i class="icon i_add"/>{{ $t('i.add_specs') }}</a-button>
                 </div>
@@ -393,13 +361,6 @@
                     </a-select>
                 </div>
             </div>
-            <!-- <div class="form-item">
-                <div class="key">建议零售价</div>
-                <div class="value input-number">
-                    <a-input-number v-model:value="form.price" :min="0" :precision="2" placeholder="0.00"/>
-                    <span>€</span>
-                </div>
-            </div> -->
             <div class="form-item required">
                 <div class="key">FOB(EUR)</div>
                 <div class="value input-number">
@@ -429,15 +390,13 @@ import CategoryTreeSelectMultiple from '@/components/popup-btn/CategoryTreeSelec
 import ItemHeader from './components/ItemHeader.vue'
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
-// import VueTinymce from '@jsdawn/vue3-tinymce';
 
 export default {
     name: 'ItemEdit',
     components: {
         CategoryTreeSelectMultiple,
         ItemHeader,
-        ItemSelect,
-        // VueTinymce,
+        ItemSelect,        
     },
     props: {},
     data() {
@@ -573,7 +532,7 @@ export default {
     created() {
         this.form.id = Number(this.$route.query.id) || 0
         this.set_id = Number(this.$route.query.set_id) || 0
-        this.indep_flag = Number(this.$route.query.indep_flag) || 0
+        this.indep_flag = Number(this.$route.query.indep_flag) || 0   // 商品详情里面的编辑按钮参数
         if (this.form.id) {
             this.getItemDetail();
         }
@@ -657,23 +616,21 @@ export default {
             for (const key in this.form) {
                 this.form[key] = res[key]
             }
-            console.log('setFormData config:', config)
+
             this.form.config = config
-            this.form.type = res.type
-            console.log('type',res.type)
+            this.form.type = res.type            
             this.form.price = Core.Util.countFilter(res.price)
             this.form.fob_eur = Core.Util.countFilter(res.fob_eur)
             this.form.fob_usd = Core.Util.countFilter(res.fob_usd)
             this.form.man_hour = Core.Util.countFilter(res.man_hour)
-            this.form.category_ids = this.detail.category_list ? this.detail.category_list.map(i => i.category_id): []
-            // this.form.type = JSON.stringify(res.type)
+            this.form.category_ids = this.detail.category_list ? this.detail.category_list.map(i => i.category_id): []            
             this.form.original_price = Core.Util.countFilter(res.original_price)
-            this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []
-            // this.form.drawing_code = res.drawing_code
+            this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map(i => i.id): []            
             this.form.color = res.color
             this.form.color_en = res.color_en
             this.form.net_weight = res.net_weight
             this.form.gross_weight = res.gross_weight
+
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
                 this.upload.coverList = logos.map((item, index) => ({
@@ -736,10 +693,7 @@ export default {
                 let data = itemList.map(item => {
                     let params = {}
                     for (const attr of list) {
-                        let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        console.log(item)
-                        // console.log(element.value)
-                        // params[attr.key] = element.value
+                        let element = item.attr_list.find(i => i.attr_def_id === attr.id)                                          
                         if (element != undefined){
                             params[attr.key] = {
                                 value:element.value,
@@ -792,23 +746,34 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let specData = Core.Util.deepCopy(this.specific.data)
             let attrDef = Core.Util.deepCopy(this.specific.list)
-            console.log('form:', form)
+            // 校验检查            
             if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
+
+            // 封面上传
             if (this.upload.coverList.length) {
                 let coverList = this.upload.coverList.map(item => {
                     return item.short_path || item.response.data.filename
                 })
                 form.logo = coverList[0]
             }
+
+            // 详情页面上传
             if (this.upload.detailList.length) {
                 let detailList = this.upload.detailList.map(item => {
                     return item.short_path || item.response.data.filename
                 })
                 form.imgs = detailList.join(',')
             }
+
+            if(form.type == 1){
+                // 如果是整车的时候传数据可以删除不必要的
+                Core.Util.deleteParamsFilter(form,["color","color_en","net_weight","gross_weight"])
+            }
+
             form.sales_area_ids = form.sales_area_ids.join(',')
             form.man_hour = Math.round(form.man_hour * 100)
             form.config = JSON.stringify(form.config)
+
             let apiName = 'save'
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 apiName = this.indep_flag ? 'update' : 'save'
@@ -851,9 +816,9 @@ export default {
                         }),
                     }
                 })
-            }
-            console.log('handleSubmit form:', form)
-            Core.Api.Item[apiName](form).then(() => {
+            }            
+                                   
+            Core.Api.Item[apiName](Core.Util.searchFilter(form)).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
             }).catch(err => {
@@ -898,8 +863,9 @@ export default {
             if (!form.sales_area_ids.length) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.sales_area')})`)
             }
-            // 图面代号
+            // 1 整车 2 ...其他的
             if(form.type == 1){
+                // 图面代号
                 if (!form.drawing_code) {
                     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
                 }
@@ -955,8 +921,7 @@ export default {
                 }
                 if (Core.Util.hasSameItem(attrs)) {
                     return this.$message.warning(this.$t('i.spec_a'))
-                }
-                console.log('attrs:', attrs)
+                }                
             }
             if (this.configTemp.length) {
                 for (let i = 0; i < this.configTemp.length; i++) {

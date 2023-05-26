@@ -16,7 +16,7 @@
                     </a-button>
                 </a-upload>
                 <a-button type="primary" @click="handleSalesAreaByIdsShow()"><i class="icon i_edit"/> {{ $t('ar.set_sales') }} </a-button>
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
+                <a-button type="primary" @click="routerChange('add')"><i class="icon i_add"/>{{ $t('i.new') }}</a-button>
             </div>
         </div>
         <div class="search-container">
@@ -300,10 +300,20 @@ export default {
                 case 'edit':  // 商品编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
+                        query: { 
+                            id: item.default_item_id || item.id, 
+                            set_id: item.set_id,
+                            edit:true
+                        }
                     })
                     window.open(routeUrl.href, '_self')
-                    break;
+                break;
+                case 'add':  // 商品新增
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-edit",                  
+                    })
+                    window.open(routeUrl.href, '_self')
+                break;
             }
         },
         pageChange(curr) {  // 页码改变

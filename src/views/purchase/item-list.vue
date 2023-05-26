@@ -2,13 +2,7 @@
 <div id="PurchaseItemList">
     <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
         <template v-if="!bomShow">
-            <div class="item-content" v-if="tableData.length">
-                <!-- <div class="switch-btn">
-                    <a-radio-group v-model:value="pageType">
-                        <a-radio-button value="agora"><i class="icon i_agora"/></a-radio-button>
-                        <a-radio-button value="list"><i class="icon i_list"/></a-radio-button>
-                    </a-radio-group>
-                </div> -->
+            <div class="item-content" v-if="tableData.length">             
                 <div class="list-container">
                     <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
                         <div class="cover">
@@ -16,15 +10,14 @@
                         </div>
                         <p  class="sub" v-if="item.type !== Core.Const.ITEM.TYPE.PRODUCT">{{item.code || '-'}}</p>
                         <p  class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{'' || ' '}} &ensp;</p>
-
-                        <!--                        <p class="sub">{{item.code}}</p>-->
+                        
                         <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
                         <p class="desc">&nbsp;</p>
                         <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
-                            €{{$Util.countFilter(item[priceKey + 'eur'])}}
+                            {{$Util.priceUnitFilter(currency)}}{{$Util.countFilter(item[priceKey + 'eur'])}}
                         </p>
                         <p class="price" v-else>
-                            ${{$Util.countFilter(item[priceKey + 'usd'])}}
+                            {{$Util.priceUnitFilter(currency)}}{{$Util.countFilter(item[priceKey + 'usd'])}}
                         </p>
                         <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
                     </div>
@@ -62,6 +55,10 @@ import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import { ExportOutlined } from '@ant-design/icons-vue';
 import ExploredContentPay from './components/ExploredContentPay.vue';
 const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
+const ITEM = Core.Const.ITEM
+
+
+
 export default {
     name: 'PurchaseItemList',
     components: {
@@ -73,20 +70,8 @@ export default {
     props: {
         category_id: {type: Number},
         name: {name: String},
-
-
     },
-    watch: {
-        // category_id(n,o){
-        //    console.log("category_id",n)
-        //     this.searchForm.category_id = n
-        //     this.getTableData();
-        //     this.isBomShow(this.searchForm.category_id);
-        // },
-        // name(n,o){
-        //     console.log("category_id",n)
-        //     this.searchForm.name = n
-        // },
+    watch: {     
         category_id: {
             immediate: true,
             handler(n) {
@@ -148,11 +133,12 @@ export default {
             bomShow: false,
             menaKey: 1,
             currency: '',
+            MONETARY_TYPE_MAP: ITEM.MONETARY_TYPE_MAP, // 单位
         };
     },
     computed: {
         priceKey() {
-            return this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            return this.$auth('DISTRIBUTOR') ? 'fob_' : 'price_'
         },
         lang() {
             return this.$store.state.lang
@@ -255,7 +241,7 @@ export default {
                 if (element.children[i].children != null){
                     this.isBomChildren(element.children[i], id);
                 }
-                console.log("element.id",element.children[i].id)
+                // console.log("element.id",element.children[i].id)
                 console.log("id",id)
                 if(element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
