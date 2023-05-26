@@ -332,10 +332,7 @@ export default {
         async handleSubmit() {
             let form = Core.Util.deepCopy(this.form)
             let area = Core.Util.deepCopy(this.area)
-
-
             if (!Core.Util.isEmptyObj(this.areaMap)) {
-                console.log('areaMap2222',this.areaMap)
                 area.country = this.areaMap.country.name
                 area.country_en = this.areaMap.country.name_en
                 area.city = this.areaMap.city.name
@@ -346,7 +343,6 @@ export default {
                 } else {
                     area.province = ""
                     area.province_en = ""
-
                 }
                 if (this.areaMap.county) {
                     area.county = this.areaMap.county.name
@@ -364,7 +360,6 @@ export default {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
-            console.log('area27249534',area)
             if(form.device_type !== REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 form.customer_address = ''
                 form.customer_email = ''
@@ -403,72 +398,70 @@ export default {
         checkFormInput(form) {
 
             if (!form.type) {
+                console.log('form.type');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.priority) {
+                console.log('form.priority');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.service_type) {
+                console.log('form.service_type');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
              if (!form.mileage && form.mileage !== 0 && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                this.$message.warning(this.$t('def.enter'))
-                return 0
+                console.log('form.mileage');
+                return this.$message.warning(this.$t('def.enter'))
             }
             if (!form.name) {
+                console.log('form.name');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.desc) {
+                console.log('form.desc');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.channel && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+                console.log('form.channel');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.repair_method && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+                console.log('form.repair_method');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             if (!form.vehicle_no && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+                console.log('form.vehicle_no');
                 return this.$message.warning(this.$t('def.enter'))
-                return 0
             }
             // if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
             if (form.id && form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 if (!form.customer_id) {
+                    console.log('form.customer_id');
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
                 if (form.channel == 1 && !form.customer_address) {
+                    console.log('form.customer_address');
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
                 // if (!form.repair_user_id) {
                 //     this.$message.warning('请选择工单负责人')
-                //     return 0
                 // }
                 if (!form.customer_name) {
+                    console.log('form.customer_name');
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
                 if (!form.customer_phone) {
+                    console.log('form.customer_phone');
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
                 if (!form.customer_email) {
+                    console.log('form.customer_email');
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
-                if (!this.area.province && !this.area.county && !this.area.county) {
+                if (!this.areaMap.country && !this.areaMap.city) {
                     return this.$message.warning(this.$t('def.enter'))
-                    return 0
                 }
             }
             return 1
@@ -491,6 +484,7 @@ export default {
             this.form.customer_address = item.address ? item.address : ''
             // this.defAddr = [item.country,item.province, item.city, item.county]
             console.log('this.addr', this.defAddr)
+            console.log('this.area',this.area);
 
         },
         handleTypeChange(){
