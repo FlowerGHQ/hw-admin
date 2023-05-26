@@ -14,7 +14,7 @@
                         <img :src="$Util.imageFilter(detail.image, 3)" />
                         <span class="title">{{ lang==='zh' ?detail.name : detail.name_en }}</span>
                         <span 
-                            v-if="detail?.sync_type" 
+                            v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" 
                             class="source-erp" 
                             :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(detail?.sync_time) || '-' )">
                             {{ SOURCE_STOCK_TYPE[detail?.sync_type]?.value }}
