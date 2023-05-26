@@ -109,7 +109,7 @@
                             </a-tooltip>
 
                             <div 
-                                v-if="record?.item && record?.item?.sync_type" 
+                                v-if="record?.item && SOURCE_STOCK_TYPE[record?.item?.sync_type]?.value == 'ERP'"
                                 class="source-erp" 
                                 :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record?.item?.sync_time) || '-' )"
                             >
@@ -136,7 +136,7 @@
                             </a-tooltip>
                   
                             <div 
-                                v-if="record?.material && record?.material?.sync_type" 
+                                v-if="record?.material && SOURCE_STOCK_TYPE[record?.material?.sync_type]?.value == 'ERP'" 
                                 class="source-erp"
                                 :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(record?.material?.sync_time) || '-' )"
                             >
