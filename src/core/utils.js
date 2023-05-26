@@ -130,8 +130,7 @@ const Util = {
      * @param {*} timestamp 秒时间戳或毫秒时间戳
      * @param {Number} type 预设时间格式对应的数字
      */
-    timeFilter(value, type = 1) {
-        console.log("输出", value);
+    timeFilter(value, type = 1) {        
         if (value == null || value == '') return '-';
         if (value.toString() === '0') return '-';
         switch (type) {
