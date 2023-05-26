@@ -2,10 +2,7 @@
 <div id="PurchaseList">
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('p.list')}}</div>
-            <!-- <div class="btns-area">
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>新增工单</a-button>
-            </div> -->
+            <div class="title-area">{{ $t('p.list')}}</div>  
         </div>
         <div class="tabs-container colorful" v-if="!purchaseMode">
             <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
@@ -105,10 +102,29 @@
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'money'">
+                    <!-- 总价 -->
+                    <template v-if="column.key === 'total_price'">                        
+                        <div v-if="user_type && (record.status === STATUS.WAIT_AUDIT || record.status === STATUS.REVISE_AUDIT)">-</div>
+                        <div v-else>
+                            <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                            <span>                        
+                                {{$Util.countFilter(text)}}
+                            </span>
+                        </div>
+                    </template>
+                    <!-- 运费 -->
+                    <template v-if="column.key === 'freight'">
                         <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
-                        {{$Util.countFilter(text)}}
-<!--                        {{$Util.priceUnitFilter(record.currency)}} {{$Util.countFilter(text)}}-->
+                        <span>                        
+                            {{$Util.countFilter(text)}}
+                        </span>
+                    </template>
+                    <!-- 已支付金额 -->
+                    <template v-if="column.key === 'amount_paid'">
+                        <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                        <span>                        
+                            {{$Util.countFilter(text)}}
+                        </span>
                     </template>
                     <template v-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
@@ -179,6 +195,8 @@ const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
 const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST
+const STATUS = Core.Const.PURCHASE.STATUS;
+
 import { message } from 'ant-design-vue';
 
 
@@ -194,6 +212,7 @@ export default {
         return {
             LOGIN_TYPE,
             SEARCH_TYPE,
+            STATUS,
             PAYMENT_STATUS_MAP,
             PAYMENT_TYPE_LIST,
             PAY_TIME_LIST,
@@ -209,14 +228,6 @@ export default {
             // 搜索
             purchaseMode: '',
             search_type: 0,
-           /* statusList: [
-                {zh: '全  部', en: 'All', value: '0', color: 'primary',  key: '0'},
-                {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
-                {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
-                {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
-                {zh: '交易完成', en: 'Transaction completed', value: '0', color: 'green',  key: '400'},
-                {zh: '交易取消', en: 'Canceled', value: '0', color: 'grey',  key: '-100'},
-            ],*/
             agentList: [],
             storeList: [],
             distributorList: [],
@@ -249,16 +260,6 @@ export default {
                 this.getStatusStat();                
             }
         },
-
-       /* 'searchForm.distributor_id': function () {
-            this.getAgentListAll();
-            this.searchForm.agent_id = undefined
-            this.searchForm.store_id = undefined
-        },
-        'searchForm.agent_id': function () {
-            this.getStoreListAll()
-            this.searchForm.store_id = undefined
-        },*/
     },
     computed: {
         tableColumns() {
@@ -266,42 +267,23 @@ export default {
                 { title: this.$t('p.number'), dataIndex: 'sn', },
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
-                { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },
-
-                // { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },
-                // { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },
+                { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },                                
                 { title: this.$t('p.order_status'), dataIndex: 'status' },
                 { title: this.$t('n.order_time'), dataIndex: 'create_time', key: 'time' },
-                { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },
-                // { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },
+                { title: this.$t('p.payment_status'), dataIndex: 'payment_status' },                
                 { title: this.$t('p.payment_time'), dataIndex: 'pay_time', key: 'time' },
                 { title: this.$t('p.complete_time'), dataIndex: 'close_time', key: 'time' },
 
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.splice(4, 0, { title: this.$t('n.institution'), dataIndex: ['create_org', 'name'], key: 'item' },)
-                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'money' },)
-                // columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'price', key: 'money' },)
-                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'money' },)
-                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'money' },)
-
-                columns.push(
-                    // { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
-                    // { title: this.$t('i.total_price'),dataIndex: 'price', key: 'money'},
-                )
+                columns.splice(5, 0, { title: this.$t('p.total_price'), dataIndex: 'total_price', key: 'total_price' },)                
+                columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' },)
+                columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' },)
             }
             columns.push(
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             )
-     /*       if ((this.$auth('AGENT', 'DISTRIBUTOR') && this.search_type != SEARCH_TYPE.SELF) ||  (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
-                columns.splice(2, 0, {title: '所属门店', dataIndex: 'store_name', key: 'item'})
-            }
-            if ((this.$auth( 'DISTRIBUTOR') && this.search_type !== SEARCH_TYPE.SELF) || (this.$auth('ADMIN') && this.search_type == SEARCH_TYPE.ALL)) {
-                columns.splice(2, 0, {title: '所属零售商', dataIndex: 'agent_name', key: 'item'})
-            }
-            if (this.$auth('ADMIN')) {
-                columns.splice(2, 0, {title: '所属分销商', dataIndex: 'distributor_name', key: 'item'})
-            }*/
             return columns
         },
         statusList() {
@@ -322,7 +304,11 @@ export default {
                 columns.splice(3, 0, {zh: '已转单', en: 'Order transferred', value: '0', color: 'blue',  key: '250'})
             }
             return columns
-        }
+        },
+        // 权限(平台方还是分销商等)
+        user_type() {
+            return Core.Data.getLoginType() == Core.Const.LOGIN.TYPE.DISTRIBUTOR   // 分销商
+        },
     },
     mounted() {
         this.getDistributorListAll();
