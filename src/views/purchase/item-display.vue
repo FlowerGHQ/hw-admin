@@ -94,7 +94,7 @@ export default {
                 console.log("watch item_id",n)
                 this.id = n
                 // this.getItemDetail();
-                this.getAccessoryData();
+                // this.getAccessoryData();
                 this.getDownloadData()
             }
         },
@@ -143,7 +143,7 @@ export default {
             this.id = Number(this.$route.query.id) || 0
         }
         this.getItemDetail();
-        // this.getAccessoryData();
+        this.getAccessoryData();
         // this.getDownloadData()
     },
     methods: {
@@ -242,7 +242,10 @@ export default {
             this.explodeShow = data
         },
         getAccessoryData() {
-            Core.Api.ItemAccessory.list({item_id: this.id,is_authority :1}).then(res => {
+            Core.Api.ItemAccessory.list({
+                item_id: this.id,
+                is_authority :1
+            }).then(res => {
                 let list =[]
                 console.log(res)
                 res.list.forEach( it =>{
