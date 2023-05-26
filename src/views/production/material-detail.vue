@@ -15,8 +15,8 @@
                         <span class="title">{{ lang==='zh' ?detail.name : detail.name_en }}</span>
                         <span 
                             v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" 
-                            class="source-erp" 
-                            :title="$t('i.synchronization_time') + ' ' + ($Util.timeFilter(detail?.sync_time) || '-' )">
+                            class="source-erp"
+                        >
                             {{ SOURCE_STOCK_TYPE[detail?.sync_type]?.value }}
                         </span>
                     </div>
@@ -56,10 +56,12 @@
                             <a-tag>{{ item.short_name }}</a-tag>
                         </template>
                     </a-col>
-<!--                    <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
-                        <span class="key">价格：</span>
-                        <span class="value">{{ detail.price }}</span>
-                    </a-col>-->
+                   <a-col :xs="24" :sm="12" :lg="8" class="detail-item">
+                        <span class="key">{{ $t('i.synchronization_time') }}：</span>
+                        <span class="value">
+                            {{ $Util.timeFilter(detail?.sync_time) || '-' }}
+                        </span>                        
+                    </a-col>
                 </a-row>
             </div>
         </div>
@@ -180,7 +182,6 @@ export default {
     color: #F92E25;
     border-radius: 30px;
     font-size: 12px; 
-    margin-left: 5px;   
-    cursor: pointer;            
+    margin-left: 5px;
 }
 </style>
