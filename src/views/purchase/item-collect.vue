@@ -2,11 +2,11 @@
 <div id="ItemCollect" class="list-container">
     <a-button type="primary" class="monetary-export" @click="handleExport"><i class="icon i_download"/>{{$t('i.download_the_template')}}</a-button>
     <a-upload name="file" class="monetary-upload"
-              :file-list="upload.fileList" :action="upload.action"
-              :show-upload-list='false'
-              :headers="upload.headers" :data='upload.data'
-              accept=".xlsx,.xls"
-              @change="handlePurchaseChange">
+          :file-list="upload.fileList" :action="upload.action"
+          :show-upload-list='false'
+          :headers="upload.headers" :data='upload.data'
+          accept=".xlsx,.xls"
+          @change="handlePurchaseChange">
         <a-button type="primary" ghost class="file-upload-btn">
             <i class="icon i_add"/> {{$t('i.bulk_import')}}
         </a-button>
@@ -79,18 +79,17 @@
         <div class="title-area">{{ $t('i.favorite') }}</div>
         <div class="list-content">
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
-                <img class="cover" :src="$Util.imageFilter(item.item ? item.item.logo : '', 2)" />
+                <img class="cover" :src="$Util.imageFilter(item.item ? item.item?.logo : '', 2)" />
                 <div class="info">
                     <div class="name" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
-                    <div class="sub">{{item.item ? item.item.code : '-'}}</div>
-                    <div class="spec" v-if='item.item && item.item.attr_list'>
-                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
+                    <div class="sub">{{item.item ? item.item?.code : '-'}}</div>
+                    <div class="spec" v-if='item.item && item.item?.attr_list'>
+                        <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item?.attr_list, lang)}}
                     </div>
                     <div></div><!-- 调整结构用 不要删 --><div></div>
                     <div class="btns">
                         <a-button type="link" @click="handleFavoriteRemove(item)">{{ $t('def.delete') }}</a-button>
-                        <!-- <a-button type="link" class="disabled" v-if="item.in_shopping_cart">{{ $t('i.already') }}</a-button> -->
-                        <a-button type="primary" ghost v-if="item.item.status !== -1" @click="handleMoveToShopCart(item)">{{ $t('i.cart') }}</a-button>
+                        <a-button type="primary" ghost v-if="item?.item?.status !== -1" @click="handleMoveToShopCart(item)">{{ $t('i.cart') }}</a-button>
                     </div>
                 </div>
                 <div class="price">
@@ -106,8 +105,7 @@
 <script>
 import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
 import Core from '../../core';
-import Const from "../../core/const";
-import Data from "../../core/data";
+
 export default {
     name: 'ItemCollect',
     components: {SimpleImageEmpty},
@@ -355,6 +353,7 @@ export default {
                     Core.Api.ShopCart.remove({id:item.id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.move'))
                         _this.getList()
+                        _this.getShopCartList() // 更新
                     })
                 },
             });

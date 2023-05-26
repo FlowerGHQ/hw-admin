@@ -532,7 +532,7 @@ export default {
     created() {
         this.form.id = Number(this.$route.query.id) || 0
         this.set_id = Number(this.$route.query.set_id) || 0
-        this.indep_flag = Number(this.$route.query.indep_flag) || 0
+        this.indep_flag = Number(this.$route.query.indep_flag) || 0   // 商品详情里面的编辑按钮参数
         if (this.form.id) {
             this.getItemDetail();
         }
