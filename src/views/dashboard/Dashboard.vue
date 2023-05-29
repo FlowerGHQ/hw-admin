@@ -6,14 +6,14 @@
         <div class="statistic-item">
             <div class="title"><i class="icon i_cart"/>{{ $t('n.total_purchase') }}</div>
             <div class="count">
-                <span>{{stat.purchase}}</span>
+                <span>{{stat.purchase || 0}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('purchase')"/></div>
             </div>
         </div>
         <div class="statistic-item">
             <div class="title"><i class="icon i_order"/>{{ $t('n.total_maintenance') }}</div>
             <div class="count">
-                <span>{{stat.repair}}</span>
+                <span>{{stat.repair || 0}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('repair')"/></div>
             </div>
         </div>
@@ -105,8 +105,8 @@ export default {
             downloadDisabled: false,
 
             stat: {
-                purchase: 2673092,
-                repair: 2673092,
+                purchase: 0,
+                repair: 0,
             },
 
             purchaseRank: [],
@@ -179,8 +179,8 @@ export default {
             this.org_type = data.org_type
             this.dateList = dateList
             setTimeout(() => {
-                this.getStatData();
-                this.getPurchaseChart();
+                this.getStatData(data);
+                this.getPurchaseChart(data);
                 this.getPurchaseRank();
                 this.getRepairRank();
                 this.getRepairChart();
@@ -188,11 +188,18 @@ export default {
             }, 1000)
         },
 
-        getStatData() {
+        getStatData(data) {
             this.stat = {
                 purchase: Math.round(Math.random() * 100),
                 repair: Math.round(Math.random() * 100),
             }
+            // Core.Api.DashBoard.orderCount({
+            //     begin_time: data.begin_time,
+            //     end_time: data.end_time
+            // }).then(res =>{
+            //     this.stat.purchase = res.purchaseOrderCount
+            //     this.stat.repair = res.repairOrderCount
+            // })
         },
 
         getPurchaseRank() {
@@ -248,16 +255,20 @@ export default {
             this.downloadDisabled = false;
         },
 
-        getPurchaseChart() {
+        getPurchaseChart(data) {
             let list = Core.Util.deepCopy(this.dateList)
             list = list.map(i => ({
                 date: i,
                 price: Math.round(Math.random() * 10000),
                 count: Math.round(Math.random() * 100),
             }))
-            setTimeout(() => {
-                this.drawPurchaseChart(list)
-            }, 100)
+            // Core.Api.DashBoard.purchaseOrder({
+            //     begin_time: data.begin_time,
+            //     end_time: data.end_time,
+            // }).then(res=> {
+            //     console.log('getPurchaseChart res',res);
+            //     this.drawPurchaseChart(res.list)
+            // })
         },
         getRepairChart() {
             let list = Core.Util.deepCopy(this.dateList)
