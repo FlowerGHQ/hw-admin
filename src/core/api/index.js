@@ -251,8 +251,8 @@ const apiList = {
 
     },
 	ItemAccessory: { // 商品
-		save: ['PostJson', 'item-accessory/save'],   // 当选
-		// save: ['PostJson', 'item-accessory/save-list'],  // 多选
+		// save: ['PostJson', 'item-accessory/save'],   // 当选
+		save: ['PostJson', 'item-accessory/save-list'],  // 多选
 		list: ['PostJson', 'item-accessory/list'],
 		delete: ['PostJson', 'item-accessory/delete'],
 	},
