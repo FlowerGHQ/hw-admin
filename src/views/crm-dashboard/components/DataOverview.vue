@@ -84,7 +84,7 @@
 							:src="getSrcImg(item.des_icon)"
 							alt=""
 						/>
-						<span>{{Math.abs(item.percentage)}}</span>
+						<span>{{item.percentage}}</span>
 					</div>
 				</div>
 			</div>
@@ -159,7 +159,7 @@ export default {
 				title:'db.new_customer', 
 				count:`${this.form.new_customer_count}`,
 				rise_des_count:`${this.form.new_customer_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.new_customer_seven_day_count}`,   // 百分比
+				percentage:`${this.form?.new_customer_percentage}`,   // 百分比
 				title_icon:'customer',
 				rise_icon:'increase', 
 				des_icon:'fall',
@@ -169,17 +169,17 @@ export default {
 				title:'db.new_follow_up_records', 
 				count:`${this.form.new_contact_count}`,
 				rise_des_count:`${this.form.new_contact_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.new_contact_seven_day_count}`,   // 百分比
+				percentage:`${this.form?.new_contact_percentage}`,   // 百分比
 				title_icon:'follow_up-records',
 				rise_icon:'increase',
 				des_icon:'fall',
 			},		
 			//  新增商机
 			{	id:3, 
-				title:'db.new_business', 
-				count:`${this.form.new_order_count}`,
-				rise_des_count:`${this.form.new_order_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.new_order_seven_day_count}`,   // 百分比
+				title:'db.new_business', 				
+				count:`${this.form.new_bo_count}`,
+				rise_des_count:`${this.form.new_bo_seven_day_count}`, // 判断其是升还是降的数字
+				percentage:`${this.form?.new_bo_percentage}`,
 				title_icon:'business',
 				rise_icon:'increase', 
 				des_icon:'fall',
@@ -187,19 +187,19 @@ export default {
 			//  新增订单
 			{	id:4, 
 				title:'db.new_orders', 
-				count:`${this.form.new_bo_count}`,
-				rise_des_count:`${this.form.new_bo_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.new_bo_seven_day_count}`,   // 百分比
+				count:`${this.form.new_order_count}`,
+				rise_des_count:`${this.form.new_order_seven_day_count}`, // 判断其是升还是降的数字
+				percentage:`${this.form?.new_order_percentage}`,   // 百分比
 				title_icon:'order',
 				rise_icon:'increase', 
 				des_icon:'fall',
 			},		
 			//  新增试驾单
 			{	id:5, 
-				title:'db.new_drive_order', 
-				count:`${this.form.win_bo_count}`,
-				rise_des_count:`${this.form.win_bo_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.win_bo_seven_day_count}`,   // 百分比
+				title:'db.new_drive_order', 				
+				count:`${this.form.new_test_driver_count}`,
+				rise_des_count:`${this.form.new_test_driver_seven_day_count}`, // 判断其是升还是降的数字
+				percentage:`${this.form?.new_test_driver_percentage}`,   // 百分比
 				title_icon:'drive-order',
 				rise_icon:'increase', 
 				des_icon:'fall',
@@ -207,9 +207,9 @@ export default {
 			//  新增回款单
 			{	id:6, 
 				title:'db.new_payment_receipt', 
-				count:`${this.form.new_test_driver_count}`,
-				rise_des_count:`${this.form.new_test_driver_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form.new_test_driver_seven_day_count}`,   // 百分比
+				count:`${this.form.win_bo_count}`,
+				rise_des_count:`${this.form.win_bo_seven_day_count}`, // 判断其是升还是降的数字
+				percentage:`${this.form?.win_bo_percentage}`,   // 百分比
 				title_icon:'return-order',
 				rise_icon:'increase', 
 				des_icon:'fall',
@@ -230,7 +230,7 @@ export default {
 		const path = `../../../assets/images/dashboard/${name}.${type}`;		
         return modules[path]?.default;
 	},
-    salesStatistics() {
+    salesStatistics() {		
       Core.Api.CRMDashboard.salesStatistics({
         ...this.searchForm,
       }).then((res) => {
@@ -244,25 +244,29 @@ export default {
           case 3:
             this.day = 3;
             break;
-        }
-        console.log("dataOverview salesStatistics ~ res", res);
-        this.form.new_customer_count = res.new_customer_count;
-        this.form.new_contact_count = res.new_contact_count;
-        this.form.new_order_count = res.new_order_count;
-        this.form.new_bo_count = res.new_bo_count;
-        this.form.win_bo_count = res.win_bo_count;
-        this.form.new_test_driver_count = res.new_test_driver_count;
+        }        
+        this.form.new_customer_count = res.new_customer_count;  // 新增客户(ok)
+        this.form.new_contact_count = res.new_contact_count; // 新增跟进记录
+        this.form.new_bo_count = res.new_bo_count;  // 新增商机（ok）
+        this.form.new_order_count = res.new_order_count;  // 新增订单(ok)
+        this.form.new_test_driver_count = res.new_test_driver_count; // 新增试驾单(ok)
+        this.form.win_bo_count = res.win_bo_count;  // 新增回款单
 
-        this.form.new_customer_seven_day_count =
-          res.new_customer_count - res.new_customer_seven_day_count;
-        this.form.new_contact_seven_day_count =
-          res.new_contact_count - res.new_contact_seven_day_count;
-        this.form.new_order_seven_day_count =
-          res.new_order_count - res.new_order_seven_day_count;
+		// 判断其是增还是降
+        this.form.new_customer_seven_day_count = res.new_customer_count - res.new_customer_seven_day_count;
+        this.form.new_contact_seven_day_count = res.new_contact_count - res.new_contact_seven_day_count;
         this.form.new_bo_seven_day_count = res.new_bo_count - res.new_bo_seven_day_count;
+        this.form.new_order_seven_day_count = res.new_order_count - res.new_order_seven_day_count;
+        this.form.new_test_driver_seven_day_count = res.new_test_driver_count - res.new_test_driver_seven_day_count;
         this.form.win_bo_seven_day_count = res.win_bo_count - res.win_bo_seven_day_count;
-        this.form.new_test_driver_seven_day_count =
-          res.new_test_driver_count - res.new_test_driver_seven_day_count;
+		console.log("新增de",res.win_bo_count,this.form.win_bo_seven_day_count);
+		// 百分比
+		this.form.new_customer_percentage = Core.Util.percentageFilter(res.new_customer_count, res.new_customer_seven_day_count)		
+		this.form.new_contact_percentage =  Core.Util.percentageFilter(res.new_contact_count, res.new_contact_seven_day_count)			
+		this.form.new_bo_percentage =  Core.Util.percentageFilter(res.new_bo_count, res.new_bo_seven_day_count )		  
+		this.form.new_order_percentage =  Core.Util.percentageFilter(res.new_order_count, res.new_order_seven_day_count)		  
+		this.form.new_test_driver_percentage =  Core.Util.percentageFilter(res.new_test_driver_count, res.new_test_driver_seven_day_count)		  
+		this.form.win_bo_percentage =  Core.Util.percentageFilter(res.win_bo_count, res.win_bo_seven_day_count)
       });
     },
     // 时间转换
@@ -456,11 +460,14 @@ export default {
 					padding: 2px 4px;
 					background: rgba(0, 110, 249, 0.1);
 					border-radius: 4px;
-					color: #006EF9;
+					color: #006EF9;					
+					display: flex;
+					justify-content: center;
+					align-items: center;
 					.allow{
 						margin-right: 3px;
-						width: 5px;
-						height: 5px;
+						width: 10px;
+						height: 10px;
 					}
 
 					&.right-percentage-des{

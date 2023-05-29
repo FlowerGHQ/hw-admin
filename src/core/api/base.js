@@ -38,9 +38,7 @@ class ApiBase {
         return p.join('&');
     }
 
-    http(config, moduleName, args = {}) {
-        console.log('config', config)
-
+    http(config, moduleName, args = {}) {        
         let mark = ApiBase.getMark()
         const token = Data.getToken()
 

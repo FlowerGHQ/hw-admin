@@ -400,10 +400,10 @@ export default {
                     formCopy.county = this.$i18n.locale == 'en'?this.areaMap.county.name_en:this.areaMap.county.name
                 }
             }
-            
+
             // console.log('formCopy:', formCopy, this.areaMap)
             this.workTimeFilter(formCopy)
-            if(this.checkInput(formCopy)) return            
+            if(this.checkInput(formCopy)) return
             // console.log('formCopy完成:', formCopy)
                       
             Core.Api.Store.save({
