@@ -30,19 +30,7 @@
         </a-row>
       </a-col>
     </a-row>
-    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
-      <a-col :xs="24" :sm="24" :xl="9" :xxl="9">
-        <a-row :gutter="[8, 0]">
-          <!-- 车辆预订总数 -->
-          <a-col :span="24">
-            <OrderTotalCard @click="handleCarClick" :isCar="isCar" :count="carCount" />
-          </a-col>
-          <!-- 客户总数 -->
-          <a-col :span="24">
-            <ClientTotalCard @click="handlePeopleClick" :isPeople="isPeople" :count="peopleCount" />
-          </a-col>
-        </a-row>
-      </a-col>
+    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">    
       <a-col :xs="24" :sm="24" :xl="15" :xxl="15">
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
@@ -51,6 +39,18 @@
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
+          </a-col>
+        </a-row>
+      </a-col>
+	  <a-col :xs="24" :sm="24" :xl="9" :xxl="9">
+        <a-row :gutter="[8, 0]">
+          <!-- 车辆预订总数 -->
+          <a-col :span="24">
+            <OrderTotalCard @click="handleCarClick" :isCar="isCar" :count="carCount" />
+          </a-col>
+          <!-- 客户总数 -->
+          <a-col :span="24">
+            <ClientTotalCard @click="handlePeopleClick" :isPeople="isPeople" :count="peopleCount" />
           </a-col>
         </a-row>
       </a-col>

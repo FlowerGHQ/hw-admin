@@ -4,10 +4,10 @@
             {{ $t('db.order_total') }}
         </div>
         <div class="flex-total">
+            <img class="img" src="../../../assets/images/dashboard/total.png" alt="">
             <div :class="[isCar ? 'total active' : 'total']">
                 {{ count }}
             </div>
-            <img class="img" src="../../../assets/images/dashboard/total.png" alt="">
         </div>
     </div>
 </template>
@@ -67,12 +67,16 @@ export default {
 
     .flex-total {
         width: 100%;
-        display: flex;
-        justify-content: space-between;
+        display: flex;        
         align-items: center;
         margin-top: 50px;
-
+        
+        .img {            
+            width: 38px;
+            height: 38px;
+        }
         .total {
+            margin-left: 10px;
             font-size: 30px;
             font-family: Barlow-SemiBold, Barlow;
             font-weight: 600;
@@ -80,11 +84,6 @@ export default {
             &.active {
                 color: #DC6E38;
             }
-        }
-
-        .img {
-            width: 27px;
-            height: 27px;
         }
     }
 }
