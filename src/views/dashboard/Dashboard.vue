@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <div class="statistic-container">
+    <div class="statistic-container seven-three">
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.analysis_order') }}</div>
             <div class="chart-container">
@@ -46,14 +46,6 @@
                 </a-table>
             </div>
         </div>
-    </div>
-    <div class="statistic-container seven-three">
-        <div class="statistic-content">
-            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
-            <div class="chart-container">
-                <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
-            </div>
-        </div>
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.system_file') }}</div>
             <div class="rank-container">
@@ -67,6 +59,10 @@
     </div>
     <div class="statistic-container seven-three">
         <div class="statistic-content">
+            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
+            <div class="chart-container">
+                <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
+            </div>
         </div>
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.fault_ranking') }}</div>
@@ -183,7 +179,7 @@ export default {
                 this.getPurchaseChart(data);
                 this.getPurchaseRank();
                 this.getRepairRank();
-                this.getRepairChart();
+                this.getRepairChart(data);
                 this.getSystemFile();
             }, 1000)
         },
@@ -262,15 +258,23 @@ export default {
                 price: Math.round(Math.random() * 10000),
                 count: Math.round(Math.random() * 100),
             }))
+            setTimeout(() => {
+                this.drawPurchaseChart(list)
+            }, 100)
             // Core.Api.DashBoard.purchaseOrder({
             //     begin_time: data.begin_time,
             //     end_time: data.end_time,
             // }).then(res=> {
             //     console.log('getPurchaseChart res',res);
-            //     this.drawPurchaseChart(res.list)
+            //     const list = res.list.map(item => {
+            //         const date = this.$Util.timeFilter(item.time, 3)
+            //         item.price = this.$Util.countFilter(item.price)                    
+            //         return { date: date, ...item }
+            //     })
+            //     this.drawPurchaseChart(list)
             // })
         },
-        getRepairChart() {
+        getRepairChart(data) {
             let list = Core.Util.deepCopy(this.dateList)
             list = list.map(i => ({
                 date: i,
@@ -279,6 +283,17 @@ export default {
             setTimeout(() => {
                 this.drawRepairChart(list)
             }, 100)
+            // Core.Api.DashBoard.repairOrder({
+            //     begin_time: data.begin_time,
+            //     end_time: data.end_time,
+            // }).then(res=> {
+            //     console.log('getPurchaseChart res',res);
+            //     const list = res.list.map(item => {
+            //         const date = this.$Util.timeFilter(item.time, 3)
+            //         return { date: date, ...item }
+            //     })
+            //     this.drawRepairChart(list)
+            // })
         },
 
         drawPurchaseChart(data) {

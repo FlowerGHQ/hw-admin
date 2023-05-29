@@ -806,6 +806,7 @@ const apiList = {
     DashBoard: {
         orderCount: ['PostJson', 'data-board/statistics'],
         purchaseOrder: ['PostJson', 'data-board/purchase-order'],
+        repairOrder: ['PostJson', 'data-board/repair-order'],
     }
 };
 
