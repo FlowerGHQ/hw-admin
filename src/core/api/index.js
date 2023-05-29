@@ -801,8 +801,12 @@ const apiList = {
     CRMTESTDRIVE:{
         userEmail:['PostJson', 'crm-test-drive-order/reset-email-to-user'],
         storeEmail:['PostJson', 'crm-test-drive-order/reset-email-to-store']
+    },
+    // 数据看板
+    DashBoard: {
+        orderCount: ['PostJson', 'data-board/statistics'],
+        purchaseOrder: ['PostJson', 'data-board/purchase-order'],
     }
-
 };
 
 export default new Api(baseUrl, apiList);
