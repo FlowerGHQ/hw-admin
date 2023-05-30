@@ -75,15 +75,18 @@
                     <!-- 名称 -->
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
-                            <!-- :title='$Util.itemSpecFilter(record.attr_list)' -->
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>                            
                             <div class="info">
-                                <a-button type="link" @click="routerChange('detail', record)">
-                                    <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
-                                </a-button>
-                                <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
-                                    {{$Util.itemSpecFilter(record.attr_list)}}
-                                </div>                                                                      
+                                     
+                                <a-tooltip>
+                                    <template #title>{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</template>
+                                    <a-button type="link" @click="routerChange('detail', record)">
+                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
+                                    </a-button>
+                                    <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
+                                        {{$Util.itemSpecFilter(record.attr_list)}}
+                                </div> 
+                                </a-tooltip>                                                                
                                 <!-- 来源 -->                                
                                 <div 
                                     v-if="SOURCE_TYPE[record.source_type]?.value == 'ERP'"

@@ -1204,7 +1204,7 @@ const Util = {
     */
     percentageFilter(denominator,numerator, type = '%'){
         if(!Number(denominator)) return 0 + type
-        let result =  Number(numerator) / Number(denominator) + type
+        let result =  Number(numerator) / Number(denominator) * 100 + type
         return result
     }
     /* ======== 百分比 ========== */
