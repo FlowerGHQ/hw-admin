@@ -24,7 +24,8 @@
             <div class="chart-container">
                 <div id="PurchaseOrderChart" class="chart" ref="PurchaseOrderChart"></div>
             </div>
-            <div class="table-container" v-if="org_type">
+            <!-- <div class="table-container" v-if="org_type"> -->
+            <div class="table-container" v-if="false">
                 <a-table :columns="tableColumns" :data-source="purchaseRank" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , index}">
