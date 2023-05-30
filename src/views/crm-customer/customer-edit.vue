@@ -826,7 +826,6 @@ export default {
             }).then(res => {
                 this.userPortraitForm.customer_id = res.crmCustomer.id
                 if(this.userPortraitForm.customer_id) {
-                    console.log('11111111111111111');
                     let userPortraitForm = Core.Util.deepCopy(this.userPortraitForm)
                     Core.Api.CRMCustomerPortrait.save({
                         ...userPortraitForm,
