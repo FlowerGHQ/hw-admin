@@ -696,7 +696,6 @@ export default {
         }
     },
     mounted() {
-        // console.log('111',phoneCountryCode);
         this.phoneCountryCodeList = phoneCountryCode
         this.form.id = Number(this.$route.query.id) || 0
         this.userPortraitForm.customer_id = Number(this.$route.query.id) || 0
@@ -742,11 +741,11 @@ export default {
                         this.form[key] = undefined
                     }
                 }
+                this.userPortraitForm.customer_id = res.detail.id
                 this.defAddr = [d.province, d.city, d.county]
                 this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']
                 this.handleContinentSelect(this.defAreaContinent);
                 this.handleAddressSelect(this.defAddr);
-
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
