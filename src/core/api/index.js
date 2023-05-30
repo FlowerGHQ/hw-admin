@@ -807,6 +807,7 @@ const apiList = {
         orderCount: ['PostJson', 'data-board/statistics'],
         purchaseOrder: ['PostJson', 'data-board/purchase-order'],
         repairOrder: ['PostJson', 'data-board/repair-order'],
+        repairRank: ['PostJson', 'data-board/fault_rank'],
     }
 };
 
