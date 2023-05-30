@@ -36,7 +36,11 @@
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">
-            <DataTrendStatistics :searchForm="searchForm" :isCar="isCar" :isPeople="isPeople" :list="list" :maxCount="maxCount" />
+            <DataTrendStatistics 
+				:searchForm="searchForm" 				
+				:isPeople="isPeople" 
+				:list="list" 				
+			/>
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
@@ -108,7 +112,6 @@ import NewBoStatistics from "./components/NewBoStatistics.vue";
 
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import Core from "../../core";
-import dayjs from "dayjs";
 
 export default {
   name: "Demo",
@@ -136,99 +139,41 @@ export default {
   props: {},
   data() {
     return {
-      searchForm: {
-        group_id: undefined,
-        begin_time: "",
-        end_time: "",
-        day: 1,
-      },
-      time: [],
-      groupOptions: [],
-      day: '',
-      isCar:true,
-      isPeople:false,
-        carCount: 0,
-        peopleCount: 0,
-        list: [],
-        maxCount: 0,
+		searchForm: {
+			group_id: undefined,
+			begin_time: (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000,
+			end_time: Date.now() / 1000,
+			day: 1,
+		},
+		isCar:true,  // 车辆预定默认显示
+		isPeople:false,
+        carCount: 0,  // 车辆预定总数
+        peopleCount: 0,   // 客户总数
+        list: [],  // 数据趋势list数据        
     };
   },
   watch: {},
   computed: {},
   created() { },
-  mounted() {
-    this.handleGroupTree();
-      this.httpPeople();
-      this.httpCar();
+  mounted() {    	
+      	this.httpPeople();
+      	this.httpCar();
 
   },
   methods: {
-    handleSearch() {
-      // 搜索
-      // this.getTableData();
-    },
-    handleSearchReset() {
-      // 重置搜索
-      Object.assign(this.searchForm, this.$options.data().searchForm);
-      this.day = ''
-      this.time = []
-      // this.getTableData();
-    },
-    handleGroupTree() {
-      Core.Api.CRMGroupMember.structureByUser().then((res) => {
-        this.groupOptions = res.list;
-        console.log(res);
-      });
-    },
-    handleChange() {
-      let begin_time = dayjs(this.time[0]);
-      let end_time = dayjs(this.time[1]);
-      // let data = {
-      //     org_type: this.org_type,
-      //     begin_time: begin_time.startOf('day').unix(),
-      //     end_time: end_time.endOf('day').unix(),
-      // }
-      // let diff = end_time.diff(begin_time, 'days')
-      //
-      // let dateList = [begin_time.format('YYYY-MM-DD')]
-      // for (let i = 1; i <= diff; i++) {
-      //     dateList.push(dayjs(begin_time).add(i, 'days').format('YYYY-MM-DD'))
-      // }
-      // console.log('handleChange data:', data, 'dateList', dateList)
-      let searchForm = this.$Util.deepCopy(this.searchForm);
-      searchForm.begin_time = begin_time.startOf("day").unix();
-      searchForm.end_time = end_time.endOf("day").unix();
-      this.searchForm = searchForm;
-      // this.$emit('search', data, dateList)
-    },
-
-    handleTimeChange() { },
-
-    // 时间转换
-    handleTimeTypeChange() {
-      switch (this.day) {
-        case 1:
-          this.searchForm.begin_time = (Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000; break;
-        case 2:
-          this.searchForm.begin_time = (Date.now() - 15 * 24 * 60 * 60 * 1000) / 1000; break;
-        case 3:
-          this.searchForm.begin_time = (Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000; break;
-      }
-
-      this.searchForm.end_time = Date.now() /1000;
-        this.searchForm.day = this.day
-    },
+	// 车辆预订总数模块点击事件
     handleCarClick(){
       this.httpCar();
       this.isCar = true
       this.isPeople = false
     },
+	// 客户总数模块点击事件
     handlePeopleClick(){
       this.httpPeople()
       this.isCar = false
       this.isPeople = true
     },
-      searchFormOperation(searchForm){
+    searchFormOperation(searchForm){
         this.searchForm = searchForm
         if(this.isCar === true){
           this.httpCar();
@@ -236,21 +181,27 @@ export default {
         if(this.isPeople === true){
           this.httpPeople();
         }
-      },
-      httpCar(){
-          Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {
-              this.list = res.list
-              this.carCount = res.count
-              this.maxCount = res.max_count
-          })
-      },
-      httpPeople(){
-          Core.Api.CRMDashboard.customerTotalStatistics(this.searchForm).then(res => {
-              this.list = res.list
-              this.peopleCount = res.count
-              this.maxCount = res.max_count
-          })
-      }
+    },
+	// 车辆预订总数接口
+    httpCar(){
+		Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {
+            console.log("车辆的数据", res);
+            this.carCount = res.count                
+            if(this.isCar){
+                this.list = res.list
+            }
+		})
+    },
+	// 客户总数接口
+    httpPeople(){
+		Core.Api.CRMDashboard.customerTotalStatistics(this.searchForm).then(res => {
+            console.log("客户的数据", res);
+            this.peopleCount = res.count
+            if(this.isPeople){
+                this.list = res.list
+            }
+		})
+    }
 
   },
 };
