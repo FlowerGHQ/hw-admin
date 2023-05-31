@@ -380,7 +380,7 @@ export default {
           this.$message.success(this.$t("pop_up.save_success"));
           this.handleTrackRecordClose();	
           this.$emit("submit");
-		  location.reload();	  
+		      location.reload();	  
         })
         .catch((err) => {
           console.log("handleSubmit err:", err);
@@ -420,7 +420,7 @@ export default {
           return this.$message.error(file.response.message);
         }
         let imageAttachment = {
-          id: file.uid,
+          // id: file.uid,
           uid: file.uid,
           name: file.name,
           path: file.response.data.filename,
@@ -449,7 +449,7 @@ export default {
           return this.$message.error(file.response.message);
         }
         let fileAttachment = {
-          id: file.uid,
+          // id: file.uid,
           uid: file.uid,
           name: file.name,
           path: file.response.data.filename,
