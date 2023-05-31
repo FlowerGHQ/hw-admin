@@ -84,7 +84,7 @@
 							:src="getSrcImg(item.des_icon)"
 							alt=""
 						/>
-						<span>{{item.percentage}}</span>
+						<span>{{Math.abs(item.rise_des_count)}}</span>
 					</div>
 				</div>
 			</div>
