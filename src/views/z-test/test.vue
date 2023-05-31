@@ -6,7 +6,7 @@
 
 <script setup>
     import { onMounted, ref } from 'vue';
-    import { Chart } from '@antv/g2';
+    import { Chart} from '@antv/g2';
         
     const chart = ref(null)
 
@@ -20,14 +20,7 @@
         test()
     })
 
-    const test = () => {    
-        
-        const data1 = [
-            { year: '2023-05-20', value: 5, value1: 1, value2: 13},
-            { year: '2023-05-21', value: 2, value1: 2, value2: 2},
-            { year: '2023-05-22', value: 11, value1: 3, value2: 13},
-            { year: '2023-05-23', value: 4, value1: 4, value2: 5},
-        ]
+    const test = () => {
         const data = [
             { country: 'Asia', year: '1750', value: 502 },
             { country: 'Asia', year: '1800', value: 635 },
@@ -62,7 +55,7 @@
             { country: 'Oceania', year: '2050', value: 300 },
         ];
         
-        chart.value.data(data1);
+        chart.value.data(data);
 
         chart.value.scale({
             year:{                
@@ -71,43 +64,15 @@
             },
             value:{
                 nice: true,                
-            },
-            value1:{
-                nice: true,                
-            },
-            value2:{
-                nice: true,                
-            },
-        });
-
-        chart.value.legend("value1",{
-            position: 'top',
+            }
         });
 
 
-        chart.value.area()
-            .position('year*value1')
-            .shape('smooth')
-            .color('#604e78')
-
-        chart.value.line()
-            .position('year*value1')
-            .shape('smooth')
-            .color('#604e78')
-            .size(2)
-
-        chart.value.area()
-            .position('year*value2')
-            .shape('smooth')
-            .color('#31781d')
+        chart.value.area().shape('smooth').position('year*value').color('country');
+        chart.value.line().shape('smooth').position('year*value').color('country');
 
 
-        chart.value.line()
-            .position('year*value2')
-            .shape('smooth')
-            .color('#31781d')
-            .size(2)
-
+        
         chart.value.interaction('element-highlight');
 
         chart.value.render();
