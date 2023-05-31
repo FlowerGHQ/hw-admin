@@ -143,8 +143,7 @@ export default {
   },
   watch: {
     searchForm: {
-      deep: true,
-      immediate: true,
+      deep: true,      
       handler(n) {
         this.salesStatistics();
       },
@@ -259,7 +258,8 @@ export default {
         this.form.new_order_seven_day_count = res.new_order_count - res.new_order_seven_day_count;
         this.form.new_test_driver_seven_day_count = res.new_test_driver_count - res.new_test_driver_seven_day_count;
         this.form.win_bo_seven_day_count = res.win_bo_count - res.win_bo_seven_day_count;
-		// console.log("新增de",res.win_bo_count,this.form.win_bo_seven_day_count);
+
+		// console.log("新增de", res.new_order_count, res.new_order_seven_day_count);
 		// 百分比
 		this.form.new_customer_percentage = Core.Util.percentageFilter(res.new_customer_count, res.new_customer_seven_day_count)		
 		this.form.new_contact_percentage =  Core.Util.percentageFilter(res.new_contact_count, res.new_contact_seven_day_count)			
@@ -267,6 +267,8 @@ export default {
 		this.form.new_order_percentage =  Core.Util.percentageFilter(res.new_order_count, res.new_order_seven_day_count)		  
 		this.form.new_test_driver_percentage =  Core.Util.percentageFilter(res.new_test_driver_count, res.new_test_driver_seven_day_count)		  
 		this.form.win_bo_percentage =  Core.Util.percentageFilter(res.win_bo_count, res.win_bo_seven_day_count)
+
+		// console.log("百分比", this.form.new_order_percentage);
       });
     },
     // 时间转换

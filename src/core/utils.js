@@ -1202,7 +1202,7 @@ const Util = {
         denominator  // 分母
         numerator // 分子
     */
-    percentageFilter(denominator,numerator, type = '%'){
+    percentageFilter(denominator,numerator, type = '%'){        
         if(!Number(denominator)) return 0 + type
         let result =  Number(numerator) / Number(denominator) * 100 + type
         return result

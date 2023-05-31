@@ -15,8 +15,6 @@
 
 <script>
 import { Chart, registerTheme } from '@antv/g2'
-import Core from "../../../core";
-import { Log } from '@antv/scale';
 
 export default {
     name: 'Cards',
@@ -96,11 +94,13 @@ export default {
                     alias: this.$t('db.order_amount'),
                     range: [0, 0.97],
                     type: 'linear',
+                    nice: true
                 },
                 value2: {
                     alias: this.$t('db.order_amount'),
                     range: [0, 0.97],
                     type: 'linear',
+                    nice: true
                 }
             });
             chart.legend({
