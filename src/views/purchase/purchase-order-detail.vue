@@ -428,7 +428,7 @@
                     </div>
                 </div>
                 <div class="form-item img-upload required">
-                    <div class="key">{{ $t('p.attachment') }}</div>
+                    <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
                     <div class="value">                    
                         <a-upload name="file" class="file-uploader"
                                 :file-list="upload.fileList" :action="upload.action"

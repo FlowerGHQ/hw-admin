@@ -6,25 +6,26 @@
         <div class="statistic-item">
             <div class="title"><i class="icon i_cart"/>{{ $t('n.total_purchase') }}</div>
             <div class="count">
-                <span>{{stat.purchase}}</span>
+                <span>{{stat.purchase || 0}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('purchase')"/></div>
             </div>
         </div>
         <div class="statistic-item">
             <div class="title"><i class="icon i_order"/>{{ $t('n.total_maintenance') }}</div>
             <div class="count">
-                <span>{{stat.repair}}</span>
+                <span>{{stat.repair || 0}}</span>
                 <div class="more"><i class="icon i_more" @click="routerChange('repair')"/></div>
             </div>
         </div>
     </div>
-    <div class="statistic-container">
+    <div class="statistic-container seven-three">
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.analysis_order') }}</div>
             <div class="chart-container">
                 <div id="PurchaseOrderChart" class="chart" ref="PurchaseOrderChart"></div>
             </div>
-            <div class="table-container" v-if="org_type">
+            <!-- <div class="table-container" v-if="org_type"> -->
+            <div class="table-container" v-if="false">
                 <a-table :columns="tableColumns" :data-source="purchaseRank" :scroll="{ x: true }"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , index}">
@@ -46,14 +47,6 @@
                 </a-table>
             </div>
         </div>
-    </div>
-    <div class="statistic-container seven-three">
-        <div class="statistic-content">
-            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
-            <div class="chart-container">
-                <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
-            </div>
-        </div>
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.system_file') }}</div>
             <div class="rank-container">
@@ -67,13 +60,17 @@
     </div>
     <div class="statistic-container seven-three">
         <div class="statistic-content">
+            <div class="title-container">{{ $t('n.volume_analysis') }}</div>
+            <div class="chart-container">
+                <div id="RepairOrderChart" class="chart" ref='RepairOrderChart'></div>
+            </div>
         </div>
         <div class="statistic-content">
             <div class="title-container">{{ $t('n.fault_ranking') }}</div>
             <div class="rank-container">
                 <div class="rank-item" v-for="(item,index) of repairRank" :key="index">
                     <div class="number" :class="index < 3 ? 'color' : ''">{{index + 1}}</div>
-                    <div class="name">{{item.name}}</div>
+                    <div class="name">{{item.fault_desc || '-'}}</div>
                     <div class="count">{{item.count}}</div>
                 </div>
             </div>
@@ -105,8 +102,8 @@ export default {
             downloadDisabled: false,
 
             stat: {
-                purchase: 2673092,
-                repair: 2673092,
+                purchase: 0,
+                repair: 0,
             },
 
             purchaseRank: [],
@@ -179,20 +176,27 @@ export default {
             this.org_type = data.org_type
             this.dateList = dateList
             setTimeout(() => {
-                this.getStatData();
-                this.getPurchaseChart();
+                this.getStatData(data);
+                this.getPurchaseChart(data);
                 this.getPurchaseRank();
                 this.getRepairRank();
-                this.getRepairChart();
+                this.getRepairChart(data);
                 this.getSystemFile();
             }, 1000)
         },
 
-        getStatData() {
-            this.stat = {
-                purchase: Math.round(Math.random() * 100),
-                repair: Math.round(Math.random() * 100),
-            }
+        getStatData(data) {
+            // this.stat = {
+            //     purchase: Math.round(Math.random() * 100),
+            //     repair: Math.round(Math.random() * 100),
+            // }
+            Core.Api.DashBoard.orderCount({
+                begin_time: data.begin_time,
+                end_time: data.end_time
+            }).then(res =>{
+                this.stat.purchase = res.purchaseOrderCount
+                this.stat.repair = res.repairOrderCount
+            })
         },
 
         getPurchaseRank() {
@@ -204,14 +208,19 @@ export default {
                 amount: Math.round(Math.random() * 1000),
             }))
             this.purchaseRank = list
+
         },
         getRepairRank() {
-            let _list = Object.values(Core.Const.REPAIR.FAULT_OPTIONS_MAP)
-            let list = new Array(_list.length).fill({})
-            list = list.map((item,i) => ({name: _list[i],count: i * 100}))
-            list = list.map((item,i) => ({name: item.name, count: item.count + Math.round(Math.random() * 100)}))
+            // let _list = Object.values(Core.Const.REPAIR.FAULT_OPTIONS_MAP)
+            // let list = new Array(_list.length).fill({})
+            // list = list.map((item,i) => ({name: _list[i],count: i * 100}))
+            // list = list.map((item,i) => ({name: item.name, count: item.count + Math.round(Math.random() * 100)}))
 
-            this.repairRank = list.reverse()
+            // this.repairRank = list.reverse()
+            Core.Api.DashBoard.repairRank().then(res => {
+                console.log('getRepairRank res', res);
+                this.repairRank = res.list
+            })
         },
         getSystemFile() { // 系统文件信息获取
             this.loading = true;
@@ -248,26 +257,49 @@ export default {
             this.downloadDisabled = false;
         },
 
-        getPurchaseChart() {
-            let list = Core.Util.deepCopy(this.dateList)
-            list = list.map(i => ({
-                date: i,
-                price: Math.round(Math.random() * 10000),
-                count: Math.round(Math.random() * 100),
-            }))
-            setTimeout(() => {
+        getPurchaseChart(data) {
+            // let list = Core.Util.deepCopy(this.dateList)
+            // list = list.map(i => ({
+            //     date: i,
+            //     price: Math.round(Math.random() * 10000),
+            //     count: Math.round(Math.random() * 100),
+            // }))
+            // setTimeout(() => {
+            //     this.drawPurchaseChart(list)
+            // }, 100)
+            Core.Api.DashBoard.purchaseOrder({
+                begin_time: data.begin_time,
+                end_time: data.end_time,
+            }).then(res=> {
+                console.log('getPurchaseChart res',res);
+                const list = res.list.map(item => {
+                    const date = this.$Util.timeFilter(item.time, 3)
+                    item.price = this.$Util.countFilter(item.price)                    
+                    return { date: date, ...item }
+                })
                 this.drawPurchaseChart(list)
-            }, 100)
+            })
         },
-        getRepairChart() {
-            let list = Core.Util.deepCopy(this.dateList)
-            list = list.map(i => ({
-                date: i,
-                count: Math.round(Math.random() * 100),
-            }))
-            setTimeout(() => {
+        getRepairChart(data) {
+            // let list = Core.Util.deepCopy(this.dateList)
+            // list = list.map(i => ({
+            //     date: i,
+            //     count: Math.round(Math.random() * 100),
+            // }))
+            // setTimeout(() => {
+            //     this.drawRepairChart(list)
+            // }, 100)
+            Core.Api.DashBoard.repairOrder({
+                begin_time: data.begin_time,
+                end_time: data.end_time,
+            }).then(res=> {
+                console.log('getPurchaseChart res',res);
+                const list = res.list.map(item => {
+                    const date = this.$Util.timeFilter(item.time, 3)
+                    return { date: date, ...item }
+                })
                 this.drawRepairChart(list)
-            }, 100)
+            })
         },
 
         drawPurchaseChart(data) {

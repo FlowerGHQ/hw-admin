@@ -1195,8 +1195,19 @@ const Util = {
         });
     
        return _options
-    }
+    },
     /* ======== 传参数的时候删除自己不需要的字段 ========== */
+
+    /* ======== 百分比 ========== 
+        denominator  // 分母
+        numerator // 分子
+    */
+    percentageFilter(denominator,numerator, type = '%'){        
+        if(!Number(denominator)) return 0 + type
+        let result =  Number(numerator) / Number(denominator) * 100 + type
+        return result
+    }
+    /* ======== 百分比 ========== */
 }
 
 export default Util

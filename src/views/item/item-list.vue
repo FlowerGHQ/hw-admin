@@ -70,20 +70,23 @@
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :pagination='false'
                 :row-key="record => record.id" @expand='handleTableExpand' @change="handleTableChange" :row-selection="rowSelection"
-                     :expandedRowKeys="expandedRowKeys" :indentSize='0' :expandIconColumnIndex="expandIconColumnIndex">
+                     :expandedRowKeys="expandedRowKeys" :indentSize='0'>
                 <template #bodyCell="{ column, text , record }">
                     <!-- 名称 -->
                     <template v-if="column.key === 'detail'">
                         <div class="table-img afs">
-                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>
-                            <!-- :title='$Util.itemSpecFilter(record.attr_list)' -->
+                            <a-image class="image" :width="55" :height="55" :src="$Util.imageFilter(record.logo)" :fallback="$t('def.none')"/>                            
                             <div class="info">
-                                <a-button type="link" @click="routerChange('detail', record)">
-                                    <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
-                                </a-button>
-                                <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
-                                    {{$Util.itemSpecFilter(record.attr_list)}}
-                                </div>                                                                      
+                                     
+                                <a-tooltip>
+                                    <template #title>{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</template>
+                                    <a-button type="link" @click="routerChange('detail', record)">
+                                        <div class="ell" style="max-width: 150px">{{$i18n.locale === 'zh' ? record.name : record.name_en || '-' }}</div>
+                                    </a-button>
+                                    <div v-if="record.attr_list && record.attr_list.length" class="sub-info" >
+                                        {{$Util.itemSpecFilter(record.attr_list)}}
+                                </div> 
+                                </a-tooltip>                                                                
                                 <!-- 来源 -->                                
                                 <div 
                                     v-if="SOURCE_TYPE[record.source_type]?.value == 'ERP'"
@@ -224,8 +227,7 @@ export default {
             SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
             // 表格
             tableData: [],
-            expandedRowKeys: [],
-            expandIconColumnIndex: 0,
+            expandedRowKeys: [],            
             selectedRowKeys: [],
             salesAreaVisible: false,
             salesList: [],
@@ -242,6 +244,7 @@ export default {
                     type: 'xlsx',
                 },
             },
+            flag_spread: 0,   // 0, 2是默认  传其他的是全部
         };
     },
     watch: {},
@@ -277,10 +280,8 @@ export default {
         },
     },
     mounted() {
-        this.getTableData();
+        this.getTableData({flag_spread: 1});
         this.getSalesAreaList();
-
-
     },
     methods: {
         routerChange(type, item = {}) {
@@ -325,7 +326,11 @@ export default {
             this.pageSize = size
             this.getTableData()
         },
-        handleSearch() {  // 搜索
+        // 查询
+        handleSearch() {
+            if (this.searchForm.name !== '' || this.searchForm.code !== '') {
+                this.flag_spread = 1
+            }
             this.pageChange(1);
         },
         handleOtherSearch(params) { // 时间等组件化的搜索
@@ -351,20 +356,15 @@ export default {
             this.$refs.TimeSearch.handleReset()
             this.pageChange(1);
         },
-        getTableData() {  // 获取 表格 数据
+        getTableData(params = {}) {  // 获取 表格 数据
             this.loading = true;
-            let flag_spread = 0
-            if (this.searchForm.name !== '' || this.searchForm.code !== '') {
-                flag_spread = 1
-            }
             Core.Api.Item.list({
                 ...Core.Util.searchFilter(this.searchForm),
-                flag_spread,
+                flag_spread: this.flag_spread,
                 page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
-                this.expandIconColumnIndex = flag_spread == 1 ? -1 : 0
+                page_size: this.pageSize,
+                ...params
+            }).then(res => {                
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {

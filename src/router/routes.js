@@ -2214,6 +2214,13 @@ const routes = [
 
         ]
     },
+    // 测试用例
+    {
+        path:'/test',
+        name:'test',
+        component: () => import('../views/z-test/test.vue'),
+        children: []
+    }
 
 ];
 
