@@ -6,22 +6,15 @@
             </div>
             <div class="card-info">
                 <div class="title">{{ $i18n.locale =='zh' ? data.name : data.name_en }}</div>
-                <div class="info">{{ data.code }}</div>
-                <!-- <ul>
-                    <li v-for="attr in data.attr_list">{{ $i18n.locale =='zh' ? attr.attr_def_name : attr.attr_def_key }}：{{ $i18n.locale =='zh' ? attr.value : attr.value_en }}</li>
-                </ul> -->
-                <!-- <div class="code">货号：{{ data.id }}</div> -->
+                <div class="info">{{ data.code }}</div>           
             </div>
         </div>
         <div class="shop-card">
             <div class="shop-top">
                 <div class="spot-box">
-<!--                     <div class="spot"></div>
-                    <span>库存：89</span>-->
                 </div>
                 <div class="shop-price" v-if="currency === 'eur' || currency === 'EUR'">€{{$Util.countFilter(data[priceKey + 'eur'])}}</div>
                 <div class="shop-price" v-else>${{$Util.countFilter(data[priceKey + 'usd'])}}</div>
-<!--                <div class="shop-price">€{{$Util.countFilter(data[priceKey + 'eur'])}} | ${{$Util.countFilter(data[priceKey + 'usd'])}}</div>-->
             </div>
             <div class="shop-bottom">
                 <div class="cart-box">
