@@ -525,12 +525,11 @@ const routes = [
                     hidden: true,
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类配置',
-
                 }
             },
             {
                 path: 'Item-category-explored',
-                name: 'ItemCategoryConfig',
+                name: 'ItemCategoryExplored',
                 component: () => import('@/views/item/Item-category-explored.vue'),
                 meta: {
                     hidden: true,
