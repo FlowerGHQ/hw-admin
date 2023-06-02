@@ -34,9 +34,9 @@ switch (window.location.hostname) {
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.132:8889' // my
+        // URL_POINT = 'http://10.0.0.145:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.0.0.105:8889' // zy
+        // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
 }
 
@@ -178,10 +178,10 @@ let Const = {
             STORE: 30,
         },
 	    ROUTER_TYPE: {
-		    SALES: 1,
-		    AFTER: 2,
-			PRODUCTION: 3,
-		    CRM: 4,
+		    SALES: 1,  // 销售
+		    AFTER: 2,  // 售后
+			PRODUCTION: 3, // 生产
+		    CRM: 4,  // CRM
 	    },
     },
 	FLAG: {

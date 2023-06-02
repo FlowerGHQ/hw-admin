@@ -91,21 +91,33 @@
         </a-layout-header>
         <a-layout class="layout-container">
             <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64' theme='light'>
-                <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
-                    :inlineCollapsed='collapsed' :inlineIndent='8'>
+                <a-menu 
+                    theme="light" 
+                    v-model:openKeys="openKeys" 
+                    v-model:selectedKeys="selectedKeys" 
+                    mode="inline"
+                    :inlineCollapsed='collapsed'
+                    :inlineIndent='8'>
                     <template v-for="item of showList">
-                        <a-menu-item :key="item.path" v-if="$auth(...item.auth) && item.not_sub_menu" @click="handleLink(item.path)">
+                        <a-menu-item 
+                            v-if="$auth(...item.auth) && item.not_sub_menu" 
+                            :key="item.path"  
+                            @click="handleLink(item.path)"
+                        >
                             <i class='icon' :class="item.meta.icon"/>
                             <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
                         </a-menu-item>
-                        <a-sub-menu :key="item.path" v-else-if="$auth(...item.auth)">
+                        <a-sub-menu  v-else-if="$auth(...item.auth)" :key="item.name">
                             <template #title>
                                 <i class='icon' :class="item.meta.icon"/>
                                 <span v-show="!collapsed">{{ lang =='zh' ? item.meta.title : item.meta.title_en }}</span>
                             </template>
                             <template v-for="i of item.children">
                                 <template v-if="$auth(...i.auth)">
-                                    <a-menu-item :key="item.path + '/' + i.path" @click="handleLink(item.path + '/' + i.path)">
+                                    <a-menu-item 
+                                        :key="item.path + '/' + i.path" 
+                                        @click="handleLink(item.path + '/' + i.path)"
+                                    >
                                         <span>{{ lang =='zh' ? i.meta.title : i.meta.title_en }}</span>
                                     </a-menu-item>
                                 </template>
@@ -193,7 +205,7 @@ export default {
                 })
                 showList = newShowList;
             }
-            console.log('computed showList:', showList)
+            console.log('Router Filter', showList)
             return showList
         },
         lang() {
@@ -206,10 +218,10 @@ export default {
             immediate: true,
             handler(n) {
                 let meta = n.meta || {}
-                console.log('watch $route:', n)
+                // console.log('watch $route:', n)
                 let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
                 let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
-                console.log('is_sp:', is_sp)
+                // console.log('is_sp:', is_sp)
                 let path = n.path.split('/').slice(1)
 
                 if (n.meta.parent) {
@@ -357,8 +369,8 @@ export default {
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
-        handleRouterSwitch() {
 
+        handleRouterSwitch() {
             if (Core.Data.getTabPosition() === this.tabPosition){
                 return
             }
@@ -378,13 +390,12 @@ export default {
 
         },
 
-
+        // 监听窗口变化
         handleWindowResize(e) {
-            // console.log('handleWindowResize e:', e)
-
-            // console.log('window.innerWidth:', window.innerWidth)
             if (window.innerWidth <= 830) {
                 this.collapsed = true
+            }else{
+                this.collapsed = false
             }
         }
     }

@@ -8,6 +8,11 @@ const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 
+/*
+* type 这个权限是 销售/售后/生产/CRM 路口的权限
+* roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
+* name 每一个都需要 
+*/
 const routes = [
     {
         path: '/',
@@ -28,6 +33,7 @@ const routes = [
     { // 看板
         path: '/dashboard',
         component: Layout,
+        name:'Dashboard',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '数据看板',
@@ -2238,6 +2244,7 @@ target.forEach(first => {
     first.children = children
 })
 
+// 平台方
 ADMIN = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
@@ -2250,6 +2257,7 @@ ADMIN.forEach(first => {
     first.children = children
 })
 
+// 分销售
 DISTRIBUTOR = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
@@ -2262,6 +2270,7 @@ DISTRIBUTOR.forEach(first => {
     first.children = children
 })
 
+// 零售商
 AGENT = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
@@ -2274,6 +2283,7 @@ AGENT.forEach(first => {
     first.children = children
 })
 
+// 门店
 STORE = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
