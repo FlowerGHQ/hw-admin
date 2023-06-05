@@ -3,6 +3,7 @@
 <!--    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">-->
 <!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
 <!--    </a-select>-->
+    <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
         <div class="config-item receive">
@@ -99,7 +100,7 @@ export default {
             // 加载
             orgId: Core.Data.getOrgId(),
             orgType: Core.Data.getOrgType(),
-            loading: false,
+            loading: false, // 按钮防重复点击 loading
             PURCHASE,
             receiveList: [],
             flagPartShipmentList: PURCHASE.FLAG_PART_SHIPMENT_LIST, // 分批发货
@@ -314,11 +315,17 @@ export default {
                 parms['flag_transfer'] = this.form.flag_transfer;
 
             }
+            if (this.loading) return
+            this.loading = true
             Core.Api.Purchase.create(parms).then(res => {
               let _this = this;
                 this.$message.success(_this.$t('i.order_success'));
                 this.routerChange('order');
                 this.handleClearShopCart()
+            }).catch(err => {
+                console.log('handleCreateOrder err', err);
+            }).finally(() => {
+                this.loading = false
             })
         },
         handleClearShopCart() {

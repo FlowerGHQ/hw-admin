@@ -323,13 +323,17 @@ export default {
         },
     },
     mounted() {
-        this.getDistributorListAll();
+        if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
+            this.getDistributorListAll();
+        }
         this.getAgentListAll();
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
             setTimeout(() => {
-                this.getDistributorListAll();
+                if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
+                    this.getDistributorListAll();
+                }
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);
