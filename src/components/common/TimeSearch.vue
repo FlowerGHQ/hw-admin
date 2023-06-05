@@ -37,6 +37,10 @@ export default {
         },
         handleReset() {
             this.createTime = []
+            let obj = {}
+            obj[this.keys[0]] = this.createTime[0]
+            obj[this.keys[1]] = this.createTime[1]
+            this.$emit('search', obj);
         }
     },
 }
