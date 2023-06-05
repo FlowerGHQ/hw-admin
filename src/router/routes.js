@@ -25,6 +25,15 @@ const routes = [
 	        title_en: 'Login',
         }
     },
+    { // 登录
+        path: '/test',
+        component: () => import ('@/views/test/index.vue'),
+        meta: {
+            hidden: true,
+            title: '测试',
+	        title_en: 'Test',
+        }
+    },
     { // 看板
         path: '/dashboard',
         component: Layout,
