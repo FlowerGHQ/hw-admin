@@ -1618,6 +1618,8 @@ let Const = {
 			'1': { key: 1, zh: '预定小程序',en: 'Order Applets', value: 1 },
 			'2': { key: 2, zh: '后台注册',en: 'Background Registration', value: 2 },
 			'3': { key: 3, zh: 'Shopify',en: 'Shopify', value: 3 },
+			'4': { key: 4, zh: '官网2.0',en: 'Official website 2.0', value: 4 },
+			'5': { key: 5, zh: '官网1.0',en: 'Official website 1.0', value: 5 },
 		},
 
 	},
