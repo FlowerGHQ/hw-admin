@@ -216,7 +216,7 @@
                         <!-- 跟进记录 tab -->
                         <a-tab-pane key="TrackRecord" :tab="$t('crm_t.track_record')">
                             <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail" ref ="CRMTrackRecord">
-                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" @submit="getCRMTrackRecord" />
+                                <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :groupId="detail.group_id" @submit="getCRMTrackRecord" />
                             </CRMTrackRecord>
                         </a-tab-pane>
                         <!-- 资料 tab -->
