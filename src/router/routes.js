@@ -918,8 +918,7 @@ const routes = [
 					hidden: true,
 					title: '反馈单编辑',
                     title_en: 'feedback-edit',
-					parent: '/feedback/feedback-list',
-					roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
+					parent: '/feedback/feedback-list',					
 					auth: ['quality-feedback.save'],
 				}
 			},

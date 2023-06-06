@@ -4,7 +4,7 @@
         <div class="title-container">
             <div class="title-area">{{$t('fe.feedback_list')}}</div>
             <div class="btns-area">
-<!--                <a-button type="primary" @click="routerChange('edit')" v-if=" $auth('feedback.save')"><i class="icon i_add" />{{$t('fe.feedback_create')}}</a-button>-->
+<!--                <a-button type="primary" @click="routerChange('edit')" v-if="$auth('feedback.save')"><i class="icon i_add" />{{$t('fe.feedback_create')}}</a-button>-->
                 <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add"/>{{ $t('fe.feedback_create') }}</a-button>
             </div>
         </div>
