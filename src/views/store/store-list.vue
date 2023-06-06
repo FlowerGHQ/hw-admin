@@ -65,13 +65,6 @@
                         <template v-if="column.key === 'pay_type'">
                             {{$Util.payTypeFilter(text, $i18n.locale) || '-' }}
                         </template>
-<!--                        <template v-if="column.key === 'flag_receive_transfer'">
-                            <a-switch v-if="$auth('ADMIN')" :checked="!!record.flag_receive_transfer"
-                                checked-children="是" un-checked-children="否" @click="handleTransferChange(record)"/>
-                            <div v-else class="status status-bg status-tag" :class="text ? 'green' : 'red'">
-                                {{ text ? '接受' : '不接受' }}
-                            </div>
-                        </template>-->
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="text ? 'green' : 'red'">
                                 {{ text ? $t('def.enable_ing') : $t('def.disable_ing') }}
@@ -166,8 +159,7 @@ export default {
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$auth('ADMIN')) {
-                tableColumns.splice(2, 0, {title: this.$t('n.distributor'), dataIndex: 'distributor_name', key: 'item'})
-                // tableColumns.splice(6, 0, {title: '是否接受转单', dataIndex: 'flag_receive_transfer', key: 'flag_receive_transfer'})
+                tableColumns.splice(2, 0, {title: this.$t('n.distributor'), dataIndex: 'distributor_name', key: 'item'})                
             }
             if (this.$auth('ADMIN', 'DISTRIBUTOR')) {
                 tableColumns.splice(3, 0, {title: this.$t('n.agent'), dataIndex: 'agent_name', key: 'item'})

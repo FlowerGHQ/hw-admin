@@ -16,14 +16,10 @@
         <div class="banner-card" v-for="(banner,i) in bannerList" :key="i" @click="routerChange('item',banner.first_level)">
             <template v-if="banner.first_level ==='1'">
                 <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">
-                <!-- <p class="title-black">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>
-                <p class="info-black">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p> -->
                 <arrow-right-outlined type="user" class="arrow-black"/>
             </template>
             <template v-if="banner.first_level ==='2'">
                 <img src="../../assets/images/default_banner-five.png" class="card-bg">
-<!--                <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
-<!--                <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>-->
                 <arrow-right-outlined type="user" class="arrow-black"/>
             </template>
             <template v-if="banner.first_level ==='3'">
@@ -32,39 +28,14 @@
                 <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>
                 <arrow-right-outlined type="user" class="arrow"/>
             </template>
-<!--            <template v-else>-->
-<!--                <img src="../../assets/images/default_banner-five.jpeg" class="card-bg">-->
-<!--                &lt;!&ndash; <p class="title-black">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
-<!--                <p class="info-black">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p> &ndash;&gt;-->
-<!--                <arrow-right-outlined type="user" class="arrow-black"/>-->
-<!--            </template>-->
-<!--            <img src="../../assets/images/default_banner-two.png" class="card-bg" v-if="banner.first_level !=='vehicle'">-->
-<!--            <img src="../../assets/images/default_banner-five.jpeg" class="card-bg" v-else>-->
-<!--            <p class="title">{{ $i18n.locale === 'zh' ? banner.content : banner.content_en }}</p>-->
-<!--            <p class="info">{{ $i18n.locale === 'zh' ? banner.name : banner.name_en }}</p>-->
-<!--            <arrow-right-outlined type="user" class="arrow"/>-->
         </div>
     </div>
-<!--    <div class="message card">-->
-<!--        <div class="title">{{ $t('n.pending') }} <a-badge :count="1" class="badge"/></div>-->
-<!--        <div class="content">-->
-<!--            <div class="message-card" v-for="pend,i in pendingList" :class=" !!pend.istrue ? 'red' : 'green' ">-->
-<!--                <div class="message-content">-->
-<!--                    <p>-->
-<!--                        <span class="text">{{ $i18n.locale === 'zh' ? pend.name : pend.name_en }}</span>-->
-<!--                        <span class="info">{{ $i18n.locale === 'zh' ? pend.info : pend.info_en }}</span>-->
-<!--                    </p>-->
-<!--                    <p class="content">{{ $i18n.locale === 'zh' ? pend.content : pend.content_en }}</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
     <div class="service">
         <div class="service-left card">
             <div class="service-title">{{ $t('n.service') }}</div>
             <div class="service-content service">
                 <div class="service-list" v-for="(service,index) in servicelist" :key="index">
-                    <img :src="service.imgUrl" alt="" class="service-img">
+                    <img :src="serviceSrc(service.imgUrl)" alt="" class="service-img">
                     <p class="service-info">{{ $i18n.locale === 'zh' ? service.name : service.name_en }}</p>
                 </div>
             </div>
@@ -110,6 +81,9 @@
 
 import Core from '../../core';
 import { SearchOutlined, ArrowRightOutlined, RightOutlined } from '@ant-design/icons-vue';
+
+const serviceModules = import.meta.globEager ("../../assets/images/service/*")
+
 export default {
     name: 'Analytics',
     components: {
@@ -185,32 +159,32 @@ export default {
                 {
                     name: '下载',
                     name_en: 'Downloads',
-                    imgUrl: '/src/assets/images/service/download.png',
+                    imgUrl: 'download',
                 },
                 {
                     name: '文档',
                     name_en: 'Documents',
-                    imgUrl: '/src/assets/images/service/documents.png',
+                    imgUrl: 'documents',
                 },
                 {
                     name: '登录管理',
                     name_en: 'Login Management',
-                    imgUrl: '/src/assets/images/service/documents.png',
+                    imgUrl: 'documents',
                 },
                 {
                     name: '配送地址',
                     name_en: 'Shipping Adresses',
-                    imgUrl: '/src/assets/images/service/shipping.png',
+                    imgUrl: 'shipping',
                 },
                 {
                     name: '常见问题',
                     name_en: 'FAQ',
-                    imgUrl: '/src/assets/images/service/FAQ.png',
+                    imgUrl: 'FAQ',
                 },
                 {
                     name: '登录管理',
                     name_en: 'Login Management',
-                    imgUrl: '/src/assets/images/service/documents.png',
+                    imgUrl: 'documents',
                 },
             ],
             // 推荐数据
@@ -285,6 +259,10 @@ export default {
         }
     },
     methods: {
+        serviceSrc(name, type ='png'){
+            let path = `../../assets/images/service/${name}.${type}`;		
+            return serviceModules[path]?.default
+        },
         routerChange(type, first_level_id) {
             let routeUrl = ''
             switch (type) {

@@ -235,7 +235,12 @@ export default {
                 case 'edit':  // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: {id: this.id, set_id: this.detail.set_id, indep_flag: this.indep_flag}
+                        query: {
+                            id: this.id, 
+                            set_id: this.detail.set_id, 
+                            indep_flag: this.indep_flag,
+                            edit: true,
+                        }
                     })
                     window.open(routeUrl.href, '_self')
                     break;

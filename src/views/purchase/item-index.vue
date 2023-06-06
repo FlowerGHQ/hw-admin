@@ -15,8 +15,7 @@
                     <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
                 </a-input>
                 </a-input-group>
-                <a-tooltip :title="$t('i.data_export')" class="popover">
-                <!--  @click="routerChange('favorite')"  {{$t('def.export')}}-->
+                <a-tooltip :title="$t('i.data_export')" class="popover">                
                     <a-button type="text" @click="handleExportConfirm"><i class="icon i_download"/></a-button>
                 </a-tooltip>
                 <a-tooltip :title="$t('i.favorites')" class="popover">
@@ -220,10 +219,7 @@ export default {
             this.isBomShow(category)
             // this.bomShow = false
             if (this.firstLevel_key !== ''){
-                this.firstLevelName = this.categoryList.find(i => i.index_key === this.firstLevel_key);
-                console.log("firstLevel_key", this.firstLevel_key)
-                console.log("categoryList", this.categoryList)
-                console.log("firstLevelName", this.firstLevelName)
+                this.firstLevelName = this.categoryList.find(i => i.index_key === this.firstLevel_key);             
                 if (this.firstLevelName !== undefined){
                     this.searchForm.category_id = this.firstLevelName.id
                     this.firstLevelId = this.firstLevelName.id
@@ -231,34 +227,27 @@ export default {
 
                 this.firstLevel_key = '';
             }
-            console.log('handleCategoryChange category2:', this.searchForm.category_id)
+            
             if ( this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category);
 
                 this.$nextTick(() => {
                     this.$refs.CategoryTree.handleReset();
                 })
-            }
-            console.log('handleCategoryChange category3:', this.searchForm.category_id)
-            // this.pageChange(1)
+            }                        
         },
 
 
 
         // 是否显示爆炸图
         isBomShow(id) {
-            this.bomShow = false
-            console.log(' categoryList:', this.categoryList)
-            for (let i = 0; i < this.categoryList.length ; i++){
-                console.log(' categoryList:', this.categoryList)
+            this.bomShow = false            
+            for (let i = 0; i < this.categoryList.length ; i++){                
                 if(this.categoryList[i].id === id) {
-                    this.bomShow = this.categoryList[i].display_mode === 2
-                    console.log("bomShow",this.bomShow)
+                    this.bomShow = this.categoryList[i].display_mode === 2                    
                     return
-                }
-                console.log("bomShow",this.bomShow)
-                if (this.categoryList[i].children != null){
-                    console.log("bomShow",this.bomShow)
+                }                
+                if (this.categoryList[i].children != null){                    
                     this.isBomChildren(this.categoryList[i], id);
                 }
             };
@@ -268,9 +257,7 @@ export default {
             for (let i = 0; i< element.children.length ; i++){
                 if (element.children[i].children != null){
                     this.isBomChildren(element.children[i], id);
-                }
-                console.log("element.id",element.children[i].id)
-                console.log("id",id)
+                }                                
                 if(element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
 
@@ -280,8 +267,7 @@ export default {
         },
 
         getTableData() { // 获取 商品 数据
-            let searchForm = Core.Util.deepCopy(this.searchForm);
-            console.log("searchForm",searchForm)
+            let searchForm = Core.Util.deepCopy(this.searchForm);            
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
@@ -300,24 +286,15 @@ export default {
                 page: this.currPage,
                 is_authority: 1,
                 page_size: this.pageSize
-            }).then(res => {
-                console.log("getTableData res:", res)
+            }).then(res => {                
                 this.total = res.count;
-                this.tableData = res.list;
-                // if(!this.bomShow) {
-                //     this.bomShow = true
-                // }
+                this.tableData = res.list;        
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-
-        //
-        // getData() {
-        //     this.getTableData()
-        // },
 
 
         getShopCartData(flag = false) { // 获取 购物车 数据
@@ -354,7 +331,7 @@ export default {
             Core.Api.ItemCategory.tree({
                 id: 0,
                 is_authority: 1,
-            }).then(res => {
+            }).then(res => {                
                 this.categoryList = res.list
                 this.handleCategoryChange(this.firstLevelId)
             })

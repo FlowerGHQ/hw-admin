@@ -251,8 +251,8 @@ const apiList = {
 
     },
 	ItemAccessory: { // 商品
-		save: ['PostJson', 'item-accessory/save'],   // 当选
-		// save: ['PostJson', 'item-accessory/save-list'],  // 多选
+		// save: ['PostJson', 'item-accessory/save'],   // 单选
+		save: ['PostJson', 'item-accessory/save-list'],  // 多选
 		list: ['PostJson', 'item-accessory/list'],
 		delete: ['PostJson', 'item-accessory/delete'],
 	},
@@ -801,8 +801,14 @@ const apiList = {
     CRMTESTDRIVE:{
         userEmail:['PostJson', 'crm-test-drive-order/reset-email-to-user'],
         storeEmail:['PostJson', 'crm-test-drive-order/reset-email-to-store']
+    },
+    // 数据看板
+    DashBoard: {
+        orderCount: ['PostJson', 'data-board/statistics'],
+        purchaseOrder: ['PostJson', 'data-board/purchase-order'],
+        repairOrder: ['PostJson', 'data-board/repair-order'],
+        repairRank: ['PostJson', 'data-board/fault_rank'],
     }
-
 };
 
 export default new Api(baseUrl, apiList);

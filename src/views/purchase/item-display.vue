@@ -13,19 +13,12 @@
             </ul>
             <a-button type="primary" block class="btn" v-if="specList.length > 0 ">{{ $i18n.locale =='zh' ? '此商品 ' : 'This commodity has ' }}{{ specList.length }}{{ $i18n.locale =='zh' ? ' 种规格' : ' kinds of specifications' }}</a-button>
             <a-button type="primary" v-if="specList.length <= 0" block class="btn-cart" @click="hanldeAddToShopCart(detail.id)" >{{$t('i.cart')}}</a-button>
-            <!-- <a-button type="primary" v-if="specList.length <= 0  && this.detail.in_shopping_cart" block class="btn" >{{$t('i.added')}}</a-button> -->
 
             <div class="price-list">
                 <div class="retail-price">
-<!--                    <span class="price-left">{{ $t('i.price_suggest') }}</span>-->
                     <span class="price-right" v-if="currency === 'eur' || currency === 'EUR'">€{{$Util.countFilter(detail[priceKey + 'eur'])}}</span>
                     <span class="price-right" v-else>${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>
-<!--                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>-->
                 </div>
-<!--                <div class="price">-->
-<!--                    <span class="price-left">{{ $t('i.price') }}</span>-->
-<!--                    <span class="price-right">€{{$Util.countFilter(detail[priceKey + 'eur'])}} | ${{$Util.countFilter(detail[priceKey + 'usd'])}}</span>-->
-<!--                </div>-->
             </div>
             <div class="stars" @click="hanldeAddToFavorite" :class="{'active': detail.in_favorite}">
                 <star-outlined />
@@ -34,9 +27,17 @@
         </div>
         <div class="content">
             <div v-if="this.specList.length > 0">
+                <!-- 商品规格 -->
                 <div class="title">{{ $t('i.commercial_specification') }}</div>
                 <div class="content-list">
-                    <SpecificationCard v-for="(item,index) in specList" :data="item" :i="index" :class="{'active': index === mountingIndex}" @AddToFavorite="ToFavorite" class="list" @handleChangeData="changeId"/>
+                    <SpecificationCard 
+                        v-for="(item,index) in specList" 
+                        :data="item" :i="index" 
+                        :class="{'active': index === mountingIndex}" 
+                        class="list" 
+                        @AddToFavorite="ToFavorite" 
+                        @handleChangeData="changeId"
+                    />
                     <SimpleImageEmpty v-if="!specList.length" :desc="$t('p.no_item_spec')"/>
                 </div>
             </div>
@@ -50,8 +51,7 @@
                     <ExploredContent ref="ExploredContent" :id="id" :show="false" class="explored" @noData="noExplodeData"/>
                     <SimpleImageEmpty v-if="explodeShow" :desc="$t('p.no_item_explode')"/>
                 </a-tab-pane>
-                <a-tab-pane key="download" :tab="$t('n.download')">
-                    <!-- <DownLoad :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' /> -->
+                <a-tab-pane key="download" :tab="$t('n.download')">                    
                     <DownLoad :tableData='downloadData' />
                 </a-tab-pane>
             </a-tabs>
@@ -61,7 +61,6 @@
 
 <script>
 import Core from '../../core';
-// import ExploredContent from './components/ExploredContent.vue';
 import { LeftOutlined, RightOutlined, StarOutlined } from '@ant-design/icons-vue';
 import SpecificationCard from './components/SpecificationCard.vue'
 import DownLoad from './components/DownLoad.vue'
@@ -81,7 +80,7 @@ export default {
         SimpleImageEmpty,
         UpAndDownSwiper,
     },
-    props: {
+    props: {        
         item_id: {
             type: Number,
             default: 0
@@ -90,11 +89,10 @@ export default {
     watch: {
         item_id: {
             immediate: true,
-            handler(n) {
-                console.log("watch item_id",n)
+            handler(n) {                
                 this.id = n
                 // this.getItemDetail();
-                this.getAccessoryData();
+                // this.getAccessoryData();
                 this.getDownloadData()
             }
         },
@@ -127,8 +125,7 @@ export default {
     },
     computed: {
         priceKey() {
-            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
-            console.log('priceKey:', priceKey)
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'            
             return priceKey
         }
     },
@@ -142,16 +139,16 @@ export default {
         if(Number(this.$route.query.id)) {
             this.id = Number(this.$route.query.id) || 0
         }
-        this.getItemDetail();
-        // this.getAccessoryData();
-        // this.getDownloadData()
+        this.getItemDetail();                
     },
     methods: {
-        // 获取商品详情
-        getItemDetail() {
+        /*== Fetch start ==*/
+        // 获取商品详情接口
+        getItemDetail(params = {}) {
             this.loading = true;
             Core.Api.Item.detail({
                 id: this.id,
+                ...params
             }).then(res => {
                 console.log('getItemDetail res', res)
                 let detail = res.detail
@@ -166,29 +163,92 @@ export default {
                 this.getExploreDetail(this.id);
             });
         },
-        // 获取 同规格商品 列表
-        getSpecList() {
+        // 获取 同规格商品 列表接口
+        getSpecList(params = {}) {
             this.loading = true;
             Core.Api.Item.list({
                 id: this.detail.id,
                 set_id: this.detail.set_id,
                 flag_spread: 2,
                 status: 0,
-
+                ...params
             }).then(res => {
+                console.log('getSpecList res', this.specList)                
                 this.specList = res.list;
-                console.log('getSpecList res', this.specList)
+                // 刚进页面初始化 商品规格对应的配件                
+                this.getAccessoryData({
+                    item_id: res.list[this.mountingIndex].id
+                })
+
             }).catch(err => {
                 console.log('getSpecList err', err)
             }).finally(() => {
                 this.loading = false;
             });
         },
-        // 查看不同 规格
-        // handleSpecChange(item) {
-        //     this.id = item.id;
-        //     this.getItemDetail()
-        // },
+        // 添加到购物车接口
+        hanldeAddToShopCart(params = {}) {
+            Core.Api.ShopCart.save({
+                item_id: this.detail.id,
+                amount: 1,
+                price: this.detail.purchase_price,
+                ...params
+            }).then(res => {
+                console.log('hanldeAddToShopCart res:', res)
+                this.$message.success(this.$t('i.add_success'))
+                this.detail.in_shopping_cart = true;
+            })
+        },
+
+         // 配件接口
+        getAccessoryData(params = {}) {
+            Core.Api.ItemAccessory.list({
+                item_id: this.id,
+                is_authority :1,
+                ...params
+            }).then(res => {                
+                let list =[]                
+                res.list.forEach( it =>{
+                    let item = {
+                        logo: it.logo,
+                        imgs: it.imgs,
+                        name: it.target_name,
+                        name_en: it.target_name_en,
+                        code: it.target_uid,
+                        attr_list: it.attr_list,
+                        id: it.target_id,
+                        fob_usd: it.fob_usd,
+                        fob_eur: it.fob_eur,
+                        purchase_price_usd: it.purchase_price_usd,
+                        purchase_price_eur: it.purchase_price_eur,
+                    }
+                    list.push(item)
+                })
+                this.accessoryData = list
+            })
+        },
+
+        // 获取下载数据接口
+        getDownloadData(params = {}) {  // 获取 表格 数据
+            this.loading = true;
+            Core.Api.Attachment.list({
+                target_id: this.id,
+                target_type: this.ATTACHMENT_TYPE.ITEM,
+                page: 0,
+                ...params
+            }).then(res => {
+                console.log("AttachmentFile res", res)
+                this.downloadData = res.list
+            }).catch(err => {
+                console.log('AttachmentFile err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        /*== Fetch end ==*/
+
+
+
         // 根据id获取爆炸图
         getExploreDetail(id) {
             this.$refs.ExploredContent.getItemExploreList(id);
@@ -218,20 +278,7 @@ export default {
                     this.getItemDetail();
                 })
             }
-        },
-        // 添加到购物车
-        hanldeAddToShopCart(id) {
-            Core.Api.ShopCart.save({
-                item_id: this.detail.id,
-                amount: 1,
-                price: this.detail.purchase_price
-            }).then(res => {
-                console.log('hanldeAddToShopCart res:', res)
-                this.$message.success(this.$t('i.add_success'))
-                this.detail.in_shopping_cart = true;
-            })
-        },
-
+        },        
         // 商品规格收藏商品成功
         ToFavorite(data) {
             this.getItemDetail();
@@ -240,46 +287,6 @@ export default {
         // 无爆炸图数据
         noExplodeData(data) {
             this.explodeShow = data
-        },
-        getAccessoryData() {
-            Core.Api.ItemAccessory.list({item_id: this.id,is_authority :1}).then(res => {
-                let list =[]
-                console.log(res)
-                res.list.forEach( it =>{
-                    let item = {
-                        logo: it.logo,
-                        imgs: it.imgs,
-                        name: it.target_name,
-                        name_en: it.target_name_en,
-                        code: it.target_uid,
-                        attr_list: it.attr_list,
-                        id: it.target_id,
-                        fob_usd: it.fob_usd,
-                        fob_eur: it.fob_eur,
-                        purchase_price_usd: it.purchase_price_usd,
-                        purchase_price_eur: it.purchase_price_eur,
-                    }
-                    list.push(item)
-                })
-                this.accessoryData = list
-            })
-        },
-
-        // 获取下载数据
-        getDownloadData() {  // 获取 表格 数据
-            this.loading = true;
-            Core.Api.Attachment.list({
-                target_id: this.id,
-                target_type: this.ATTACHMENT_TYPE.ITEM,
-                page: 0
-            }).then(res => {
-                console.log("AttachmentFile res", res)
-                this.downloadData = res.list
-            }).catch(err => {
-                console.log('AttachmentFile err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
         },
 
         // 点击规格(或者点击图片轮播)请求数据

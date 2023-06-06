@@ -130,8 +130,7 @@ const Util = {
      * @param {*} timestamp 秒时间戳或毫秒时间戳
      * @param {Number} type 预设时间格式对应的数字
      */
-    timeFilter(value, type = 1) {
-        console.log("输出", value);
+    timeFilter(value, type = 1) {        
         if (value == null || value == '') return '-';
         if (value.toString() === '0') return '-';
         switch (type) {
@@ -1163,7 +1162,9 @@ const Util = {
         let _searchOptions = this.deepCopy(obj)  
         for (let el in _searchOptions) {
             if(!_searchOptions[el]){
-                Reflect.deleteProperty(_searchOptions,el)
+                if(_searchOptions[el] === "" || _searchOptions[el] === null || _searchOptions[el] === undefined){
+                    Reflect.deleteProperty(_searchOptions,el)
+                }
             }
         }  
         return _searchOptions
@@ -1182,8 +1183,31 @@ const Util = {
         });
         // console.log("结果", result);
         return result
-    }
+    },
     /* ======== 判断门店,分销商,零售商重置密码权限判断 end ========== */
+
+    /* ======== 传参数的时候删除自己不需要的字段 ========== */
+    deleteParamsFilter(_options, deleteValue = []){             
+        deleteValue.forEach(el => {
+            if(Reflect.has(_options, el)){
+                Reflect.deleteProperty(_options, el);
+            }
+        });
+    
+       return _options
+    },
+    /* ======== 传参数的时候删除自己不需要的字段 ========== */
+
+    /* ======== 百分比 ========== 
+        denominator  // 分母
+        numerator // 分子
+    */
+    percentageFilter(denominator,numerator, type = '%'){        
+        if(!Number(denominator)) return 0 + type
+        let result =  Number(numerator) / Number(denominator) * 100 + type
+        return result
+    }
+    /* ======== 百分比 ========== */
 }
 
 export default Util

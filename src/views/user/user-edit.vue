@@ -114,7 +114,7 @@ export default {
         if (this.$auth('MANAGER') && this.loginType == this.org_type) {
             this.getRoleList();
         }
-        this.handleGroupTree();
+        // this.handleGroupTree();
     },
     methods: {
         routerChange(type, item) {
@@ -184,7 +184,6 @@ export default {
             Core.Api.CRMGroupMember.structureByUser().then(res => {
                 this.groupOptions = res.list
                 console.log(res)
-
             })
         },
     }

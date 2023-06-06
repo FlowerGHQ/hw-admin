@@ -696,7 +696,6 @@ export default {
         }
     },
     mounted() {
-        // console.log('111',phoneCountryCode);
         this.phoneCountryCodeList = phoneCountryCode
         this.form.id = Number(this.$route.query.id) || 0
         this.userPortraitForm.customer_id = Number(this.$route.query.id) || 0
@@ -742,11 +741,11 @@ export default {
                         this.form[key] = undefined
                     }
                 }
+                this.userPortraitForm.customer_id = res.detail.id
                 this.defAddr = [d.province, d.city, d.county]
                 this.defAreaContinent = [d.continent || '', d.country || '', d.country_en || '']
                 this.handleContinentSelect(this.defAreaContinent);
                 this.handleAddressSelect(this.defAddr);
-
             }).catch(err => {
                 console.log('getCustomerDetail err', err)
             }).finally(() => {
@@ -819,20 +818,24 @@ export default {
             //     }
             //     console.log('area1234556',area)
             // }
-            let userPortraitForm = Core.Util.deepCopy(this.userPortraitForm)
-            Core.Api.CRMCustomerPortrait.save({
-                ...userPortraitForm,
-                ...areaContinent,
-            }).then( res =>{
-                console.log('CRMCustomerPortrait res', res);
-            }).catch(err => {
-                console.log('CRMCustomerPortrait err:', err)
-            })
+
             Core.Api.CRMCustomer.save({
                 ...form,
                 ...areaContinent,
                 label_id_list: this.labelIdList,
-            }).then(() => {
+            }).then(res => {
+                this.userPortraitForm.customer_id = res.crmCustomer.id
+                if(this.userPortraitForm.customer_id) {
+                    let userPortraitForm = Core.Util.deepCopy(this.userPortraitForm)
+                    Core.Api.CRMCustomerPortrait.save({
+                        ...userPortraitForm,
+                        ...areaContinent,
+                    }).then( res =>{
+                        console.log('CRMCustomerPortrait res', res);
+                    }).catch(err => {
+                        console.log('CRMCustomerPortrait err:', err)
+                    })
+                }
                 this.$message.success(this.$t('pop_up.save_success'))                              
                 this.routerChange('back')
             }).catch(err => {

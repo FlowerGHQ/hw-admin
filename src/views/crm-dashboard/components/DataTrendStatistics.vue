@@ -15,7 +15,6 @@
 
 <script>
 import { Chart, registerTheme } from '@antv/g2'
-import Core from "../../../core";
 
 export default {
     name: 'Cards',
@@ -38,58 +37,60 @@ export default {
     data() {
         return {
             boStatisticsChart: {},
+			timer: null
         };
     },
     watch: {
-        searchForm: {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                this.testDriveIntentStatistics()
-            }
-        },
-        isPeople: {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                this.testDriveIntentStatistics()
-            }
-        },
-        isCar: {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                this.testDriveIntentStatistics()
-            }
-        },
         list: {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                this.testDriveIntentStatistics()
-                console.log(this.list, 'this.list');
+            deep: true,            
+            handler(n) {				
+                this.testDriveIntentStatistics()                
             }
         },
 
     },
-    computed: {
-        lang() {
-            return this.$store.state.lang
-        },
-    },
+    computed: {},
     created() {
 
     },
     mounted() {
         this.testDriveIntentStatistics()
     },
-    beforeUnmount() {
+    beforeUnmount() {		
         this.$refs.PurchaseIntentchartId.innerHTML = ''
+		clearTimeout(this.timer)
     },
     methods: {
+        // 获取数据
+        testDriveIntentStatistics() {			
+            this.timer = setTimeout(() => {
+                // 客户
+                if (this.isPeople) {
+                    this.drawPeopleBoStatisticsChart(this.list)
+                } else {  
+                // 车辆预定         
+                    this.drawCarBoStatisticsChart(this.list)
+                }
+            }, 50)
+        },
         drawCarBoStatisticsChart(data) {
+            // console.log("数据", data);
+            // value 总数
+            // value1 是国外
+            // value2 是国内(指app)
+            let filterData = []
+
+            data.forEach(el => {
+                let abroadObj = { country: this.$t('db.abroad'), value: el.value1, time: el.date }  // 国外
+                let domesticObj = { country: this.$t('db.domestic') , value: el.value2, time: el.date } // 国内
+                const arr = [abroadObj,domesticObj]
+                filterData.push(...arr)
+            });
+
+            // console.log("过滤后的数据", filterData);
+
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
+                // 销毁图表
                 this.boStatisticsChart.destroy()
             }
             const chart = new Chart({
@@ -98,73 +99,39 @@ export default {
                 height: 217,
                 width: 600,
             });
-            chart.data(data)
+            chart.data(filterData)
             chart.scale({
-                date: {
+                time: {
                     tickCount: 10,
                     range: [0.01, 0.98],
                     type: 'cat',
                 },
-                value1: {
+                value: {
                     alias: this.$t('db.order_amount'),
-                    range: [0, 0.97],
-                    type: 'linear',
+                    range: [0, 0.97],                    
+                    nice: true
                 },
-                value2: {
-                    alias: this.$t('db.order_amount'),
-                    range: [0, 0.97],
-                    type: 'linear',
-                }
             });
-            chart.legend({
-                position: 'top-right',
-                custom: true, // 自定义图例
-                offsetY: -6,
-                items: [
-                    {
-                        name: this.$t('db.domestic'),
-                        value: 'value1',
-                        marker: { symbol: 'circle', style: { fill: 'l(270) 0:#FFFFFF 1:#346EF2', r: 5 } },
-                    },
-                    {
-                        name: this.$t('db.abroad'),
-                        value: 'value2',
-                        marker: { symbol: 'circle', style: { fill: 'l(270) 0:#FFFFFF 1:#DC6E38', r: 5 } },
-                    },
-                ],
-            });
-            chart.interaction('legend-highlight');
-            chart.axis('value1', { // 隐藏y轴线
-                grid: null
-            })
-            chart.axis('value2', { // 隐藏y轴线
-                grid: null
-            })
-            chart.area()
-                .position('date*value1')
-                .shape('smooth')
-                .color('l(270) 0:#FFFFFF 1:#346EF2')
-            chart.area()
-                .position('date*value2')
-                .shape('smooth')
-                .color('l(270) 0:#FFFFFF 1:#DC6E38')
 
-            chart.line()
-                .position('date*value1')
-                .shape('smooth')
-                .color('#346EF2')
-                .size(2)
-            chart.line()
-                .position('date*value2')
-                .shape('smooth')
-                .color('#DC6E38')
-                .size(2)
+            chart.legend({
+                position: 'top'
+            })
+            chart.axis('value', { // 隐藏网格线
+                grid: null
+            })  
+            
+            chart.area().shape('smooth').position('time*value').color('country');
+            chart.line().shape('smooth').position('time*value').color('country');
+
+            chart.interaction('element-highlight');
+
+              
+
             chart.render();
             this.boStatisticsChart = chart
         },
         drawPeopleBoStatisticsChart(people_data) {
-            if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
+            if (this.boStatisticsChart.destroy) {                
                 this.boStatisticsChart.destroy()
             }
             const chart = new Chart({
@@ -200,43 +167,7 @@ export default {
                 .size(2)
             chart.render();
             this.boStatisticsChart = chart
-        },
-        testDriveIntentStatistics() {
-            this.loading = true;
-            Core.Api.CRMDashboard.purchaseIntentStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = []
-                res.list.forEach(res => {
-                    if (res.type !== 0) {
-                        if (res.type !== 40) {
-                            dv.push({ type: this.$Util.CRMCustomerPurchaseIntentChartFilter(res.type, this.lang), value: res.value })
-                        }
-                    }
-                })
-                const _data = this.list;
-                const people_data = this.list;
-                if (this.isPeople === true) {
-                    this.drawPeopleBoStatisticsChart(people_data)
-                } else {
-                    console.log('_data', _data);
-                    // const carData = [
-                    //     { value: 46, value1: 0, value2: 0, date: '2023-02-20' },
-                    //     { value: 46, value1: 22, value2: 20, date: '2023-02-20' },
-                    //     { value: 46, value1: 10, value2: 22, date: '2023-02-21' },
-                    // ]
-                    this.drawCarBoStatisticsChart(_data)
-                }
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        }
-
-
+        },       
     }
 };
 </script>

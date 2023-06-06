@@ -158,7 +158,7 @@ const { proxy } = getCurrentInstance();
 const TimeSearchs = ref(null)  //组件的ref
 const balanceForm = ref({
     source_type: "0", // 来源
-    source_uid: null, // 工单编号
+    source_uid: '', // 工单编号
     type: "0", // 收入还是支出
 })
 const tableData = ref([]) // 明细列表详情
@@ -260,7 +260,7 @@ const handleSearch = () => {
 const handleSearchReset = () => {
     balanceForm.value = {
         source_type: "0",
-        source_uid: null,
+        source_uid: '',
         type: "0",
     }
     walletListFetch({ ...balanceForm.value })

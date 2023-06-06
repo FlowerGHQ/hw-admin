@@ -99,7 +99,7 @@
                     </AuditHandle>
                 </template>
                 <!-- 订单审核 -->
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.WAIT_AUDIT && detail.type === TYPE.AFTER_SALES && $auth('purchase-order.audit')">
+                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.WAIT_AUDIT && $auth('purchase-order.audit')">
                     <a-button 
                         type="primary" 
                         @click="handleModalShow('createAuditShow')">
@@ -428,7 +428,7 @@
                     </div>
                 </div>
                 <div class="form-item img-upload required">
-                    <div class="key">{{ $t('p.attachment') }}</div>
+                    <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
                     <div class="value">                    
                         <a-upload name="file" class="file-uploader"
                                 :file-list="upload.fileList" :action="upload.action"
@@ -798,9 +798,7 @@ export default {
                     if (this.detail.type === PARENT_TYPE.MIX){
                         return false;
                     }
-
-            }
-            console.log("detail", this.detail)
+            }            
             switch (this.detail.status) {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
@@ -1290,8 +1288,7 @@ export default {
             }
         },
         // 步骤条
-        step(){
-            // console.log("detail", this.detail)
+        step(){            
             if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT ||  this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT){
                 this.stepsList = [
                     {status: '100', zh: '支付', en: 'Payment'},
@@ -1299,7 +1296,8 @@ export default {
                     {status: '300', zh: '收货',en: 'Receipt'},
                     {status: '400', zh: '交易完成',en: 'Transaction completed'},
                 ]
-                if (this.detail.type === Core.Const.PURCHASE.TYPE.AFTER_SALES){
+                // 售后订单 售前订单 显示
+                if (this.detail.type === Core.Const.PURCHASE.TYPE.AFTER_SALES || this.detail.type === Core.Const.PURCHASE.TYPE.PRE_SALES){
                     this.stepsList = [
                         {status: '60', zh: '审核', en: 'Audit'},
                         {status: '100', zh: '支付', en: 'Payment'},

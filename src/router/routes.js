@@ -525,12 +525,11 @@ const routes = [
                     hidden: true,
                     roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类配置',
-
                 }
             },
             {
                 path: 'Item-category-explored',
-                name: 'ItemCategoryConfig',
+                name: 'ItemCategoryExplored',
                 component: () => import('@/views/item/Item-category-explored.vue'),
                 meta: {
                     hidden: true,
@@ -913,8 +912,7 @@ const routes = [
 					hidden: true,
 					title: '反馈单编辑',
                     title_en: 'feedback-edit',
-					parent: '/feedback/feedback-list',
-					roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
+					parent: '/feedback/feedback-list',					
 					auth: ['quality-feedback.save'],
 				}
 			},
@@ -2214,6 +2212,13 @@ const routes = [
 
         ]
     },
+    // 测试用例
+    {
+        path:'/test',
+        name:'test',
+        component: () => import('../views/z-test/test.vue'),
+        children: []
+    }
 
 ];
 
