@@ -262,7 +262,7 @@ export default {
             //     searchForm.name = "";
             // }
             this.loading = true;
-            Core.Api.Item.list({
+            const params = {
                 flag_spread: 0,
                 category_id: searchForm.category_id,
                 name: searchForm.name,
@@ -271,13 +271,12 @@ export default {
                 page: this.currPage,
                 is_authority: 1,
                 page_size: this.pageSize
-            }).then(res => {
+            }
+            
+            Core.Api.Item.list(Core.Util.searchFilter(params)).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
-                this.tableData = res.list;
-                // if(!this.bomShow) {
-                //     this.bomShow = true
-                // }
+                this.tableData = res.list;  
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
