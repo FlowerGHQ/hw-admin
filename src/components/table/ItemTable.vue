@@ -142,9 +142,11 @@ export default {
                     console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys,'selectedRowItems:', selectedRowItems)
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
                 },
-                getCheckboxProps: record => ({
-                    disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
-                }),
+                getCheckboxProps: (record) => {
+                    return {
+                        disabled: (this.showStock && record.stock === 0) || this.disabledChecked.includes(record.id)
+                    }
+                },               
             };
         },
     },
