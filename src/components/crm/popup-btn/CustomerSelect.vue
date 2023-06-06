@@ -5,7 +5,7 @@
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
         class="CustomerSelectModal">
         <div class="modal-content">
-            <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="targetId" :targetType="targetType" v-if="addCustomerBtn" @select="getTableData"/>
+            <CustomerAdd :btnText="$t('crm_c.add')"  :targetId="targetId" :targetType="targetType" :groupId="groupId" v-if="addCustomerBtn" @select="getTableData"/>
             <div class="search-container">
                 <a-row class="search-area">
                     <!-- 名称 -->
@@ -15,7 +15,7 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
-                    <!-- 邮箱 -->
+                    <!-- 手机号 -->
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('n.phone') }}:</span></div>
                         <div class="value">
@@ -139,6 +139,9 @@ export default {
             type: Boolean,
             default: false,
         },
+        groupId: {
+            type: Number
+        }
 
 
     },
