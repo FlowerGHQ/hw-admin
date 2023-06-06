@@ -5,6 +5,7 @@
         </div>
         <div class="search-container">
             <a-row class="search-area">
+                <!-- 所属仓库 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('wa.related') }}:</div>
                     <div class="value">
@@ -16,17 +17,18 @@
                         </a-select>
                     </div>
                 </a-col>
+                <!-- 产品类型 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                     <div class="key">{{ $t('wa.product_type') }}:</div>
                     <div class="value">
                         <a-select v-model:value="searchForm.target_type" :placeholder="$t('wa.choose_product_type')" @change="handleTargetTypeSearch" allowClear>
-                            <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">{{
-                                    val[$i18n.locale]
-                                }}
+                            <a-select-option v-for="(val, key) of targetTypeMap" :key="key" :value="Number(key)">
+                                {{ val[$i18n.locale] }}
                             </a-select-option>
                         </a-select>
                     </div>
                 </a-col>
+                <!-- 商品编码 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('i.code') }}:</div>
                     <div class="value">
@@ -49,6 +51,7 @@
                         </a-select>
                     </div>
                 </a-col>
+                <!-- 商品名称 -->
                 <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
                     <div class="key">{{ $t('r.item_name') }}:</div>
                     <div class="value">
@@ -283,7 +286,7 @@ export default {
             this.searchForm.target_id = undefined;
             this.handleSearch()
         },
-        handleSearch() {  // 搜索
+        handleSearch() {  // 搜索            
             this.pageChange(1);
         },
         handleSearchReset() {  // 重置搜索
@@ -309,14 +312,31 @@ export default {
             })
         },
         handleItemSearch(code) {
-            Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
-                this.itemOptions = res.list
-            })
+            // 商品
+            if(this.searchForm.target_type == 1){
+                Core.Api.Item.list({code: code,flag_spread: 1}).then(res => {
+                    this.itemOptions = res.list
+                })
+            } else if(this.searchForm.target_type == 2){
+            // 物料
+                Core.Api.Material.list({code: code}).then(res => {
+                    this.itemOptions = res.list
+                })
+            }
+            
         },
         handleItemNameSearch(name) {
-            Core.Api.Item.list({name: name,flag_spread: 1}).then(res => {
-                this.itemOptions = res.list
-            })
+            // 商品
+            if(this.searchForm.target_type == 1){
+                Core.Api.Item.list({name: name,flag_spread: 1}).then(res => {
+                    this.itemOptions = res.list
+                })
+            } else if(this.searchForm.target_type == 2){
+            // 物料
+                Core.Api.Material.list({name: name}).then(res => {
+                    this.itemOptions = res.list
+                })
+            }        
         },
         handleItemChange(){
             // this.searchForm.target_type = undefined
