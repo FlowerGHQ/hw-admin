@@ -10,7 +10,8 @@
                         <ItemSelect 
                             btnType='primary' 
                             :btnText="$t('i.select_item')" 
-                            btnClass="item-select-btn"                            
+                            btnClass="item-select-btn"
+                            :disabled-checked='disabledChecked'
                             @select="handleSelectItem" 
                         />          
                         <!-- 确认更改 -->
@@ -103,6 +104,7 @@ export default {
                     type: 'img',
                 },
             },
+            disabledChecked: [], // 传给上传配件选择商品中哪些不选中的
         };
     },
     computed: {
@@ -189,7 +191,12 @@ export default {
         },
         getTableData() {
             Core.Api.ItemAccessory.list({item_id: this.item_id}).then(res => {
-                this.tableData = res.list
+                this.tableData = res.list  
+                // 每次先清空                         
+                this.disabledChecked = []
+                res.list.forEach($1 => {
+                    this.disabledChecked.push($1.item_id)
+                });                            
             })
         },
         handleSelectItem(ids, items) {

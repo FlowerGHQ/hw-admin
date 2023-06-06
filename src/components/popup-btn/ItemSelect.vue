@@ -39,7 +39,7 @@
                     :loading='loading'  
                     :showStock='!!warehouseId'
                     :check-mode='true' 
-                    :disabled-checked='disabledChecked' 
+                    :disabled-checked='disabledChecked'
                     :radio-mode='radioMode'
                     @submit="handleSelectItem" 
                 />
