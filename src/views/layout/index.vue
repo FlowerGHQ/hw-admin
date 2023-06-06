@@ -107,7 +107,7 @@
                             <i class='icon' :class="item.meta.icon"/>
                             <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
                         </a-menu-item>
-                        <a-sub-menu  v-else-if="$auth(...item.auth)" :key="item.name">
+                        <a-sub-menu  v-else="$auth(...item.auth)" :key="item.path">
                             <template #title>
                                 <i class='icon' :class="item.meta.icon"/>
                                 <span v-show="!collapsed">{{ lang =='zh' ? item.meta.title : item.meta.title_en }}</span>
@@ -219,18 +219,19 @@ export default {
             handler(n) {
                 let meta = n.meta || {}
                 // console.log('watch $route:', n)
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
-                let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu                
                 // console.log('is_sp:', is_sp)
                 let path = n.path.split('/').slice(1)
-
+                
                 if (n.meta.parent) {
                     this.selectedKeys = [n.meta.parent]
-                } else if (not_sub_menu && !is_sp) {
+                } else if (not_sub_menu) {
                     this.selectedKeys = ['/' + path[0]]
                 } else {
                     this.selectedKeys = [n.fullPath]
                 }
+                this.openKeys = [`/${path[0]}`]
+                
                 console.log('this.selectedKeys:', this.selectedKeys)
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
