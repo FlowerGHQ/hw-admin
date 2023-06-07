@@ -13,6 +13,7 @@
 <script type="text/javascript" src="https://lf1-cdn-tos.bytegoofy.com/goofy/lark/op/h5-js-sdk-1.5.23.js"></script>
 <!-- 在页面上添加 VConsole 方便调试-->
 <script src="https://unpkg.com/vconsole/dist/vconsole.min.js"></script>
+<script src="https://sf3-cn.feishucdn.com/obj/feishu-static/lark/passport/qrcode/LarkSSOSDKWebQRCode-1.0.2.js"></script>
 <script>
     // VConsole will be exported to `window.VConsole` by default.
     var vConsole = new window.VConsole();
@@ -20,7 +21,7 @@
 
 <body>
     <div>
-        <div class="img">
+        <!-- <div class="img">
             <div id="img_div" class="img_div">
             </div>
             <span class="hello_text">Hello</span>
@@ -28,7 +29,8 @@
             <div id="hello_text_welcome" class="hello_text_welcome">
             </div>
         </div>
-        <div class="icon"><img src="../public/svg/icon.svg" /></div>
+        <div class="icon"><img src="../public/svg/icon.svg" /></div> -->
+        <div id="login_container"></div>
     </div>
     <!-- 在 html 文档中引入本 demo 免登流程函数 apiAuth() 和用户信息展示函数 showUser(res) -->
     <script src="/public/index.js"></script>
