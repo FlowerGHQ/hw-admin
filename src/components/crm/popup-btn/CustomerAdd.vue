@@ -209,7 +209,6 @@ export default {
                 marital_status: '',
                 income: '',
                 remark: '',
-
                 address: '',
             },
             defAddr: [],

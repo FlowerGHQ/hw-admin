@@ -21,7 +21,8 @@
 						<a-input v-model:value="form.name_en" :placeholder="$t('m.enter_material_en')" :maxlength="60" />
 					</div>
 				</div>
-				<div class="form-item">
+				<!-- 物料分类 -->
+				<div class="form-item required">
 					<div class="key">{{ $t('m.material_category') }}</div>
 					<div class="value">
 						<CategoryTreeSelect @change="handleCategorySelect" :category="item_category" :category-id="form.category_id" :placeholder="$t('n.choose') + $t('m.material_category')" type="material" />
@@ -145,7 +146,7 @@
 					name: '',
 					name_en: '',
 					code: '',
-					category_id: undefined,
+					category_id: undefined,	// 物料分类
 					encapsulation: '', // 物料包装
 					spec: '', // 规格
 					supplier_ids: undefined, // 供应商
@@ -272,6 +273,10 @@
 				}
 				if (!form.name_en) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_en_name')}`);
+				}
+				// 物料分类-必选判断
+				if (!form.category_id) {
+					return this.$message.warning(`${this.$t('n.choose')}${this.$t('m.material_category')}`);
 				}
 				if (!form.code) {
 					return this.$message.warning(`${this.$t('n.enter')}${this.$t('m.material_code')}`);
