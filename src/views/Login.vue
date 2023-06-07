@@ -39,6 +39,7 @@
 import Core from '../core';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+import jsapi from '../core/jsapi';
 const TYPE = Core.Const.LOGIN.TYPE
 const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
@@ -75,8 +76,16 @@ export default {
         // 初始化看选中哪个登录方
         this.loginForm.user_type = Core.Data.getLoginType() || TYPE.ADMIN
     },
-    mounted() {},
+    mounted() {
+        this.fsLogin()
+    },
     methods: {
+        fsLogin() {
+            if (window.h5sdk) {
+                jsapi.apiAuth();
+                console.log('1111111111111111');
+            }
+        },
         handleFocusPwd() {
             this.$refs['password-input'].focus()
         },
