@@ -8,12 +8,17 @@
                 <a-input-group  compact>
                     <a-select v-model:value="searchType" class="search_select">
                         <a-select-option v-for="(val, key) in SEARCH_TYPE_MAP" :key="key" :value="key">{{ val[$i18n.locale]  }}</a-select-option>
-
                     </a-select>
-                <a-input class="search_input" v-model:value="searchForm.name" :placeholder="$t('def.input')" @pressEnter="handleSearch" style="width: 50%" >
-                    <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
-                    <template #suffix><i class="icon i_close_b" @click="handleNameReset" v-if="searchForm.name"/></template>
-                </a-input>
+                    <a-input 
+                        class="search_input" 
+                        style="width: 50%" 
+                        v-model:value="searchForm.name" 
+                        :placeholder="$t('def.input')" 
+                        @pressEnter="handleSearch" 
+                    >
+                        <template #prefix><i class="icon i_search" @click="handleSearch"/></template>
+                        <template v-if="searchForm.name" #suffix><i class="icon i_close_b" @click="handleNameReset"/></template>
+                    </a-input>
                 </a-input-group>
                 <a-tooltip :title="$t('i.data_export')" class="popover">                
                     <a-button type="text" @click="handleExportConfirm"><i class="icon i_download"/></a-button>
@@ -64,7 +69,7 @@
                 <CategoryTree :parentId='firstLevelId' @change='handleCategoryChange' @clickCurrent='clickTab' ref="CategoryTree"/>
             </div>
         </div>
-        <ItemList v-if="!flag_display"  :category_id="searchForm.category_id" :name="searchForm.name" @changeDisplay="changeDisplay" ref="itemList"></ItemList>
+        <ItemList v-show="!flag_display"  :category_id="searchForm.category_id" :name="searchForm.name" @changeDisplay="changeDisplay" ref="itemList"></ItemList>
         <ItemDisplay v-if="flag_display" :item_id="item_id"></ItemDisplay>
     </div>
 </div>
@@ -260,7 +265,6 @@ export default {
                 }                                
                 if(element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
-
                     return
                 }
             }
