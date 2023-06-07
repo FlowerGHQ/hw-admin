@@ -21,6 +21,15 @@ const routes = [
             hidden: true
         }
     },
+    { // 飞书跳转
+        path: '/login-redirect',
+        component: () => import ('@/views/login-redirect.vue'),
+        meta: {
+            hidden: true,
+            title: '登录重定向',
+	        title_en: 'login-redirect',
+        }
+    },
     { // 登录
         path: '/login',
         component: () => import ('@/views/Login.vue'),
