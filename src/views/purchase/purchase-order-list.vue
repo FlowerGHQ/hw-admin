@@ -84,7 +84,6 @@
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.quantity_sales_report_export')}}</a-button>
-
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -102,9 +101,19 @@
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
                     </template>
-                    <!-- 总价 -->
-                    <template v-if="column.key === 'total_price'">                        
+                    <!-- 总价 user_type 分销商可看 状态是等待审核 或者 待审核显示true显示 '-'  -->
+                    <template v-if="column.key === 'total_price'">
                         <div v-if="user_type && (record.status === STATUS.WAIT_AUDIT || record.status === STATUS.REVISE_AUDIT)">-</div>
+                        <div v-else-if="user_type && record.type == FLAG_ORDER_TYPE.Mix_SALES">                            
+                            <!-- 混合订单(分销商有两种显示 平台方可不进这里流程) price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
+                            <div v-if="record?.price_flag == 1">
+                                <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
+                                <span>                        
+                                    {{$Util.countFilter(text)}}
+                                </span>
+                            </div>
+                            <div v-else>-</div>
+                        </div>
                         <div v-else>
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
                             <span>                        
@@ -194,6 +203,7 @@ const LOGIN_TYPE = Core.Const.LOGIN.TYPE
 const SEARCH_TYPE = Core.Const.PURCHASE.SEARCH_TYPE
 const PAYMENT_STATUS_MAP = Core.Const.PURCHASE.PAYMENT_STATUS_MAP
 const PAYMENT_TYPE_LIST = Core.Const.PURCHASE.FLAG_ORDER_TYPE_LIST
+const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE
 const PAY_TIME_LIST = Core.Const.DISTRIBUTOR.PAY_TIME_LIST
 const STATUS = Core.Const.PURCHASE.STATUS;
 
@@ -216,6 +226,7 @@ export default {
             PAYMENT_STATUS_MAP,
             PAYMENT_TYPE_LIST,
             PAY_TIME_LIST,
+            FLAG_ORDER_TYPE,
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
@@ -307,17 +318,22 @@ export default {
         },
         // 权限(平台方还是分销商等)
         user_type() {
-            return Core.Data.getLoginType() == Core.Const.LOGIN.TYPE.DISTRIBUTOR   // 分销商
+            let arr = [Core.Const.LOGIN.TYPE.DISTRIBUTOR]  // 分销商
+            return arr.includes(Core.Data.getLoginType())  
         },
     },
     mounted() {
-        this.getDistributorListAll();
+        if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
+            this.getDistributorListAll();
+        }
         this.getAgentListAll();
         this.getStoreListAll();
         this.getStatusStat();
         this.timer = window.setInterval(() => {
             setTimeout(() => {
-                this.getDistributorListAll();
+                if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
+                    this.getDistributorListAll();
+                }
                 this.getAgentListAll();
                 this.getStoreListAll();
             }, 0);

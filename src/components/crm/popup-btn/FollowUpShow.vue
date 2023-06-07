@@ -105,6 +105,7 @@
               addCustomerBtn="true"
               :targetId="targetId"
               :targetType="targetType"
+              :groupId="groupId"
             >
               <i class="icon i_edit" /> {{ $t("crm_c.add") }}
             </CustomerSelect>
@@ -244,6 +245,9 @@ export default {
     detail: {
       type: Object,
     },
+    groupId: {
+      type: Number
+    }
   },
   data() {
     return {

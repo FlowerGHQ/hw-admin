@@ -297,14 +297,14 @@ export default {
         margin-bottom: 22px;
     }
     .carousel-list {
-        width: 800px;
+        width: 900px;
         max-height: 600px;
         overflow: hidden;
         .carousel-item {
             position: relative;
             padding-bottom: 150px;
             >img {
-                width: 800px;
+                width: 900px;
             }
             canvas {
                 position: absolute;
