@@ -16,7 +16,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const routes = [
     {
         path: '/',
-        redirect: '/test',
+        redirect: '/dashboard',
         meta: {
             hidden: true
         }
