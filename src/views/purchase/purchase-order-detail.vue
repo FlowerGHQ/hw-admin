@@ -297,9 +297,22 @@
                                 <a-table-summary-cell :index="1" :col-span="1">
                                     {{ $t('i.total_quantity') }}:{{total.amount}}
                                 </a-table-summary-cell>
-                                <a-table-summary-cell :index="4" :col-span="1">                           
-                                    <span v-if="!user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
-                                    <span v-else>{{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}</span>
+                                <!-- 订单总价 -->
+                                <a-table-summary-cell :index="4" :col-span="1">     
+                                    <!-- !user_type  不是平台方显示的 -->
+                                    <span v-if="!user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
+                                        {{ $t('p.quotation')}}: - ({{$t('p.auditText')}})
+                                    </span>
+                                    <span v-else-if="!user_type && detail.type == FLAG_ORDER_TYPE.Mix_SALES">
+                                        <!-- 混合订单  price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
+                                        <span v-if="detail?.price_flag == 1">
+                                            {{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}
+                                        </span>
+                                        <span v-else>{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
+                                    </span>
+                                    <span v-else>
+                                        {{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}
+                                    </span>
                                 </a-table-summary-cell>
                             </a-table-summary-row>
                         </a-table-summary>
@@ -822,7 +835,8 @@ export default {
         },
         // 权限(平台方还是分销商等)
         user_type() {
-            return Core.Data.getLoginType() == Core.Const.LOGIN.TYPE.ADMIN
+            let arr = [Core.Const.LOGIN.TYPE.ADMIN]  // 平台方           
+            return arr.includes(Core.Data.getLoginType())              
         },
     },
     mounted() {

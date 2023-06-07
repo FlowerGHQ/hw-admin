@@ -258,6 +258,7 @@ const handleSearch = () => {
 
 // 重置
 const handleSearchReset = () => {
+    proxy.$refs.TimeSearchs?.handleReset()
     balanceForm.value = {
         source_type: "0",
         source_uid: '',
