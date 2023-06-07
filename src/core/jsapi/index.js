@@ -1,100 +1,68 @@
-const appId = 'your_app_id'; // 在飞书开放平台上注册的应用程序的App ID
-const appSecret = 'your_app_secret'; // 在飞书开放平台上注册的应用程序的App Secret
+const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
+const appSecret = 'tz2mi3zVFEE3Qbr8kqDCweER5p5SpMsE'; // 在飞书开放平台上注册的应用程序的App Secret
 
+import Core from '../index'
 export default {
     apiAuth(jsApiList, success, error) {
         console.log("start apiAuth");
-        if (!window.h5sdk) {
-            console.log('invalid h5sdk')
-            alert('please open in feishu')
-            return
-        }
-        // 调用config接口的当前网页url
-        const myUrl = encodeURIComponent(location.href.split("#")[0]);
-        // fetch(`/get_config_parameters?url=${myUrl}`)
-        //     .then((response) =>
-        //         response.json().then((res) => {
-        //             console.log("get_signature", res);
-        //             // 通过error接口处理API验证失败后的回调
-        //             window.h5sdk.error((err) => {
-        //                 throw ("h5sdk error:", JSON.stringify(err));
-        //             });
-        //             // 调用config接口进行鉴权
-        //             window.h5sdk.config({
-        //                 appId: res.appid,
-        //                 timestamp: res.timestamp,
-        //                 nonceStr: res.noncestr,
-        //                 signature: res.signature,
-        //                 jsApiList: [],
-        //                 //鉴权成功回调
-        //                 onSuccess: (res) => {
-        //                     console.log(`config success: ${JSON.stringify(res)}`);
-        //                 },
-        //                 //鉴权失败回调
-        //                 onFail: (err) => {
-        //                     throw `config failed: ${JSON.stringify(err)}`;
-        //                 },
-        //             });
-        //             // 完成鉴权后，便可在 window.h5sdk.ready 里调用 JSAPI
-        //             window.h5sdk.ready(() => {
-        //                 // window.h5sdk.ready回调函数在环境准备就绪时触发
-        //                 // 调用 getUserInfo API 获取已登录用户的基本信息，详细文档参见https://open.feishu.cn/document/uYjL24iN/ucjMx4yNyEjL3ITM
-        //                 tt.getUserInfo({
-        //                     // getUserInfo API 调用成功回调
-        //                     success(res) {
-        //                         console.log(`getUserInfo success: ${JSON.stringify(res)}`);
-        //                         // 单独定义的函数showUser，用于将用户信息展示在前端页面上
-        //                         showUser(res.userInfo);
-        //                     },
-        //                     // getUserInfo API 调用失败回调
-        //                     fail(err) {
-        //                         console.log(`getUserInfo failed, err:`, JSON.stringify(err));
-        //                     },
-        //                 });
-        //                 // 调用 showToast API 弹出全局提示框，详细文档参见https://open.feishu.cn/document/uAjLw4CM/uYjL24iN/block/api/showtoast
-        //                 tt.showToast({
-        //                     title: "鉴权成功",
-        //                     icon: "success",
-        //                     duration: 3000,
-        //                     success(res) {
-        //                         console.log("showToast 调用成功", res.errMsg);
-        //                     },
-        //                     fail(res) {
-        //                         console.log("showToast 调用失败", res.errMsg);
-        //                     },
-        //                     complete(res) {
-        //                         console.log("showToast 调用结束", res.errMsg);
-        //                     },
-        //                 });
-        //             });
-        //         })
-        //     )
-        //     .catch(function (e) {
-        //         console.error(e);
-        //     });
-        // fetch(`/get_appid`).then(response1 => response1.json().then(res1 => {
-        //     console.log("get appid succeed: ", res1.appid);
-        //     // 通过 error 接口处理 API 验证失败后的回调
-        //     window.h5sdk.error(err => {
-        //         throw ('h5sdk error:', JSON.stringify(err));
-        //     });
-        //     // 通过 ready 接口确认环境准备就绪后才能调用 API
-
-        // })).catch(function (e) { // 从服务端获取 app_id 失败后的处理
-        //     console.error(e)
-        // })
+        // if (!window.h5sdk) {
+        //     console.log('invalid h5sdk')
+        //     alert('please open in feishu')
+        //     return
+        // }
         window.h5sdk.ready(() => {
-            console.log("window.h5sdk.ready");
-            console.log("url:", window.location.href);
             // 调用 JSAPI tt.requestAuthCode 获取 authorization code
             tt.requestAuthCode({
-                appId: 'cli_a4f7ecfb66bb500d',
+                appId: appId,
                 // 获取成功后的回调
                 success(res) {
                     console.log("getAuthCode succeed", res);
-                    //authorization code 存储在 res.code
-                    // 此处通过 fetch 把 code 传递给接入方服务端 Route: callback，并获得user_info
-                    // 服务端 Route: callback 的具体内容请参阅服务端模块 server.py 的callback() 函数
+                    const code = res.code
+                    fetch(`http://horwintest.natapp1.cc/feishu/authorize/authorize?code=${code}`)
+                    .then(response => response.json())
+                    .then(res =>{
+                        console.log('authorize res', res);
+                        Core.Data.setToken(res.data.token);
+                        Core.Data.setUser(res.data.user.account || '');
+                        Core.Data.setOrgId(res.data.user.org_id);
+                        Core.Data.setOrgType(res.data.user.org_type);
+                        Core.Data.setCurrency(res.data.user.currency);
+                        Core.Data.setLoginType(res.data.user.type);
+                        Core.Data.setAuthority('')
+                        let loginType = res.data.user.type
+                        let flagAdmin = res.data.user.flag_admin
+                        let flagGroupCustomerAdmin = res.data.user.flag_group_customer_admin
+                        let userId = res.data.user.id
+                        let authorityMap = {}
+                        authorityMap[loginType] = true
+                        if (flagAdmin) {
+                            authorityMap['MANAGER'] = true
+                        }
+                        if (flagGroupCustomerAdmin){
+                            authorityMap['MANAGER_GROUP'] = true
+                        }
+                        Core.Api.Authority.authUserAll({
+                            user_id: userId,
+                            user_type: loginType
+                        }).then(res => {
+                            console.log('authUserAll', res )
+                            let list = res.list
+                            for (const item of list) {
+                                authorityMap[item.key] = true
+                            }
+                        }).finally(() => {
+                            Core.Data.setAuthority(authorityMap)
+                            if (loginType === Core.Const.USER.TYPE.ADMIN){
+                                setTimeout(() => {
+                                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                                }, 1000)
+                            } else {
+                                setTimeout(() => {
+                                    this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                                }, 1000)
+                            }
+                        })
+                    })
                 },
                 // 获取失败后的回调
                 fail(err) {

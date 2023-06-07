@@ -29,7 +29,6 @@
                 </template>
             </a-input>
             <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
-            <a-button @click="test">测试按钮</a-button>
         </div>
     </div>
     <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
@@ -75,17 +74,22 @@ export default {
             Core.Data.setLang("zh")
         }
         if (Core.Data.getLoginType()) {
+            console.log('Core.Data.getLoginType();', Core.Data.getLoginType());
             this.loginForm.user_type = Core.Data.getLoginType();
         } else {
             this.loginForm.user_type = TYPE.AGENT;
         }
+        console.log('this.loginForm.user_type', this.loginForm.user_type);
     },
     mounted() {
-
+        this.fsLogin()
     },
     methods: {
-        test() {
-            jsapi.apiAuth();
+        fsLogin() {
+            if (window.h5sdk) {
+                jsapi.apiAuth();
+                console.log('1111111111111111');
+            }
         },
         handleFocusPwd() {
             this.$refs['password-input'].focus()
