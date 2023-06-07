@@ -29,6 +29,7 @@
                 </template>
             </a-input>
             <a-button class="form-button" type="primary" @click="handleLogin">{{ $t('n.login') }}</a-button>
+            <a-button @click="test">测试按钮</a-button>
         </div>
     </div>
     <div class="login-footer">Copyright © 2019-2022 常州浩万新能源科技有限公司 苏ICP备2022002975号-2</div>
@@ -39,6 +40,7 @@
 import Core from '../core';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+import jsapi from '../core/jsapi';
 const TYPE = Core.Const.LOGIN.TYPE
 const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
@@ -82,6 +84,9 @@ export default {
 
     },
     methods: {
+        test() {
+            jsapi.apiAuth();
+        },
         handleFocusPwd() {
             this.$refs['password-input'].focus()
         },

@@ -1,7 +1,7 @@
 <template>
     <div id="Index">
-        这是一个测试页面
-        <button @click="test">
+        <div>这是一个测试页面</div> 
+        <button class="btn" @click="test">
             测试按钮
         </button>
     </div>
@@ -21,7 +21,7 @@ export default {
     mounted() {
         this.token = Core.Data.getToken()
         console.log('this.token', this.token);
-        this.drawQrcode()
+        // this.drawQrcode()
     },
     methods: {
         test() {
@@ -41,4 +41,18 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#Index {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn {
+    margin-left: 100px;
+    width: 100px;        
+    height: 100px;
+    border: 1px solid red;
+}
+</style>

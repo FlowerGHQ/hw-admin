@@ -11,7 +11,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/test',
         meta: {
             hidden: true
         }
@@ -25,7 +25,7 @@ const routes = [
 	        title_en: 'Login',
         }
     },
-    { // 登录
+    { // demo
         path: '/test',
         component: () => import ('@/views/test/index.vue'),
         meta: {

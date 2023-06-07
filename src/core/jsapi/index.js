@@ -72,42 +72,36 @@ export default {
         //     .catch(function (e) {
         //         console.error(e);
         //     });
-        fetch(`/get_appid`).then(response1 => response1.json().then(res1 => {
-            console.log("get appid succeed: ", res1.appid);
-            // 通过 error 接口处理 API 验证失败后的回调
-            window.h5sdk.error(err => {
-                throw ('h5sdk error:', JSON.stringify(err));
-            });
-            // 通过 ready 接口确认环境准备就绪后才能调用 API
-            window.h5sdk.ready(() => {
-                console.log("window.h5sdk.ready");
-                console.log("url:", window.location.href);
-                // 调用 JSAPI tt.requestAuthCode 获取 authorization code
-                tt.requestAuthCode({
-                    appId: res1.appid,
-                    // 获取成功后的回调
-                    success(res) {
-                        console.log("getAuthCode succeed");
-                        //authorization code 存储在 res.code
-                        // 此处通过 fetch 把 code 传递给接入方服务端 Route: callback，并获得user_info
-                        // 服务端 Route: callback 的具体内容请参阅服务端模块 server.py 的callback() 函数
-                        fetch(`/callback?code=${res.code}`).then(response2 => response2.json().then(res2 => {
-                            console.log("getUserInfo succeed");
-                            // 示例 Demo 中单独定义的函数 showUser，用于将用户信息展示在前端页面上
-                            showUser(res2);
-                        }
-                        )
-                        ).catch(function (e) { console.error(e) })
-                    },
-                    // 获取失败后的回调
-                    fail(err) {
-                        console.log(`getAuthCode failed, err:`, JSON.stringify(err));
-                    }
-                })
-            }
-            )
-        })).catch(function (e) { // 从服务端获取 app_id 失败后的处理
-            console.error(e)
-        })
+        // fetch(`/get_appid`).then(response1 => response1.json().then(res1 => {
+        //     console.log("get appid succeed: ", res1.appid);
+        //     // 通过 error 接口处理 API 验证失败后的回调
+        //     window.h5sdk.error(err => {
+        //         throw ('h5sdk error:', JSON.stringify(err));
+        //     });
+        //     // 通过 ready 接口确认环境准备就绪后才能调用 API
+
+        // })).catch(function (e) { // 从服务端获取 app_id 失败后的处理
+        //     console.error(e)
+        // })
+        window.h5sdk.ready(() => {
+            console.log("window.h5sdk.ready");
+            console.log("url:", window.location.href);
+            // 调用 JSAPI tt.requestAuthCode 获取 authorization code
+            tt.requestAuthCode({
+                appId: 'cli_a4f7ecfb66bb500d',
+                // 获取成功后的回调
+                success(res) {
+                    console.log("getAuthCode succeed", res);
+                    //authorization code 存储在 res.code
+                    // 此处通过 fetch 把 code 传递给接入方服务端 Route: callback，并获得user_info
+                    // 服务端 Route: callback 的具体内容请参阅服务端模块 server.py 的callback() 函数
+                },
+                // 获取失败后的回调
+                fail(err) {
+                    console.log(`getAuthCode failed, err:`, JSON.stringify(err));
+                }
+            })
+        }
+        )
     },
 };
