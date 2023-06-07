@@ -342,6 +342,7 @@ export default {
       searchForm: {
         name: undefined,
         phone: undefined,
+        source_type: undefined,
         level: 0,
         begin_time: undefined,
         end_time: undefined,
