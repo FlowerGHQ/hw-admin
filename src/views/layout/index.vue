@@ -318,13 +318,10 @@ export default {
             this.$router.push(path);
         },
 
-        handleLogout() {
-            Core.Data.setUser('');
-            Core.Data.setAuthority('');
+        handleLogout() {           
             this.$router.replace('/login');
-            Core.Api.Common.logout().finally(() => {
-                Core.Data.setToken('');
-            });
+            localStorage.clear()
+            Core.Api.Common.logout()
         },
 
         handleEditShow() {
