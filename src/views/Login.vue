@@ -82,7 +82,7 @@ export default {
     methods: {
         fsLogin() {
             if (window.h5sdk) {
-                jsapi.apiAuth();
+                jsapi.apiAuth();                
             }
         },
         handleFocusPwd() {

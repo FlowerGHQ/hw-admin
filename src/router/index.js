@@ -20,47 +20,57 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach((to, from, next) => {
-	let _this = this
+// 设置路由白名单(其实网上很多做法用meta的requiresAuth就是跟白名单一样的)
+function inWhiteList(toPath) {
+    const whiteList = ['/login','/login-redirect'];
+    const bool = whiteList.some(el => el == toPath) // 有一个正确就正确
+    return bool
+}
+
+router.beforeEach((to, from, next) => {	
+    const token = Core.Data.getToken();
+    const loginType = Core.Data.getLoginType()
+
     NProgress.start();
     if (to.meta.title) {
-        /* let sys_name = Core.Data.getLoginType() === 1 ? '管理 | ' : '运营 | '
-        document.title = sys_name + to.meta.title */
-        let org_name = Core.Util.userTypeFilter(Core.Data.getLoginType())
 	    const lang = Core.Data.getLang();
         document.title = "EOS" + ' | ' + (lang ==="zh" ? to.meta.title : to.meta.title_en)
     }
-    if (to.path === '/login') {
-        // 去登录页面直接放行
-        NProgress.done();
-        next();
-    } else {
-        const token = Core.Data.getToken();
-        const loginType = Core.Data.getLoginType()
-        if (!token) {
-            // 没登录
-            message.info('请先登录');
-            NProgress.done();
-            next('/login');
+    if (inWhiteList(to.path)){
+        // 判断存在token的时候并且是login的时候直接跳转
+        if (to.path === '/login' && token) {
+            // 避免重复登录
+            next({ path: '/'})
         } else {
-            // 已登录
-            const roles = to.meta.roles;
-            // next();
-            if (roles) {
-                // 如果进入的路由meta中有roles规则
-                if (roles.includes(loginType)) {
-                    // 如果当前usertType在roles arr中有
-                    next();
-                } else {
-                    // 表前userType禁止访问
-                    message.warning('当前身份无法访问');
-                    next('/dashboard');
-                    NProgress.done();
-                }
-            } else {
-                // 没有roles规则直接放行
+            next()
+        }
+        NProgress.done();
+        return
+    }
+
+    if (!token) {
+        // 没登录
+        message.info('请先登录');
+        NProgress.done();
+        next('/login');
+    } else {
+        // 已登录
+        const roles = to.meta.roles;
+        // next();
+        if (roles) {
+            // 如果进入的路由meta中有roles规则
+            if (roles.includes(loginType)) {
+                // 如果当前usertType在roles arr中有
                 next();
+            } else {
+                // 表前userType禁止访问
+                message.warning('当前身份无法访问');
+                next('/dashboard');
+                NProgress.done();
             }
+        } else {
+            // 没有roles规则直接放行
+            next();
         }
     }
 });
