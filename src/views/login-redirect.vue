@@ -26,7 +26,7 @@ onMounted(() => {
 /* Fetch */
 const loginRedirect = (token) => {
     axios({
-        url: 'http://horwintest.natapp1.cc/authorize/user-by-token',
+        url: 'http://eos-dev-api.horwincloud.com/authorize/user-by-token',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         params: {token},        

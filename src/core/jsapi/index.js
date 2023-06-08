@@ -18,7 +18,7 @@ export default {
                 success(res) {
                     console.log("getAuthCode succeed", res);
                     const code = res.code
-                    fetch(`http://horwintest.natapp1.cc/feishu/authorize/authorize?code=${code}`)
+                    fetch(`http://eos-dev-api.horwincloud.com/feishu/authorize/authorize?code=${code}`)
                     .then(response => response.json())
                     .then(res =>{
                         console.log('authorize res', res);
