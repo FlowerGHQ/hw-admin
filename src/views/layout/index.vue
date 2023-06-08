@@ -1,145 +1,142 @@
 <template>
-<a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
-    <a-layout id="Layout" :class="lang">
-        <a-layout-header class="layout-header">
-            <div class="header-left" :class="{'collapsed': collapsed}">
-                <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万"/>
-            </div>
-            <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
-                <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
-                        <div class="router-type">
-                            <img src="@images/router_type_3.png" alt="浩万"/>{{ $t('n.sales') }}
-                        </div>
-                    </a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
-                        <div class="router-type">
-                            <img src="@images/router_type_2.png" alt="浩万"/>{{ $t('n.after') }}
-                        </div>
-                    </a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
-                        <div class="router-type">
-                            <img src="@images/router_type_4.png" alt="浩万"/>{{ $t('n.production') }}
-                        </div>
-                    </a-radio-button>
-                    <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
-                        <div class="router-type">
-                            <img src="@images/router_type_1.png" alt="浩万"/>{{ $t('n.crm') }}
-                        </div>
-                    </a-radio-button>
-                </a-radio-group>
-            </div>
-            <div class="header-right">
-                <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
-                <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
-                    <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
-                </a-button>
-                <a-divider type="vertical"/>
-                <a-button class="notice PC" type="link">
-                    <a-badge :count="unread.org + unread.master"  @click="routerChange('notice')">
-                        <i class="icon i_notify" />
-                    </a-badge>
-                </a-button>
-                <a-divider class="PC" type="vertical"/>
-                <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
-                <!-- <a-divider type="vertical"/>-->
-                <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
-                    <a-button class="user-info" type="link">
-                        <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
-                            <template #icon><i  class="icon i_user"/></template>
-                        </a-avatar>
-                        <span class="user-name">{{ user.name }}</span>
+    <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
+        <a-layout id="Layout" :class="lang">
+            <a-layout-header class="layout-header">
+                <div class="header-left" :class="{ 'collapsed': collapsed }">
+                    <img src="@images/header-logo2.png" class="logo" @click="collapsed = !collapsed" alt="浩万" />
+                </div>
+                <div class="header-center" v-if="loginType === Core.Const.USER.TYPE.ADMIN">
+                    <a-radio-group v-model:value="tabPosition" @change="handleRouterSwitch">
+                        <a-radio-button class="header-button" :value="ROUTER_TYPE.SALES">
+                            <div class="router-type">
+                                <img src="@images/router_type_3.png" alt="浩万" />{{ $t('n.sales') }}
+                            </div>
+                        </a-radio-button>
+                        <a-radio-button class="header-button" :value="ROUTER_TYPE.AFTER">
+                            <div class="router-type">
+                                <img src="@images/router_type_2.png" alt="浩万" />{{ $t('n.after') }}
+                            </div>
+                        </a-radio-button>
+                        <a-radio-button class="header-button" :value="ROUTER_TYPE.PRODUCTION">
+                            <div class="router-type">
+                                <img src="@images/router_type_4.png" alt="浩万" />{{ $t('n.production') }}
+                            </div>
+                        </a-radio-button>
+                        <a-radio-button class="header-button" :value="ROUTER_TYPE.CRM">
+                            <div class="router-type">
+                                <img src="@images/router_type_1.png" alt="浩万" />{{ $t('n.crm') }}
+                            </div>
+                        </a-radio-button>
+                    </a-radio-group>
+                </div>
+                <div class="header-right">
+                    <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
+                    <a-button class="lang-switch" type="link" @click="handleLangSwitch">
+                        <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
-                    <template #overlay>
-                        <a-menu style="text-align: center;">
-                            <a-menu-item @click="handleEditShow">
-                                <a-button type="link"  class="menu-item-btn">{{ $t('n.password') }}</a-button>
-                                <a-modal v-model:visible="passShow" :title="$t('n.password')" class="password-edit-modal" :after-close="handleEditClose">
-                                    <div class="form-title">
-                                        <div class="form-item required">
-                                            <div class="key">{{ $t('n.old') }}:</div>
-                                            <div class="value">
-                                                <a-input-password :placeholder="$t('def.input')" v-model:value="form.old_password" />
+                    <a-divider type="vertical" />
+                    <a-button class="notice PC" type="link">
+                        <a-badge :count="unread.org + unread.master" @click="routerChange('notice')">
+                            <i class="icon i_notify" />
+                        </a-badge>
+                    </a-button>
+                    <a-divider class="PC" type="vertical" />
+                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
+                    <!-- <a-divider type="vertical"/>-->
+                    <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
+                        <a-button class="user-info" type="link">
+                            <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
+                                <template #icon><i class="icon i_user" /></template>
+                            </a-avatar>
+                            <span class="user-name">{{ user.name }}</span>
+                        </a-button>
+                        <template #overlay>
+                            <a-menu style="text-align: center;">
+                                <a-menu-item @click="handleEditShow">
+                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                                    <a-modal v-model:visible="passShow" :title="$t('n.password')"
+                                        class="password-edit-modal" :after-close="handleEditClose">
+                                        <div class="form-title">
+                                            <div class="form-item required">
+                                                <div class="key">{{ $t('n.old') }}:</div>
+                                                <div class="value">
+                                                    <a-input-password :placeholder="$t('def.input')"
+                                                        v-model:value="form.old_password" />
+                                                </div>
+                                            </div>
+                                            <div class="form-item required">
+                                                <div class="key">{{ $t('n.new') }}:</div>
+                                                <div class="value">
+                                                    <a-input-password v-model:value="form.password"
+                                                        :placeholder="$t('def.input')" />
+                                                </div>
+                                            </div>
+                                            <div class="form-item required">
+                                                <div class="key">{{ $t('n.double') }}:</div>
+                                                <div class="value">
+                                                    <a-input-password v-model:value="form.new_password"
+                                                        :placeholder="$t('n.double')" />
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="form-item required">
-                                            <div class="key">{{ $t('n.new') }}:</div>
-                                            <div class="value">
-                                                <a-input-password v-model:value="form.password" :placeholder="$t('def.input')" />
-                                            </div>
-                                        </div>
-                                        <div class="form-item required">
-                                            <div class="key">{{ $t('n.double') }}:</div>
-                                            <div class="value">
-                                                <a-input-password v-model:value="form.new_password" :placeholder="$t('n.double')" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <template #footer>
-                                        <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure') }}</a-button>
-                                        <a-button @click="passShow=false">{{ $t('def.cancel') }}</a-button>
-                                    </template>
-                                </a-modal>
+                                        <template #footer>
+                                            <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure')
+                                            }}</a-button>
+                                            <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
+                                        </template>
+                                    </a-modal>
+                                </a-menu-item>
+                                <a-menu-item @click="handleLogout">
+                                    <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
+                </div>
+            </a-layout-header>
+            <a-layout class="layout-container">
+                <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64'
+                    theme='light'>
+                    <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
+                        :inlineCollapsed='collapsed' :inlineIndent='8'>
+                        <template v-for="item of showList">
+                            <a-menu-item v-if="$auth(...item.auth) && item.not_sub_menu" :key="item.path"
+                                @click="handleLink(item.path)">
+                                <i class='icon' :class="item.meta.icon" />
+                                <span :class="{ 'collapsed-title': collapsed }">{{ item.meta.title }}</span>
                             </a-menu-item>
-                            <a-menu-item  @click="handleLogout">
-                                <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-            </div>
-        </a-layout-header>
-        <a-layout class="layout-container">
-            <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64' theme='light'>
-                <a-menu 
-                    theme="light" 
-                    v-model:openKeys="openKeys" 
-                    v-model:selectedKeys="selectedKeys" 
-                    mode="inline"
-                    :inlineCollapsed='collapsed'
-                    :inlineIndent='8'>
-                    <template v-for="item of showList">
-                        <a-menu-item 
-                            v-if="$auth(...item.auth) && item.not_sub_menu" 
-                            :key="item.path"  
-                            @click="handleLink(item.path)"
-                        >
-                            <i class='icon' :class="item.meta.icon"/>
-                            <span :class="{'collapsed-title': collapsed}">{{ item.meta.title }}</span>
-                        </a-menu-item>
-                        <a-sub-menu  v-else="$auth(...item.auth)" :key="item.path">
-                            <template #title>
-                                <i class='icon' :class="item.meta.icon"/>
-                                <span v-show="!collapsed">{{ lang =='zh' ? item.meta.title : item.meta.title_en }}</span>
-                            </template>
-                            <template v-for="i of item.children">
-                                <template v-if="$auth(...i.auth)">
-                                    <a-menu-item 
-                                        :key="item.path + '/' + i.path" 
-                                        @click="handleLink(item.path + '/' + i.path)"
-                                    >
-                                        <span>{{ lang =='zh' ? i.meta.title : i.meta.title_en }}</span>
-                                    </a-menu-item>
+                            <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.name">
+                                <template #title>
+                                    <i class='icon' :class="item.meta.icon" />
+                                    <span v-show="!collapsed">{{ lang == 'zh' ? item.meta.title : item.meta.title_en
+                                    }}</span>
                                 </template>
-                            </template>
-                        </a-sub-menu>
-                    </template>
-                </a-menu>
-            </a-layout-sider>
-            <a-layout class="layout-main" :class="{longer: collapsed}">
-                <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
-                <a-layout-content class="layout-content">
-                    <router-view></router-view>
-                </a-layout-content>
+                                <template v-for="i of item.children">
+                                    <template v-if="$auth(...i.auth)">
+                                        <a-menu-item :key="item.path + '/' + i.path"
+                                            @click="handleLink(item.path + '/' + i.path)">
+                                            <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
+                                        </a-menu-item>
+                                    </template>
+                                </template>
+                            </a-sub-menu>
+                        </template>
+                    </a-menu>
+                </a-layout-sider>
+                <a-layout class="layout-main" :class="{ longer: collapsed }">
+                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
+                    <a-layout-content class="layout-content">
+                        <router-view></router-view>
+                    </a-layout-content>
+                </a-layout>
             </a-layout>
         </a-layout>
-    </a-layout>
-</a-config-provider>
+    </a-config-provider>
 </template>
-
+    
 <script>
 import Core from '../../core';
-import {SIDER} from '../../router/routes';
+import { SIDER } from '../../router/routes';
 
 import MyBreadcrumb from './components/Breadcrumb.vue';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
@@ -196,10 +193,10 @@ export default {
                 })
             })
             // 选择模块进行路由过滤
-            if (this.loginType === LOGIN_TYPE.ADMIN){
+            if (this.loginType === LOGIN_TYPE.ADMIN) {
                 let newShowList = []
                 SIDER.ADMIN.forEach(item => {
-                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1: true){
+                    if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
                 })
@@ -219,25 +216,24 @@ export default {
             handler(n) {
                 let meta = n.meta || {}
                 // console.log('watch $route:', n)
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu                
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
+                let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
                 // console.log('is_sp:', is_sp)
                 let path = n.path.split('/').slice(1)
-                
+
                 if (n.meta.parent) {
                     this.selectedKeys = [n.meta.parent]
-                } else if (not_sub_menu) {
+                } else if (not_sub_menu && !is_sp) {
                     this.selectedKeys = ['/' + path[0]]
                 } else {
                     this.selectedKeys = [n.fullPath]
                 }
-                this.openKeys = [`/${path[0]}`]
-                
                 console.log('this.selectedKeys:', this.selectedKeys)
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
-                    this.breadcrumbList = [{text: meta.title, path: n.path, key: path[0]}]
+                    this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }]
                 } else {
-                    this.breadcrumbList.push({text: meta.title, path: n.path, key: path[0]})
+                    this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] })
                 }
                 console.log('this.breadcrumbList:', this.breadcrumbList)
             }
@@ -260,10 +256,10 @@ export default {
     mounted() {
         this.loginType = Core.Data.getLoginType()
         this.getUnreadCount();
-        if (Core.Data.getLang() === "" || Core.Data.getLang() === null){
+        if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
             Core.Data.setLang("zh")
         }
-        console.log("Core.Data.getLang()",Core.Data.getLang())
+        console.log("Core.Data.getLang()", Core.Data.getLang())
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1
@@ -368,23 +364,23 @@ export default {
             console.log('handleLangSwitch')
             this.$store.commit('switchLang')
             this.$i18n.locale = this.$store.state.lang
-            console.log('this.$i18n.locale',this.$i18n.locale)
+            console.log('this.$i18n.locale', this.$i18n.locale)
         },
 
         handleRouterSwitch() {
-            if (Core.Data.getTabPosition() === this.tabPosition){
+            if (Core.Data.getTabPosition() === this.tabPosition) {
                 return
             }
             Core.Data.setTabPosition(this.tabPosition)
-            console.log("tabPosition",this.tabPosition)
+            console.log("tabPosition", this.tabPosition)
 
-            if (this.tabPosition === this.ROUTER_TYPE.CRM){
+            if (this.tabPosition === this.ROUTER_TYPE.CRM) {
                 this.$router.replace('/crm-dashboard');
             } else {
-                if (this.loginType === Core.Const.USER.TYPE.ADMIN){
-                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                    this.$router.replace({ path: '/dashboard', query: { from: 'login' } })
                 } else {
-                    this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                    this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
                 }
             }
 
@@ -395,14 +391,14 @@ export default {
         handleWindowResize(e) {
             if (window.innerWidth <= 830) {
                 this.collapsed = true
-            }else{
+            } else {
                 this.collapsed = false
             }
         }
     }
 };
 </script>
-
+    
 <style lang="less">
 .ant-menu-inline-collapsed-tooltip {
     i.icon {
@@ -429,6 +425,7 @@ export default {
 
         .header-left {
             .fcc();
+
             img.logo {
                 height: 34px;
                 cursor: pointer;
@@ -444,8 +441,9 @@ export default {
                 padding: 0 10px;
                 text-align: center;
                 align-items: center;
+
                 .ant-radio-button-wrapper {
-                    display:none;
+                    display: none;
                 }
             }
 
@@ -453,6 +451,7 @@ export default {
                 height: 100%;
                 width: 100%;
                 .fcc();
+
                 img {
                     width: 30px;
                     height: 30px;
@@ -464,11 +463,13 @@ export default {
             .ant-radio-button-wrapper:focus {
                 border: 0px;
             }
+
             .ant-radio-button-wrapper:not(:first-child)::before {
                 border: 0px solid #d9d9d9;
                 border-radius: 2px 0 0 2px;
                 background: #fff;
             }
+
             .ant-radio-button-wrapper-checked {
                 background-color: #F3F6F8;
                 border: 0px;
@@ -477,10 +478,12 @@ export default {
 
         .header-right {
             .fcc();
+
             .notice {
                 width: 50px;
                 height: 50px;
             }
+
             .lang-switch {
                 .icon {
                     font-size: 20px;
@@ -494,6 +497,7 @@ export default {
             i.icon {
                 font-size: 14px;
             }
+
             i.i_cart {
                 font-size: 25px;
                 color: @TC_header_item;
@@ -616,7 +620,8 @@ export default {
                         right: 8px;
                         transform: translateY(3px);
 
-                        &::after, &::before {
+                        &::after,
+                        &::before {
                             height: 1px;
                         }
                     }
@@ -660,17 +665,19 @@ export default {
         overflow-y: auto;
     }
 
-    @media (min-width: 820px) {
-    }
+    @media (min-width: 820px) {}
+
     @media (max-width: 820px) {
         .layout-header {
             .header-center {
                 .header-button {
                     padding: 2px 10px;
+
                     .router-type {
                         flex-direction: column;
                         font-size: 10px;
                         line-height: 1;
+
                         img {
                             margin: 0 5px;
                             width: 26px;
@@ -681,5 +688,5 @@ export default {
             }
         }
     }
-}
-</style>
+}</style>
+    
