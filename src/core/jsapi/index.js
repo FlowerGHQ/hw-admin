@@ -1,6 +1,7 @@
 const appId = 'cli_a4f7ecfb66bb500d'; // 在飞书开放平台上注册的应用程序的App ID
 const appSecret = 'tz2mi3zVFEE3Qbr8kqDCweER5p5SpMsE'; // 在飞书开放平台上注册的应用程序的App Secret
 
+import router from '../../router'
 import Core from '../index'
 export default {
     apiAuth(jsApiList, success, error) {
@@ -54,11 +55,11 @@ export default {
                             Core.Data.setAuthority(authorityMap)
                             if (loginType === Core.Const.USER.TYPE.ADMIN){
                                 setTimeout(() => {
-                                    this.$router.replace({ path: '/dashboard', query: {from: 'login'} })
+                                    router.replace({ path: '/dashboard', query: {from: 'login'} })
                                 }, 1000)
                             } else {
                                 setTimeout(() => {
-                                    this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                                    router.replace({ path: '/dashboard/index', query: {from: 'login'} })
                                 }, 1000)
                             }
                         })
@@ -66,7 +67,6 @@ export default {
                 },
                 // 获取失败后的回调
                 fail(err) {
-                    console.log('test', window.location.href.split('?')[0].split('#')[0]);
                     console.log(`getAuthCode failed, err:`, JSON.stringify(err));
                 }
             })
