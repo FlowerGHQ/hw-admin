@@ -37,13 +37,7 @@ router.beforeEach((to, from, next) => {
         document.title = "EOS" + ' | ' + (lang ==="zh" ? to.meta.title : to.meta.title_en)
     }
     if (inWhiteList(to.path)){
-        // 判断存在token的时候并且是login的时候直接跳转
-        if (to.path === '/login' && token) {
-            // 避免重复登录
-            next({ path: '/'})
-        } else {
-            next()
-        }
+        next()
         NProgress.done();
         return
     }

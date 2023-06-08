@@ -485,13 +485,10 @@ export default {
                 this.storeList = []
             }
         },
-        getTableData() {  // 获取 表格 数据
-            console.log('this.operMode', this.operMode)
+        getTableData() {  // 获取 表格 数据            
             this.loading = true;
             console.log('this.searchForm:', this.searchForm)
-            /*if(this.operMode == 'audit' && this.loginType == 10) {
-                this.searchForm.org_type = 15
-            }*/
+            
             Core.Api.Repair.list({
                 ...this.searchForm,
                 page: this.currPage,
