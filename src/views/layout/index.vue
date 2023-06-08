@@ -100,12 +100,15 @@
                     <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                         :inlineCollapsed='collapsed' :inlineIndent='8'>
                         <template v-for="item of showList">
-                            <a-menu-item v-if="$auth(...item.auth) && item.not_sub_menu" :key="item.path"
+                            <a-menu-item 
+                                v-if="$auth(...item.auth) && item.not_sub_menu" 
+                                :key="item.path"
                                 @click="handleLink(item.path)">
-                                <i class='icon' :class="item.meta.icon" />
+                                <i class='icon' :class="item.meta.icon" 
+                            />
                                 <span :class="{ 'collapsed-title': collapsed }">{{ item.meta.title }}</span>
                             </a-menu-item>
-                            <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.name">
+                            <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
                                 <template #title>
                                     <i class='icon' :class="item.meta.icon" />
                                     <span v-show="!collapsed">{{ lang == 'zh' ? item.meta.title : item.meta.title_en
@@ -214,11 +217,10 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                let meta = n.meta || {}
-                // console.log('watch $route:', n)
+                let meta = n.meta || {}                
                 let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
                 let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
-                // console.log('is_sp:', is_sp)
+
                 let path = n.path.split('/').slice(1)
 
                 if (n.meta.parent) {
@@ -228,6 +230,10 @@ export default {
                 } else {
                     this.selectedKeys = [n.fullPath]
                 }
+
+                this.openKeys = [`/${path[0]}`
+]
+
                 console.log('this.selectedKeys:', this.selectedKeys)
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
