@@ -66,6 +66,7 @@ export default {
                 },
                 // 获取失败后的回调
                 fail(err) {
+                    console.log('test', window.location.href.split('?')[0].split('#')[0]);
                     console.log(`getAuthCode failed, err:`, JSON.stringify(err));
                 }
             })
