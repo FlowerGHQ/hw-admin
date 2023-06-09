@@ -110,7 +110,7 @@
                     <div class="key">{{ $t('d.sales_area') }}:</div>
                     <div class="value">
                         <a-select v-model:value="form.sales_area_ids" mode="multiple" :placeholder=" $t('def.select')">
-                            <a-select-option v-for="(item,index) of salesList" :key="index" :value="item.id">{{ item.name }}</a-select-option>
+                            <a-select-option v-for="(item,index) of salesList" :key="index" :value="item.id">{{ $i18n.locale === 'zh' ? item.country : item.country_en }}</a-select-option>
                         </a-select>
                     </div>
                 </div>
