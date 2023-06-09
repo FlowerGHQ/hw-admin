@@ -31,7 +31,7 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服	    
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.145:8889' // my
@@ -1621,6 +1621,11 @@ let Const = {
 			'4': { key: 4, zh: '官网2.0',en: 'Official website 2.0', value: 4 },
 			'5': { key: 5, zh: '官网1.0',en: 'Official website 1.0', value: 5 },
 		},
+        // 落地页
+        Landing_Page:{
+            '30': { key: 1, zh: '落地页',en: 'Landing page'},
+            '31': { key: 2, zh: '落地页',en: 'Landing page'},
+        }
 
 	},
     CRM_ORDER: {

@@ -202,7 +202,12 @@
             </template>
 
             <template v-if="column.key === 'source_type'">
-              {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+				<span v-if="Landing_Page[text]">
+					{{ Landing_Page[text][$i18n.locale]}}{{"-"}}{{ $i18n.locale == 'en'? record.country_en:record.country }}{{ Landing_Page[text]['key'] }}
+				</span>
+				<span>
+					{{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+				</span>
             </template>
             <template v-if="column.dataIndex === 'label_list'">
               <a-tag v-for="(item, index) in record.label_list" :key="index" color="blue" class="customer-tag">{{ lang ===
@@ -336,6 +341,7 @@ export default {
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
       DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
       SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP,
+      Landing_Page: Core.Const.CRM_CUSTOMER.Landing_Page, // 落地页
       total: 0,
       orderByFields: {},
       // 搜索

@@ -216,13 +216,13 @@ export default {
             this.searchForm.name = ''
             this.$refs.itemList.pageChangeName(this.searchForm.name,this.searchType);
         },
-        handleCategoryChange(category) {
+        handleCategoryChange(category) {            
             console.log('handleCategoryChange category1:', this.searchForm.category_id)
             this.tableData = []
             this.searchForm.category_id = category
             this.flag_display = false
             this.isBomShow(category)
-            // this.bomShow = false
+            this.bomShow = false
             if (this.firstLevel_key !== ''){
                 this.firstLevelName = this.categoryList.find(i => i.index_key === this.firstLevel_key);             
                 if (this.firstLevelName !== undefined){
