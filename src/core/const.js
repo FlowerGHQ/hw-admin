@@ -1623,8 +1623,8 @@ let Const = {
 		},
         // 落地页
         Landing_Page:{
-            '30': { key: 1, zh: '落地页',en: 'Landing page'},
-            '31': { key: 2, zh: '落地页',en: 'Landing page'},
+            '30': { key: 1, zh: '落地页',en: 'Landing page', country_en:'Germany', country:'德国'},
+            '31': { key: 2, zh: '落地页',en: 'Landing page', country_en:'Germany', country:'德国'},
         }
 
 	},
