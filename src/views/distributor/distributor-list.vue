@@ -58,8 +58,8 @@
                         </template>
                         <template v-if="column.dataIndex === 'sales_area_list'">
                             <div v-if="text && text.length" class="ell" style="max-width: 300px">
-                                <a-tooltip :title="text.map(i => i.name).join(' , ')" destroyTooltipOnHide placement="topLeft">
-                                    <a-tag v-for="item of text" :key="item.id">{{item.name}}</a-tag>
+                                <a-tooltip :title="text.map(i => $i18n.locale === 'zh' ? i?.country : i.country_en).join(' , ')" destroyTooltipOnHide placement="topLeft">
+                                    <a-tag v-for="item of text" :key="item.id">{{ $i18n.locale === 'zh' ? item?.country : item?.country_en }}</a-tag>
                                 </a-tooltip>
                             </div>
                             <div v-else>-</div>

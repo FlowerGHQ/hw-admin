@@ -21,6 +21,15 @@ const routes = [
             hidden: true
         }
     },
+    { // 飞书跳转
+        path: '/login-redirect',
+        component: () => import ('@/views/login-redirect.vue'),
+        meta: {
+            hidden: true,
+            title: '登录重定向',
+	        title_en: 'login-redirect',
+        }
+    },
     { // 登录
         path: '/login',
         component: () => import ('@/views/Login.vue'),
@@ -30,6 +39,15 @@ const routes = [
 	        title_en: 'Login',
         }
     },
+    // { // demo
+    //     path: '/test',
+    //     component: () => import ('@/views/test/index.vue'),
+    //     meta: {
+    //         hidden: true,
+    //         title: '测试',
+	//         title_en: 'Test',
+    //     }
+    // },
     { // 看板
         path: '/dashboard',
         component: Layout,

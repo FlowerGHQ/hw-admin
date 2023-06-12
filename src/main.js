@@ -5,9 +5,10 @@ import store from './store';
 import Util from './core/utils'
 import i18n from './core/i18n'
 import Antd from 'ant-design-vue'
-
+// import './core/vconsole'
 console.log('i18n', i18n)
 import {message,notification} from 'ant-design-vue';
+import MyDirective from './core/myDirective/index.js'
 
 // import address from './assets/js/address/cascader-address-options.js'
 
@@ -27,3 +28,7 @@ app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Util.confirm
 
 app.use(router).use(Antd).use(store).use(i18n).mount('#app')
+
+// 自定义指令
+const directive = new MyDirective(app)
+directive.default()

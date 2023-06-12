@@ -77,6 +77,12 @@ class StorageHandler {
         return JSON.parse(localStorage.getItem(FINAL_KEY));
     }
 
+    removeItem(key) {
+        key = normalizeKey(key);
+        const FINAL_KEY = `${Const.DATA.KEY_PREFIX}${key}`;
+        return JSON.parse(localStorage.removeItem(FINAL_KEY));
+    }
+
     setToken(value) {
         this.setItem(Const.DATA.KEY_TOKEN, value);
     }
