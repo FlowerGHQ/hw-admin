@@ -203,7 +203,7 @@
 
             <template v-if="column.key === 'source_type'">
 				<span v-if="Landing_Page[text]">
-					{{ Landing_Page[text][$i18n.locale]}}{{"-"}}{{ $i18n.locale == 'en'? record.country_en:record.country }}{{ Landing_Page[text]['key'] }}
+					{{ Landing_Page[text][$i18n.locale]}}{{"-"}}{{ $i18n.locale == 'en'? Landing_Page[text]['country_en']:Landing_Page[text]['country'] }}{{ Landing_Page[text]['key'] }}
 				</span>
 				<span>
 					{{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
