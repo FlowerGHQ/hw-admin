@@ -10,7 +10,7 @@ let baseUrl = Const.NET.URL_POINT
  */
 
 const apiList = {
-    Common: { // 公共
+    Common: { // 公共        
         login: ['PostJson', 'system/login'], // 账号登录
         logout: ['Post', 'system/logout'], // 账号登出
         updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改

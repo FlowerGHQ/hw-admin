@@ -1621,6 +1621,11 @@ let Const = {
 			'4': { key: 4, zh: '官网2.0',en: 'Official website 2.0', value: 4 },
 			'5': { key: 5, zh: '官网1.0',en: 'Official website 1.0', value: 5 },
 		},
+        // 落地页
+        Landing_Page:{
+            '30': { key: 1, zh: '落地页',en: 'Landing page', country_en:'Germany', country:'德国'},
+            '31': { key: 2, zh: '落地页',en: 'Landing page', country_en:'Germany', country:'德国'},
+        }
 
 	},
     CRM_ORDER: {

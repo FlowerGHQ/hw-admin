@@ -39,6 +39,7 @@
 import Core from '../core';
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
 import enUS from 'ant-design-vue/lib/locale-provider/en_US';
+import jsapi from '../core/jsapi';
 const TYPE = Core.Const.LOGIN.TYPE
 const TYPE_MAP = Core.Const.LOGIN.TYPE_MAP
 export default {
@@ -56,7 +57,7 @@ export default {
             loginForm: {
                 username: '',
                 password: '',
-                user_type: 30,
+                user_type: 10, 
             },
 
             user: {},
@@ -72,16 +73,18 @@ export default {
         if (Core.Data.getLang() === "" || Core.Data.getLang() === null){
             Core.Data.setLang("zh")
         }
-        if (Core.Data.getLoginType()) {
-            this.loginForm.user_type = Core.Data.getLoginType();
-        } else {
-            this.loginForm.user_type = TYPE.AGENT;
-        }
+        // 初始化看选中哪个登录方
+        this.loginForm.user_type = Core.Data.getLoginType() || TYPE.ADMIN
     },
     mounted() {
-
+        this.fsLogin()
     },
     methods: {
+        fsLogin() {
+            if (window.h5sdk) {
+                jsapi.apiAuth();                
+            }
+        },
         handleFocusPwd() {
             this.$refs['password-input'].focus()
         },
@@ -95,25 +98,18 @@ export default {
                 return this.$message.warning(this.$t('n.enter_password'))
             }
             Core.Api.Common.login(form).then(res => {
-                console.log('handleLogin apiName res', res)
-                Core.Data.setToken(res.token);
-                Core.Data.setLoginType(this.loginForm.user_type);
+                console.log('handleLogin apiName res', res)                
                 Core.Data.setToken(res.token);
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);
                 Core.Data.setCurrency(res.user.currency);
-
+                
+                Core.Data.setLoginType(this.loginForm.user_type);  // 设置登录方的数字
+                
                 let loginType = TYPE_MAP[this.loginForm.user_type]
-                /* switch (this.loginForm.user_type) {
-                    case TYPE.ADMIN:
-                        break;
-                    case TYPE.AGENT:
-                        break;
-                    case TYPE.STORE:
-                        break;
-                } */
-                Core.Data.setUserType(loginType);
+                Core.Data.setUserType(loginType); // 设置登录方的文字
+
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
             });
         },
@@ -133,9 +129,7 @@ export default {
                 user_id: userId,
                 user_type: userType
             }).then(res => {
-                // console.log('authUserAll', res )
-                let list = res.list
-                // let list = []
+                let list = res.list                
                 for (const item of list) {
                     authorityMap[item.key] = true
                 }
@@ -150,11 +144,7 @@ export default {
                         this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
                     }, 1000)
                 }
-
-
             })
-
-
         },
         handleLangSwitch() {
             console.log('handleLangSwitch')

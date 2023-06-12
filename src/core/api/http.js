@@ -3,6 +3,7 @@ import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
 
+const shownErrorMessages = [];
 const showMessage = (msg) => {
     message.error(msg);
 };
@@ -18,14 +19,33 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (status === -1) {
         return showMessage(i18n.global.t('error_code.system'));
     }
+    // if (status >= 1000) {
+    //     try {
+    //         message = JSON.parse(message)
+    //     } catch (err) {
+    //         message = {}
+    //     }
+    //     return showMessage(i18n.global.t('error_code.' + status, message))
+    // }
+    // showMessage(message);
     if (status >= 1000) {
         try {
             message = JSON.parse(message)
         } catch (err) {
             message = {}
         }
-        return showMessage(i18n.global.t('error_code.' + status, message))
+        const errorMessageKey = i18n.global.t('error_code.' + status, message);
+        if (shownErrorMessages.includes(errorMessageKey)) {
+            return;
+        }
+        shownErrorMessages.push(errorMessageKey);
+        return showMessage(errorMessageKey);
     }
+    const errorMessageKey = message;
+    if (shownErrorMessages.includes(errorMessageKey)) {
+        return;
+    }
+    shownErrorMessages.push(errorMessageKey);
     showMessage(message);
 };
 
