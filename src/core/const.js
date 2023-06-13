@@ -813,8 +813,16 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { value: 1 , zh: '国际物流', en: 'International logistics'},
-            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            // { value: 1 , zh: '国际物流', en: 'International logistics'},
+            // { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            { value: 3 , zh: '陆运', en: 'Land transport'},
+            { value: 4 , zh: '海运', en: 'Sea transport' },
+            { value: 5 , zh: '空运', en: 'Air freight' },
+        ],
+        PORT_LIST: [
+            { value: 1 , zh: '上海', en: 'Shanghai'},
+            { value: 2 , zh: '太仓', en: 'Taicang' },
+            { value: 3 , zh: '南沙', en: 'Nansha' },
         ],
         COURIER_MAP: {
             '1': { key: 1, zh: '国际物流', en: 'International logistics'},
@@ -1046,14 +1054,11 @@ let Const = {
 	        WAIT_AUDIT: 10, //待审核
 	        FINANCE_PASS: 20, //财务审核
             AUDIT_PASS: 30, //审核通过
-
-
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已发货
             RECEIVED: 60, //已收货
 	        AUDIT_BACK: -5,//退回
             AUDIT_REFUSE: -10,//审核失败
-
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {

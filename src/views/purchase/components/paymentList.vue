@@ -140,7 +140,7 @@ const props = defineProps({
 /*== 计算属性 ==*/
 const payColumns = computed(() => {
     let columns = [
-        { title: proxy.$t('p.attachment'), dataIndex: 'attachment', key: 'attachment' },
+        { title: proxy.$t('p.payment_voucher'), dataIndex: 'attachment', key: 'attachment' },
         { title: proxy.$t('p.payment_method'), dataIndex: 'type', key: 'type'  },
         { title: proxy.$t('p.status'), dataIndex: 'status' ,key: 'status'},
         { title: proxy.$t('p.pay_amount'), dataIndex: 'price', key: 'money'},
