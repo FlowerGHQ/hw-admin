@@ -83,50 +83,50 @@
         <!-- 物流信息弹框 -->
         <a-modal v-model:visible="waybillShow" :title="$t('n.delivery_logs')" width='860px'>
             <div class="modal-content">
-                <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
+                <!-- <div class="info-item" v-if="detail.org_type === USER_TYPE.AGENT || detail.org_type === USER_TYPE.STORE">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
-                    {{ waybillDetail.express_type }}
-                </div>
+                    {{ logisticsInfoDetail.express_type }}
+                </div> -->
                 <!-- 发货方式 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
-                    <div class="value">{{ $Util.purchaseExpressFilter(waybillDetail?.express_type, $i18n.locale) || '-' }}
+                    <div class="value">{{ $Util.purchaseExpressFilter(logisticsInfoDetail?.express_type, $i18n.locale) || '-' }}
                     </div>
                 </div>
                 <!-- 发货港口 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.shipping_port') }}</div>
-                    <div class="value">{{ waybillDetail?.port || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail?.port || '-' }}</div>
                 </div>
                 <!-- 发货仓库 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_warehouse') }}</div>
-                    <div class="value">{{ $Util.purchaseWaybillFilter(waybillDetail?.name, $i18n.locale) || '-' }}</div>
+                    <div class="value">{{ $Util.purchaseWaybillFilter(logisticsInfoDetail?.name, $i18n.locale) || '-' }}</div>
                 </div>
                 <!-- 发货时间 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_time') }}</div>
-                    <div class="value">{{ $Util.timeFilter(waybillDetail?.delivery_time) || '-' }}</div>
+                    <div class="value">{{ $Util.timeFilter(logisticsInfoDetail?.delivery_time) || '-' }}</div>
                 </div>
                 <!-- 提单号 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.lading_bill_no') }}</div>
-                    <div class="value">{{ waybillDetail?.lading_bill_no || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail?.lading_bill_no || '-' }}</div>
                 </div>
                 <!-- 备注信息 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.remark') }}</div>
-                    <div class="value">{{ waybillDetail?.remark || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail?.remark || '-' }}</div>
                 </div>
                 <!-- 费用 -->
                 <div class="info-item">
                     <div class="key">{{ $t('d.cost') }}</div>
-                    <div class="value">{{ waybillDetail.post_fee || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail.post_fee || '-' }}</div>
                 </div>
                 <!-- 发货单号 -->
                 <div class="info-item" v-if="detail.waybill">
                     <div class="key">{{ $t('p.shipment_number') }}</div>
-                    <div class="value">{{ waybillDetail.waybill || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail.waybill || '-' }}</div>
                 </div>
             </div>
             <template #footer>
@@ -187,7 +187,7 @@
                                     {{ item.name }}
                                 </a-select-option>
                             </a-select> -->
-                            
+                            {{ warehouseName || '-' }}
                         </div>
                     </div>
                     <!-- 发货地址 -->
@@ -351,6 +351,7 @@ export default {
             warehouse_id: undefined,
             port: undefined, // 发货港口
             waybillDetail: {},
+            logisticsInfoDetail: {},
             takeDeliverShow: false,
             waybillShow: false,
             modalShow: false,
@@ -491,6 +492,12 @@ export default {
             this.form = Core.Util.deepCopy(item);
             this.form.freight = Core.Util.countFilter(this.form.freight)
             this.invoiceId = item.id
+            Core.Api.Invoice.detail({
+                id: item.id
+            }).then(res => {
+                console.log('detail res', res);
+                this.warehouseName = res.detail?.warehouse?.name
+            })
         },
         handleTakeDeliverShow(id) {
             this.takeDeliverShow = true;
@@ -556,6 +563,12 @@ export default {
             this.getInvoiceList({ page: 1 })
             this.getWaybillInfo();
             this.waybillShow = true;
+            Core.Api.Invoice.detail({
+                id: id
+            }).then(res => {
+                console.log('detail res', res);
+                this.logisticsInfoDetail = res.detail
+            })
         },
         handleWaybillClear() {
             this.form = Core.Util.deepCopy(this.$options.data().form)
