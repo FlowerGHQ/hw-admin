@@ -946,6 +946,7 @@ const messages = {
             lading_bill_no:'提单号',
             payment_record: '付款记录',
             payment_voucher: '付款凭证',
+            receiving_time: '收货时间',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3232,6 +3233,7 @@ const messages = {
             lading_bill_no: 'B/L',
             payment_record: 'Payment record',
             payment_voucher: 'Payment voucher',
+            receiving_time: 'Receiving time',
         },
         s: {
             store_list:'Shop list',

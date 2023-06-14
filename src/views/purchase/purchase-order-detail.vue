@@ -347,6 +347,11 @@
                     <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList" />
                 </template>
 
+                <!-- 收货明细 -->
+                <template v-if="activeValue == 'receiving_detail'">
+                    <receivingDetails :target_id="id" :order_detail="detail" :sn="detail.sn" />
+                </template>
+
                 <!-- 上传附件(合同信息) -->
                 <template v-if="activeValue == 'AttachmentFile'">
                     <AttachmentFile ref="attachment" :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER'
@@ -502,11 +507,11 @@ import AttachmentFile from './components/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import ActionLog from './components/ActionLog.vue';
 import paymentList from './components/paymentList.vue';
+import receivingDetails from './components/receivingDetails.vue';
 
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import eosTabs from '@/components/common/eos-tabs.vue'
-
 import EditItem from './components/EditItem.vue';
 
 
@@ -541,7 +546,8 @@ export default {
         AuditHandle,
         ActionLog,
         eosTabs,
-        paymentList
+        paymentList,
+        receivingDetails
     },
     data() {
         return {
@@ -565,26 +571,22 @@ export default {
             DISTRIBUTOR,
             WAYBILL,
             USER_TYPE,
-
             loginType: Core.Data.getLoginType(),
+            userType: Core.Data.getUserType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
-
-
             warehouseList: [],
             // 加载
             loading: false,
             id: '',
             detail: {}, // 采购单详情
             activeKey: ['ItemInfo', 'PayInfo', 'PurchaseInfo', 'WaybillInfo'],
-
             stepsList: [
                 { status: '100', zh: '支付', en: 'Payment' },
                 { status: '200', zh: '发货', en: 'Deliver' },
                 { status: '300', zh: '收货', en: 'Receipt' },
                 { status: '400', zh: '交易完成', en: 'Transaction completed' },
             ],
-
             itemList: [], // 商品列表            
             total: {
                 amount: 0,
@@ -592,7 +594,6 @@ export default {
                 charge: 0,
                 freight: 0, // 运费
             },
-
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -606,19 +607,15 @@ export default {
                     type: 'img',
                 },
             },
-
             waybill: {},
             waybillInfo: {},
             paymentShow: false,
-
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
-
             outStockShow: false, // 确认发货 model 显隐 
             companyUidList: WAYBILL.COMPANY_LIST,
             courierTypeList: WAYBILL.COURIER_LIST,
             receiveTypeList: WAYBILL.RECEIPT_LIST,
-
             form: {
                 express_type: undefined, // 快递方式
                 waybill: '', // 物流单号
@@ -640,10 +637,8 @@ export default {
             editForm: {
                 distributor_id: undefined,
             },
-
             distributorList: [],
             exportDisabled: false, // 导出按钮禁用
-
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
             selectedRowItemsAll: [],
@@ -652,8 +647,7 @@ export default {
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
             createAuditShow: false, // 订单审核 model 显隐  
-            PIShow: false,  // 修改pi model 显隐                           
-
+            PIShow: false,  // 修改pi model 显隐
             activeValue: 'payment_detail', // nameList的value
             outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
 
@@ -760,13 +754,15 @@ export default {
         // tabs切换
         nameList() {
             let arr = [
-                { weight: 1, key: 'payment_detail', value: `${this.$t('p.payment_record')}` }, // 付款记录
-                { weight: 2, key: 'delivery_record', value: `${this.$t('p.delivery_record')}` }, // 发货记录 
-                { weight: 3, key: 'receiving_record', value: `${this.$t('p.receiving_record')}` }, // 收货记录         
-                { weight: 4, key: 'AttachmentFile', value: `${this.$t('n.attachment')}` }, // 附件信息 
-                { weight: 5, key: 'ActionLog', value: `${this.$t('p.record')}` }, // 操作记录 
+                { weight: 1, key: 'payment_detail', value: `${this.$t('p.payment_record')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 付款记录
+                { weight: 2, key: 'delivery_record', value: `${this.$t('p.delivery_record')}`, permission: ['ADMIN'] }, // 发货记录 
+                { weight: 3, key: 'receiving_record', value: `${this.$t('p.receiving_record')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 收货记录         
+                { weight: 3, key: 'receiving_detail', value: `${this.$t('p.take_delivery_detail')}`, permission: ['DISTRIBUTOR'] }, // 收货明细         
+                { weight: 4, key: 'AttachmentFile', value: `${this.$t('n.attachment')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 附件信息 
+                { weight: 5, key: 'ActionLog', value: `${this.$t('p.record')}`, permission: ['ADMIN'] }, // 操作记录 
             ]
-            return arr.sort((a, b) => a.weight - b.weight)
+            let filteredArr = arr.filter(obj => obj.permission.includes(this.userType));
+            return filteredArr.sort((a, b) => a.weight - b.weight)
         },
         // 权限(平台方还是分销商等)
         user_type() {
@@ -775,6 +771,7 @@ export default {
         },
     },
     mounted() {
+        console.log('this.userType', this.userType);
         this.getList();
         this.getWarehouseList();
     },

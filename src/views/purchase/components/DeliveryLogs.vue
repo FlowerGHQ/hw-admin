@@ -37,7 +37,6 @@
                             </a-button>
                             <a-button type='link' @click="handleUpdatePI(record)">{{ $t('p.update_PI') }}
                             </a-button>
-
                         </template>
                         <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type)">
                             <a-button type='link'
@@ -172,9 +171,9 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('p.shipping_port') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="port" :placeholder="$t('def.select')">
+                            <a-select v-model:value="port" :placeholder="$t('def.select')" @change="handleSelectPort">
                                 <a-select-option v-for="portItem of portTypeList" :key="portItem.value"
-                                    :value="portItem.value">{{ portItem[$i18n.locale] }}
+                                    :value="portItem[$i18n.locale]">{{ portItem[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -183,11 +182,12 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('p.delivery_warehouse') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="warehouse_id" :placeholder="$t('def.select')">
+                            <!-- <a-select v-model:value="warehouse_id" :placeholder="$t('def.select')">
                                 <a-select-option v-for="item of warehouseOptions" :key="item.id" :value="item.id">
                                     {{ item.name }}
                                 </a-select-option>
-                            </a-select>
+                            </a-select> -->
+                            
                         </div>
                     </div>
                     <!-- 发货地址 -->
@@ -336,7 +336,7 @@ export default {
                 waybill: '', // 物流单号
                 delivery_address: '', //发货地址
                 receive_type: undefined, // 收货方式
-                freight: '', // 运费
+                freight: undefined, // 运费
                 pay_method: undefined, // 收款方式
                 // pay_clause: undefined, // 支付条款
                 remark: '', // 备注
@@ -375,6 +375,9 @@ export default {
                 showTotal: (total) => `${this.$t('n.all_total')} ${total} ${this.$t('in.total')}`
             }, // 分页数据
             warehouseOptions: [], // 发货仓库列表
+            port: undefined, // 港口中文
+            port_en: undefined, // 港口英文
+            warehouseName: undefined, // 发货仓库
         };
     },
     computed: {
@@ -387,7 +390,6 @@ export default {
                 columns.push(
                     { title: this.$t('p.delivery_method'), dataIndex: 'receive_type', key: 'receive_type' },
                     { title: this.$t('p.shipping_port'), dataIndex: 'port' },
-                    // {title: this.$t('p.delivery_address'), dataIndex: 'delivery_address'},
                     { title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item' },
                     { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
                     { title: this.$t('def.operate'), key: 'operation', fixed: 'right' }
@@ -406,13 +408,7 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('n.name'), dataIndex: 'item_name', key: 'name' },
-                // {title: this.$t('i.categories'), dataIndex: 'category_list', key: 'category_list' },
-                // {title: this.$t('n.name'), dataIndex: 'name', key: 'detail'},
-                // {title: this.$t('n.name'), dataIndex: ['item', 'name'], key: 'detail'},
-                // {title: this.$t('i.categories'), dataIndex: ['item', 'name']},
-                // {title: this.$t('i.number'), dataIndex: ['item', 'category', 'name'], key: 'item'},
                 { title: this.$t('i.code'), dataIndex: "item_code", key: 'item' },
-
                 { title: this.$t('i.deliver_amount'), dataIndex: 'amount', key: 'count' },
             ]
             return columns
@@ -424,13 +420,6 @@ export default {
         this.handleWarehouseSearch();
     },
     methods: {
-        // handleCollapseChange(key) {
-        //     console.log('handleCollapseChangekey:', key)
-        //     if (key[0] && !this.flagOpened) {
-        //         this.flagOpened = true
-        //         this.getInvoiceList();
-        //     }
-        // },
         /*== FETCH start==*/
         // 仓库列表Fetch
         getWarehouseList() {
@@ -565,11 +554,22 @@ export default {
             this.handleWaybillClear()
             this.target_id = id
             this.getInvoiceList({ page: 1 })
+            this.getWaybillInfo();
             this.waybillShow = true;
         },
         handleWaybillClear() {
             this.form = Core.Util.deepCopy(this.$options.data().form)
             this.waybillShow = false;
+        },
+        handleSelectPort(value) {
+            console.log('handleSelectPort value', value);
+            // 根据选中的值查找对应的对象
+            const selectedPort = this.portTypeList.find(item => item[this.$i18n.locale] === value);
+            // 如果找到了对象，将其 zh 和 en 值分别存储在 port 和 port_en 变量中
+            if (selectedPort) {
+                this.port = selectedPort.zh;
+                this.port_en = selectedPort.en;
+            }
         },
         // 确认发货
         handleDeliver() {
@@ -580,20 +580,19 @@ export default {
                 id: this.orderId,
                 invoice_id: this.invoiceId,
                 remark: form.remark,
+                port: this.port,
+                port_en: this.port_en,
+                // warehouse_id: this.warehouse_id
             }
             let adminRequire = [];
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    // { key: 'port', msg: this.$t('p.enter_harbor') },
                     { key: 'delivery_address', msg: this.$t('p.fill_address') },
                     { key: 'delivery_time', msg: this.$t('wb.delivery_time') },
                     { key: 'express_type', msg: this.$t('def.enter') },
-                    // { key: 'warehouse_id', msg: this.$t('def.enter') },
                     { key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no') },
-                    // {key: 'freight', msg: this.$t('p.enter_freight')},
-                    // { key: 'waybill', msg: this.$t('n.tracking_number') },
-                    // { key: 'entry_bill_no', msg: this.$t('wb.entry_bill_no') },
+                    { key: 'freight', msg: this.$t('p.enter_freight') },
                 ]
                 param['waybill'] = form['waybill'];
             } else if (this.$auth('DISTRIBUTOR')) {
@@ -611,28 +610,28 @@ export default {
                     param[key] = form[key];
                 }
             }
-            if(!this.port) {
+            if (!this.port) {
                 return this.$message.warning(this.$t('p.enter_harbor'))
             }
-            if(!this.warehouse_id) {
-                return this.$message.warning(this.$t('def.enter'))
-            }
+            // if (!this.warehouse_id) {
+            //     return this.$message.warning(this.$t('def.enter'))
+            // }
             param['freight'] = Math.round(param['freight'] * 100)
             param['item_list'] = this.selectedRowItems
             console.log('param', param);
-            // Core.Api.Purchase.deliver(param).then(res => {
-            //     this.$message.success(this.$t('p.shipped'))
-            //     this.deliverShow = false
-            //     this.getInvoiceList({ page: 1 });
-            //     this.$emit('Submit')
-            //     this.handleWaybillClear()
-            // }).catch(err => {
-            //     console.log('handleDeliver err', err)
-            // }).finally(() => {
-            //     this.loading = false;
-            // });
+            Core.Api.Purchase.deliver(Core.Util.searchFilter(param)).then(res => {
+                this.$message.success(this.$t('p.shipped'))
+                this.deliverShow = false
+                this.getInvoiceList({ page: 1 });
+                this.$emit('Submit')
+                this.handleWaybillClear()
+            }).catch(err => {
+                console.log('handleDeliver err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
         },
-        // 确认发货
+        // 修改PI
         UpdatePI() {
             console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);

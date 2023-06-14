@@ -18,6 +18,7 @@
                         <div class="table-img">
                             <a-image-preview-group class="image-group">
                                 <a-image 
+                                    style="cursor: pointer;"
                                     v-for="(path, index) in record.path" :key="index"
                                     class="image" 
                                     :width="55" 
