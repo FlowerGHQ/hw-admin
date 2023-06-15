@@ -70,7 +70,10 @@
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.pay_address') }}：</span>
-                        <span class="value">{{ detail.payAddress }}</span>
+                        <a-tooltip placement="top" :title="detail.payAddress || '-' ">
+                            <span class="value">{{ detail.payAddress || '-' }}</span>
+                        </a-tooltip>
+
                     </a-col>
                 </a-row>
 
