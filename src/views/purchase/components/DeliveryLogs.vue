@@ -26,6 +26,7 @@
                         {{ $Util.purchaseWaybillFilter(detail.receive_type, $i18n.locale || '-') }}
                     </template>
                     <template v-if="column.key === 'operation'">
+                        <!-- 物流信息 -->
                         <a-button type='link' @click="handleWaybillShow(record.id)">{{
                             $t('p.logistics')
                         }}
@@ -90,7 +91,7 @@
                 <!-- 发货方式 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_method') }}</div>
-                    <div class="value">{{ $Util.purchaseExpressFilter(logisticsInfoDetail?.express_type, $i18n.locale) || '-' }}
+                    <div class="value">{{ $Util.purchaseDeliveryMethodFilter(logisticsInfoDetail?.express_type, $i18n.locale) || '-' }}
                     </div>
                 </div>
                 <!-- 发货港口 -->
@@ -567,7 +568,8 @@ export default {
                 id: id
             }).then(res => {
                 console.log('detail res', res);
-                this.logisticsInfoDetail = res.detail
+                this.logisticsInfoDetail = res.detail?.waybill
+                // console.log('this.logisticsInfoDetail', this.logisticsInfoDetail);
             })
         },
         handleWaybillClear() {
