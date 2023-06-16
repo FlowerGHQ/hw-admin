@@ -4,6 +4,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('m.material_list') }}</div>
                 <div class="btns-area">
+                    <a-button class="export-btn" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
                     <a-upload name="file" class="file-uploader"
                               :file-list="upload.fileList" :action="upload.action"
                               :show-upload-list='false'
@@ -65,6 +66,9 @@
                         </template>
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'category'">
+                            {{ $i18n.locale === 'zh' ? record?.category?.name : (record?.category?.name_en ? record?.category?.name_en : record?.category?.name) }}
                         </template>
                         <template v-if="column.key === 'gross_weight'">
                             {{ $Util.countFilter(text) }}
@@ -146,6 +150,8 @@ export default {
                     type: 'xlsx',
                 },
             },
+            // 导出
+            exportDisabled: false,
         }
     },
     watch: {},
@@ -156,7 +162,7 @@ export default {
       tableColumns() {
         let columns = [
         { title: this.$t('m.material_name'), dataIndex: 'name', key: 'detail' },
-        { title: this.$t('m.material_category'), dataIndex: ['category','name'], key: 'item' },
+        { title: this.$t('m.material_category'), dataIndex: ['category','name'], key: 'category' },
         { title: this.$t('m.material_code'), dataIndex: 'code', key: 'item' },
         { title: this.$t('m.spec'), dataIndex: 'spec', key: 'spec' },
         { title: this.$t('m.unit'), dataIndex: 'unit', key: 'item' },
@@ -267,6 +273,31 @@ export default {
             }
             this.upload.fileList = fileList
         },
+        handleExportConfirm() { // 确认物料是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleMaterialExport();
+                }
+            })
+        },
+        handleMaterialExport() { // 物料导出
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.materialExport({
+                ...form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
+            console.log("handleMaterialExport exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
     },
 }
 </script>
@@ -276,6 +307,9 @@ export default {
     .list-container {
         .title-container {
             .btns-area {
+                .export-btn {
+                    margin-right: 15px;
+                }
                .file-uploader {
                    margin-right: 15px;
                }
