@@ -44,6 +44,9 @@
                                 v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && record.status === Core.Const.STOCK_RECORD.STATUS.CLOSE"
                                 @click="handleDeliverShow(record)">{{ $t('p.confirm_delivery') }}
                             </a-button>
+                            <!-- <a-button type='link'
+                                @click="handleDeliverShow(record)">{{ $t('p.confirm_delivery') }}
+                            </a-button> -->
                         </template>
                         <template v-if="authOrg(detail.org_id, detail.org_type)">
                             <!-- 确认收货 -->
@@ -161,9 +164,9 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('p.delivery_method') }}</div>
                         <div class="value">
-                            <a-select v-model:value="form.express_type" :placeholder="$t('def.select')">
-                                <a-select-option v-for="courier of courierTypeList" :key="courier.value"
-                                    :value="courier.value">{{ courier[$i18n.locale] }}
+                            <a-select v-model:value="express_type" :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of courierTypeList" :key="item.value"
+                                    :value="item.value">{{ item[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -192,18 +195,18 @@
                         </div>
                     </div>
                     <!-- 发货地址 -->
-                    <div class="form-item required">
+                    <!-- <div class="form-item required">
                         <div class="key">{{ $t('p.delivery_address') }}:</div>
                         <div class="value">
                             <a-input v-model:value="form.delivery_address" :placeholder="$t('def.input')" />
                         </div>
-                    </div>
+                    </div> -->
                     <!-- 发货时间 -->
                     <div class="form-item required">
                         <div class="key">{{ $t('wb.delivery_time') }}:</div>
                         <div class="value">
-                            <a-date-picker v-model:value="form.delivery_time" valueFormat='YYYY-MM-DD HH:mm:ss'
-                                :show-time="defaultTime" :placeholder="$t('wb.choose_delivery_time')">
+                            <a-date-picker v-model:value="form.delivery_time" valueFormat='YYYY-MM-DD'
+                                :show-time="defaultTime" :placeholder="$t('wb.choose_delivery_time')" format="YYYY/MM/DD">
                                 <template #suffixIcon><i class="icon i_calendar" /></template>
                             </a-date-picker>
                         </div>
@@ -249,7 +252,7 @@
                 <div class="form-item">
                     <div class="key">{{ $t('p.remark') }}:</div>
                     <div class="value">
-                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
+                        <a-textarea :rows="4" v-model:value="form.remark" :placeholder="$t('def.input')" :maxlength="500" showCount />
                     </div>
                 </div>
             </div>
@@ -336,7 +339,6 @@ export default {
             receiveTypeList: WAYBILL.RECEIPT_LIST,
             deliverShow: false,
             form: {
-                express_type: undefined, // 发货方式
                 waybill: '', // 物流单号
                 delivery_address: '', //发货地址
                 receive_type: undefined, // 收货方式
@@ -352,6 +354,7 @@ export default {
                 lading_bill_no: '',
                 delivery_time: '', //发货时间
             },
+            express_type: 3, // 发货方式
             warehouse_id: undefined,
             port: undefined, // 发货港口
             waybillDetail: {},
@@ -603,15 +606,16 @@ export default {
                 remark: form.remark,
                 port: this.port,
                 port_en: this.port_en,
+                express_type: this.express_type,
                 // warehouse_id: this.warehouse_id
             }
             let adminRequire = [];
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    { key: 'delivery_address', msg: this.$t('p.fill_address') },
+                    // { key: 'delivery_address', msg: this.$t('p.fill_address') },
                     { key: 'delivery_time', msg: this.$t('wb.delivery_time') },
-                    { key: 'express_type', msg: this.$t('def.enter') },
+                    // { key: 'express_type', msg: this.$t('def.enter') },
                     { key: 'lading_bill_no', msg: this.$t('wb.lading_bill_no') },
                     { key: 'freight', msg: this.$t('p.enter_freight') },
                 ]
@@ -633,6 +637,9 @@ export default {
             }
             if (!this.port) {
                 return this.$message.warning(this.$t('p.enter_harbor'))
+            }
+            if (!this.express_type) {
+                return this.$message.warning(this.$t('def.enter'))
             }
             // if (!this.warehouse_id) {
             //     return this.$message.warning(this.$t('def.enter'))
