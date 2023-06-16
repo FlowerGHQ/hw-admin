@@ -11,7 +11,8 @@ const showMessage = (msg) => {
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (message.includes('登录状态已过期，请重新登录')) {
         window.location.href = window.location.href.split('#')[0] + '#/login'
-        return showMessage(i18n.global.t('error_code.expire'));
+        // return showMessage(i18n.global.t('error_code.expire'));
+        return
     }
     if (message.includes('timeout')) {
         return showMessage(i18n.global.t('error_code.timeout'));
