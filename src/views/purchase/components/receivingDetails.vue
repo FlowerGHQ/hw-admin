@@ -55,8 +55,8 @@ const receiveColumns = computed(() => {
     let columns = [
         { title: proxy.$t('i.item'), dataIndex: 'item' },
         { title: proxy.$t('i.code'), dataIndex: ['item', "code"] },
-        { title: proxy.$t('i.deliver_amount'), dataIndex: 'deliver_amount' },
-        { title: proxy.$t('p.receiving_time'), dataIndex: 'receiving_time', key: 'time' }, 
+        { title: proxy.$t('i.deliver_amount'), dataIndex: 'amount' },
+        { title: proxy.$t('p.receiving_time'), dataIndex: 'create_time', key: 'time' }, 
     ]
     return columns
 })

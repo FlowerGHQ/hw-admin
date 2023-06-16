@@ -336,15 +336,15 @@
                 <template v-if="activeValue == 'payment_detail'">
                     <paymentList :target_id="id" :order_detail="detail" :sn="detail.sn" @submit="getList" ref="payment" />
                 </template>
-
+                <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
                 <!-- 发货记录 -->
                 <template v-if="activeValue == 'delivery_record'">
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" @submit="getList" />
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" :displayIn="true" @submit="getList" />
                 </template>
-
+                <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
                 <!-- 收货记录 -->
                 <template v-if="activeValue == 'receiving_record'">
-                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.IN" @submit="getList" />
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" :displayIn="false" @submit="getList" />
                 </template>
 
                 <!-- 收货明细 -->

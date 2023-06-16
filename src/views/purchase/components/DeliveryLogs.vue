@@ -53,7 +53,7 @@
                                 {{ $t('p.confirm_the_take_delivery') }}
                             </a-button>
                             <!-- 收货明细 -->
-                            <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT"
+                            <a-button type='link' v-if="type === Core.Const.STOCK_RECORD.TYPE.OUT && displayIn"
                                 @click="handleModalShow(record.id)">{{ $t('p.take_delivery_detail') }}
                             </a-button>
                         </template>
@@ -97,12 +97,12 @@
                 <!-- 发货港口 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.shipping_port') }}</div>
-                    <div class="value">{{ logisticsInfoDetail?.port || '-' }}</div>
+                    <div class="value">{{ $i18n.locale === 'zh' ? logisticsInfoDetail?.port : logisticsInfoDetail?.port_en || '-' }}</div>
                 </div>
                 <!-- 发货仓库 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.delivery_warehouse') }}</div>
-                    <div class="value">{{ $Util.purchaseWaybillFilter(logisticsInfoDetail?.name, $i18n.locale) || '-' }}</div>
+                    <div class="value">{{ logisticsHouse || '-' }}</div>
                 </div>
                 <!-- 发货时间 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
@@ -122,7 +122,7 @@
                 <!-- 费用 -->
                 <div class="info-item">
                     <div class="key">{{ $t('d.cost') }}</div>
-                    <div class="value">{{ logisticsInfoDetail.post_fee || '-' }}</div>
+                    <div class="value">{{ logisticsInfoDetail.post_fee / 100.0 || '-' }}</div>
                 </div>
                 <!-- 发货单号 -->
                 <div class="info-item" v-if="detail.waybill">
@@ -137,7 +137,7 @@
             </template>
         </a-modal>
         <!-- 确认收货弹框 -->
-        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.shipping_confirmation')" @ok="handleTakeDeliver">
+        <a-modal v-model:visible="takeDeliverShow" :title="$t('p.confirm_the_goods')" @ok="handleTakeDeliver">
             <div class="modal-content">
                 <div class="form-item required">
                     <div class="key">{{ $t('wa.warehouse') }}：</div>
@@ -313,6 +313,9 @@ export default {
         },
         type: {
             type: Number,
+        },
+        displayIn: {
+            type: Boolean,
         }
     },
     data() {
@@ -353,6 +356,7 @@ export default {
             port: undefined, // 发货港口
             waybillDetail: {},
             logisticsInfoDetail: {},
+            logisticsHouse: undefined, // 物流明细发货仓库
             takeDeliverShow: false,
             waybillShow: false,
             modalShow: false,
@@ -402,7 +406,7 @@ export default {
                     { title: this.$t('p.shipping_port'), dataIndex: 'port' },
                     { title: this.$t('n.operator'), dataIndex: ['apply_user', "account", "name"], key: 'item' },
                     { title: this.$t('d.create_time'), dataIndex: 'create_time', key: 'time' },
-                    // {title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
+                    { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
                 )
             }
             return columns
@@ -569,6 +573,7 @@ export default {
             }).then(res => {
                 console.log('detail res', res);
                 this.logisticsInfoDetail = res.detail?.waybill
+                this.logisticsHouse = res.detail?.warehouse.name
                 // console.log('this.logisticsInfoDetail', this.logisticsInfoDetail);
             })
         },
