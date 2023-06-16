@@ -100,7 +100,7 @@
                 <!-- 发货港口 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
                     <div class="key">{{ $t('p.shipping_port') }}</div>
-                    <div class="value">{{ $i18n.locale === 'zh' ? logisticsInfoDetail?.port : logisticsInfoDetail?.port_en || '-' }}</div>
+                    <div class="value">{{ ($i18n.locale === 'zh' ? logisticsInfoDetail?.port : logisticsInfoDetail?.port_en) || '-' }}</div>
                 </div>
                 <!-- 发货仓库 -->
                 <div class="info-item" v-if="detail.org_type === USER_TYPE.DISTRIBUTOR">
@@ -125,7 +125,7 @@
                 <!-- 费用 -->
                 <div class="info-item">
                     <div class="key">{{ $t('d.cost') }}</div>
-                    <div class="value">{{ detail.currency === 'EUR' ? '€' : '$' }} {{ logisticsInfoDetail.post_fee / 100.0 || '-' }}</div>
+                    <div class="value">{{ detail.currency === 'EUR' ? '€' : '$' }} {{ logisticsInfoDetail?.post_fee / 100.0 || '-' }}</div>
                 </div>
                 <!-- 发货单号 -->
                 <div class="info-item" v-if="detail.waybill">
