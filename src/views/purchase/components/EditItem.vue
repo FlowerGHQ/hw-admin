@@ -197,8 +197,8 @@ export default {
                         item_list,
                         type: PURCHASE_TYPE.GIVEAWAY,
                         org_id: this.detail.org_id,
-                        org_type: this.detail.org_type
-
+                        org_type: this.detail.org_type,
+                        currency: this.detail.currency
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.save_success'))
                         this.$emit('submit')
