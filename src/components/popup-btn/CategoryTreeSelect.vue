@@ -68,9 +68,10 @@ export default {
             immediate: true,
             handler(n) {
                 console.log('$i18n.locale', n)
-                let fieldNames = { label: 'title_en', value: 'id' , children: 'children', }
+                let fieldNames = { label: 'name_en', value: 'id' , children: 'children', }
                 switch (n) {
-                    case 'zh': fieldNames.label = 'title'; break;
+                    case 'zh': fieldNames.label = 'name'; break;
+                    case 'en': fieldNames.label = 'name_en'; break;
                 }
                 this.fieldNames = fieldNames
             }

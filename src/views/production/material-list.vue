@@ -67,6 +67,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'category'">
+                            {{ $i18n.locale === 'zh' ? record?.category?.name : (record?.category?.name_en ? record?.category?.name_en : record?.category?.name) }}
+                        </template>
                         <template v-if="column.key === 'gross_weight'">
                             {{ $Util.countFilter(text) }}
                         </template>
@@ -159,7 +162,7 @@ export default {
       tableColumns() {
         let columns = [
         { title: this.$t('m.material_name'), dataIndex: 'name', key: 'detail' },
-        { title: this.$t('m.material_category'), dataIndex: ['category','name'], key: 'item' },
+        { title: this.$t('m.material_category'), dataIndex: ['category','name'], key: 'category' },
         { title: this.$t('m.material_code'), dataIndex: 'code', key: 'item' },
         { title: this.$t('m.spec'), dataIndex: 'spec', key: 'spec' },
         { title: this.$t('m.unit'), dataIndex: 'unit', key: 'item' },
