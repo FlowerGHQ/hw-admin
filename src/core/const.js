@@ -334,20 +334,20 @@ let Const = {
         },
         // 状态
         STATUS: {
-            WAIT_DETECTION: 30,
-            WAIT_REPAIR: 40,
-	        REPAIR_END: 45,
-            SETTLEMENT: 60,
-            SETTLEMENT_DISTRIBUTOR: 70,
-            DISTRIBUTOR_AUDIT_SUCCESS: 80,
-            AUDIT_SUCCESS: 90,
-            DISTRIBUTOR_WAREHOUSE: 95,
-            FINISH: 100,
-            FAULT_ENTITY_AUDIT: 105,
-            SAVE_TO_INVOICE: 110,
-            CLOSE: -10,
-            AUDIT_FAIL: -30,
-            FAULT_ENTITY_AUDIT_FAIL: -40,
+            WAIT_DETECTION: 30, // 订单创建，等待检测
+            WAIT_REPAIR: 40, // 维修中
+	        REPAIR_END: 45, // 维修完成
+            SETTLEMENT: 60, // 已结算，待审核(零售商创建)
+            SETTLEMENT_DISTRIBUTOR: 70, // 已结算，待审核(分销商创建)
+            DISTRIBUTOR_AUDIT_SUCCESS: 80, // 分销商审核通过，待平台方审核
+            AUDIT_SUCCESS: 90, // 平台方审核通过
+            DISTRIBUTOR_WAREHOUSE: 95, // 分销商故障件入库，待平台方审核故障件
+            FINISH: 100, // 保外结算直接完成，不需要审核 从40直接过来
+            FAULT_ENTITY_AUDIT: 105, // 平台方故障件审核成功
+            SAVE_TO_INVOICE: 110, // 平台方故障件入库
+            CLOSE: -10, // 订单取消
+            AUDIT_FAIL: -30, // 审核未通过
+            FAULT_ENTITY_AUDIT_FAIL: -40, // 故障件审核未通过
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
@@ -813,12 +813,23 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { value: 1 , zh: '国际物流', en: 'International logistics'},
-            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            // { value: 1 , zh: '国际物流', en: 'International logistics'},
+            // { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            { value: 3 , zh: '陆运', en: 'Land transport'},
+            { value: 4 , zh: '海运', en: 'Sea transport' },
+            { value: 5 , zh: '空运', en: 'Air freight' },
+        ],
+        PORT_LIST: [
+            { value: 1 , zh: '上海', en: 'Shanghai'},
+            { value: 2 , zh: '太仓', en: 'Taicang' },
+            { value: 3 , zh: '南沙', en: 'Nansha' },
         ],
         COURIER_MAP: {
-            '1': { key: 1, zh: '国际物流', en: 'International logistics'},
-            '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            // '1': { key: 1, zh: '国际物流', en: 'International logistics'},
+            // '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            '3': { key: 3, zh: '陆运', en: 'Land transport'},
+            '4': { key: 4, zh: '海运', en: 'Sea transport' },
+            '5': { key: 5, zh: '空运', en: 'Air freight'},
         },
         RECEIPT_LIST: [
             { name: '快递', value: 1 },
@@ -1046,14 +1057,11 @@ let Const = {
 	        WAIT_AUDIT: 10, //待审核
 	        FINANCE_PASS: 20, //财务审核
             AUDIT_PASS: 30, //审核通过
-
-
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已发货
             RECEIVED: 60, //已收货
 	        AUDIT_BACK: -5,//退回
             AUDIT_REFUSE: -10,//审核失败
-
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {

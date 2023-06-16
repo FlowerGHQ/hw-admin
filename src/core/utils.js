@@ -587,6 +587,16 @@ const Util = {
             return item[to] || ''
         }
     },
+    purchaseDeliveryMethodFilter(val, to='zh') {
+        console.log('val',val)
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.WAYBILL.COURIER_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
+        }
+    },
     aftersalesTypeFilter(val, to='zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
         let value = MAP[val + ''] || {}
