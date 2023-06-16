@@ -122,7 +122,7 @@
                 <!-- 费用 -->
                 <div class="info-item">
                     <div class="key">{{ $t('d.cost') }}</div>
-                    <div class="value">{{ logisticsInfoDetail.post_fee / 100.0 || '-' }}</div>
+                    <div class="value">{{ detail.currency === 'EUR' ? '€' : '$' }} {{ logisticsInfoDetail.post_fee / 100.0 || '-' }}</div>
                 </div>
                 <!-- 发货单号 -->
                 <div class="info-item" v-if="detail.waybill">
@@ -424,6 +424,7 @@ export default {
         this.getInvoiceList();
         this.getWarehouseList();
         this.handleWarehouseSearch();
+        console.log('detail', this.detail.currency)
     },
     methods: {
         /*== FETCH start==*/
