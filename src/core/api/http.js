@@ -17,6 +17,9 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
         // return showMessage(i18n.global.t('error_code.expire'));
         return
     }
+    if (message.includes('token not set')) {
+        return
+    }
     if (message.includes('timeout')) {
         return showMessage(i18n.global.t('error_code.timeout'));
     }
