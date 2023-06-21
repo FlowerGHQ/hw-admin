@@ -903,7 +903,7 @@ const messages = {
             choose_type: '请选择类型',
             shipped: '发货成功',
             choose_express: '请选择快递方式',
-            enter_harbor: '请填写发货港口',
+            enter_harbor: '请选择发货港口',
             enter_freight: '请填写运费',
             choose_receive: '请选择收货方式',
             confirm_receive: '确认已收到货物吗？',
@@ -941,6 +941,12 @@ const messages = {
             auditText:'最终价格和数量由销售审核后确定',
             cancel_msg: '该订单已取消',
             item_msg_err: '已下架商品不支持结算',            
+            delivery_warehouse: '发货仓库',
+            delivery_time:'发货时间',
+            lading_bill_no:'提单号',
+            payment_record: '付款记录',
+            payment_voucher: '付款凭证',
+            receiving_time: '收货时间',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -1124,9 +1130,7 @@ const messages = {
             inaccessible: '当前身份无法访问',
             uploaded: '上传成功',
 	        export_as_supplier_report: '以供应商报表方式导出',
-	        error_phone: '手机号输入不正确',
-
-
+	        error_phone: '手机号输入不正确',            
         },
         search: {
             repair_sn: '工单编号',
@@ -1362,7 +1366,8 @@ const messages = {
 		    next_track_time: '下次跟进时间',
             phone_country_code:'国家/地区',
             custom_area: '客户地址',
-
+            intentionality: '意向度',
+            be_added:'待补充',
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
@@ -1373,7 +1378,7 @@ const messages = {
 		    file: '附件',
 		    track_time: '跟进时间',
 		    next_track_time: '下次跟进时间',
-		    intent: '意向程度',
+		    intent: '跟进结果',     //国内：意向程度改为“跟进结果”
 		    contact_customer:'联系人',
 		    operator: '跟进人',
             next_track_plan: '下次跟进计划',
@@ -3185,7 +3190,7 @@ const messages = {
             choose_type:'Please choose the type',
             shipped:'Successful delivery',
             choose_express:'Please select the delivery method',
-            enter_harbor:'Please fill in the delivery port',
+            enter_harbor:'Please select in the delivery port',
             enter_freight:'Please fill in the freight',
             choose_receive:'Please select the receiving method.',
             confirm_receive:'Do you confirm the receipt of products?',
@@ -3222,7 +3227,13 @@ const messages = {
             quotation:'quotation',
             auditText:'The final price and quantity shall be determined after sales review',
             cancel_msg: 'The order has been cancelled',
-            item_msg_err: 'Goods that have been removed from the shelves do not support settlement'
+            item_msg_err: 'Goods that have been removed from the shelves do not support settlement',
+            delivery_warehouse: 'Delivery warehouse',
+            delivery_time: 'Delivery time',
+            lading_bill_no: 'B/L',
+            payment_record: 'Payment record',
+            payment_voucher: 'Payment voucher',
+            receiving_time: 'Receiving time',
         },
         s: {
             store_list:'Shop list',
@@ -3619,7 +3630,9 @@ const messages = {
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
             phone_country_code:'Country/Region',
-            custom_area: 'Customer Address'
+            custom_area: 'Customer Address',
+            intentionality: 'Intentionality',
+            be_added:'To be added',
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
