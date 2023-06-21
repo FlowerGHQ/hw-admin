@@ -1368,7 +1368,7 @@ const messages = {
             custom_area: '客户地址',
             intentionality: '意向度',
             be_added:'待补充',
-            output:'输出品牌',
+            output:'输入品牌',
             choose_class:'选择类别'
 	    },
 	    crm_t: {
