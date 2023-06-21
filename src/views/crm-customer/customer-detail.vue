@@ -265,8 +265,13 @@
                                         5(其他驾驶工具)一个地方有两个输入框的 
                                      -->
                                     <template v-if="$2.type == 0">
-                                        <div :class="[$2.value == 'phone' ? 'phone-hover' : '']">
-                                            <span style="width: 80px; display: inline-block;">{{ msgForm[$2.value] }}</span>
+                                        <div :class="[$2.value == 'phone' ? 'phone-hover' : '']"><span
+                                                style="width: 80px; display: inline-block;"
+                                                v-if="$2.value == 'source_type'">{{
+                                                    $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value], $i18n.locale) }}</span>
+
+                                            <span style="width: 80px; display: inline-block;" v-else>{{ msgForm[$2.value]
+                                            }}</span>
                                             <template v-if="$2.value == 'phone'">
                                                 <a-button type="link"
                                                     v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER"
@@ -301,14 +306,13 @@
                                     </template>
                                     <!-- 是否下拉选择框 -->
                                     <template v-else-if="$2.type == 2.1">
-                                        
-                                            <a-select style="width: 80%;" @focus="selectFocus($2.value)"
-                                                @blur="msgChange($2.value)" :placeholder="$t('crm_c.be_added')">
-                                                <a-select-option v-for="item in WhetherNot" :key="item.key"
-                                                    :value="item.key">
-                                                    {{ lang === 'zh' ? item.zh : item.en }}
-                                                </a-select-option>
-                                            </a-select>
+
+                                        <a-select style="width: 80%;" @focus="selectFocus($2.value)"
+                                            @blur="msgChange($2.value)" :placeholder="$t('crm_c.be_added')">
+                                            <a-select-option v-for="item in WhetherNot" :key="item.key" :value="item.key">
+                                                {{ lang === 'zh' ? item.zh : item.en }}
+                                            </a-select-option>
+                                        </a-select>
 
                                     </template>
                                     <!-- 用车城市 -->
@@ -319,7 +323,7 @@
                                             tree-default-expand-all @blur="msgChange($2.value)" />
                                     </template>
                                     <!-- 性别 -->
-                                    
+
                                     <template v-else-if="$2.type == 2.3">
                                         <div class="select-box">
 
@@ -327,8 +331,8 @@
                                                 v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[0].list[3].onFocus">{{
                                                     $t('crm_c.be_added') }}</span>
                                             <!-- msg[0].list[3].onFocus  findBooOnFocusByValue($2.value) -->
-                                            <span class="select-value no-select-tab"
-                                                v-else-if="!msg[0].list[3].onFocus">{{ $Util.CRMOrderSexFilter(
+                                            <span class="select-value no-select-tab" v-else-if="!msg[0].list[3].onFocus">{{
+                                                $Util.CRMOrderSexFilter(
                                                     msgForm[$2.value], $i18n.locale) }}</span>
                                             <a-select :class="[msg[0].list[3].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msgForm[$2.value]" style="width: 80%;"
@@ -372,7 +376,7 @@
                                                     {{ $Util.CRMOrderIntentFilter(msgForm[$2.value], $i18n.locale) }}
                                                 </span>
                                                 <span class="none-content">{{ (msgForm[$2.value] == undefined ||
-                                                    msgForm[$2.value] == '') ? '待补充' : '' }}</span>
+                                                    msgForm[$2.value] == '') ? $t('crm_c.be_added') : '' }}</span>
                                             </span>
                                             <span class="text">编辑</span>
 
@@ -659,6 +663,7 @@ export default {
                 driver_license: undefined,
                 ride_exp: undefined,
                 other_brand_model: undefined,
+                source_type: undefined,
                 // 其他信息
                 flag_kol: undefined,
                 flag_seek_cooperation: undefined,
@@ -690,8 +695,9 @@ export default {
                         { key: "意向度", value: 'intention', type: 4, onFocus: undefined },
                         { key: "性别", value: 'gender', type: 2.3, onFocus: false },
                         { key: "行业", value: 'industry', type: 3, onFocus: false },
-                        { key: "意向车型", value: 'pre_order_car_type', type: 2, onFocus: false },
+                        { key: "来源", value: 'source_type', type: 0, onFocus: false },
                         { key: "创建时间", value: 'create_time', type: 0.1, onFocus: undefined },
+                        { key: "意向车型", value: 'pre_order_car_type', type: 2, onFocus: false },
                     ]
                 },
                 {
@@ -788,11 +794,11 @@ export default {
         },
         // 查找当前标签的onFocus
         findBooOnFocusByValue(value) {
-            console.log('vavavava',value);
-            this.msg.forEach(($1,index) => {
-                $1.list.forEach(($2,ind) => {
+            console.log('vavavava', value);
+            this.msg.forEach(($1, index) => {
+                $1.list.forEach(($2, ind) => {
                     if ($2.value == value) {
-                        console.log('this.msg[index].list[ind]this.msg[index].list[ind]',this.msg[index].list[ind],$2,$2.onFocus);
+                        console.log('this.msg[index].list[ind]this.msg[index].list[ind]', this.msg[index].list[ind], $2, $2.onFocus);
                         return $2.onFocus;
                     }
                 })
