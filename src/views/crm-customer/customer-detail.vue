@@ -291,7 +291,7 @@
                                         <span>{{ $Util.timeFilter(msgForm[$2.value]) }}</span>
                                     </template>
                                     <template v-else-if="$2.type == 1">
-                                        <a-input v-model:value="msgForm[$2.value]" style="width: 80%;"
+                                        <a-input v-model:value="msgForm[$2.value]" style="width: 80%; font-size: 14px;"
                                             :placeholder="$t('crm_c.be_added')" @blur="msgChange($2.value)"
                                             @pressEnter="msgChange($2.value)" />
                                     </template>
@@ -555,7 +555,7 @@
                         </a-select>
                     </span>
                 </a-col>
-                <a-col :md="24" class='intent-input'>
+                <a-col :md="24" class='intent-input required'>
                     <span class="key">调整理由:</span>
                     <span class="value">
                         <a-input v-model:value="intentSea" placeholder="输入理由" />
@@ -884,10 +884,14 @@ export default {
         // 保存意向程度修改
         saveIntent(params) {
             console.log('saveIntent--------------------...params', params);
+            if(!this.intentSea) {
+                return this.$message.warning('请填写调整理由！')
+            }
             Core.Api.CRMTrackRecord.save({
                 ...params
             }).then(res => {
                 console.log('saveIntent--res', res);
+                this.intentVisible = false;
             }).catch(err => {
                 console.log('saveIntent---err', err);
 
@@ -1212,7 +1216,7 @@ export default {
             // target_type:1客户  商机 2
             let par = { intention: this.msgForm.intention, content: this.intentSea, target_type: this.detail.type, target_id: this.detail.id }
             this.saveIntent(par);
-            this.intentVisible = false;
+            // this.intentVisible = false;
         },
 
         // 信息提交
@@ -1345,13 +1349,25 @@ export default {
         display: flex;
         align-items: center;
         margin-top: 10px;
-
         .key {
             width: 100px;
         }
 
         .value {
             width: calc(100% - 100px);
+        }
+        .key::before {
+            opacity: 0;
+            content: '*';
+            color: @TC_required;
+            padding-right: 2px;
+        }
+
+        &.required {
+            // 必填标志
+            .key::before {
+                opacity: 1;
+            }
         }
     }
 }
@@ -1361,4 +1377,10 @@ export default {
 //     white-space: normal;
 //     word-break: break-all;
 // }
+.ant-input {
+    font-size: 14px;
+}
+input.ant-input {
+    font-size: 14px;
+}
 </style>
