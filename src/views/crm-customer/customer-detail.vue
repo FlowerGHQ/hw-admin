@@ -270,7 +270,8 @@
                                                 v-if="$2.value == 'source_type'">{{
                                                     $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value], $i18n.locale) }}</span>
 
-                                            <span style="min-width: 80px; display: inline-block;" v-else>{{ msgForm[$2.value]
+                                            <span style="min-width: 80px; display: inline-block;" v-else>{{
+                                                msgForm[$2.value]
                                             }}</span>
                                             <template v-if="$2.value == 'phone'">
                                                 <a-button type="link"
@@ -385,13 +386,13 @@
 
                                     <!-- 其他驾驶工具 otherTool-->
                                     <template v-else-if="$2.type == 5">
-                                        <a-select :placeholder="$t('crm_c.choose_class')"
-                                            style="width: 40%;">
-                                            <a-select-option v-model:value="msg[1].list[5].value1"  v-for="item in otherTool" :key="item.key" :value="item.zh">
+                                        <a-select :placeholder="$t('crm_c.choose_class')" style="width: 40%;">
+                                            <a-select-option v-model:value="msg[1].list[5].value1" v-for="item in otherTool"
+                                                :key="item.key" :value="item.zh">
                                                 {{ lang === 'zh' ? item.zh : item.en }}
                                             </a-select-option>
                                         </a-select>
-                                        
+
                                         <a-input v-model:value="msg[1].list[5].value2"
                                             style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
                                             @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
@@ -500,7 +501,7 @@
                                 ref="Group" />
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord v-if="id > 0" :targetId="id"
+                            <ActionRecord v-if="id > 0" :targetId="id" :key="componentKey"
                                 :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :detail="detail"
                                 ref="ActionRecord" />
                         </a-tab-pane>
@@ -748,7 +749,9 @@ export default {
             intentVisible: false, // 意向程度model显示隐藏
             useCarOptions: [], // 用车城市
             // 意向程度 -理由
-            intentSea: ''
+            intentSea: '',
+            // key--动态组件
+            componentKey: 0,
 
         };
     },
@@ -778,6 +781,10 @@ export default {
         this.GroupTreeFetch()
     },
     methods: {
+        // 刷新动态组件
+        forceRerender() {
+            this.componentKey += 1;
+        },
 
         // 搜索框点击获取焦点事件
         selectFocus(value) {
@@ -876,6 +883,7 @@ export default {
         savePortrait(params) {
             Core.Api.CRMCustomerPortrait.save({ ...params }).then(res => {
                 console.log('rescrm-customer-portrait------res', res);
+                this.forceRerender()
 
             }).catch(err => {
                 console.log('rescrm-customer-portrait------err', err);
@@ -883,8 +891,7 @@ export default {
         },
         // 保存意向程度修改
         saveIntent(params) {
-            console.log('saveIntent--------------------...params', params);
-            if(!this.intentSea) {
+            if (!this.intentSea) {
                 return this.$message.warning('请填写调整理由！')
             }
             Core.Api.CRMTrackRecord.save({
@@ -892,6 +899,8 @@ export default {
             }).then(res => {
                 console.log('saveIntent--res', res);
                 this.intentVisible = false;
+                this.forceRerender();
+
             }).catch(err => {
                 console.log('saveIntent---err', err);
 
@@ -900,9 +909,9 @@ export default {
 
         // crm-customer
         saveCustomer(params) {
-            console.log('params99999999999999999', params);
             Core.Api.CRMCustomer.save({ ...params }).then(res => {
                 console.log('saveCustomer------res', res);
+                this.forceRerender();
             }).catch(err => {
                 console.log('saveCustomer------err', err);
             })
@@ -1349,6 +1358,7 @@ export default {
         display: flex;
         align-items: center;
         margin-top: 10px;
+
         .key {
             width: 100px;
         }
@@ -1356,6 +1366,7 @@ export default {
         .value {
             width: calc(100% - 100px);
         }
+
         .key::before {
             opacity: 0;
             content: '*';
@@ -1364,6 +1375,7 @@ export default {
         }
 
         &.required {
+
             // 必填标志
             .key::before {
                 opacity: 1;
@@ -1380,7 +1392,7 @@ export default {
 .ant-input {
     font-size: 14px;
 }
+
 input.ant-input {
     font-size: 14px;
-}
-</style>
+}</style>
