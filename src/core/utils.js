@@ -587,6 +587,16 @@ const Util = {
             return item[to] || ''
         }
     },
+    purchaseDeliveryMethodFilter(val, to='zh') {
+        console.log('val',val)
+        if ( val === 0) {
+            return '-'
+        } else {
+            const MAP = Const.WAYBILL.COURIER_MAP
+            let item = MAP[val + ''] || {}
+            return item[to] || ''
+        }
+    },
     aftersalesTypeFilter(val, to='zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
         let value = MAP[val + ''] || {}
@@ -966,6 +976,25 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
+    CRMOrderIntentFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER.INTENTION_STATUS
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+    // 性别
+    CRMOrderSexFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER.SEX
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+     // 是否
+     CRMOrderYesNoFilter(val,  to='zh') {
+		const MAP = Const.CRM_ORDER.WhetherNot
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},
+    
+    
 	/* =============== CRM订单管理 ================ */
 
 	/* =============== CRM跟进记录 ================ */
@@ -977,6 +1006,15 @@ const Util = {
 	CRMTrackRecordIntentFilter(val,  to='zh',selectList) {
         /* selectList 传需要转换的数据*/
 		let MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+        if(selectList){
+            MAP = selectList
+        }
+		let item = MAP[val + ''] || {}
+		return item[to] || ''
+	},	
+    CRMTrackChinaIntentFilter(val,  to='zh',selectList) {
+        /* selectList 传需要转换的数据*/
+		let MAP = Const.CRM_TRACK_RECORD.CHINA_INTENT
         if(selectList){
             MAP = selectList
         }
@@ -998,7 +1036,7 @@ const Util = {
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
 	},
-	CRMOrderIncomeTypeFilter(val,  to='zh') {
+	CRMOrderIncomeTypeFilter(val,  to='zh') { 
 		const MAP = Const.CRM_ORDER_INCOME.TYPE_MAP
 		let item = MAP[val + ''] || {}
 		return item[to] || ''
