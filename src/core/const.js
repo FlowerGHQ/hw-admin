@@ -1681,8 +1681,8 @@ let Const = {
 			'5': { key: 5, zh: '回款进度 80%-100%',en: 'Payment Collection Progress 80% - 100%', value: 5 },
         },
         WhetherNot:{            
-			'1': { key: 20, zh: '是',en: 'YES'},
-			'-1': { key: 30, zh: '否',en: 'NO' },
+			'1': { key: 20, zh: '是',en: 'YES',value:1},
+			'-1': { key: 30, zh: '否',en: 'NO' ,value:-1},
         },
         INTENTION:{            
 			'10': { key: 10, zh: '无意向(不购买/30天3次无效沟通)',en: ''},

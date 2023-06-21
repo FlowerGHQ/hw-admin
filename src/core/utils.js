@@ -90,7 +90,7 @@ const Util = {
      * 检测字符串中是否包含 表情图标
      * @param {String} str 需要检测的字符串
      */
-    includeEmoji(str = '', ) {
+    includeEmoji(str = '',) {
         str = str.toString()
         let regRule = /\uD83C[\uDF00-\uDFFF]|\uD83D[\uDC00-\uDE4F]/g
         return str.match(regRule) ? true : false
@@ -108,9 +108,9 @@ const Util = {
         parentId = parentId || 'parentId'
         children = children || 'children'
         rootId = rootId || 0
-            //对源数据深度克隆
+        //对源数据深度克隆
         const cloneData = JSON.parse(JSON.stringify(data))
-            //循环所有项
+        //循环所有项
         const treeData = cloneData.filter(father => {
             let branchArr = cloneData.filter(child => {
                 //返回每一项的子级数组
@@ -130,7 +130,7 @@ const Util = {
      * @param {*} timestamp 秒时间戳或毫秒时间戳
      * @param {Number} type 预设时间格式对应的数字
      */
-    timeFilter(value, type = 1) {        
+    timeFilter(value, type = 1) {
         if (value == null || value == '') return '-';
         if (value.toString() === '0') return '-';
         switch (type) {
@@ -142,8 +142,8 @@ const Util = {
                 return dayjs.unix(value).format('YYYY-MM-DD');
             case 4:
                 return dayjs.unix(value).format('YYYY年MM月DD日');
-	        case 5:
-		        return dayjs.unix(value).format('HH:mm:ss');
+            case 5:
+                return dayjs.unix(value).format('HH:mm:ss');
             default:
                 return '-';
         }
@@ -248,9 +248,9 @@ const Util = {
         let d_m = end.diff(begin, 'm')
         let d_s = diff
 
-        let s_h = (d_h).toString().padStart(2,'0')
-        let s_m = (d_m - (60 * d_h)).toString().padStart(2,'0')
-        let s_s = (d_s - (60 * d_m)).toString().padStart(2,'0')
+        let s_h = (d_h).toString().padStart(2, '0')
+        let s_m = (d_m - (60 * d_h)).toString().padStart(2, '0')
+        let s_s = (d_s - (60 * d_m)).toString().padStart(2, '0')
 
         switch (type) {
             case 1: return [s_h, s_m, s_s].filter(i => i).join(':')
@@ -270,8 +270,8 @@ const Util = {
         if (val === 0) {
             return "0"
         }
-        if (val < 0){
-	        return "N/A"
+        if (val < 0) {
+            return "N/A"
         }
         if (type) {
             return parseFloat((val * divisor).toFixed(dp))
@@ -339,7 +339,7 @@ const Util = {
         }
     },
 
-    addressFilter(obj,lang, type = 1) {
+    addressFilter(obj, lang, type = 1) {
         if (typeof obj !== 'object' || !obj) {
             return '-'
         }
@@ -347,12 +347,12 @@ const Util = {
         if (!province && !city && !county && !address) {
             return '-'
         }
-       /* switch (type) {
-            case 1:
-                return `${province} ${city} ${county} ${address}`;
-            case 2:
-                return `${province} ${city} ${county}`;
-        }*/
+        /* switch (type) {
+             case 1:
+                 return `${province} ${city} ${county} ${address}`;
+             case 2:
+                 return `${province} ${city} ${county}`;
+         }*/
         if (lang === 'en') {
             let { province_en, city_en, county, address } = obj
             switch (type) {
@@ -411,7 +411,7 @@ const Util = {
             return item.role === undefined || item.role.includes(role)
         })
     },
-	ifPhoneFilter(val,phoneAreaCode){
+    ifPhoneFilter(val, phoneAreaCode) {
         return true;
         // 国内限制手机号11位  国外限制手机号9位
         // if(phoneAreaCode === '+86') {
@@ -428,11 +428,11 @@ const Util = {
         //         return false;
         //     }
         // }
-	},
-    phoneEncryption(val){   //手机号加密
-        if(val.length === 11){
+    },
+    phoneEncryption(val) {   //手机号加密
+        if (val.length === 11) {
             return val.replace(/^(\d{3})\d{4}(\d+)/, '$1****$2');
-        }else{
+        } else {
             return val.replace(/^(\d{3})(\d+)/, '$1****')
         }
     },
@@ -440,45 +440,45 @@ const Util = {
     /* =============== 通用过滤器 ================ */
 
     /* =============== 分销商管理 ================ */
-    distributorTypeFilter(val, to='zh') {
+    distributorTypeFilter(val, to = 'zh') {
         const MAP = Const.DISTRIBUTOR.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-	payTypeFilter(val, to='zh') {
+    payTypeFilter(val, to = 'zh') {
 
-		const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
-		let value = MAP[val + ''] || {}
-		return value[to] || '-'
-	},
+        const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
 
     /* =============== 分销商管理 ================ */
 
     /* =============== 商品 ================ */
-    itemTypeFilter(val, to='zh') {
+    itemTypeFilter(val, to = 'zh') {
         const MAP = Const.ITEM.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    itemSpecFilter(attr_list, to='zh') {
+    itemSpecFilter(attr_list, to = 'zh') {
         if (!(attr_list instanceof Array) || !attr_list.length) {
             return '-'
         }
-        if (to === 'zh'){
-	        let attr = attr_list.map(i => i.value)
-	        return attr.join(' ')
+        if (to === 'zh') {
+            let attr = attr_list.map(i => i.value)
+            return attr.join(' ')
         } else {
-	        let attr = attr_list.map(i => i.value_en)
-	        return attr.join(' ')
+            let attr = attr_list.map(i => i.value_en)
+            return attr.join(' ')
         }
 
 
     },
-	itemFlagEntityFilter(val, to= 'zh') {
-		const MAP = Const.ITEM.FLAG_ENTITY_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
+    itemFlagEntityFilter(val, to = 'zh') {
+        const MAP = Const.ITEM.FLAG_ENTITY_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
     /* =============== 商品 ================ */
 
 
@@ -493,17 +493,17 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-    repairChannelFilter(val, to='key') {
+    repairChannelFilter(val, to = 'key') {
         const MAP = Const.REPAIR.CHANNEL_MAP
         let value = MAP[val] || {}
         return value[to] || '-'
     },
-    repairMethodFilter(val, to='key') {
+    repairMethodFilter(val, to = 'key') {
         const MAP = Const.REPAIR.METHOD_MAP
         let value = MAP[val] || {}
         return value[to] || '-'
     },
-    repairServiceFilter(val, to='key') {
+    repairServiceFilter(val, to = 'key') {
         const MAP = Const.REPAIR.SERVICE_TYPE_MAP
         let value = MAP[val] || {}
         return value[to] || '-'
@@ -514,11 +514,11 @@ const Util = {
         return value[to] || '-'
     },
 
-	deviceTypeFilter(val, to = 'zh') {
-		const MAP = Const.REPAIR.DEVICE_LIST_OBJ
-		let value = MAP[val + ''] || {}
-		return value[to] || '-'
-	},
+    deviceTypeFilter(val, to = 'zh') {
+        const MAP = Const.REPAIR.DEVICE_LIST_OBJ
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
     /* repairItemTypeFilter(val) {
         const MAP = Const.REPAIR.ITEM_TYPE_MAP
         return MAP[val] || '未知'
@@ -527,7 +527,7 @@ const Util = {
         const MAP = Const.REPAIR.FAULT_OPTIONS_MAP
         return MAP[val] || '未知'
     }, */
-    actionLogTypeFilter(val, to= 'zh') {
+    actionLogTypeFilter(val, to = 'zh') {
         const MAP = Const.ACTION_LOG.TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -547,11 +547,11 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-	purchasePayStatusFilter(val, to = 'zh') {
-		const MAP = Const.PURCHASE.PAY_STATUS_LIST
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
+    purchasePayStatusFilter(val, to = 'zh') {
+        const MAP = Const.PURCHASE.PAY_STATUS_LIST
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
     purchaseFlagReviewFilter(val) {
         const MAP = Const.PURCHASE.FLAG_REVIEW_MAP
         return MAP[val] || '-'
@@ -561,25 +561,25 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    purchaseTransferFilter(val, to='zh') {
+    purchaseTransferFilter(val, to = 'zh') {
         const MAP = Const.PURCHASE.FLAG_TRANSFER_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    purchaseExpressFilter(val, to='zh') {
-        if ( val === 0) {
+    purchaseExpressFilter(val, to = 'zh') {
+        if (val === 0) {
             return '-'
         } else {
-        	console.log("val",val)
-	        console.log("to",to)
+            console.log("val", val)
+            console.log("to", to)
             const MAP = Const.WAYBILL.COURIER_MAP
             let item = MAP[val + ''] || {}
             return item[to] || ''
         }
     },
-    purchaseWaybillFilter(val, to='zh') {
-        console.log('val',val)
-        if ( val === 0) {
+    purchaseWaybillFilter(val, to = 'zh') {
+        console.log('val', val)
+        if (val === 0) {
             return '-'
         } else {
             const MAP = Const.WAYBILL.RECEIPT_MAP
@@ -587,9 +587,9 @@ const Util = {
             return item[to] || ''
         }
     },
-    purchaseDeliveryMethodFilter(val, to='zh') {
-        console.log('val',val)
-        if ( val === 0) {
+    purchaseDeliveryMethodFilter(val, to = 'zh') {
+        console.log('val', val)
+        if (val === 0) {
             return '-'
         } else {
             const MAP = Const.WAYBILL.COURIER_MAP
@@ -597,7 +597,7 @@ const Util = {
             return item[to] || ''
         }
     },
-    aftersalesTypeFilter(val, to='zh') {
+    aftersalesTypeFilter(val, to = 'zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
@@ -609,7 +609,7 @@ const Util = {
         return value[to] || '-'
     },
 
-    refundTypeFilter(val, to='zh') {
+    refundTypeFilter(val, to = 'zh') {
         const MAP = Const.REFUND.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
@@ -619,30 +619,30 @@ const Util = {
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
-	purchaseTypeFilter(val, to = 'zh') {
-		const MAP = Const.PURCHASE.FLAG_ORDER_TYPE_LIST
-		let value = MAP[val + ''] || {}
-		return value[to] || '-'
-	},
-	purchasePayTypeFilter(val, to = 'zh') {
-		const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
-		let value = MAP[val + ''] || {}
-		return value[to] || '-'
-	},
-    refundOrderStatusFilter(val, to='zh') {
+    purchaseTypeFilter(val, to = 'zh') {
+        const MAP = Const.PURCHASE.FLAG_ORDER_TYPE_LIST
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
+    purchasePayTypeFilter(val, to = 'zh') {
+        const MAP = Const.DISTRIBUTOR.PAY_TIME_LIST
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
+    refundOrderStatusFilter(val, to = 'zh') {
         const MAP = Const.AFTERSALES.REFUND_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
     // 统一状态管理
-    StatusFilter(val, MAP, to = 'zh',final = 'finally') {        
+    StatusFilter(val, MAP, to = 'zh', final = 'finally') {
         let item = MAP[String(val)] || MAP[final]
         return item[to] || ''
     },
     /* =============== 采购单 && 售后管理 && 退款管理  ================ */
 
     /* =============== 用户/账号/用户 ================ */
-    userTypeFilter(val, to='zh') {
+    userTypeFilter(val, to = 'zh') {
         const MAP = Const.USER.TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -655,12 +655,12 @@ const Util = {
         const MAP = Const.WAYBILL.COMPANY_MAP
         return MAP[key] || '未知物流公司'
     },
-    waybillTargetFilter(val, to='zh') {
+    waybillTargetFilter(val, to = 'zh') {
         const MAP = Const.WAYBILL.TARGET_TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '未知货物订单'
     },
-    waybillTypeFilter(val, to='zh') {
+    waybillTypeFilter(val, to = 'zh') {
         const MAP = Const.WAYBILL.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
@@ -669,33 +669,33 @@ const Util = {
 
 
     /* =============== 系统管理 ================ */
-    noticeTypeFilter(val, to='zh') {
+    noticeTypeFilter(val, to = 'zh') {
         const MASTER_MAP = Const.NOTICE.MASTER_TYPE_MAP
         const ORG_MAP = Const.NOTICE.ORG_TYPE_MAP
         const MAP = { ...MASTER_MAP, ...ORG_MAP }
         const item = MAP[val] || {}
         return item[to] || 'Unknown'
     },
-    fileTargetTypeFilter(val, to='zh') {
+    fileTargetTypeFilter(val, to = 'zh') {
         const MAP = Const.SYSTEM.FILE.TARGET_TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || 'Unknown'
     },
-    authUserTypeFilter(val, to='text') {
+    authUserTypeFilter(val, to = 'text') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
-	printTemplateTypeMapFilter(val,  to='zh') {
-		const MAP = Const.SYSTEM.PRINT_TEMPLATE.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
+    printTemplateTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.SYSTEM.PRINT_TEMPLATE.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
     /* =============== 系统管理 ================ */
 
 
     /* =============== 出入库 ================ */
-    stockRecordFilter(val, to='zh') {
+    stockRecordFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
@@ -704,12 +704,12 @@ const Util = {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         return MAP[val] || '未知'
     },
-    warehouseTypeFilter(val, to='zh') {
+    warehouseTypeFilter(val, to = 'zh') {
         const MAP = Const.WAREHOUSE.TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
     },
-    inventoryTypeFilter(val, to='zh') {
+    inventoryTypeFilter(val, to = 'zh') {
         const MAP = Const.INVENTORY.TYPE_MAP
         const item = MAP[val] || {}
         return item[to] || '未知'
@@ -719,27 +719,27 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    targetTypeFilter(val, to='zh') {
+    targetTypeFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-	targetTypeOldFilter(val, to='zh') {
-		const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_OLD_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-    sourceTypeAdminFilter(val, to='zh') {
+    targetTypeOldFilter(val, to = 'zh') {
+        const MAP = Const.STOCK_RECORD.COMMODITY_TYPE_OLD_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    sourceTypeAdminFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_ADMIN_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    sourceTypeFilter(val, to='zh') {
+    sourceTypeFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    sourceFormFilter(val, to='zh') {
+    sourceFormFilter(val, to = 'zh') {
         const MAP = Const.STOCK_RECORD.SOURCE_FORM_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -779,12 +779,12 @@ const Util = {
         const MAP = Const.WALLET.TYPE_MAP
         return MAP[val] || '未知'
     },
-    operateTypeFilter(val, to= 'zh') {
+    operateTypeFilter(val, to = 'zh') {
         const MAP = Const.WALLET.OPERATE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    subjectTypeFilter(val, to= 'zh') {
+    subjectTypeFilter(val, to = 'zh') {
         const MAP = Const.WALLET.SUBJECT_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -829,7 +829,7 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
-    supplierTypeFilter(val, to='text') {
+    supplierTypeFilter(val, to = 'text') {
         const MAP = Const.SUPPLIER.SUPPLIER_TYPE_MAP
         const COLOR_MAP = Const.SUPPLIER.SUPPLIER_TYPE_COLOR_MAP
         switch (to) {
@@ -855,13 +855,13 @@ const Util = {
 
     /* =============== 物料采购 ================ */
 
-	/* =============== 质量反馈单 ================ */
-	feedbackStatusFilter(val, to = 'key') {
-		const MAP = Const.FEEDBACK.STATUS_MAP
-		let value = MAP[val + ''] || {}
-		return value[to] || '-'
-	},
-	/* =============== 质量反馈单 ================ */
+    /* =============== 质量反馈单 ================ */
+    feedbackStatusFilter(val, to = 'key') {
+        const MAP = Const.FEEDBACK.STATUS_MAP
+        let value = MAP[val + ''] || {}
+        return value[to] || '-'
+    },
+    /* =============== 质量反馈单 ================ */
 
     /* =============== 调货单 ================ */
     warehouseTransferStatusFilter(val, to = 'text') {
@@ -874,196 +874,208 @@ const Util = {
         return MAP[val] || '未知'
     },
     /* =============== 调货单 ================ */
-	/* =============== 整车 ================ */
-	entityStatusFilter(val,  to='zh') {
-		const MAP = Const.ENTITY.STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== 整车 ================ */
-	/* =============== 整车 ================ */
-	deviceStatusFilter(val,  to='zh') {
-		const MAP = Const.DEVICE.STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== 整车 ================ */
+    /* =============== 整车 ================ */
+    entityStatusFilter(val, to = 'zh') {
+        const MAP = Const.ENTITY.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 整车 ================ */
+    /* =============== 整车 ================ */
+    deviceStatusFilter(val, to = 'zh') {
+        const MAP = Const.DEVICE.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 整车 ================ */
 
     /* =============== 权限 ================ */
-    userAuthFilter(val,  to='zh') {
+    userAuthFilter(val, to = 'zh') {
         const MAP = Const.NOTICE.RESOURCE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
     /* =============== 权限 ================ */
-	/* =============== CRM客户管理 ================ */
-	CRMCustomerTypeFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCustomerLevelFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.LEVEL_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
-	CRMCustomerPurchaseIntentFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
-	CRMCustomerTestDriveIntentFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
-	CRMCustomerPurchaseIntentChartFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_CHART_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
-	CRMCustomerTestDriveIntentChartFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_CHART_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
-	CRMCustomerSourceFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.SOURCE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCustomerIndustryFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.INDUSTRY_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCustomerGenderFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.GENDER_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCustomerMaritalStatusFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.MARITAL_STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTrackStatusMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.TRACK_STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCompanySizeMapMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.COMPANY_SIZE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMCustomerSourceTypeFilter(val,  to='zh') {
-		const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
-		let item = MAP[val + ''] || {}		
-		return item[to] || ''
-	},
+    /* =============== CRM客户管理 ================ */
+    CRMCustomerTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerLevelFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.LEVEL_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerPurchaseIntentFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerTestDriveIntentFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerPurchaseIntentChartFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.PURCHASE_INTENT_CHART_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerTestDriveIntentChartFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.TEST_DRIVE_INTENT_CHART_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerSourceFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.SOURCE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerIndustryFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.INDUSTRY_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerGenderFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.GENDER_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerMaritalStatusFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.MARITAL_STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTrackStatusMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.TRACK_STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCompanySizeMapMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.COMPANY_SIZE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMCustomerSourceTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    }, 
 
-	/* =============== CRM客户管理 ================ */
+    /* =============== CRM客户管理 ================ */
 
-	/* =============== CRM订单管理 ================ */
-	CRMOrderTypeFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMOrderStatusFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER.STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-    CRMOrderIntentFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER.INTENTION_STATUS
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
+    /* =============== CRM订单管理 ================ */
+    CRMOrderTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMOrderStatusFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMOrderIntentFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.INTENTION_STATUS
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
     // 性别
-    CRMOrderSexFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER.SEX
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-     // 是否
-     CRMOrderYesNoFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER.WhetherNot
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-    
-    
-	/* =============== CRM订单管理 ================ */
+    CRMOrderSexFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.SEX
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 骑行经验RidingExperience
+    CRMRidingFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.RidingExperience
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 车型
+    CRMVehicleTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.VehicleType
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 是否
+    CRMOrderYesNoFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER.WhetherNot
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 
-	/* =============== CRM跟进记录 ================ */
-	CRMTrackRecordFilter(val,  to='zh') {
-		const MAP = Const.CRM_TRACK_RECORD.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTrackRecordIntentFilter(val,  to='zh',selectList) {
+
+    /* =============== CRM订单管理 ================ */
+
+    /* =============== CRM跟进记录 ================ */
+    CRMTrackRecordFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TRACK_RECORD.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTrackRecordIntentFilter(val, to = 'zh', selectList) {
         /* selectList 传需要转换的数据*/
-		let MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
-        if(selectList){
+        let MAP = Const.CRM_TRACK_RECORD.INTENT_MAP
+        if (selectList) {
             MAP = selectList
         }
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},	
-    CRMTrackChinaIntentFilter(val,  to='zh',selectList) {
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTrackChinaIntentFilter(val, to = 'zh', selectList) {
         /* selectList 传需要转换的数据*/
-		let MAP = Const.CRM_TRACK_RECORD.CHINA_INTENT
-        if(selectList){
+        let MAP = Const.CRM_TRACK_RECORD.CHINA_INTENT
+        if (selectList) {
             MAP = selectList
         }
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== CRM跟进记录 ================ */
-	/* =============== CRM跟进团队 ================ */
-	CRMGroupFilter(val,  to='zh') {
-		const MAP = Const.CRM_TRACK_MEMBER.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== CRM跟进团队 ================ */
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM跟进记录 ================ */
+    /* =============== CRM跟进团队 ================ */
+    CRMGroupFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TRACK_MEMBER.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM跟进团队 ================ */
 
-	/* =============== CRM回款单 ================ */
-	CRMOrderIncomeStatusFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER_INCOME.STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMOrderIncomeTypeFilter(val,  to='zh') { 
-		const MAP = Const.CRM_ORDER_INCOME.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMOrderIncomePaymentTypeFilter(val,  to='zh') {
-		const MAP = Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== CRM回款单 ================ */
-	/* =============== CRM操作记录 ================ */
-	CRMActionRecordTypeMapFilter(val,  to='zh') {
-		console.log(val)
-		const MAP = Const.CRM_ACTION_RECORD.TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	/* =============== CRM操作记录 ================ */
+    /* =============== CRM回款单 ================ */
+    CRMOrderIncomeStatusFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER_INCOME.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMOrderIncomeTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER_INCOME.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMOrderIncomePaymentTypeFilter(val, to = 'zh') {
+        const MAP = Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM回款单 ================ */
+    /* =============== CRM操作记录 ================ */
+    CRMActionRecordTypeMapFilter(val, to = 'zh') {
+        console.log(val)
+        const MAP = Const.CRM_ACTION_RECORD.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM操作记录 ================ */
 
     /* =============== CRM商机 ================ */
-    CRMBoSourceMapFilter(val,  to='zh') {
+    CRMBoSourceMapFilter(val, to = 'zh') {
         console.log(val)
         const MAP = Const.CRM_BO.SOURCE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    CRMBoLostReasonFilter(val,  to='zh') {
+    CRMBoLostReasonFilter(val, to = 'zh') {
         console.log(val)
         const MAP = Const.CRM_BO.LOST_REASON_MAP
         let item = MAP[val + ''] || {}
@@ -1072,7 +1084,7 @@ const Util = {
     /* =============== CRM商机 ================ */
 
     /* =============== CRM退款记录 ================ */
-    CRMRefundRecordTypeMapFilter(val,  to='zh') {
+    CRMRefundRecordTypeMapFilter(val, to = 'zh') {
         console.log(val)
         const MAP = Const.CRM_REFUND_RECORD.TYPE_MAP
         let item = MAP[val + ''] || {}
@@ -1081,7 +1093,7 @@ const Util = {
     /* =============== CRM退款记录 ================ */
 
     /* =============== CRM标签 ================ */
-    CRMLabelCategoryMapFilter(val,  to='zh') {
+    CRMLabelCategoryMapFilter(val, to = 'zh') {
         const MAP = Const.LABEl.CATEGORY_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -1089,98 +1101,98 @@ const Util = {
     /* =============== CRM标签 ================ */
 
     /* =============== CRM设置 ================ */
-    CRMDictTypeMapFilter(val,  to='zh') {
+    CRMDictTypeMapFilter(val, to = 'zh') {
         const MAP = Const.CRM_DICT.TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
     /* =============== CRM设置 ================ */
 
-	/* =============== 试驾单 ================ */
-	CRMTestDriveChannelMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.CHANNEL_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveStatusMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.STATUS_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveBuyTypeMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.BUY_TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveRentalDemandMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.RENTAL_DEMAND_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveTravelRangeMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.TRAVEL_RANGE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveGreenCarOwnerMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.GREEN_CAR_OWNER_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveDriverLicenseMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.DRIVER_LICENSE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveRideExpMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.RIDE_EXP_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveMotoExpMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.MOTO_EXP_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveMotoTourIntentionMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.MOTO_TOUR_INTENTION_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDrivePayAttentionToMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.PAY_ATTENTION_TO_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveGreenEnergyUnderstandMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.GREEN_ENERGY_UNDERSTAND_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMTestDriveElectricTwoWheelerUnderstandMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-	CRMPreOrderCarTypeMapFilter(val,  to='zh') {
-		const MAP = Const.CRM_TEST_DRIVE.PRE_ORDER_CAR_TYPE_MAP
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-    CRMTestDriveStatusCycFilter(val,  to='zh') {
-		const MAP = Const.test_drive.test_drive_status
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
-    CRMTestDriveSourceFilter(val,  to='zh') {
-		const MAP = Const.test_drive.appointment_channel
-		let item = MAP[val + ''] || {}
-		return item[to] || ''
-	},
+    /* =============== 试驾单 ================ */
+    CRMTestDriveChannelMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.CHANNEL_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveStatusMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveBuyTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.BUY_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveRentalDemandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.RENTAL_DEMAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveTravelRangeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.TRAVEL_RANGE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveGreenCarOwnerMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.GREEN_CAR_OWNER_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveDriverLicenseMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.DRIVER_LICENSE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveRideExpMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.RIDE_EXP_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveMotoExpMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.MOTO_EXP_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveMotoTourIntentionMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.MOTO_TOUR_INTENTION_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDrivePayAttentionToMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.PAY_ATTENTION_TO_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveGreenEnergyUnderstandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.GREEN_ENERGY_UNDERSTAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveElectricTwoWheelerUnderstandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMPreOrderCarTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.PRE_ORDER_CAR_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveStatusCycFilter(val, to = 'zh') {
+        const MAP = Const.test_drive.test_drive_status
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveSourceFilter(val, to = 'zh') {
+        const MAP = Const.test_drive.appointment_channel
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 
-	/* =============== 试驾单 ================ */
+    /* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */
-    CRMToDoStatusFilter(val,  to='zh') {
+    CRMToDoStatusFilter(val, to = 'zh') {
         const MAP = Const.CRM_TODO.STATUS_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
@@ -1197,20 +1209,20 @@ const Util = {
     * obj { uid: null, status: null }
     start========== */
     searchFilter(obj) {
-        let _searchOptions = this.deepCopy(obj)  
+        let _searchOptions = this.deepCopy(obj)
         for (let el in _searchOptions) {
-            if(!_searchOptions[el]){
-                if(_searchOptions[el] === "" || _searchOptions[el] === null || _searchOptions[el] === undefined){
-                    Reflect.deleteProperty(_searchOptions,el)
+            if (!_searchOptions[el]) {
+                if (_searchOptions[el] === "" || _searchOptions[el] === null || _searchOptions[el] === undefined) {
+                    Reflect.deleteProperty(_searchOptions, el)
                 }
             }
-        }  
+        }
         return _searchOptions
     },
     /* ======== 搜索条件筛选 end ========== */
 
     /* ======== 判断门店,分销商,零售商重置密码权限判断 start ========== */
-    userAuth(...arr){
+    userAuth(...arr) {
         if (!arr.length) {
             return true
         }
@@ -1225,14 +1237,14 @@ const Util = {
     /* ======== 判断门店,分销商,零售商重置密码权限判断 end ========== */
 
     /* ======== 传参数的时候删除自己不需要的字段 ========== */
-    deleteParamsFilter(_options, deleteValue = []){             
+    deleteParamsFilter(_options, deleteValue = []) {
         deleteValue.forEach(el => {
-            if(Reflect.has(_options, el)){
+            if (Reflect.has(_options, el)) {
                 Reflect.deleteProperty(_options, el);
             }
         });
-    
-       return _options
+
+        return _options
     },
     /* ======== 传参数的时候删除自己不需要的字段 ========== */
 
@@ -1240,9 +1252,9 @@ const Util = {
         denominator  // 分母
         numerator // 分子
     */
-    percentageFilter(denominator,numerator, type = '%'){        
-        if(!Number(denominator)) return 0 + type
-        let result =  Number(numerator) / Number(denominator) * 100 + type
+    percentageFilter(denominator, numerator, type = '%') {
+        if (!Number(denominator)) return 0 + type
+        let result = Number(numerator) / Number(denominator) * 100 + type
         return result
     }
     /* ======== 百分比 ========== */

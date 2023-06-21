@@ -239,7 +239,7 @@
                 <!-- 中国详情显示 #labels 这 -->
                 <div class="desc-zh-container">
                     <!-- 信息块 -->
-                    <template v-for="($1, index) in msg" :key="index">
+                    <template v-for="($1, index1) in msg" :key="index">
                         <div class="desc-zh-title">
                             <div class="title-area">
                                 <span class="title">{{ $1.title }}</span>
@@ -247,7 +247,7 @@
                         </div>
 
                         <a-row class="desc-zh-detail">
-                            <a-col :xs='24' :sm='12' :lg='8' class='detail-item input-box' v-for="($2, index) in $1.list">
+                            <a-col :xs='24' :sm='12' :lg='8' class='detail-item input-box' v-for="($2, index2) in $1.list">
                                 <span class="key">{{ $2.key }}:</span>
                                 <div class="value">
                                     <!--  
@@ -298,30 +298,68 @@
                                     </template>
                                     <!-- 意向车型 -->
                                     <template v-else-if="$2.type == 2">
-                                        <a-select v-model:value="msgForm[$2.value]" style="width: 80%;"
-                                            @blur="msgChange($2.value)" :placeholder="$t('crm_c.be_added')">
-                                            <a-select-option v-for="item in VehicleType" :key="item.key" :value="item.key">
-                                                {{ lang === 'zh' ? item.zh : item.en }}
-                                            </a-select-option>
-                                        </a-select>
+                                        <div class="select-box">
+                                            <!-- {{msgForm[$2.value]}}{{ msg[index1].list[index2].onFocus }} -->
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">
+                                                {{ $Util.CRMVehicleTypeFilter(msgForm[$2.value], $i18n.locale) }}
+
+                                            </span>
+                                            <a-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                v-model:value="msgForm[$2.value]" style="width: 80%;"
+                                                @focus="selectFocus($2.value)" @blur="msgChange($2.value)"
+                                                :placeholder="$t('crm_c.be_added')">
+                                                <a-select-option v-for="item in VehicleType" :key="item.key"
+                                                    :value="item.key">
+                                                    {{ lang === 'zh' ? item.zh : item.en }}
+                                                </a-select-option>
+                                            </a-select>
+                                        </div>
                                     </template>
                                     <!-- 是否下拉选择框 -->
                                     <template v-else-if="$2.type == 2.1">
 
-                                        <a-select style="width: 80%;" @focus="selectFocus($2.value)"
-                                            @blur="msgChange($2.value)" :placeholder="$t('crm_c.be_added')">
-                                            <a-select-option v-for="item in WhetherNot" :key="item.key" :value="item.key">
-                                                {{ lang === 'zh' ? item.zh : item.en }}
-                                            </a-select-option>
-                                        </a-select>
+                                        <div class="select-box">
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">
+                                                {{ $Util.CRMOrderYesNoFilter(msgForm[$2.value], $i18n.locale) }}
+
+                                            </span>
+                                            <a-select style="width: 80%;" v-model:value="msgForm[$2.value]"
+                                                :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                @focus="selectFocus($2.value)" @blur="msgChange($2.value)"
+                                                :placeholder="$t('crm_c.be_added')">
+                                                <a-select-option v-for="item in WhetherNot" :key="item.key"
+                                                    :value="item.value">
+                                                    {{ lang === 'zh' ? item.zh : item.en }}
+                                                </a-select-option>
+                                            </a-select>
+                                        </div>
 
                                     </template>
                                     <!-- 用车城市 -->
                                     <template v-else-if="$2.type == 2.2">
+                                        <div class="select-box">
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">
+                                                {{ msgForm['group_id_name'] }}
 
-                                        <a-tree-select v-model:value="msgForm[$2.value]" style="width: 80%;"
-                                            :tree-data="useCarOptions" :placeholder="$t('crm_c.be_added')"
-                                            tree-default-expand-all @blur="msgChange($2.value)" />
+                                            </span>
+                                            <a-tree-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                v-model:value="msgForm[$2.value]" style="width: 80%;"
+                                                :tree-data="useCarOptions" :placeholder="$t('crm_c.be_added')"
+                                                @focus="selectFocus($2.value)" tree-default-expand-all
+                                                @blur="msgChange($2.value)" />
+                                        </div>
                                     </template>
                                     <!-- 性别 -->
 
@@ -329,13 +367,13 @@
                                         <div class="select-box">
 
                                             <span class="none-content no-select-tab"
-                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[0].list[3].onFocus">{{
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
                                                     $t('crm_c.be_added') }}</span>
-                                            <!-- msg[0].list[3].onFocus  findBooOnFocusByValue($2.value) -->
-                                            <span class="select-value no-select-tab" v-else-if="!msg[0].list[3].onFocus">{{
-                                                $Util.CRMOrderSexFilter(
-                                                    msgForm[$2.value], $i18n.locale) }}</span>
-                                            <a-select :class="[msg[0].list[3].onFocus ? '' : 'select-tab']"
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">{{
+                                                    $Util.CRMOrderSexFilter(
+                                                        msgForm[$2.value], $i18n.locale) }}</span>
+                                            <a-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msgForm[$2.value]" style="width: 80%;"
                                                 @focus="selectFocus($2.value)" :placeholder="$t('crm_c.be_added')"
                                                 @blur="msgChange($2.value)">
@@ -348,8 +386,17 @@
                                     <!-- 骑行经验 -->
                                     <template v-else-if="$2.type == 2.4">
                                         <div class="select-box">
-                                            <a-select v-model:value="msgForm[$2.value]" style="width: 80%;"
-                                                :placeholder="$t('crm_c.be_added')" @blur="msgChange($2.value)">
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">{{
+                                                    $Util.CRMRidingFilter(msgForm[$2.value],
+                                                        $i18n.locale) }}</span>
+                                            <a-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                v-model:value="msgForm[$2.value]" style="width: 80%;"
+                                                :placeholder="$t('crm_c.be_added')" @focus="selectFocus($2.value)"
+                                                @blur="msgChange($2.value)">
                                                 <a-select-option v-for="item in RidingExperience" :key="item.key"
                                                     :value="item.key">
                                                     {{ lang === 'zh' ? item.zh : item.en }}
@@ -359,13 +406,24 @@
                                     </template>
                                     <!-- 行业 -->
                                     <template v-else-if="$2.type == 3">
-                                        <a-select v-model:value="msgForm[$2.value]" :placeholder="$t('crm_c.be_added')"
-                                            style="width: 80%;" @focus="getFocus" @blur="msgChange($2.value)">
-                                            <a-select-option v-for="item of CRM_INDUSTRY_MAP" :key="item.value"
-                                                :value="item.value">
-                                                {{ lang === 'zh' ? item.zh : item.en }}
-                                            </a-select-option>
-                                        </a-select>
+                                        <div class="select-box">
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">{{
+                                                    $Util.CRMCustomerIndustryFilter(msgForm[$2.value],
+                                                        $i18n.locale) }}</span>
+                                            <a-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                v-model:value="msgForm[$2.value]" :placeholder="$t('crm_c.be_added')"
+                                                style="width: 80%;" @focus="selectFocus($2.value)"
+                                                @blur="msgChange($2.value)">
+                                                <a-select-option v-for="item of CRM_INDUSTRY_MAP" :key="item.value"
+                                                    :value="item.value">
+                                                    {{ lang === 'zh' ? item.zh : item.en }}
+                                                </a-select-option>
+                                            </a-select>
+                                        </div>
                                     </template>
                                     <!-- 意向程度 -->
                                     <template v-else-if="$2.type == 4">
@@ -386,16 +444,27 @@
 
                                     <!-- 其他驾驶工具 otherTool-->
                                     <template v-else-if="$2.type == 5">
-                                        <a-select :placeholder="$t('crm_c.choose_class')" style="width: 40%;">
-                                            <a-select-option v-model:value="msg[1].list[5].value1" v-for="item in otherTool"
-                                                :key="item.key" :value="item.zh">
-                                                {{ lang === 'zh' ? item.zh : item.en }}
-                                            </a-select-option>
-                                        </a-select>
+                                        <div class="select-box">
+                                            <span class="none-content no-select-tab"
+                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
+                                            <span class="select-value no-select-tab"
+                                                v-else-if="!msg[index1].list[index2].onFocus">
+                                                {{ msgForm[$2.value] }}</span>
+                                            <a-select @focus="selectFocus($2.value)"
+                                                :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                :placeholder="$t('crm_c.choose_class')" style="width: 40%;"
+                                                v-model:value="msg[index1].list[index2].value1">
+                                                <a-select-option v-for="item in otherTool" :key="item.zh" :value="item.zh">
+                                                    {{ lang === 'zh' ? item.zh : item.en }}
+                                                </a-select-option>
+                                            </a-select>
 
-                                        <a-input v-model:value="msg[1].list[5].value2"
-                                            style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
-                                            @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
+                                            <a-input :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                v-model:value="msg[index1].list[index2].value2"
+                                                style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
+                                                @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
+                                        </div>
                                     </template>
                                 </div>
                             </a-col>
@@ -659,6 +728,7 @@ export default {
                 create_time: undefined,
                 // 用车信息
                 group_id: undefined,
+                group_id_name: undefined,
                 moto_owner: undefined,
                 moto_model: undefined,
                 driver_license: undefined,
@@ -752,7 +822,10 @@ export default {
             intentSea: '',
             // key--动态组件
             componentKey: 0,
-
+            // keyvalue-当前点击的
+            keyValue: '',
+            // 用车城市中文
+            cityUseCar: ''
         };
     },
     watch: {},
@@ -761,8 +834,25 @@ export default {
             return this.$store.state.lang
         },
         tabStrList() {
-            console.log('this.targetListStr.split(', ')', this.targetListStr.split(','));
             return this.targetListStr.split(',')
+        },
+        // 查找当前标签的onFocus
+        /*    findBooOnFocusByValue() {
+               this.msg.forEach(($1, index) => {
+                   let val;
+                   $1.list.forEach(($2, ind) => {
+                       if ($2.value == this.keyValue) {
+                           console.log('this.msg[index].list[ind]this.msg[index].list[ind]', this.msg[index].list[ind], $2, $2.onFocus);
+                           return $2.onFocus;
+                       }
+                   })
+               })
+           }, */
+
+        cityUseCar() {
+            this.useCarOptions.forEach((item, index) => {
+
+            })
         }
     },
     created() {
@@ -788,36 +878,20 @@ export default {
 
         // 搜索框点击获取焦点事件
         selectFocus(value) {
-            console.log('aaa------aaa-------focus', value);
+            this.keyValue = value;
             this.msg.forEach(($1, index) => {
                 $1.list.forEach(($2, ind) => {
                     if ($2.value == value) {
                         $2.onFocus = true;
-                        console.log('666666666666aaaaaaaaaa------this.msg[index].list[ind]', this.msg[index].list[ind]);
                     }
                 })
             })
             // this.findBooOnFocusByValue(value)
         },
-        // 查找当前标签的onFocus
-        findBooOnFocusByValue(value) {
-            console.log('vavavava', value);
-            this.msg.forEach(($1, index) => {
-                $1.list.forEach(($2, ind) => {
-                    if ($2.value == value) {
-                        console.log('this.msg[index].list[ind]this.msg[index].list[ind]', this.msg[index].list[ind], $2, $2.onFocus);
-                        return $2.onFocus;
-                    }
-                })
-            })
-        },
-        // 搜索框失去焦点事件
-        selectBlur() {
-            console.log('bbb----------bbb-------blur');
-        },
+
+      
         // 添加-购车关注点
         addCarTrackStr(data) {
-            console.log('addCarTrackStr', data);
             this.tabData.forEach(((item, index) => {
                 if (data.key == item.key) {
                     let arr = item.value && item.value.split(',') || []
@@ -838,7 +912,6 @@ export default {
         },
         // 删除购车关注点
         deleteCarTrackStr(data) {
-            console.log('deleteCarTrackStr', data);
             this.tabData.forEach(((item, index) => {
                 if (data.key == item.key) {
                     let arr = item.value && item.value.split(',') || []
@@ -876,6 +949,7 @@ export default {
         GroupTreeFetch() {
             Core.Api.CRMGroupMember.structureByUser().then(res => {
                 this.useCarOptions = res.list
+                console.log('cityUseCar----this.useCarOptions', this.useCarOptions);
             })
         },
 
@@ -1007,6 +1081,7 @@ export default {
                 ...dataObj,
                 ...dataObj['crm_customer_portrait']
             }
+
             console.log("obj['other_brand_model']", obj['other_brand_model']);
             let otharr = obj['other_brand_model'].split('-')
             this.msg[1].list[5].value1 = otharr[0]
@@ -1019,6 +1094,8 @@ export default {
                     this.msgForm[item] = obj[item]
                 }
             }
+            // 获取城市名称
+            this.getCityName();
             // 购车关注点之下的
             arrData.forEach((item, index) => {
                 if (dataObj['crm_customer_portrait'] || dataObj['crm_customer_portrait'][item.key]) {
@@ -1027,6 +1104,16 @@ export default {
             })
 
             console.log('arrData', arrData);
+        },
+        // 获取城市名称
+        getCityName() {
+            Core.Api.CRMGroup.detail({ id: this.msgForm['group_id'] }).then(res => {
+                console.log('res============', res);
+                this.msgForm['group_id_name'] = res.detail?.name
+            }).catch(err => {
+                console.log('err============', err);
+
+            })
         },
         // 添加商品
         handleAddCustomerShow(ids, items) {
@@ -1172,7 +1259,6 @@ export default {
             this.$refs.CRMTrackRecord.getTableData();
         },
         getCrmActionRecordTableData() {
-            console.log("getCrmActionRecordTableData");
             this.$refs.TrackRecord.getCrmActionRecordTableData();
         },
         handleGroupTree() {
@@ -1230,28 +1316,27 @@ export default {
 
         // 信息提交
         msgChange(type) {
-
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
-            let porParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type] }
+            let porParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type], }
             if (type == 'other_brand_model' && this.msg[1].list[5].value2) {
-                var othParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msg[1].list[5].value1 + '-' + this.msg[1].list[5].value2 }
+                this.msgForm[type] = this.msg[1].list[5].value1 + '-' + this.msg[1].list[5].value2;
+                var othParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type] }
+            } else if (type == 'group_id') {
+                // 获取城市名称
+                this.getCityName();
             }
             this.msg.forEach(($1, index) => {
                 $1.list.forEach(($2) => {
                     $2.onFocus = false;
                 })
             })
-            console.log(' this.msg', this.msg);
-            console.log('cusParms', cusParms, 'porParms', porParms, 'othParms', othParms);
             switch (type) {
                 case 'name':
-                    console.log("迪纳基");
                     this.saveCustomer(cusParms);
                     break;
                 // 性别
                 case 'gender':
                     this.saveCustomer(cusParms);
-                    console.log("迪纳基");
                     break;
                 // 行业
                 case 'industry':
@@ -1260,12 +1345,10 @@ export default {
                 // 意向车型
                 case 'pre_order_car_type':
                     this.savePortrait(porParms);
-                    console.log("迪纳基");
                     break;
                 // 用车城市
                 case 'group_id':
                     this.saveCustomer(cusParms);
-                    console.log("迪纳基");
                     break;
                 // 是否有摩托车
                 case 'moto_owner':
@@ -1395,4 +1478,5 @@ export default {
 
 input.ant-input {
     font-size: 14px;
-}</style>
+}
+</style>
