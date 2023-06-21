@@ -53,6 +53,18 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 意向度（仅中文情况下显示） -->
+          <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show && lang === 'zh'">
+            <div class="key">意向度：</div>
+            <div class="value">
+              <a-select v-model:value="searchForm.degree_intent" :placeholder="$t('def.select')" allowClear>
+                <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
+                  <img class="intent_img" v-if="item.value == 40" src="../../assets/images/intent/Vector.png" />{{ item.zh
+                  }}
+                </a-select-option>
+              </a-select>
+            </div>
+          </a-col>
           <!-- 客户级别 -->
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
             <div class="key">{{ $t("crm_c.level") }}：</div>
@@ -75,7 +87,7 @@
                 tree-default-expand-all allowClear />
             </div>
           </a-col>
-          <!-- 意向程度 -->
+          <!-- 意向程度:国内名称改为“跟进结果” -->
           <a-col v-if="show" :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
             <div class="key">{{ $t('crm_t.intent') }}:</div>
             <div class="value">
@@ -98,7 +110,7 @@
             </div>
           </a-col>
           <!-- 创建时间 -->
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="8 " class="search-item" v-if="show">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="8" class="search-item" v-if="show">
             <div class="key">{{ $t("d.create_time") }}：</div>
             <div class="value">
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
@@ -145,12 +157,14 @@
           :scroll="{ x: true }" :row-key="(record) => record.id" :pagination="false" :row-selection="rowSelection"
           @change="getTableDataSorter">
           <template #headerCell="{ column, title }">
-            {{ $t(title) }}
+            <!-- 意向度表头仅中文显示 -->
+            {{ $t(title)=='意向度'&& lang=="en"?'':$t(title) }}
             <template v-if="column.key == 'operation'">
               <span class="config-icon" @click="OnConfiguration">
                 <SettingOutlined />
               </span>
             </template>
+            
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
@@ -202,16 +216,21 @@
             </template>
 
             <template v-if="column.key === 'source_type'">
-				<span v-if="Landing_Page[text]">
-					{{ Landing_Page[text][$i18n.locale]}}{{"-"}}{{ $i18n.locale == 'en'? Landing_Page[text]['country_en']:Landing_Page[text]['country'] }}{{ Landing_Page[text]['key'] }}
-				</span>
-				<span>
-					{{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
-				</span>
+              <span v-if="Landing_Page[text]">
+                {{ Landing_Page[text][$i18n.locale] }}{{ "-" }}{{ $i18n.locale == 'en' ?
+                  Landing_Page[text]['country_en'] : Landing_Page[text]['country'] }}{{ Landing_Page[text]['key'] }}
+              </span>
+              <span>
+                {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
+              </span>
             </template>
             <template v-if="column.dataIndex === 'label_list'">
               <a-tag v-for="(item, index) in record.label_list" :key="index" color="blue" class="customer-tag">{{ lang ===
                 "zh" ? item.label : item.label_en }}</a-tag>
+            </template>
+            <!-- 中文存在：意向度 -->
+            <template v-if="column.name === 'dintent' && lang==='zh'">
+              <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />{{ $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
             </template>
             <!-- 意向程度 -->
             <template v-if="column.name === 'intent'">
@@ -225,7 +244,7 @@
             </template>
             <template v-if="column.key === 'operation'">
               <a-button type="link" @click="handleBatch('distribute', record)" v-if="$auth('crm-customer.distribute') && operMode === 'high_seas'
-                ">{{ $t("crm_c.distribute") }}</a-button>
+              ">{{ $t("crm_c.distribute") }}</a-button>
               <a-button type="link" @click="handleBatch('transfer', record)"
                 v-if="$auth('crm-customer.transfer') && operMode === 'private'">{{ $t("crm_c.transfer") }}</a-button>
 
@@ -238,7 +257,7 @@
         </a-table>
         <!-- 表格列配置项选项 -->
         <ColumnConfiguration v-if="ConfigurationBool" class="Configuration-style" @configOptions="getConfigOptions"
-          :dataOptions="columnOptions" :options="tableColumns"></ColumnConfiguration>
+          :dataOptions="columnOptions" :options="tableColumns" :lang="lang"></ColumnConfiguration>
       </div>
       <!-- 分页 -->
       <div class="paging-container with-operate">
@@ -249,7 +268,7 @@
         </div>
         <a-pagination v-model:current="currPage" :page-size="pageSize" :total="total" show-quick-jumper show-size-changer
           show-less-items :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
-            " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
+          " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
           @showSizeChange="pageSizeChange" />
       </div>
     </div>
@@ -340,6 +359,7 @@ export default {
       CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
       SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
       DEGREE_INTENT: Core.Const.CRM_TRACK_RECORD.DEGREE_INTENT, // 意向程度list
+      CHINA_INTENT: Core.Const.CRM_TRACK_RECORD.CHINA_INTENT,
       SOURCE_TYPE_MAP: Core.Const.CRM_CUSTOMER.SOURCE_TYPE_MAP,
       Landing_Page: Core.Const.CRM_CUSTOMER.Landing_Page, // 落地页
       total: 0,
@@ -357,7 +377,8 @@ export default {
         search_type: undefined,
         group_id: undefined,
         create_user_id: undefined,
-        purchase_intent: undefined
+        purchase_intent: undefined,
+        degree_intent: undefined //意向度（仅中文显示）
       },
       batchForm: {
         group_id: undefined,
@@ -417,6 +438,13 @@ export default {
 
         // {title: 'n.continent', dataIndex: 'continent', key:'item'},
         {
+          title: "意向度",
+          dataIndex: "degree_intent",
+          key: 'dintent',
+          name: 'dintent'
+        },
+
+        {
           title: "crm_c.level",
           dataIndex: "level",
           key: "level",
@@ -469,7 +497,7 @@ export default {
           key: "source_type",
           sorter: true,
         },
-        // 意向程度
+        // 意向程度（中文改为：跟进结果）
         {
           title: "crm_t.intent",
           dataIndex: "purchase_intent",
@@ -493,6 +521,7 @@ export default {
           sorter: true,
         });
       }
+      
       return columns;
     },
     rowSelection() {
@@ -930,5 +959,13 @@ export default {
 .config-icon {
   font-size: 14px;
   cursor: pointer;
+}
+
+.intent_img {
+  vertical-align: baseline;
+  height: 13px;
+  width: 11px;
+  margin-right: 6px;
+
 }
 </style>
