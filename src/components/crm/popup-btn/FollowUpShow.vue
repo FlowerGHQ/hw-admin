@@ -33,7 +33,7 @@
         </div>
         <!-- 详情图 -->
         <div class="form-item img-upload">
-          <div class="key">{{ $t("i.picture") }}</div>
+          <div class="key">{{ $t("i.picture") }}：</div>
           <div class="value">
             <a-upload name="file" class="image-uploader" list-type="picture-card" accept="image/*"
               :file-list="upload.detailList" :action="upload.action" :headers="upload.headers" :data="upload.data"
@@ -47,7 +47,7 @@
         </div>
         <!-- 上传文件 -->
         <div class="form-item file-upload">
-          <div class="key">{{ $t("f.file") }}:</div>
+          <div class="key">{{ $t("f.file") }}：</div>
           <div class="value">
             <a-upload name="file" :file-list="fileUpload.fileList" :action="fileUpload.action"
               :headers="fileUpload.headers" :data="fileUpload.data" @change="handleFileChange">
@@ -86,7 +86,7 @@
         </div>
         <!-- 跟进结果 -->
         <div class="form-item">
-          <div class="key">{{ $t("crm_t.intent") }}</div>
+          <div class="key">{{ $t("crm_t.intent") }}：</div>
           <div class="value">
             <a-select v-model:value="trackRecordForm.intent" :placeholder="$t('def.select')" allowClear>
               <a-select-option v-for="item of DEGREE_INTENT" :key="item.key" :value="item.value">
@@ -97,7 +97,7 @@
         </div>
         <!-- 意向度 -->
         <div class="form-item">
-          <div class="key">{{ $t("crm_c.intentionality") }}</div>
+          <div class="key">{{ $t("crm_c.intentionality") }}：</div>
           <div class="value">
             <a-select v-model:value="trackRecordForm.intention" :placeholder="$t('def.select')" allowClear>
               <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
