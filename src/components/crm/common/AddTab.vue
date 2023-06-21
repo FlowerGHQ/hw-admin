@@ -7,7 +7,7 @@
                 <close-circle-filled @click="popTabClick(item, false)" />
             </a-tag>
 
-            <plus-square-filled class="square" @click="addPop" />
+            <img  class="square"  @click="addPop" src="../../../assets//images/intent/addtab.png" alt="">
 
             <div class="add-tab" v-if="addPopBoo">
                 <div class="input-tab">
@@ -31,18 +31,17 @@
             </div>
         </div>
         <div class="mask-layer" @click="addPop" v-if="addPopBoo"></div>
-
     </div>
 
 </template>
 
 <script>
 import Core from '../../../core';
-import { CloseCircleFilled, PlusSquareFilled } from '@ant-design/icons-vue';
+import { CloseCircleFilled } from '@ant-design/icons-vue';
 
 export default {
     name: 'LabelList',
-    components: { CloseCircleFilled, PlusSquareFilled },
+    components: { CloseCircleFilled },
     props: {
         detail: {
             type: Object,
@@ -165,10 +164,13 @@ export default {
     // 添加标签盒子
     .square {
 
+        height: 28px;
+        width: 28px;
         color: #006EF9;
         font-size: 28px;
         vertical-align: bottom;
         margin-left: 6px;
+        border-radius: 4px;
     }
 
     // 添加标签弹窗盒子

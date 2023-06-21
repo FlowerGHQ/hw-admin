@@ -745,4 +745,11 @@ export default {
     color: #006EF9;
     cursor: pointer;
 }
+
+.intent_img {
+  vertical-align: baseline;
+  height: 13px;
+  width: 11px;
+  margin-right: 6px;
+}
 </style>

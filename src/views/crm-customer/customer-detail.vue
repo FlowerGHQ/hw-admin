@@ -270,7 +270,7 @@
                                                 v-if="$2.value == 'source_type'">{{
                                                     $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value], $i18n.locale) }}</span>
 
-                                            <span style="width: 80px; display: inline-block;" v-else>{{ msgForm[$2.value]
+                                            <span style="min-width: 80px; display: inline-block;" v-else>{{ msgForm[$2.value]
                                             }}</span>
                                             <template v-if="$2.value == 'phone'">
                                                 <a-button type="link"
@@ -369,7 +369,7 @@
                                     <!-- 意向程度 -->
                                     <template v-else-if="$2.type == 4">
                                         <div class="intent cursor" @click="intentEvent">
-                                            <img src="../../assets/images/CRM/hot.png" v-if="msgForm[$2.value] == 40"
+                                            <img src="../../assets/images/intent/Vector.png" v-if="msgForm[$2.value] == 40"
                                                 alt="">
                                             <span style="margin-left: 3px;width: 120px;display: block;">
                                                 <span>
@@ -385,15 +385,15 @@
 
                                     <!-- 其他驾驶工具 otherTool-->
                                     <template v-else-if="$2.type == 5">
-                                        <a-select v-model:value="msg[1].list[5].value1" :placeholder="$t('crm_c.be_added')"
+                                        <a-select :placeholder="$t('crm_c.choose_class')"
                                             style="width: 40%;">
-                                            <a-select-option v-for="item in otherTool" :key="item.key" :value="item.zh">
+                                            <a-select-option v-model:value="msg[1].list[5].value1"  v-for="item in otherTool" :key="item.key" :value="item.zh">
                                                 {{ lang === 'zh' ? item.zh : item.en }}
                                             </a-select-option>
                                         </a-select>
-
+                                        
                                         <a-input v-model:value="msg[1].list[5].value2"
-                                            style="width: 40%; margin-left: 10px;" placeholder="Basic usage"
+                                            style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
                                             @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
                                     </template>
                                 </div>
@@ -1230,77 +1230,77 @@ export default {
             })
             console.log(' this.msg', this.msg);
             console.log('cusParms', cusParms, 'porParms', porParms, 'othParms', othParms);
-            // switch (type) {
-            //     case 'name':
-            //         console.log("迪纳基");
-            //         this.saveCustomer(cusParms);
-            //         break;
-            //     // 性别
-            //     case 'gender':
-            //         this.saveCustomer(cusParms);
-            //         console.log("迪纳基");
-            //         break;
-            //     // 行业
-            //     case 'industry':
-            //         this.saveCustomer(cusParms);
-            //         break;
-            //     // 意向车型
-            //     case 'pre_order_car_type':
-            //         this.savePortrait(porParms);
-            //         console.log("迪纳基");
-            //         break;
-            //     // 用车城市
-            //     case 'group_id':
-            //         this.saveCustomer(cusParms);
-            //         console.log("迪纳基");
-            //         break;
-            //     // 是否有摩托车
-            //     case 'moto_owner':
-            //         this.savePortrait(porParms);
-            //         break;
-            //     // 摩托车型号
-            //     case 'moto_model':
-            //         this.savePortrait(porParms);
-            //         break;
-            //     // 是否有驾照
-            //     case 'driver_license':
-            //         this.savePortrait(porParms);
-            //         break;
-            //     // 骑行经验
-            //     case 'ride_exp':
-            //         this.savePortrait(porParms);
+            switch (type) {
+                case 'name':
+                    console.log("迪纳基");
+                    this.saveCustomer(cusParms);
+                    break;
+                // 性别
+                case 'gender':
+                    this.saveCustomer(cusParms);
+                    console.log("迪纳基");
+                    break;
+                // 行业
+                case 'industry':
+                    this.saveCustomer(cusParms);
+                    break;
+                // 意向车型
+                case 'pre_order_car_type':
+                    this.savePortrait(porParms);
+                    console.log("迪纳基");
+                    break;
+                // 用车城市
+                case 'group_id':
+                    this.saveCustomer(cusParms);
+                    console.log("迪纳基");
+                    break;
+                // 是否有摩托车
+                case 'moto_owner':
+                    this.savePortrait(porParms);
+                    break;
+                // 摩托车型号
+                case 'moto_model':
+                    this.savePortrait(porParms);
+                    break;
+                // 是否有驾照
+                case 'driver_license':
+                    this.savePortrait(porParms);
+                    break;
+                // 骑行经验
+                case 'ride_exp':
+                    this.savePortrait(porParms);
 
-            //         break;
-            //     // 其他驾驶工具
-            //     case 'other_brand_model':
-            //         this.savePortrait(othParms);
-            //         break;
-            //     // 是否是KOL
-            //     case 'flag_kol':
-            //         this.savePortrait(porParms);
+                    break;
+                // 其他驾驶工具
+                case 'other_brand_model':
+                    this.savePortrait(othParms);
+                    break;
+                // 是否是KOL
+                case 'flag_kol':
+                    this.savePortrait(porParms);
 
-            //         break;
-            //     // 是否寻求合作
-            //     case 'flag_seek_cooperation':
-            //         this.savePortrait(porParms);
+                    break;
+                // 是否寻求合作
+                case 'flag_seek_cooperation':
+                    this.savePortrait(porParms);
 
-            //         break;
-            //     // 购车关注点
-            //     case 'car_purchase_focus':
-            //         this.savePortrait(porParms);
+                    break;
+                // 购车关注点
+                case 'car_purchase_focus':
+                    this.savePortrait(porParms);
 
-            //         break;
-            //     // 购车习惯
-            //     case 'car_purchase_habit':
-            //         this.savePortrait(porParms);
+                    break;
+                // 购车习惯
+                case 'car_purchase_habit':
+                    this.savePortrait(porParms);
 
-            //         break;
-            //     // 购车顾虑
-            //     case 'car_purchase_concern':
-            //         this.savePortrait(porParms);
+                    break;
+                // 购车顾虑
+                case 'car_purchase_concern':
+                    this.savePortrait(porParms);
 
-            //         break;
-            // }
+                    break;
+            }
         }
 
     }
