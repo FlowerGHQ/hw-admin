@@ -48,6 +48,21 @@
                             </a-select>
                         </div>
                     </a-col>
+
+
+                    <!-- 意向度（仅中文情况下显示） -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show && lang === 'zh'">
+                        <div class="key">意向度：</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.degree_intent" :placeholder="$t('def.select')" allowClear>
+                                <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
+                                    <img class="intent_img" v-if="item.value == 40"
+                                        src="../../assets/images/intent/Vector.png" />{{ item.zh
+                                        }}
+                                </a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show">
                         <div class="key">{{ $t('crm_c.level') }}：</div>
                         <div class="value">
@@ -106,7 +121,8 @@
                     :row-key="record => record.id" :pagination='false' :row-selection="rowSelection"
                     @change="getTableDataSorter">
                     <template #headerCell="{ title }">
-                        {{ $t(title) }}
+                        <!-- 意向度表头仅中文显示 -->
+                        {{ $t(title) == '意向度' && lang == "en" ? '' : $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'detail'">
@@ -156,7 +172,8 @@
 
                         <template v-if="column.key === 'source_type'">
                             <span v-if="Landing_Page[text]">
-                                {{ Landing_Page[text][$i18n.locale]}}{{"-"}}{{ $i18n.locale == 'en'? record.country_en:record.country }}{{ Landing_Page[text]['key'] }}
+                                {{ Landing_Page[text][$i18n.locale] }}{{ "-" }}{{ $i18n.locale == 'en' ?
+                                    record.country_en : record.country }}{{ Landing_Page[text]['key'] }}
                             </span>
                             <span>
                                 {{ $Util.CRMCustomerSourceTypeFilter(text, $i18n.locale) }}
@@ -167,12 +184,19 @@
                                 item.label : item.label_en }}</a-tag>
                         </template>
 
+                        <!-- 中文存在：意向度 -->
+                        <template v-if="column.name === 'dintent' && lang === 'zh'">
+                            <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />{{
+                                $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
+                        </template>
+
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="handleBatch('distribute', record)"
-                                v-if="$auth('crm-customer.distribute') && operMode === 'high_seas'">{{ $t('crm_c.distribute')
+                                v-if="$auth('crm-customer.distribute') && operMode === 'high_seas'">{{
+                                    $t('crm_c.distribute')
                                 }}</a-button>
                             <a-button type="link" @click="handleBatch('transfer', record)"
                                 v-if="$auth('crm-customer.transfer') && operMode === 'private'">{{ $t('crm_c.transfer')
@@ -254,6 +278,10 @@
 import Core from '../../core';
 import TimeSearch from '../../components/common/TimeSearch.vue'
 
+// <!-- 意向程度 -->
+//             <template v-if="column.name === 'intent'">
+//               {{ $Util.CRMTrackRecordIntentFilter(text, lang, DEGREE_INTENT) || '_' }}
+//             </template>
 
 export default {
     name: 'CustomerList',
@@ -276,6 +304,7 @@ export default {
             CRM_LEVEL_MAP: Core.Const.CRM_CUSTOMER.LEVEL_MAP,
             CRM_STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             SEARCH_TYPE: Core.Const.CRM_CUSTOMER.SEARCH_TYPE,
+            CHINA_INTENT: Core.Const.CRM_TRACK_RECORD.CHINA_INTENT,//意向度
             Landing_Page: Core.Const.CRM_CUSTOMER.Landing_Page, // 落地页
             total: 0,
             orderByFields: {},
@@ -289,6 +318,7 @@ export default {
                 type: undefined,
                 status: undefined,
                 search_type: undefined,
+                degree_intent: undefined //意向度（仅中文显示）
             },
             batchForm: {
                 group_id: undefined,
@@ -332,7 +362,12 @@ export default {
                 { title: 'n.phone', dataIndex: 'phone', key: 'phone', sorter: true },
                 { title: 'n.email', dataIndex: 'email', key: 'email', sorter: true },
                 { title: 'sl.label', dataIndex: 'label_list', key: 'label_list' },
-
+                {
+                    title: "意向度",
+                    dataIndex: "degree_intent",
+                    key: 'dintent',
+                    name: 'dintent'
+                },
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 { title: 'crm_c.level', dataIndex: 'level', key: 'level', sorter: true },
                 { title: 'crm_c.type', dataIndex: 'type', key: 'type', sorter: true },
