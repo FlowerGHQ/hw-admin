@@ -31,10 +31,10 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
@@ -1688,13 +1688,13 @@ let Const = {
 			'10': { key: 10, zh: '无意向(不购买/30天3次无效沟通)',en: ''},
 			'20': { key: 20, zh: '有意向(了解产品（体验、服务、性能、功能、权益、政策)，30天内能决策。)',en: '' },
 			'30': { key: 30, zh: '高意向(完成产品体验并保持购买意向，14天内能决策)',en: '' },
-			'40': { key: 40, zh: 'HOT(主动提出支付意向金,3天内能决策)',en: '' },
+			'40': { key: 40, zh: 'Hot(主动提出支付意向金,3天内能决策)',en: '' },
         },
         INTENTION_STATUS:{            
 			'10': { key: 10, zh: '无意向',en: ''},
 			'20': { key: 20, zh: '有意向',en: '' },
 			'30': { key: 30, zh: '高意向',en: '' },
-			'40': { key: 40, zh: 'HOT',en: '' },
+			'40': { key: 40, zh: 'Hot',en: '' },
         },
         SEX:{            
 			'1': { key: 1, zh: '男',en: 'M'},

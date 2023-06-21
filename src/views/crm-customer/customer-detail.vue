@@ -9,7 +9,7 @@
             <div class="btns-area">
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
-                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button>
+                    <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
                     <!-- 领取 -->
                     <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
                         {{ $t('crm_c.obtain') }}
@@ -26,9 +26,9 @@
                 <template
                     v-if="detail.status === STATUS.CUSTOMER && trackMemberDetail !== undefined && trackMemberDetail !== null && trackMemberDetail !== ''">
                     <template v-if="trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ">
-                        <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">
+                        <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">
                             {{ $t('n.edit') }}
-                        </a-button>
+                        </a-button> -->
                     </template>
                     <template v-if="trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN">
                         <!-- 移交 -->
@@ -539,7 +539,7 @@
             </template>
         </a-modal>
 
-        <a-modal v-model:visible="intentVisible" title="意向程度修改" @ok="handleOk">
+        <a-modal v-model:visible="intentVisible" title="意向度修改" @ok="handleOk">
             <a-row class="model-intent">
                 <a-col :md="24" class='intent-input'>
                     <span class="key">调整为:</span>

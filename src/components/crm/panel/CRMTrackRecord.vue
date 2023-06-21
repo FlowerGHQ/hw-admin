@@ -60,10 +60,10 @@
                                         </div>
                                     </a-col>
                                     <!-- 意向度 -->
-                                    <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12' v-if="item.intention">
+                                    <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='12'>
                                         <div class="content">
                                             <div class="line grey">{{$t('crm_c.intentionality')}}:</div>
-                                            <div class="line">{{ $Util.CRMTrackChinaIntentFilter(item.intention) }}</div>
+                                            <div class="line">{{ $Util.CRMTrackChinaIntentFilter(item.intention) || '-' }}</div>
                                         </div>
                                     </a-col>
                                 </a-row>
