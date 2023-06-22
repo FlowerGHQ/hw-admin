@@ -10,6 +10,9 @@
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
                     <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
+                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && lang === 'en'">{{
+                        $t('n.edit')
+                    }}</a-button>
                     <!-- 领取 -->
                     <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
                         {{ $t('crm_c.obtain') }}
@@ -268,10 +271,12 @@
                                         <div :class="[$2.value == 'phone' ? 'phone-hover' : '']"><span
                                                 style="width: 80px; display: inline-block;"
                                                 v-if="$2.value == 'source_type'">
-                                                {{ Landing_Page[msgForm[$2.value]] ? Landing_Page[msgForm[$2.value]][$i18n.locale] + "-" + Landing_Page[msgForm[$2.value]
-                                                ]['country'] + Landing_Page[msgForm[$2.value]
-                                                ]['key'] : $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value],
-                                                    $i18n.locale) }}
+                                                {{ Landing_Page[msgForm[$2.value]] ?
+                                                    Landing_Page[msgForm[$2.value]][$i18n.locale] + "-" +
+                                                    Landing_Page[msgForm[$2.value]
+                                                    ]['country'] + Landing_Page[msgForm[$2.value]
+                                                    ]['key'] : $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value],
+                                                        $i18n.locale) }}
                                             </span>
 
 
@@ -302,7 +307,7 @@
                                             @pressEnter="msgChange($2.value)" />
                                     </template>
                                     <!-- 意向车型 -->
-                                    <template v-else-if="$2.type == 2">
+                                    <template v-else-if="$2.type == 2 && msgForm['source_type'] < 29">
                                         <div class="select-box">
                                             <!-- {{msgForm[$2.value]}}{{ msg[index1].list[index2].onFocus }} -->
                                             <span class="none-content no-select-tab"
@@ -323,6 +328,10 @@
                                                 </a-select-option>
                                             </a-select>
                                         </div>
+                                    </template>
+                                    <template v-else-if="$2.type == 2 && msgForm['source_type'] > 29">
+
+                                        <span>{{ detail.crm_test_drive_order?.item_name || "-" }}</span>
                                     </template>
                                     <!-- 是否下拉选择框 -->
                                     <template v-else-if="$2.type == 2.1">
@@ -447,9 +456,9 @@
                                         </div>
                                     </template>
 
-                                    <!-- 其他驾驶工具 otherToolmsg[index1].list[index2].value1-->
+                                    <!-- 其他驾驶工具-->
                                     <template v-else-if="$2.type == 5">
-                                        <div class="select-box">
+                                        <div class="select-box" style="display: flex;align-items: center;">
                                             <span class="none-content no-select-tab"
                                                 v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
                                                     $t('crm_c.choose_class') }}</span>
@@ -466,7 +475,7 @@
                                             </a-select>
 
                                             <a-input :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
-                                                v-model:value="msg[index1].list[index2].value2"
+                                                v-model:value="msg[index1].list[index2].value2"  @focus="selectFocus($2.value)"
                                                 style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
                                                 @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
                                         </div>
@@ -1322,10 +1331,16 @@ export default {
         // 信息提交
         msgChange(type) {
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
-            let porParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type], }
-            if (type == 'other_brand_model' && this.msg[1].list[5].value2) {
+            let porParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type], }
+            if (type == 'other_brand_model') {
+                if (!this.msg[1].list[5].value2) {
+                    this.msg[1].list[5].value2 = "未填写品牌";
+                }
+                if (!this.msgForm[type + '1']) {
+                    this.msgForm[type + '1'] = "未选择车型";
+                }
                 this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
-                var othParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type] }
+                var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
             } else if (type == 'group_id') {
                 // 获取城市名称
                 this.getCityName();
@@ -1483,4 +1498,5 @@ export default {
 
 input.ant-input {
     font-size: 14px;
-}</style>
+}
+</style>
