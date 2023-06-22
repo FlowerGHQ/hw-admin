@@ -35,6 +35,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
@@ -813,12 +814,23 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { value: 1 , zh: '国际物流', en: 'International logistics'},
-            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            // { value: 1 , zh: '国际物流', en: 'International logistics'},
+            // { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            { value: 3 , zh: '陆运', en: 'Land transport'},
+            { value: 4 , zh: '海运', en: 'Sea transport' },
+            { value: 5 , zh: '空运', en: 'Air freight' },
+        ],
+        PORT_LIST: [
+            { value: 1 , zh: '上海', en: 'Shanghai'},
+            { value: 2 , zh: '太仓', en: 'Taicang' },
+            { value: 3 , zh: '南沙', en: 'Nansha' },
         ],
         COURIER_MAP: {
-            '1': { key: 1, zh: '国际物流', en: 'International logistics'},
-            '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            // '1': { key: 1, zh: '国际物流', en: 'International logistics'},
+            // '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            '3': { key: 3, zh: '陆运', en: 'Land transport'},
+            '4': { key: 4, zh: '海运', en: 'Sea transport' },
+            '5': { key: 5, zh: '空运', en: 'Air freight'},
         },
         RECEIPT_LIST: [
             { name: '快递', value: 1 },
@@ -1571,22 +1583,22 @@ let Const = {
 			'30': { key: 30, zh: '活动推广',en: 'Activities to promote', value: 30 },
 			'40': { key: 40, zh: '其他',en: 'Other', value: 40 },
 		},
-		INDUSTRY_MAP: {
-			'10': { key: 10, zh: '金融',en: 'Finance', value: 10 },
-			'20': { key: 20, zh: '电信',en: 'Telecom', value: 20 },
-			'30': { key: 30, zh: '教育',en: 'Education', value: 30 },
-			'40': { key: 40, zh: '高科技',en: 'High-tech', value: 40 },
-			'50': { key: 50, zh: '政府',en: 'The government', value: 50 },
-			'60': { key: 60, zh: '制造业',en: 'Manufacturing', value: 60 },
-			'70': { key: 70, zh: '服务',en: 'Service', value: 70 },
-			'80': { key: 80, zh: '能源',en: 'Energy', value: 80 },
-			'90': { key: 90, zh: '零售',en: 'Retail', value: 90 },
-			'100': { key: 100, zh: '媒体',en: 'Media', value: 100 },
-			'110': { key: 110, zh: '娱乐',en: 'Entertainment', value: 110 },
-			'120': { key: 120, zh: '咨询',en: 'Consulting', value: 120 },
-			'130': { key: 130, zh: '非盈利事业',en: 'Non profit cause', value: 130 },
-			'140': { key: 140, zh: '公用事业',en: 'Utilities', value: 140 },
-			'500': { key: 500, zh: '其他',en: 'Other', value: 500 },
+		INDUSTRY_MAP: {            
+			'10': { key: 10, zh: '金融',en: 'Finance', value: 10},
+			'20': { key: 20, zh: '电信',en: 'Telecom', value: 20},
+			'30': { key: 30, zh: '教育',en: 'Education', value: 30},
+			'40': { key: 40, zh: '高科技',en: 'High-tech', value: 40},
+			'50': { key: 50, zh: '政府',en: 'The government', value: 50},
+			'60': { key: 60, zh: '制造业',en: 'Manufacturing', value: 60},
+			'70': { key: 70, zh: '服务',en: 'Service', value: 70},
+			'80': { key: 80, zh: '能源',en: 'Energy', value: 80},
+			'90': { key: 90, zh: '零售',en: 'Retail', value: 90},
+			'100': { key: 100, zh: '媒体',en: 'Media', value: 100},
+			'110': { key: 110, zh: '娱乐',en: 'Entertainment', value: 110},
+			'120': { key: 120, zh: '咨询',en: 'Consulting', value: 120},
+			'130': { key: 130, zh: '非盈利事业',en: 'Non profit cause', value: 130},
+			'140': { key: 140, zh: '公用事业',en: 'Utilities', value: 140},
+			'500': { key: 500, zh: '其他',en: 'Other', value: 500},
 		},
 		GENDER_MAP: {
 			'1': { key: 1, zh: '女',en: 'Woman', value: 1 },

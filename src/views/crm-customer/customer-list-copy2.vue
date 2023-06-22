@@ -53,7 +53,7 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="show && lang === 'zh'">
                         <div class="key">意向度：</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.degree_intent" :placeholder="$t('def.select')" allowClear>
+                            <a-select v-model:value="searchForm.intention" :placeholder="$t('def.select')" allowClear>
                                 <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
                                     <img class="intent_img" v-if="item.value == 40"
                                         src="../../assets/images/intent/Vector.png" />{{ item.zh
@@ -184,7 +184,7 @@
                                 item.label : item.label_en }}</a-tag>
                         </template>
                         <!-- 中文存在：意向度 -->
-                        <template v-if="column.name === 'dintent' && lang === 'zh'">
+                        <template v-if="column.name === 'intention' && lang === 'zh'">
                             <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />{{
                                 $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
                         </template>
@@ -313,7 +313,7 @@ export default {
                 type: undefined,
                 status: undefined,
                 search_type: undefined,
-                degree_intent: undefined //意向度（仅中文显示）
+                intention: undefined //意向度（仅中文显示）
             },
             batchForm: {
                 group_id: undefined,
@@ -359,9 +359,9 @@ export default {
                 { title: 'sl.label', dataIndex: 'label_list', key: 'label_list' },
                 {
                     title: "意向度",
-                    dataIndex: "degree_intent",
-                    key: 'dintent',
-                    name: 'dintent'
+                    dataIndex: "intention",
+                    key: 'intention',
+                    name: 'intention'
                 },
                 // {title: 'n.continent', dataIndex: 'continent', key:'item'},
                 { title: 'crm_c.level', dataIndex: 'level', key: 'level', sorter: true },

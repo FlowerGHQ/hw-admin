@@ -1993,7 +1993,7 @@ p {
     }
 
     .desc-zh-detail {
-    
+
 
         .fac();
         flex-wrap: wrap;
@@ -2016,18 +2016,32 @@ p {
                 color: #8090A6;
                 width: 100px;
             }
+
+            .select-value {
+                padding-left: 12px;
+            }
+
             &:hover .select-box {
 
                 .select-tab {
-                    display:inline-block;
+                    display: inline-block;
                 }
 
                 .no-select-tab {
                     display: none;
                 }
-         
+
             }
+
             .select-box {
+                line-height: 40px;
+                min-height: 36px;
+                font-size: 14px;
+
+                .ant-select-selector {
+                    height: 36px;
+                    font-size: 14px;
+                }
 
                 .select-tab {
                     display: none;
@@ -2040,7 +2054,7 @@ p {
                     font-size: 14px;
                     line-height: 20px;
                     color: #CCD3DD;
-                    padding-left: 10px;
+                    padding-left: 12px;
                 }
             }
 
@@ -2048,9 +2062,9 @@ p {
                 color: #2D2E30;
                 width: calc(~"100% - 100px");
                 .ell();
-              
+
                 // 意向度
-                .intent {   
+                .intent {
 
                     &:hover>.text {
                         display: block;
@@ -2072,6 +2086,7 @@ p {
                         font-size: 14px;
                         line-height: 20px;
                         color: #CCD3DD;
+                        padding-left: 12px;
                     }
                 }
 
@@ -2089,6 +2104,7 @@ p {
                         font-size: 14px;
                         line-height: 20px;
                         color: #CCD3DD;
+                        padding-left: 12px;
                     }
 
                     &:hover>.radio-text {
@@ -2176,14 +2192,17 @@ p {
 
             .ant-input {
                 border: inherit;
-
+                height: 36px;
                 &:hover {
                     border: 1px solid #d7d7d7;
+                    box-sizing: border-box;
+
                 }
             }
 
             .ant-input:focus {
                 border: 1px solid #2f80ed;
+                box-sizing: border-box;
             }
 
             // .ant-select{

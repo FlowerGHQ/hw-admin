@@ -267,8 +267,13 @@
                                     <template v-if="$2.type == 0">
                                         <div :class="[$2.value == 'phone' ? 'phone-hover' : '']"><span
                                                 style="width: 80px; display: inline-block;"
-                                                v-if="$2.value == 'source_type'">{{
-                                                    $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value], $i18n.locale) }}</span>
+                                                v-if="$2.value == 'source_type'">
+                                                {{ Landing_Page[msgForm[$2.value]] ? Landing_Page[msgForm[$2.value]][$i18n.locale] + "-" + Landing_Page[msgForm[$2.value]
+                                                ]['country'] + Landing_Page[msgForm[$2.value]
+                                                ]['key'] : $Util.CRMCustomerSourceTypeFilter(msgForm[$2.value],
+                                                    $i18n.locale) }}
+                                            </span>
+
 
                                             <span style="min-width: 80px; display: inline-block;" v-else>{{
                                                 msgForm[$2.value]
@@ -442,19 +447,19 @@
                                         </div>
                                     </template>
 
-                                    <!-- 其他驾驶工具 otherTool-->
+                                    <!-- 其他驾驶工具 otherToolmsg[index1].list[index2].value1-->
                                     <template v-else-if="$2.type == 5">
                                         <div class="select-box">
                                             <span class="none-content no-select-tab"
                                                 v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
-                                                    $t('crm_c.be_added') }}</span>
+                                                    $t('crm_c.choose_class') }}</span>
                                             <span class="select-value no-select-tab"
                                                 v-else-if="!msg[index1].list[index2].onFocus">
                                                 {{ msgForm[$2.value] }}</span>
                                             <a-select @focus="selectFocus($2.value)"
                                                 :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 :placeholder="$t('crm_c.choose_class')" style="width: 40%;"
-                                                v-model:value="msg[index1].list[index2].value1">
+                                                v-model:value="msgForm[$2.value + '1']" @blur="msgChange($2.value)">
                                                 <a-select-option v-for="item in otherTool" :key="item.zh" :value="item.zh">
                                                     {{ lang === 'zh' ? item.zh : item.en }}
                                                 </a-select-option>
@@ -677,8 +682,6 @@ export default {
             INTENT_MAP: Core.Const.CRM_TRACK_RECORD.INTENT_MAP,
             STATUS: Core.Const.CRM_CUSTOMER.STATUS,
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            // 性别
-            GENDER_MAP_ZH: Core.Const.CRM_CUSTOMER.GENDER_MAP_ZH,
             // 意向度
             CHINA_INTENT: Core.Const.CRM_TRACK_RECORD.CHINA_INTENT,
             // 购车关注点
@@ -687,6 +690,7 @@ export default {
             carHabitsList: Core.Const.CRM_TRACK_RECORD.BUY_HABITS,
             // 购车顾虑
             carConcensList: Core.Const.CRM_TRACK_RECORD.BUY_CONCERNS,
+            Landing_Page: Core.Const.CRM_CUSTOMER.Landing_Page, // 落地页
 
 
             // 意向度编辑-弹窗
@@ -734,6 +738,7 @@ export default {
                 driver_license: undefined,
                 ride_exp: undefined,
                 other_brand_model: undefined,
+                other_brand_model1: undefined,
                 source_type: undefined,
                 // 其他信息
                 flag_kol: undefined,
@@ -889,7 +894,7 @@ export default {
             // this.findBooOnFocusByValue(value)
         },
 
-      
+
         // 添加-购车关注点
         addCarTrackStr(data) {
             this.tabData.forEach(((item, index) => {
@@ -1084,7 +1089,7 @@ export default {
 
             console.log("obj['other_brand_model']", obj['other_brand_model']);
             let otharr = obj['other_brand_model'].split('-')
-            this.msg[1].list[5].value1 = otharr[0]
+            this.msgForm['other_brand_model1'] = otharr[0]
             this.msg[1].list[5].value2 = otharr[1]
             for (let item in this.msgForm) {
                 if (obj[item] == 0) {
@@ -1319,7 +1324,7 @@ export default {
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
             let porParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type], }
             if (type == 'other_brand_model' && this.msg[1].list[5].value2) {
-                this.msgForm[type] = this.msg[1].list[5].value1 + '-' + this.msg[1].list[5].value2;
+                this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
                 var othParms = { id: this.detail.crm_customer_portrait.id, [`${type}`]: this.msgForm[type] }
             } else if (type == 'group_id') {
                 // 获取城市名称
@@ -1478,5 +1483,4 @@ export default {
 
 input.ant-input {
     font-size: 14px;
-}
-</style>
+}</style>
