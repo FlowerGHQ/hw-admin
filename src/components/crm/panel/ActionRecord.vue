@@ -324,10 +324,10 @@ export default {
                 case "crm_c_p.rental_demand": return this.$Util.CRMTestDriveRentalDemandMapFilter(value, this.lang)
                 case "crm_c_p.green_car_owner": return this.$Util.CRMTestDriveGreenCarOwnerMapFilter(value, this.lang)
                 case "crm_c_p.ride_exp": return this.$Util.CRMRidingFilter(value, this.lang)
-                case "crm_c_p.flag_seek_cooperation": return this.$Util.CRMOrderYesNoFilter(value, this.lang)
-                case "crm_c_p.flag_kol": return this.$Util.CRMOrderYesNoFilter(value, this.lang)
-                case "crm_c_p.moto_owner": return this.$Util.CRMOrderYesNoFilter(value, this.lang)
-                case "crm_c_p.driver_license": return this.$Util.CRMOrderYesNoFilter(value, this.lang)
+                case "crm_c_p.flag_seek_cooperation": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
+                case "crm_c_p.flag_kol": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
+                case "crm_c_p.moto_owner": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
+                case "crm_c_p.driver_license": return this.$Util.CRMTestDriveMotoExpMapFilter(value, this.lang)
 
             }
             return value

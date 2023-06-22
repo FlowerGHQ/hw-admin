@@ -342,14 +342,14 @@
                                                     $t('crm_c.be_added') }}</span>
                                             <span class="select-value no-select-tab"
                                                 v-else-if="!msg[index1].list[index2].onFocus">
-                                                {{ $Util.CRMOrderYesNoFilter(msgForm[$2.value], $i18n.locale) }}
+                                                {{ $Util.CRMTestDriveMotoExpMapFilter(msgForm[$2.value], $i18n.locale) }}
 
                                             </span>
                                             <a-select style="width: 80%;" v-model:value="msgForm[$2.value]"
                                                 :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 @focus="selectFocus($2.value)" @blur="msgChange($2.value)"
                                                 :placeholder="$t('crm_c.be_added')">
-                                                <a-select-option v-for="item in WhetherNot" :key="item.key"
+                                                <a-select-option v-for="item in MOTO_EXP_MAP" :key="item.key"
                                                     :value="item.value">
                                                     {{ lang === 'zh' ? item.zh : item.en }}
                                                 </a-select-option>
@@ -679,7 +679,7 @@ export default {
     data() {
         return {
             Core,
-            WhetherNot: Core.Const.CRM_ORDER.WhetherNot, // 是否
+            MOTO_EXP_MAP:Core.Const.CRM_TEST_DRIVE.MOTO_EXP_MAP, // 是否
             INTENTION: Core.Const.CRM_ORDER.INTENTION, // 意向程度
             INTENTION_STATUS: Core.Const.CRM_ORDER.INTENTION_STATUS, // 意向程度
             SEX: Core.Const.CRM_ORDER.SEX, // 性别
