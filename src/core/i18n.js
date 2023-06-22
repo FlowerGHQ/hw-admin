@@ -1130,9 +1130,7 @@ const messages = {
             inaccessible: '当前身份无法访问',
             uploaded: '上传成功',
 	        export_as_supplier_report: '以供应商报表方式导出',
-	        error_phone: '手机号输入不正确',
-
-
+	        error_phone: '手机号输入不正确',            
         },
         search: {
             repair_sn: '工单编号',
@@ -1368,7 +1366,10 @@ const messages = {
 		    next_track_time: '下次跟进时间',
             phone_country_code:'国家/地区',
             custom_area: '客户地址',
-
+            intentionality: '意向度',
+            be_added:'待补充',
+            output:'输入品牌',
+            choose_class:'选择类别'
 	    },
 	    crm_t: {
 		    track_record: '跟进记录',
@@ -1379,7 +1380,7 @@ const messages = {
 		    file: '附件',
 		    track_time: '跟进时间',
 		    next_track_time: '下次跟进时间',
-		    intent: '意向程度',
+		    intent: '跟进结果',     //国内：意向程度改为“跟进结果”
 		    contact_customer:'联系人',
 		    operator: '跟进人',
             next_track_plan: '下次跟进计划',
@@ -1538,7 +1539,7 @@ const messages = {
 		    park_and_charging_pile: '车位&充电桩情况',
 		    family_member: '家庭成员',
 		    green_car_owner: '新能源车主',
-		    driver_license: '驾驶资格',
+		    // driver_license: '驾驶资格',
 		    ride_exp: '骑行经验',
 		    moto_exp: '摩旅经验',
 		    moto_tour_intention: '摩旅意向',
@@ -1548,6 +1549,14 @@ const messages = {
 		    pre_order_car_type: '留资意向车型',
 		    pre_order_city: '留资城市',
 		    pre_order_time: '留资时间',
+            car_purchase_concern: '购车顾虑',
+            moto_model: '摩托车型号',
+            car_purchase_focus: '购车关注点',
+            car_purchase_habit: '购车习惯',
+            flag_seek_cooperation: '是否寻求合作',
+            flag_kol: '是否是KOL',
+            moto_owner: '是否有摩托车',
+            driver_license: '是否有驾照',
 	    },
 	    crm_refund: {
 		    list: '退款单列表',
@@ -3631,7 +3640,9 @@ const messages = {
 		    last_track_time: 'Last Track Time',
 		    next_track_time: 'Next Track Time',
             phone_country_code:'Country/Region',
-            custom_area: 'Customer Address'
+            custom_area: 'Customer Address',
+            intentionality: 'Intentionality',
+            be_added:'To be added',
 	    },
 	    crm_t: {
 		    track_record: 'Track Record',
@@ -3800,7 +3811,7 @@ const messages = {
 		    park_and_charging_pile: 'Parking & Charging Pile Info',
 		    family_member: 'Family Member',
 		    green_car_owner: 'New Energy Vehicle Owner',
-		    driver_license: 'Driving Certified',
+		    // driver_license: 'Driving Certified',
 		    ride_exp: 'Riding Experience',
 		    moto_exp: 'Moto Travel Experience',
 		    moto_tour_intention: 'Moto Travel Intention',
@@ -3810,6 +3821,14 @@ const messages = {
 		    pre_order_car_type: 'Model Intention',
 		    pre_order_city: 'City',
 		    pre_order_time: 'Update Time',
+            car_purchase_concern: 'Car Purchase Concern',
+            moto_model: 'Motorcycle Model',
+            car_purchase_focus: 'Focus Of Car Buying',
+            car_purchase_habit: 'Car Buying Habit',
+            flag_seek_cooperation: 'Whether To Seek Cooperation',
+            flag_kol: 'KOL Or Not',
+            moto_owner: 'Is There A Motorcycle?',
+            driver_license: `Have A Driver's License`,
 	    },
 	    crm_refund: {
 		    list: 'Refund Order List',
