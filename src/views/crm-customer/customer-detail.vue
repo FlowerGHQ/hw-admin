@@ -1095,11 +1095,6 @@ export default {
                 ...dataObj,
                 ...dataObj['crm_customer_portrait']
             }
-
-            console.log("obj['other_brand_model']", obj['other_brand_model']);
-            let otharr = obj['other_brand_model'].split('-')
-            this.msgForm['other_brand_model1'] = otharr[0]
-            this.msg[1].list[5].value2 = otharr[1]
             for (let item in this.msgForm) {
                 if (obj[item] == 0) {
                     // 让其能显示待补充的字段
@@ -1108,6 +1103,10 @@ export default {
                     this.msgForm[item] = obj[item]
                 }
             }
+            let otharr = obj['other_brand_model'].split('-')
+            this.msgForm['other_brand_model1'] = otharr[0]
+            this.msg[1].list[5].value2 = otharr[1]
+
             // 获取城市名称
             this.getCityName();
             // 购车关注点之下的
