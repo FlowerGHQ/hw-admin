@@ -361,17 +361,22 @@
                                     <template v-else-if="$2.type == 2.2">
                                         <div class="select-box">
                                             <span class="none-content no-select-tab"
-                                                v-if="(msgForm[$2.value] == undefined || !msgForm[$2.value]) && !msg[index1].list[index2].onFocus">{{
+                                                v-if="defAddrString === '' && !msg[index1].list[index2].onFocus">{{
                                                     $t('crm_c.be_added') }}</span>
                                             <span class="select-value no-select-tab"
-                                                v-else-if="!msg[index1].list[index2].onFocus">
-                                                {{ msgForm['group_id_name'] }}
+                                                v-else-if="defAddrString !== '' && !msg[index1].list[index2].onFocus">
+                                                {{ defAddrString }}
                                             </span>
-                                            <a-tree-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                            <!-- ===''?'':msgForm['country'] <a-tree-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msgForm[$2.value]" style="width: 80%;"
                                                 :tree-data="useCarOptions" :placeholder="$t('crm_c.be_added')"
                                                 @focus="selectFocus($2.value)" tree-default-expand-all
-                                                @blur="msgChange($2.value)" />
+                                                @blur="msgChange($2.value)" /> -->
+                                            <ChinaAddressCascader style="width: 80%;" @focus="selectFocus($2.value)"
+                                                @blur="msgChange($2.value)" :on-select="true"
+                                                :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
+                                                @select='handleAddressSelect' :default-address='defAddr' />
+
                                         </div>
                                     </template>
                                     <!-- 性别 -->
@@ -474,9 +479,10 @@
                                             </a-select>
 
                                             <a-input :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
-                                                v-model:value="msg[index1].list[index2].value2"  @focus="selectFocus($2.value)"
-                                                style="width: 40%; margin-left: 10px;" :placeholder="$t('crm_c.output')"
-                                                @blur="msgChange($2.value)" @pressEnter="msgChange($2.value)" />
+                                                v-model:value="msg[index1].list[index2].value2"
+                                                @focus="selectFocus($2.value)" style="width: 40%; margin-left: 10px;"
+                                                :placeholder="$t('crm_c.output')" @blur="msgChange($2.value)"
+                                                @pressEnter="msgChange($2.value)" />
                                         </div>
                                     </template>
                                 </div>
@@ -669,16 +675,17 @@ import LabelList from '@/components/crm/common/LabelList.vue';
 import AddTab from '@/components/crm/common/AddTab.vue';
 
 import CustomerSelect from '@/components/crm/popup-btn/CustomerSelect.vue';
+import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
 import data from '../../core/data';
 
 export default {
     name: 'CustomerEdit',
-    components: { CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation, LabelList, CRMTestDrive, AddTab, CustomerSelect, },
+    components: { ChinaAddressCascader, CustomerAdd, FollowUpShow, CRMContact, CRMBo, CRMTrackRecord, Group, CRMOrder, ActionRecord, CustomerSituation, LabelList, CRMTestDrive, AddTab, CustomerSelect, },
     props: {},
     data() {
         return {
             Core,
-            MOTO_EXP_MAP:Core.Const.CRM_TEST_DRIVE.MOTO_EXP_MAP, // 是否
+            MOTO_EXP_MAP: Core.Const.CRM_TEST_DRIVE.MOTO_EXP_MAP, // 是否
             INTENTION: Core.Const.CRM_ORDER.INTENTION, // 意向程度
             INTENTION_STATUS: Core.Const.CRM_ORDER.INTENTION_STATUS, // 意向程度
             SEX: Core.Const.CRM_ORDER.SEX, // 性别
@@ -740,7 +747,7 @@ export default {
                 create_time: undefined,
                 // 用车信息
                 group_id: undefined,
-                group_id_name: undefined,
+                // group_id_name: undefined,
                 moto_owner: undefined,
                 moto_model: undefined,
                 driver_license: undefined,
@@ -755,7 +762,16 @@ export default {
                 car_purchase_focus: undefined,
                 car_purchase_habit: undefined,
                 car_purchase_concern: undefined,
+
+                // 地址-仅中国
+                // country:undefined,
+                province: '',
+                city: '',
+                county: ''
+
             },
+            // 区域组件（中国）--值
+            defAddr: [],
             msg: [
                 /* 
                     type 
@@ -846,9 +862,7 @@ export default {
         lang() {
             return this.$store.state.lang
         },
-        tabStrList() {
-            return this.targetListStr.split(',')
-        },
+
         // 查找当前标签的onFocus
         /*    findBooOnFocusByValue() {
                this.msg.forEach(($1, index) => {
@@ -867,6 +881,20 @@ export default {
 
         //     })
         // }
+
+        // address--defAddr
+        defAddrString() {
+            var str = "";
+            this.defAddr.forEach((item, index) => {
+
+                if (item !== '') {
+                    if (index < 1) str += item;
+                    if (index > 0) str += '/' + item;
+                }
+            })
+            return str;
+        }
+
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -884,6 +912,16 @@ export default {
         this.GroupTreeFetch()
     },
     methods: {
+
+        handleAddressSelect(address = []) {
+
+            this.defAddr = Core.Util.deepCopy(address)
+            console.log('handleAddressSelect', address, 'this.defAddr', this.defAddr);
+            this.msgForm.province = address[0]?address[0]:''
+            this.msgForm.city = address[1]?address[1]:''
+            this.msgForm.county = address[2]?address[2]:''
+            
+        },
         // 刷新动态组件
         forceRerender() {
             this.componentKey += 1;
@@ -1001,6 +1039,7 @@ export default {
                 this.forceRerender();
             }).catch(err => {
                 console.log('saveCustomer------err', err);
+
             })
         },
         /* Fetch end*/
@@ -1072,6 +1111,10 @@ export default {
                     this.form[key] = d[key]
                 }
                 this.defAddr = [d.province, d.city, d.county]
+
+                this.msgForm.province = Core.Util.deepCopy(this.defAddr[0])
+                this.msgForm.city = Core.Util.deepCopy(this.defAddr[1])
+                this.msgForm.county = Core.Util.deepCopy(this.defAddr[2])
                 if (this.detail.status === Core.Const.CRM_CUSTOMER.STATUS.POOL) {
                     this.tabActiveKey = "InformationInfo";
                 }
@@ -1107,7 +1150,7 @@ export default {
             this.msg[1].list[5].value2 = otharr[1]
 
             // 获取城市名称
-            this.getCityName();
+            // this.getCityName();
             // 购车关注点之下的
             arrData.forEach((item, index) => {
                 if (dataObj['crm_customer_portrait'] || dataObj['crm_customer_portrait'][item.key]) {
@@ -1118,15 +1161,15 @@ export default {
             console.log('arrData', arrData);
         },
         // 获取城市名称
-        getCityName() {
-            Core.Api.CRMGroup.detail({ id: this.msgForm['group_id'] }).then(res => {
-                console.log('res============', res);
-                this.msgForm['group_id_name'] = res.detail?.name
-            }).catch(err => {
-                console.log('err============', err);
-
-            })
-        },
+        /*        getCityName() {
+                   Core.Api.CRMGroup.detail({ id: this.msgForm['group_id'] }).then(res => {
+                       console.log('res============', res);
+                       this.msgForm['group_id_name'] = res.detail?.name
+                   }).catch(err => {
+                       console.log('err============', err);
+       
+                   })
+               }, */
         // 添加商品
         handleAddCustomerShow(ids, items) {
             Core.Api.CrmContactBind.batchSave({
@@ -1329,7 +1372,8 @@ export default {
         // 信息提交
         msgChange(type) {
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
-            let porParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type], }
+            let porParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
+            let group_id_par = { id: this.detail.id, province: this.msgForm['province'], city: this.msgForm['city'], county: this.msgForm['county'], status: this.detail.status }
             if (type == 'other_brand_model') {
                 if (!this.msg[1].list[5].value2) {
                     this.msg[1].list[5].value2 = "未填写品牌";
@@ -1339,9 +1383,6 @@ export default {
                 }
                 this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
                 var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
-            } else if (type == 'group_id') {
-                // 获取城市名称
-                this.getCityName();
             }
             this.msg.forEach(($1, index) => {
                 $1.list.forEach(($2) => {
@@ -1366,7 +1407,8 @@ export default {
                     break;
                 // 用车城市
                 case 'group_id':
-                    this.saveCustomer(cusParms);
+                    this.saveCustomer(group_id_par);
+                    console.log('group_id_par', group_id_par);
                     break;
                 // 是否有摩托车
                 case 'moto_owner':
