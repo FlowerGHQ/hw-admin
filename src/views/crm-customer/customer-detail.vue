@@ -299,7 +299,7 @@
                                     </template>
                                     <!-- 时间 -->
                                     <template v-if="$2.type == 0.1">
-                                        <span>{{ $Util.timeFilter(msgForm[$2.value]) }}</span>
+                                        <span>{{ $Util.timeFilter(detail.create_time) }}</span>
                                     </template>
                                     <template v-else-if="$2.type == 1">
                                         <a-input v-model:value="msgForm[$2.value]" style="width: 80%; font-size: 14px;"
@@ -637,7 +637,7 @@
                 <a-col :md="24" class='intent-input'>
                     <span class="key">调整为:</span>
                     <span class="value">
-                        <a-select v-model:value="msgForm.intention" style="width: 100%;">
+                        <a-select v-model:value="intentionName" style="width: 100%;">
                             <a-select-option v-for="item in INTENTION" :key="item.key" :value="item.key">
                                 {{ lang === 'zh' ? item.zh : item.en }}
                             </a-select-option>
@@ -770,6 +770,8 @@ export default {
                 county: ''
 
             },
+            // 意向度编辑数据双向绑定
+            intentionName:'',
             // 区域组件（中国）--值
             defAddr: [],
             msg: [
@@ -1145,6 +1147,7 @@ export default {
                     this.msgForm[item] = obj[item]
                 }
             }
+            this.intentionName = Core.Util.deepCopy(this.msgForm.intention);
             let otharr = obj['other_brand_model'].split('-')
             this.msgForm['other_brand_model1'] = otharr[0]
             this.msg[1].list[5].value2 = otharr[1]
@@ -1158,7 +1161,7 @@ export default {
                 }
             })
 
-            console.log('arrData', arrData);
+            console.log('arrData', arrData,this.msgForm.intention);
         },
         // 获取城市名称
         /*        getCityName() {
@@ -1363,6 +1366,7 @@ export default {
         },
         // 意向程度 点击确定
         handleOk() {
+            this.msgForm.intention = Core.Util.deepCopy(this.intentionName) 
             // target_type:1客户  商机 2
             let par = { intention: this.msgForm.intention, content: this.intentSea, target_type: this.detail.type, target_id: this.detail.id }
             this.saveIntent(par);

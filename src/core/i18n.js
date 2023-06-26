@@ -302,6 +302,7 @@ const messages = {
             enter_email: '请输入客户邮箱',
             address: '客户地址',
             specific_address: '详细地址',
+            use_car_city: '用车城市',
             enter_specific: '请输入详细地址',
             remark: '工单备注',
             enter_remark: '请输入工单备注',

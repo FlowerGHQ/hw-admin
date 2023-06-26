@@ -467,7 +467,7 @@ export default {
           dataIndex: "order_count",
           key: "order_count",
         },
-        { title: "ad.specific_address", dataIndex: "address", sorter: true },
+        { title: "r.use_car_city", dataIndex: "address", sorter: true },
         {
           title: "d.create_time",
           dataIndex: "create_time",
