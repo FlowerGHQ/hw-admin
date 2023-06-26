@@ -366,7 +366,6 @@
                                             <span class="select-value no-select-tab"
                                                 v-else-if="!msg[index1].list[index2].onFocus">
                                                 {{ msgForm['group_id_name'] }}
-
                                             </span>
                                             <a-tree-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msgForm[$2.value]" style="width: 80%;"
@@ -839,7 +838,7 @@ export default {
             // keyvalue-当前点击的
             keyValue: '',
             // 用车城市中文
-            cityUseCar: ''
+            // cityUseCar: ''
         };
     },
     watch: {},
@@ -863,11 +862,11 @@ export default {
                })
            }, */
 
-        cityUseCar() {
-            this.useCarOptions.forEach((item, index) => {
+        // cityUseCar() {
+        //     this.useCarOptions.forEach((item, index) => {
 
-            })
-        }
+        //     })
+        // }
     },
     created() {
         this.id = Number(this.$route.query.id) || 0

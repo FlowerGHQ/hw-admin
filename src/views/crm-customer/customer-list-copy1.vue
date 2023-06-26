@@ -133,6 +133,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'group_name'">
+                            {{ text || "中国" }}
+                        </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">
                                 {{ record.phone_country_code }} {{ text || '-' }}
