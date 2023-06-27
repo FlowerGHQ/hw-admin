@@ -1495,6 +1495,7 @@ const messages = {
             state: '州、省',
             postcode: '邮政编码',
             country: '国家区号',
+            address: '支付地址',
         },
         crm_oi: {
             list: '回款单列表',
@@ -3740,7 +3741,8 @@ const messages = {
             city: 'City',
             state: 'State',
             postcode: 'Postcode',
-            country: 'Country code',
+            country: 'Country Code',
+            address: 'Payment Address',
         },
         crm_oi: {
             list: 'Collection Slip List',

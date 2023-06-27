@@ -599,6 +599,7 @@ export default {
                 this.getTargetByUserId();
             }
         },
+        // 编辑支付地址
         handleAddressEditConfirm() {
             Core.Api.CRMOrder.saveAddress({
                 id: this.id,
@@ -606,6 +607,7 @@ export default {
             }).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'));
                 this.modalVisible = false
+                this.$refs.ActionRecord.getCrmActionRecordTableData();
             }).catch(err => {
                 console.log('handleAddressEditConfirm err', err);
             })

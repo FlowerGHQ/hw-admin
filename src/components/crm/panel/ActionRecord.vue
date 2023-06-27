@@ -178,9 +178,8 @@ export default {
             try {
                 item = JSON.parse(content)
             } catch (e) {
-
+                
             }
-
             // console.log("type", type)
             // console.log("item", item)
             if(type >= 1000 && type < 2000) {
@@ -229,7 +228,15 @@ export default {
                 let con = ""
                 item.forEach(it => {
                   switch (it.key) {
-                    // case "crm_c.crm_dict_id" :
+                    case "crm_o.address" :
+                        if(!it.old_value) {
+                            con += "将 " + this.$t(it.key)+" 从【 】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
+                        } else if (!it.new_value) {
+                            con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value ? it.old_value : '') + "】更新为【 】, "
+                        } else {
+                            con += "将 " + this.$t(it.key)+" 从【" + this.valueParsing(it.key, it.old_value ? it.old_value : '') + "】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
+                        }
+                        break;
                     // case "crm_t.contact_customer_id" :
                     // case "crm_c.group" :
                     //       con += "将 " + this.$t(it.key)+" 从【" + record.old_value + "】更新为【" + record.new_value + "】, "; break;
@@ -295,6 +302,7 @@ export default {
                 // 订单
                 case "crm_o.type" : return this.$Util.CRMOrderTypeFilter(value, this.lang)
                 case "crm_o.status" : return this.$Util.CRMOrderStatusFilter(value, this.lang)
+                case "crm_o.address" : return this.$Util.CRMAddressLogFilter(value, this.lang)
                 // 回款单
                 case "crm_oi.type" : return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang)
                 case "crm_oi.status" : return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang)
