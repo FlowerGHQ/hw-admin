@@ -435,6 +435,7 @@ export default {
                 } else {
                     this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
                 }
+                this.detail.payAddress = this.handleRemoveExtraCommas(this.detail.payAddress)
                 this.addressForm.address_line_1 = this.detail.address ? JSON.parse(this.detail.address)?.address_line_1 : undefined
                 this.addressForm.admin_area_2 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_2 : undefined
                 this.addressForm.admin_area_1 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_1 : undefined
@@ -615,6 +616,14 @@ export default {
             }).catch(err => {
                 console.log('handleAddressEditConfirm err', err);
             })
+        },
+        // 去掉支付地址前后多余逗号的方法
+        handleRemoveExtraCommas(v) {
+            // 使用正则表达式替换连续逗号
+            v = v.replace(/,+/g, ',');
+            // 使用trim()方法去掉字符串首尾的逗号
+            v = v.trim().replace(/^,|,$/g, '');
+            return v
         }
     }
 };
