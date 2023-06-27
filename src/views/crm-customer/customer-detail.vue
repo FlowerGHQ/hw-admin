@@ -307,7 +307,8 @@
                                             @pressEnter="msgChange($2.value)" />
                                     </template>
                                     <!-- 意向车型 -->
-                                    <template v-else-if="$2.type == 2 && (msgForm['source_type'] ===1||msgForm['source_type'] ===4)">
+                                    <template
+                                        v-else-if="$2.type == 2 && (msgForm['source_type'] === 1 || msgForm['source_type'] === 4)">
                                         <div class="select-box">
                                             <!-- {{msgForm[$2.value]}}{{ msg[index1].list[index2].onFocus }} -->
                                             <span class="none-content no-select-tab"
@@ -329,7 +330,8 @@
                                             </a-select>
                                         </div>
                                     </template>
-                                    <template v-else-if="$2.type == 2 && (msgForm['source_type'] ===2 ||msgForm['source_type'] ===3||msgForm['source_type'] ===5|| msgForm['source_type'] ===30||msgForm['source_type'] ===31)">
+                                    <template
+                                        v-else-if="$2.type == 2 && (msgForm['source_type'] === 2 || msgForm['source_type'] === 3 || msgForm['source_type'] === 5 || msgForm['source_type'] === 30 || msgForm['source_type'] === 31)">
 
                                         <span>{{ detail.crm_test_drive_order?.item_name || "-" }}</span>
                                     </template>
@@ -361,7 +363,7 @@
                                     <template v-else-if="$2.type == 2.2">
                                         <div class="select-box">
                                             <span class="none-content no-select-tab"
-                                                v-if="(defAddrString === ''&&detail.country==='') && !msg[index1].list[index2].onFocus">{{
+                                                v-if="(defAddrString === '' && detail.country === '') && !msg[index1].list[index2].onFocus">{{
                                                     $t('crm_c.be_added') }}</span>
                                             <span class="select-value no-select-tab"
                                                 v-if="!msg[index1].list[index2].onFocus">
@@ -477,7 +479,6 @@
                                                     {{ lang === 'zh' ? item.zh : item.en }}
                                                 </a-select-option>
                                             </a-select>
-
                                             <a-input :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msg[index1].list[index2].value2"
                                                 @focus="selectFocus($2.value)" style="width: 40%; margin-left: 10px;"
@@ -771,7 +772,7 @@ export default {
 
             },
             // 意向度编辑数据双向绑定
-            intentionName:'',
+            intentionName: '',
             // 区域组件（中国）--值
             defAddr: [],
             msg: [
@@ -919,10 +920,10 @@ export default {
 
             this.defAddr = Core.Util.deepCopy(address)
             console.log('handleAddressSelect', address, 'this.defAddr', this.defAddr);
-            this.msgForm.province = address[0]?address[0]:''
-            this.msgForm.city = address[1]?address[1]:''
-            this.msgForm.county = address[2]?address[2]:''
-            
+            this.msgForm.province = address[0] ? address[0] : ''
+            this.msgForm.city = address[1] ? address[1] : ''
+            this.msgForm.county = address[2] ? address[2] : ''
+
         },
         // 刷新动态组件
         forceRerender() {
@@ -1021,6 +1022,8 @@ export default {
             if (!this.intentSea) {
                 return this.$message.warning('请填写调整理由！')
             }
+            
+            this.msgForm.intention = Core.Util.deepCopy(this.intentionName)
             Core.Api.CRMTrackRecord.save({
                 ...params
             }).then(res => {
@@ -1161,7 +1164,7 @@ export default {
                 }
             })
 
-            console.log('arrData', arrData,this.msgForm.intention);
+            console.log('arrData', arrData, this.msgForm.intention);
         },
         // 获取城市名称
         /*        getCityName() {
@@ -1366,9 +1369,8 @@ export default {
         },
         // 意向程度 点击确定
         handleOk() {
-            this.msgForm.intention = Core.Util.deepCopy(this.intentionName) 
             // target_type:1客户  商机 2
-            let par = { intention: this.msgForm.intention, content: this.intentSea, target_type: this.detail.type, target_id: this.detail.id }
+            let par = { intention: this.intentionName, content: this.intentSea, target_type: this.detail.type, target_id: this.detail.id }
             this.saveIntent(par);
             // this.intentVisible = false;
         },
@@ -1378,7 +1380,13 @@ export default {
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
             let porParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
             let group_id_par = { id: this.detail.id, province: this.msgForm['province'], city: this.msgForm['city'], county: this.msgForm['county'], status: this.detail.status }
-            if (type == 'other_brand_model') {
+           
+            this.msg.forEach(($1, index) => {
+                $1.list.forEach(($2) => {
+                    $2.onFocus = false;
+                })
+            }) 
+            if (type == 'other_brand_model' && (this.msg[1].list[5].value2 || this.msgForm[type + '1'] !== undefined && this.msgForm[type + '1'])) {
                 if (!this.msg[1].list[5].value2) {
                     this.msg[1].list[5].value2 = "未填写品牌";
                 }
@@ -1387,12 +1395,8 @@ export default {
                 }
                 this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
                 var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
+                return;
             }
-            this.msg.forEach(($1, index) => {
-                $1.list.forEach(($2) => {
-                    $2.onFocus = false;
-                })
-            })
             switch (type) {
                 case 'name':
                     this.saveCustomer(cusParms);
