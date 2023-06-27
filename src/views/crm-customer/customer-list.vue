@@ -177,7 +177,7 @@
               </a-tooltip>
             </template>
             <template v-if="column.key === 'group_name'">
-              {{ text || "中国" }}
+              {{ text || "-" }}
             </template>
             <template v-if="column.key === 'item'">
               {{ text || "-" }}

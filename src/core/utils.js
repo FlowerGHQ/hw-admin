@@ -370,14 +370,15 @@ const Util = {
             }
         }
     },
+
     
     addressFilterZh(obj, lang, type = 1) {
         if (typeof obj !== 'object' || !obj) {
-            return '中国'
+            return '-'
         }
-        let { province, city, county, address } = obj
+        let { country, province, city, county, address } = obj
         if (!province && !city && !county && !address) {
-            return '中国'
+            return country
         }
         /* switch (type) {
              case 1:
@@ -402,6 +403,7 @@ const Util = {
             }
         }
     },
+    
 
     boolFlagFilter(val, name) {
         if (name) {

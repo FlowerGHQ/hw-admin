@@ -360,12 +360,12 @@
                                     <!-- 用车城市 -->
                                     <template v-else-if="$2.type == 2.2">
                                         <div class="select-box">
-                                            <!-- <span class="none-content no-select-tab"
-                                                v-if="defAddrString === '' && !msg[index1].list[index2].onFocus">{{
-                                                    $t('crm_c.be_added') }}</span> -->
+                                            <span class="none-content no-select-tab"
+                                                v-if="(defAddrString === ''&&detail.country==='') && !msg[index1].list[index2].onFocus">{{
+                                                    $t('crm_c.be_added') }}</span>
                                             <span class="select-value no-select-tab"
                                                 v-if="!msg[index1].list[index2].onFocus">
-                                                {{ defAddrString ||'中国'}}
+                                                {{ defAddrString || detail.country }}
                                             </span>
                                             <!-- ===''?'':msgForm['country'] <a-tree-select :class="[msg[index1].list[index2].onFocus ? '' : 'select-tab']"
                                                 v-model:value="msgForm[$2.value]" style="width: 80%;"
