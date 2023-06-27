@@ -176,6 +176,9 @@
                 </a-button>
               </a-tooltip>
             </template>
+            <template v-if="column.key === 'group_name'">
+              {{ text || "-" }}
+            </template>
             <template v-if="column.key === 'item'">
               {{ text || "-" }}
             </template>
@@ -206,7 +209,7 @@
               {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
             </template>
             <template v-if="column.dataIndex === 'address'">
-              {{ $Util.addressFilter(record, $i18n.locale) }}
+              {{ $Util.addressFilterZh(record, $i18n.locale) }}
             </template>
             <template v-if="column.key === 'creator_name'">
               {{ record.create_user ? record.create_user.name || "-" : "-" }}
@@ -464,7 +467,7 @@ export default {
           dataIndex: "order_count",
           key: "order_count",
         },
-        { title: "ad.specific_address", dataIndex: "address", sorter: true },
+        { title: "r.use_car_city", dataIndex: "address", sorter: true },
         {
           title: "d.create_time",
           dataIndex: "create_time",

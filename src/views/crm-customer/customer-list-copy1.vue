@@ -133,6 +133,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'group_name'">
+                            {{ text || "-" }}
+                        </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">
                                 {{ record.phone_country_code }} {{ text || '-' }}
@@ -161,7 +164,7 @@
                             {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
                         </template>
                         <template v-if="column.dataIndex === 'address'">
-                            {{ $Util.addressFilter(record, $i18n.locale) }}
+                            {{ $Util.addressFilterZh(record, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'creator_name'">
                             {{ record.create_user ? record.create_user.name || '-' : '-' }}
@@ -374,7 +377,7 @@ export default {
                 { title: 'r.creator_name', dataIndex: 'create_user_id', key: 'creator_name', sorter: true },
                 { title: 'crm_c.group', dataIndex: 'group_name', key: 'group_name' },
                 { title: 'crm_c.order_success_count', dataIndex: 'order_count', key: 'order_count' },
-                { title: 'ad.specific_address', dataIndex: 'address', sorter: true },
+                { title: 'r.use_car_city', dataIndex: 'address', sorter: true },
                 { title: 'd.create_time', dataIndex: 'create_time', key: 'time', sorter: true },
                 { title: 'crm_c.remark', dataIndex: 'remark', key: 'remark', sorter: true },
                 { title: 'crm_c.source_type', dataIndex: 'source_type', key: 'source_type', sorter: true },
@@ -747,9 +750,9 @@ export default {
 }
 
 .intent_img {
-  vertical-align: baseline;
-  height: 13px;
-  width: 11px;
-  margin-right: 6px;
+    vertical-align: baseline;
+    height: 13px;
+    width: 11px;
+    margin-right: 6px;
 }
 </style>
