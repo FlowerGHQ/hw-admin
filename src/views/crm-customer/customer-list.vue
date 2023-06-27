@@ -209,7 +209,7 @@
               {{ $Util.CRMCustomerLevelFilter(text, $i18n.locale) }}
             </template>
             <template v-if="column.dataIndex === 'address'">
-              {{ $Util.addressFilter(record, $i18n.locale) }}
+              {{ $Util.addressFilterZh(record, $i18n.locale) }}
             </template>
             <template v-if="column.key === 'creator_name'">
               {{ record.create_user ? record.create_user.name || "-" : "-" }}

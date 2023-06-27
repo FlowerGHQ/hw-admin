@@ -370,6 +370,38 @@ const Util = {
             }
         }
     },
+    
+    addressFilterZh(obj, lang, type = 1) {
+        if (typeof obj !== 'object' || !obj) {
+            return '中国'
+        }
+        let { province, city, county, address } = obj
+        if (!province && !city && !county && !address) {
+            return '中国'
+        }
+        /* switch (type) {
+             case 1:
+                 return `${province} ${city} ${county} ${address}`;
+             case 2:
+                 return `${province} ${city} ${county}`;
+         }*/
+        if (lang === 'en') {
+            let { province_en, city_en, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province_en} ${city_en} ${county} ${address}`;
+            }
+        }
+        if (lang === 'zh') {
+            let { province, city, county, address } = obj
+            switch (type) {
+                case 1:
+                    return `${province} ${city} ${county} ${address}`;
+                case 2:
+                    return `${province} ${city} ${county}`;
+            }
+        }
+    },
 
     boolFlagFilter(val, name) {
         if (name) {
