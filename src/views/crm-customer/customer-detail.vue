@@ -10,7 +10,7 @@
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
                     <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
-                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && lang === 'en'">{{
+                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && (lang === 'en'|| detail.country !=='中国')">{{
                         $t('n.edit')
                     }}</a-button>
                     <!-- 领取 -->
