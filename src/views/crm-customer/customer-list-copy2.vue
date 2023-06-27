@@ -134,7 +134,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'group_name'">
-                            {{ text || "中国" }}
+                            {{ text || "-" }}
                         </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">

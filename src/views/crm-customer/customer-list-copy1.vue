@@ -134,7 +134,7 @@
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'group_name'">
-                            {{ text || "中国" }}
+                            {{ text || "-" }}
                         </template>
                         <template v-if="column.key === 'phone'">
                             <div v-if="text !== ''" class="phone-hover">
@@ -750,9 +750,9 @@ export default {
 }
 
 .intent_img {
-  vertical-align: baseline;
-  height: 13px;
-  width: 11px;
-  margin-right: 6px;
+    vertical-align: baseline;
+    height: 13px;
+    width: 11px;
+    margin-right: 6px;
 }
 </style>
