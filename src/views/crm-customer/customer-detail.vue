@@ -1022,12 +1022,12 @@ export default {
             if (!this.intentSea) {
                 return this.$message.warning('请填写调整理由！')
             }
-            
-            this.msgForm.intention = Core.Util.deepCopy(this.intentionName)
+
             Core.Api.CRMTrackRecord.save({
                 ...params
             }).then(res => {
                 console.log('saveIntent--res', res);
+                this.msgForm.intention = Core.Util.deepCopy(this.intentionName)
                 this.intentVisible = false;
                 this.forceRerender();
 
@@ -1380,12 +1380,12 @@ export default {
             let cusParms = { id: this.detail.id, [`${type}`]: this.msgForm[type], status: this.detail.status }
             let porParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
             let group_id_par = { id: this.detail.id, province: this.msgForm['province'], city: this.msgForm['city'], county: this.msgForm['county'], status: this.detail.status }
-           
+
             this.msg.forEach(($1, index) => {
                 $1.list.forEach(($2) => {
                     $2.onFocus = false;
                 })
-            }) 
+            })
             if (type == 'other_brand_model' && (this.msg[1].list[5].value2 || this.msgForm[type + '1'] !== undefined && this.msgForm[type + '1'])) {
                 if (!this.msg[1].list[5].value2) {
                     this.msg[1].list[5].value2 = "未填写品牌";
