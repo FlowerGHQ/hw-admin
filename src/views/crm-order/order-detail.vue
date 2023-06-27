@@ -430,7 +430,11 @@ export default {
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.detail = d
-                this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
+                if(!JSON.parse(this.detail.address)?.address_line_1 && !JSON.parse(this.detail.address)?.admin_area_2 && !JSON.parse(this.detail.address)?.admin_area_1 && !JSON.parse(this.detail.address)?.postal_code && !JSON.parse(this.detail.address)?.country_code) {
+                    this.detail.payAddress = '-'
+                } else {
+                    this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
+                }
                 this.addressForm.address_line_1 = this.detail.address ? JSON.parse(this.detail.address)?.address_line_1 : undefined
                 this.addressForm.admin_area_2 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_2 : undefined
                 this.addressForm.admin_area_1 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_1 : undefined
