@@ -1395,6 +1395,7 @@ export default {
                 }
                 this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
                 var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
+            } else {
                 return;
             }
             switch (type) {
