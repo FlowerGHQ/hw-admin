@@ -48,7 +48,7 @@
         </div>
         <div class="gray-panel">
             <!-- 顶部添加基本信息（仅英文显示一个样式） -->
-            <template v-if="lang === 'en'">
+            <template v-if="lang === 'en'|| detail.country !=='中国'">
                 <div class="panel-content desc-container">
                     <div class="desc-title">
                         <div class="title-area">
