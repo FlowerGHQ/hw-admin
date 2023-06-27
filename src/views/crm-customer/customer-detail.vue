@@ -1386,18 +1386,21 @@ export default {
                     $2.onFocus = false;
                 })
             })
-            if (type == 'other_brand_model' && (this.msg[1].list[5].value2 || this.msgForm[type + '1'] !== undefined && this.msgForm[type + '1'])) {
-                if (!this.msg[1].list[5].value2) {
-                    this.msg[1].list[5].value2 = "未填写品牌";
+            if (type == 'other_brand_model') {
+                if (this.msg[1].list[5].value2 || this.msgForm[type + '1'] !== undefined && this.msgForm[type + '1']) {
+                    if (!this.msg[1].list[5].value2) {
+                        this.msg[1].list[5].value2 = "未填写品牌";
+                    }
+                    if (!this.msgForm[type + '1']) {
+                        this.msgForm[type + '1'] = "未选择车型";
+                    }
+                    this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
+                    var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
+                } else {
+                    return;
                 }
-                if (!this.msgForm[type + '1']) {
-                    this.msgForm[type + '1'] = "未选择车型";
-                }
-                this.msgForm[type] = this.msgForm[type + '1'] + '-' + this.msg[1].list[5].value2;
-                var othParms = { id: this.detail.crm_customer_portrait?.id, [`${type}`]: this.msgForm[type] }
-            } else {
-                return;
             }
+
             switch (type) {
                 case 'name':
                     this.saveCustomer(cusParms);
