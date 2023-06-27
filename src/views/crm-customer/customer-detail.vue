@@ -307,7 +307,7 @@
                                             @pressEnter="msgChange($2.value)" />
                                     </template>
                                     <!-- 意向车型 -->
-                                    <template v-else-if="$2.type == 2 && msgForm['source_type'] < 29">
+                                    <template v-else-if="$2.type == 2 && (msgForm['source_type'] ===1||msgForm['source_type'] ===4)">
                                         <div class="select-box">
                                             <!-- {{msgForm[$2.value]}}{{ msg[index1].list[index2].onFocus }} -->
                                             <span class="none-content no-select-tab"
@@ -329,7 +329,7 @@
                                             </a-select>
                                         </div>
                                     </template>
-                                    <template v-else-if="$2.type == 2 && msgForm['source_type'] > 29">
+                                    <template v-else-if="$2.type == 2 && (msgForm['source_type'] ===2 ||msgForm['source_type'] ===3||msgForm['source_type'] ===5|| msgForm['source_type'] ===30||msgForm['source_type'] ===31)">
 
                                         <span>{{ detail.crm_test_drive_order?.item_name || "-" }}</span>
                                     </template>
