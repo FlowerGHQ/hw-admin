@@ -2,7 +2,7 @@
     <div>
         <div class="tab-box">
 
-            <a-tag color="processing" v-for="(item, index) in tabStrList" v-if="tabStrList.length">
+            <a-tag class="tag" color="processing" v-for="(item, index) in tabStrList" v-if="tabStrList.length">
                 {{ item }}
                 <close-circle-filled @click="popTabClick(item, false)" />
             </a-tag>
@@ -13,7 +13,7 @@
                 <div class="input-tab">
                     <a-input v-model:value="inputValue" placeholder="输入创建标签" :max-length="25"
                         style="width: 120px;margin-bottom: 10px;"  @pressEnter="pressEnter" />
-                    <div class="input-tabname" v-if="formatValue">
+                    <div class="input-tabname" v-if="formatValue" @click="pressEnter">
                         创建标签&nbsp;&nbsp; <span class="span-tab-name">{{ formatValue }}</span>
                     </div>
 
@@ -159,7 +159,10 @@ export default {
 <style lang="less" scoped>
 .tab-box {
     position: relative;
-    padding-top: 20px;
+    padding-top: 10px;
+    .tag{
+        margin-top: 10px;
+    }
 
     // 添加标签盒子
     .square {
@@ -171,6 +174,7 @@ export default {
         vertical-align: bottom;
         margin-left: 6px;
         border-radius: 4px;
+        margin-top: 10px;
     }
 
     // 添加标签弹窗盒子
