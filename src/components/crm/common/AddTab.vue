@@ -218,6 +218,7 @@ export default {
 
         // 输入框标签名称备注
         .input-tabname {
+            cursor:pointer;
             min-width: 112px;
             max-width: 120px;
             background: #EDEEEE;
