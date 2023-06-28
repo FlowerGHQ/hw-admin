@@ -238,7 +238,7 @@
                     </a-row>
                 </div>
             </template>
-            <a-spin :spinning="!loading" class='loading-incontent' v-if="!loading" tip="Loading"></a-spin>
+            <a-spin :spinning="loading" class='loading-incontent' v-if="loading" tip="Loading"></a-spin>
             <template v-else>
                 <!-- 中国详情显示 #labels 这 -->
                 <div class="desc-zh-container">
