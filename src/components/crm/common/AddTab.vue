@@ -2,18 +2,18 @@
     <div>
         <div class="tab-box">
 
-            <a-tag color="processing" v-for="(item, index) in tabStrList" v-if="tabStrList.length">
+            <a-tag class="tag" color="processing" v-for="(item, index) in tabStrList" v-if="tabStrList.length">
                 {{ item }}
                 <close-circle-filled @click="popTabClick(item, false)" />
             </a-tag>
 
-            <img  class="square"  @click="addPop" src="../../../assets//images/intent/addtab.png" alt="">
+            <img class="square" @click="addPop" src="../../../assets//images/intent/addtab.png" alt="">
 
             <div class="add-tab" v-if="addPopBoo">
                 <div class="input-tab">
                     <a-input v-model:value="inputValue" placeholder="输入创建标签" :max-length="25"
-                        style="width: 120px;margin-bottom: 10px;"  @pressEnter="pressEnter" />
-                    <div class="input-tabname" v-if="formatValue">
+                        style="width: 120px;margin-bottom: 10px;" @pressEnter="pressEnter" />
+                    <div class="input-tabname" v-if="formatValue" @click="pressEnter">
                         创建标签&nbsp;&nbsp; <span class="span-tab-name">{{ formatValue }}</span>
                     </div>
 
@@ -32,7 +32,6 @@
         </div>
         <div class="mask-layer" @click="addPop" v-if="addPopBoo"></div>
     </div>
-
 </template>
 
 <script>
@@ -84,13 +83,13 @@ export default {
         },
     },
     computed: {
-        
+
         // 提示内容
         formatValue() {
             return this.inputValue;
         },
         tabStrList() {
-            return this.targetListStr&&this.targetListStr.split(',')||[]
+            return this.targetListStr && this.targetListStr.split(',') || []
         }
     },
     mounted() {
@@ -140,7 +139,7 @@ export default {
 
 
         pressEnter() {
-            this.$emit('addStr', { value: this.inputValue.trim().replace(/,/g, "") , key: this.keyValue }); 
+            this.$emit('addStr', { value: this.inputValue.trim().replace(/,/g, ""), key: this.keyValue });
             this.inputValue = ''
         },
         // 点击弹窗标签 boo是true  则添加 否则删除
@@ -159,7 +158,11 @@ export default {
 <style lang="less" scoped>
 .tab-box {
     position: relative;
-    padding-top: 20px;
+    padding-top: 10px;
+
+    .tag {
+        margin-top: 10px;
+    }
 
     // 添加标签盒子
     .square {
@@ -171,6 +174,8 @@ export default {
         vertical-align: bottom;
         margin-left: 6px;
         border-radius: 4px;
+        margin-top: 10px;
+        cursor: pointer;
     }
 
     // 添加标签弹窗盒子
@@ -214,6 +219,7 @@ export default {
 
         // 输入框标签名称备注
         .input-tabname {
+            cursor: pointer;
             min-width: 112px;
             max-width: 120px;
             background: #EDEEEE;
@@ -245,6 +251,8 @@ export default {
             .tag-list-all {
                 margin-bottom: 10px;
                 margin-top: 0px;
+                cursor: pointer;
+
             }
 
         }
