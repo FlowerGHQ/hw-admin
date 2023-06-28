@@ -238,7 +238,6 @@
                     </a-row>
                 </div>
             </template>
-            <a-spin :spinning="loading" class='loading-incontent' v-if="loading" tip="Loading"></a-spin>
             <template v-else>
                 <!-- 中国详情显示 #labels 这 -->
                 <div class="desc-zh-container">
@@ -526,6 +525,7 @@
                             @delStr="deleteCarTrackStr" :keyValue="tabData[2].key" />
                     </div>
                 </div>
+
             </template>
         </div>
 
@@ -654,6 +654,8 @@
                 </a-col>
             </a-row>
         </a-modal>
+        <a-spin :spinning="loading" class='loading-incontent' v-if="loading" tip="Loading"></a-spin>
+
     </div>
 </template>
 
@@ -1506,7 +1508,8 @@ export default {
 
 }
 
-.loading-fullscreen, .loading-incontent {
+.loading-fullscreen,
+.loading-incontent {
     background-color: rgba(255, 255, 255, 0.8);
 }
 
