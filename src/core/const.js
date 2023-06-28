@@ -2071,7 +2071,8 @@ let Const = {
             BMS_PLUG_IN_MACHINE: 10001,
         },
         TYPE_MAP: {
-            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'}
+            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'},
+            '26003': { value: 26003, key: 't.test_case.lierda_vcu_test', text: '利尔达VCU测试'}
         },
 
         TYPE_CASE_MAP: {
