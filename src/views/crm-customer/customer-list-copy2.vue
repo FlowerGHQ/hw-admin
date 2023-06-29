@@ -54,10 +54,16 @@
                         <div class="key">意向度：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.intention" :placeholder="$t('def.select')" allowClear>
-                                <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
-                                    <img class="intent_img" v-if="item.value == 40"
-                                        src="../../assets/images/intent/Vector.png" />{{ item.zh
-                                        }}
+                                <a-select-option style="display: flex;align-items: center;" v-for="item of CHINA_INTENT"
+                                    :key="item.key" :value="item.value">
+                                    <div class="intention-box">
+                                        <img class="intent_img" v-if="item.value == 40"
+                                            src="../../assets/images/intent/Vector.png" />
+                                        <span class="intent-text">
+                                            {{ item.zh
+                                            }}
+                                        </span>
+                                    </div>
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -188,8 +194,12 @@
                         </template>
                         <!-- 中文存在：意向度 -->
                         <template v-if="column.name === 'intention' && lang === 'zh'">
-                            <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />{{
-                                $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
+                            <div class="intention-box">
+                                <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />
+                                <span class="intent-text">
+                                    {{ $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
+                                </span>
+                            </div>
                         </template>
 
                         <template v-if="column.key === 'time'">
@@ -744,10 +754,18 @@ export default {
     cursor: pointer;
 }
 
-.intent_img {
-    vertical-align: baseline;
-    height: 13px;
-    width: 11px;
-    margin-right: 6px;
+.intention-box {
+    display: flex;
+    align-items: center;
+
+    .intent_img {
+        height: 13px;
+        width: 11px;
+        margin-right: 6px;
+    }
+
+    .intent-text {
+        line-height: 13px;
+    }
 }
 </style>
