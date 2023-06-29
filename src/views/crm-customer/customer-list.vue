@@ -58,9 +58,14 @@
             <div class="key">意向度：</div>
             <div class="value">
               <a-select v-model:value="searchForm.intention" :placeholder="$t('def.select')" allowClear>
-                <a-select-option v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
-                  <img class="intent_img" v-if="item.value == 40" src="../../assets/images/intent/Vector.png" />{{ item.zh
-                  }}
+                <a-select-option  style="display: flex;align-items: center;" v-for="item of CHINA_INTENT" :key="item.key" :value="item.value">
+                  <div class="intention-box">
+                    <img class="intent_img" v-if="item.value == 40" src="../../assets/images/intent/Vector.png" />
+                    <span class="intent-text">
+                      {{ item.zh
+                      }}
+                    </span>
+                  </div>
                 </a-select-option>
               </a-select>
             </div>
@@ -158,13 +163,13 @@
           @change="getTableDataSorter">
           <template #headerCell="{ column, title }">
             <!-- 意向度表头仅中文显示 -->
-            {{ $t(title)=='意向度'&& lang=="en"?'':$t(title) }}
+            {{ $t(title) == '意向度' && lang == "en" ? '' : $t(title) }}
             <template v-if="column.key == 'operation'">
               <span class="config-icon" @click="OnConfiguration">
                 <SettingOutlined />
               </span>
             </template>
-            
+
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'detail'">
@@ -232,9 +237,14 @@
                 "zh" ? item.label : item.label_en }}</a-tag>
             </template>
             <!-- 中文存在：意向度 -->
-            <template v-if="column.name === 'intention' && lang==='zh'&&column.dataIndex=='intention'">
-              <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />
-              {{ $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
+            <template v-if="column.name === 'intention' && lang === 'zh' && column.dataIndex == 'intention'">
+              <div class="intention-box">
+                <img class="intent_img" v-if="text == 40" src="../../assets/images/intent/Vector.png" />
+                <span class="intent-text">
+                  {{ $Util.CRMTrackChinaIntentFilter(text, lang, CHINA_INTENT) || '-' }}
+                </span>
+              </div>
+
             </template>
             <!-- 意向程度 -->
             <template v-if="column.name === 'intent'">
@@ -248,7 +258,7 @@
             </template>
             <template v-if="column.key === 'operation'">
               <a-button type="link" @click="handleBatch('distribute', record)" v-if="$auth('crm-customer.distribute') && operMode === 'high_seas'
-              ">{{ $t("crm_c.distribute") }}</a-button>
+                ">{{ $t("crm_c.distribute") }}</a-button>
               <a-button type="link" @click="handleBatch('transfer', record)"
                 v-if="$auth('crm-customer.transfer') && operMode === 'private'">{{ $t("crm_c.transfer") }}</a-button>
 
@@ -272,7 +282,7 @@
         </div>
         <a-pagination v-model:current="currPage" :page-size="pageSize" :total="total" show-quick-jumper show-size-changer
           show-less-items :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
-          " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
+            " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
           @showSizeChange="pageSizeChange" />
       </div>
     </div>
@@ -525,7 +535,7 @@ export default {
           sorter: true,
         });
       }
-      
+
       return columns;
     },
     rowSelection() {
@@ -965,11 +975,18 @@ export default {
   cursor: pointer;
 }
 
-.intent_img {
-  vertical-align: baseline;
-  height: 13px;
-  width: 11px;
-  margin-right: 6px;
+.intention-box {
+  display: flex;
+  align-items: center;
 
+  .intent_img {
+    height: 13px;
+    width: 11px;
+    margin-right: 6px;
+  }
+
+  .intent-text {
+    line-height: 13px;
+  }
 }
 </style>
