@@ -448,8 +448,8 @@
                                     <!-- 意向程度 -->
                                     <template v-else-if="$2.type == 4">
                                         <div class="intent cursor content-one" @click="intentEvent">
-                                            <img src="../../assets/images/intent/Vector.png" v-if="msgForm[$2.value] == 40"
-                                                alt="">
+                                            <img class="img-hot" src="../../assets/images/intent/Vector.png"
+                                                v-if="msgForm[$2.value] == 40" alt="">
                                             <span style="margin-left: 3px;width: 120px;display: block;">
                                                 <span>
                                                     {{ $Util.CRMOrderIntentFilter(msgForm[$2.value], $i18n.locale) }}
@@ -1563,5 +1563,11 @@ export default {
 
 input.ant-input {
     font-size: 14px;
+}
+
+.img-hot {
+    height: 16px;
+    width: 16px;
+    margin-right: 10px;
 }
 </style>

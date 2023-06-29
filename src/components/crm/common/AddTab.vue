@@ -224,13 +224,14 @@ export default {
             max-width: 120px;
             background: #EDEEEE;
             border-radius: 3px;
-            padding: 4px 5px;
+            padding: 8px 4px 5px;
 
             font-family: 'PingFang SC';
             font-style: normal;
             font-weight: 400;
             font-size: 12px;
             line-height: 17px;
+            min-height: 26px;
 
             .span-tab-name {
                 font-weight: 600;
