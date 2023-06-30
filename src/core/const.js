@@ -31,9 +31,9 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
+        // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
@@ -1808,11 +1808,11 @@ let Const = {
 			ORDER_INCOME:4,
 		},
         // 购车关注点
-        CAR_BUYING_CONCERNS: ['续航','服务','质量','外观','性能','舒适','安全','储物空间','智能','销售政策','售后政策'],
+        CAR_BUYING_CONCERNS: ['续航','服务','质量','外观','性能','舒适','安全','储物空间','智能','改装','销售政策','售后政策'],
         // 购车习惯
-        BUY_HABITS: ['置换','全款','贷款'],
+        BUY_HABITS: ['试驾','全款','贷款'],
         // 购车顾虑  
-        BUY_CONCERNS: ['预算不足','品牌顾虑','售后','保值率','提车时间']
+        BUY_CONCERNS: ['预算不足','品牌顾虑','售后保证','保值率','提车时间']
 
 
 	},

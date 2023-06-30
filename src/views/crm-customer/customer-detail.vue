@@ -10,9 +10,10 @@
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
                     <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
-                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && (lang === 'en'|| detail.country !=='中国')">{{
-                        $t('n.edit')
-                    }}</a-button>
+                    <a-button @click="routerChange('edit')"
+                        v-if="$auth('crm-customer.save') && (lang === 'en' || detail.country !== '中国')">{{
+                            $t('n.edit')
+                        }}</a-button>
                     <!-- 领取 -->
                     <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
                         {{ $t('crm_c.obtain') }}
@@ -48,7 +49,7 @@
         </div>
         <div class="gray-panel">
             <!-- 顶部添加基本信息（仅英文显示一个样式） -->
-            <template v-if="lang === 'en'|| detail.country !=='中国'">
+            <template v-if="lang === 'en' || detail.country !== '中国'">
                 <div class="panel-content desc-container">
                     <div class="desc-title">
                         <div class="title-area">
@@ -70,7 +71,6 @@
                                 {{ detail.email }}
                                 <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER"
                                     class="switch" @click="handleChecking()"><i class="icon i_eyes" /></a-button>
-
                             </span>
                         </a-col>
                         <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
@@ -268,7 +268,7 @@
                                         5(其他驾驶工具)一个地方有两个输入框的 
                                      -->
                                     <template v-if="$2.type == 0">
-                                        <div :class="[$2.value == 'phone' ? 'phone-hover' : '']"><span
+                                        <div :class="[$2.value == 'phone' ? 'phone-hover' : '']" class="content-one"><span
                                                 style="width: 80px; display: inline-block;"
                                                 v-if="$2.value == 'source_type'">
                                                 {{ Landing_Page[msgForm[$2.value]] ?
@@ -299,7 +299,7 @@
                                     </template>
                                     <!-- 时间 -->
                                     <template v-if="$2.type == 0.1">
-                                        <span>{{ $Util.timeFilter(detail.create_time) }}</span>
+                                        <span class="content-one">{{ $Util.timeFilter(detail.create_time) }}</span>
                                     </template>
                                     <template v-else-if="$2.type == 1">
                                         <a-input v-model:value="msgForm[$2.value]" style="width: 80%; font-size: 14px;"
@@ -447,9 +447,9 @@
                                     </template>
                                     <!-- 意向程度 -->
                                     <template v-else-if="$2.type == 4">
-                                        <div class="intent cursor" @click="intentEvent">
-                                            <img src="../../assets/images/intent/Vector.png" v-if="msgForm[$2.value] == 40"
-                                                alt="">
+                                        <div class="intent cursor content-one" @click="intentEvent">
+                                            <img class="img-hot" src="../../assets/images/intent/Vector.png"
+                                                v-if="msgForm[$2.value] == 40" alt="">
                                             <span style="margin-left: 3px;width: 120px;display: block;">
                                                 <span>
                                                     {{ $Util.CRMOrderIntentFilter(msgForm[$2.value], $i18n.locale) }}
@@ -525,6 +525,7 @@
                             @delStr="deleteCarTrackStr" :keyValue="tabData[2].key" />
                     </div>
                 </div>
+
             </template>
         </div>
 
@@ -653,6 +654,8 @@
                 </a-col>
             </a-row>
         </a-modal>
+        <a-spin :spinning="loading" class='loading-incontent' v-if="loading" tip="Loading"></a-spin>
+
     </div>
 </template>
 
@@ -1486,6 +1489,11 @@ export default {
         font-size: 12px;
     }
 
+    .content-one {
+
+        padding-left: 12px;
+    }
+
     .phone-hover {
         .switch {
             opacity: 0;
@@ -1498,6 +1506,11 @@ export default {
         }
     }
 
+}
+
+.loading-fullscreen,
+.loading-incontent {
+    background-color: rgba(255, 255, 255, 0.8);
 }
 
 // 意向程度样式
@@ -1550,5 +1563,11 @@ export default {
 
 input.ant-input {
     font-size: 14px;
+}
+
+.img-hot {
+    height: 16px;
+    width: 16px;
+    margin-right: 10px;
 }
 </style>
