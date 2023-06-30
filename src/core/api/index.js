@@ -718,6 +718,7 @@ const apiList = {
         audit: ['PostJson', 'crm-order/audit'],// 审核
         reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
 	    batchTransfer: ['PostJson', 'crm-order/batch-transfer'],
+        saveAddress: ['PostJson', 'crm-order/save-address'],//新增/修改
     },
     CRMItemBind: {  //CRM销售信息
         save: ['PostJson', 'crm-item-bind/save'],//新增/修改

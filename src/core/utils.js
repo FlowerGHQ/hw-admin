@@ -1020,6 +1020,19 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    CRMAddressLogFilter(val, lang) {
+        const addressObj = JSON.parse(val);
+        const adminArea1 = addressObj.admin_area_1;
+        const countryCode = addressObj.country_code;
+        const addressLine1 = addressObj.address_line_1;
+        const adminArea2 = addressObj.admin_area_2;
+        const postalCode = addressObj.postal_code;
+        if(lang === 'zh') {
+            return `州/省: ${adminArea1} 国家区号: ${countryCode} 街道: ${addressLine1} 城市: ${adminArea2} 邮编: ${postalCode}`;
+        } else {
+            return `State: ${adminArea1} Country: ${countryCode} Street: ${addressLine1} City: ${adminArea2} Postcode: ${postalCode}`;
+        }
+    },
     CRMOrderIntentFilter(val, to = 'zh') {
         const MAP = Const.CRM_ORDER.INTENTION_STATUS
         let item = MAP[val + ''] || {}
