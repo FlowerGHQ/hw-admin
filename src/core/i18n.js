@@ -1369,9 +1369,9 @@ const messages = {
             phone_country_code: '国家/地区',
             custom_area: '客户地址',
             intentionality: '意向度',
-            be_added:'待补充',
-            output:'输入品牌',
-            choose_class:'选择类别'
+            be_added: '待补充',
+            output: '输入品牌',
+            choose_class: '选择类别'
         },
         crm_t: {
             track_record: '跟进记录',
@@ -3620,7 +3620,7 @@ const messages = {
             phone_country_code: 'Country/Region',
             custom_area: 'Customer Address',
             intentionality: 'Intentionality',
-            be_added:'To be added',
+            be_added: 'To be added',
         },
         crm_t: {
             track_record: 'Track Record',
