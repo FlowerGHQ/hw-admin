@@ -26,7 +26,7 @@
                 <div class="info">
                     <div class="name"  v-if="lang == 'zh'" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="name" v-else @click="routerChange('detail', item.item)">{{ item.item?.material?.name_en ? (item.item?.material?.name_en) :
-                                (item.item.name_en ? item.item.name_en : '-' )}}</div>
+                                (item.item?.name_en ? item.item?.name_en : '-' )}}</div>
                     <div class="sub">{{item.item ? item.item.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item.attr_list'>
                         <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item.attr_list, lang)}}
@@ -83,9 +83,9 @@
             <div class="list-item" v-for="item of favoriteList" :key="item.id">
                 <img class="cover" :src="$Util.imageFilter(item.item ? item.item?.logo : '', 2)" />
                 <div class="info">
-                    <div class="name"  v-if="lang == 'zh'" @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
+                    <div class="name" v-if="lang=='zh'"  @click="routerChange('detail', item.item)">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</div>
                     <div class="name" v-else @click="routerChange('detail', item.item)">{{ item.item?.material?.name_en ? (item.item?.material?.name_en) :
-                                (item.item.name_en ? item.item.name_en : '-' )}}</div>
+                                (item.item?.name_en ? item.item?.name_en : '-' )}}</div>
                     <div class="sub">{{item.item ? item.item?.code : '-'}}</div>
                     <div class="spec" v-if='item.item && item.item?.attr_list'>
                         <span>{{ $t('i.spec') }}：</span>{{$Util.itemSpecFilter(item.item?.attr_list, lang)}}
