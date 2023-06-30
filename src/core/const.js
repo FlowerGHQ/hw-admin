@@ -26,8 +26,8 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
 	case "10.0.0.213":
-		URL_POINT = 'http://10.0.0.213:8889'
-		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
+		URL_POINT = 'http://10.0.0.213:8889'  
+		// URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
