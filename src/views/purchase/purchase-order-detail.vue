@@ -12,27 +12,65 @@
                 </div> -->
                 <div class="btns-area"
                     v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
-                    <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
-                        <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                        <!-- 导出PI -->
-                        <a-button @click="handleExportIn"><i class="icon i_download" />{{
-                            $t('p.export_purchase') }}</a-button>
-                        <!-- 修改PI -->
-                        <a-button @click="handleUpdatePI()"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button>
-                    </template>
-                    <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
-                        <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                        <!-- 导出商品信息 -->
-                        <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button>
-                    </template>
+                    
+                    <a-dropdown placement="bottomRight">
+                        <template #overlay>
+                            <a-menu>
+                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="0">                            
+                                        <!-- 导出PI -->
+                                        <div @click="handleExportIn">
+                                            {{ $t('p.export_purchase') }}
+                                        </div>
+                                        <!-- <a-button @click="handleExportIn"><i class="icon i_download" />
+                                            {{ $t('p.export_purchase') }}
+                                        </a-button> -->
+                                    </a-menu-item>
+                                    <a-menu-item key="1">
+                                        <!-- 修改PI -->
+                                        <div @click="handleUpdatePI">
+                                            {{ $t('p.update_PI') }}
+                                        </div>
+                                        <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
+                                    </a-menu-item>
+                                </template>
+
+                                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="3">
+                                        <!-- 导出商品信息 -->
+                                        <div @click="handleExportInfo">
+                                            {{ $t('p.export_product_information') }}
+                                        </div>
+                                        <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
+                                    </a-menu-item>
+                                </template>
+
+                                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="3">
+                                        <!-- 以供应商报表方式导出 -->
+                                        <div v-if="$auth('ADMIN')" @click="handleExport">
+                                            {{ $t('def.export_as_supplier_report') }}
+                                        </div>
+                                        <!-- <a-button v-if="$auth('ADMIN')" type="primary" @click="handleExport">
+                                            <i class="icon i_download" />
+                                            {{ $t('def.export_as_supplier_report') }}
+                                        </a-button> -->
+                                    </a-menu-item>
+                                </template>                            
+                            </a-menu>                                                                          
+                        </template>
+                        <a-button>
+                            更多操作
+                            <DownOutlined/>
+                        </a-button>
+                    </a-dropdown>
+                                                          
 
                     <template
-                        v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                        <!-- 以供应商报表方式导出 -->
-                        <a-button v-if="$auth('ADMIN')" type="primary" @click="handleExport">
-                            <i class="icon i_download" />
-                            {{ $t('def.export_as_supplier_report') }}
-                        </a-button>
+                        v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">                        
                         <!-- 出库 -->
                         <template v-if="!outStockBtnShow">
                             <a-button
@@ -513,7 +551,7 @@ import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import eosTabs from '@/components/common/eos-tabs.vue'
 import EditItem from './components/EditItem.vue';
-
+import { DownOutlined } from '@ant-design/icons-vue';
 
 
 const PURCHASE = Core.Const.PURCHASE;
@@ -547,7 +585,8 @@ export default {
         ActionLog,
         eosTabs,
         paymentList,
-        receivingDetails
+        receivingDetails,
+        DownOutlined
     },
     data() {
         return {
@@ -1304,7 +1343,7 @@ export default {
             })
             this.total.amount = total_amount
             this.total.price = this.$Util.countFilter(total_price, 100, 2, true)
-        },
+        },        
     }
 };
 </script>
