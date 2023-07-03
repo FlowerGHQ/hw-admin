@@ -25,7 +25,7 @@
                         <!-- 导出商品信息 -->
                         <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button>
                     </template>
-
+                    
                     <template
                         v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
                         <!-- 以供应商报表方式导出 -->
@@ -117,9 +117,15 @@
                                             :src="$Util.imageFilter(text ? text.logo : '', 2)" />
                                         <a-tooltip placement="top"
                                             :title="text ? lang == 'zh' ? text.name : text.name_en : '-'">
-                                            <a-button type="link" @click="routerChange('detail', text)"
+                                            <a-button v-if="lang=='zh'" type="link" @click="routerChange('detail', text)"
                                                 style="margin-left: 6px;">
                                                 {{ text ? lang == 'zh' ? text.name : text.name_en : '-' }}
+                                            </a-button>
+                                             <a-button v-else type="link" @click="routerChange('detail', text)"
+                                                style="margin-left: 6px;">
+                                                {{ text?.material?.name_en ? (text?.material?.name_en) :
+                                (text.name_en ? text.name_en : '-' )}}
+
                                             </a-button>
                                         </a-tooltip>
                                     </div>
