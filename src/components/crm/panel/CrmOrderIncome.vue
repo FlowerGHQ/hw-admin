@@ -15,6 +15,9 @@
                                                     <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                                                 </a-tooltip>
                                             </template>-->
+                    <template v-if="column.key === 'money'">
+                        {{ text/100 || '-' }}
+                    </template>
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
                     </template>
