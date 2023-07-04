@@ -16,6 +16,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-'}}
                         </template>
+                        <template v-if="column.dataIndex === 'name'">
+                            {{ $i18n.locale === 'zh' ? record.name : (record.name_en ? record.name_en : record.name) }}
+                        </template>
                         <template v-if="column.key === 'tip_item'">
                             <a-tooltip placement="top" :title='text'>
                                 <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
@@ -36,10 +39,18 @@
         <template class="modal-container">
             <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('m.edit_category') : $t('m.new_category')" @ok="handleModalSubmit">
                 <div class="modal-content">
+                    <!--分类名称-->
                     <div class="form-item">
                         <div class="key">{{ $t('m.category_name') }}</div>
                         <div class="value">
                             <a-input v-model:value="editForm.name" :placeholder="$t('def.input')+$t('m.category_name')"/>
+                        </div>
+                    </div>
+                    <!--分类英文名-->
+                    <div class="form-item">
+                        <div class="key">{{ $t('m.category_name_en') }}</div>
+                        <div class="value">
+                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')+$t('m.category_name')"/>
                         </div>
                     </div>
                 </div>
@@ -72,6 +83,7 @@ export default {
                 id: '',
                 parent_id: '',
                 name: '',
+                name_en: '',
                 type: 1,
             },
         };
@@ -157,10 +169,11 @@ export default {
         },
 
         // 编辑与新增子类
-        handleModalShow({parent_id = 0, id, name}, node = null, parent = null) {
+        handleModalShow({parent_id = 0, id, name, name_en}, node = null, parent = null) {
             this.editForm = {
                 id: id,
                 name: name,
+                name_en: name_en,
                 parent_id: parent_id,
                 type: 1,
             }
@@ -173,6 +186,9 @@ export default {
             let form = Core.Util.deepCopy(this.editForm)
             if (!form.name) {
                 return this.$message.warning(this.$t('def.input')+this.$t('m.category_name'))
+            }
+            if (!form.name_en) {
+                return this.$message.warning(this.$t('def.input')+this.$t('m.category_name_en'))
             }
             this.loading = true
             let apiName = form.id ? 'update' : 'save';

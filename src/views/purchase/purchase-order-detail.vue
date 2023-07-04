@@ -1,562 +1,540 @@
 <template>
-<div id="PurchaseOrderDetail">
-    <!-- 采购订单详情 -->
-    <div class="list-container">
-        <div class="title-container">
-            <div class="title-area">{{ $t('p.details')}}</div>
-            <div  class="center-info">
-                <span class="header-info">{{ $t('p.order_number')}}：{{detail.sn || '-'}}</span>
-                <span class="header-info">{{ $t('p.order_time')}}：{{$Util.timeFilter(detail.create_time) || '-'}}</span>
-                <span class="header-info">{{ $t('p.person')}}：{{detail.user_name|| '-'}}</span>
-            </div>
-            <div class="btns-area" v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
-                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
-                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                    <!-- 导出PI -->
-                    <a-button @click="handleExportIn"><i class="icon i_download"/>{{ $t('p.export_purchase')}}</a-button>
-                    <!-- 修改PI -->
-                    <a-button @click="handleUpdatePI()"><i class="icon i_edit"/>{{ $t('p.update_PI') }}</a-button>
-                </template>
-                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
-                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
-                    <!-- 导出商品信息 -->
-                    <a-button @click="handleExportInfo">{{ $t('p.export_product_information')}}</a-button>
-                </template>
+    <div id="PurchaseOrderDetail">
+        <!-- 采购订单详情 -->
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area" style="font-weight: 600;">{{ $t('p.details') }}</div>
+                <!-- <div class="center-info">
+                    <span class="header-info">{{ $t('p.order_number') }}：{{ detail.sn || '-' }}</span>
+                    <span class="header-info">{{ $t('p.order_time') }}：{{ $Util.timeFilter(detail.create_time) || '-'
+                    }}</span>
+                    <span class="header-info">{{ $t('p.person') }}：{{ detail.user_name || '-' }}</span>
+                </div> -->
+                <div class="btns-area"
+                    v-if="detail.status != STATUS.CANCEL && detail.status != STATUS.RE_REVISE && detail.status != STATUS.REVISE && detail.status != STATUS.ORDER_TRANSFERRED && !$auth('purchase-order.supply-detail')">
+                    
+                    <a-dropdown placement="bottomRight">
+                        <template #overlay>
+                            <a-menu>
+                                <template v-if="$auth('ADMIN') && $auth('purchase-order.export')">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="0">                            
+                                        <!-- 导出PI -->
+                                        <div @click="handleExportIn">
+                                            {{ $t('p.export_purchase') }}
+                                        </div>
+                                        <!-- <a-button @click="handleExportIn"><i class="icon i_download" />
+                                            {{ $t('p.export_purchase') }}
+                                        </a-button> -->
+                                    </a-menu-item>
+                                    <a-menu-item key="1">
+                                        <!-- 修改PI -->
+                                        <div @click="handleUpdatePI">
+                                            {{ $t('p.update_PI') }}
+                                        </div>
+                                        <!-- <a-button @click="handleUpdatePI"><i class="icon i_edit" />{{ $t('p.update_PI') }}</a-button> -->
+                                    </a-menu-item>
+                                </template>
 
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                    <!-- 以供应商报表方式导出 -->
-                    <a-button 
-                        v-if="$auth('ADMIN')"
-                        type="primary" 
-                        @click="handleExport">
-                            <i class="icon i_download"/>
-                            {{$t('def.export_as_supplier_report')}}
-                    </a-button>
-                    <!-- 出库 -->
-                    <template v-if="!outStockBtnShow">
-                        <a-button 
-                            v-if="(detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')" 
-                            type="primary" 
-                            @click="handleModalShow('out_stock')" 
-                            :disabled="exportDisabled">
-                                <i class="icon i_deliver"/>{{ $t('p.out_stock')}}
+                                <template v-if="!$auth('ADMIN') && $auth('purchase-order.export')">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="3">
+                                        <!-- 导出商品信息 -->
+                                        <div @click="handleExportInfo">
+                                            {{ $t('p.export_product_information') }}
+                                        </div>
+                                        <!-- <a-button @click="handleExportInfo">{{ $t('p.export_product_information') }}</a-button> -->
+                                    </a-menu-item>
+                                </template>
+
+                                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">
+                                    <!-- 暂时只有平台方 且订单已经发货 可以导出订单 -->
+                                    <a-menu-item key="3">
+                                        <!-- 以供应商报表方式导出 -->
+                                        <div v-if="$auth('ADMIN')" @click="handleExport">
+                                            {{ $t('def.export_as_supplier_report') }}
+                                        </div>
+                                        <!-- <a-button v-if="$auth('ADMIN')" type="primary" @click="handleExport">
+                                            <i class="icon i_download" />
+                                            {{ $t('def.export_as_supplier_report') }}
+                                        </a-button> -->
+                                    </a-menu-item>
+                                </template>                            
+                            </a-menu>                                                                          
+                        </template>
+                        <a-button>
+                            更多操作
+                            <DownOutlined/>
+                        </a-button>
+                    </a-dropdown>
+                                                          
+
+                    <template
+                        v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status !== STATUS.REVISE_AUDIT">                        
+                        <!-- 出库 -->
+                        <template v-if="!outStockBtnShow">
+                            <a-button
+                                v-if="(detail.status === STATUS.WAIT_DELIVER || detail.status === STATUS.WAIT_TAKE_DELIVER) && $auth('purchase-order.deliver')"
+                                type="primary" @click="handleModalShow('out_stock')" :disabled="exportDisabled">
+                                <i class="icon i_deliver" />{{ $t('p.out_stock') }}
+                            </a-button>
+                        </template>
+                        <!-- 赠送订单 -->
+                        <a-button type="primary" ghost
+                            v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"
+                            @click="handleGiveOrder">
+                            {{ $t('p.give_order') }}
                         </a-button>
                     </template>
-                    <!-- 赠送订单 -->
-                    <a-button 
-                        type="primary" 
-                        ghost 
-                        v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"  
-                        @click="handleGiveOrder">
-                        {{ $t('p.give_order')}}
-                    </a-button>
+                    <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
+                        <!-- 更换商品 (1.赠送订单(type = 40)不会显示按钮)-->
+                        <a-button
+                            v-if="detail.type !== FLAG_ORDER_TYPE.Gift_SALES && beforeDeliver && !itemEditShow && $auth('purchase-order.save')"
+                            type="primary" ghost @click="itemEditShow = true">
+                            {{ $t('p.change_item') }}
+                        </a-button>
+                        <!-- 付款 -->
+                        <a-button
+                            v-if="detail.status !== STATUS.WAIT_AUDIT && detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')"
+                            type="primary" @click="handleModalShow('payment')">
+                            <i class="icon i_received" />{{ $t('p.payment') }}
+                        </a-button>
+                        <!-- 取消 -->
+                        <a-button
+                            v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)"
+                            type="primary" @click="handleCancel()">
+                            <i class="icon i_close_c" />{{ $t('def.cancel') }}
+                        </a-button>
+                        <!-- 申请售后 -->
+                        <a-button v-if="detail.status === STATUS.DEAL_SUCCESS" type="primary"
+                            @click="routerChange('aftersales')" ghost>
+                            <i class="icon i_edit" />{{ $t('p.apply_for_after_sales') }}
+                        </a-button>
+                    </template>
+                    <!-- 待审核中的审核 -->
+                    <template
+                        v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.type !== TYPE.MIX && $auth('purchase-order.audit')">
+                        <AuditHandle btnType='primary' :api-list="['Purchase', 'reviseAudit']" :id="detail.id"
+                            :s-pass="FLAG.YES" :s-refuse="FLAG.NO" no-refuse :item_list="itemList" @submit="getList">
+                            <i class="icon i_audit" />{{ $t('n.audit') }}
+                        </AuditHandle>
+                    </template>
+                    <!-- 订单审核 -->
+                    <template
+                        v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.WAIT_AUDIT && $auth('purchase-order.audit')">
+                        <a-button type="primary" @click="handleModalShow('createAuditShow')">
+                            <i class="icon i_audit" />{{ $t('p.create_audit') }}
+                        </a-button>
+                    </template>
+                </div>
+            </div>
+            <!-- 步骤条 -->
+            <div class="gray-panel">
+                <div class="panel-content">
+                    <MySteps :stepsList='stepsList' :current='currStep' :status="detail.status"
+                        :payment_status="detail.payment_status">
+                    </MySteps>
+                </div>
+            </div>
+            <!-- 商品信息 -->
+            <div class="list-container">
+                <template v-if="!itemEditShow">
+                    <div class="title-container">
+                        <div class="title-area2">{{ $t('i.product_information') }}</div>
+                        <div class="btns-area">
+                        </div>
+                    </div>
+                    <div style="margin:0 20px;">
+                        <a-table :columns="itemColumns" :data-source="itemList" :scroll="{ x: true }"
+                            :row-key="record => record.id" :loading='loading' :pagination='false'
+                            :row-selection="rowSelection">
+                            <template #bodyCell="{ column, text, record }">
+                                <template v-if="column.dataIndex === 'item'">
+                                    <div class="table-img">
+                                        <a-image :width="30" :height="30"
+                                            :src="$Util.imageFilter(text ? text.logo : '', 2)" />
+                                        <a-tooltip placement="top"
+                                            :title="text ? lang == 'zh' ? text.name : text.name_en : '-'">
+                                            <a-button type="link" @click="routerChange('detail', text)"
+                                                style="margin-left: 6px;">
+                                                {{ text ? lang == 'zh' ? text.name : text.name_en : '-' }}
+                                            </a-button>
+                                        </a-tooltip>
+                                    </div>
+                                </template>
+                                <!-- 总数量 -->
+                                <template v-if="column.dataIndex === 'amount'">
+                                    <span
+                                        v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
+                                        <a-input-number v-model:value="record.amount" style="width: 120px;" :min="0"
+                                            :precision="0" @change="inputChange(record, 'amount')" />
+                                    </span>
+                                    <span v-else>
+                                        {{ text || '-' }}
+                                    </span>
+                                </template>
+                                <!-- 发货数量 -->
+                                <template v-if="column.dataIndex === 'deliver_amount'">
+                                    <span
+                                        v-if="user_type && (detail.status === STATUS.WAIT_DELIVER || detail.status === STATUS.WAIT_TAKE_DELIVER)">
+                                        <a-input-number v-model:value="record.deliver_amount" style="width: 120px;" :min="0"
+                                            :precision="0" />
+                                    </span>
+                                    <span v-else>
+                                        {{ record.deliver_amount }}
+                                    </span>
+                                </template>
+                                <!-- 备注 -->
+                                <template v-if="column.key === 'remark'">
+                                    <span>{{ record.remark || '-' }}</span>
+                                </template>
+                                <!-- 单价 -->
+                                <template v-if="column.key === 'unit_price'">
+                                    <span v-if="text >= 0">{{ $Util.priceUnitFilter(detail.currency) }}</span>
+                                    <span>{{ text }}</span>
+                                </template>
+                                <!-- 总价 -->
+                                <template v-if="column.key === 'price'">
+                                    <span
+                                        v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
+                                        <a-input-number v-model:value="record.price" style="width: 120px;" :min="0"
+                                            :precision="2" @change="inputChange(record, 'price')" />
+                                    </span>
+                                    <span v-else>
+                                        <span v-if="text >= 0">{{ $Util.priceUnitFilter(detail.currency) }}</span>
+                                        <span>{{ text }}</span>
+                                    </span>
+                                </template>
+
+                                <template v-if="column.key === 'spec'">
+                                    {{ $Util.itemSpecFilter(text, $i18n.locale) }}
+                                </template>
+                            </template>
+                            <template #summary v-if="!$auth('purchase-order.supply-detail')">
+                                <a-table-summary>
+                                    <a-table-summary-row>
+                                        <a-table-summary-cell :col-span="6"></a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1"><span style="margin-right: 100px;">{{
+                                            $t('p.total') }}</span> {{
+        $t('p.freight') }}:{{ $Util.priceUnitFilter(detail.currency) }}{{
+        $Util.countFilter(total.freight) || '0' }}</a-table-summary-cell>
+                                        <a-table-summary-cell :index="1" :col-span="1">
+                                            {{ $t('i.total_quantity') }}:{{ total.amount }}
+                                        </a-table-summary-cell>
+                                        <!-- 订单总价 -->
+                                        <a-table-summary-cell :index="4" :col-span="1">
+                                            <!-- !user_type  不是平台方显示的 -->
+                                            <span
+                                                v-if="!user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
+                                                {{ $t('p.quotation') }}: - ({{ $t('p.auditText') }})
+                                            </span>
+                                            <span v-else-if="!user_type && detail.type == FLAG_ORDER_TYPE.Mix_SALES">
+                                                <!-- 混合订单  price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
+                                                <span v-if="detail?.price_flag == 1">
+                                                    {{ $t('n.total_price') }}: {{ $Util.priceUnitFilter(detail.currency) }}
+                                                    {{ $Util.countFilter(total.price + (total.freight || 0)) }}
+                                                </span>
+                                                <span v-else>{{ $t('p.quotation') }}: - ({{ $t('p.auditText') }})</span>
+                                            </span>
+                                            <span v-else>
+                                                {{ $t('n.total_price') }}: {{ $Util.priceUnitFilter(detail.currency) }}
+                                                {{ $Util.countFilter(total.price + (total.freight || 0)) }}
+                                            </span>
+                                        </a-table-summary-cell>
+                                    </a-table-summary-row>
+                                </a-table-summary>
+                            </template>
+                        </a-table>
+                    </div>
                 </template>
-                <template v-if="authOrg(detail.org_id, detail.org_type) && detail.status !== STATUS.REVISE_AUDIT">
-                    <!-- 更换商品 (1.赠送订单(type = 40)不会显示按钮)-->
-                    <a-button 
-                        v-if="detail.type !== FLAG_ORDER_TYPE.Gift_SALES && beforeDeliver && !itemEditShow && $auth('purchase-order.save')" 
-                        type="primary" 
-                        ghost 
-                        @click="itemEditShow = true">
-                            {{$t('p.change_item')}}
-                    </a-button>
-                    <!-- 付款 -->
-                    <a-button 
-                        v-if="detail.status !== STATUS.WAIT_AUDIT && detail.status !== STATUS.CANCEL && detail.status !== STATUS.DEAL_SUCCESS && detail.status !== STATUS.SPLIT && detail.status !== STATUS.REVISE && detail.status !== STATUS.REVISE_AUDIT && detail.payment_status !== PAYMENT_STATUS.PAY_ALL && $auth('purchase-order.collection')" 
-                        type="primary" 
-                        @click="handleModalShow('payment')">
-                            <i class="icon i_received"/>{{ $t('p.payment')}}
-                    </a-button>   
-                    <!-- 取消 -->
-                    <a-button 
-                        v-if="detail.status === STATUS.WAIT_PAY || (detail.payment_status !== PAYMENT_STATUS.WAIT_PAY && detail.WAIT_DELIVER)" 
-                        type="primary" 
-                        @click="handleCancel()">
-                            <i class="icon i_close_c"/>{{ $t('def.cancel')}}
-                    </a-button>
-                    <!-- 申请售后 -->
-                    <a-button 
-                        v-if="detail.status === STATUS.DEAL_SUCCESS" 
-                        type="primary" 
-                        @click="routerChange('aftersales')" 
-                        ghost>
-                            <i class="icon i_edit"/>{{ $t('p.apply_for_after_sales')}}
-                    </a-button>
-                </template>
-                <!-- 待审核中的审核 -->
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.REVISE_AUDIT && detail.type !== TYPE.MIX && $auth('purchase-order.audit')">
-                    <AuditHandle
-                        btnType='primary' 
-                        :api-list="['Purchase', 'reviseAudit']" 
-                        :id="detail.id" 
-                        :s-pass="FLAG.YES" 
-                        :s-refuse="FLAG.NO" 
-                        no-refuse
-                        :item_list="itemList"
-                        @submit="getList"
-                        >
-                            <i class="icon i_audit"/>{{ $t('n.audit') }}
-                    </AuditHandle>
-                </template>
-                <!-- 订单审核 -->
-                <template v-if="authOrg(detail.supply_org_id, detail.supply_org_type) && detail.status === STATUS.WAIT_AUDIT && $auth('purchase-order.audit')">
-                    <a-button 
-                        type="primary" 
-                        @click="handleModalShow('createAuditShow')">
-                            <i class="icon i_audit"/>{{ $t('p.create_audit')}}
-                    </a-button>
-                </template>
+                <EditItem v-if="itemEditShow" :order-id='id' :detail='detail' type='PURCHASE_ORDER' @submit="getList"
+                    @cancel='itemEditShow = false'>
+                </EditItem>
             </div>
         </div>
-        <!-- 步骤条 -->
-        <div class="gray-panel">
-            <div class="panel-content">
-                <MySteps 
-                    :stepsList='stepsList' 
-                    :current='currStep' 
-                    :status="detail.status" 
-                    :payment_status="detail.payment_status">
-                </MySteps>
-            </div>
+
+        <!-- 赠送订单 -->
+        <div class="giftOrder" style="margin-bottom: 20px;">
+            <EditItem v-if="giveOrderShow" :order-id='id' :detail='detail' type='GIVE_ORDER' @submit="getList"
+                @cancel='giveOrderShow = false'>
+            </EditItem>
         </div>
-         <!-- 订单信息 -->
+
+        <!-- 订单详情 -->
         <div class="list-container3">
+            <div class="title-container">
+                <div class="title-area" style="font-weight: 600;">{{ $t('dis.order_detail') }}</div>
+            </div>
             <a-row>
-                <!-- 收货人信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
-                    <!-- <div class="info-title">{{ $t('p.consignee_information') }}</div> -->
-                    <div class="info-title">{{ $t('p.consignee_information') }}</div>
+                <!-- 订单信息 -->
+                <a-col :xs='24' :sm='24' :lg='12' :xl='12' class="info-block">
+                    <div class="info-title">{{ $t('p.order_information') }}</div>
+                    <!-- 订单编号 -->
                     <div class="info-item">
-                        <div class="key">{{ $t('p.consignee') }}:</div>
-                        <div class="value" v-if="detail.receive_info !=null">
-                            {{ detail.receive_info.name || '-' }}
+                        <div class="key">{{ $t('p.order_number') }}:</div>
+                        <div class="value">
+                            {{ detail.sn || '-' }}
                         </div>
-                        <div class="value" v-else>-</div>
                     </div>
+                    <!-- 下单时间 -->
                     <div class="info-item">
-                        <div class="key">{{ $t('p.Telephone') }}:</div>
-                        <div class="value" v-if="detail.receive_info !=null">
-                            {{ detail.receive_info.phone || '-' }}
+                        <div class="key">{{ $t('p.order_time') }}:</div>
+                        <div class="value">
+                            {{ $Util.timeFilter(detail.create_time) || '-' }}
                         </div>
-                        <div class="value" v-else>-</div>
                     </div>
+                    <!-- 付款方式 -->
                     <div class="info-item">
-                        <div class="key">{{ $t('ad.shipping_address') }}:</div>
-                        <div class="value" v-if="detail.receive_info !=null">
-                            <a-tooltip>
-                                <template #title>{{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}</template>
-                                <div class="one_spils" style="width: 250px;">{{ this.$i18n.locale === 'zh' ? detail.receive_info.country + detail.receive_info.province + detail.receive_info.city + detail.receive_info.county + detail.receive_info.address || '-' : detail.receive_info.countryEn + detail.receive_info.provinceEn + detail.receive_info.cityEn + detail.receive_info.county + detail.receive_info.address || '-' }}</div>
-                            </a-tooltip>                            
+                        <div class="key">{{ $t('p.payment_terms') }}:</div>
+                        <div class="value">
+                            {{ $Util.payTypeFilter(detail.pay_type) || '-' }}
                         </div>
-                        <div class="value" v-else>-</div>
+                    </div>
+                    <!-- 是否分批发货 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.partial_shipments') }}:</div>
+                        <div class="value">
+                            {{ $Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale) }}
+                        </div>
+                    </div>
+                    <!-- 是否转运 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.transshipment') }}:</div>
+                        <div class="value">
+                            {{ $Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale) }}
+                        </div>
+                    </div>
+                    <!-- 备注信息 -->
+                    <div class="info-item">
+                        <div class="key">{{ $t('p.remark') }}:</div>
+                        <div class="value">
+                            {{ detail.remark || '-' }}
+                        </div>
                     </div>
                 </a-col>
-                <!-- 配送信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
-                    <div class="info-title">{{ $t('p.delivery_info') }}</div>
-                    <div v-show="!$auth('purchase-order.supply-detail')">
-                        <div class="info-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                            <div class="key">{{ $t('p.shipping_port')}}</div>
-                            <div class="value" >{{detail.port || '-'}}</div>
-                        </div>
-                        <div class="info-item" >
-                            <div class="key">{{ $t('p.partial_shipments')}}</div>
-                            <div class="value">{{$Util.purchaseTransferFilter(detail.flag_part_shipment, $i18n.locale)}}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="key">{{ $t('p.transshipment')}}</div>
-                            <div class="value" style="margin-left: 10px;">{{$Util.purchaseTransferFilter(detail.flag_transfer, $i18n.locale)}}</div>
-                        </div>
-                    </div>
-                </a-col>             
                 <!-- 买家信息 -->
-                <a-col :xs='24' :sm='24' :lg='12' :xl='8' class="info-block">
+                <a-col :xs='24' :sm='24' :lg='12' :xl='12' class="info-block">
                     <div class="info-title">{{ $t('p.delivery_information') }}</div>
                     <div>
+                        <!-- 客户姓名 -->
                         <div class="info-item">
-                            <div class="key">{{ $t('p.buyer')}}</div>
-                            <div class="value" >{{detail.user_name|| '-'}}</div>
+                            <div class="key">{{ $t('p.person') }}</div>
+                            <!-- <div class="value">{{ detail.user_name || '-' }}</div> -->
+                            <div class="value">{{ detail?.receive_info?.name || '-' }}</div>
                         </div>
-                        <div class="info-item" >
-                            <div class="key">{{ $t('p.remark')}}</div>
-                            <div class="value">{{detail.remark || '-'}}</div>
-                        </div>                      
-                        <div class="info-item" >
-                            <div class="key">{{ $t('p.contact')}}</div>
-                            <div class="value">{{detail?.receive_info?.phone || '-'}}</div>
-                        </div>                      
+                        <!-- 联系方式 -->
+                        <div class="info-item">
+                            <div class="key">{{ $t('p.contact') }}</div>
+                            <div class="value">{{ detail?.receive_info?.phone || '-' }}</div>
+                        </div>
+                        <!-- 收货地址 -->
+                        <div class="info-item">
+                            <div class="key">{{ $t('ad.shipping_address') }}:</div>
+                            <div class="value" v-if="detail.receive_info != null">
+                                <a-tooltip>
+                                    <template #title>{{ this.$i18n.locale === 'zh' ? detail.receive_info.country +
+                                        detail.receive_info.province + detail.receive_info.city + detail.receive_info.county
+                                        +
+                                        detail.receive_info.address || '-' : detail.receive_info.countryEn +
+                                        detail.receive_info.provinceEn + detail.receive_info.cityEn +
+                                        detail.receive_info.county
+                                        + detail.receive_info.address || '-' }}</template>
+                                    <div class="one_spils" style="width: 250px;">{{ this.$i18n.locale === 'zh' ?
+                                        detail.receive_info.country + detail.receive_info.province +
+                                        detail.receive_info.city +
+                                        detail.receive_info.county + detail.receive_info.address || '-' :
+                                        detail.receive_info.countryEn + detail.receive_info.provinceEn +
+                                        detail.receive_info.cityEn + detail.receive_info.county +
+                                        detail.receive_info.address ||
+                                        '-' }}</div>
+                                </a-tooltip>
+                            </div>
+                            <div class="value" v-else>-</div>
+                        </div>
                     </div>
                 </a-col>
             </a-row>
         </div>
-    </div>
 
-    <!-- 赠送订单 -->
-    <div class="giftOrder" style="margin-bottom: 20px;">    
-        <EditItem 
-            v-if="giveOrderShow" 
-            :order-id='id' 
-            :detail='detail' 
-            type='GIVE_ORDER' 
-            @submit="getList"
-            @cancel='giveOrderShow = false'
-        >
-        </EditItem>    
-    </div>
-
-    <!-- 商品信息 -->
-    <div class="list-container">
-        <template v-if="!itemEditShow">        
+        <!-- 付款明细、发货记录、收货记录、合同、操作记录 -->
+        <div v-if="!$auth('purchase-order.supply-detail')" class="list-container list-container2">
             <div class="title-container">
-                <div class="title-area2">{{$t('i.product_information')}}</div>
-                <div class="btns-area">               
+                <div class="title-area" style="font-size: 14px;">
+                    <eosTabs v-model:activeKey="activeValue" :tabsList="nameList">
+                    </eosTabs>
+                </div>
+                <div class="btns-area">
+                    <div v-if="activeValue == 'AttachmentFile'">
+                        <a-button type="primary" @click="attachmentEvent">{{ $t('n.upload_attachment') }}</a-button>
+                    </div>
                 </div>
             </div>
-            <div style="padding:0 20px">
-                <a-table
-                    :columns="itemColumns" 
-                    :data-source="itemList" 
-                    :scroll="{ x: true }"
-                    :row-key="record => record.id" 
-                    :loading='loading' 
-                    :pagination='false'
-                    :row-selection="rowSelection"
-                >
-                    <template #bodyCell="{ column, text, record}">
-                        <template v-if="column.dataIndex === 'item'">
-                            <div class="table-img">
-                                <a-image :width="30" :height="30" :src="$Util.imageFilter(text ? text.logo : '', 2)"/>
-                                <a-tooltip placement="top" :title='text'>
-                                    <a-button type="link" @click="routerChange('detail', text)" style="margin-left: 6px;">
-                                        {{ text ? lang =='zh' ? text.name : text.name_en : '-' }}
-                                    </a-button>
-                                </a-tooltip>
-                            </div>
-                        </template>
-                        <!-- 总数量 -->
-                        <template v-if="column.dataIndex === 'amount'">                          
-                            <span v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
-                                <a-input-number 
-                                    v-model:value="record.amount" 
-                                    style="width: 120px;" 
-                                    :min="0" :precision="0" 
-                                    @change="inputChange(record,'amount')"
-                                />
-                            </span>
-                            <span v-else>
-                                {{ text || '-' }}
-                            </span> 
-                        </template>
-                        <!-- 发货数量 -->
-                        <template v-if="column.dataIndex === 'deliver_amount'">                            
-                            <span v-if="user_type && (detail.status === STATUS.WAIT_DELIVER  || detail.status === STATUS.WAIT_TAKE_DELIVER)">
-                                <a-input-number 
-                                    v-model:value="record.deliver_amount" 
-                                    style="width: 120px;" 
-                                    :min="0" :precision="0" 
-                                />
-                            </span>
-                            <span v-else>
-                                {{ record.deliver_amount }}
-                            </span>                                                     
-                        </template>
-                        <!-- 备注 -->
-                        <template v-if="column.key === 'remark'">
-                            <span>{{ record.remark || '-' }}</span>                           
-                        </template>
-                        <!-- 单价 -->
-                        <template v-if="column.key === 'unit_price'">
-                            <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
-                            <span>{{text}}</span>                           
-                        </template>
-                        <!-- 总价 -->
-                        <template v-if="column.key === 'price'">
-                            <span v-if="user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">  
-                                <a-input-number 
-                                    v-model:value="record.price"                                     
-                                    style="width: 120px;" 
-                                    :min="0" :precision="2" 
-                                    @change="inputChange(record,'price')"
-                                />
-                            </span>
-                            <span v-else>
-                                <span v-if="text >= 0">{{$Util.priceUnitFilter(detail.currency)}}</span>
-                                <span>{{text}}</span>
-                            </span>                             
-                        </template>
-                                             
-                        <template v-if="column.key === 'spec'">
-                            {{$Util.itemSpecFilter(text, $i18n.locale )}}
-                        </template>
-                    </template>
-                    <template #summary v-if="!$auth('purchase-order.supply-detail')">
-                        <a-table-summary  >
-                            <a-table-summary-row>
-                                <a-table-summary-cell :index="0" :col-span="8"><!-- {{ $t('p.total')}} --></a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="1">{{ $t('p.freight')}}:{{$Util.priceUnitFilter(detail.currency)}}{{$Util.countFilter(total.freight) || '0'}}</a-table-summary-cell>
-                                <a-table-summary-cell :index="1" :col-span="1">
-                                    {{ $t('i.total_quantity') }}:{{total.amount}}
-                                </a-table-summary-cell>
-                                <!-- 订单总价 -->
-                                <a-table-summary-cell :index="4" :col-span="1">     
-                                    <!-- !user_type  不是平台方显示的 -->
-                                    <span v-if="!user_type && (detail.status === STATUS.WAIT_AUDIT || detail.status === STATUS.REVISE_AUDIT)">
-                                        {{ $t('p.quotation')}}: - ({{$t('p.auditText')}})
-                                    </span>
-                                    <span v-else-if="!user_type && detail.type == FLAG_ORDER_TYPE.Mix_SALES">
-                                        <!-- 混合订单  price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
-                                        <span v-if="detail?.price_flag == 1">
-                                            {{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}
-                                        </span>
-                                        <span v-else>{{ $t('p.quotation')}}: - ({{$t('p.auditText')}})</span>
-                                    </span>
-                                    <span v-else>
-                                        {{ $t('n.total_price')}}: {{$Util.priceUnitFilter(detail.currency)}} {{$Util.countFilter(total.price + (total.freight || 0))}}
-                                    </span>
-                                </a-table-summary-cell>
-                            </a-table-summary-row>
-                        </a-table-summary>
-                    </template>
-                </a-table>
+            <div class="container-body">
+                <!-- 付款明细 -->
+                <template v-if="activeValue == 'payment_detail'">
+                    <paymentList :target_id="id" :order_detail="detail" :sn="detail.sn" @submit="getList" ref="payment" />
+                </template>
+                <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
+                <!-- 发货记录 -->
+                <template v-if="activeValue == 'delivery_record'">
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" :displayIn="true" @submit="getList" />
+                </template>
+                <!-- displayIn 这个变量是为了区分是收货记录和发货记录 因为现在收货记录和发货记录展示的信息基本相同 但是收货记录不需要展示收货明细 -->
+                <!-- 收货记录 -->
+                <template v-if="activeValue == 'receiving_record'">
+                    <DeliveryLogs :order-id='id' :detail='detail' :type="STOCK_TYPE.OUT" :displayIn="false" @submit="getList" />
+                </template>
+
+                <!-- 收货明细 -->
+                <template v-if="activeValue == 'receiving_detail'">
+                    <receivingDetails :target_id="id" :order_detail="detail" :sn="detail.sn" />
+                </template>
+
+                <!-- 上传附件(合同信息) -->
+                <template v-if="activeValue == 'AttachmentFile'">
+                    <AttachmentFile ref="attachment" :target_id='id' :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER'
+                        :detail='detail' @submit="getList" />
+                </template>
+
+                <!-- 操作记录 -->
+                <template v-if="activeValue == 'ActionLog'">
+                    <ActionLog :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER" />
+                </template>
             </div>
+        </div>
+
+        <template class="modal-container">
+            <!-- 确认收款 -->
+            <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
+                <div class="modal-content">
+                    <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
+                    <!-- 支付方式 -->
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.payment_method') }}</div>
+                        <div class="value">
+                            <a-select v-model:value="form.pay_method" :placeholder="$t('p.please_select_payment_method')">
+                                <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{
+                                    pay[$i18n.locale] }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <!-- 分销商 账户余额 -->
+                    <div class="form-item">
+                        <div class="key">{{ $t('d.account_balance') }}:</div>
+                        <div class="value">
+                            <a-input-number v-model:value="form.accountBalance" style="width: 120px" min="0"
+                                :max="accountMoney" :precision="2" :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                        </div>
+                    </div>
+                    <!-- 金额 -->
+                    <div class="form-item required">
+                        <div class="key">{{ $t('ac.money') }}：</div>
+                        <div class="value">
+                            <a-input-number v-model:value="form.payment" style="width: 120px" :min="0"
+                                :max="(((detail.freight || 0) + detail.price - detail.payment) / 100 - form.accountBalance).toFixed(2)"
+                                :precision="2" :prefix="`${$Util.priceUnitFilter(detail.currency)}`" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="form-item img-upload required">
+                        <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
+                        <div class="value">
+                            <a-upload name="file" class="file-uploader" :file-list="upload.fileList" :action="upload.action"
+                                :headers="upload.headers" :data='upload.data' :before-upload="handleFileCheck"
+                                @remove="handleremove" @change="handleFileChange">
+                                <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
+                                    <i class="icon i_upload" /> {{ $t('f.choose') }}
+                                </a-button>
+                            </a-upload>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.remark') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+                </div>
+                <template #footer>
+                    <a-button @click="handlePayment" type="primary">{{ $t('def.sure') }}</a-button>
+                    <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
+                </template>
+            </a-modal>
+            <!-- 确认发货 -->
+            <a-modal v-model:visible="outStockShow" :title="$t('p.shipping_confirmation')" @ok="handleOutStock">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('wa.warehouse') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')"
+                                :disabled="!!isProd">
+                                <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name
+                                }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    <!--                <div class="form-item required">-->
+                    <!--                    <div class="key">{{ $t('in.category') }}：</div>-->
+                    <!--                    <div class="value">-->
+                    <!--                        <a-radio-group v-model:value="form.target_type">-->
+                    <!--                            <a-radio v-for="item in COMMODITY_MAP" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
+                    <!--                        </a-radio-group>-->
+                    <!--                    </div>-->
+                    <!--                </div>-->
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.remark') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+            <!-- 订单审核 -->
+            <a-modal v-model:visible="createAuditShow" :title="$t('p.create_audit')" @ok="handleCreateAudit">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('n.result_a') }}:</div>
+                        <div class="value">
+                            <a-radio-group v-model:value="form.audit_result">
+                                <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
+                                <a-radio :value="2">{{ $t('n.fail') }}</a-radio>
+                            </a-radio-group>
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.remark') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
+            <!-- 修改PI -->
+            <a-modal v-model:visible="PIShow" :title="$t('p.update_PI')" @ok="UpdatePI">
+                <div class="modal-content">
+                    <div class="form-item required">
+                        <div class="key">{{ $t('p.shipping_port') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.port" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+
+                    <div class="form-item" v-if="detail.status === Core.Const.PURCHASE.STATUS.WAIT_AUDIT">
+                        <div class="key">{{ $t('p.freight') }}:</div>
+                        <div class="value">
+                            <a-input-number v-model:value="form.freight" placeholder="0.00" style="width: 120px" :min="0.00"
+                                :precision="2" :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
+                        </div>
+                    </div>
+                    <div class="form-item">
+                        <div class="key">{{ $t('p.remark') }}:</div>
+                        <div class="value">
+                            <a-input v-model:value="form.remark" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+                </div>
+            </a-modal>
         </template>
-        <EditItem             
-            v-if="itemEditShow" 
-            :order-id='id' 
-            :detail='detail' 
-            type='PURCHASE_ORDER' 
-            @submit="getList" 
-            @cancel='itemEditShow = false'>
-        </EditItem>
     </div>
-
-    <!-- 付款明细、发货记录、收货记录、合同、操作记录 -->
-    <div v-if="!$auth('purchase-order.supply-detail')" class="list-container list-container2">     
-        <div class="title-container">
-            <div class="title-area" style="font-size: 14px;">
-                <eosTabs v-model:activeKey="activeValue" :tabsList="nameList">
-                </eosTabs>
-            </div>
-            <div class="btns-area">     
-                <div v-if="activeValue == 'AttachmentFile'">
-                    <a-button type="primary" @click="attachmentEvent">{{$t('n.upload_attachment')}}</a-button>
-                </div>           
-            </div>
-        </div>
-        <div class="container-body">
-            <!-- 付款明细 -->
-            <template v-if="activeValue == 'payment_detail'">            
-                <paymentList 
-                    :target_id="id"
-                    :order_detail="detail"
-                    :sn="detail.sn"
-                    @submit="getList"
-                    ref="payment"
-                />
-            </template> 
-
-            <!-- 发货记录 -->
-            <template v-if="activeValue == 'delivery_record'">            
-                <DeliveryLogs
-                    :order-id='id' 
-                    :detail='detail' 
-                    :type="STOCK_TYPE.OUT" 
-                    @submit="getList" 
-                />
-            </template>
-
-            <!-- 收货记录 -->
-            <template v-if="activeValue == 'receiving_record'">            
-                <DeliveryLogs
-                    :order-id='id' 
-                    :detail='detail' 
-                    :type="STOCK_TYPE.IN" 
-                    @submit="getList" 
-                />
-            </template>
-
-            <!-- 上传附件(合同信息) -->
-            <template v-if="activeValue == 'AttachmentFile'">            
-                <AttachmentFile
-                    ref="attachment"
-                    :target_id='id' 
-                    :target_type='ATTACHMENT_TYPE.PURCHASE_ORDER' 
-                    :detail='detail' 
-                    @submit="getList" 
-                />
-            </template>
-
-            <!-- 操作记录 -->
-            <template v-if="activeValue == 'ActionLog'">            
-                <ActionLog 
-                    :id='id' 
-                    :detail='detail' 
-                    :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER"
-                />
-            </template>
-        </div>
-    </div>
-         
-    <template class="modal-container">
-        <!-- 确认收款 -->
-        <a-modal v-model:visible="paymentShow" :title="$t('p.confirm_payment')" @ok="handlePayment">
-            <div class="modal-content">
-                <!-- 国外暂无支付宝微信银行卡支付方式，先隐藏 -->
-                <!-- 支付方式 -->
-                <div class="form-item required">
-                    <div class="key">{{$t('p.payment_method')}}</div>
-                    <div class="value">
-                        <a-select v-model:value="form.pay_method" :placeholder="$t('p.please_select_payment_method')">
-                            <a-select-option v-for="pay of payMethodList" :key="pay.value" :value="pay.value">{{pay[$i18n.locale]}}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-                <!-- 分销商 账户余额 -->
-                <div class="form-item">
-                    <div class="key">{{ $t('d.account_balance') }}:</div>
-                    <div class="value">
-                        <a-input-number
-                            v-model:value="form.accountBalance"
-                            style="width: 120px"
-                            min="0"
-                            :max="accountMoney"
-                            :precision="2"
-                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                        />
-                    </div>
-                </div>
-                <!-- 金额 -->
-                <div class="form-item required">
-                    <div class="key">{{ $t('ac.money') }}：</div>
-                    <div class="value">
-                        <a-input-number
-                            v-model:value="form.payment"
-                            style="width: 120px"
-                            :min="0"
-                            :max="(((detail.freight||0) + detail.price - detail.payment)/100 - form.accountBalance).toFixed(2)"
-                            :precision="2"
-                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`"
-                            placeholder="0.00"
-                        />
-                    </div>
-                </div>
-                <div class="form-item img-upload required">
-                    <div class="key">{{ $t('p.upload_payment_voucher') }}</div>
-                    <div class="value">                    
-                        <a-upload name="file" class="file-uploader"
-                                :file-list="upload.fileList" :action="upload.action"
-                                :headers="upload.headers" :data='upload.data'
-                                :before-upload="handleFileCheck"
-                                @remove="handleremove"
-                                @change="handleFileChange">
-                            <a-button type="primary" ghost class="file-upload-btn" v-if="upload.fileList.length < 1">
-                                <i class="icon i_upload"/> {{ $t('f.choose') }}
-                            </a-button>
-                        </a-upload>                        
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">{{ $t('p.remark') }}：</div>
-                    <div class="value">
-                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-            </div>
-            <template #footer>
-                <a-button @click="handlePayment" type="primary">{{ $t('def.sure') }}</a-button>
-                <a-button @click="paymentShow = false">{{ $t('def.cancel') }}</a-button>
-            </template>
-        </a-modal>       
-        <!-- 确认发货 -->
-        <a-modal v-model:visible="outStockShow" :title="$t('p.shipping_confirmation')" @ok="handleOutStock">
-            <div class="modal-content">
-                <!-- <template v-if="$auth('ADMIN')">-->
-                <!--     <div class="form-item required">-->
-                <!--         <div class="key">{{$t('p.payment_terms')}}:</div>-->
-                <!--         <div class="value">-->
-                <!--             <a-select v-model:value="form.pay_clause" :placeholder="$t('def.select')">-->
-                <!--                 <a-select-option v-for="(item,index) of paymentTimeList" :key="index" :value="item.value">{{ item.text }}</a-select-option>-->
-                <!--             </a-select>-->
-                <!--         </div>-->
-                <!--     </div>-->
-                <!-- </template>-->
-                <div class="form-item required">
-                    <div class="key">{{ $t('wa.warehouse') }}：</div>
-                    <div class="value">
-                        <a-select v-model:value="form.warehouse_id" :placeholder="$t('def.select')" :disabled="!!isProd">
-                            <a-select-option v-for="item of warehouseList" :key="item.id" :value="item.id">{{ item.name }}</a-select-option>
-                        </a-select>
-                    </div>
-                </div>
-<!--                <div class="form-item required">-->
-<!--                    <div class="key">{{ $t('in.category') }}：</div>-->
-<!--                    <div class="value">-->
-<!--                        <a-radio-group v-model:value="form.target_type">-->
-<!--                            <a-radio v-for="item in COMMODITY_MAP" :key='item.key' :value='item.key'>{{ item[$i18n.locale] }}</a-radio>-->
-<!--                        </a-radio-group>-->
-<!--                    </div>-->
-<!--                </div>-->
-
-                <div class="form-item" >
-                    <div class="key">{{$t('p.remark')}}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-        <!-- 订单审核 -->
-        <a-modal v-model:visible="createAuditShow" :title="$t('p.create_audit')" @ok="handleCreateAudit">
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">{{$t('n.result_a')}}:</div>
-                    <div class="value">
-                        <a-radio-group v-model:value="form.audit_result">
-                            <a-radio :value="1">{{ $t('n.pass') }}</a-radio>
-                            <a-radio :value="2">{{ $t('n.fail') }}</a-radio>
-                        </a-radio-group>
-                    </div>
-                </div>
-                <div class="form-item" >
-                    <div class="key">{{$t('p.remark')}}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-        <!-- 修改PI -->
-        <a-modal v-model:visible="PIShow" :title="$t('p.update_PI')" @ok="UpdatePI">
-            <div class="modal-content">
-                <div class="form-item required">
-                    <div class="key">{{ $t('p.shipping_port') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.port" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-
-                <div class="form-item" v-if="detail.status === Core.Const.PURCHASE.STATUS.WAIT_AUDIT">
-                    <div class="key">{{$t('p.freight')}}:</div>
-                    <div class="value">
-                        <a-input-number
-                            v-model:value="form.freight"
-                            placeholder="0.00"
-                            style="width: 120px"
-                            :min="0.00"
-                            :precision="2"
-                            :prefix="`${$Util.priceUnitFilter(detail.currency)}`" />
-                    </div>
-                </div>
-                <div class="form-item">
-                    <div class="key">{{ $t('p.remark') }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="form.remark" :placeholder="$t('def.input')"/>
-                    </div>
-                </div>
-            </div>
-        </a-modal>
-    </template>
-</div>
 </template>
 
 <script>
@@ -567,13 +545,13 @@ import AttachmentFile from './components/AttachmentFile.vue';
 import DeliveryLogs from './components/DeliveryLogs.vue';
 import ActionLog from './components/ActionLog.vue';
 import paymentList from './components/paymentList.vue';
+import receivingDetails from './components/receivingDetails.vue';
 
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import eosTabs from '@/components/common/eos-tabs.vue'
-
 import EditItem from './components/EditItem.vue';
-
+import { DownOutlined } from '@ant-design/icons-vue';
 
 
 const PURCHASE = Core.Const.PURCHASE;
@@ -606,8 +584,10 @@ export default {
         AuditHandle,
         ActionLog,
         eosTabs,
-        paymentList
-    },    
+        paymentList,
+        receivingDetails,
+        DownOutlined
+    },
     data() {
         return {
             Core,
@@ -626,30 +606,26 @@ export default {
             PAYMENT_STATUS,
             FLAG_PART_SHIPMENT_MAP,
             FLAG_TRANSFER_MAP,
-            PURCHASE ,
+            PURCHASE,
             DISTRIBUTOR,
             WAYBILL,
             USER_TYPE,
-
             loginType: Core.Data.getLoginType(),
+            userType: Core.Data.getUserType(),
             loginOrgId: Core.Data.getOrgId(),
             loginOrgType: Core.Data.getOrgType(),
-
-
             warehouseList: [],
             // 加载
             loading: false,
             id: '',
             detail: {}, // 采购单详情
             activeKey: ['ItemInfo', 'PayInfo', 'PurchaseInfo', 'WaybillInfo'],
-
             stepsList: [
-                {status: '100', zh: '支付', en: 'Payment'},
-                {status: '200', zh: '发货', en: 'Deliver'},
-                {status: '300', zh: '收货',en: 'Receipt'},
-                {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                { status: '100', zh: '支付', en: 'Payment' },
+                { status: '200', zh: '发货', en: 'Deliver' },
+                { status: '300', zh: '收货', en: 'Receipt' },
+                { status: '400', zh: '交易完成', en: 'Transaction completed' },
             ],
-
             itemList: [], // 商品列表            
             total: {
                 amount: 0,
@@ -657,7 +633,6 @@ export default {
                 charge: 0,
                 freight: 0, // 运费
             },
-
             upload: { // 上传图片
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
                 coverList: [],
@@ -671,19 +646,15 @@ export default {
                     type: 'img',
                 },
             },
-
             waybill: {},
-            waybillInfo: {},            
+            waybillInfo: {},
             paymentShow: false,
-
             payMethodList: PURCHASE.PAY_METHOD_LIST,
             paymentTimeList: DISTRIBUTOR.PAY_TIME_LIST,
-
             outStockShow: false, // 确认发货 model 显隐 
             companyUidList: WAYBILL.COMPANY_LIST,
             courierTypeList: WAYBILL.COURIER_LIST,
             receiveTypeList: WAYBILL.RECEIPT_LIST,
-
             form: {
                 express_type: undefined, // 快递方式
                 waybill: '', // 物流单号
@@ -704,11 +675,9 @@ export default {
             accountMoney: 0, // 账户的余额用来约束
             editForm: {
                 distributor_id: undefined,
-            },                
-
+            },
             distributorList: [],
             exportDisabled: false, // 导出按钮禁用
-
             expandedRowKeys: [],
             expandIconColumnIndex: 0,
             selectedRowItemsAll: [],
@@ -717,51 +686,50 @@ export default {
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
             createAuditShow: false, // 订单审核 model 显隐  
-            PIShow: false,  // 修改pi model 显隐                           
-
+            PIShow: false,  // 修改pi model 显隐
             activeValue: 'payment_detail', // nameList的value
             outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
-            
+
         };
-    },    
+    },
     computed: {
         itemColumns() {
             let columns = [
                 { title: this.$t('i.item'), dataIndex: 'item' }, // 商品
-                { title: this.$t('i.number'),dataIndex: ['item', "model"] },  // 商品品号
+                // { title: this.$t('i.number'), dataIndex: ['item', "model"] },  // 商品品号
                 { title: this.$t('i.code'), dataIndex: ['item', "code"] }, // 商品编码
                 { title: this.$t('i.spec'), dataIndex: ['item', 'attr_list'], key: 'spec' }, // 规格
-                { title: this.$t('i.total_quantity'), dataIndex: 'amount'}, // 总数量
-                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity'}, // 待发货数量
-                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount'}, // 发货数量
-                { title: this.$t('i.remark'),dataIndex: "remark", key: 'remark' }, // 备注
+                { title: this.$t('i.total_quantity'), dataIndex: 'amount' }, // 总数量
+                { title: this.$t('i.residue_quantity'), dataIndex: 'residue_quantity' }, // 待发货数量
+                { title: this.$t('i.deliver_amount'), dataIndex: 'deliver_amount', key: 'deliver_amount' }, // 发货数量
+                // { title: this.$t('i.remark'), dataIndex: "remark", key: 'remark' }, // 备注
             ]
             if (!this.$auth('purchase-order.supply-detail')) {
                 columns.push(
-                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price'}, // 单价
-                    { title: this.$t('i.total_price'),dataIndex: 'price', key: 'price'}, // 总价
+                    { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'unit_price' }, // 单价
+                    { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
                 )
             }
             return columns
 
-        },      
+        },
         currStep() {
             // console.log("现在的状态", this.detail.status);
             for (let i = 0; i < this.stepsList.length; i++) {
                 const item = this.stepsList[i];
-                switch (this.detail.status){
+                switch (this.detail.status) {
                     case STATUS.CANCEL:
-                        this.stepsList= [{status: '100', zh: '取消', en: 'Canceled'},]
+                        this.stepsList = [{ status: '100', zh: '取消', en: 'Canceled' },]
                         break;
                     case STATUS.RE_REVISE:
-                        this.stepsList= [{status: '100', zh: '已修改关闭', en: 'Modified closed'},]
+                        this.stepsList = [{ status: '100', zh: '已修改关闭', en: 'Modified closed' },]
                         break;
                     case STATUS.CANCEL:
                 }
                 console.log(this.stepsList[0])
                 if (this.detail.status == STATUS.CANCEL) {
-                    this.stepsList= [
-                        {status: '100', zh: '取消'},
+                    this.stepsList = [
+                        { status: '100', zh: '取消' },
                     ]
                     return i
                 }
@@ -782,11 +750,11 @@ export default {
             return true
         },
         rowSelection() {
-            return {                
-                selectedRowKeys: this.selectedRowKeys,                
+            return {
+                selectedRowKeys: this.selectedRowKeys,
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
                     // console.log("变化", selectedRowKeys);
-                    this.selectedRowKeys = selectedRowKeys                    
+                    this.selectedRowKeys = selectedRowKeys
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
                     selectedRowKeys.forEach(id => {
@@ -794,10 +762,10 @@ export default {
                         selectedRowItems.push(element)
                     });
                     // console.log("变化2", selectedRowItems);
-                    this.selectedRowItems = selectedRowItems   
+                    this.selectedRowItems = selectedRowItems
                     // 这句不知何用                 
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
-                }                      
+                }
             };
         },
         lang() {
@@ -808,10 +776,10 @@ export default {
                 case TYPE.GIVEAWAY:
                 case TYPE.PRE_SALES:
                 case TYPE.AFTER_SALES:
-                    if (this.detail.type === PARENT_TYPE.MIX){
+                    if (this.detail.type === PARENT_TYPE.MIX) {
                         return false;
                     }
-            }            
+            }
             switch (this.detail.status) {
                 case STATUS.INIT:
                 case STATUS.WAIT_PAY:
@@ -823,76 +791,79 @@ export default {
             }
         },
         // tabs切换
-        nameList(){
+        nameList() {
             let arr = [
-                { weight:1, key: 'payment_detail', value: `${this.$t('p.payment_detail')}` }, // 付款明细
-                { weight:2, key: 'delivery_record', value: `${this.$t('p.delivery_record')}` }, // 发货记录 
-                { weight:3, key: 'receiving_record', value: `${this.$t('p.receiving_record')}` }, // 收货记录         
-                { weight:4, key: 'AttachmentFile', value: `${this.$t('p.contract_information')}` }, // 上传附件(合同信息) 
-                { weight:5, key: 'ActionLog', value: `${this.$t('p.record')}` }, // 操作记录 
+                { weight: 1, key: 'payment_detail', value: `${this.$t('p.payment_record')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 付款记录
+                { weight: 2, key: 'delivery_record', value: `${this.$t('p.delivery_record')}`, permission: ['ADMIN'] }, // 发货记录 
+                { weight: 3, key: 'receiving_record', value: `${this.$t('p.receiving_record')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 收货记录         
+                { weight: 3, key: 'receiving_detail', value: `${this.$t('p.take_delivery_detail')}`, permission: ['DISTRIBUTOR'] }, // 收货明细         
+                { weight: 4, key: 'AttachmentFile', value: `${this.$t('n.attachment')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 附件信息 
+                { weight: 5, key: 'ActionLog', value: `${this.$t('p.record')}`, permission: ['ADMIN'] }, // 操作记录 
             ]
-            return arr.sort((a,b) => a.weight - b.weight)
+            let filteredArr = arr.filter(obj => obj.permission.includes(this.userType));
+            return filteredArr.sort((a, b) => a.weight - b.weight)
         },
         // 权限(平台方还是分销商等)
         user_type() {
             let arr = [Core.Const.LOGIN.TYPE.ADMIN]  // 平台方           
-            return arr.includes(Core.Data.getLoginType())              
+            return arr.includes(Core.Data.getLoginType())
         },
     },
     mounted() {
+        console.log('this.userType', this.userType);
         this.getList();
-        this.getWarehouseList();        
+        this.getWarehouseList();
     },
     created() {
-        this.id = Number(this.$route.query.id) || 0       
+        this.id = Number(this.$route.query.id) || 0
     },
     methods: {
         /*== FETCH start==*/
 
         // 获取 采购单订单信息
         getPurchaseInfo(type) {
-                Core.Api.Purchase.detail({
-                    id: this.id
-                }).then(res => {
-                    this.detail = res.detail;
-                    if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER){
-                        this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
-                    }
-                    this.total.freight = res.detail.freight || 0;                    
-                    this.step();
-                    if(type === 1 && res.detail.status == STATUS.CANCEL) {
-                        // 交易取消了提示信息(极端情况)                 
-                        this.giveOrderShow = false
-                        this.$message.warning(this.$t('p.cancel_msg'))
-                    }
-                }).catch(err => {
-                    console.log('getPurchaseInfo err', err)
-                })
+            Core.Api.Purchase.detail({
+                id: this.id
+            }).then(res => {
+                this.detail = res.detail;
+                if (this.detail.status === Core.Const.PURCHASE.STATUS.TAKE_DELIVER) {
+                    this.detail.status = Core.Const.PURCHASE.STATUS.WAIT_DELIVER
+                }
+                this.total.freight = res.detail.freight || 0;
+                this.step();
+                if (type === 1 && res.detail.status == STATUS.CANCEL) {
+                    // 交易取消了提示信息(极端情况)                 
+                    this.giveOrderShow = false
+                    this.$message.warning(this.$t('p.cancel_msg'))
+                }
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            })
         },
         getWarehouseList() {
-                Core.Api.Warehouse.listAll().then(res => {
-                    this.warehouseList = res.list
-                })
-        },       
+            Core.Api.Warehouse.listAll().then(res => {
+                this.warehouseList = res.list
+            })
+        },
 
-        getList(){
+        getList() {
             this.itemEditShow = false
             this.giveOrderShow = false
-            this.getPurchaseItemList();            
+            this.getPurchaseItemList();
             this.getPurchaseInfo();
             this.$refs.payment.getPurchasePayList()
         },
 
         // 经销商钱包详情
         getWalletDetail() {
-                Core.Api.Distributor.detail({
-                    id: Core.Data.getOrgId()
-                }).then(res => {                
-                    this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
-                    this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
-                }).catch(err => {
-                    console.log('getTableData err', err)
-                })
+            Core.Api.Distributor.detail({
+                id: Core.Data.getOrgId()
+            }).then(res => {
+                this.accountMoney = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
+                this.form['accountBalance'] = this.$Util.countFilter(res.detail.wallet_list.balance.balance)
+            }).catch(err => {
+                console.log('getTableData err', err)
+            })
         },
 
         // 获取 采购单 商品列表
@@ -901,8 +872,8 @@ export default {
                 order_id: this.id,
                 page: 0,
             }).then(res => {
-                let total_amount = 0,total_charge = 0,total_price = 0;
-                res.list.forEach(it =>{
+                let total_amount = 0, total_charge = 0, total_price = 0;
+                res.list.forEach(it => {
                     it.disabled = true
                     it.unit_price = this.$Util.countFilter(it.unit_price) // 单价
                     it.price = this.$Util.countFilter(it.price) // 总价
@@ -919,14 +890,14 @@ export default {
                 this.itemList = res.list
                 this.total.amount = total_amount
                 this.total.charge = total_charge
-                this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
+                this.total.price = this.$Util.countFilter(total_price, 100, 2, true)
                 this.outStockBtnShow = this.itemList.every(item => item.residue_quantity === 0);
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
                 this.loading = false;
             });
-        },  
+        },
 
         // 获取 物流单信息
         getWaybillDetail() {
@@ -957,13 +928,13 @@ export default {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
             });
-        }, 
+        },
 
         // 订单审核fetch
-        createAuditFetch(params = {}){
+        createAuditFetch(params = {}) {
             Core.Api.Purchase.createAudit({
-                id:this.id,
-                ...params                
+                id: this.id,
+                ...params
             }).then(res => {
                 this.$message.success(this.$t('pop_up.audited'))
                 this.createAuditShow = false
@@ -977,77 +948,77 @@ export default {
 
         // 导出PI
         handleExportIn() {
-                    const params = {
-                        id: this.id, // 订单id
-                        currency: this.detail.currency, // 货币类型
-                        id_type: 0,
-                        language: this.$i18n.locale === 'en' ? 1 : 0
-                    };
+            const params = {
+                id: this.id, // 订单id
+                currency: this.detail.currency, // 货币类型
+                id_type: 0,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            };
 
-                    this.exportDisabled = true;
-                    let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
-                    // console.log("handlePurchaseExport _exportUrl", exportUrl)
-                    window.open(exportUrl, '_blank')
-                    this.exportDisabled = false;
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
+            // console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
         // 修改PI
-        handleUpdatePI(){
-                this.form.freight = Core.Util.countFilter(this.detail.freight);
-                this.form.port = this.detail.port; 
-                this.form.remark = this.detail.remark           
-                this.PIShow = true;
+        handleUpdatePI() {
+            this.form.freight = Core.Util.countFilter(this.detail.freight);
+            this.form.port = this.detail.port;
+            this.form.remark = this.detail.remark
+            this.PIShow = true;
         },
         // 导出商品信息
         handleExportInfo() {
-                const params = {
-                    id: this.id, // 订单id
-                    currency: this.detail.currency, // 货币类型
-                    language: this.$i18n.locale === 'en' ? 1 : 0
-                };
+            const params = {
+                id: this.id, // 订单id
+                currency: this.detail.currency, // 货币类型
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            };
 
-                this.exportDisabled = true;
-                let exportUrl = Core.Api.Export.purchaseOrderExport(params);
-                console.log("handlePurchaseExport _exportUrl", exportUrl)
-                window.open(exportUrl, '_blank')
-                this.exportDisabled = false;
+            this.exportDisabled = true;
+            let exportUrl = Core.Api.Export.purchaseOrderExport(params);
+            console.log("handlePurchaseExport _exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
         },
         // 以供应商报表方式导出
         handleExport() {
-                let _this = this;
-                this.$confirm({
-                    title: _this.$t('p.sure_export'),
-                    okText: _this.$t('def.sure'),
-                    cancelText: _this.$t('def.cancel'),
-                    onOk() {
-                        _this.handleExportAccessoriesOrder();
-                    }
-                })
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('p.sure_export'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleExportAccessoriesOrder();
+                }
+            })
         },
         // 取消采购
         handleCancel() {
-                let _this = this
-                this.$confirm({
-                    title: _this.$t('p.sure_cancel'),
-                    okText: _this.$t('def.sure'),
-                    cancelText: _this.$t('def.cancel'),
-                    onOk() {
-                        Core.Api.Purchase.cancel({
-                            id: _this.id
-                        }).then(res => {
-                            _this.$message.success(_this.$t('pop_up.canceled'))
-                            _this.routerChange('orderList')
-                        }).catch(err => {
-                            console.log('handleCancel err', err)
-                        })
-                    },
-                });
+            let _this = this
+            this.$confirm({
+                title: _this.$t('p.sure_cancel'),
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Purchase.cancel({
+                        id: _this.id
+                    }).then(res => {
+                        _this.$message.success(_this.$t('pop_up.canceled'))
+                        _this.routerChange('orderList')
+                    }).catch(err => {
+                        console.log('handleCancel err', err)
+                    })
+                },
+            });
         },
 
-        /*== header options end ==*/  
+        /*== header options end ==*/
 
         // 弹出弹框
         handleModalShow(val) {
-            if(val != 'payment'){
+            if (val != 'payment') {
                 Object.assign(this.form, this.$options.data().form)
             }
             switch (val) {
@@ -1059,7 +1030,7 @@ export default {
                 case "out_stock":
                     // 出库
                     this.outStockShow = true
-                    break;                
+                    break;
                 case "createAuditShow":
                     // 订单审核
                     this.createAuditShow = true
@@ -1067,7 +1038,7 @@ export default {
             }
         },
 
-        /*== model 事件 start ==*/  
+        /*== model 事件 start ==*/
 
         // 修改pi model的事件
         UpdatePI() {
@@ -1082,7 +1053,7 @@ export default {
 
             if (this.$auth('ADMIN')) {
                 adminRequire = [
-                    {key: 'port', msg: this.$t('p.enter_harbor')},
+                    { key: 'port', msg: this.$t('p.enter_harbor') },
                 ]
             }
             for (let index in adminRequire) {
@@ -1096,7 +1067,7 @@ export default {
             param.freight = Math.round(param.freight * 100) || 0;
             Core.Api.Purchase.updatePI({
                 ...param,
-                id:this.id
+                id: this.id
             }).then(res => {
                 this.$message.success(this.$t('p.modify_success'))
                 this.PIShow = false
@@ -1107,7 +1078,7 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        },  
+        },
         // 确认出库
         handleOutStock() {
             // console.log("rowSelection",this.selectedRowItems)
@@ -1123,9 +1094,9 @@ export default {
                 { key: 'target_type', msg: this.$t('p.choose_type') },
             ];
 
-            for(let index in adminRequire) {
+            for (let index in adminRequire) {
                 let key = adminRequire[index].key
-                if(!this.form[key]) {
+                if (!this.form[key]) {
                     return this.$message.warning(adminRequire[index].msg)
                 } else {
                     param[key] = form[key];
@@ -1164,45 +1135,45 @@ export default {
 
             // if (this.loading !== true){
 
-                Core.Api.Purchase.payment({
-                    id: this.id,
-                    pay_method: form.pay_method,
-                    payment: Core.Util.countFilter(form.payment, 100, 0,true),
-                    imgs: form.path,
-                    img_type: form.type,
-                    remark: form.remark,
-                    wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0,true)
-                }).then(res => {
-                    this.$message.success(this.$t('p.payment_success'))
-                    this.getList()
-                    this.getPurchaseInfo()
-                    this.paymentShow = false
-                }).catch(err => {
-                    console.log('getPurchaseInfo err', err)
-                }).finally(() => {
+            Core.Api.Purchase.payment({
+                id: this.id,
+                pay_method: form.pay_method,
+                payment: Core.Util.countFilter(form.payment, 100, 0, true),
+                imgs: form.path,
+                img_type: form.type,
+                remark: form.remark,
+                wallet_price: Core.Util.countFilter(form.accountBalance, 100, 0, true)
+            }).then(res => {
+                this.$message.success(this.$t('p.payment_success'))
+                this.getList()
+                this.getPurchaseInfo()
+                this.paymentShow = false
+            }).catch(err => {
+                console.log('getPurchaseInfo err', err)
+            }).finally(() => {
 
-                    this.timer = setTimeout(()=> {   //设置延迟执行
-                        this.loading = false;
-                    },300);
+                this.timer = setTimeout(() => {   //设置延迟执行
+                    this.loading = false;
+                }, 300);
 
-                });
+            });
             // }
         },
         // 订单审核       
-        handleCreateAudit() {            
+        handleCreateAudit() {
             let formObj = {
                 audit_result: this.form.audit_result,
                 remark: this.remark
             }
             // 通过是否
-            if(!formObj.audit_result) {
+            if (!formObj.audit_result) {
                 this.$message.warning(this.$t('r.audit_result'))
                 return
             }
 
             let item_list = []
             // 选中的商品信息表格有数据的话进行
-            if(this.itemList.length){
+            if (this.itemList.length) {
                 this.itemList.forEach(el => {
                     item_list.push({
                         item_id: el.id,
@@ -1210,18 +1181,18 @@ export default {
                         price: this.$Util.countFilter(el.price, 100, 2, true),
                     })
                 })
-            }              
+            }
             // 不管怎么审核都提交                      
             this.createAuditFetch({
                 ...Core.Util.searchFilter(formObj),
                 item_list
-            })           
-        },        
-        /*== model 事件  end ==*/  
+            })
+        },
+        /*== model 事件  end ==*/
 
         // 上传前检查文件
         /*== 确认收款model start ==*/
-        
+
         // 上传文件前检查
         handleFileCheck(file) {
             // console.log('handleFileCheck file.type', file.type)
@@ -1237,12 +1208,12 @@ export default {
             return true
         },
         //删除文件
-        handleremove(){
+        handleremove() {
             console.log(this.upload.fileList)
             this.form.path = ''
         },
         // 上传文件
-        handleFileChange({file, fileList}) {
+        handleFileChange({ file, fileList }) {
             // console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
@@ -1250,7 +1221,7 @@ export default {
                 }
                 this.form.path = file.response.data.filename
                 this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
+                if (this.form.path) {
                     this.submitDisabled = false
                 }
             }
@@ -1259,11 +1230,11 @@ export default {
 
         /*== 确认收款model end ==*/
 
-        authOrg(orgId, orgType) {            
+        authOrg(orgId, orgType) {
             // console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
-            } else{ return false }
+            } else { return false }
         },
         // 路由跳转
         routerChange(type, item = {}) {
@@ -1272,7 +1243,7 @@ export default {
                 case 'detail':        // 详情
                     routeUrl = this.$router.resolve({
                         path: this.$auth('ADMIN') ? "/item/item-detail" : '/purchase/item-display',
-                        query: {id: item.id}
+                        query: { id: item.id }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
@@ -1302,30 +1273,30 @@ export default {
             }
         },
         // 步骤条
-        step(){            
-            if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT ||  this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT){
+        step() {
+            if (this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_ALL_PAYMENT || this.detail.pay_type == PAY_TIME.PAYMENT_TYPE_DOWN_PAYMENT) {
                 this.stepsList = [
-                    {status: '100', zh: '支付', en: 'Payment'},
-                    {status: '200', zh: '发货', en: 'Deliver'},
-                    {status: '300', zh: '收货',en: 'Receipt'},
-                    {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                    { status: '100', zh: '支付', en: 'Payment' },
+                    { status: '200', zh: '发货', en: 'Deliver' },
+                    { status: '300', zh: '收货', en: 'Receipt' },
+                    { status: '400', zh: '交易完成', en: 'Transaction completed' },
                 ]
                 // 售后订单 售前订单 显示
-                if (this.detail.type === Core.Const.PURCHASE.TYPE.AFTER_SALES || this.detail.type === Core.Const.PURCHASE.TYPE.PRE_SALES){
+                if (this.detail.type === Core.Const.PURCHASE.TYPE.AFTER_SALES || this.detail.type === Core.Const.PURCHASE.TYPE.PRE_SALES) {
                     this.stepsList = [
-                        {status: '60', zh: '审核', en: 'Audit'},
-                        {status: '100', zh: '支付', en: 'Payment'},
-                        {status: '200', zh: '发货', en: 'Deliver'},
-                        {status: '300', zh: '收货',en: 'Receipt'},
-                        {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                        { status: '60', zh: '审核', en: 'Audit' },
+                        { status: '100', zh: '支付', en: 'Payment' },
+                        { status: '200', zh: '发货', en: 'Deliver' },
+                        { status: '300', zh: '收货', en: 'Receipt' },
+                        { status: '400', zh: '交易完成', en: 'Transaction completed' },
                     ]
                 }
             } else {
                 this.stepsList = [
-                    {status: '200', zh: '发货', en: 'Deliver'},
-                    {status: '300', zh: '收货',en: 'Receipt'},
-                    {status: '360', zh: '支付', en: 'Payment'},
-                    {status: '400', zh: '交易完成',en: 'Transaction completed'},
+                    { status: '200', zh: '发货', en: 'Deliver' },
+                    { status: '300', zh: '收货', en: 'Receipt' },
+                    { status: '360', zh: '支付', en: 'Payment' },
+                    { status: '400', zh: '交易完成', en: 'Transaction completed' },
                 ]
             }
 
@@ -1342,7 +1313,7 @@ export default {
             this.exportDisabled = false;
         },
         // 合同上传ref事件
-        attachmentEvent(){
+        attachmentEvent() {
             this.$refs.attachment.handleModalShow()
         },
         // 赠送订单事件
@@ -1352,44 +1323,48 @@ export default {
             this.giveOrderShow = true
         },
         // 等待状态下审核订单修改总数量和总价格时候改变
-        inputChange(record,type){                
+        inputChange(record, type) {
             const i = this.itemList.findIndex((el) => {
                 return el.id == record.id
-            })            
+            })
             // 修改的是总数量
-            if(type == 'amount'){                
+            if (type == 'amount') {
                 this.itemList[i].price = this.itemList[i].amount * this.itemList[i].unit_price
             }
             // 修改的是总价
-            if(type == 'price'){
+            if (type == 'price') {
                 this.itemList[i].unit_price = this.itemList[i].price / this.itemList[i].amount
             }
 
-            let total_amount = 0,total_price = 0;
+            let total_amount = 0, total_price = 0;
             this.itemList.forEach((el) => {
-                total_amount += el.amount                
+                total_amount += el.amount
                 total_price += el.price
             })
-            this.total.amount = total_amount          
-            this.total.price  = this.$Util.countFilter(total_price, 100, 2, true)
-        },    
+            this.total.amount = total_amount
+            this.total.price = this.$Util.countFilter(total_price, 100, 2, true)
+        },        
     }
 };
 </script>
 
 <style lang="less" scoped>
 #PurchaseOrderDetail {
-    .list-container{
+    .list-container {
         margin-bottom: 20px;
-        .title-container{
+
+        .title-container {
             display: flex;
             justify-content: flex-start;
-            .title-area{
+
+            .title-area {
                 margin-right: 32px;
             }
-            .center-info{
+
+            .center-info {
                 flex: 1;
-                .header-info{
+
+                .header-info {
                     font-weight: 400;
                     font-size: 14px;
                     line-height: 20px;
@@ -1398,26 +1373,30 @@ export default {
                 }
             }
         }
-        .gray-panel{
+
+        .gray-panel {
             margin-top: 8px;
             border: 1px solid #E6EAEE;
             border-radius: 6px;
             background: none;
             padding: 0;
             height: 100px;
-            .panel-content{
-            }
+
+            .panel-content {}
         }
-        .title-container{
+
+        .title-container {
             display: flex;
             justify-content: space-between;
-            .title-area2{
+
+            .title-area2 {
                 font-weight: 500;
                 font-size: 16px;
                 line-height: 22px;
                 color: rgba(0, 0, 0, 0.85);
+            }
         }
-        }
+
         // .header-tab{
         //     width: 50%;
         //     background: #F5F5F5;
@@ -1427,33 +1406,63 @@ export default {
         // }
 
     }
-    .list-container2{
-        .container-body{
+
+    .list-container2 {
+        .container-body {
             padding: 0 20px;
         }
     }
-    .list-container3{
-        background: #f7f8fa;
+
+    .list-container3 {
+        background: #FFFFFF;
         border-radius: 6px;
-        margin: 24px 20px;    
-        padding: 20px 12px;      
-        .info-title{
+        margin: 0 8px 20px 8px;
+        padding: 20px;
+        box-sizing: border-box;
+
+        .title-container {
+            display: flex;
+            justify-content: flex-start;
+            padding: 0;
+            margin-bottom: 16px;
+
+            .title-area {
+                margin-right: 32px;
+            }
+
+            .center-info {
+                flex: 1;
+
+                .header-info {
+                    font-weight: 400;
+                    font-size: 14px;
+                    line-height: 20px;
+                    color: #252526;
+                    margin-right: 16px;
+                }
+            }
+        }
+
+        .info-title {
             font-weight: 500;
             font-size: 16px;
             line-height: 22px;
             color: rgba(0, 0, 0, 0.85);
             margin-bottom: 16px;
         }
-        .info-item{
+
+        .info-item {
             display: flex;
             margin-bottom: 10px;
-            .key{
+
+            .key {
                 width: 100px;
                 font-size: 14px;
                 line-height: 22px;
                 color: rgba(0, 0, 0, 0.4);
             }
-            .value{
+
+            .value {
                 margin-left: 10px;
                 width: 140px;
                 font-size: 14px;

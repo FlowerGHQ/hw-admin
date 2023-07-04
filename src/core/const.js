@@ -34,7 +34,8 @@ switch (window.location.hostname) {
 	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.145:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
@@ -334,20 +335,20 @@ let Const = {
         },
         // 状态
         STATUS: {
-            WAIT_DETECTION: 30,
-            WAIT_REPAIR: 40,
-	        REPAIR_END: 45,
-            SETTLEMENT: 60,
-            SETTLEMENT_DISTRIBUTOR: 70,
-            DISTRIBUTOR_AUDIT_SUCCESS: 80,
-            AUDIT_SUCCESS: 90,
-            DISTRIBUTOR_WAREHOUSE: 95,
-            FINISH: 100,
-            FAULT_ENTITY_AUDIT: 105,
-            SAVE_TO_INVOICE: 110,
-            CLOSE: -10,
-            AUDIT_FAIL: -30,
-            FAULT_ENTITY_AUDIT_FAIL: -40,
+            WAIT_DETECTION: 30, // 订单创建，等待检测
+            WAIT_REPAIR: 40, // 维修中
+	        REPAIR_END: 45, // 维修完成
+            SETTLEMENT: 60, // 已结算，待审核(零售商创建)
+            SETTLEMENT_DISTRIBUTOR: 70, // 已结算，待审核(分销商创建)
+            DISTRIBUTOR_AUDIT_SUCCESS: 80, // 分销商审核通过，待平台方审核
+            AUDIT_SUCCESS: 90, // 平台方审核通过
+            DISTRIBUTOR_WAREHOUSE: 95, // 分销商故障件入库，待平台方审核故障件
+            FINISH: 100, // 保外结算直接完成，不需要审核 从40直接过来
+            FAULT_ENTITY_AUDIT: 105, // 平台方故障件审核成功
+            SAVE_TO_INVOICE: 110, // 平台方故障件入库
+            CLOSE: -10, // 订单取消
+            AUDIT_FAIL: -30, // 审核未通过
+            FAULT_ENTITY_AUDIT_FAIL: -40, // 故障件审核未通过
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},
@@ -813,12 +814,23 @@ let Const = {
             { name: '跨越速运', value: 'KYEXPRESS' },
         ],
         COURIER_LIST: [
-            { value: 1 , zh: '国际物流', en: 'International logistics'},
-            { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            // { value: 1 , zh: '国际物流', en: 'International logistics'},
+            // { value: 2 , zh: '货代公司', en: 'Shipping agent' },
+            { value: 3 , zh: '陆运', en: 'Land transport'},
+            { value: 4 , zh: '海运', en: 'Sea transport' },
+            { value: 5 , zh: '空运', en: 'Air freight' },
+        ],
+        PORT_LIST: [
+            { value: 1 , zh: '上海', en: 'Shanghai'},
+            { value: 2 , zh: '太仓', en: 'Taicang' },
+            { value: 3 , zh: '南沙', en: 'Nansha' },
         ],
         COURIER_MAP: {
-            '1': { key: 1, zh: '国际物流', en: 'International logistics'},
-            '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            // '1': { key: 1, zh: '国际物流', en: 'International logistics'},
+            // '2': { key: 2, zh: '货代公司', en: 'Shipping agent' },
+            '3': { key: 3, zh: '陆运', en: 'Land transport'},
+            '4': { key: 4, zh: '海运', en: 'Sea transport' },
+            '5': { key: 5, zh: '空运', en: 'Air freight'},
         },
         RECEIPT_LIST: [
             { name: '快递', value: 1 },
@@ -1046,14 +1058,11 @@ let Const = {
 	        WAIT_AUDIT: 10, //待审核
 	        FINANCE_PASS: 20, //财务审核
             AUDIT_PASS: 30, //审核通过
-
-
             CLOSE: 40, //已完成
 	        DELIVERY: 50, //已发货
             RECEIVED: 60, //已收货
 	        AUDIT_BACK: -5,//退回
             AUDIT_REFUSE: -10,//审核失败
-
             CANCEL: -20, // 取消
         },
         STATUS_MAP: {
@@ -1574,22 +1583,22 @@ let Const = {
 			'30': { key: 30, zh: '活动推广',en: 'Activities to promote', value: 30 },
 			'40': { key: 40, zh: '其他',en: 'Other', value: 40 },
 		},
-		INDUSTRY_MAP: {
-			'10': { key: 10, zh: '金融',en: 'Finance', value: 10 },
-			'20': { key: 20, zh: '电信',en: 'Telecom', value: 20 },
-			'30': { key: 30, zh: '教育',en: 'Education', value: 30 },
-			'40': { key: 40, zh: '高科技',en: 'High-tech', value: 40 },
-			'50': { key: 50, zh: '政府',en: 'The government', value: 50 },
-			'60': { key: 60, zh: '制造业',en: 'Manufacturing', value: 60 },
-			'70': { key: 70, zh: '服务',en: 'Service', value: 70 },
-			'80': { key: 80, zh: '能源',en: 'Energy', value: 80 },
-			'90': { key: 90, zh: '零售',en: 'Retail', value: 90 },
-			'100': { key: 100, zh: '媒体',en: 'Media', value: 100 },
-			'110': { key: 110, zh: '娱乐',en: 'Entertainment', value: 110 },
-			'120': { key: 120, zh: '咨询',en: 'Consulting', value: 120 },
-			'130': { key: 130, zh: '非盈利事业',en: 'Non profit cause', value: 130 },
-			'140': { key: 140, zh: '公用事业',en: 'Utilities', value: 140 },
-			'500': { key: 500, zh: '其他',en: 'Other', value: 500 },
+		INDUSTRY_MAP: {            
+			'10': { key: 10, zh: '金融',en: 'Finance', value: 10},
+			'20': { key: 20, zh: '电信',en: 'Telecom', value: 20},
+			'30': { key: 30, zh: '教育',en: 'Education', value: 30},
+			'40': { key: 40, zh: '高科技',en: 'High-tech', value: 40},
+			'50': { key: 50, zh: '政府',en: 'The government', value: 50},
+			'60': { key: 60, zh: '制造业',en: 'Manufacturing', value: 60},
+			'70': { key: 70, zh: '服务',en: 'Service', value: 70},
+			'80': { key: 80, zh: '能源',en: 'Energy', value: 80},
+			'90': { key: 90, zh: '零售',en: 'Retail', value: 90},
+			'100': { key: 100, zh: '媒体',en: 'Media', value: 100},
+			'110': { key: 110, zh: '娱乐',en: 'Entertainment', value: 110},
+			'120': { key: 120, zh: '咨询',en: 'Consulting', value: 120},
+			'130': { key: 130, zh: '非盈利事业',en: 'Non profit cause', value: 130},
+			'140': { key: 140, zh: '公用事业',en: 'Utilities', value: 140},
+			'500': { key: 500, zh: '其他',en: 'Other', value: 500},
 		},
 		GENDER_MAP: {
 			'1': { key: 1, zh: '女',en: 'Woman', value: 1 },
@@ -1683,6 +1692,41 @@ let Const = {
 			'4': { key: 4, zh: '回款进度 60%-80%',en: 'Payment Collection Progress 60% - 80%', value: 4 },
 			'5': { key: 5, zh: '回款进度 80%-100%',en: 'Payment Collection Progress 80% - 100%', value: 5 },
         },
+        WhetherNot:{            
+			'1': { key: 20, zh: '是',en: 'YES',value:1},
+			'-1': { key: 30, zh: '否',en: 'NO' ,value:-1},
+        },
+        INTENTION:{            
+			'10': { key: 10, zh: '无意向(不购买/30天3次无效沟通)',en: ''},
+			'20': { key: 20, zh: '有意向(了解产品（体验、服务、性能、功能、权益、政策)，30天内能决策。)',en: '' },
+			'30': { key: 30, zh: '高意向(完成产品体验并保持购买意向，14天内能决策)',en: '' },
+			'40': { key: 40, zh: 'Hot(主动提出支付意向金,3天内能决策)',en: '' },
+        },
+        INTENTION_STATUS:{            
+			'10': { key: 10, zh: '无意向',en: ''},
+			'20': { key: 20, zh: '有意向',en: '' },
+			'30': { key: 30, zh: '高意向',en: '' },
+			'40': { key: 40, zh: 'Hot',en: '' },
+        },
+        SEX:{            
+			'1': { key: 1, zh: '男',en: 'M'},
+			'2': { key: 2, zh: '女',en: 'W' },
+        },
+        RidingExperience:{
+            '-1': { key: -1, zh: '无经验',en: '' },            
+			'1': { key: 1, zh: '0-3年',en: ''},
+			'2': { key: 2, zh: '3-5年',en: '' },
+			'3': { key: 3, zh: '5年及以上',en: '' },
+        },
+        VehicleType:{            
+			'1': { key: 1, zh: 'SENMENTI 0',en: ''},
+			'2': { key: 2, zh: 'SENMENTI X',en: '' }, 
+        },
+        // 其他驾驶工具
+        otherTool:{
+			'1': { key: 1, zh: '油车',en: ''},
+			'2': { key: 2, zh: '电车',en: '' }, 
+        }
     },
     CRM_ORDER_INCOME: {
 		STATUS: {
@@ -1751,12 +1795,26 @@ let Const = {
             '90': { key: 90, zh: '已购',en: 'Purchased', value: 90 },
 	        '100': { key: 100, zh: '预约试驾',en: 'Book a test drive', value: 100 },
         },
+        CHINA_INTENT:{ // 仅国内拥有--意向度(无英文)10无意向 20有意向 30高意向 40 Hot
+            '10': { key: 10, zh: '无意向', value: 10 ,con:'不购买/30天内3次无效沟通'},
+            '20': { key: 20, zh: '有意向', value: 20 ,con:'了解产品（体验、服务、性能、功能、权益、政策）,30天内能决策'},
+            '30': { key: 30, zh: '高意向', value: 30 ,con:'完成产品体验并保持购买意向，14天内能决策'},
+            '40': { key: 40, zh: 'Hot', value: 40 ,con:'主动提出支付意向金，3天内能做出决策'},
+        },
 		TARGET_TYPE: {
 			CUSTOMER: 1,
 			BO: 2,
 			ORDER:3,
 			ORDER_INCOME:4,
 		},
+        // 购车关注点
+        CAR_BUYING_CONCERNS: ['续航','服务','质量','外观','性能','舒适','安全','储物空间','智能','改装','销售政策','售后政策'],
+        // 购车习惯
+        BUY_HABITS: ['试驾','全款','贷款'],
+        // 购车顾虑  
+        BUY_CONCERNS: ['预算不足','品牌顾虑','售后保证','保值率','提车时间']
+
+
 	},
     CRM_TODO: {
         STATUS: {
@@ -2071,7 +2129,8 @@ let Const = {
             BMS_PLUG_IN_MACHINE: 10001,
         },
         TYPE_MAP: {
-            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'}
+            '10001': { value: 10001, key: 't.test_case.bms_plug_in_machine', text: 'BMS外挂整机测试'},
+            '26003': { value: 26003, key: 't.test_case.lierda_vcu_test', text: '利尔达VCU测试'}
         },
 
         TYPE_CASE_MAP: {

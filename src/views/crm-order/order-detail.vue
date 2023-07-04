@@ -1,23 +1,29 @@
 <template>
     <div id="OrderDetail" class="edit-container">
         <div class="title-container">
-                <div class="title-area">{{  $t('crm_o.detail')  }}
-<!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
-<!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
-<!--                </a-tag>-->
+            <div class="title-area">{{ $t('crm_o.detail') }}
+                <!--                <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
+                <!--                    {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
+                <!--                </a-tag>-->
             </div>
             <div class="btns-area">
-                        <template v-if="trackMemberDetail!= null? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
-                            <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">{{$t('def.edit')}}</a-button>
-                            <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">{{$t('crm_oi.save')}}</a-button>
-                            <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">{{$t('def.delete')}}</a-button>
-                        </template>
-                        <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
-                            <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
-                        </template>
-                         <AuditHandle v-if="user.id === audit.audit_user_id"
-                    btnType='primary' :api-list="['CRMOrder', 'audit']" :id="detail.id" @submit="getOrderDetail"
-                    :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO" :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit"/>{{ $t('n.audit') }}
+                <template
+                    v-if="trackMemberDetail != null ? trackMemberDetail.type !== Core.Const.CRM_TRACK_MEMBER.TYPE.READ : false">
+                    <a-button @click="routerChange('edit', detail)" v-if="$auth('crm-order.save')">{{ $t('def.edit')
+                    }}</a-button>
+                    <a-button @click="routerChange('income')" v-if="$auth('crm-order-income.save')">{{ $t('crm_oi.save')
+                    }}</a-button>
+                    <a-button @click="handleDelete(detail.id)" type="danger" v-if="$auth('crm-order.delete')">{{
+                        $t('def.delete') }}</a-button>
+                </template>
+                <template
+                    v-if="trackMemberDetail != null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
+                    <a-button type="primary" @click="handleBatch('transfer')">{{ $t('crm_c.transfer') }}</a-button>
+                </template>
+                <AuditHandle v-if="user.id === audit.audit_user_id" btnType='primary' :api-list="['CRMOrder', 'audit']"
+                    :id="detail.id" @submit="getOrderDetail" :s-pass="Core.Const.FLAG.YES" :s-refuse="Core.Const.FLAG.NO"
+                    :current-audit-process-id="detail.current_audit_process_id" no-refuse><i class="icon i_audit" />{{
+                        $t('n.audit') }}
                 </AuditHandle>
             </div>
         </div>
@@ -30,26 +36,27 @@
                 </div>
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>                        
-                        <router-link target="_blank" :to="{ path: '/crm-customer/customer-detail', query: { id: detail.customer_id } }">
-                            {{ detail.customer_name || '-'   || '-'  }}
-                        </router-link> 
+                        <span class="key">{{ $t('crm_o.customer_name') }}：</span>
+                        <router-link target="_blank"
+                            :to="{ path: '/crm-customer/customer-detail', query: { id: detail.customer_id } }">
+                            {{ detail.customer_name || '-' || '-' }}
+                        </router-link>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.contract_no') }}：</span>
-                        <span class="value">{{ detail.uid || '-'  }}</span>
+                        <span class="value">{{ detail.uid || '-' }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.money') }}：</span>
-                        <span class="value">{{ $Util.countFilter(detail.money) || '-'  }}</span>
+                        <span class="value">{{ $Util.countFilter(detail.money) || '-' }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.paid_money_progress') }}：</span>
-                        <span class="value">{{ detail.paid_money_progress || '-'  }}</span>
+                        <span class="value">{{ detail.paid_money_progress || '-' }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.own_user_name') }}：</span>
-                        <span class="value">{{ detail.own_user_name || '-'}}</span>
+                        <span class="value">{{ detail.own_user_name || '-' }}</span>
                     </a-col>
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item'>
                         <!-- <template v-if="trackMemberDetail!= null ? trackMemberDetail.type === Core.Const.CRM_TRACK_MEMBER.TYPE.OWN : false">
@@ -65,30 +72,33 @@
                     <a-col :xs='24' :sm='24' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('sl.show') }}：</span>
                         <span class="value">
-                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER"/>
+                            <LabelList :targetId="id" :targetType="Core.Const.CRM_LABEL.CATEGORY.ORDER" />
                         </span>
                     </a-col>
+                    <!-- 支付地址 -->
                     <a-col :xs='24' :sm='24' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_o.pay_address') }}：</span>
-                        <span class="value">{{ detail.payAddress }}</span>
+                        <span>{{ detail.payAddress }}</span>
+                        <a-button @click="addressEditModalShow" style="margin-left: 20px;" type="link">+ {{ $t('def.edit')
+                        }}</a-button>
                     </a-col>
                 </a-row>
 
                 <a-row class="desc-detail">
                     <a-col :xs='24' :sm='24' :lg='24' class='detail-item' v-if="flag_message">
                         <span class="key">{{ $t('crm_oi.error') }}：</span>
-                        <span class="value">{{ audit_message ||  '-'  }}</span>
+                        <span class="value">{{ audit_message || '-' }}</span>
                     </a-col>
                     <a-steps :current="current">
-                        <a-step v-for="(item,index) in auditUserList">
+                        <a-step v-for="(item, index) in auditUserList">
                             <template #icon>
                                 <user-outlined />
                             </template>
                             <template #title>
-                                {{item.audit_user_name}}
+                                {{ item.audit_user_name }}
                             </template>
                             <template #status>
-                                {{item.audit_step}}
+                                {{ item.audit_step }}
                             </template>
                         </a-step>
 
@@ -99,12 +109,12 @@
         </div>
 
 
-        <a-row >
-            <a-col :xs='24' :sm='24' :lg='16' >
+        <a-row>
+            <a-col :xs='24' :sm='24' :lg='16'>
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="activeKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.summary_information')">
-                            <CustomerSituation :detail="detail"/>
+                            <CustomerSituation :detail="detail" />
                         </a-tab-pane>
                         <!-- <a-tab-pane key="InformationInfo" :tab="$t('crm_c.related')">
                             <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
@@ -112,28 +122,32 @@
                             <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane> -->
                         <a-tab-pane key="salesinfo" :tab="$t('crm_o.sales_info')">
-                            <CRMItem  v-if="id>0" :detail="detail" :sourceId="detail.id" :currency="detail.currency" :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref ="CRMItem"/>
+                            <CRMItem v-if="id > 0" :detail="detail" :sourceId="detail.id" :currency="detail.currency"
+                                :sourceType="Core.Const.CRM_ITEM_BIND.SOURCE_TYPE.ORDER" ref="CRMItem" />
                         </a-tab-pane>
                         <a-tab-pane key="RemittanceList" :tab="$t('crm_oi.list')">
-                            <CrmOrderIncome v-if="id>0" :detail="detail" :orderId="detail.id" ref ="CrmOrderIncome"/>
+                            <CrmOrderIncome v-if="id > 0" :detail="detail" :orderId="detail.id" ref="CrmOrderIncome" />
                         </a-tab-pane>
                         <a-tab-pane key="AttachmentsList" :tab="$t('n.attachment_list')">
-                            <CRMAttachmentFile v-if="id>0" :target_id="id" :target_type="CRM_ORDER_FILE" />
+                            <CRMAttachmentFile v-if="id > 0" :target_id="id" :target_type="CRM_ORDER_FILE" />
                         </a-tab-pane>
                         <a-tab-pane key="customerInfo" :tab="$t('crm_o.customer_detail')">
-                            <CrmCustomerDetail  v-if="id>0" :id="detail.customer_id" ref ="CrmCustomerDetail"/>
+                            <CrmCustomerDetail v-if="id > 0" :id="detail.customer_id" ref="CrmCustomerDetail" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
             </a-col>
-            <a-col :xs='24' :sm='24' :lg='8' >
+            <a-col :xs='24' :sm='24' :lg='8'>
                 <div class="tabs-container">
                     <a-tabs v-model:activeKey="tabActiveKey">
                         <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
-                            <Group v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER" :detail="detail" ref ="Group"/>
+                            <Group v-if="id > 0" :targetId="id" :targetType="Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER"
+                                :detail="detail" ref="Group" />
                         </a-tab-pane>
                         <a-tab-pane key="InformationInfo" :tab="$t('crm_c.dynamic')">
-                            <ActionRecord v-if="id>0" :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail" ref ="ActionRecord"/>
+                            <ActionRecord v-if="id > 0" :targetId="id"
+                                :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.ORDER" :detail="detail"
+                                ref="ActionRecord" />
                         </a-tab-pane>
                     </a-tabs>
                 </div>
@@ -143,42 +157,29 @@
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.customer_name') }}：</div>
                 <div class="value">
-                    {{detail.customer_name}}
+                    {{ detail.customer_name }}
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_o.name') }}：</div>
                 <div class="value">
-                    {{detail.name}}
+                    {{ detail.name }}
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_group.name') }}：</div>
                 <div class="value">
-                    <a-tree-select class="CategoryTreeSelect"
-                                   v-model:value="group_id"
-                                   :placeholder="$t('def.select')"
-                                   :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                   :tree-data="groupOptions"
-                                   @change="getUserData('')"
-                                   tree-default-expand-all
-                    />
+                    <a-tree-select class="CategoryTreeSelect" v-model:value="group_id" :placeholder="$t('def.select')"
+                        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }" :tree-data="groupOptions"
+                        @change="getUserData('')" tree-default-expand-all />
                 </div>
             </div>
             <div class="form-item required">
                 <div class="key">{{ $t('crm_b.own_user_name') }}：</div>
                 <div class="value">
-                    <a-select
-                        v-model:value="batchForm.own_user_id"
-                        show-search
-                        :placeholder="$t('def.input')"
-                        :default-active-first-option="false"
-                        :show-arrow="false"
-                        :filter-option="false"
-                        :not-found-content="null"
-                        @search="getUserData"
-                        :disabled="!group_id"
-                    >
+                    <a-select v-model:value="batchForm.own_user_id" show-search :placeholder="$t('def.input')"
+                        :default-active-first-option="false" :show-arrow="false" :filter-option="false"
+                        :not-found-content="null" @search="getUserData" :disabled="!group_id">
                         <a-select-option v-for=" item in userData" :key="item.id" :value="item.id">
                             {{ item.account ? item.account.name : '-' }}
                         </a-select-option>
@@ -188,6 +189,60 @@
             <template #footer>
                 <a-button @click="handleBatchSubmit" type="primary">{{ $t('def.ok') }}</a-button>
                 <a-button @click="handleBatchClose">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
+        <a-modal v-model:visible="modalVisible" :title="$t('crm_o.pay_address_edit')" centered class="field-select-modal"
+            :width="630" :after-close='addressEditModalClose'>
+            <div class="modal-content">
+                <!-- 街道 -->
+                <div class="form-item">
+                    <div class="key">
+                        {{ $t('crm_o.street') }}：
+                    </div>
+                    <div class="value">
+                        <a-input v-model:value="addressForm.address_line_1" :placeholder="$t(/*请输入*/'def.input')" />
+                    </div>
+                </div>
+                <!-- 城市 -->
+                <div class="form-item">
+                    <div class="key">
+                        {{ $t('crm_o.city') }}：
+                    </div>
+                    <div class="value">
+                        <a-input v-model:value="addressForm.admin_area_2" :placeholder="$t(/*请输入*/'def.input')" />
+                    </div>
+                </div>
+                <!-- 州 -->
+                <div class="form-item">
+                    <div class="key">
+                        {{ $t('crm_o.state') }}：
+                    </div>
+                    <div class="value">
+                        <a-input v-model:value="addressForm.admin_area_1" :placeholder="$t(/*请输入*/'def.input')" />
+                    </div>
+                </div>
+                <!-- 邮编 -->
+                <div class="form-item">
+                    <div class="key">
+                        {{ $t('crm_o.postcode') }}：
+                    </div>
+                    <div class="value">
+                        <a-input v-model:value="addressForm.postal_code" :placeholder="$t(/*请输入*/'def.input')" />
+                    </div>
+                </div>
+                <!-- 国家 -->
+                <div class="form-item">
+                    <div class="key">
+                        {{ $t('crm_o.country') }}：
+                    </div>
+                    <div class="value">
+                        <a-input v-model:value="addressForm.country_code" :placeholder="$t(/*请输入*/'def.input')" />
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button type="primary" @click="handleAddressEditConfirm">{{ $t(/*确定*/'def.ok') }}</a-button>
+                <a-button @click="modalVisible = false">{{ $t(/*取消*/'def.cancel') }}</a-button>
             </template>
         </a-modal>
     </div>
@@ -203,7 +258,7 @@ import ActionRecord from '@/components/crm/panel/ActionRecord.vue';
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 
 import dayjs from "dayjs";
-import {get} from "lodash";
+import { get } from "lodash";
 import CRMItem from '@/components/crm/panel/CRMItem.vue';
 import CrmOrderIncome from '@/components/crm/panel/CrmOrderIncome.vue';
 import CrmCustomerDetail from '../../components/crm/panel/CrmCustomerDetail.vue';
@@ -213,7 +268,7 @@ import {
 import LabelList from '@/components/crm/common/LabelList.vue';
 export default {
     name: 'OrderDetail',
-    components: {  Group, ActionRecord, CustomerSituation, CRMAttachmentFile,CRMItem, UserOutlined, AuditHandle,CrmOrderIncome,LabelList,CrmCustomerDetail},
+    components: { Group, ActionRecord, CustomerSituation, CRMAttachmentFile, CRMItem, UserOutlined, AuditHandle, CrmOrderIncome, LabelList, CrmCustomerDetail },
     props: {},
     data() {
         return {
@@ -271,17 +326,26 @@ export default {
             batchShow: false,
             batchType: '',
             auditUserList: [],
-            current:0,
+            current: 0,
             audit: {
-                id:'',
+                id: '',
                 audit_user_id: '',
-                current_audit_process_id:'',
+                current_audit_process_id: '',
             },
             flag_message: false,
             audit_message: '',
-            id:"",
+            id: "",
             groupOptions: [],
             group_id: undefined,
+            modalVisible: false,
+            address: undefined,
+            addressForm: {
+                address_line_1: undefined, // 街道
+                admin_area_2: undefined, // 城市、城镇、村庄
+                admin_area_1: undefined, // 州、省
+                postal_code: undefined, // 邮编
+                country_code: undefined, // 国家区号
+            }
         };
     },
     watch: {},
@@ -337,7 +401,7 @@ export default {
             if (!this.batchForm.own_user_id) {
                 return this.$message.warning(this.$t('crm_c.select'))
             }
-            switch (this.batchType){
+            switch (this.batchType) {
                 case "transfer":
                     Core.Api.CRMBo.transfer({
                         id: this.detail.id,
@@ -366,16 +430,25 @@ export default {
                 }
                 this.defAddr = [d.province, d.city, d.county]
                 this.detail = d
-                this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
+                if(!JSON.parse(this.detail.address)?.address_line_1 && !JSON.parse(this.detail.address)?.admin_area_2 && !JSON.parse(this.detail.address)?.admin_area_1 && !JSON.parse(this.detail.address)?.postal_code && !JSON.parse(this.detail.address)?.country_code) {
+                    this.detail.payAddress = '-'
+                } else {
+                    this.detail.payAddress = this.detail.address ? `${JSON.parse(this.detail.address)?.address_line_1},${JSON.parse(this.detail.address)?.admin_area_2},${JSON.parse(this.detail.address)?.admin_area_1} ${JSON.parse(this.detail.address)?.postal_code},${JSON.parse(this.detail.address)?.country_code}` : '-'
+                }
+                this.detail.payAddress = this.handleRemoveExtraCommas(this.detail.payAddress)
+                this.addressForm.address_line_1 = this.detail.address ? JSON.parse(this.detail.address)?.address_line_1 : undefined
+                this.addressForm.admin_area_2 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_2 : undefined
+                this.addressForm.admin_area_1 = this.detail.address ? JSON.parse(this.detail.address)?.admin_area_1 : undefined
+                this.addressForm.postal_code = this.detail.address ? JSON.parse(this.detail.address)?.postal_code : undefined
+                this.addressForm.country_code = this.detail.address ? JSON.parse(this.detail.address)?.country_code : undefined
                 this.auditUserList = res.detail.audit_user_list
                 this.audit = Core.Util.deepCopy(this.$options.data().audit)
                 this.auditUserList.forEach(item => {
-                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT){
+                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.WAIT_AUDIT) {
                         this.current = item.audit_step
                         this.audit = item
-
                     }
-                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.REFUSE){
+                    if (item.audit_status === Core.Const.CRM_AUDIT_PROCESS.AUDIT_STATUS.REFUSE) {
                         this.flag_message = true
                         this.audit_message = item.remark
                     }
@@ -416,7 +489,7 @@ export default {
                 console.log('handleSubmit err:', err)
             })
         },
-        handleTrackRecordClose(){
+        handleTrackRecordClose() {
             this.TrackRecordShow = false;
             Object.assign(this.trackRecordForm, this.$options.data().trackRecordForm)
         },
@@ -441,8 +514,8 @@ export default {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
                 }
-                this.shortPath = get(fileList,'[0].response.data.filename', null);
-                if(this.shortPath) {
+                this.shortPath = get(fileList, '[0].response.data.filename', null);
+                if (this.shortPath) {
                     this.form.img = this.shortPath;
                     // this.loadImage(this.detailImageUrl);
                 }
@@ -450,7 +523,7 @@ export default {
             this.upload.coverList = fileList;
         },
         // 上传文件
-        handleFileChange({file, fileList}) {
+        handleFileChange({ file, fileList }) {
             console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
@@ -458,7 +531,7 @@ export default {
                 }
                 this.form.path = file.response.data.filename
                 this.form.type = this.form.path.split('.').pop()
-                if (this.form.path){
+                if (this.form.path) {
                     this.submitDisabled = false
                 }
             }
@@ -479,7 +552,7 @@ export default {
                 okType: 'danger',
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.CRMOrder.delete({id}).then(() => {
+                    Core.Api.CRMOrder.delete({ id }).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getTableData();
                     }).catch(err => {
@@ -497,7 +570,7 @@ export default {
                 console.log("trackMemberDetail", this.trackMemberDetail);
             })
         },
-        getUserData(query){
+        getUserData(query) {
             this.batchForm.own_user_id = undefined
             this.loading = true;
             Core.Api.User.listGroup({
@@ -513,7 +586,7 @@ export default {
                 this.loading = false;
             });
         },
-        handleGroupTree(){
+        handleGroupTree() {
             Core.Api.CRMGroupMember.structureByUserGroup({
                 group_id: this.detail.group_id
             }).then(res => {
@@ -522,6 +595,36 @@ export default {
 
             })
         },
+        addressEditModalShow() {
+            this.modalVisible = true
+        },
+        addressEditModalClose() {
+            if (this.id) {
+                this.getOrderDetail();
+                this.getTargetByUserId();
+            }
+        },
+        // 编辑支付地址
+        handleAddressEditConfirm() {
+            Core.Api.CRMOrder.saveAddress({
+                id: this.id,
+                ...this.addressForm
+            }).then(res => {
+                this.$message.success(this.$t('pop_up.save_success'));
+                this.modalVisible = false
+                this.$refs.ActionRecord.getCrmActionRecordTableData();
+            }).catch(err => {
+                console.log('handleAddressEditConfirm err', err);
+            })
+        },
+        // 去掉支付地址前后多余逗号的方法
+        handleRemoveExtraCommas(v) {
+            // 使用正则表达式替换连续逗号
+            v = v.replace(/,+/g, ',');
+            // 使用trim()方法去掉字符串首尾的逗号
+            v = v.trim().replace(/^,|,$/g, '');
+            return v
+        }
     }
 };
 </script>

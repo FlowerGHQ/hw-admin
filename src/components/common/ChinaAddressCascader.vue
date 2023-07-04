@@ -7,6 +7,7 @@
     :field-names="{ label: 'name', value: 'name' , children: 'children'}"
     :show-search="{ filter }"
     @change='handleChange'
+    :changeOnSelect="onSelect"
 />
 </template>
 
@@ -18,6 +19,10 @@ export default {
     props: {
         defaultAddress: {
             type: Array,
+        },
+        onSelect:{
+            type:Boolean,
+            default:false
         }
     },
     emit: ['select'],

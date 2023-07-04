@@ -41,6 +41,7 @@ const apiList = {
         exportSalesStatement: ['GetJson', 'purchase-order/export-sales-statement'], // 导出数据
 	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
 	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
+        materialExport: ['PostJson', 'material/export-material'], // 物料导出
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -717,6 +718,7 @@ const apiList = {
         audit: ['PostJson', 'crm-order/audit'],// 审核
         reactivation: ['PostJson', 'crm-order/reactivation'],// 审核未通过，修改后再次提交从头审核
 	    batchTransfer: ['PostJson', 'crm-order/batch-transfer'],
+        saveAddress: ['PostJson', 'crm-order/save-address'],//新增/修改
     },
     CRMItemBind: {  //CRM销售信息
         save: ['PostJson', 'crm-item-bind/save'],//新增/修改

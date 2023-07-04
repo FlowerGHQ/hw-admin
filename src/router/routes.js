@@ -565,7 +565,7 @@ const routes = [
         component: Layout,
         redirect: '/entity/entity-list',
         name: 'EntityManagement',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '实例管理',
             title_en: 'Instance',
