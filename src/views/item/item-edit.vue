@@ -765,7 +765,7 @@ export default {
                 form.imgs = detailList.join(',')
             }
 
-            if(form.type == 1){
+            if(form.type != 1){
                 // 如果是整车的时候传数据可以删除不必要的
                 Core.Util.deleteParamsFilter(form,["color","color_en","net_weight","gross_weight"])
             }
