@@ -19,7 +19,6 @@
             </div>
             <div class="search-container">
                 <a-row class="search-area">
-
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('v.number') }}:</div>
                         <div class="value">
@@ -324,10 +323,10 @@ export default {
                 {title: 'n.name', dataIndex: 'name', key: 'detail'},
                 {title: 'p.code', dataIndex: 'code', key: 'code'},
                 {title: 'search.vehicle_no', dataIndex: 'vehicle_uid', key: 'vehicle_uid'},
-                {title: 'v.battery_code', dataIndex: 'battery_uid', key: 'battery_uid'},
+                {title: 'v.vehicle_code', dataIndex: 'uid', key: 'item'},
                 {title: 'v.motor_coding', dataIndex: 'motor_uid', key: 'motor_uid'},
                 {title: 'v.control_code', dataIndex: 'vcu_uid', key: 'vcu_uid'},
-                {title: 'v.number', dataIndex: 'uid', key: 'item'},
+                {title: 'v.battery_code', dataIndex: 'battery_uid', key: 'battery_uid'},
                 {title: 'i.spec', dataIndex: 'attr', key: 'attr'},
                 {title: 'v.type', dataIndex: 'org_type'},
                 {title: 'r.unit', dataIndex: 'org_name'},
