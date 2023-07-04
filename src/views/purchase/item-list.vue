@@ -1,50 +1,48 @@
 <template>
-<div id="PurchaseItemList">
-    <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
-        <template v-if="!bomShow">
-            <div class="item-content" v-if="tableData.length">             
-                <div class="list-container">
-                    <div class="list-item" v-for="item of tableData" :key="item.id" @click="routerChange('detail', item)">
-                        <div class="cover">
-                            <img :src="$Util.imageFilter(item.logo, 2)" />
+    <div id="PurchaseItemList">
+        <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
+            <template v-if="!bomShow">
+                <div class="item-content" v-if="tableData.length">
+                    <div class="list-container">
+                        <div class="list-item" v-for="item of tableData" :key="item.id"
+                            @click="routerChange('detail', item)">
+                            <div class="cover">
+                                <img :src="$Util.imageFilter(item.logo, 2)" />
+                            </div>
+                            <p class="sub">{{ item.code || '-' }}</p>
+                            <!-- <p class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{ '' || ' ' }} &ensp;</p> -->
+
+                            <p class="name" v-if="lang == 'zh'">{{ item.name ? lang == 'zh' ? item.name : item.name_en : '-'
+                            }}</p>
+                            <p class="name" v-else>{{ item?.material?.name_en ? (item?.material?.name_en) :
+                                (item.name_en ? item.name_en : '-' )}}</p>
+                            <p class="desc">&nbsp;</p>
+                            <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
+                                {{ $Util.priceUnitFilter(currency) }}{{ $Util.countFilter(item[priceKey + 'eur']) }}
+                            </p>
+                            <p class="price" v-else>
+                                {{ $Util.priceUnitFilter(currency) }}{{ $Util.countFilter(item[priceKey + 'usd']) }}
+                            </p>
+                            <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart')
+                            }}</a-button>
                         </div>
-                        <p  class="sub" v-if="item.type !== Core.Const.ITEM.TYPE.PRODUCT">{{item.code || '-'}}</p>
-                        <p  class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{'' || ' '}} &ensp;</p>
-                        
-                        <p class="name">{{ item.name ? lang =='zh' ? item.name : item.name_en : '-' }}</p>
-                        <p class="desc">&nbsp;</p>
-                        <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
-                            {{$Util.priceUnitFilter(currency)}}{{$Util.countFilter(item[priceKey + 'eur'])}}
-                        </p>
-                        <p class="price" v-else>
-                            {{$Util.priceUnitFilter(currency)}}{{$Util.countFilter(item[priceKey + 'usd'])}}
-                        </p>
-                        <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart') }}</a-button>
+                    </div>
+                    <div class="paging-container">
+                        <a-pagination v-model:current="currPage" :page-size='pageSize' :total="total" show-quick-jumper
+                            show-size-changer show-less-items
+                            :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                            :hide-on-single-page='false' :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
+                            @showSizeChange="pageSizeChange" />
                     </div>
                 </div>
-                <div class="paging-container">
-                    <a-pagination
-                        v-model:current="currPage"
-                        :page-size='pageSize'
-                        :total="total"
-                        show-quick-jumper
-                        show-size-changer
-                        show-less-items
-                        :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                        :hide-on-single-page='false'
-                        :pageSizeOptions="['10', '20', '30', '40']"
-                        @change="pageChange"
-                        @showSizeChange="pageSizeChange"
-                    />
-                </div>
+                <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')" />
+            </template>
+            <div class="bom-content" v-else>
+                <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData"
+                    @change="getData"></ExploredContentPay>
             </div>
-            <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')"/>
-        </template>
-        <div class="bom-content" v-else>
-            <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData" @change="getData"></ExploredContentPay>
         </div>
     </div>
-</div>
 </template>
 
 <script>
@@ -68,14 +66,14 @@ export default {
         ExploredContentPay,
     },
     props: {
-        category_id: {type: Number},
-        name: {name: String},
+        category_id: { type: Number },
+        name: { name: String },
     },
-    watch: {     
+    watch: {
         category_id: {
             immediate: true,
             handler(n) {
-                console.log("watch category_id",n)
+                console.log("watch category_id", n)
                 this.searchForm.category_id = n
                 this.getTableData();
                 this.isBomShow(this.searchForm.category_id);
@@ -84,7 +82,7 @@ export default {
         name: {
             immediate: true,
             handler(n) {
-                console.log("watch name",n)
+                console.log("watch name", n)
                 this.searchForm.name = n
 
             }
@@ -127,7 +125,7 @@ export default {
             //  备注
             labelCol: { style: { width: '40px' } },
             wrapperCol: { span: 14 },
-            orderId:'',
+            orderId: '',
 
             // 是否显示爆炸图
             bomShow: false,
@@ -145,11 +143,11 @@ export default {
         }
     },
 
-     mounted() {
-         this.currency = Core.Data.getCurrency();
-         this.getTableData();
-         this.getCategoryList()
-         this.getShopCartData();
+    mounted() {
+        this.currency = Core.Data.getCurrency();
+        this.getTableData();
+        this.getCategoryList()
+        this.getShopCartData();
 
     },
 
@@ -163,7 +161,7 @@ export default {
                     //     query: { id: item.id }
                     // })
                     // window.open(routeUrl.href, '_blank')
-                    this.$emit('changeDisplay',true,item.id)
+                    this.$emit('changeDisplay', true, item.id)
 
                     break;
                 case 'favorite':  // 收藏夹
@@ -181,7 +179,7 @@ export default {
                     break;
             }
         },
-        pageChangeName(name,searchType) {  // 页码改变
+        pageChangeName(name, searchType) {  // 页码改变
             this.searchForm.name = name
             this.searchType = searchType
             this.pageChange(1)
@@ -208,7 +206,7 @@ export default {
             this.isBomShow(category)
             // this.bomShow = false
             this.searchForm.category_id = category
-            if ( this.firstLevelId && category === this.firstLevelId) {
+            if (this.firstLevelId && category === this.firstLevelId) {
                 this.firstLevelName = this.categoryList.find(i => i.id === category)
                 this.$nextTick(() => {
                     this.$refs.CategoryTree.handleReset();
@@ -221,29 +219,29 @@ export default {
         isBomShow(id) {
             this.bomShow = false
             console.log(' categoryList:', this.categoryList)
-            for (let i = 0; i < this.categoryList.length ; i++){
+            for (let i = 0; i < this.categoryList.length; i++) {
                 console.log(' categoryList:', this.categoryList)
-                if(this.categoryList[i].id === id) {
+                if (this.categoryList[i].id === id) {
                     this.bomShow = this.categoryList[i].display_mode === 2
-                    console.log("bomShow",this.bomShow)
+                    console.log("bomShow", this.bomShow)
                     return
                 }
-                console.log("bomShow",this.bomShow)
-                if (this.categoryList[i].children != null){
-                    console.log("bomShow",this.bomShow)
+                console.log("bomShow", this.bomShow)
+                if (this.categoryList[i].children != null) {
+                    console.log("bomShow", this.bomShow)
                     this.isBomChildren(this.categoryList[i], id);
                 }
             };
             // this.bomShow = true
         },
-        isBomChildren(element, id){
-            for (let i = 0; i< element.children.length ; i++){
-                if (element.children[i].children != null){
+        isBomChildren(element, id) {
+            for (let i = 0; i < element.children.length; i++) {
+                if (element.children[i].children != null) {
                     this.isBomChildren(element.children[i], id);
                 }
                 // console.log("element.id",element.children[i].id)
-                console.log("id",id)
-                if(element.children[i].id === id) {
+                console.log("id", id)
+                if (element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
 
                     return
@@ -253,7 +251,7 @@ export default {
 
         getTableData() { // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
-            if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE){
+            if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE) {
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
             }
@@ -272,11 +270,11 @@ export default {
                 is_authority: 1,
                 page_size: this.pageSize
             }
-            
+
             Core.Api.Item.list(Core.Util.searchFilter(params)).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
-                this.tableData = res.list;  
+                this.tableData = res.list;
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
@@ -302,7 +300,7 @@ export default {
         },
 
         handleCartAdd(item) { // 添加到购物车
-          let _this = this;
+            let _this = this;
             console.log('handleCartAdd item:', item)
             if (item.set_id && item.attr_list.length > 1) {
                 this.routerChange('detail', item)
@@ -347,7 +345,7 @@ export default {
             let form = Core.Util.deepCopy(this.searchForm);
 
             // 编码
-            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE){
+            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE) {
                 form.code = form.name;
                 form.name = "";
             }
@@ -385,32 +383,39 @@ export default {
 .ant-form {
     width: 100%;
 }
+
 .ant-form-item {
     margin: 0;
 }
+
 .ant-input {
     border: none;
     border-radius: 0px !important;
     border-bottom: 1px solid #d9d9d9;
 }
+
 .ant-input:hover {
     border-color: #fff;
     border-bottom-color: #d9d9d9;
 }
-.ant-input:focus{
+
+.ant-input:focus {
     border-color: #fff;
     border-bottom-color: #d9d9d9;
     box-shadow: none;
     outline: 0;
 }
+
 #PurchaseItemList {
     background-color: #fff;
     border-radius: 6px;
     overflow: hidden;
+
     .item-header-container {
         .ant-tabs.ant-tabs-top {
             .ant-tabs-nav {
                 margin-bottom: 0;
+
                 .ant-tabs-nav-list {
                     .ant-tabs-tab {
                         padding: 18px 12px;
@@ -418,71 +423,86 @@ export default {
                         line-height: 22px;
                         color: #1A1A1A;
                         margin-left: 44px;
+
                         &.ant-tabs-tab-active .ant-tabs-tab-btn {
                             color: #1A1A1A;
                         }
                     }
+
                     .ant-tabs-ink-bar {
                         background: #000;
                     }
                 }
+
                 .ant-tabs-extra-content {
                     .fcc();
                     padding-right: 44px;
+
                     .search {
 
                         height: 36px;
                         background: #F5F5F5;
                         border-radius: 20px;
                         border: 0;
+
                         .icon.i_search {
                             font-size: 16px;
                             padding-right: 4px;
                         }
+
                         .icon.i_close_b {
                             font-size: 14px;
                             color: rgba(0, 0, 0, 0.25);
+
                             &:hover {
                                 color: rgba(0, 0, 0, 0.45);
                             }
                         }
+
                         .ant-input {
                             background-color: transparent;
                             font-size: 14px;
                         }
                     }
-                    .search_select{
-                        .ant-select-selector{
+
+                    .search_select {
+                        .ant-select-selector {
                             background: #F5F5F5;
                             padding-top: 2px;
                             height: 36px;
                             width: 80px;
-                            border-radius: 20px 0px 0px 20px ;
+                            border-radius: 20px 0px 0px 20px;
                         }
                     }
-                    .search_input{
+
+                    .search_input {
                         background: #F5F5F5;
                         height: 36px;
 
-                        border-radius: 0px 20px 20px 0px ;
-                        .ant-input-affix-wrapper{
+                        border-radius: 0px 20px 20px 0px;
+
+                        .ant-input-affix-wrapper {
                             background: #F5F5F5;
                             height: 36px;
                             width: 300px;
-                            border-radius: 0px 20px 20px 0px ;
+                            border-radius: 0px 20px 20px 0px;
                         }
-                        .ant-input{
+
+                        .ant-input {
                             width: 300px;
                             background: #F5F5F5;
                         }
                     }
+
                     .popover {
                         margin-left: 20px;
+
                         i.icon {
                             font-size: 20px;
                             color: #2B2B2B;
                         }
                     }
+
                     .add {
                         margin-left: 20px;
                     }
@@ -490,24 +510,29 @@ export default {
             }
         }
     }
+
     .item-content-container {
         display: flex;
         width: 100%;
+
         .category-container {
             width: 260px;
             box-sizing: border-box;
             padding-left: 44px;
             padding-bottom: 44px;
+
             .category-title {
                 font-size: 24px;
                 font-weight: 500;
                 color: #111111;
                 line-height: 28px;
                 margin: 100px 0 33px;
+
                 &:hover {
                     color: @primary !important;
                 }
             }
+
             .category-content {
                 .ant-menu.ant-menu-root {
                     border-right: 0;
@@ -515,16 +540,20 @@ export default {
                 }
             }
         }
+
         .item-content {
             width: calc(~'100% - 260px');
+
             .switch-btn {
                 padding: 25px 44px 0;
                 text-align: right;
             }
+
             .list-container {
                 margin: 32px 22px 0;
                 display: flex;
                 flex-wrap: wrap;
+
                 .list-item {
                     cursor: pointer;
                     margin: 0 22px 60px;
@@ -533,34 +562,41 @@ export default {
                     font-weight: 500;
                     font-size: 14px;
                     line-height: 16px;
+
                     .cover {
                         width: 180px;
                         height: 180px;
                         background-color: #fff;
                         .fcc();
                         overflow: hidden;
+
                         img {
                             width: 100%;
                             height: 100%;
                             object-fit: scale-down;
                         }
                     }
+
                     .sub {
                         .ell();
                         margin: 15px 0 5px;
                         font-size: 12px;
                         line-height: 14px;
                     }
+
                     .name {
                         .ell();
                         padding-top: 5px;
                         border-top: 1px solid #E6EAEE;
                     }
-                    .desc, .price {
+
+                    .desc,
+                    .price {
                         margin: 5px 0;
                         color: #757575;
                         font-weight: 400;
                     }
+
                     .btn {
                         width: 100%;
                         height: 40px;
@@ -569,6 +605,7 @@ export default {
                         margin-top: 22px;
                         font-weight: 500;
                         color: @primary;
+
                         &:hover {
                             background-color: @primary_l !important;
                         }
@@ -576,19 +613,25 @@ export default {
                 }
 
             }
+
             .paging-container {
                 padding-right: 44px;
             }
 
         }
+
         .item-content-empty {
             .flex(center);
         }
+
         &.full-content {
-            .item-content, .item-content-empty {
+
+            .item-content,
+            .item-content-empty {
                 width: 100%;
             }
         }
+
         .bom-content {
             padding: 48px;
             width: 100%;
@@ -596,12 +639,15 @@ export default {
 
     }
 }
+
 .shop-cart-brief-content {
     visibility: hidden;
+
     .ant-popover-arrow {
         display: none;
     }
 }
+
 .shop-cart-brief {
     box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
     visibility: visible;
@@ -610,6 +656,7 @@ export default {
     right: 56px;
     top: 126px;
     padding: 22px;
+
     .icon.i_close {
         cursor: pointer;
         position: absolute;
@@ -618,67 +665,81 @@ export default {
         top: 22px;
         right: 22px;
     }
+
     .tip {
         font-size: 15px;
         color: #272727;
         line-height: 18px;
         margin-bottom: 22px;
+
         .icon.i_check_b {
             color: #37D347;
             font-size: 12px;
             margin-right: 10px;
         }
     }
+
     .item {
         display: flex;
+
         .cover {
             width: 78px;
             height: 78px;
             object-fit: cover;
             margin-right: 20px;
         }
+
         .desc {
             width: calc(~'100% - 78px - 20px');
             display: flex;
             flex-direction: column;
             font-size: 14px;
             line-height: 16px;
+
             p {
                 font-weight: 500;
                 line-height: 16px;
                 margin: 0;
             }
+
             span {
                 font-weight: 400;
                 color: #757575;
                 margin: 10px 0 8px;
             }
+
             .price {
                 font-weight: 400;
                 color: #111111;
             }
         }
     }
+
     .btns {
         // margin-top: 52px;
         margin-top: 30px;
+
         .btn {
             width: 172px;
             height: 55px;
             border-radius: 12px;
             font-size: 15px;
+
             &.ghost {
                 background: #FFFFFF;
                 border: 1px solid #E5E8EB;
                 color: #111111;
+
                 &:hover {
                     background: rgba(17, 17, 17, 0.1);
                 }
             }
+
             &.black {
                 background: #111111;
                 border: 1px solid #111111;
                 color: #FFFFFF;
+
                 &:hover {
                     background: rgba(17, 17, 17, 0.9);
                 }
@@ -690,10 +751,9 @@ export default {
         opacity: 1;
         display: block;
     }
+
     &.hidden {
         opacity: 0;
         display: none;
     }
-}
-
-</style>
+}</style>

@@ -64,7 +64,7 @@
                 </div>
                 <div class="info-item">
                     <div class="key">{{ $t('r.arrival_time') }}</div>
-                    <div class="value">{{$Util.timeFilter(detail.arrival_time)}}</div>
+                    <div class="value">{{$Util.timeFilter(detail?.vehicle?.arrival_time?(detail?.vehicle?.arrival_time):detail.arrival_time)}}</div>
                 </div>
             </a-col>
             <a-col :xs='24' :sm='24' :lg='12' :xl='6' :xxl='6' class="info-block">
