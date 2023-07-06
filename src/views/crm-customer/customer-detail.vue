@@ -1022,10 +1022,10 @@ export default {
         },
         // 保存意向程度修改
         saveIntent(params) {
-            if (!this.intentSea) {
+            // 无意向-调整理由为必填
+            if (params.intention == '10'&& !this.intentSea) {
                 return this.$message.warning('请填写调整理由！')
             }
-
             Core.Api.CRMTrackRecord.save({
                 ...params
             }).then(res => {
