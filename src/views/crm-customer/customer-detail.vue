@@ -301,6 +301,11 @@
                                     <template v-if="$2.type == 0.1">
                                         <span class="content-one">{{ $Util.timeFilter(detail.create_time) }}</span>
                                     </template>
+                                    <template v-else-if="$2.type == 0.2">
+                                        <a-tag v-for="(item, index) in detail.label_list" :key="index" color="blue" class="customer-tag">{{ lang ===
+                "zh" ? item.label : item.label_en }}</a-tag>
+                                    </template>
+
                                     <template v-else-if="$2.type == 1">
                                         <a-input v-model:value="msgForm[$2.value]" style="width: 80%; font-size: 14px;"
                                             :placeholder="$t('crm_c.be_added')" @blur="msgChange($2.value)"
@@ -646,7 +651,7 @@
                         </a-select>
                     </span>
                 </a-col>
-                <a-col :md="24" class='intent-input required'>
+                <a-col :md="24" class='intent-input ' :class="{'required':intentionName == '10'}">
                     <span class="key">调整理由:</span>
                     <span class="value">
                         <a-input v-model:value="intentSea" placeholder="输入理由" />
@@ -804,6 +809,7 @@ export default {
                         { key: "来源", value: 'source_type', type: 0, onFocus: false },
                         { key: "创建时间", value: 'create_time', type: 0.1, onFocus: undefined },
                         { key: "意向车型", value: 'pre_order_car_type', type: 2, onFocus: false },
+                        { key: "状态", value: 'tab_type', type: 0.2, onFocus: undefined },
                     ]
                 },
                 {
