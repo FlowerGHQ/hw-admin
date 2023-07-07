@@ -302,8 +302,11 @@
                                         <span class="content-one">{{ $Util.timeFilter(detail.create_time) }}</span>
                                     </template>
                                     <template v-else-if="$2.type == 0.2">
-                                        <a-tag v-for="(item, index) in detail.label_list" :key="index" color="blue" class="customer-tag">{{ lang ===
-                "zh" ? item.label : item.label_en }}</a-tag>
+                                        <div class="content-one">
+                                            <a-tag class="customer-tag" v-for="(item, index) in detail.label_list" :key="index" color="blue"
+                                              >{{ lang ===
+                                                    "zh" ? item.label : item.label_en }}</a-tag>
+                                        </div>
                                     </template>
 
                                     <template v-else-if="$2.type == 1">
@@ -651,7 +654,7 @@
                         </a-select>
                     </span>
                 </a-col>
-                <a-col :md="24" class='intent-input ' :class="{'required':intentionName == '10'}">
+                <a-col :md="24" class='intent-input ' :class="{ 'required': intentionName == '10' }">
                     <span class="key">调整理由:</span>
                     <span class="value">
                         <a-input v-model:value="intentSea" placeholder="输入理由" />
@@ -1029,7 +1032,7 @@ export default {
         // 保存意向程度修改
         saveIntent(params) {
             // 无意向-调整理由为必填
-            if (params.intention == '10'&& !this.intentSea) {
+            if (params.intention == '10' && !this.intentSea) {
                 return this.$message.warning('请填写调整理由！')
             }
             Core.Api.CRMTrackRecord.save({
