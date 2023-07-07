@@ -123,7 +123,7 @@
             <div class="title">{{ $t('r.customer') }}</div>
         </div>
         <div class="form-content">
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('r.associated_customers') }}</div>
                 <div class="value">
                     <a-select :placeholder="$t('r.select_customer')" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
@@ -138,26 +138,26 @@
                     <a-button type="link" @click="getCustomerList('refresh')">{{ $t('r.refresh') }}</a-button>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('r.customer_phone') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.customer_phone" :placeholder="$t('r.enter_phone')"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('r.email') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.customer_email" :placeholder="$t('r.enter_email')"/>
                 </div>
             </div>
-            <div class="form-item required">
+            <div class="form-item">
                 <div class="key">{{ $t('r.address') }}</div>
                 <div class="value">
 <!--                    <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>-->
                     <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
                 </div>
             </div>
-            <div class="form-item" :class="form.channel == 1 ? 'required' : ''">
+            <div class="form-item">
                 <div class="key">{{ $t('r.specific_address') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.customer_address" :placeholder="$t('r.enter_specific')"/>
@@ -366,6 +366,7 @@ export default {
                 form.customer_name = ''
                 form.customer_phone = ''
             }
+            
             await Core.Api.Repair[apiName]({
                 ...form,
                 ...area,
@@ -437,14 +438,14 @@ export default {
             //     return this.$message.warning(this.$t('def.enter'))
             // }
             if (form.id && form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                if (!form.customer_id) {
-                    console.log('form.customer_id');
-                    return this.$message.warning(this.$t('def.enter'))
-                }
-                if (form.channel == 1 && !form.customer_address) {
-                    console.log('form.customer_address');
-                    return this.$message.warning(this.$t('def.enter'))
-                }
+                // if (!form.customer_id) {
+                //     console.log('form.customer_id');
+                //     return this.$message.warning(this.$t('def.enter'))
+                // }
+                // if (form.channel == 1 && !form.customer_address) {
+                //     console.log('form.customer_address');
+                //     return this.$message.warning(this.$t('def.enter'))
+                // }
                 // if (!form.repair_user_id) {
                 //     this.$message.warning('请选择工单负责人')
                 // }
@@ -452,17 +453,17 @@ export default {
                     console.log('form.customer_name');
                     return this.$message.warning(this.$t('def.enter'))
                 }
-                if (!form.customer_phone) {
-                    console.log('form.customer_phone');
-                    return this.$message.warning(this.$t('def.enter'))
-                }
-                if (!form.customer_email) {
-                    console.log('form.customer_email');
-                    return this.$message.warning(this.$t('def.enter'))
-                }
-                if (!this.areaMap.country && !this.areaMap.city) {
-                    return this.$message.warning(this.$t('def.enter'))
-                }
+                // if (!form.customer_phone) {
+                //     console.log('form.customer_phone');
+                //     return this.$message.warning(this.$t('def.enter'))
+                // }
+                // if (!form.customer_email) {
+                //     console.log('form.customer_email');
+                //     return this.$message.warning(this.$t('def.enter'))
+                // }
+                // if (!this.areaMap.country && !this.areaMap.city) {
+                //     return this.$message.warning(this.$t('def.enter'))
+                // }
             }
             return 1
         },
