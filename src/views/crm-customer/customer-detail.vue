@@ -1,7 +1,7 @@
 <template>
     <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('crm_c.detail') }}{{ loading }}
+            <div class="title-area">{{ $t('crm_c.detail') }}
                 <!--  <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
                 <!--      {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
                 <!--  </a-tag>-->
@@ -503,7 +503,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">{{$t('crm_c_p.car_purchase_focus')}}</span>
+                            <span class="title">购车关注点</span>
                         </div>
                     </div>
                     <div class="tabBox">
@@ -513,7 +513,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">{{$t('crm_c_p.car_purchase_habit')}}</span>
+                            <span class="title">购车习惯</span>
                         </div>
                     </div>
 
@@ -526,7 +526,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">{{$t('crm_c_p.car_purchase_concern')}}</span>
+                            <span class="title">购车顾虑</span>
                         </div>
                     </div>
 
@@ -804,7 +804,7 @@ export default {
                     5(其他驾驶工具)一个地方有两个输入框的 
                 */
                 {
-                    title: 'crm_c.information',
+                    title: '基本信息',
                     list: [
                         { key: "名称", value: 'name', type: 1, onFocus: undefined },
                         { key: "电话", value: 'phone', type: 0, onFocus: undefined },
@@ -818,7 +818,7 @@ export default {
                     ]
                 },
                 {
-                    title: 'crm_c.use_car_info',
+                    title: '用车信息',
                     list: [
                         { key: "用车城市", value: 'group_id', type: 2.2, onFocus: false },
                         { key: "是否有摩托车", value: 'moto_owner', type: 2.1, onFocus: false },
@@ -830,7 +830,7 @@ export default {
                 },
 
                 {
-                    title: 'other_info',
+                    title: '其他信息',
                     list: [
                         { key: "是否是KOL", value: 'flag_kol', type: 2.1, onFocus: false },
                         { key: "是否寻求合作", value: 'flag_seek_cooperation', type: 2.1, onFocus: false },
