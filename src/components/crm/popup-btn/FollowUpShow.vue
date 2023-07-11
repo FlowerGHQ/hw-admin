@@ -3,7 +3,7 @@
     <slot><i class="icon i_add"></i> {{ btnText }}</slot>
   </a-button>
   <template class="modal-container">
-    <template v-if="$i18n.locale === 'zh'">
+    <template v-if="isMoreCss">
       <a-drawer :width="500" :title="$t('crm_t.add_track_record')" :visible="TrackRecordShow"
         @close="handleTrackRecordClose" :closable="false">
         <template #extra>
@@ -128,7 +128,7 @@
         </div>
       </a-drawer>
     </template>
-    <template v-if="$i18n.locale === 'en'">
+    <template v-else>
       <a-modal v-model:visible="TrackRecordShow" :title="$t('crm_t.add_track_record')"
         :after-close="handleTrackRecordClose">
         <!-- 跟进方式 -->
@@ -296,6 +296,9 @@ export default {
     },
     groupId: {
       type: Number
+    },
+    isMoreCss: {
+      type: Boolean
     }
   },
   data() {

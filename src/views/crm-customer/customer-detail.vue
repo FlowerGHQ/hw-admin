@@ -1,7 +1,7 @@
 <template>
     <div id="CustomerDetail" class="edit-container">
         <div class="title-container">
-            <div class="title-area">{{ $t('crm_c.detail') }}
+            <div class="title-area">{{ $t('crm_c.detail') }}{{ loading }}
                 <!--  <a-tag v-if="$auth('ADMIN')" :color='detail.status ? "green" : "red"'>-->
                 <!--      {{ detail.status ? $t('def.enable_ing') : $t('def.disable_ing') }}-->
                 <!--  </a-tag>-->
@@ -10,10 +10,13 @@
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
                     <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
-                    <a-button @click="routerChange('edit')"
+                    <!-- <a-button @click="routerChange('edit')"
                         v-if="$auth('crm-customer.save') && (lang === 'en' || detail.country !== '中国')">{{
                             $t('n.edit')
-                        }}</a-button>
+                        }}</a-button> -->
+                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && !isMoreCss">{{
+                        $t('n.edit')
+                    }}</a-button>
                     <!-- 领取 -->
                     <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
                         {{ $t('crm_c.obtain') }}
@@ -48,8 +51,8 @@
             </div>
         </div>
         <div class="gray-panel">
-            <!-- 顶部添加基本信息（仅英文显示一个样式） -->
-            <template v-if="lang === 'en' || detail.country !== '中国'">
+            <!-- 顶部添加基本信息（仅英文显示一个样式）detail.source_type === 5 || detail.source_type === 30 || detail.source_type === 31 || detail.country !== '中国' -->
+            <template v-if="!isMoreCss">
                 <div class="panel-content desc-container">
                     <div class="desc-title">
                         <div class="title-area">
@@ -245,7 +248,7 @@
                     <template v-for="($1, index1) in msg" :key="index">
                         <div class="desc-zh-title">
                             <div class="title-area">
-                                <span class="title">{{ $1.title }}</span>
+                                <span class="title">{{ $t($1.title) }}</span>
                             </div>
                         </div>
 
@@ -279,7 +282,6 @@
                                                         $i18n.locale) }}
                                             </span>
 
-
                                             <span style="min-width: 80px; display: inline-block;" v-else>{{
                                                 msgForm[$2.value]
                                             }}</span>
@@ -303,8 +305,8 @@
                                     </template>
                                     <template v-else-if="$2.type == 0.2">
                                         <div class="content-one">
-                                            <a-tag class="customer-tag" v-for="(item, index) in detail.label_list" :key="index" color="blue"
-                                              >{{ lang ===
+                                            <a-tag class="customer-tag" v-for="(item, index) in detail.label_list"
+                                                :key="index" color="blue">{{ lang ===
                                                     "zh" ? item.label : item.label_en }}</a-tag>
                                         </div>
                                     </template>
@@ -501,7 +503,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">购车关注点</span>
+                            <span class="title">{{$t('crm_c_p.car_purchase_focus')}}</span>
                         </div>
                     </div>
                     <div class="tabBox">
@@ -511,7 +513,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">购车习惯</span>
+                            <span class="title">{{$t('crm_c_p.car_purchase_habit')}}</span>
                         </div>
                     </div>
 
@@ -524,7 +526,7 @@
 
                     <div class="desc-zh-title">
                         <div class="title-area">
-                            <span class="title">购车顾虑</span>
+                            <span class="title">{{$t('crm_c_p.car_purchase_concern')}}</span>
                         </div>
                     </div>
 
@@ -546,7 +548,7 @@
                             <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"
                                 :detail="detail" ref="CRMTrackRecord">
                                 <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id"
-                                    :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"
+                                    :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :isMoreCss="isMoreCss"
                                     :groupId="detail.group_id" @submit="getCRMTrackRecord" />
                             </CRMTrackRecord>
                         </a-tab-pane>
@@ -802,7 +804,7 @@ export default {
                     5(其他驾驶工具)一个地方有两个输入框的 
                 */
                 {
-                    title: '基本信息',
+                    title: 'crm_c.information',
                     list: [
                         { key: "名称", value: 'name', type: 1, onFocus: undefined },
                         { key: "电话", value: 'phone', type: 0, onFocus: undefined },
@@ -816,7 +818,7 @@ export default {
                     ]
                 },
                 {
-                    title: '用车信息',
+                    title: 'crm_c.use_car_info',
                     list: [
                         { key: "用车城市", value: 'group_id', type: 2.2, onFocus: false },
                         { key: "是否有摩托车", value: 'moto_owner', type: 2.1, onFocus: false },
@@ -828,7 +830,7 @@ export default {
                 },
 
                 {
-                    title: '其他信息',
+                    title: 'other_info',
                     list: [
                         { key: "是否是KOL", value: 'flag_kol', type: 2.1, onFocus: false },
                         { key: "是否寻求合作", value: 'flag_seek_cooperation', type: 2.1, onFocus: false },
@@ -876,6 +878,15 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        // 判断新旧样式--显示
+        isMoreCss() {
+            let { country, source_type } = this.detail;
+            if (source_type === 5 || source_type === 31 || source_type === 30 || country !== '中国') {
+                return false;
+            } else {
+                return true;
+            }
         },
 
         // 查找当前标签的onFocus
