@@ -1312,6 +1312,7 @@ const messages = {
             phone: '电话',
             gender: '性别',
             birthday: '生日',
+            indu:'行业',
             industry: '客户行业',
             nationality: '国籍',
             hobby: '爱好',
@@ -1359,7 +1360,6 @@ const messages = {
             test_drive_intent: '试驾意向',
             group: '区域',
             transfer_success: "转让成功",
-            information: '基本信息',
             client_information: '客户信息',
             business_information: '商机信息',
             data_access: '数据权限',
@@ -1568,6 +1568,7 @@ const messages = {
             flag_kol: '是否是KOL',
             moto_owner: '是否有摩托车',
             driver_license: '是否有驾照',
+            other_driver_tools:'其他驾驶工具'
         },
         crm_refund: {
             list: '退款单列表',
@@ -3564,6 +3565,7 @@ const messages = {
             phone: 'Phone',
             gender: 'Gender',
             birthday: 'Birthday',
+            indu:'Industry',
             industry: 'Customer Industry',
             nationality: 'Nationality',
             hobby: 'Hobby',

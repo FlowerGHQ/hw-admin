@@ -10,10 +10,13 @@
                 <template v-if="detail.status === STATUS.POOL">
                     <!-- 编辑 -->
                     <!-- <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save')">{{ $t('n.edit') }}</a-button> -->
-                    <a-button @click="routerChange('edit')"
+                    <!-- <a-button @click="routerChange('edit')"
                         v-if="$auth('crm-customer.save') && (lang === 'en' || detail.country !== '中国')">{{
                             $t('n.edit')
-                        }}</a-button>
+                        }}</a-button> -->
+                    <a-button @click="routerChange('edit')" v-if="$auth('crm-customer.save') && !isMoreCss">{{
+                        $t('n.edit')
+                    }}</a-button>
                     <!-- 领取 -->
                     <a-button type="primary" @click="handleObtain" v-if="$auth('crm-customer.obtain')">
                         {{ $t('crm_c.obtain') }}
@@ -48,8 +51,8 @@
             </div>
         </div>
         <div class="gray-panel">
-            <!-- 顶部添加基本信息（仅英文显示一个样式） -->
-            <template v-if="lang === 'en' || detail.country !== '中国'">
+            <!-- 顶部添加基本信息（仅英文显示一个样式）detail.source_type === 5 || detail.source_type === 30 || detail.source_type === 31 || detail.country !== '中国' -->
+            <template v-if="!isMoreCss">
                 <div class="panel-content desc-container">
                     <div class="desc-title">
                         <div class="title-area">
@@ -245,7 +248,7 @@
                     <template v-for="($1, index1) in msg" :key="index">
                         <div class="desc-zh-title">
                             <div class="title-area">
-                                <span class="title">{{ $1.title }}</span>
+                                <span class="title">{{ $t($1.title) }}</span>
                             </div>
                         </div>
 
@@ -279,7 +282,6 @@
                                                         $i18n.locale) }}
                                             </span>
 
-
                                             <span style="min-width: 80px; display: inline-block;" v-else>{{
                                                 msgForm[$2.value]
                                             }}</span>
@@ -303,8 +305,8 @@
                                     </template>
                                     <template v-else-if="$2.type == 0.2">
                                         <div class="content-one">
-                                            <a-tag class="customer-tag" v-for="(item, index) in detail.label_list" :key="index" color="blue"
-                                              >{{ lang ===
+                                            <a-tag class="customer-tag" v-for="(item, index) in detail.label_list"
+                                                :key="index" color="blue">{{ lang ===
                                                     "zh" ? item.label : item.label_en }}</a-tag>
                                         </div>
                                     </template>
@@ -546,7 +548,7 @@
                             <CRMTrackRecord :targetId="id" :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"
                                 :detail="detail" ref="CRMTrackRecord">
                                 <FollowUpShow :btnText="$t('crm_c.add_follow_records')" :targetId="detail.id"
-                                    :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER"
+                                    :targetType="Core.Const.CRM_TRACK_RECORD.TARGET_TYPE.CUSTOMER" :isMoreCss="isMoreCss"
                                     :groupId="detail.group_id" @submit="getCRMTrackRecord" />
                             </CRMTrackRecord>
                         </a-tab-pane>
@@ -876,6 +878,15 @@ export default {
     computed: {
         lang() {
             return this.$store.state.lang
+        },
+        // 判断新旧样式--显示
+        isMoreCss() {
+            let { country, source_type } = this.detail;
+            if (source_type === 5 || source_type === 31 || source_type === 30 || country !== '中国') {
+                return false;
+            } else {
+                return true;
+            }
         },
 
         // 查找当前标签的onFocus

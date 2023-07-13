@@ -1697,35 +1697,35 @@ let Const = {
 			'-1': { key: 30, zh: '否',en: 'NO' ,value:-1},
         },
         INTENTION:{            
-			'10': { key: 10, zh: '无意向(不购买/30天3次无效沟通)',en: ''},
-			'20': { key: 20, zh: '有意向(了解产品（体验、服务、性能、功能、权益、政策)，30天内能决策。)',en: '' },
-			'30': { key: 30, zh: '高意向(完成产品体验并保持购买意向，14天内能决策)',en: '' },
-			'40': { key: 40, zh: 'Hot(主动提出支付意向金,3天内能决策)',en: '' },
+			'10': { key: 10, zh: '无意向(不购买/30天3次无效沟通)',en: 'Unintentional communication (no purchase / 3 invalid communication times in 30 days)'},
+			'20': { key: 20, zh: '有意向(了解产品（体验、服务、性能、功能、权益、政策)，30天内能决策。)',en: 'Intentional (understand the product (experience, service, performance, features, benefits, policies), and be able to make a decision within 30 days. )' },
+			'30': { key: 30, zh: '高意向(完成产品体验并保持购买意向，14天内能决策)',en: 'High intent (complete the product experience and maintain purchase intent, and make a decision within 14 days)' },
+			'40': { key: 40, zh: 'Hot(主动提出支付意向金,3天内能决策)',en: 'Hot (offer to pay the intention fee, can make a decision within 3 days)' },
         },
         INTENTION_STATUS:{            
-			'10': { key: 10, zh: '无意向',en: ''},
-			'20': { key: 20, zh: '有意向',en: '' },
-			'30': { key: 30, zh: '高意向',en: '' },
-			'40': { key: 40, zh: 'Hot',en: '' },
+			'10': { key: 10, zh: '无意向',en: 'Unintentional'},
+			'20': { key: 20, zh: '有意向',en: 'Intentional' },
+			'30': { key: 30, zh: '高意向',en: 'High intent' },
+			'40': { key: 40, zh: 'Hot',en: 'Hot' },
         },
         SEX:{            
 			'1': { key: 1, zh: '男',en: 'M'},
 			'2': { key: 2, zh: '女',en: 'W' },
         },
         RidingExperience:{
-            '-1': { key: -1, zh: '无经验',en: '' },            
-			'1': { key: 1, zh: '0-3年',en: ''},
-			'2': { key: 2, zh: '3-5年',en: '' },
-			'3': { key: 3, zh: '5年及以上',en: '' },
+            '-1': { key: -1, zh: '无经验',en: 'Inexperienced' },            
+			'1': { key: 1, zh: '0-3年',en: '0-3 years'},
+			'2': { key: 2, zh: '3-5年',en: '3-5 years' },
+			'3': { key: 3, zh: '5年及以上',en: '5 years and above' },
         },
         VehicleType:{            
-			'1': { key: 1, zh: 'SENMENTI 0',en: ''},
-			'2': { key: 2, zh: 'SENMENTI X',en: '' }, 
+			'1': { key: 1, zh: 'SENMENTI 0',en: 'SENMENTI 0'},
+			'2': { key: 2, zh: 'SENMENTI X',en: 'SENMENTI X' }, 
         },
         // 其他驾驶工具
         otherTool:{
-			'1': { key: 1, zh: '油车',en: ''},
-			'2': { key: 2, zh: '电车',en: '' }, 
+			'1': { key: 1, zh: '油车',en: 'Oil trucks'},
+			'2': { key: 2, zh: '电车',en: 'tram' }, 
         }
     },
     CRM_ORDER_INCOME: {
