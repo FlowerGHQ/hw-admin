@@ -1251,6 +1251,7 @@ const messages = {
             edit_name: '编辑名称',
             new_sub_category: '新增子分类',
             category_name: '分类名称',
+            category_name_en: '分类英文名',
             sure_delete_category_a: '确定要删分类',
             sure_delete_category_b: '吗？',
             type: '类型',
@@ -3516,6 +3517,7 @@ const messages = {
             edit_name: 'Edit Name',
             new_sub_category: 'New Subclassification',
             category_name: 'Classification Name',
+            category_name_en: 'Classification English Name',
             sure_delete_category_a: 'Sure To Delete The Classification',
             sure_delete_category_b: 'Are You Sure?',
             type: 'type'
