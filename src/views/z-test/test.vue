@@ -1,10 +1,12 @@
 <template>
     <div>
-        <div id="container" class="chart"></div>
+        <!-- <div id="container" class="chart"></div> -->
 
-        <a-input v-model:value="testValue" v-focus placeholder="Basic usage" />
+        <!-- <a-input v-model:value="testValue" v-focus placeholder="Basic usage" /> -->
 
-        <a-button @click="btns">点击</a-button>
+        <!-- <a-button @click="btns">点击</a-button> -->
+        <a-textarea v-model:value="frame_uid" placeholder="Basic usage" :rows="10" />
+        <a-button @click="submit">提交</a-button>
     </div>       
 </template>
 
@@ -14,10 +16,15 @@ import { Chart } from "@antv/g2";
 
 const chart = ref(null);
 const testValue = ref("")
-
+const frame_uid = ref(undefined)
 onMounted(() => {
     // charts()
 });
+
+const submit = () => {
+    const uidList = frame_uid.value.trim().split('\n').map(str => str.trim());;
+    console.log('uidList', uidList);
+}
 
 // 试验charts
 const charts = () => {

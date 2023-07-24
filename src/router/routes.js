@@ -2233,7 +2233,7 @@ const routes = [
         name:'test',
         component: () => import('../views/z-test/test.vue'),
         children: []
-    }
+    },
 
 ];
 
