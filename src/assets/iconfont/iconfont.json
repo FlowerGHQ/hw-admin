@@ -578,6 +578,13 @@
       "font_class": "user",
       "unicode": "e6b2",
       "unicode_decimal": 59058
+    },
+    {
+      "icon_id": "15419387",
+      "name": "门店设置 base/setting/shop ",
+      "font_class": "gongyingshang",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
     }
   ]
 }
