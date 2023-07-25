@@ -39,15 +39,6 @@ const routes = [
 	        title_en: 'Login',
         }
     },
-    // { // demo
-    //     path: '/test',
-    //     component: () => import ('@/views/test/index.vue'),
-    //     meta: {
-    //         hidden: true,
-    //         title: '测试',
-	//         title_en: 'Test',
-    //     }
-    // },
     { // 看板
         path: '/dashboard',
         component: Layout,
@@ -1610,10 +1601,8 @@ const routes = [
                 }
             },
         ]
-    },
-
-    // CRM
-	{ // 客户管理
+    },    
+	{ // 数据
 		path: '/crm-dashboard',
 		component: Layout,
 		redirect: '/crm-dashboard/dashboard',
@@ -1649,7 +1638,7 @@ const routes = [
 			// },
 		]
 	},
-	{ // 客户管理
+	{ // 客户
 		path: '/crm-customer',
 		component: Layout,
 		redirect: '/crm-customer/customer-list',
@@ -1998,7 +1987,33 @@ const routes = [
             },
         ]
     },
-	{ // CRM设置
+    /*----  零售业务新添加在CRM中的 ----*/
+    // 车辆管理
+    {
+        path:'/retail-vehicle',
+        component: Layout, 
+        redirect: '/retail-vehicle/vehicle-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '车辆管理',
+            title_en: 'Vehicle Management',
+            icon: 'i_setting',
+        },       
+        children: [
+            {
+                path: 'vehicle-list',
+                name: 'vehicleList',
+                component: () => import('@/views/CRM/Vehicle/list.vue'),
+                meta: {
+                    title: '车辆管理',
+                    title_en: 'Vehicle Management',
+                    icon: 'i_setting',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            }
+        ]
+    },
+	{ // 系统设置
 		path: '/crm-setting',
 		component: Layout,
 		redirect: '/crm-setting/setting-list',
@@ -2233,8 +2248,7 @@ const routes = [
         name:'test',
         component: () => import('../views/z-test/test.vue'),
         children: []
-    }
-
+    },
 ];
 
 export default routes;
@@ -2310,4 +2324,3 @@ export const SIDER = {
     AGENT,
     STORE,
 }
-console.log('SIDER:', SIDER)
