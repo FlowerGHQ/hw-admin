@@ -518,7 +518,7 @@ const Util = {
 
     /* =============== 维修单 ================ */
     repairStatusFilter(val, to = 'key') {
-        const MAP = Const.REPAIR.STATUS_MAP
+        const MAP = Const.REPAIR.NEW_STATUS_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
     },
@@ -539,6 +539,16 @@ const Util = {
     },
     repairServiceFilter(val, to = 'key') {
         const MAP = Const.REPAIR.SERVICE_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairPayMethodFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.PAYMETHOD_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    repairCategoryTypeFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.CATEGORY_TYPE_MAP
         let value = MAP[val] || {}
         return value[to] || '-'
     },

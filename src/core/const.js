@@ -287,14 +287,29 @@ let Const = {
         SERVICE_TYPE: {
             IN_REPAIR_TIME: 1,
             OUT_REPAIR_TIME: 2,
+            SPECIAL_REPAIR_TIME: 3,
         },
         SERVICE_TYPE_LIST: [
             { zh: '保内', en: 'under warranty', value: 1 },
             { zh: '保外', en: 'out of warranty', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
-            '1' : { zh: '保内', en: 'Under warranty'},
-            '2' : { zh: '保外', en: 'Out of warranty'},
+            '1' : { zh: '保内', en: 'Under warranty', color: 'green'},
+            '2' : { zh: '保外', en: 'Out of warranty', color: 'red'},
+            '3' : { zh: '特殊', en: 'Special', color: 'yellow'},
+        },
+        // 赔付方式
+        PAYMETHOD_TYPE_MAP: {
+            '1' : { zh: '赔付配件', en: 'Pay The Spare Parts'},
+            '2' : { zh: '赔付至账户', en: 'Pay The Claim To The Account'},
+        },
+        // 工单类型
+        CATEGORY_TYPE_MAP: {
+            '1' : { zh: '维修', en: 'Repair'},
+            '2' : { zh: '换车', en: 'Transfer'},
+            '2' : { zh: '开箱损', en: 'Unpacking Damage'},
+            '2' : { zh: '电池维修', en: 'Battery Maintenance'},
+            '2' : { zh: '质保', en: 'Quality Guarantee'},
         },
         // 维修方式
         CHANNEL_LIST: [
@@ -365,6 +380,12 @@ let Const = {
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
             '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit'},
             '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
+        },
+        NEW_STATUS_MAP: {
+            '30': { key: 30, color: 'yellow', zh: '待审核', en: 'Awaiting Audit'},
+            '90': { key: 90, color: 'green', zh: '通过', en: 'Passed'},
+	        '-30': { key: -30, color: 'red', zh: '不通过', en: 'Rejected'},
+            '-100': { key: -100, color: 'gray', zh: '已取消', en: 'Cancelled'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {

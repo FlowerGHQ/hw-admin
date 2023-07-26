@@ -371,6 +371,9 @@ const messages = {
             Percentage_exceeds: '抵扣百分比不能超出百分之百',
             Amount_exceeds: '抵扣金额不能超出总金额',
             check_attachment: '请上传附件！',
+            payment_method: '赔付方式',
+            car_type: '车型',
+            category_type: '工单类型',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -1149,7 +1152,10 @@ const messages = {
             enter_sn: '请输入序号',
             advanced_search: '高级搜索',
             stow: '收起',
-            special: '特殊'
+            special: '特殊',
+            enter_customer_name: '请输入客户姓名',
+            enter_item_name: '请输入商品名称',
+
         },
         pop_up: {
             reason: '原因',
@@ -2682,6 +2688,9 @@ const messages = {
             Percentage_exceeds: 'The deduction percentage cannot exceed 100%',
             Amount_exceeds: 'The deduction amount cannot exceed the total amount',
             check_attachment: 'Please upload the attachment!',
+            payment_method: 'Payment Method',
+            car_type: 'Car Type',
+            category_type: 'Type',
         },
         d: {
             distributor_detail: 'Distributor Details',
@@ -3422,6 +3431,8 @@ const messages = {
             advanced_search: 'Advanced Search',
             stow: 'Stow',
             special: 'Special',
+            enter_customer_name: 'Please Enter The Customer Name',
+            enter_item_name: 'Please Enter The Product Name',
         },
         pop_up: {
             reason: 'Reason',
