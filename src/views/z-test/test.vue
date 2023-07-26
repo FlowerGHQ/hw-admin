@@ -4,7 +4,9 @@
 
         <a-input v-model:value="testValue" v-focus placeholder="Basic usage" />
 
-        <a-button @click="btns">点击</a-button>
+        <a-button @click="btns">点击 <span class="icon i-a-Group790"></span></a-button>
+
+        
     </div>       
 </template>
 

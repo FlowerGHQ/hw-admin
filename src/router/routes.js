@@ -2005,9 +2005,32 @@ const routes = [
                 name: 'vehicleList',
                 component: () => import('@/views/CRM/Vehicle/list.vue'),
                 meta: {
-                    title: '车辆管理',
-                    title_en: 'Vehicle Management',
-                    icon: 'i_setting',
+                    title: '车辆列表',
+                    title_en: 'Vehicle List',                    
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            }
+        ]
+    },
+    // 订单管理
+    {
+        path:'/retail-Order',
+        component: Layout, 
+        redirect: '/retail-Order/Order-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '订单管理',
+            title_en: 'Order Management',
+            icon: 'i_setting',
+        },       
+        children: [
+            {
+                path: 'Order-list',
+                name: 'orderList',
+                component: () => import('@/views/CRM/Order/list.vue'),
+                meta: {
+                    title: '订单列表',
+                    title_en: 'Order List',                    
                     roles: [LOGIN_TYPE.ADMIN],
                 },       
             }
