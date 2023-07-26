@@ -1988,8 +1988,56 @@ const routes = [
         ]
     },
     /*----  零售业务新添加在CRM中的 ----*/
-    // 车辆管理
-    {
+    { // 门店管理
+        path:'/stores-vehicle',
+        component: Layout, 
+        redirect: '/retail-stores/stores-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '门店管理',
+            title_en: 'Stores Management',
+            icon: 'i_gongyingshang',
+        },       
+        children: [
+            {
+                path: 'stores-list',
+                name: 'storesList',
+                component: () => import('@/views/CRM/Stores/list.vue'),
+                meta: {
+                    title: '门店列表',
+                    title_en: 'Stores List',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            }
+        ]
+    },
+    /*----  零售业务新添加在CRM中的 ----*/
+    { // 门店管理
+        path:'/retail-personnel',
+        component: Layout, 
+        redirect: '/retail-personnel/personnel-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '人员管理',
+            title_en: 'Personnel Management',
+            icon: 'i_s_user',
+        },       
+        children: [
+            {
+                path: 'personnel-list',
+                name: 'personnelList',
+                component: () => import('@/views/CRM/Personnel/list.vue'),
+                meta: {
+                    title: '人员管理',
+                    title_en: 'Personnel List',
+                    icon: 'i_s_user',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            }
+        ]
+    },
+    { // 车辆管理
         path:'/retail-vehicle',
         component: Layout, 
         redirect: '/retail-vehicle/vehicle-list',
