@@ -1,6 +1,6 @@
 <template>
     <div>
-        门店管理
+        角色权限管理
     </div>
 </template>
 

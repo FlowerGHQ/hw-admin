@@ -1099,6 +1099,7 @@ const messages = {
             operate: '操作',
             detail: '详情',
             edit: '编辑',
+            see:'查看',
             re_edit: '重新编辑',
             disable: '禁用',
             enable: '启用',
@@ -1133,7 +1134,6 @@ const messages = {
             uploaded: '上传成功',
             export_as_supplier_report: '以供应商报表方式导出',
             error_phone: '手机号输入不正确',
-
 
         },
         search: {
@@ -1521,6 +1521,18 @@ const messages = {
             error: '拒绝原因',
             audit_list: '待审回款单列表',
             order_uid: '合同订单号',
+        },
+        crm_st:{
+            search_name:'搜索门店',
+            area:'所属区域',
+            city:'所属城市',
+            type:'门店类型',
+            status:'营业状态',
+            level:'门店级别',
+            search_placeholder:'名称/店长',
+            add_st:'创建门店',
+            manager:'店长',
+            people:'人员',
         },
         crm_d: {
             list: '试驾单列表',
@@ -3373,6 +3385,7 @@ const messages = {
             operate: 'Operate',
             detail: 'Details',
             edit: 'Edit',
+            see:'See',
             re_edit: 'Re-Edit',
             disable: 'Disabled',
             enable: 'Invocation',
@@ -3772,6 +3785,21 @@ const messages = {
             error: 'Reason for Rejection',
             audit_list: 'List of Payment Receipts to Be Approved',
             order_uid: 'Contract Order No',
+        },
+        
+        crm_st:{
+            search_name:'Search Store',
+            area:'Region Belongs',
+            city:'City',
+            type:'Store Type',
+            status:'Business Status',
+            level:'Store Level',
+            search_placeholder:'Name/Store Manager',
+            add_st:'Create Store',
+            manager:'Store Manager',
+            people:'personnel',
+
+
         },
 
         crm_d: {
