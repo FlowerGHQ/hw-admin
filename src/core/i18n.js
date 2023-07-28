@@ -378,6 +378,10 @@ const messages = {
             km_travelled: '行驶公里数',
             top_long_tip: '请将每辆车行驶的公里数填写在列表内，方便审核',
             tooltip_text: '系统未检测到的车架号',
+            records: '条记录',
+            filtered_duplicate: '已过滤重复',
+            Execute_intermediate: '执行中工单',
+            spec_tip: '其中特殊车架号为系统未录入的车架号',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2699,6 +2703,10 @@ const messages = {
             km_travelled: 'Kilometres Travelled',
             top_long_tip: 'Please fill in the number of kilometres travelled by each vehicle in the list for easy review',
             tooltip_text: 'Frame number not detected by the system',
+            records: 'Record (s)',
+            filtered_duplicate: 'Filtered Duplicate',
+            Execute_intermediate: 'Execute intermediate work order',
+            spec_tip: 'The special frame number is the frame number not recorded in the system',
         },
         d: {
             distributor_detail: 'Distributor Details',

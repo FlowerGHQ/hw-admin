@@ -43,6 +43,9 @@
                 </div>
                 <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
                     :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                    <template #headerCell="{ column }">
+                        <div v-html="column.title"></div>
+                    </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.dataIndex === 'warranty_status'">
                             <a-tooltip v-if="text === 3" placement="top" :title="$t('r.tooltip_text')">
@@ -75,8 +78,16 @@
                     </template>
                 </a-table>
                 <div class="table-footer">
-                    共 <span class="table-footer-num">5</span> 条记录，已过滤重复 <span class="table-footer-num">2</span> 条，执行中工单 <span class="table-footer-num">2</span> 条，特殊
-                    <span class="table-footer-num">2</span> 条，其中特殊车架号为系统未录入的车架号
+                    {{ $t('n.all_total') }}
+                    <span class="table-footer-num">5</span>
+                    {{ $t('r.records') }}，{{ $t('r.filtered_duplicate') }}
+                    <span class="table-footer-num">2</span>
+                    {{ $t('in.total') }}，
+                    {{ $t('r.Execute_intermediate') }}
+                    <span class="table-footer-num">2</span>
+                    {{ $t('in.total') }}，{{ $t('search.special') }}
+                    <span class="table-footer-num">2</span>
+                    {{ $t('in.total') }}，{{ $t('r.spec_tip') }}
                 </div>
             </div>
         </div>
@@ -212,7 +223,11 @@ export default {
                 { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
-                { title: this.$t('r.km_travelled'), dataIndex: 'mileage', key: 'input' }, // 行驶公里数
+                {
+                    title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('r.km_travelled')}`,
+                    dataIndex: 'mileage',
+                    key: 'input'
+                },
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 { title: this.$t('def.operate'), key: 'operation' }
             ]
@@ -700,4 +715,5 @@ export default {
             align-items: center;
         }
     }
-}</style>
+}
+</style>
