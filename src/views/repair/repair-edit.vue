@@ -1,183 +1,86 @@
 <template>
-<div id="RepairEdit" class="edit-container">
-    <div class="title-container">
-        <div class="title-area">{{ form.id ? $t('r.repair_edit') : $t('r.repair_create') }}</div>
-    </div>
-    <div class="form-block"> <!-- 工单内容 -->
-        <div class="form-title"><div class="title">{{ $t('r.repair_content') }}</div></div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">{{ $t('r.device_classify') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.device_type" :disabled="!!form.id" @change="handleTypeChange">
-                        <a-radio v-for="item of deviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
+    <div id="RepairEdit" class="edit-container">
+        <!-- 标题 -->
+        <div class="title-container">
+            <div class="title-area">{{ form.id ? $t('r.repair_edit') : $t('r.repair_create') }}</div>
+        </div>
+        <!-- 顶部提示 -->
+        <div class="tips-container">
+            <div class="tips-block">
+                <img src="../../assets/images/warn-tip.png" alt="">
+                <div class="tips-text" v-for="item in tipList" :key="index">
+                    {{ item }}
                 </div>
             </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_classify') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.type" :disabled="!!form.id" @change="handleTypeChange">
-                        <a-radio v-for="item of typeList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
+        </div>
+        <!-- 车辆信息 -->
+        <div class="head-container">
+            <div class="color-block"></div>
+            <div class="head-wrap">
+                {{ $t(/*车辆信息*/'r.vehicle_information') }}
             </div>
-            <div class="form-item required" v-if="form.device_type == 1">
-                <div class="key">{{ $t('r.category') }}</div>
+        </div>
+        <!-- 车架号 -->
+        <div class="form-container">
+            <div class="form-wrap required">
+                <div class="key">{{ $t('search.vehicle_no') }}:</div>
                 <div class="value">
-                    <a-radio-group v-model:value="form.category">
-                        <a-radio v-for="item of categoryList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
+                    <a-textarea v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')"
+                        :auto-size="{ minRows: 1, maxRows: 5 }" />
                 </div>
+                <a-button type="primary">{{ $t('i.addition') }}</a-button>
             </div>
-             <div class="form-item required" v-if="form.device_type == 2">
-                <div class="key">{{ $t('r.category') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.category">
-                        <a-radio v-for="item of partsList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
+        </div>
+        <div class="detail-container">
+            <div class="item-table-container">
+                <div class="item-table-head">
+                    <div class="item-table-title">
+                        {{ $t(/*商品信息*/'i.product_information') }}
+                    </div>
+                    <div class="item-table-tip">
+                        {{ $t(/*商品信息*/'r.top_long_tip') }}
+                    </div>
                 </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.urgency') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.priority">
-                        <a-radio v-for="item of priorityList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-           <div class="form-item required">
-               <div class="key">{{ $t('r.warranty') }}</div>
-               <div class="value">
-                   <a-radio-group v-model:value="form.service_type" :disabled="!!form.id || form.type === REPAIR.TYPE.TYPE_SPECIAL">
-                       <a-radio v-for="item of serviceList" :key="item.value" :value="item.value">{{item[$i18n.locale]}}</a-radio>
-                   </a-radio-group>
-               </div>
-           </div>
-            <!-- <a-date-picker v-model:value="form.plan_time" valueFormat='YYYY-MM-DD HH:mm:ss'/> -->
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_name') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.name" :placeholder="$t('r.enter_name')" :maxlength='50'/>
-                </div>
-            </div>
-
-            <div class="form-item required textarea">
-                <div class="key">{{ $t('r.description') }}</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.desc" :placeholder="$t('r.fault_description')"
-                        :auto-size="{ minRows: 4, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{ form.desc.length }}/500</span>
+                <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
+                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="handleTableChange">
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.dataIndex === 'warranty_status'">
+                            <a-tooltip v-if="text === 3" placement="top" :title="$t('r.tooltip_text')">
+                                <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
+                                    {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                </div>
+                            </a-tooltip>
+                            <div class="status status-bg status-box" v-else :class="$Util.threePagFilter(text, 'color')">
+                                {{ $Util.threePagFilter(text, $i18n.locale) }}
+                            </div>
+                        </template>
+                        <!-- 通用展示 -->
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'frame_uid'">
+                            <a-tooltip placement="top" :title='text'>
+                                {{ text || '-' }}
+                            </a-tooltip>
+                        </template>
+                        <!-- 行驶公里数 -->
+                        <template v-if="column.key === 'input'">
+                            <a-input v-model:value="mileage" style="width: 140px; margin-right: 4px;"
+                                :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button type="link" class="danger" @click="handleDeleteItemTable">{{ $t('def.delete')
+                            }}</a-button>
+                        </template>
+                    </template>
+                </a-table>
+                <div class="table-footer">
+                    共 <span class="table-footer-num">5</span> 条记录，已过滤重复 <span class="table-footer-num">2</span> 条，执行中工单 <span class="table-footer-num">2</span> 条，特殊
+                    <span class="table-footer-num">2</span> 条，其中特殊车架号为系统未录入的车架号
                 </div>
             </div>
         </div>
     </div>
-    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车辆信息 -->
-        <div class="form-title">
-            <div class="title">{{ $t('r.vehicle_information') }}</div>
-        </div>
-        <div class="form-content">
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_way') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.channel">
-                        <a-radio v-for="item of channelList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.repair_category') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.repair_method">
-                        <a-radio v-for="item of methodList" :key="item.value" :value="item.value">{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('search.vehicle_no') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" />
-<!--                    <a-input v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')" @blur="handleVehicleBlur"/>-->
-                </div>
-<!--                <span v-if="isExist == 1"><i class="icon i_confirm"/></span>-->
-<!--                <span class="not_exist" v-else-if="isExist == 2"><i class="icon i_close_c"/>{{$t('r.vehicle_not_exist')}}</span>-->
-            </div>
-            <div class="form-item" v-if="form.vehicle_no ">
-<!--                <div class="form-item" v-if="form.vehicle_no && isExist == 1">-->
-                <div class="key">{{ $t('r.arrival_time') }}</div>
-                <div class="value" >
-                    {{ $Util.timeFilter(arrival_time) }}
-                </div>
-            </div>
-            <div class="form-item required">
-                <div class="key">{{ $t('r.miles_driven') }}</div>
-                <div class="value">
-                    <a-input-number v-model:value="form.mileage" :min="0" :precision="3"/>
-                    <span class="unit">{{ $t('r.km') }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-block" v-if="form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE"> <!-- 车主信息 -->
-        <div class="form-title">
-            <div class="title">{{ $t('r.customer') }}</div>
-        </div>
-        <div class="form-content">
-            <div class="form-item">
-                <div class="key">{{ $t('r.associated_customers') }}</div>
-                <div class="value">
-                    <a-select :placeholder="$t('r.select_customer')" v-model:value="form.customer_id" @change="handleCustomerSelect" show-search option-filter-prop="children"
-                        :disabled="detail.status == REPAIR.STATUS.WAIT_DETECTION">
-                        <a-select-option v-for="(item,index) of customerList" :key="index" :value="item.id">
-                            {{ item.name }}
-                        </a-select-option>
-                    </a-select>
-                </div>
-                <div class="sp">
-                    <a-button type="link" v-if="$auth('customer.save')" @click="routerChange('customer')">{{ $t('r.add_customer') }}</a-button>
-                    <a-button type="link" @click="getCustomerList('refresh')">{{ $t('r.refresh') }}</a-button>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">{{ $t('r.customer_phone') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_phone" :placeholder="$t('r.enter_phone')"/>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">{{ $t('r.email') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_email" :placeholder="$t('r.enter_email')"/>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">{{ $t('r.address') }}</div>
-                <div class="value">
-<!--                    <ChinaAddressCascader @select='handleAddressSelect' :default-address='defAddr'/>-->
-                    <AddressCascader v-model:value="areaMap" :def-area='area' :default-address='defAddr'/>
-                </div>
-            </div>
-            <div class="form-item">
-                <div class="key">{{ $t('r.specific_address') }}</div>
-                <div class="value">
-                    <a-input v-model:value="form.customer_address" :placeholder="$t('r.enter_specific')"/>
-                </div>
-            </div>
-            <div class="form-item textarea">
-                <div class="key">{{ $t('r.remark') }}</div>
-                <div class="value">
-                    <a-textarea v-model:value="form.remark" :placeholder="$t('r.enter_remark')"
-                        :auto-size="{ minRows: 2, maxRows: 6 }" :maxlength='500'/>
-                    <span class="content-length">{{ form.remark.length }}/500</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="form-btns">
-        <a-button @click="handleSubmit" type="primary" v-if="$auth('repair-order.save')">{{ $t('def.sure') }}</a-button>
-        <a-button @click="routerChange('back')">{{ $t('def.cancel') }}</a-button>
-    </div>
-</div>
 </template>
 
 <script>
@@ -190,7 +93,7 @@ import AddressCascader from '@/components/common/AddressCascader.vue'
 
 export default {
     name: 'RepairEdit',
-    components: {ChinaAddressCascader, AddressCascader},
+    components: { ChinaAddressCascader, AddressCascader },
     props: {},
     data() {
         return {
@@ -207,7 +110,6 @@ export default {
             }, // 工单详情
             create_time: [],
             defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-
             deviceList: REPAIR.DEVICE_LIST, // 工单类型
             typeList: REPAIR.TYPE_LIST, // 工单分类
             categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
@@ -220,7 +122,6 @@ export default {
             isExist: '', // 车辆编号输入框提示
             form: {
                 id: '',
-
                 device_type: 1,  // 工单类型
                 type: 1,  // 工单分类
                 category: 1, // 维修工单类别
@@ -228,18 +129,15 @@ export default {
                 desc: '', // 问题描述
                 service_type: '',//保内维修、保外维修
                 mileage: '',//行程公里数
-
                 channel: 1, // 维修方式、维修途径
                 repair_method: 1, // 维修类别
                 vehicle_no: '', // 车架号
-
                 customer_id: undefined,  // 相关客户-id
                 customer_name: "",  // 相关客户-名称
                 customer_phone: "", // 客户电话
                 customer_email: "", // 客户邮箱
                 customer_address: "", // 维修地址
                 remark: "", // 工单备注
-
                 repair_user_id: undefined, // 工单负责人
                 plan_time: undefined, // 计划时间
                 // finish_time: undefined, // 完成时间
@@ -257,11 +155,70 @@ export default {
                 city: '',
                 city_en: '',
                 county: '',
-            }
+            },
+            tipList: [
+                "1. 当前新增工单时，请填写出现同一工单类型的车架号信息",
+                "2. 同一车型的车架号会生成一个工单",
+                "3. 提交后的工单在没有审核前，可以点击取消并重新编辑工单，也可直接作废该工单，作废的工单不可再次编辑；取消的工单在【已关闭】状态的工单列表中查找",
+            ],
+            showTextarea: false, // 初始值为false，表示显示输入框
+            itemTableData: [
+                {
+                    id: 1,
+                    frame_uid: 'R45LA1C20P2000043',
+                    item_name: '液压升降小推车--MAUTO',
+                    item_code: 'HW800T-1/02N6',
+                    model: 'SK3',
+                    item_spec: '银色；100/80-14’’',
+                    warranty_status: 1,
+                },
+                {
+                    id: 2,
+                    frame_uid: 'R45LA1C20P2000043',
+                    item_name: '液压升降小推车--MAUTO',
+                    item_code: 'HW800T-1/02N6',
+                    model: 'SK3',
+                    item_spec: '银色；100/80-14’’',
+                    warranty_status: 3,
+                },
+                {
+                    id: 3,
+                    frame_uid: 'R45LA1C20P2000043',
+                    item_name: '液压升降小推车--MAUTO',
+                    item_code: 'HW800T-1/02N6',
+                    model: 'SK3',
+                    item_spec: '银色；100/80-14’’',
+                    warranty_status: 2,
+                },
+                {
+                    id: 4,
+                    frame_uid: 'R45LA1C20P2000043',
+                    item_name: '液压升降小推车--MAUTO',
+                    item_code: 'HW800T-1/02N6',
+                    model: 'SK3',
+                    item_spec: '银色；100/80-14’’',
+                    warranty_status: 3,
+                },
+            ],
+            mileage: undefined,
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        itemTableColumns() {
+            let columns = [
+                { title: this.$t('search.vehicle_no'), dataIndex: 'frame_uid', key: 'frame_uid' }, // 车架号
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
+                { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
+                { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
+                { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
+                { title: this.$t('r.km_travelled'), dataIndex: 'mileage', key: 'input' }, // 行驶公里数
+                { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
+                { title: this.$t('def.operate'), key: 'operation' }
+            ]
+            return columns
+        },
+    },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0
         if (this.form.id) {
@@ -347,26 +304,26 @@ export default {
                 if (this.areaMap.county) {
                     area.county = this.areaMap.county.name
                     area.county_en = this.areaMap.county.county_en
-                }else {
+                } else {
                     area.county = ""
                     area.county_en = ""
                 }
             }
-            
-            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0            
+
+            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
 
             let checkRes = this.checkFormInput(form);
             if (!checkRes) {
                 return
             }
             let apiName = form.id ? 'update' : 'create'
-            if(form.device_type !== REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+            if (form.device_type !== REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 form.customer_address = ''
                 form.customer_email = ''
                 form.customer_name = ''
                 form.customer_phone = ''
             }
-            
+
             await Core.Api.Repair[apiName]({
                 ...form,
                 ...area,
@@ -410,7 +367,7 @@ export default {
                 console.log('form.service_type');
                 return this.$message.warning(this.$t('def.enter'))
             }
-             if (!form.mileage && form.mileage !== 0 && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
+            if (!form.mileage && form.mileage !== 0 && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
                 console.log('form.mileage');
                 return this.$message.warning(this.$t('def.enter'))
             }
@@ -471,7 +428,7 @@ export default {
         // 选择客户
         handleCustomerSelect(id) {
             let item = this.customerList.find(i => i.id === id)
-            console.log('customerList',this.customerList)
+            console.log('customerList', this.customerList)
             this.form.customer_name = item.name ? item.name : ''
             this.form.customer_phone = item.phone ? item.phone : ''
             this.form.customer_email = item.email ? item.email : ''
@@ -485,11 +442,11 @@ export default {
             this.form.customer_address = item.address ? item.address : ''
             // this.defAddr = [item.country,item.province, item.city, item.county]
             console.log('this.addr', this.defAddr)
-            console.log('this.area',this.area);
+            console.log('this.area', this.area);
 
         },
-        handleTypeChange(){
-            switch (this.form.type){
+        handleTypeChange() {
+            switch (this.form.type) {
                 case REPAIR.TYPE.TYPE_COMMON: {
                     this.form.service_type = '';
                     break;
@@ -501,23 +458,216 @@ export default {
             }
         },
 
-       /* handleAddressSelect(address) {
-            this.form.province = address[0]
-            this.form.city = address[1]
-            this.form.county = address[2]
-        }*/
+        /* handleAddressSelect(address) {
+             this.form.province = address[0]
+             this.form.city = address[1]
+             this.form.county = address[2]
+         }*/
+        handleDeleteItemTable() {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    console.log(111);
+                },
+            });
+        },
     }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #RepairEdit {
+    :deep(.ant-table-cell) {
+        color: #1D2129;
+        font-size: 12px;
+    }
+
+    .tips-container {
+        width: 100%;
+        padding: 20px;
+        box-sizing: border-box;
+
+        .tips-block {
+            width: 100%;
+            padding: 16px 0 0 46px;
+            box-sizing: border-box;
+            min-height: 98px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 125, 0, 0.30);
+            background: #FFF8F2;
+            position: relative;
+
+            >img {
+                position: absolute;
+                top: 20px;
+                left: 20px;
+                width: 20px;
+                height: 20px;
+            }
+
+            .tips-text {
+                color: #FF7D00;
+                font-size: 15px;
+                font-weight: 400;
+                line-height: 24px;
+            }
+        }
+    }
+
+    .head-container {
+        width: 100%;
+        display: flex;
+        padding: 32px 20px 24px;
+        box-sizing: border-box;
+
+        .color-block {
+            width: 3px;
+            height: 48px;
+            background-color: #0061FF;
+        }
+
+        .head-wrap {
+            width: calc(100% - 3px);
+            height: 48px;
+            background-color: #F9FBFF;
+            display: flex;
+            align-items: center;
+            padding-left: 24px;
+            box-sizing: border-box;
+            color: #1D2129;
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 0 20px 0;
+        box-sizing: border-box;
+
+        .form-wrap {
+            display: flex;
+            align-items: center;
+
+            .key {
+                margin-right: 16px;
+                color: #000;
+                font-size: 14px;
+            }
+
+            .value {
+                width: 400px;
+                height: 32px;
+
+                textarea {
+                    &::-webkit-scrollbar {
+                        /*滚动条整体样式*/
+                        width: 6px;
+                        height: 52px;
+                    }
+
+
+                    &::-webkit-scrollbar-thumb {
+                        /*滚动条内部滑块*/
+                        border-radius: 10px;
+                        background-color: #D9D9D9;
+                        transition: background-color 0.3s;
+
+
+                        &:hover {
+                            background: #bbb;
+                        }
+                    }
+
+
+                    &::-webkit-scrollbar-track {
+                        /*滚动条内部轨道*/
+                        // opacity: 0.9;
+                        background: #F5F5F5;
+                    }
+                }
+            }
+
+            .ant-btn {
+                width: 80px;
+                height: 32px;
+                margin-left: 16px;
+            }
+
+            .key::before {
+                opacity: 0;
+                content: '*';
+                color: @TC_required;
+                padding-right: 2px;
+            }
+
+            &.required {
+
+                // 必填标志
+                .key::before {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+
+    .detail-container {
+        width: 100%;
+        min-height: 650px;
+        background-color: #FFF;
+        padding: 0 20px 20px 20px;
+        box-sizing: border-box;
+
+        .item-table-container {
+            margin-top: 24px;
+            padding-left: 68px;
+            box-sizing: border-box;
+            width: 100%;
+
+            .item-table-head {
+                display: flex;
+                align-items: center;
+
+                .item-table-title {
+                    color: #1D2129;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+
+                .item-table-tip {
+                    color: #86909C;
+                    font-size: 12px;
+                    margin-left: 10px;
+                }
+            }
+
+            .table-footer {
+                color: #86909C;
+                font-size: 12px;
+                font-weight: 400;
+                margin-top: 12px;
+
+                .table-footer-num {
+                    color: #F5222D;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+
     .form-item {
         .value {
             .fac();
+
             .ant-input-number {
                 margin-right: 10px;
             }
+
             .unit {
                 font-size: 12px;
                 line-height: 16px;
@@ -525,6 +675,7 @@ export default {
             }
 
         }
+
         i.icon {
             display: inline-block;
             width: 24px;
@@ -532,19 +683,21 @@ export default {
             font-size: 18px;
 
         }
+
         .i_confirm {
             color: @green;
             font-size: 18px;
         }
+
         .i_close_c {
             color: @red;
             font-size: 18px;
 
         }
-        .not_exist{
+
+        .not_exist {
             text-align: center;
             align-items: center;
         }
     }
-}
-</style>
+}</style>

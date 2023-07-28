@@ -576,6 +576,11 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    threePagFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.SERVICE_TYPE_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
     /* =============== 维修单 ================ */
 
 

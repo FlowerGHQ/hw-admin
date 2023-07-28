@@ -788,6 +788,7 @@ const routes = [
                 name: 'RepairAuditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -800,6 +801,7 @@ const routes = [
                 name: 'RepairReditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待改工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
@@ -812,6 +814,7 @@ const routes = [
                 name: 'RepairInvoiceList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审核故障件',
                     title_en: 'Pending defective parts',
                     roles: [LOGIN_TYPE.ADMIN],
@@ -824,6 +827,7 @@ const routes = [
                 name: 'RepairFaultList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待入库故障件',
                     title_en: 'Wait recall parts',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -836,9 +840,10 @@ const routes = [
                 name: 'RepairEdit',
                 component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
-                    hidden: true,
-                    title: '维修单编辑',
-                    parent: '/repair/repair-list',
+                    // hidden: true,
+                    title: '新增工单',
+                    title_en: 'Add Warranty Claim',
+                    // parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['repair-order.save'],
                 }
@@ -870,6 +875,7 @@ const routes = [
                 name: 'FaultList',
                 component: () => import('@/views/repair/item-fault-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '故障管理',
                     title_en: 'Fault management',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],

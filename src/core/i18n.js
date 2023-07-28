@@ -374,6 +374,10 @@ const messages = {
             payment_method: '赔付方式',
             car_type: '车型',
             category_type: '工单类型',
+            three_pack_aging: '三包时效',
+            km_travelled: '行驶公里数',
+            top_long_tip: '请将每辆车行驶的公里数填写在列表内，方便审核',
+            tooltip_text: '系统未检测到的车架号',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -1155,7 +1159,7 @@ const messages = {
             special: '特殊',
             enter_customer_name: '请输入客户姓名',
             enter_item_name: '请输入商品名称',
-
+            enter_mile: '请输入里程数',
         },
         pop_up: {
             reason: '原因',
@@ -2691,6 +2695,10 @@ const messages = {
             payment_method: 'Payment Method',
             car_type: 'Car Type',
             category_type: 'Type',
+            three_pack_aging: 'Three-pack Aging',
+            km_travelled: 'Kilometres Travelled',
+            top_long_tip: 'Please fill in the number of kilometres travelled by each vehicle in the list for easy review',
+            tooltip_text: 'Frame number not detected by the system',
         },
         d: {
             distributor_detail: 'Distributor Details',
@@ -3433,6 +3441,7 @@ const messages = {
             special: 'Special',
             enter_customer_name: 'Please Enter The Customer Name',
             enter_item_name: 'Please Enter The Product Name',
+            enter_mile: 'Please Enter The Mileage',
         },
         pop_up: {
             reason: 'Reason',

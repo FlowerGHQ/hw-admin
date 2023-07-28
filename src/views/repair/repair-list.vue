@@ -3,6 +3,10 @@
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">{{ $t('r.repair_list') }}</div>
+                <div class="btns-area">
+                    <a-button type="primary" v-if="$auth('DISTRIBUTOR')" @click="routerChange('edit')"><i class="icon i_add" />{{ $t('r.repair_create')
+                    }}</a-button>
+                </div>
             </div>
             <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleSearch'>
@@ -32,38 +36,38 @@
                                 @keydown.enter='handleSearch' />
                         </div>
                     </a-col>
+                    <!-- 车型 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('r.car_type') }}:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.model" @change='handleSearch'
+                                :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of modelTypeList" :key="item.key" :value="item.key">{{
+                                    item.name }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <!-- 商品名称 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
+                        <div class="key">{{ $t('r.item_name') }}:</div>
+                        <div class="value">
+                            <a-input :placeholder="$t(/*请输入商品名称*/'search.enter_item_name')"
+                                v-model:value="searchForm.item_name" @keydown.enter='handleSearch' />
+                        </div>
+                    </a-col>
                     <!-- 客户姓名 -->
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
                         <div class="key">{{ $t('p.person') }}:</div>
                         <div class="value">
                             <a-input :placeholder="$t(/*请输入客户姓名*/'search.enter_customer_name')"
-                                v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch' />
-                        </div>
-                    </a-col>
-                    <!-- 选择商品 -->
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN')">
-                        <div class="key">{{ $t('i.select_item') }}:</div>
-                        <div class="value">
-                            <a-input :placeholder="$t(/*请输入商品名称*/'search.enter_item_name')"
-                                v-model:value="searchForm.vehicle_no" @keydown.enter='handleSearch' />
-                        </div>
-                    </a-col>
-                    <!-- 赔付方式 -->
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
-                        <div class="key">{{ $t('r.payment_method') }}:</div>
-                        <div class="value">
-                            <a-select v-model:value="searchForm.pay_status" @change='handleSearch'
-                                :placeholder="$t('def.select')">
-                                <a-select-option v-for="item of payMethodList" :key="item.id" :value="item.status">{{
-                                    item[$i18n.locale] }}</a-select-option>
-                            </a-select>
+                                v-model:value="searchForm.customer_name" @keydown.enter='handleSearch' />
                         </div>
                     </a-col>
                     <!-- 工单类型 -->
-                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="$auth('ADMIN', 'DISTRIBUTOR')">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('r.device_classify') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.repair_status" @change='handleSearch'
+                            <a-select v-model:value="searchForm.category" @change='handleSearch'
                                 :placeholder="$t('def.select')">
                                 <a-select-option v-for="item of repairStatusList" :key="item.id" :value="item.status">{{
                                     item[$i18n.locale] }}</a-select-option>
@@ -71,10 +75,21 @@
                         </div>
                     </a-col>
                     <!-- 创建时间 -->
-                    <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('def.create_time') }}:</div>
                         <div class="value">
                             <TimeSearch @search="handleTimeSearch" ref='TimeSearch' />
+                        </div>
+                    </a-col>
+                    <!-- 赔付方式 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">{{ $t('r.payment_method') }}:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.compensation_method" @change='handleSearch'
+                                :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of payMethodList" :key="item.id" :value="item.status">{{
+                                    item[$i18n.locale] }}</a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                 </a-row>
@@ -86,8 +101,8 @@
             <div class="operate-container">
                 <a-button type="primary" @click="handleExportConfirm" v-if="$auth('repair-order.export')"><i
                         class="icon i_download" />{{ $t('def.export') }}</a-button>
-                <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t('r.repair_create')
-                }}</a-button>
+                <!-- <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t('r.repair_create')
+                }}</a-button> -->
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -179,14 +194,16 @@ export default {
             operMode: '',
             filteredInfo: null,
             searchForm: {
-                uid: '',
-                status: '-1',
-                service_type: '',
-                vehicle_no: '',
-                begin_time: '',
-                end_time: '',
-                pay_status: 0,
-                repair_status: 100,
+                uid: undefined, // 工单编号
+                status: -1, // 列表上方状态切换
+                vehicle_no: undefined, // 车架号
+                customer_name: undefined, // 客户姓名
+                item_name: undefined, // 商品名称
+                begin_time: undefined, // 开始时间
+                end_time: undefined, // 结束时间
+                compensation_method: 0, // 赔付方式
+                model: 0, // 车型
+                category: 100, // 工单类型
             },
             // 表格
             tableFields: [],
@@ -212,6 +229,14 @@ export default {
                 { zh: '通过', en: 'Passed', status: 90, key: 3 },
                 { zh: '不通过', en: 'Rejected', status: -30, key: 4 },
             ],
+            // 车型列表
+            modelTypeList: [
+                { name: '全部', key: 0 },
+                { name: 'SK1', key: 1 },
+                { name: 'SK3', key: 2 },
+                { name: 'EK1', key: 3 },
+                { name: 'EK3', key: 4 }
+            ]
         };
     },
     watch: {
@@ -231,17 +256,17 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' }, // 工单编号
-                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item' }, // 车架号
+                // { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item' }, // 车架号
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('r.repair_status'), dataIndex: 'status' }, // 工单状态
-                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item_name' }, // 商品名称
+                // { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item_name' }, // 商品名称
                 { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
                 { title: this.$t('r.category_type'), dataIndex: 'category' }, // 工单类型
                 { title: this.$t('r.payment_method'), dataIndex: 'compensation_method', key: 'compensation_method' }, // 赔付方式
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
             ]
             if (this.$auth('ADMIN')) { // 平台方权限可见
-                columns.splice(8, 0,
+                columns.splice(6, 0,
                     { title: this.$t('p.person'), dataIndex: 'customer_name', key: 'item' }, // 客户姓名
                     { title: this.$t('p.contact'), dataIndex: 'contact', key: 'item' } // 联系方式
                 )
@@ -326,31 +351,32 @@ export default {
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
-                // this.tableData = res.list;
-                this.tableData = [
-                    {
-                        id: 0,
-                        uid: "CN2222023041300003", //工单编号
-                        model: "SK3银蓝", //车型
-                        status: 30, //工单状态
-                        service_type: 1, //工单账类
-                        category: 1, //工单类型
-                        compensation_method: 1, //赔付方式
-                        create_time: 1690254733, //创建时间
-                        item_name_list: [
-                            "SK3银蓝",
-                            "SK3粉色",
-                            "SK3白色",
-                            "SK3黑色"
-                        ],
-                        frame_Uid_list: [
-                            "R45BB2B60P3000007",
-                            "R45BB2B60P4000008",
-                            "R45BB2B61P3000009",
-                            "R45BB2B6XP3000010"
-                        ]
-                    }
-                ]
+                this.tableData = res.list;
+                /* mock 可以删 */
+                // this.tableData = [
+                //     {
+                //         id: 0,
+                //         uid: "CN2222023041300003", //工单编号
+                //         model: "SK3银蓝", //车型
+                //         status: 30, //工单状态
+                //         service_type: 1, //工单账类
+                //         category: 1, //工单类型
+                //         compensation_method: 1, //赔付方式
+                //         create_time: 1690254733, //创建时间
+                //         item_name_list: [
+                //             "SK3银蓝",
+                //             "SK3粉色",
+                //             "SK3白色",
+                //             "SK3黑色"
+                //         ],
+                //         frame_Uid_list: [
+                //             "R45BB2B60P3000007",
+                //             "R45BB2B60P4000008",
+                //             "R45BB2B61P3000009",
+                //             "R45BB2B6XP3000010"
+                //         ]
+                //     }
+                // ]
             }).catch(err => {
                 console.log('getTableData err:', err)
             }).finally(() => {
