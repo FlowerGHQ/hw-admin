@@ -204,7 +204,7 @@ const apiList = {
         detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
-        list: ['PostJson', 'repair-order/list'], // 列表
+        list: ['PostJson', 'repair/list'], // 列表
 	    create: ['PostJson', 'repair-order/save'], // 新建工单
 	    hand: ['PostJson', 'repair-order/hand'],
         detail: ['PostJson', 'repair-order/detail'], // 工单详情

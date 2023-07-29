@@ -2,7 +2,7 @@
     <div id="RepairEdit" class="edit-container">
         <!-- 标题 -->
         <div class="title-container">
-            <div class="title-area">{{ form.id ? $t('r.repair_edit') : $t('r.repair_create') }}</div>
+            <div class="title-area">{{ $t('r.repair_create') }}</div>
         </div>
         <!-- 顶部提示 -->
         <div class="tips-container">
@@ -28,68 +28,210 @@
                     <a-textarea v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')"
                         :auto-size="{ minRows: 1, maxRows: 5 }" />
                 </div>
-                <a-button type="primary">{{ $t('i.addition') }}</a-button>
+                <a-button type="primary" @click="handleSubmitVehicle">{{ $t('i.addition') }}</a-button>
             </div>
         </div>
         <div class="detail-container">
-            <div class="item-table-container">
-                <div class="item-table-head">
-                    <div class="item-table-title">
-                        {{ $t(/*商品信息*/'i.product_information') }}
+            <template v-if="isVehicle">
+                <div class="item-table-container">
+                    <div class="item-table-head">
+                        <div class="item-table-title">
+                            {{ $t(/*商品信息*/'i.product_information') }}
+                        </div>
+                        <div class="item-table-tip">
+                            {{ $t(/*商品信息*/'r.top_long_tip') }}
+                        </div>
                     </div>
-                    <div class="item-table-tip">
-                        {{ $t(/*商品信息*/'r.top_long_tip') }}
-                    </div>
-                </div>
-                <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
-                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="handleTableChange">
-                    <template #headerCell="{ column }">
-                        <div v-html="column.title"></div>
-                    </template>
-                    <template #bodyCell="{ column, text, record }">
-                        <template v-if="column.dataIndex === 'warranty_status'">
-                            <a-tooltip v-if="text === 3" placement="top" :title="$t('r.tooltip_text')">
-                                <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
+                    <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
+                        :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'
+                        @change="handleTableChange">
+                        <template #headerCell="{ column }">
+                            <div v-html="column.title"></div>
+                        </template>
+                        <template #bodyCell="{ column, text, record }">
+                            <template v-if="column.dataIndex === 'warranty_status'">
+                                <a-tooltip v-if="text === 3" placement="top" :title="$t('r.tooltip_text')">
+                                    <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
+                                        {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                    </div>
+                                </a-tooltip>
+                                <div class="status status-bg status-box" v-else
+                                    :class="$Util.threePagFilter(text, 'color')">
                                     {{ $Util.threePagFilter(text, $i18n.locale) }}
                                 </div>
-                            </a-tooltip>
-                            <div class="status status-bg status-box" v-else :class="$Util.threePagFilter(text, 'color')">
-                                {{ $Util.threePagFilter(text, $i18n.locale) }}
-                            </div>
-                        </template>
-                        <!-- 通用展示 -->
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-' }}
-                        </template>
-                        <template v-if="column.key === 'frame_uid'">
-                            <a-tooltip placement="top" :title='text'>
+                            </template>
+                            <!-- 通用展示 -->
+                            <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
-                            </a-tooltip>
+                            </template>
+                            <template v-if="column.key === 'frame_uid'">
+                                <a-tooltip placement="top" :title='text'>
+                                    {{ text || '-' }}
+                                </a-tooltip>
+                            </template>
+                            <!-- 行驶公里数 -->
+                            <template v-if="column.key === 'input'">
+                                <a-input v-model:value="mileage" style="width: 140px; margin-right: 4px;"
+                                    :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
+                            </template>
+                            <template v-if="column.key === 'operation'">
+                                <a-button type="link" class="danger" @click="handleDeleteItemTable">{{ $t('def.delete')
+                                }}</a-button>
+                            </template>
                         </template>
-                        <!-- 行驶公里数 -->
-                        <template v-if="column.key === 'input'">
-                            <a-input v-model:value="mileage" style="width: 140px; margin-right: 4px;"
-                                :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type="link" class="danger" @click="handleDeleteItemTable">{{ $t('def.delete')
-                            }}</a-button>
-                        </template>
-                    </template>
-                </a-table>
-                <div class="table-footer">
-                    {{ $t('n.all_total') }}
-                    <span class="table-footer-num">5</span>
-                    {{ $t('r.records') }}，{{ $t('r.filtered_duplicate') }}
-                    <span class="table-footer-num">2</span>
-                    {{ $t('in.total') }}，
-                    {{ $t('r.Execute_intermediate') }}
-                    <span class="table-footer-num">2</span>
-                    {{ $t('in.total') }}，{{ $t('search.special') }}
-                    <span class="table-footer-num">2</span>
-                    {{ $t('in.total') }}，{{ $t('r.spec_tip') }}
+                    </a-table>
+                    <div class="table-footer">
+                        <!-- 共 条记录 -->
+                        {{ $t('n.all_total') }}
+                        <span class="table-footer-num">{{ itemTableDetail.count || 0 }}</span>
+                        <!-- 已过滤重复 条 -->
+                        {{ $t('r.records') }}，{{ $t('r.filtered_duplicate') }}
+                        <span class="table-footer-num">{{ itemTableDetail.filter_number || 0 }}</span>
+                        {{ $t('in.total') }}，
+                        <!-- 执行中工单 条 -->
+                        {{ $t('r.Execute_intermediate') }}
+                        <span class="table-footer-num">{{ itemTableDetail.executing_number || 0 }}</span>
+                        <!-- 特殊 条 -->
+                        {{ $t('in.total') }}，{{ $t('search.special') }}
+                        <span class="table-footer-num">{{ itemTableDetail.special_number || 0 }}</span>
+                        {{ $t('in.total') }}，{{ $t('r.spec_tip') }}
+                    </div>
                 </div>
-            </div>
+                <template v-for="($1, index) in vehicleGroupList" :key="index">
+                    <!-- 车辆信息 -->
+                    <div class="head-container pr">
+                        <div class="color-block"></div>
+                        <div class="head-wrap">
+                            {{ $t(/*车型*/'r.car_type') }}：{{ $1.model }}
+                            <div class="order-type-key">{{ $t(/*工单类型*/'r.device_classify') }}：</div>
+                            <a-select v-model:value="category" @change="handleOrderChange" style="width: 120px;"
+                                :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of repairTypeList" :key="item.id" :value="item.value">{{
+                                    item[$i18n.locale] }}</a-select-option>
+                            </a-select>
+                        </div>
+
+                    </div>
+                    <!-- 故障分类 故障类型 -->
+                    <div class="form-container pl">
+                        <!-- 故障种类 -->
+                        <div class="form-wrap required">
+                            <div class="key">{{ $t('r.fault_type') }}:</div>
+                            <div class="value">
+                                <a-radio-group v-model:value="form.failure_type">
+                                    <a-radio v-for="item in faultTypeList" :value="item.key">
+                                        {{ lang === 'zh' ? item.zh : item.en }}
+                                    </a-radio>
+                                </a-radio-group>
+                            </div>
+                        </div>
+                        <!-- 故障类型 -->
+                        <div class="form-wrap required mt">
+                            <div class="key">{{ $t('r.fault_types') }}:</div>
+                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" :disabled="falgEdit">
+                                <a-checkbox v-for="item in faultTypesList" :value="item.value">
+                                    {{ item[$i18n.locale] }}
+                                </a-checkbox>
+                            </a-checkbox-group>
+                        </div>
+                    </div>
+                    <div class="parts-replace-container">
+                        <div class="parts-replace-title">
+                            {{ $t(/*零部件更换*/'r.replacement_items') }}
+                        </div>
+                        <div class="border-wrap" v-for="($2, index) in $1.vehicle_list" :key="index">
+                            <div class="vehicle-item-head">
+                                {{ $t(/*车架号*/'search.vehicle_no') }}：{{ $2.frame_uid }}
+                            </div>
+                            <div class="vehicle-item-table">
+                                <a-table :columns="itemVehicleTableColumns" :data-source="$2.itemVehicleTableData"
+                                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'
+                                    @change="handleTableChange">
+                                    <template #headerCell="{ column }">
+                                        <div v-html="column.title"></div>
+                                    </template>
+                                    <template #bodyCell="{ column, text, record }">
+                                        <template v-if="column.dataIndex === 'warranty_status'">
+                                            <a-tooltip v-if="text === 3" placement="top" :title="$t('r.tooltip_text')">
+                                                <div class="status status-bg status-box"
+                                                    :class="$Util.threePagFilter(text, 'color')">
+                                                    {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                                </div>
+                                            </a-tooltip>
+                                            <div class="status status-bg status-box" v-else
+                                                :class="$Util.threePagFilter(text, 'color')">
+                                                {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                            </div>
+                                        </template>
+                                        <!-- 通用展示 -->
+                                        <template v-if="column.key === 'item'">
+                                            {{ text || '-' }}
+                                        </template>
+                                        <template v-if="column.key === 'price'">
+                                            {{ $Util.countFilter(text) || '-' }}€
+                                        </template>
+                                        <template v-if="column.key === 'upload'">
+                                            <div class="table-upload">
+                                                <div class="table-img">
+                                                    <a-image :width="24" :height="24"
+                                                        :src="$Util.imageFilter(record.attachment_list[0].path.includes('img') ? record.attachment_list[0].path : '', 4)"
+                                                        :fallback="$t('def.none')" />
+                                                    <a-tooltip placement="top" :title='record.attachment_list[0].name'>
+                                                        <p class="ell" style="max-width:120px;margin-left:12px;">{{
+                                                            record.attachment_list[0].name || '-' }}</p>
+                                                    </a-tooltip>
+                                                </div>
+                                                <div class="divide-line"></div>
+                                                <a-button type="link" style="margin-left: 8px; font-size: 14px;">{{
+                                                    $t('n.more')
+                                                }}</a-button>
+                                                <div class="divide-line"></div>
+                                                <img class="upload-icon" src="../../assets/images/upload-icon.png" alt="">
+                                                <div class="upload-text">
+                                                    {{ $t(/*上传附件*/'n.upload_attachment') }}
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <!-- 行驶公里数 -->
+                                        <template v-if="column.key === 'input'">
+                                            <a-input v-model:value="record.question_desc"
+                                                style="width: 180px; margin-right: 4px;" show-count :maxlength="500"
+                                                :placeholder="$t(/*请输入问题描述*/'r.fault_description')" />
+                                        </template>
+                                        <template v-if="column.key === 'operation'">
+                                            <a-button type="link" class="danger" @click="handleDeleteItemTable">{{
+                                                $t('def.delete')
+                                            }}</a-button>
+                                        </template>
+                                    </template>
+                                </a-table>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+                <!-- <a-modal v-model:visible="uploadModalShow" :title="$t('n.upload_attachment')" class="attachment-file-upload-modal"
+                    :after-close="handleModalClose">
+                    <div class="form-title">
+                        <div class="form-item required file-upload">
+                            <div class="key">{{ $t('f.upload') }}:</div>
+                            <div class="value">
+                                <a-upload name="file" class="file-uploader" :multiple="true" :file-list="upload.fileList"
+                                    :action="upload.action" :headers="upload.headers" :data='upload.data'
+                                    :before-upload="handleFileCheck" @change="handleFileChange">
+                                    <a-button type="primary" ghost class="file-upload-btn">
+                                        <i class="icon i_upload" /> {{ $t('f.choose') }}
+                                    </a-button>
+                                </a-upload>
+                            </div>
+                        </div>
+                    </div>
+                    <template #footer>
+                        <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
+                        <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure')
+                        }}</a-button>
+                    </template>
+                </a-modal> -->
+            </template>
         </div>
     </div>
 </template>
@@ -99,8 +241,8 @@ import Core from '../../core';
 import dayjs from 'dayjs';
 
 const REPAIR = Core.Const.REPAIR
-import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue'
-import AddressCascader from '@/components/common/AddressCascader.vue'
+import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue';
+import AddressCascader from '@/components/common/AddressCascader.vue';
 
 export default {
     name: 'RepairEdit',
@@ -112,106 +254,125 @@ export default {
             loginType: Core.Data.getLoginType(),
             // 加载
             loading: false,
-            detail: {
-                status: 0,
-                repair_user_id: undefined, // 工单负责人
-                plan_time: undefined, // 计划时间
-                repair_message: "", // 处理信息、工单备注
-                priority: 0, // 紧急程度
-            }, // 工单详情
-            create_time: [],
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.BEGIN,
-            deviceList: REPAIR.DEVICE_LIST, // 工单类型
-            typeList: REPAIR.TYPE_LIST, // 工单分类
-            categoryList: REPAIR.CATEGORY_LIST, // 维修工单类别
-            partsList: REPAIR.PARTS_LIST, // 零配件类别
-            methodList: REPAIR.METHOD_LIST, // 维修类别
-            serviceList: REPAIR.SERVICE_TYPE_LIST,//工单帐类
-            channelList: REPAIR.CHANNEL_LIST, // 维修方式
-            priorityList: REPAIR.PRIORITY_LIST, // 紧急程度
-            customerList: [], // 车主列表
-            isExist: '', // 车辆编号输入框提示
-            form: {
-                id: '',
-                device_type: 1,  // 工单类型
-                type: 1,  // 工单分类
-                category: 1, // 维修工单类别
-                name: '', // 工单名称
-                desc: '', // 问题描述
-                service_type: '',//保内维修、保外维修
-                mileage: '',//行程公里数
-                channel: 1, // 维修方式、维修途径
-                repair_method: 1, // 维修类别
-                vehicle_no: '', // 车架号
-                customer_id: undefined,  // 相关客户-id
-                customer_name: "",  // 相关客户-名称
-                customer_phone: "", // 客户电话
-                customer_email: "", // 客户邮箱
-                customer_address: "", // 维修地址
-                remark: "", // 工单备注
-                repair_user_id: undefined, // 工单负责人
-                plan_time: undefined, // 计划时间
-                // finish_time: undefined, // 完成时间
-                repair_message: "", // 处理信息、工单备注
-                priority: 0, // 紧急程度
-            },
-            defAddr: [],
-            arrival_time: '',
-            areaMap: {},
-            area: {
-                country: '',
-                country_en: '',
-                province: '',
-                province_en: '',
-                city: '',
-                city_en: '',
-                county: '',
-            },
             tipList: [
                 "1. 当前新增工单时，请填写出现同一工单类型的车架号信息",
                 "2. 同一车型的车架号会生成一个工单",
                 "3. 提交后的工单在没有审核前，可以点击取消并重新编辑工单，也可直接作废该工单，作废的工单不可再次编辑；取消的工单在【已关闭】状态的工单列表中查找",
             ],
-            showTextarea: false, // 初始值为false，表示显示输入框
-            itemTableData: [
+            itemTableData: [],
+            mileage: undefined,
+            category: 1,
+            repairTypeList: [ // 工单类型
+                { zh: '维修', en: 'Repair', value: 1, key: 1 },
+                { zh: '开箱损', en: 'Unpacking Damage', value: 2, key: 2 },
+            ],
+            form: {
+                vehicle_no: undefined,
+                failure_type: 1,
+                category: []
+            },
+            vehicleGroupList: [], // 车型
+            isVehicle: false,
+            uidList: [],
+            itemTableDetail: {
+                count: 5, //车架号数量
+                filter_number: 2, //过滤掉的重复车架号数量
+                executing_number: 1, //在执行中的工单数量
+                special_number: 1, //特殊的车架号数量
+            },
+            faultTypeList: [ // 故障种类
                 {
-                    id: 1,
-                    frame_uid: 'R45LA1C20P2000043',
-                    item_name: '液压升降小推车--MAUTO',
-                    item_code: 'HW800T-1/02N6',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    warranty_status: 1,
+                    key: 1,
+                    zh: '同一故障',
+                    en: 'Identical Fault'
                 },
                 {
-                    id: 2,
-                    frame_uid: 'R45LA1C20P2000043',
-                    item_name: '液压升降小推车--MAUTO',
-                    item_code: 'HW800T-1/02N6',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    warranty_status: 3,
-                },
-                {
-                    id: 3,
-                    frame_uid: 'R45LA1C20P2000043',
-                    item_name: '液压升降小推车--MAUTO',
-                    item_code: 'HW800T-1/02N6',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    warranty_status: 2,
-                },
-                {
-                    id: 4,
-                    frame_uid: 'R45LA1C20P2000043',
-                    item_name: '液压升降小推车--MAUTO',
-                    item_code: 'HW800T-1/02N6',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    warranty_status: 3,
+                    key: 2,
+                    zh: '不同故障',
+                    en: 'Different Fault'
                 },
             ],
-            mileage: undefined,
+            faultTypesList: [ // 故障类型
+                {
+                    key: 1,
+                    zh: '电池组',
+                    en: 'Identical Fault',
+                    value: 1,
+                },
+                {
+                    key: 2,
+                    zh: '电机组',
+                    en: 'Different Fault',
+                    value: 2,
+                },
+                {
+                    key: 3,
+                    zh: '方向组',
+                    en: 'Identical Fault',
+                    value: 3,
+
+                },
+                {
+                    key: 4,
+                    zh: '制动组',
+                    en: 'Different Fault',
+                    value: 4,
+
+                },
+                {
+                    key: 5,
+                    zh: '前叉组',
+                    en: 'Different Fault',
+                    value: 5,
+
+                },
+                {
+                    key: 6,
+                    zh: '前轮组',
+                    en: 'Different Fault',
+                    value: 6,
+                },
+                {
+                    key: 7,
+                    zh: '后轮组',
+                    en: 'Different Fault',
+                    value: 7,
+                },
+                {
+                    key: 8,
+                    zh: '车架组',
+                    en: 'Different Fault',
+                    value: 8,
+                },
+                {
+                    key: 9,
+                    zh: '支撑组',
+                    en: 'Different Fault',
+                    value: 9,
+                },
+                {
+                    key: 9,
+                    zh: '前部塑件组',
+                    en: 'Different Fault',
+                    value: 9,
+                },
+                {
+                    key: 10,
+                    zh: '尾部塑件组',
+                    en: 'Identical Fault',
+                    value: 10,
+                },
+                {
+                    key: 11,
+                    zh: '坐垫组',
+                    en: 'Different Fault',
+                    value: 11,
+                },
+            ],
+            vehicleGroupList: [],
+            itemVehicleTableData: [],
+            question_desc: undefined,
+            uploadModalShow: false
         };
     },
     watch: {},
@@ -233,13 +394,36 @@ export default {
             ]
             return columns
         },
+        itemVehicleTableColumns() {
+            let columns = [
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
+                { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
+                { title: this.$t('i.spec'), dataIndex: 'item_spec', key: 'item' }, // 规格
+                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
+                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'price' }, // 单价
+                { title: this.$t('i.total_price'), dataIndex: 'total_price', key: 'price' }, // 总价
+                { title: this.$t('r.fault_types'), dataIndex: 'fault_type', key: 'fault_type' }, // 故障类型
+                { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
+                {   // 上传附件
+                    title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('p.attachment')}`,
+                    dataIndex: 'attachment_list',
+                    key: 'upload'
+                },
+                {   // 问题描述
+                    title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('r.description')}`,
+                    dataIndex: 'question_desc',
+                    key: 'input'
+                },
+                { title: this.$t('def.operate'), key: 'operation' }
+            ]
+            return columns
+        },
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
-        if (this.form.id) {
-            this.getRepairDetail();
-        }
-        this.getCustomerList();
+        this.getTableData()
     },
     methods: {
         // 页面跳转
@@ -266,218 +450,76 @@ export default {
                     break;
             }
         },
-
-        // 获取 车主列表
-        getCustomerList(val) {
-            Core.Api.Customer.list(
-            ).then(res => {
-                this.customerList = res.list
-                if (val == 'refresh') {
-                    this.$message.success(this.$t('r.refreshed'))
-                }
-            })
+        getTableData() {
+            let res = {
+                count: 5, //车架号数量
+                filter_number: 2, //过滤掉的重复车架号数量
+                executing_number: 1, //在执行中的工单数量
+                special_number: 1,
+                vehicle_info_list: [
+                    {
+                        frame_uid: "R45BB2B60P3000006",
+                        item_name: "SK3银蓝",
+                        item_code: "TLA3-B8-0000",
+                        item_spec: "蓝色",
+                        model: "EK1",
+                        warranty_status: 1
+                    },
+                    {
+                        frame_uid: "R45BB2B60P3000007",
+                        item_name: "SK3银蓝",
+                        item_code: "TLA3-B8-0001",
+                        item_spec: "蓝色",
+                        model: "EK3",
+                        warranty_status: 2
+                    },
+                    {
+                        frame_uid: "R45BB2B60P3000008",
+                        item_name: "SK3银蓝",
+                        item_code: "TLA3-B8-0002",
+                        item_spec: "蓝色",
+                        model: "SK3",
+                        warranty_status: 3
+                    },
+                ],
+                vehicle_group_list: [
+                    {
+                        model: "SK3",
+                        vehicle_list: [
+                            {
+                                frame_uid: "R45BB2B60P3000007",
+                                itemVehicleTableData: [
+                                    {
+                                        item_name: '电池',
+                                        item_code: 'TLA3-B8-0000',
+                                        item_spec: '珍珠白；100/80-14’’',
+                                        amount: 1,
+                                        unit_price: 10000,
+                                        total_price: 20000,
+                                        fault_type: '电池故障',
+                                        warranty_status: 1,
+                                        attachment_list: [
+                                            {
+                                                name: 'test.png',
+                                                path: "img/db6374ec97adcd584b73577edec4d42f132a139af225ff6a0afbc73e8c1474fb.png",
+                                                type: "png"
+                                            }
+                                        ],
+                                        question_desc: '',
+                                    }
+                                ]
+                            },
+                        ]
+                    },
+                ]
+            };
+            this.itemTableData = res.vehicle_info_list
+            this.itemTableDetail.count = res.count
+            this.itemTableDetail.filter_number = res.filter_number
+            this.itemTableDetail.executing_number = res.executing_number
+            this.itemTableDetail.special_number = res.special_number
+            this.vehicleGroupList = res.vehicle_group_list
         },
-        // 获取工单详情
-        getRepairDetail() {
-            this.loading = true;
-            Core.Api.Repair.detail({
-                id: this.form.id,
-            }).then(res => {
-                console.log('getRepairDetail res', res)
-                this.detail = res
-                this.form.id = res.id
-                for (const key in this.form) {
-                    this.form[key] = res[key]
-                }
-                this.form.customer_id = this.form.customer_id || undefined
-                this.form.repair_user_id = this.form.repair_user_id || undefined
-                this.form.plan_time = this.form.plan_time ? dayjs.unix(this.form.plan_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-                // this.form.finish_time = this.form.finish_time ? dayjs.unix(this.form.finish_time).format('YYYY-MM-DD HH:mm:ss') : undefined
-            }).catch(err => {
-                console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-
-        // 表单提交
-        async handleSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            let area = Core.Util.deepCopy(this.area)
-            if (!Core.Util.isEmptyObj(this.areaMap)) {
-                area.country = this.areaMap.country.name
-                area.country_en = this.areaMap.country.name_en
-                area.city = this.areaMap.city.name
-                area.city_en = this.areaMap.city.name_en
-                if (this.areaMap.province) {
-                    area.province = this.areaMap.province.name
-                    area.province_en = this.areaMap.province.name_en
-                } else {
-                    area.province = ""
-                    area.province_en = ""
-                }
-                if (this.areaMap.county) {
-                    area.county = this.areaMap.county.name
-                    area.county_en = this.areaMap.county.county_en
-                } else {
-                    area.county = ""
-                    area.county_en = ""
-                }
-            }
-
-            form.plan_time = form.plan_time ? dayjs(form.plan_time).unix() : 0
-
-            let checkRes = this.checkFormInput(form);
-            if (!checkRes) {
-                return
-            }
-            let apiName = form.id ? 'update' : 'create'
-            if (form.device_type !== REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                form.customer_address = ''
-                form.customer_email = ''
-                form.customer_name = ''
-                form.customer_phone = ''
-            }
-
-            await Core.Api.Repair[apiName]({
-                ...form,
-                ...area,
-                arrival_time: this.arrival_time
-            }).then(res => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.routerChange('detail', res.detail)
-            }).catch(err => {
-                console.log();
-                console.log('handleSubmit err:', err)
-            })
-        },
-        handleVehicleBlur() {  // 获取 车架号
-            if (!this.form.vehicle_no) {
-                return this.isExist = ''
-            }
-            Core.Api.Entity.detailByUid({
-                uid: this.form.vehicle_no,
-            }).then(res => {
-                this.isExist = res.detail == null ? 2 : 1
-                this.arrival_time = res.detail.arrival_time
-                console.log('arrival_time')
-                console.log("handleVehicleBlur res", res)
-            }).catch(err => {
-                console.log('handleVehicleBlur err', err)
-            }).finally(() => {
-            });
-        },
-        // 检查表单输入
-        checkFormInput(form) {
-
-            if (!form.type) {
-                console.log('form.type');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.priority) {
-                console.log('form.priority');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.service_type) {
-                console.log('form.service_type');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.mileage && form.mileage !== 0 && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                console.log('form.mileage');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.name) {
-                console.log('form.name');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.desc) {
-                console.log('form.desc');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.channel && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                console.log('form.channel');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.repair_method && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                console.log('form.repair_method');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            if (!form.vehicle_no && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                console.log('form.vehicle_no');
-                return this.$message.warning(this.$t('def.enter'))
-            }
-            // if (this.isExist === false && form.device_type === Core.Const.REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-            //     return this.$message.warning(this.$t('def.enter'))
-            // }
-            if (form.id && form.device_type === REPAIR.DEVICE.FINISHED_AUTOMOBILE) {
-                // if (!form.customer_id) {
-                //     console.log('form.customer_id');
-                //     return this.$message.warning(this.$t('def.enter'))
-                // }
-                // if (form.channel == 1 && !form.customer_address) {
-                //     console.log('form.customer_address');
-                //     return this.$message.warning(this.$t('def.enter'))
-                // }
-                // if (!form.repair_user_id) {
-                //     this.$message.warning('请选择工单负责人')
-                // }
-                if (!form.customer_name) {
-                    console.log('form.customer_name');
-                    return this.$message.warning(this.$t('def.enter'))
-                }
-                // if (!form.customer_phone) {
-                //     console.log('form.customer_phone');
-                //     return this.$message.warning(this.$t('def.enter'))
-                // }
-                // if (!form.customer_email) {
-                //     console.log('form.customer_email');
-                //     return this.$message.warning(this.$t('def.enter'))
-                // }
-                // if (!this.areaMap.country && !this.areaMap.city) {
-                //     return this.$message.warning(this.$t('def.enter'))
-                // }
-            }
-            return 1
-        },
-
-        // 选择客户
-        handleCustomerSelect(id) {
-            let item = this.customerList.find(i => i.id === id)
-            console.log('customerList', this.customerList)
-            this.form.customer_name = item.name ? item.name : ''
-            this.form.customer_phone = item.phone ? item.phone : ''
-            this.form.customer_email = item.email ? item.email : ''
-            this.area.country = item.country
-            this.area.country_en = item.country_en
-            this.area.province = item.province
-            this.area.province_en = item.province_en
-            this.area.city = item.city
-            this.area.city_en = item.city_en
-            this.area.county = item.county
-            this.form.customer_address = item.address ? item.address : ''
-            // this.defAddr = [item.country,item.province, item.city, item.county]
-            console.log('this.addr', this.defAddr)
-            console.log('this.area', this.area);
-
-        },
-        handleTypeChange() {
-            switch (this.form.type) {
-                case REPAIR.TYPE.TYPE_COMMON: {
-                    this.form.service_type = '';
-                    break;
-                }
-                case REPAIR.TYPE.TYPE_SPECIAL: {
-                    this.form.service_type = REPAIR.SERVICE_TYPE.IN_REPAIR_TIME;
-                    break;
-                }
-            }
-        },
-
-        /* handleAddressSelect(address) {
-             this.form.province = address[0]
-             this.form.city = address[1]
-             this.form.county = address[2]
-         }*/
         handleDeleteItemTable() {
             let _this = this;
             this.$confirm({
@@ -490,6 +532,11 @@ export default {
                 },
             });
         },
+        handleSubmitVehicle() {
+            this.isVehicle = true
+            this.uidList = this.form.vehicle_no.trim().split('\n').map(str => str.trim());;
+            console.log('uidList', this.uidList);
+        }
     }
 };
 </script>
@@ -508,7 +555,7 @@ export default {
 
         .tips-block {
             width: 100%;
-            padding: 16px 0 0 46px;
+            padding: 16px 0 16px 46px;
             box-sizing: border-box;
             min-height: 98px;
             border-radius: 8px;
@@ -539,6 +586,10 @@ export default {
         padding: 32px 20px 24px;
         box-sizing: border-box;
 
+        &.pr {
+            padding-right: 0;
+        }
+
         .color-block {
             width: 3px;
             height: 48px;
@@ -556,6 +607,14 @@ export default {
             color: #1D2129;
             font-size: 16px;
             font-weight: 600;
+
+            .order-type-key {
+                margin-left: 24px;
+                margin-right: 10px;
+                color: #1D2129;
+                font-size: 14px;
+                font-weight: 400;
+            }
         }
     }
 
@@ -564,14 +623,39 @@ export default {
         padding: 0 20px 0;
         box-sizing: border-box;
 
+        &.pl {
+            padding-left: 44px;
+        }
+
         .form-wrap {
             display: flex;
             align-items: center;
 
+            &.mt {
+                margin-top: 25px;
+                align-items: flex-start;
+            }
+
             .key {
+                min-width: 100px;
                 margin-right: 16px;
                 color: #000;
                 font-size: 14px;
+            }
+
+            .checkbox-wrap {
+                width: 100%;
+                text-align: center;
+                display: flex;
+                align-content: flex-start;
+                flex-flow: row wrap;
+
+                .ant-checkbox-wrapper {
+                    width: 25%;
+                    margin-left: 0;
+                    margin-bottom: 18px;
+                    flex: 0 0 20%;
+                }
             }
 
             .value {
@@ -617,7 +701,7 @@ export default {
                 opacity: 0;
                 content: '*';
                 color: @TC_required;
-                padding-right: 2px;
+                padding-right: 4px;
             }
 
             &.required {
@@ -634,12 +718,12 @@ export default {
         width: 100%;
         min-height: 650px;
         background-color: #FFF;
-        padding: 0 20px 20px 20px;
+        padding: 0 20px 20px 0px;
         box-sizing: border-box;
 
         .item-table-container {
-            margin-top: 24px;
-            padding-left: 68px;
+            margin-top: 104px;
+            padding-left: 88px;
             box-sizing: border-box;
             width: 100%;
 
@@ -669,6 +753,69 @@ export default {
                 .table-footer-num {
                     color: #F5222D;
                     font-weight: 600;
+                }
+            }
+        }
+
+        .parts-replace-container {
+            margin-top: 24px;
+            width: 100%;
+            padding: 0 20px 0 48px;
+            box-sizing: border-box;
+
+            .parts-replace-title {
+                color: #1D2129;
+                font-size: 14px;
+            }
+
+            .border-wrap {
+                margin-top: 16px;
+                width: 100%;
+                padding: 16px 16px 24px 16px;
+                box-sizing: border-box;
+                border-radius: 4px;
+                border: 1px solid #EEF0F3;
+                min-height: 200px;
+
+                .vehicle-item-head {
+                    min-width: 214px;
+                    max-width: 260px;
+                    height: 24px;
+                    background: rgba(0, 97, 255, 0.10);
+                    padding: 0px 6px;
+                    box-sizing: border-box;
+                    color: #0061FF;
+                    font-size: 14px;
+                    font-weight: 600;
+                    line-height: 24px;
+                    text-align: center;
+                }
+
+                .table-upload {
+                    display: flex;
+                    align-items: center;
+
+                    .divide-line {
+                        width: 1px;
+                        height: 16px;
+                        background: #F0F0F0;
+                        margin: 0 12px;
+                    }
+
+                    .upload-icon {
+                        width: 20px;
+                        height: 20px;
+                        cursor: pointer;
+                        margin-left: 10px;
+                    }
+
+                    .upload-text {
+                        color: #0061FF;
+                        font-size: 14px;
+                        font-weight: 400;
+                        margin-left: 6px;
+                        cursor: pointer;
+                    }
                 }
             }
         }

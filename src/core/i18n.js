@@ -382,6 +382,8 @@ const messages = {
             filtered_duplicate: '已过滤重复',
             Execute_intermediate: '执行中工单',
             spec_tip: '其中特殊车架号为系统未录入的车架号',
+            fault_type: '故障种类',
+            fault_types: '故障类型',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2707,6 +2709,8 @@ const messages = {
             filtered_duplicate: 'Filtered Duplicate',
             Execute_intermediate: 'Execute intermediate work order',
             spec_tip: 'The special frame number is the frame number not recorded in the system',
+            fault_type: 'Fault Type',
+            fault_types: 'Fault Type',
         },
         d: {
             distributor_detail: 'Distributor Details',
