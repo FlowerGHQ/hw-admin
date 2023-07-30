@@ -384,6 +384,9 @@ const messages = {
             spec_tip: '其中特殊车架号为系统未录入的车架号',
             fault_type: '故障种类',
             fault_types: '故障类型',
+            total_amount: '总金额',
+            available_balance: '可用余额',
+            submit_work_order: '提交工单',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2711,6 +2714,9 @@ const messages = {
             spec_tip: 'The special frame number is the frame number not recorded in the system',
             fault_type: 'Fault Type',
             fault_types: 'Fault Type',
+            total_amount: 'Total Amount',
+            available_balance: 'Available Balance',
+            submit_work_order: 'Submit',
         },
         d: {
             distributor_detail: 'Distributor Details',

@@ -43,8 +43,7 @@
                         </div>
                     </div>
                     <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
-                        :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'
-                        @change="handleTableChange">
+                        :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #headerCell="{ column }">
                             <div v-html="column.title"></div>
                         </template>
@@ -118,7 +117,7 @@
                         <div class="form-wrap required">
                             <div class="key">{{ $t('r.fault_type') }}:</div>
                             <div class="value">
-                                <a-radio-group v-model:value="form.failure_type">
+                                <a-radio-group v-model:value="$1.failure_type">
                                     <a-radio v-for="item in faultTypeList" :value="item.key">
                                         {{ lang === 'zh' ? item.zh : item.en }}
                                     </a-radio>
@@ -126,7 +125,7 @@
                             </div>
                         </div>
                         <!-- 故障类型 -->
-                        <div class="form-wrap required mt">
+                        <div class="form-wrap required mt" v-if="$1.failure_type === 1">
                             <div class="key">{{ $t('r.fault_types') }}:</div>
                             <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" :disabled="falgEdit">
                                 <a-checkbox v-for="item in faultTypesList" :value="item.value">
@@ -136,17 +135,33 @@
                         </div>
                     </div>
                     <div class="parts-replace-container">
-                        <div class="parts-replace-title">
-                            {{ $t(/*零部件更换*/'r.replacement_items') }}
+                        <div class="parts-replace-title" v-if="$1.failure_type === 1">
+                            {{ $t(/*零部件更换*/'r.replacement_items') }}：
                         </div>
                         <div class="border-wrap" v-for="($2, index) in $1.vehicle_list" :key="index">
-                            <div class="vehicle-item-head">
-                                {{ $t(/*车架号*/'search.vehicle_no') }}：{{ $2.frame_uid }}
+                            <div class="vehicle-item-head-wrap">
+                                <div class="vehicle-item-head">
+                                    {{ $t(/*车架号*/'search.vehicle_no') }}：{{ $2.frame_uid }}
+                                </div>
+                                <div class="spec-tab" v-if="$2.spec_flag">
+                                    {{ $t(/*特殊*/'search.special') }}
+                                </div>
+                            </div>
+                            <!-- 故障类型 -->
+                            <div class="form-wrap required mt" v-if="isShow($1.failure_type)">
+                                <div class="key">{{ $t('r.fault_types') }}:</div>
+                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" :disabled="falgEdit">
+                                    <a-checkbox v-for="item in faultTypesList" :value="item.value">
+                                        {{ item[$i18n.locale] }}
+                                    </a-checkbox>
+                                </a-checkbox-group>
+                            </div>
+                            <div class="parts-replace-title mb" v-if="isShow($1.failure_type)">
+                                {{ $t(/*零部件更换*/'r.replacement_items') }}：
                             </div>
                             <div class="vehicle-item-table">
                                 <a-table :columns="itemVehicleTableColumns" :data-source="$2.itemVehicleTableData"
-                                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'
-                                    @change="handleTableChange">
+                                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                                     <template #headerCell="{ column }">
                                         <div v-html="column.title"></div>
                                     </template>
@@ -205,6 +220,21 @@
                                         </template>
                                     </template>
                                 </a-table>
+                                <div class="vehicle-item-footer">
+                                    <a-button v-if="$2.spec_flag" class="add-btn" type="primary">{{ $t(/*添加商品*/'i.add') }}</a-button>
+                                    <div class="total">
+                                        {{ $t(/*合计*/'p.total') }}
+                                    </div>
+                                    <div class="total-amount">
+                                        {{ $t(/*总数量*/'i.total_quantity') }}: {{ $2.amount }}
+                                    </div>
+                                    <div class="total-amount">
+                                        {{ $t(/*总金额*/'r.total_amount') }}: €{{ $2.price }}
+                                    </div>
+                                    <div class="total-amount">
+                                        {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ $2.pay_price }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -232,6 +262,25 @@
                     </template>
                 </a-modal> -->
             </template>
+        </div>
+        <div class="fix-container">
+            <div class="pay-method-key">
+                {{ $t(/*赔付方式*/'r.payment_method') }}：
+                <div class="pay-method-radio">
+                    <a-radio-group v-model:value="form.compensation_method">
+                        <a-radio v-for="item in payMethodList" :value="item.key">
+                            {{ lang === 'zh' ? item.zh : item.en }}
+                        </a-radio>
+                    </a-radio-group>
+                </div>
+                <div class="balance">
+                    ( {{ $t(/*可用余额*/'r.available_balance') }}: €100 )
+                </div>
+                <div class="submit-btn-group">
+                    <a-button @click="handleCancel">{{ $t(/*取消*/'def.cancel') }}</a-button>
+                    <a-button @click="handleConfirm" type="primary">{{ $t(/*提交工单*/'r.submit_work_order') }}</a-button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -269,7 +318,8 @@ export default {
             form: {
                 vehicle_no: undefined,
                 failure_type: 1,
-                category: []
+                category: [],
+                compensation_method: 1,
             },
             vehicleGroupList: [], // 车型
             isVehicle: false,
@@ -290,6 +340,18 @@ export default {
                     key: 2,
                     zh: '不同故障',
                     en: 'Different Fault'
+                },
+            ],
+            payMethodList: [ // 赔付方式
+                {
+                    key: 1,
+                    zh: '赔付配件',
+                    en: 'Compensation Accessories'
+                },
+                {
+                    key: 2,
+                    zh: '赔付至账户',
+                    en: 'Allocated Account'
                 },
             ],
             faultTypesList: [ // 故障类型
@@ -420,12 +482,20 @@ export default {
         },
         lang() {
             return this.$store.state.lang
-        }
+        },
+
     },
     mounted() {
         this.getTableData()
     },
     methods: {
+        isShow(item) {
+            if (item === 2) {
+                return true
+            } else {
+                return false
+            }
+        },
         // 页面跳转
         routerChange(type, item) {
             let routeUrl
@@ -485,6 +555,7 @@ export default {
                 vehicle_group_list: [
                     {
                         model: "SK3",
+                        failure_type: 1,
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000007",
@@ -507,7 +578,98 @@ export default {
                                         ],
                                         question_desc: '',
                                     }
-                                ]
+                                ],
+                                amount: 10,
+                                price: 100,
+                                pay_price: 1000,
+                                spec_flag: false,
+                            },
+                            {
+                                frame_uid: "R45BB2B60P3000007",
+                                itemVehicleTableData: [
+                                    {
+                                        item_name: '电池',
+                                        item_code: 'TLA3-B8-0000',
+                                        item_spec: '珍珠白；100/80-14’’',
+                                        amount: 1,
+                                        unit_price: 10000,
+                                        total_price: 20000,
+                                        fault_type: '电池故障',
+                                        warranty_status: 1,
+                                        attachment_list: [
+                                            {
+                                                name: 'test.png',
+                                                path: "img/db6374ec97adcd584b73577edec4d42f132a139af225ff6a0afbc73e8c1474fb.png",
+                                                type: "png"
+                                            }
+                                        ],
+                                        question_desc: '',
+                                    }
+                                ],
+                                amount: 10,
+                                price: 100,
+                                pay_price: 1000,
+                                spec_flag: true,
+                            },
+                        ]
+                    },
+                    {
+                        model: "EK3",
+                        failure_type: 1,
+                        vehicle_list: [
+                            {
+                                frame_uid: "R45BB2B60P3000007",
+                                itemVehicleTableData: [
+                                    {
+                                        item_name: '电池',
+                                        item_code: 'TLA3-B8-0000',
+                                        item_spec: '珍珠白；100/80-14’’',
+                                        amount: 1,
+                                        unit_price: 10000,
+                                        total_price: 20000,
+                                        fault_type: '电池故障',
+                                        warranty_status: 1,
+                                        attachment_list: [
+                                            {
+                                                name: 'test.png',
+                                                path: "img/db6374ec97adcd584b73577edec4d42f132a139af225ff6a0afbc73e8c1474fb.png",
+                                                type: "png"
+                                            }
+                                        ],
+                                        question_desc: '',
+                                    }
+                                ],
+                                amount: 10,
+                                price: 100,
+                                pay_price: 1000,
+                                spec_flag: false,
+                            },
+                            {
+                                frame_uid: "R45BB2B60P3000007",
+                                itemVehicleTableData: [
+                                    {
+                                        item_name: '电池',
+                                        item_code: 'TLA3-B8-0000',
+                                        item_spec: '珍珠白；100/80-14’’',
+                                        amount: 1,
+                                        unit_price: 10000,
+                                        total_price: 20000,
+                                        fault_type: '电池故障',
+                                        warranty_status: 1,
+                                        attachment_list: [
+                                            {
+                                                name: 'test.png',
+                                                path: "img/db6374ec97adcd584b73577edec4d42f132a139af225ff6a0afbc73e8c1474fb.png",
+                                                type: "png"
+                                            }
+                                        ],
+                                        question_desc: '',
+                                    }
+                                ],
+                                amount: 10,
+                                price: 100,
+                                pay_price: 1000,
+                                spec_flag: true,
                             },
                         ]
                     },
@@ -528,7 +690,7 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    console.log(111);
+                    console.log('handleDeleteItemTable ok');
                 },
             });
         },
@@ -536,13 +698,15 @@ export default {
             this.isVehicle = true
             this.uidList = this.form.vehicle_no.trim().split('\n').map(str => str.trim());;
             console.log('uidList', this.uidList);
-        }
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
 #RepairEdit {
+    position: relative;
+
     :deep(.ant-table-cell) {
         color: #1D2129;
         font-size: 12px;
@@ -627,89 +791,91 @@ export default {
             padding-left: 44px;
         }
 
-        .form-wrap {
+
+    }
+
+    .form-wrap {
+        display: flex;
+        align-items: center;
+
+        &.mt {
+            margin-top: 25px;
+            align-items: flex-start;
+        }
+
+        .key {
+            min-width: 100px;
+            margin-right: 16px;
+            color: #000;
+            font-size: 14px;
+        }
+
+        .checkbox-wrap {
+            width: 100%;
+            text-align: center;
             display: flex;
-            align-items: center;
+            align-content: flex-start;
+            flex-flow: row wrap;
 
-            &.mt {
-                margin-top: 25px;
-                align-items: flex-start;
+            .ant-checkbox-wrapper {
+                width: 25%;
+                margin-left: 0;
+                margin-bottom: 18px;
+                flex: 0 0 20%;
             }
+        }
 
-            .key {
-                min-width: 100px;
-                margin-right: 16px;
-                color: #000;
-                font-size: 14px;
-            }
+        .value {
+            width: 400px;
+            height: 32px;
 
-            .checkbox-wrap {
-                width: 100%;
-                text-align: center;
-                display: flex;
-                align-content: flex-start;
-                flex-flow: row wrap;
-
-                .ant-checkbox-wrapper {
-                    width: 25%;
-                    margin-left: 0;
-                    margin-bottom: 18px;
-                    flex: 0 0 20%;
+            textarea {
+                &::-webkit-scrollbar {
+                    /*滚动条整体样式*/
+                    width: 6px;
+                    height: 52px;
                 }
-            }
-
-            .value {
-                width: 400px;
-                height: 32px;
-
-                textarea {
-                    &::-webkit-scrollbar {
-                        /*滚动条整体样式*/
-                        width: 6px;
-                        height: 52px;
-                    }
 
 
-                    &::-webkit-scrollbar-thumb {
-                        /*滚动条内部滑块*/
-                        border-radius: 10px;
-                        background-color: #D9D9D9;
-                        transition: background-color 0.3s;
+                &::-webkit-scrollbar-thumb {
+                    /*滚动条内部滑块*/
+                    border-radius: 10px;
+                    background-color: #D9D9D9;
+                    transition: background-color 0.3s;
 
 
-                        &:hover {
-                            background: #bbb;
-                        }
-                    }
-
-
-                    &::-webkit-scrollbar-track {
-                        /*滚动条内部轨道*/
-                        // opacity: 0.9;
-                        background: #F5F5F5;
+                    &:hover {
+                        background: #bbb;
                     }
                 }
-            }
 
-            .ant-btn {
-                width: 80px;
-                height: 32px;
-                margin-left: 16px;
-            }
 
+                &::-webkit-scrollbar-track {
+                    /*滚动条内部轨道*/
+                    // opacity: 0.9;
+                    background: #F5F5F5;
+                }
+            }
+        }
+
+        .ant-btn {
+            width: 80px;
+            height: 32px;
+            margin-left: 16px;
+        }
+
+        .key::before {
+            opacity: 0;
+            content: '*';
+            color: @TC_required;
+            padding-right: 4px;
+        }
+
+        &.required {
+
+            // 必填标志
             .key::before {
-                opacity: 0;
-                content: '*';
-                color: @TC_required;
-                padding-right: 4px;
-            }
-
-            &.required {
-
-                // 必填标志
-                .key::before {
-                    opacity: 1;
-                }
+                opacity: 1;
             }
         }
     }
@@ -758,7 +924,6 @@ export default {
         }
 
         .parts-replace-container {
-            margin-top: 24px;
             width: 100%;
             padding: 0 20px 0 48px;
             box-sizing: border-box;
@@ -766,6 +931,10 @@ export default {
             .parts-replace-title {
                 color: #1D2129;
                 font-size: 14px;
+
+                &.mb {
+                    margin-bottom: 16px;
+                }
             }
 
             .border-wrap {
@@ -777,18 +946,59 @@ export default {
                 border: 1px solid #EEF0F3;
                 min-height: 200px;
 
-                .vehicle-item-head {
-                    min-width: 214px;
-                    max-width: 260px;
-                    height: 24px;
-                    background: rgba(0, 97, 255, 0.10);
-                    padding: 0px 6px;
-                    box-sizing: border-box;
-                    color: #0061FF;
+                .vehicle-item-head-wrap {
+                    display: flex;
+
+                    .vehicle-item-head {
+                        min-width: 214px;
+                        max-width: 260px;
+                        height: 24px;
+                        background: rgba(0, 97, 255, 0.10);
+                        padding: 0px 6px;
+                        box-sizing: border-box;
+                        color: #0061FF;
+                        font-size: 14px;
+                        font-weight: 600;
+                        line-height: 24px;
+                        text-align: center;
+                    }
+
+                    .spec-tab {
+                        margin-left: 8px;
+                        min-width: 52px;
+                        text-align: center;
+                        line-height: 24px;
+                        padding: 0 12px;
+                        height: 24px;
+                        border-radius: 2px;
+                        color: #F5222D;
+                        font-size: 14px;
+                        font-weight: 400;
+                        background: rgba(245, 34, 45, 0.10);
+                    }
+                }
+
+
+                .vehicle-item-footer {
+                    position: relative;
+                    margin-top: 18px;
+                    margin-bottom: 16px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                    color: #1D2129;
                     font-size: 14px;
-                    font-weight: 600;
-                    line-height: 24px;
-                    text-align: center;
+                    font-weight: 400;
+
+                    .add-btn {
+                        position: absolute;
+                        left: 0;
+                    }
+
+                    .total,
+                    .total-amount {
+                        margin-right: 24px;
+                    }
                 }
 
                 .table-upload {
@@ -821,6 +1031,41 @@ export default {
         }
     }
 
+    .fix-container {
+        width: 100%;
+        height: 60px;
+        position: fixed;
+        z-index: 999;
+        bottom: 0;
+        display: flex;
+        justify-content: right;
+        align-items: center;
+        background-color: #FFF;
+
+        .pay-method-key {
+            width: 840px;
+            display: flex;
+            align-items: center;
+            color: #1D2129;
+            font-size: 14px;
+            font-weight: 400;
+
+            .pay-method-radio {
+                margin-left: 16px;
+            }
+
+            .balance {
+                color: #86909C;
+                font-size: 14px;
+                font-weight: 400;
+                margin-left: 24px;
+            }
+
+            .submit-btn-group {
+                margin-left: 32px;
+            }
+        }
+    }
 
     .form-item {
         .value {
@@ -862,5 +1107,4 @@ export default {
             align-items: center;
         }
     }
-}
-</style>
+}</style>
