@@ -2329,6 +2329,52 @@ const messages = {
         // 限制提示文字
         input: {
             input_number: "最大输入99字"
+        },
+        // 零售业务
+        retail:{
+            // 车辆管理模块
+            vehicle_list:'车辆列表',
+            view:'查看',
+            delete:'删除',
+            apply_vehicle:'申请车辆',  // Applying for a vehicle
+            series:'系列',
+            model:'型号',
+            color:'颜色',
+            vehicle_usage:'车辆用途',
+            use_status:'使用状态',
+            belonging_area:'归属区域',
+            belonging_store:'归属门店',
+            warehousing_time:'入库时间',
+            operate:'操作',
+            more_screening:'更多筛选',
+            order_search:'订单搜索',
+            vehicle_series:'车辆系列',
+            order_status:'订单状态',
+            subregion:'所属大区',
+            home_city:'所属城市',
+            affiliated_store:'所属门店',
+            order_progress:'订单进度',
+            creat_time:'创建时间',
+            name:'名称',
+            vehicle_information:'车辆信息',
+            test_drive_records:'试驾记录',
+            maintenance_records:'维保记录',
+            license_plate_number:'车牌号',
+            frame_code:'车架码',
+            motor_coding:'电机编码',
+            last_maintenance:'上次保养',
+            service_interval:'保养周期',
+            next_maintenance:'下次保养',
+            test_drive_start_time:"试驾开始时间",
+            test_drive_end_time:"试驾结束时间",
+            test_drive_status:"试驾状态",
+            test_drive_duration:"试驾时长",
+            test_drive_users:"试驾用户",
+            driving_license:"驾驶证照",
+            sign_an_agreement:"签署协议",
+            experience_hall:"体验馆",
+            // 订单管理模块
+            order_list:'订单列表',
         }
     },
 
@@ -4534,6 +4580,50 @@ const messages = {
         // 限制提示文字
         input: {
             input_number: "Maximum input of 99 words"
+        },
+        // 零售业务
+        retail:{
+            vehicle_list:'Vehicle List',
+            view:'View',
+            delete:'Delete',
+            apply_vehicle:'Applying for a vehicle',  // Applying for a vehicle
+            series:'Series',
+            model:'Model',
+            color:'Color',
+            vehicle_usage:'Vehicle Usage',
+            use_status:'Use Status',
+            belonging_area:'Belonging Area',
+            belonging_store:'Belonging Store',
+            warehousing_time:'Warehousing Time',
+            operate:'Operate',
+            more_screening:'More Screening',
+            order_search:'Order Search',
+            vehicle_series:'Vehicle Series',
+            order_status:'Order Status',
+            subregion:'Subregion',
+            home_city:'Home City',
+            affiliated_store:'Affiliated Store',
+            order_progress:'Order Progress',
+            creat_time:'Creat Time',
+
+            name:'Name',
+            vehicle_information:'Vehicle Information',
+            test_drive_records:'Test Drive Records',
+            maintenance_records:'Maintenance Records',
+            license_plate_number:'License Plate Number',
+            frame_code:'Frame Code',
+            motor_coding:'Motor Coding',
+            last_maintenance:'Last Maintenance',
+            service_interval:'Service Interval',
+            next_maintenance:'Next Maintenance',
+            test_drive_start_time:"Test Drive Start Time",
+            test_drive_end_time:"Test Drive End Time",
+            test_drive_status:"Test Drive Status",
+            test_drive_duration:"Test Drive Duration",
+            test_drive_users:"Test Drive Users",
+            driving_license:"Driving License",
+            sign_an_agreement:"Sign An Agreement",
+            experience_hall:"Experience Hall",
         }
     },
 }

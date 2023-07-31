@@ -2486,3 +2486,27 @@ p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
 }
+
+// 筛选
+.search{
+    .search-row{
+        position: relative;
+        .search-col {
+            display: flex;
+            justify-content: flex-start;
+            flex-wrap: wrap; 
+            align-items: center;                 
+            padding-right: 20px; 
+            margin-top: 20px;   
+            .key {
+                width: 100px;
+                text-align: right;                                        
+            }
+
+            .value {
+                width: calc(100% - 100px);                    
+                padding-left: 10px;
+            }
+        }        
+    }  
+}
