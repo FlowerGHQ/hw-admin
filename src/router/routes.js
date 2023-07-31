@@ -12,6 +12,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 * type 这个权限是 销售/售后/生产/CRM 路口的权限
 * roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
 * meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
+* meta hideen判断是否显示到侧边栏上 true为不显示
 */
 const routes = [
     {
@@ -2123,7 +2124,17 @@ const routes = [
                     title: '车辆列表',
                     title_en: 'Vehicle List',                    
                     roles: [LOGIN_TYPE.ADMIN],
-                },       
+                },
+            },
+            {
+                path: 'vehicle-detail',
+                name: 'vehicleDetail',
+                component: () => import('@/views/CRM/Vehicle/detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '车辆详情',
+                    title_en: 'Vehicle Detail',
+                },
             }
         ]
     },
