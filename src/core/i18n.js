@@ -1161,7 +1161,7 @@ const messages = {
             distributor: '该分销商吗？',
             success_disable: '禁用',
             success_enable: '启用',
-            success: '成功',
+            success: '成功', 
             yes: '确定',
             open: '开启',
             close: '关闭',
