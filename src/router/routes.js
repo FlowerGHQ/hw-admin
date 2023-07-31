@@ -2003,14 +2003,70 @@ const routes = [
             {
                 path: 'stores-list',
                 name: 'storesList',
-                component: () => import('@/views/CRM/Stores/list.vue'),
+                component: () => import('@/views/CRM/Stores/store-list.vue'),
                 meta: {
                     title: '门店列表',
                     title_en: 'Stores List',
                     icon: 'i_home',
                     roles: [LOGIN_TYPE.ADMIN],
                 },       
-            }
+            },
+            {
+                path: 'regional-mangage',
+                name: 'regionalMangage',
+                component: () => import('@/views/CRM/Stores/regional-mangage.vue'),
+                meta: {
+                    title: '区域管理',
+                    title_en: 'Regional Mangage',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            },
+            {
+                path: 'shift-mangage',
+                name: 'shiftMangage',
+                component: () => import('@/views/CRM/Stores/shift-mangage.vue'),
+                meta: {
+                    title: '班次管理',
+                    title_en: 'Shift Mangage',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            },
+            {
+                path: 'target-mangage',
+                name: 'targetMangage',
+                component: () => import('@/views/CRM/Stores/target-mangage.vue'),
+                meta: {
+                    title: '目标管理',
+                    title_en: 'Target Mangage',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            },
+			{
+				path: 'store-edit',
+				name: 'store-edit',
+				component: () => import('@/views/CRM/Stores/store-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '',
+					parent: '/stores-vehicle/stores-list',
+                    auth: [],
+				}
+			},
+			{
+				path: 'stores-detail',
+				name: 'storesDetail',
+				component: () => import('@/views/CRM/Stores/store-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '门店详情',
+					title_en: 'Payment Receipt Phase',
+					parent: '/stores-vehicle/stores-list',
+                    auth: [],
+				}
+			},
         ]
     },
     /*----  零售业务新添加在CRM中的 ----*/
@@ -2030,8 +2086,19 @@ const routes = [
                 name: 'personnelList',
                 component: () => import('@/views/CRM/Personnel/list.vue'),
                 meta: {
-                    title: '人员管理',
+                    title: '人员列表',
                     title_en: 'Personnel List',
+                    icon: 'i_s_user',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            },
+            {
+                path: 'role-permiss-man',
+                name: 'rolePermissMan',
+                component: () => import('@/views/CRM/Personnel/rolePermissMan.vue'),
+                meta: {
+                    title: '角色权限管理',
+                    title_en: 'Role Permission Management',
                     icon: 'i_s_user',
                     roles: [LOGIN_TYPE.ADMIN],
                 },       
