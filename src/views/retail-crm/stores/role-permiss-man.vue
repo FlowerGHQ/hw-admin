@@ -4,29 +4,9 @@
     </div>
 </template>
 
-<script >
+<script setup>
 
-export default {
 
-    name: "StoreList",
-    data() {
-        return {}
-    },
-    watch: {
-
-    },
-    computed: {
-
-    },
-    mounted() {
-        // this.getTableData();
-        // this.createUserFetch();
-    },
-    methods: {
-
-    }
-
-}
 </script>
 
 <style lang="less" scoped></style>

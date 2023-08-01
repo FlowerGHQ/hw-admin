@@ -2,7 +2,7 @@
     <div class="vehicle-detail">
         <div class="d-top">
             <div class="title">
-                {{ $t('retail.vehicle_detail') }}
+                {{ $t('s.detail') }}
             </div>
             <div class="container">
                 <div class="d-img">
@@ -13,89 +13,87 @@
                 <div class="d-content">
                     <a-row class="all-msg">
                         <div class="vehicle-msg">
-                            <span>上海浦东新区五角场零售中心
-零售体验中心
-A级
-开业</span>
-                            <!-- 使用中 -->
-                            <span class="use">{{ $t('retail.use') }}</span>
-                            <!-- 试驾车 -->
-                            <span class="test-drive">{{ $t('retail.test_drive') }}</span>
+                            <span>上海浦东新区五角场零售中心</span>
+                            <!-- 店铺 -->
+                            <span class="use tabsty">{{ $t('retail.use') }}零售体验中心</span>
+                            <!-- 等级 -->
+                            <span class="test-drive tabsty">{{ $t('retail.test_drive') }}A级</span>
+                            <!-- 状态 -->
+                            <span class="store-type tabsty">{{ $t('retail.test_drive') }}开业</span>
                         </div>
                         <div class="vehicle-id">
-                            <span class="key">ID：</span>
-                            <span class="value">
-                                12345678
-                            </span>
+                            <span class="key">江苏省常州市天宁区万达购物商场15幢12楼0812号</span>
+                            <span class="key">上海大区-上海</span>
+                            <span class="key">编码：123456</span>
                         </div>
                     </a-row>
                     <a-row class="row-detail">
-                        <!-- 系列 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.series') }}：</span>
+                        <!-- 京都 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.longitude') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
-                        <!-- 型号 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.model') }}：</span>
+                        <!-- 纬度 -->
+                        <a-col :xs="24" :sm="12" :xl="18" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.latitude') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
-                        <!-- 颜色 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.color') }}：</span>
+                        <!-- 开业时间 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.open_time') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
-                        <!-- 入库时间 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.warehousing_time') }}：</span>
-                            <span class="value">
-                                你好
-                            </span>
-                        </a-col>
-                        <!-- 车辆用途 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.vehicle_usage') }}：</span>
-                            <span class="value">
-                                你好
-                            </span>
-                        </a-col>
-                        <!-- 使用状态 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.use_status') }}：</span>
-                            <span class="value">
-                                你好
-                            </span>
-                        </a-col>
-                        <!-- 所属大区 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.subregion') }}：</span>
-                            <span class="value">
-                                你好
-                            </span>
-                        </a-col>
-                        <!-- 所属城市 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.home_city') }}：</span>
+                        <!-- 营业时间 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.com_affil') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 所属门店 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.affiliated_store') }}：</span>
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('dis.business_hours') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
-                        <!-- 名称 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.name') }}：</span>
+                        <!-- 联系手机 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.con_phone') }}：</span>
+                            <span class="value">
+                                你好
+                            </span>
+                        </a-col>
+                        <!-- 联系邮箱 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.con_email') }}：</span>
+                            <span class="value">
+                                你好
+                            </span>
+                        </a-col>
+                        <!-- 门店面积 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.sto_area') }}：</span>
+                            <span class="value">
+                                你好
+                            </span>
+                        </a-col>
+                        <!-- 车位数 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.park_space') }}：</span>
+                            <span class="value">
+                                你好
+                            </span>
+                        </a-col>
+                        <!-- 充电桩数 -->
+                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('crm_st.charg_station') }}：</span>
                             <span class="value">
                                 你好
                             </span>
@@ -106,17 +104,24 @@ A级
         </div>
         <div class="d-bottom">
             <a-tabs v-model:activeKey="activeKey">
-                <a-tab-pane key="vehicle_information" :tab="$t('retail.vehicle_information')">
-                    <!-- <vehicleInformationCom /> -->
-                    36666666666666666666
+                <a-tab-pane key="sto_person" :tab="$t('s.sto_person')">
+                    <CrmEditStorePeo />
                 </a-tab-pane>
-                <a-tab-pane key="test_drive_records" :tab="$t('retail.test_drive_records')">
-                    <!-- <driveRecordsCom /> -->
-                    8888888888888888888888888888
+                <a-tab-pane key="sto_car" :tab="$t('s.sto_car')">
+                    <ShopCarList />
                 </a-tab-pane>
-                <!-- <a-tab-pane key="maintenance_records" :tab="$t('retail.maintenance_records')">   
-                    <maintenanceRecordsCom/>
-                </a-tab-pane> -->
+                <a-tab-pane key="store_shift" :tab="$t('s.store_shift')">
+                    <!-- <maintenanceRecordsCom/> -->
+                    store_shift
+                </a-tab-pane>
+                <a-tab-pane key="contract_info" :tab="$t('s.contract_info')">
+                    <!-- <maintenanceRecordsCom/> -->
+                    <ContentInfo />
+                </a-tab-pane>
+                <a-tab-pane key="licenses" :tab="$t('s.licenses')">
+                    <!-- <maintenanceRecordsCom/> -->
+                    <UploadLicenses />
+                </a-tab-pane>
             </a-tabs>
         </div>
     </div>
@@ -125,11 +130,12 @@ A级
 <script setup>
 
 import { ref } from 'vue';
-// import vehicleInformationCom from './components/vehicle-information.vue'
-// import maintenanceRecordsCom from './components/maintenance-records.vue'
-// import driveRecordsCom from './components/drive-records.vue'
+import CrmEditStorePeo from '@/components/crm/panel/CrmEditStorePeo.vue';
+import ShopCarList from './components/shop-car-list.vue';
+import ContentInfo from './components/content-info.vue';
+import UploadLicenses from './components/upload-licenses.vue';
 
-const activeKey = ref('test_drive_records')
+const activeKey = ref('sto_car')
 </script>
 
 <style lang="less" scoped>
@@ -169,7 +175,7 @@ const activeKey = ref('test_drive_records')
 
             .d-content {
                 .all-msg {
-                    .fcc(space-between);
+                    .flex(space-between, flex-start);
 
                     .vehicle-msg {
                         color: #1D2129;
@@ -177,42 +183,47 @@ const activeKey = ref('test_drive_records')
                         font-weight: 600;
                         letter-spacing: 0.167px;
 
-                        .use {
+                        .tabsty {
+                            height: 19px;
+                            line-height: 19px;
                             display: inline-block;
                             padding: 1px 6px;
                             border-radius: 2px;
-                            background: rgba(255, 125, 0, 0.10);
-                            font-weight: 600;
+                            color: #FFFFFF;
                             font-size: 12px;
-                            color: #FF7D00;
+                            font-weight: 600;
+                        }
+
+                        .use {
+                            background: rgba(0, 97, 255, 1);
                             margin-left: 12px;
                         }
 
                         .test-drive {
                             margin-left: 8px;
-                            display: inline-block;
-                            padding: 1px 6px;
-                            border-radius: 2px;
-                            background: rgba(255, 125, 0, 0.10);
-                            font-weight: 600;
-                            font-size: 12px;
-                            color: #44CB7C;
+                            background: rgba(247, 114, 52, 1);
+                        }
+
+                        .store-type {
+                            margin-left: 8px;
+                            background: rgba(0, 180, 42, 1);
                         }
                     }
 
                     .vehicle-id {
+                        color: var(--color-text-2, #4E5969);
+                        font-family: PingFang SC;
                         font-size: 14px;
                         font-style: normal;
                         font-weight: 400;
                         line-height: normal;
+                        margin-top: 12px;
 
                         .key {
                             color: #86909C;
+                            margin-right: 18px;
                         }
 
-                        .value {
-                            color: #1D2129;
-                        }
                     }
                 }
             }
@@ -236,7 +247,7 @@ const activeKey = ref('test_drive_records')
         font-style: normal;
         font-weight: 400;
         line-height: normal;
-
+        min-width: 200px;
         .key {
             display: inline-block;
             color: #86909C;

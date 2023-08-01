@@ -960,6 +960,13 @@ const messages = {
             sure_delete: '确定要删除该门店吗？',
             store_settings_no: '确定要将该门店设置为不可接受转单吗？',
             store_settings_yes: '确定要将该门店设置为可接受转单吗？',
+            sto_con:'门店配置',
+            sto_person:'门店人员',
+            sto_car:'门店用车',
+            store_shift:'门店班次',
+            contract_info:'签约信息',
+            licenses:'证照',
+
         },
         af: { // 售后单
             list: '售后单列表',
@@ -1376,8 +1383,6 @@ const messages = {
             output: '输入品牌',
             choose_class: '选择类别',
             address:'地址',
-            sto_con:'门店配置',
-            sto_person:'门店人员',
         },
         crm_t: {
             track_record: '跟进记录',
@@ -1554,6 +1559,23 @@ const messages = {
             office:'职务',
             bound_thread:'绑定线索数',
             job_time:'上岗时间',
+            longitude:'经度',
+            latitude:'纬度',
+            owner:'业主',
+            owner_con:'业主联系方式',
+            rental_costs:'租金费用',
+            rent_payment_cycle:'租金缴纳周期',
+            time_rent_payment:'租金缴纳时间',
+            property_costs:'物业费用',
+            property_payment_cycle:'物业缴纳周期',
+            property_payment_time:'物业缴纳时间',
+            renovation_costs:'装修费用',
+            owner_placeholder:'请输入业主姓名',
+            owner_con_placeholder:'请输入业主联系方式',
+            rental_costs_placeholder:'请输入租金费用',
+            property_costs_placeholder:'请输入物业费用',
+            renovation_costs_placeholder:'请输入装修费用',
+            
 
         },
         crm_d: {
@@ -3379,6 +3401,14 @@ const messages = {
             sure_delete: 'Are you sure to delete the shop?',
             store_settings_no: 'Are you sure to set the shop that accepts no transfer?',
             store_settings_yes: 'Are you sure to set the shop that accepts transfer?',
+            sto_con:'Store Configuration',
+            sto_person:'Store Personnel',
+            sto_car:'Shop Cars',
+            store_shift:'Store Shifts',
+            contract_info:'Contract Information',
+            licenses:'Licenses',
+
+
         },
         af: {//售后单
             list: 'After-Sales Order List',
@@ -3771,9 +3801,6 @@ const messages = {
             intentionality: 'Intentionality',
             be_added: 'To be added',
             address:'Address',
-            sto_con:'Store Configuration',
-            sto_person:'Store Personnel',
-
         },
         crm_t: {
             track_record: 'Track Record',
@@ -3949,6 +3976,22 @@ const messages = {
             office:'office',
             bound_thread:'The Number of Bound Threads',
             job_time:'On-The-job Time',
+            longitude:'Longitude',
+            latitude:'Latitude',
+            owner:'owner',
+            owner_con:'Owner contact details',
+            rental_costs:'Rental Costs',
+            rent_payment_cycle:'Rent Payment Cycle',
+            time_rent_payment:'Time of Rent Payment',
+            property_costs:'Property Costs',
+            property_payment_cycle:'Property Payment Cycle',
+            property_payment_time:'Property Payment Time',
+            renovation_costs:'Renovation Costs',
+            owner_placeholder:'Please enter the owner’s name',
+            owner_con_placeholder:'Please enter the owner’s contact information',
+            rental_costs_placeholder:'Please enter the rental fee',
+            property_costs_placeholder:'Please enter the property fee',
+            renovation_costs_placeholder:'Please enter the renovation cost',
 
         },
 

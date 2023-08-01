@@ -1,11 +1,5 @@
 <template>
     <div>
-        <div class="form-item ">
-            <div class="key">{{ $t('crm_st.manager') }}：</div>
-            <div class="value">
-                <a-button type="primary" v-if="$auth('customer.detail')">{{ $t('crm_st.add_peo') }}</a-button>
-            </div>
-        </div>
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"
             :pagination='false' @change="getTableDataSorter">
             <template #headerCell="{ title }">
@@ -42,44 +36,29 @@
                 </template>
             </template>
         </a-table>
-        <addStorePeo :isShow="isShow"></addStorePeo>
-
     </div>
 </template>
+
 <script>
-import Core from '../../../core';
-import addStorePeo from "./addStorePeo.vue"
 
 export default {
 
-    name: 'CrmEditStorePeo',
-    components: {
-        addStorePeo
-    },
-    props: {
-        detail: {
-            type: Object,
-        },
-        orderId: {
-            type: Number,
-            default: 0
-        },
-    },
+    name: "StoreList",
     data() {
-        return {
-            isShow:false,
-        }
+        return {}
     },
-    watch: {},
+    watch: {
+
+    },
     computed: {
         tableColumns() {
             let columns = [
-                { title: 'n.name', dataIndex: 'uid', key: 'detail' },
-                { title: 'crm_st.Work_status', dataIndex: 'own_user_name', key: 'own_user_name' },
-                { title: 'n.phone', dataIndex: 'money', key: 'money' },
-                { title: 'crm_st.office', dataIndex: 'customer_name', key: 'customer_name' },
-                { title: 'crm_st.bound_thread', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true },
-                { title: 'crm_st.job_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time', sorter: true },
+                { title: 'retail.series', dataIndex: 'uid', key: 'detail' },
+                { title: 'retail.model', dataIndex: 'own_user_name', key: 'own_user_name' },
+                { title: 'retail.color', dataIndex: 'money', key: 'money' },
+                { title: 'retail.vehicle_usage', dataIndex: 'customer_name', key: 'customer_name' },
+                { title: 'retail.use_status', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time' },
+                { title: 'retail.warehousing_time', dataIndex: 'estimated_deal_time', key: 'estimated_deal_time' },
                 { title: 'def.operate', key: 'operation', fixed: 'right' },
             ]
             return columns
@@ -96,8 +75,15 @@ export default {
     }
 
 }
-
 </script>
 
-<style lang="less" scoped></style>
-
+<style lang="less" scoped>
+// :deep(.th-text) {
+//     color: #1D2129;
+//     font-family: PingFang SC;
+//     font-size: 14px;
+//     font-style: normal;
+//     font-weight: 800;
+//     line-height: 22px;
+// }
+</style>

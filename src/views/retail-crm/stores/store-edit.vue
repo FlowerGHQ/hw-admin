@@ -20,15 +20,12 @@
                     <div class="form-item">
                         <div class="key">{{ $t('n.store_pic') }}：</div>
                         <div class="value">
-                            <a-upload v-model:file-list="fileList" name="avatar" list-type="picture-card"
-                                class="avatar-uploader" :show-upload-list="false"
-                                action="https://www.mocky.io/v2/5cc8019d300000980a055e76" :before-upload="beforeUpload"
-                                @change="handleChange">
-                                <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-                                <div v-else>
-                                    <loading-outlined v-if="loading"></loading-outlined>
-                                    <plus-outlined v-else></plus-outlined>
-                                    <div class="ant-upload-text">Upload</div>
+                            <a-upload :file-list="upload.detailList" class="image-uploader" name="file"
+                                accept="image/*" list-type="picture-card" :headers="upload.headers" :data="upload.data"
+                                :show-upload-list="false" :action="upload.action" :before-upload="handleImgCheck"
+                                @change="handleCoverChange">
+                                <div class="image-inner" v-if="upload.detailList.length < 10">
+                                    <i class="icon i_upload" />
                                 </div>
                             </a-upload>
                         </div>
@@ -175,7 +172,7 @@
             <!-- 门店配置 -->
             <div class="form-block">
                 <div class="form-title">
-                    <div class="title-colorful">{{ $t('crm_c.sto_con') }}</div>
+                    <div class="title-colorful">{{ $t('s.sto_con') }}</div>
                 </div>
                 <div class="form-content">
                     <div class="form-item ">
@@ -231,7 +228,7 @@
             <!-- 门店人员 -->
             <div class="form-block">
                 <div class="form-title">
-                    <div class="title-colorful">{{ $t('crm_c.sto_person') }}</div>
+                    <div class="title-colorful">{{ $t('s.sto_person') }}</div>
                 </div>
 
                 <div class="form-content">
@@ -247,6 +244,7 @@
 </template>
 
 <script>
+import Core from "../../../core";
 import CrmEditStorePeo from '../../../components/crm/panel/CrmEditStorePeo.vue';
 export default {
 
@@ -259,8 +257,24 @@ export default {
             form: {
                 id: ''
             },
-            // 整体输入内容-前两部分
 
+            // 上传图片
+            upload: {
+                // 上传图片
+                action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+                coverList: [],
+                detailList: [],
+                headers: {
+                    ContentType: false,
+                },
+                data: {
+                    token: Core.Data.getToken(),
+                    type: "img",
+                },
+            },
+            trackRecordForm: {
+                image_attachment_list: [],
+            },
 
         }
     },
@@ -274,7 +288,59 @@ export default {
         this.form.id = Number(this.$route.query.id) || 0
     },
     methods: {
+        // 校验图片
+        handleImgCheck(file) {
+            const isCanUpType = [
+                "image/jpeg",
+                "image/png",
+                "image/gif",
+                "image/bmp",
+            ].includes(file.type);
+            if (!isCanUpType) {
+                this.$message.warning(this.$t("n.file_incorrect"));
+            }
+            const isLt10M = file.size / 1024 / 1024 < 10;
+            if (!isLt10M) {
+                this.$message.warning(this.$t("n.picture_smaller"));
+            }
 
+            // this.loadImage(TEST_IMAGE);
+            // return false;
+            return isCanUpType && isLt10M;
+        },
+        // 上传图片
+        handleCoverChange({ file, fileList }) {
+            // 上传成功后在添加   
+            console.log('handleCoverChange--------------------file', file, 'fileList', fileList);
+            if (file.status == "done") {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(file.response.message);
+                }
+                let imageAttachment = {
+                    // id: file.uid,
+                    uid: file.uid,
+                    name: file.name,
+                    path: file.response.data.filename,
+                    type: file.response.data.filename.split(".").pop(),
+                };
+                // this.shortPath = get(fileList,'[0].response.data.filename', null);
+                // if(this.shortPath) {
+                //     // this.form.img = this.shortPath;
+                //     // this.loadImage(this.detailImageUrl);
+                // }
+                this.trackRecordForm.image_attachment_list.push(imageAttachment);
+                console.log('imageAttachment', imageAttachment);
+            }
+            // 删除的时候
+            if (file.status == "removed") {
+                this.trackRecordForm.image_attachment_list = this.trackRecordForm.image_attachment_list.filter(el => {
+                    return el.id != file.uid
+                })
+            }
+
+            this.upload.detailList = fileList;
+            console.log('handleCoverChange------------follow', file, 'fileList', fileList, 'this.upload.detailList ', this.upload.detailList, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list, 'this.upload.coverList', this.upload.coverList);
+        },
     }
 
 }
