@@ -1997,7 +1997,7 @@ const routes = [
         meta: {
             title: '门店管理',
             title_en: 'Stores Management',
-            icon: 'i_gongyingshang',
+            icon: 'i_stores',
         },       
         children: [
             {
@@ -2070,7 +2070,7 @@ const routes = [
         ]
     },
     /*----  零售业务新添加在CRM中的 ----*/
-    { // 门店管理
+    { // 人员管理
         path:'/retail-personnel',
         component: Layout, 
         redirect: '/retail-personnel/personnel-list',
@@ -2078,7 +2078,7 @@ const routes = [
         meta: {
             title: '人员管理',
             title_en: 'Personnel Management',
-            icon: 'i_s_user',
+            icon: 'i_renyuan-',
         },       
         children: [
             {
@@ -2113,7 +2113,7 @@ const routes = [
         meta: {
             title: '车辆管理',
             title_en: 'Vehicle Management',
-            icon: 'i_setting',
+            icon: 'i_001motuoche',
         },       
         children: [
             {
@@ -2147,7 +2147,7 @@ const routes = [
         meta: {
             title: '订单管理',
             title_en: 'Order Management',
-            icon: 'i_setting',
+            icon: 'i_dingdan',
         },       
         children: [
             {
