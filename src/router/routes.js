@@ -2003,7 +2003,7 @@ const routes = [
             {
                 path: 'stores-list',
                 name: 'storesList',
-                component: () => import('@/views/CRM/Stores/store-list.vue'),
+                component: () => import('@/views/retail-crm/stores/store-list.vue'),
                 meta: {
                     title: '门店列表',
                     title_en: 'Stores List',
@@ -2014,7 +2014,7 @@ const routes = [
             {
                 path: 'regional-mangage',
                 name: 'regionalMangage',
-                component: () => import('@/views/CRM/Stores/regional-mangage.vue'),
+                component: () => import('@/views/retail-crm/stores/regional-mangage.vue'),
                 meta: {
                     title: '区域管理',
                     title_en: 'Regional Mangage',
@@ -2025,7 +2025,7 @@ const routes = [
             {
                 path: 'shift-mangage',
                 name: 'shiftMangage',
-                component: () => import('@/views/CRM/Stores/shift-mangage.vue'),
+                component: () => import('@/views/retail-crm/stores/shift-mangage.vue'),
                 meta: {
                     title: '班次管理',
                     title_en: 'Shift Mangage',
@@ -2036,7 +2036,7 @@ const routes = [
             {
                 path: 'target-mangage',
                 name: 'targetMangage',
-                component: () => import('@/views/CRM/Stores/target-mangage.vue'),
+                component: () => import('@/views/retail-crm/stores/target-mangage.vue'),
                 meta: {
                     title: '目标管理',
                     title_en: 'Target Mangage',
@@ -2047,7 +2047,7 @@ const routes = [
 			{
 				path: 'store-edit',
 				name: 'store-edit',
-				component: () => import('@/views/CRM/Stores/store-edit.vue'),
+				component: () => import('@/views/retail-crm/stores/store-edit.vue'),
 				meta: {
 					hidden: true,
 					title: '',
@@ -2058,7 +2058,7 @@ const routes = [
 			{
 				path: 'stores-detail',
 				name: 'storesDetail',
-				component: () => import('@/views/CRM/Stores/store-detail.vue'),
+				component: () => import('@/views/retail-crm/stores/store-detail.vue'),
 				meta: {
 					hidden: true,
 					title: '门店详情',
@@ -2068,8 +2068,7 @@ const routes = [
 				}
 			},
         ]
-    },
-    /*----  零售业务新添加在CRM中的 ----*/
+    },    
     { // 人员管理
         path:'/retail-personnel',
         component: Layout, 
@@ -2084,7 +2083,7 @@ const routes = [
             {
                 path: 'personnel-list',
                 name: 'personnelList',
-                component: () => import('@/views/CRM/Personnel/list.vue'),
+                component: () => import('@/views/retail-crm/personnel/list.vue'),
                 meta: {
                     title: '人员列表',
                     title_en: 'Personnel List',
@@ -2095,7 +2094,7 @@ const routes = [
             {
                 path: 'role-permiss-man',
                 name: 'rolePermissMan',
-                component: () => import('@/views/CRM/Personnel/rolePermissMan.vue'),
+                component: () => import('@/views/retail-crm/personnel/rolePermissMan.vue'),
                 meta: {
                     title: '角色权限管理',
                     title_en: 'Role Permission Management',
@@ -2119,7 +2118,7 @@ const routes = [
             {
                 path: 'vehicle-list',
                 name: 'vehicleList',
-                component: () => import('@/views/CRM/Vehicle/list.vue'),
+                component: () => import('@/views/retail-crm/vehicle/list.vue'),
                 meta: {
                     title: '车辆列表',
                     title_en: 'Vehicle List',                    
@@ -2129,7 +2128,7 @@ const routes = [
             {
                 path: 'vehicle-detail',
                 name: 'vehicleDetail',
-                component: () => import('@/views/CRM/Vehicle/detail.vue'),
+                component: () => import('@/views/retail-crm/vehicle/detail.vue'),
                 meta: {
                     hidden: true,
                     title: '车辆详情',
@@ -2137,9 +2136,8 @@ const routes = [
                 },
             }
         ]
-    },
-    // 订单管理
-    {
+    },    
+    { // 订单管理
         path:'/retail-order',
         component: Layout, 
         redirect: '/retail-order/order-list',
@@ -2153,7 +2151,7 @@ const routes = [
             {
                 path: 'order-list',
                 name: 'orderList',
-                component: () => import('@/views/CRM/Order/list.vue'),
+                component: () => import('@/views/retail-crm/order/list.vue'),
                 meta: {
                     title: '订单列表',
                     title_en: 'Order List',                    
@@ -2163,7 +2161,7 @@ const routes = [
             {
                 path: 'order-detail',
                 name: 'orderDetail',
-                component: () => import('@/views/CRM/Order/detail.vue'),
+                component: () => import('@/views/retail-crm/order/detail.vue'),
                 meta: {
                     hidden: true,
                     title: '订单详情',
