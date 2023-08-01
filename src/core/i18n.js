@@ -2463,7 +2463,12 @@ const messages = {
             modify_color:"修改颜色", // Modify color        
             total_price:"总价",     // Total price    
             vehicle_status:"车辆状态", // Vehicle status        
-            modification_time:"修改时间",  // Modification time       
+            modification_time:"修改时间",  // Modification time   
+            
+            personnel_list:'人员列表', // Personnel list
+            searcher:"搜索人员", // searcher
+            working_condition:"工作状态", // Working condition
+            job:"职务", // job
         }
     },
 
@@ -4807,7 +4812,7 @@ const messages = {
             modify_color:"Modify color",
             total_price:"Total price ",    
             vehicle_status:"Vehicle status ",
-            modification_time:"Modification time", 
+            modification_time:"Modification time",
         }
     },
 }

@@ -1,13 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1671443010925') format('woff2'),
-       url('iconfont.woff?t=1671443010925') format('woff'),
-       url('iconfont.ttf?t=1671443010925') format('truetype');
-}
-
-@font-face {
-  font-family: "icon"; /* Project id  */
-  src: url('iconfont-zx.ttf?t=1690291298993') format('truetype');
+  src: url('iconfont.woff2?t=1690856815773') format('woff2'),
+       url('iconfont.woff?t=1690856815773') format('woff'),
+       url('iconfont.ttf?t=1690856815773') format('truetype');
 }
 
 .icon {
@@ -16,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.i_renyuan-:before {
+  content: "\e612";
+}
+
+.i_dingdan:before {
+  content: "\e603";
+}
+
+.i_stores:before {
+  content: "\e6d4";
+}
+
+.i_001motuoche:before {
+  content: "\e829";
+}
+
+.i_xiala:before {
+  content: "\e61f";
 }
 
 .i_point1:before {
@@ -345,8 +360,4 @@
 .i_user:before {
   content: "\e6b2";
 }
-.i_gongyingshang:before {
-  content: "\e61f";
-}
-
 
