@@ -1189,14 +1189,14 @@ let Const = {
             '2': {key: 2, zh: '扣款', en: 'Deduction'},
         },
         SUBJECT: {
-            MANAGER_ADJUSTMENT: 101,
-            PURCHASE_ORDER: 201,
-            REPAIR_ORDER_DEDUCTIONS: 501,
+            MANAGER_ADJUSTMENT: 10,
+            PURCHASE_ORDER: 20,
+            REPAIR_ORDER_DEDUCTIONS: 50,
         },
         SUBJECT_MAP: {
-            '101': {key: 101, zh: '管理员操作', en: 'Admin action'},
-            '201': {key: 201, zh: '采购单', en: 'Purchase order'},
-            '501': {key: 501, zh: '维修单', en: 'Repair order'},
+            '10': {key: 10, zh: '管理员操作', en: 'Admin action'},
+            '20': {key: 20, zh: '采购单', en: 'Purchase order'},
+            '50': {key: 50, zh: '维修单', en: 'Repair order'},
         }
     },
     FAULT_ENTITY: { //故障件

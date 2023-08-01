@@ -77,9 +77,9 @@
                         </div>
                     </div>
                     <div class="form-item required" v-if="needUid">
-                        <div class="key">{{sourceTypeMap[operateForm.source_type]}}{{ $t('w.number') }}：</div>
+                        <div class="key">{{sourceTypeMap[operateForm.source_type][$i18n.locale]}}{{ $t('w.number') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="sourceUid" :placeholder="$t('w.enter_number') + `${sourceTypeMap[operateForm.source_type]}` + $t('w.number')" @blur="handleSelectBlur()">
+                            <a-input v-model:value="sourceUid" :placeholder="$t('w.enter_number') + `${sourceTypeMap[operateForm.source_type][$i18n.locale]}` + $t('w.number')" @blur="handleSelectBlur()">
                                 <template #suffix>
                                     <span v-if="isExist == 1"><i class="icon suffix i_confirm"/></span>
                                     <span v-else-if="isExist == 2"><i class="icon suffix i_close_c"/></span>
