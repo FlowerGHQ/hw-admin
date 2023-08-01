@@ -2203,6 +2203,15 @@ let Const = {
     // 用户判断
     USERNAME:{
         'admin1': true
+    },
+    // 国内零售业务
+    RETAIL:{
+        Order_Status_Map:{
+            paid: 1,  // 已支付
+            to_be_paid: 2, // 待支付
+            apply_refund: 3, // 申请退订/退款
+            unsubscribed_refunded: 4, // 已退订/退款
+        }
     }
 };
 

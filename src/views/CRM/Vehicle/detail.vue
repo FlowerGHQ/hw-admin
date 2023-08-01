@@ -2,18 +2,20 @@
     <div class="vehicle-detail" >
         <div class="d-top">
             <div class="title">
-                车辆详情 
+                {{ $t('retail.vehicle_detail') }} 
             </div>
             <div class="container">            
                 <div class="d-img">
-                    <img class="img" src="" alt="">
+                    <img class="img" src="https://img2.baidu.com/it/u=1143142527,1258116580&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750" alt="">
                 </div>
                 <div class="d-content">
                     <a-row class="all-msg">
                           <div class="vehicle-msg">
                             <span>SENMENTI 0 · 创世版</span>
-                            <span class="use">使用中</span>
-                            <span class="test-drive">试驾车</span>
+                            <!-- 使用中 -->
+                            <span class="use">{{ $t('retail.use') }}</span>
+                            <!-- 试驾车 -->
+                            <span class="test-drive">{{ $t('retail.test_drive') }}</span>
                           </div>
                           <div class="vehicle-id">
                                 <span class="key">ID：</span>
@@ -23,60 +25,70 @@
                           </div>
                     </a-row>
                     <a-row class="row-detail">
+                        <!-- 系列 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('retail.series') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 型号 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.model') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 颜色 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.color') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 入库时间 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.warehousing_time') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 车辆用途 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.vehicle_usage') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 使用状态 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.use_status') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 所属大区 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.subregion') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 所属城市 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.home_city') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 所属门店 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.affiliated_store') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 名称 -->
                         <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
                             <span class="key">{{ $t('retail.name') }}：</span>
                             <span class="value">
@@ -109,7 +121,7 @@ import vehicleInformationCom from './components/vehicle-information.vue'
 // import maintenanceRecordsCom from './components/maintenance-records.vue'
 import driveRecordsCom from './components/drive-records.vue'
 
-const activeKey = ref('vehicle_information')
+const activeKey = ref('test_drive_records')
 </script>
 
 <style lang="less" scoped>
@@ -132,20 +144,17 @@ const activeKey = ref('vehicle_information')
             line-height: normal;
             margin-bottom: 16px;
         }
-        .container{
-            width: 100%;
+        .container{            
             display: flex;           
-            .d-img{
-                margin-right: 20px;
-                width: 240px;
-                height: 160px;            
+            .d-img{                           
                 .img{
-                    width: 100%;
-                    height: 100%;
+                    margin-right: 20px;
+                    width: 240px;
+                    height: 160px; 
+                    object-fit: cover
                 }
             }
-            .d-content{
-                width: calc(100% - 240px);
+            .d-content{                
                 .all-msg{
                     .fcc(space-between);
                     .vehicle-msg{
@@ -157,8 +166,7 @@ const activeKey = ref('vehicle_information')
                             display: inline-block;
                             padding: 1px 6px;
                             border-radius: 2px;
-                            background: rgba(255, 125, 0, 0.10);
-                            font-size: 12px;
+                            background: rgba(255, 125, 0, 0.10);                            
                             font-weight: 600;
                             font-size: 12px;
                             color: #FF7D00;
@@ -169,8 +177,7 @@ const activeKey = ref('vehicle_information')
                             display: inline-block;
                             padding: 1px 6px;
                             border-radius: 2px;
-                            background: rgba(255, 125, 0, 0.10);
-                            font-size: 12px;
+                            background: rgba(255, 125, 0, 0.10);                            
                             font-weight: 600;
                             font-size: 12px;
                             color: #44CB7C;
@@ -195,12 +202,11 @@ const activeKey = ref('vehicle_information')
     .d-bottom{
         min-height: calc(100% - 260px);        
         margin-top: 20px;        
-        padding: 0 20px 0px 20px;        
+        padding: 0 20px;        
         box-sizing: border-box; 
         border-radius: 6px;
         border: 1px solid #E7E9F0;
-        background: #FFF;
-        margin-bottom: 200px;
+        background: #FFF;        
     }
 }
 

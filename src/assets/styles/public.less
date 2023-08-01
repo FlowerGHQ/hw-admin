@@ -2500,13 +2500,25 @@ p {
             margin-top: 20px;   
             .key {
                 width: 100px;
-                text-align: right;                                        
+                text-align: right;
+                // flex: 1;
             }
 
             .value {
-                width: calc(100% - 100px);                    
-                padding-left: 10px;
+                width: calc(100% - 100px);
+                // flex: 3;
+                padding-left: 10px;  
+                .select-st{
+                    width: 100%;
+                }            
             }
         }        
+        .search-text {
+            color: #006ef9;
+            cursor: pointer;    
+        }
+        .retract-icon{
+            margin-right: 8px;
+        }
     }  
 }

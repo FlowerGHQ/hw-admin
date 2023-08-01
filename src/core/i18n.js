@@ -2343,8 +2343,7 @@ const messages = {
             input_number: "最大输入99字"
         },
         // 零售业务
-        retail:{
-            // 车辆管理模块
+        retail:{            
             vehicle_list:'车辆列表',
             view:'查看',
             delete:'删除',
@@ -2385,8 +2384,64 @@ const messages = {
             driving_license:"驾驶证照",
             sign_an_agreement:"签署协议",
             experience_hall:"体验馆",
-            // 订单管理模块
+
+            vehicle_detail:"车辆详情",
+            use:"使用中",
+            test_drive:"试驾车",            
             order_list:'订单列表',
+            detail:"详情",
+            paid:"已支付",
+            to_be_paid:"待支付",
+            apply_refund:"申请退订/退款",  // Apply for unsubscribe/refund
+            unsubscribed_refunded:"已退订/退款", // Unsubscribed/refunded
+            search_vehicle:"搜索车辆",
+            unsubscribe_review:"退订审核",
+            view_reason:"查看原因",
+            order_detail: '订单详情',
+            phone:"手机",
+            email:"邮箱",
+            user_experience_officer:"用户体验官",
+            province:"省份",
+            city:"城市",
+            order_address:"订单地址",
+            push_to_customers:"推送给客户",
+            intention_deposit_paid:"已付意向金",
+            paid_small_order:"已付小订",
+            paid_large_order:"已付大订",
+            final_payment_paid:"已付尾款",
+            to_be_delivered:"待交付",
+            delivered:"已交付",
+            to_be_invoiced:"待开票",
+            completed:"已完成",
+            product_Information:"商品信息",
+            payment_information:"支付信息",
+            unsubscribe_refund_record:"退订/退款记录",
+            modify_record:"修改记录",
+            vehicle_model:"车型",
+            order_amount:"订单金额",
+            amount_paid:"已付金额",
+            configuration_item:"配置项目",            
+            price:"价格",
+            preferential_policy:"优惠政策",            
+            payment_status:"支付状态", // Payment status
+            amount_actually_paid:"实际支付金额", // Amount actually paid
+            payment_method:"支付方式", // Payment method
+            order_number:"交易单号", // Order number
+            time_of_payment:"支付时间", // Time of payment
+            unsubscribe_phase:"退订阶段",  // Unsubscribe phase
+            initiator:"发起人",  // initiator
+            request_cancellation_time:"申请退订时间",  // Request cancellation time
+            refundable_amount:"应退金额",  // Refundable amount
+            refundable_amount:"实退金额",  // Refundable amount
+            approval_time:"审核通过时间",  // Approval time
+            refund_time:"退款时间",   // Refund time  
+            record_information:"记录信息",  // Record information                       
+            modified_model:"修改车型", // Modified model        
+            modified_version:"修改版本",  // Modified version       
+            modify_color:"修改颜色", // Modify color        
+            total_price:"总价",     // Total price    
+            vehicle_status:"车辆状态", // Vehicle status        
+            modification_time:"修改时间",  // Modification time       
         }
     },
 
@@ -4610,7 +4665,7 @@ const messages = {
             input_number: "Maximum input of 99 words"
         },
         // 零售业务
-        retail:{
+        retail:{            
             vehicle_list:'Vehicle List',
             view:'View',
             delete:'Delete',
@@ -4633,7 +4688,6 @@ const messages = {
             affiliated_store:'Affiliated Store',
             order_progress:'Order Progress',
             creat_time:'Creat Time',
-
             name:'Name',
             vehicle_information:'Vehicle Information',
             test_drive_records:'Test Drive Records',
@@ -4652,6 +4706,64 @@ const messages = {
             driving_license:"Driving License",
             sign_an_agreement:"Sign An Agreement",
             experience_hall:"Experience Hall",
+            vehicle_detail:"Vehicle Detail",
+            
+            use:"Use",
+            test_drive:"Test Drive",            
+            order_list:'Order List',
+            detail:"Detail",
+            paid:"Paid",
+            to_be_paid:"To Be Paid",
+            apply_refund:"Apply for unsubscribe/refund",
+            unsubscribed_refunded:"Unsubscribed/refunded", 
+            search_vehicle:"Search Vehicle",
+            unsubscribe_review:"Unsubscribe Review",
+            view_reason:"View Reason",
+            order_detail: 'Order Detail',
+            phone:"Phone",
+            email:"Email",
+            user_experience_officer:"User Experience Officer",
+            province:"Province",
+            city:"City",
+            order_address:"Order Address",
+            push_to_customers:"Push To Customers",
+            intention_deposit_paid:"Intention Deposit Paid",
+            paid_small_order:"Paid Small Order",
+            paid_large_order:"Paid Large Order",
+            final_payment_paid:"Final Payment Paid",
+            to_be_delivered:"To Be Delivered",
+            delivered:"Delivered",
+            to_be_invoiced:"To Be Invoiced",
+            completed:"Completed",
+            product_Information:"Product Information",
+            payment_information:"Payment Information",
+            unsubscribe_refund_record:"Unsubscribe Refund Record",
+            modify_record:"Modify Record",
+            vehicle_model:"Vehicle Model",
+            order_amount:"Order Amount",
+            amount_paid:"Amount Paid",
+            configuration_item:"Configuration Item",            
+            price:"Price",
+            preferential_policy:"Preferential Policy",            
+            payment_status:"ayment statusv",
+            amount_actually_paid:"Amount actually paid",
+            payment_method:"Payment method",
+            order_number:"Order number",
+            time_of_payment:"Time of payment",
+            unsubscribe_phase:"Unsubscribe phase", 
+            initiator:"initiator", 
+            request_cancellation_time:"Request cancellation time", 
+            refundable_amount:"Refundable amount", 
+            refundable_amount:"Refundable amount", 
+            approval_time:"Approval time", 
+            refund_time:"Refund time",  
+            record_information:"Record information", 
+            modified_model:"Modified model",
+            modified_version:"Modified version", 
+            modify_color:"Modify color",
+            total_price:"Total price ",    
+            vehicle_status:"Vehicle status ",
+            modification_time:"Modification time", 
         }
     },
 }

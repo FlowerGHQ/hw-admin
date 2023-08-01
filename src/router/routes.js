@@ -1,4 +1,4 @@
-import Const from "../core/const"
+ import Const from "../core/const"
 import Util from "../core/utils"
 
 import Layout from '../views/layout/index.vue';
@@ -2140,9 +2140,9 @@ const routes = [
     },
     // 订单管理
     {
-        path:'/retail-Order',
+        path:'/retail-order',
         component: Layout, 
-        redirect: '/retail-Order/Order-list',
+        redirect: '/retail-order/order-list',
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '订单管理',
@@ -2151,7 +2151,7 @@ const routes = [
         },       
         children: [
             {
-                path: 'Order-list',
+                path: 'order-list',
                 name: 'orderList',
                 component: () => import('@/views/CRM/Order/list.vue'),
                 meta: {
@@ -2159,6 +2159,16 @@ const routes = [
                     title_en: 'Order List',                    
                     roles: [LOGIN_TYPE.ADMIN],
                 },       
+            },
+            {
+                path: 'order-detail',
+                name: 'orderDetail',
+                component: () => import('@/views/CRM/Order/detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '订单详情',
+                    title_en: 'Order Detail',
+                },
             }
         ]
     },

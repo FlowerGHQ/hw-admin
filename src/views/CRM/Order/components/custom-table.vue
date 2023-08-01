@@ -2,6 +2,7 @@
     <div class="have-paid">
         <div class="search">
             <a-row class="search-row">
+                <!-- 订单搜索 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
                     <span class="key">{{ $t("retail.order_search") }}：</span>
                     <span class="value">
@@ -12,8 +13,9 @@
                         />
                     </span>
                 </a-col>
+                <!-- 车辆系列 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
-                    <span class="key">你好阿萨：</span>
+                    <span class="key">{{ $t("retail.vehicle_series") }}：</span>
                     <span class="value">
                         <a-input
                             :placeholder="$t('def.input')"
@@ -22,37 +24,31 @@
                         />
                     </span>
                 </a-col>
+                <!-- 订单状态： -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
-                    <span class="key">你好阿萨：</span>
+                    <span class="key">{{ $t("retail.order_status") }}：</span>
                     <span class="value">
-                        <a-input
-                            :placeholder="$t('def.input')"
-                            v-model:value="searchForm.uid"
-                            @keydown.enter="handleSearch"
-                        />
-                    </span>
-                </a-col>
-                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
-                    <span class="key">你好阿萨：</span>
-                    <span class="value">
-                        <a-input
-                            :placeholder="$t('def.input')"
-                            v-model:value="searchForm.uid"
-                            @keydown.enter="handleSearch"
-                        />
+                        <a-select
+                            class="select-st"                            
+                            v-model:value="searchForm.status"
+                            :placeholder="$t('def.select')"
+                            @change="handleSearch"
+                        >                    
+                            <a-select-option                            
+                                v-for="item of CRM_STATUS_MAP"
+                                :key="item.key"
+                                :value="item.value"
+                                >{{
+                                    lang === "zh" ? item.zh : item.en
+                                }}</a-select-option
+                            >
+                        </a-select>
                     </span>
                 </a-col>
                 <template v-if="show">
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="search-col"
-                    >
-                        <span class="key"
-                            >{{ $t("retail.order_search") }}：</span
-                        >
+                    <!-- 所属大区 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
+                        <span class="key">{{ $t("retail.subregion") }}：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -61,6 +57,7 @@
                             />
                         </span>
                     </a-col>
+                    <!-- 所属城市 -->
                     <a-col
                         :xs="24"
                         :sm="24"
@@ -68,7 +65,7 @@
                         :xxl="6"
                         class="search-col"
                     >
-                        <span class="key">你好阿萨：</span>
+                        <span class="key">{{ $t("retail.home_city") }}：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -77,6 +74,7 @@
                             />
                         </span>
                     </a-col>
+                    <!-- 所属门店 -->
                     <a-col
                         :xs="24"
                         :sm="24"
@@ -84,7 +82,7 @@
                         :xxl="6"
                         class="search-col"
                     >
-                        <span class="key">你好阿萨：</span>
+                        <span class="key">{{ $t("retail.affiliated_store") }}：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -93,6 +91,7 @@
                             />
                         </span>
                     </a-col>
+                    <!-- 订单进度 -->
                     <a-col
                         :xs="24"
                         :sm="24"
@@ -100,7 +99,24 @@
                         :xxl="6"
                         class="search-col"
                     >
-                        <span class="key">你好阿萨：</span>
+                        <span class="key">{{ $t("retail.order_progress") }}：</span>
+                        <span class="value">
+                            <a-input
+                                :placeholder="$t('def.input')"
+                                v-model:value="searchForm.uid"
+                                @keydown.enter="handleSearch"
+                            />
+                        </span>
+                    </a-col>
+                    <!-- 创建时间 -->
+                    <a-col
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="search-col"
+                    >
+                        <span class="key">{{ $t("retail.creat_time") }}：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -110,21 +126,22 @@
                         </span>
                     </a-col>
                 </template>
-            </a-row>
-        </div>
-        <div>
-            <div class="btns m-b-20">
-                <div class="btn-left"></div>
-                <div class="btn-right">
-                    <span class="search-item search-text" @click="moreSearch">
-                        {{
-                            show
-                                ? $t("search.stow")
-                                : $t("retail.more_screening")
-                        }}
+                <a-col
+                    class="search-col search-text"
+                    @click="moreSearch"
+                >       
+                    <span class="key">
+                        <span class="retract-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
                         <i v-if="!show" class="icon i_xialajiantouxiao"></i>
                         <i v-else class="icon i_shouqijiantouxiao"></i>
                     </span>
+                </a-col>
+            </a-row>
+        </div>
+        <div> 
+            <div class="btns m-b-20">
+                <div class="btn-left"></div>
+                <div class="btn-right">                  
                     <a-button @click="handleSearch" type="primary">{{
                         $t("def.search")
                     }}</a-button>
@@ -146,15 +163,18 @@
                 </template>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="handleView(item.id)">{{
-                            $t("retail.view")
-                        }}</a-button>
-                        <a-button
-                            type="link"
-                            danger
-                            @click="handleDelete(item.id)"
-                            >{{ $t("retail.delete") }}</a-button
-                        >
+                        <!-- 详情 -->
+                        <a-button type="link" @click="handleView(record.id)">
+                            {{ $t("retail.detail")}}
+                        </a-button>                      
+                        <!-- 退订审核 (只有在申请退订/退款)-->
+                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link" @click="handleView(record.id)">
+                            {{ $t("retail.unsubscribe_review")}}
+                        </a-button>    
+                        <!-- 查看原因 (只有已退订/退款)-->
+                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link" @click="handleView(record.id)">
+                            {{ $t("retail.view_reason")}}
+                        </a-button>                      
                     </template>
                 </template>
             </a-table>
@@ -190,52 +210,70 @@ onMounted(() => {
 });
 const { proxy } = getCurrentInstance();
 const router = useRouter();
+const props = defineProps({
+    activeKey:{
+        type:[String,Number]
+    }
+})
 
 /* 计算属性 */
 const tableColumns = computed(() => {
     let columns = [
         {
-            title: "retail.series",
+            title: "车辆系列",
             dataIndex: "uid",
             key: "uid",
         },
         {
-            title: "retail.model",
+            title: "订单号",
             dataIndex: ["order", "uid"],
             key: "order_uid",
         },
         {
-            title: "retail.color",
+            title: "用户",
             dataIndex: "status",
             key: "util",
             util: "CRMOrderIncomeStatusFilter",
         },
         {
-            title: "retail.vehicle_usage",
+            title: "订单状态",
             dataIndex: "money",
             key: "money",
         },
         {
-            title: "retail.use_status",
+            title: "订单金额",
             dataIndex: "refunded",
             key: "refunded",
         },
         {
-            title: "retail.belonging_area",
+            title: "已付金额",
             dataIndex: "date",
             key: "time",
         },
         {
-            title: "retail.belonging_store",
+            title: "购车方案",
             dataIndex: "type",
-            key: "util",
-            util: "CRMOrderIncomeTypeFilter",
+            key: "util",            
         },
         {
-            title: "retail.warehousing_time",
+            title: "区域 ",
             dataIndex: "payment_type",
-            key: "util",
-            util: "CRMOrderIncomePaymentTypeFilter",
+            key: "util",            
+        },
+        {
+            title: "门店 ",
+            dataIndex: "payment_type",
+            key: "util",            
+        },
+        {
+            title: "体验官 ",
+            dataIndex: "payment_type",
+            key: "util",            
+        },
+        {
+            title: "申请时间 ",
+            dataIndex: "payment_type",
+            key: "util",            
         },
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];
@@ -286,7 +324,14 @@ const handleSearch = () => {};
 const handleSearchReset = () => {};
 const handleOtherSearch = (params) => {};
 // 查看操作
-const handleView = (id) => {};
+const handleView = (id) => {
+    let routeUrl = "";
+    routeUrl = router.resolve({
+        path: "/retail-order/order-detail",
+        // query: { id },
+    });
+    window.open(routeUrl.href, "_blank");
+};
 
 // 申请车辆
 const addVehicle = () => {};
@@ -309,12 +354,6 @@ const handleTableChange = (pagination, filters, sorter) => {
 <style lang="less" scoped>
 .have-paid {
 }
-
-.search-text {
-    color: #006ef9;
-    cursor: pointer;
-    margin-right: 20px;
-}
 .btns {
     .fcc(space-between);
     .btn-left {
@@ -326,6 +365,8 @@ const handleTableChange = (pagination, filters, sorter) => {
     .btn-right {
     }
 }
+
+
 .m-b-20 {
     margin-bottom: 20px;
 }

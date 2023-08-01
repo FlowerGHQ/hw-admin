@@ -4,17 +4,17 @@
             <div class="title-container">
                 <div class="title-area">{{ $t("retail.vehicle_list") }}</div>
             </div>            
-            <div class="search-container custom-container">
-                <a-row class="search-area" style="width: 100%;">
-                    <!-- 订单搜索 -->
+            <div class="search">
+                <a-row class="search-row">
+                    <!-- 搜索车辆 -->
                     <a-col
                         :xs="24"
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-item"
+                        class="search-col"
                     >
-                        <div class="key">{{ $t("retail.order_search") }}：</div>                        
+                        <div class="key">{{ $t("retail.search_vehicle") }}：</div>                        
                         <div class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -23,17 +23,45 @@
                             />
                         </div>
                     </a-col>
+                    <!-- 车辆用途 -->
+                    <a-col
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="search-col"
+                    >
+                        <div class="key">{{ $t("retail.vehicle_usage") }}：</div>                        
+                        <div class="value">
+                            <a-select
+                                class="select-st"
+                                v-model:value="searchForm.status"
+                                :placeholder="$t('def.select')"
+                                @change="handleSearch"
+                            >                    
+                                <a-select-option
+                                    v-for="item of CRM_STATUS_MAP"
+                                    :key="item.key"
+                                    :value="item.value"
+                                    >{{
+                                        lang === "zh" ? item.zh : item.en
+                                    }}</a-select-option
+                                >
+                            </a-select>
+                        </div>
+                    </a-col>
                     <!-- 车辆系列 -->
                     <a-col
                         :xs="24"
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-item"
+                        class="search-col"
                     >
                         <div class="key">{{ $t("retail.vehicle_series") }}：</div>                        
                         <div class="value">
                             <a-select
+                                class="select-st" 
                                 v-model:value="searchForm.status"
                                 :placeholder="$t('def.select')"
                                 @change="handleSearch"
@@ -48,33 +76,7 @@
                                 >
                             </a-select>
                         </div>
-                    </a-col>
-                    <!-- 订单状态 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="search-item"
-                    >
-                        <div class="key">{{ $t("retail.order_status") }}：</div>                        
-                        <div class="value">
-                            <a-select
-                                v-model:value="searchForm.status"
-                                :placeholder="$t('def.select')"
-                                @change="handleSearch"
-                            >                    
-                                <a-select-option
-                                    v-for="item of CRM_STATUS_MAP"
-                                    :key="item.key"
-                                    :value="item.value"
-                                    >{{
-                                        lang === "zh" ? item.zh : item.en
-                                    }}</a-select-option
-                                >
-                            </a-select>
-                        </div>
-                    </a-col>
+                    </a-col>                    
                     <template v-if="show">
                         <!-- 所属大区 -->
                         <a-col
@@ -82,11 +84,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-item"
+                            class="search-col"
                         >
                             <div class="key">{{ $t("retail.subregion") }}：</div>                        
                             <div class="value">
                                 <a-select
+                                    class="select-st"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -108,11 +111,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-item"
+                            class="search-col"
                         >
                             <div class="key">{{ $t("retail.home_city") }}：</div>                        
                             <div class="value">
                                 <a-select
+                                    class="select-st"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -134,11 +138,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-item"
+                            class="search-col"
                         >
                             <div class="key">{{ $t("retail.affiliated_store") }}：</div>                        
                             <div class="value">
                                 <a-select
+                                    class="select-st"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -153,60 +158,18 @@
                                     >
                                 </a-select>
                             </div>
-                        </a-col>
-                        <!-- 订单进度 -->
-                        <a-col
-                            :xs="24"
-                            :sm="24"
-                            :xl="8"
-                            :xxl="6"
-                            class="search-item"
-                        >
-                            <div class="key">{{ $t("retail.order_progress") }}：</div>                        
-                            <div class="value">
-                                <a-select
-                                    v-model:value="searchForm.status"
-                                    :placeholder="$t('def.select')"
-                                    @change="handleSearch"
-                                >                    
-                                    <a-select-option
-                                        v-for="item of CRM_STATUS_MAP"
-                                        :key="item.key"
-                                        :value="item.value"
-                                        >{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option
-                                    >
-                                </a-select>
-                            </div>
-                        </a-col>
-                        <!-- 创建时间 -->
-                        <a-col
-                            :xs="24"
-                            :sm="24"
-                            :xl="8"
-                            :xxl="6"
-                            class="search-item"
-                        >
-                            <div class="key">{{ $t("retail.creat_time") }}：</div>                        
-                            <div class="value">
-                                <a-select
-                                    v-model:value="searchForm.status"
-                                    :placeholder="$t('def.select')"
-                                    @change="handleSearch"
-                                >                    
-                                    <a-select-option
-                                        v-for="item of CRM_STATUS_MAP"
-                                        :key="item.key"
-                                        :value="item.value"
-                                        >{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option
-                                    >
-                                </a-select>
-                            </div>
-                        </a-col>
-                    </template>                 
+                        </a-col>                    
+                    </template>
+                    <a-col
+                        class="search-col search-text"
+                        @click="moreSearch"
+                    >       
+                        <span class="key">
+                            <span class="retract-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                            <i v-if="!show" class="icon i_xialajiantouxiao"></i>
+                            <i v-else class="icon i_shouqijiantouxiao"></i>
+                        </span>
+                    </a-col>               
                 </a-row>
             </div>
             <div class="table-container">
@@ -214,12 +177,7 @@
                     <div class="btn-left">
                         <a-button class="left-btn-style" @click="addVehicle">{{ $t("retail.apply_vehicle") }}</a-button>
                     </div>
-                    <div class="btn-right">
-                        <span class="search-item search-text" @click="moreSearch">
-                            {{ show ? $t("search.stow") : $t("retail.more_screening") }}
-                            <i v-if="!show" class="icon i_xialajiantouxiao"></i>
-                            <i v-else class="icon i_shouqijiantouxiao"></i>
-                        </span>
+                    <div class="btn-right">                        
                         <a-button @click="handleSearch" type="primary">{{
                             $t("def.search")
                         }}</a-button> 
@@ -412,16 +370,6 @@ const handleTableChange = (pagination, filters, sorter) => {
 </script>
 
 <style lang="less" scoped>
-.search-text {    
-    color: #006ef9;
-    cursor: pointer;
-    margin-right: 20px;
-}
-
-.custom-container{
-    background-color: #fff
-}
-
 .btns {
     .fcc(space-between);
     margin-bottom: 20px;
