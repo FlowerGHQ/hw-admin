@@ -64,7 +64,7 @@
                     <template #bodyCell="{ column, text, record }">
                         <!-- 来源 1工单类型 2采购下单 -->
                         <template v-if="column.dataIndex === 'source_type'">
-                            {{ text ? source_type[text][$i18n.locale] : "" }}
+                            {{ source_type[text] ? source_type[text][$i18n.locale] : $t('ac.admin') }}
                         </template>
 
                         <!-- 工单编号 -->
