@@ -388,6 +388,7 @@ const messages = {
             available_balance: '可用余额',
             submit_work_order: '提交工单',
             fault_selection: '故障选择',
+            repair_detail: '工单详情',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2719,6 +2720,7 @@ const messages = {
             available_balance: 'Available Balance',
             submit_work_order: 'Submit',
             fault_selection: 'Fault Selection',
+            repair_detail: 'Work Order Details',
         },
         d: {
             distributor_detail: 'Distributor Details',

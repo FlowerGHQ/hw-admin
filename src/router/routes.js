@@ -840,10 +840,9 @@ const routes = [
                 name: 'RepairEdit',
                 component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
-                    // hidden: true,
-                    title: '新增工单',
-                    title_en: 'Add Warranty Claim',
-                    // parent: '/repair/repair-list',
+                    hidden: true,
+                    title: '维修单编辑',
+                    parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['repair-order.save'],
                 }
@@ -875,11 +874,21 @@ const routes = [
                 name: 'FaultList',
                 component: () => import('@/views/repair/item-fault-list.vue'),
                 meta: {
-                    hidden: true,
                     title: '故障管理',
                     title_en: 'Fault management',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['fault.list'],
+                }
+            },
+            {
+                path: 'repair-detail-fix',
+                name: 'RepairDetailFix',
+                component: () => import('@/views/repair/repair-detail-fix.vue'),
+                meta: {
+                    hidden: true,
+                    title: '维修单详情',
+                    parent: '/repair/repair-list',
+                    auth: ['repair-order.detail'],
                 }
             },
         ]
@@ -2239,7 +2248,7 @@ const routes = [
         name:'test',
         component: () => import('../views/z-test/test.vue'),
         children: []
-    }
+    },
 
 ];
 
