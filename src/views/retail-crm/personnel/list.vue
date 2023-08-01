@@ -30,7 +30,7 @@
                         :xl="8"
                         :xxl="6"
                         class="search-col"
-                    >
+                    > 
                         <div class="key">{{ $t("retail.working_condition") }}：</div>                        
                         <div class="value">
                             <a-select
@@ -160,7 +160,7 @@
                             </div>
                         </a-col>                    
                     </template>
-                    <a-col
+                    <a-col                        
                         class="search-col search-text"
                         @click="moreSearch"
                     >       
@@ -175,15 +175,22 @@
             <div class="table-container">
                 <div class="btns">
                     <div class="btn-left">
-                        <a-button class="left-btn-style" @click="addVehicle">{{ $t("retail.apply_vehicle") }}</a-button>
+                        <!-- 添加人员 -->
+                        <a-button 
+                            type="primary" 
+                            @click="addPerson" 
+                        >
+                            <i class="icon i_add" />
+                            {{ $t("retail.add_personnel") }}
+                        </a-button>
                     </div>
-                    <div class="btn-right">                        
-                        <a-button @click="handleSearch" type="primary">{{
-                            $t("def.search")
-                        }}</a-button> 
-                        <a-button @click="handleSearchReset">{{
-                            $t("def.reset")
-                        }}</a-button>
+                    <div class="btn-right">
+                        <a-button @click="handleSearchReset">
+                            {{ $t("def.reset")}}
+                        </a-button>
+                        <a-button @click="handleSearch" type="primary">
+                            {{ $t("def.search")}}
+                        </a-button> 
                     </div>
                 </div>
                 <a-table
@@ -199,8 +206,9 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleView(record.id)">{{ $t("retail.view") }}</a-button>
-                            <a-button type="link" danger @click="handleDelete(record.id)">{{ $t("retail.delete") }}</a-button>
+                            <a-button type="link" @click="routerChange('detail',record)">{{ $t("retail.view") }}</a-button>
+                            <a-button type="link" @click="routerChange('deit', record)">{{ $t("retail.edit") }}</a-button>
+                            <a-button type="link" danger @click="routerChange('delete',record)">{{ $t("retail.delete") }}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -244,51 +252,63 @@ const {proxy} = getCurrentInstance()
 const router = useRouter()
 
 /* 计算属性 */
-const tableColumns = computed(() => {
+const tableColumns = computed(() => {  
     let columns = [
         {
-            title: "retail.series",
-            dataIndex: "uid",
+            title: "retail.name",
+            dataIndex: "name",
             key: "uid",            
         },
         {
-            title: "retail.model",
+            title: "retail.working_condition",
             dataIndex: ["order", "uid"],
             key: "order_uid",            
         },
         {
-            title: "retail.color",
+            title: "retail.phone",
             dataIndex: "status",
             key: "util",
             util: "CRMOrderIncomeStatusFilter",            
         },
         {
-            title: "retail.vehicle_usage",
+            title: "retail.job",
             dataIndex: "money",
             key: "money",            
         },
         {
-            title: "retail.use_status",
+            title: "retail.area",
             dataIndex: "refunded",
             key: "refunded",
         },
         {
-            title: "retail.belonging_area",
+            title: "retail.affiliated_store",
             dataIndex: "date",
             key: "time",            
         },
+        // 绑定线索数
         {
-            title: "retail.belonging_store",
+            title: "retail.number_of_bound_threads",
             dataIndex: "type",
-            key: "util",
-            util: "CRMOrderIncomeTypeFilter",            
+            key: "util",                       
         },
+        // 上岗时间
         {
-            title: "retail.warehousing_time",
-            dataIndex: "payment_type",
-            key: "util",
-            util: "CRMOrderIncomePaymentTypeFilter",            
-        },      
+            title: "retail.start_date",
+            dataIndex: "type",
+            key: "util",                       
+        },
+        // 添加人员
+        {
+            title: "retail.add_personnel",
+            dataIndex: "type",
+            key: "util",                        
+        },
+        // 添加时间        
+        {
+            title: "retail.add_time",
+            dataIndex: "type",
+            key: "util",                       
+        },           
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];
     return columns;
@@ -320,8 +340,22 @@ const routerChange = (type, item = {}) => {
     switch (type) {
         case "detail": // 详情
             routeUrl = router.resolve({
-                path: "/crm-order-income/order-income-detail",
-                query: { id: item.id },
+                path: "/retail-personnel/personnel-detail",
+                // query: { id: item.id },
+            });
+            window.open(routeUrl.href, "_blank");
+            break;
+        case "edit": // 编辑
+            routeUrl = router.resolve({
+                path: "/retail-personnel/personnel-detail",
+                // query: { id: item.id },
+            });
+            window.open(routeUrl.href, "_blank");
+            break;
+        case "delete": // 删除
+            routeUrl = router.resolve({
+                path: "/retail-personnel/personnel-detail",
+                // query: { id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
@@ -332,25 +366,12 @@ const moreSearch = () => {
     show.value = !show.value
 };
 // 查询按钮
-const handleSearch = () => {};
+const handleSearch = () => {}; 
 // 重置按钮
 const handleSearchReset = () => {};
-const handleOtherSearch = (params) => {};
-// 查看操作
-const handleView = (id) => {
-    let routeUrl = "";
-    routeUrl = router.resolve({
-        path: "/retail-vehicle/vehicle-detail",
-        query: { id },
-    });
-    window.open(routeUrl.href, "_blank");
-}
-// 删除操作
-const handleDelete = (id) => {
-    
-};
-// 申请车辆
-const addVehicle = () => {
+
+// 添加人员
+const addPerson = () => {
 
 }
 // 分页事件

@@ -1378,6 +1378,8 @@ const messages = {
             address:'地址',
             sto_con:'门店配置',
             sto_person:'门店人员',
+
+
         },
         crm_t: {
             track_record: '跟进记录',
@@ -2469,6 +2471,25 @@ const messages = {
             searcher:"搜索人员", // searcher
             working_condition:"工作状态", // Working condition
             job:"职务", // job
+            add_personnel:"添加人员", // Add personnel
+            area:'所属区域',
+            number_of_bound_threads:"绑定线索数",
+            start_date:"上岗时间",            
+            add_time:"添加时间",
+            edit:"编辑",
+            phone1:"手机号码",
+            sex:"性别", // sex
+            on_borard_time:"入职时间", // On-board time
+            job_number:"工号", // Job number
+            section:"部门", // section
+            personnel_attribution:"人员归属",
+            role_authority:"角色权限",
+            add_a_role:"添加角色",
+            age:"年龄",
+            workwear_size:"工服尺寸",
+            male:'男',           
+            female:'女', 
+            role:'角色',
         }
     },
 
@@ -4813,6 +4834,30 @@ const messages = {
             total_price:"Total price ",    
             vehicle_status:"Vehicle status ",
             modification_time:"Modification time",
+
+            personnel_list:'Personnel List',
+            searcher:"Searcher",
+            working_condition:"Working Condition",
+            job:"Job",
+            add_personnel:"Add Personnel",
+            area:'Area',
+            number_of_bound_threads:"Number Of Bound Threads",
+            start_date:"Start Date",            
+            add_time:"Add Time",
+            edit:"Edit",
+            phone1:"Phone",
+            sex:"Sex",
+            on_borard_time:"On-board Time",
+            job_number:"Job Number",
+            section:"Section",
+
+            personnel_attribution:"Personnel Attribution",
+            role_authority:"Role Authority",
+            age:"Age",
+            workwear_size:"Workwear Size",
+            male:'Male',           
+            female:'Female',  
+            role:'role',         
         }
     },
 }

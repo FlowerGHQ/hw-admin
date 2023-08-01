@@ -178,12 +178,12 @@
                         <a-button class="left-btn-style" @click="addVehicle">{{ $t("retail.apply_vehicle") }}</a-button>
                     </div>
                     <div class="btn-right">                        
-                        <a-button @click="handleSearch" type="primary">{{
-                            $t("def.search")
-                        }}</a-button> 
                         <a-button @click="handleSearchReset">{{
                             $t("def.reset")
                         }}</a-button>
+                        <a-button @click="handleSearch" type="primary">{{
+                            $t("def.search")
+                        }}</a-button> 
                     </div>
                 </div>
                 <a-table
@@ -199,7 +199,7 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleView(record.id)">{{ $t("retail.view") }}</a-button>
+                            <a-button type="link" @click="routerChange('detail', record)">{{ $t("retail.view") }}</a-button>
                             <a-button type="link" danger @click="handleDelete(record.id)">{{ $t("retail.delete") }}</a-button>
                         </template>
                     </template>
@@ -320,8 +320,8 @@ const routerChange = (type, item = {}) => {
     switch (type) {
         case "detail": // 详情
             routeUrl = router.resolve({
-                path: "/crm-order-income/order-income-detail",
-                query: { id: item.id },
+                path: "/retail-vehicle/vehicle-detail",
+                // query: { id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
@@ -336,15 +336,6 @@ const handleSearch = () => {};
 // 重置按钮
 const handleSearchReset = () => {};
 const handleOtherSearch = (params) => {};
-// 查看操作
-const handleView = (id) => {
-    let routeUrl = "";
-    routeUrl = router.resolve({
-        path: "/retail-vehicle/vehicle-detail",
-        query: { id },
-    });
-    window.open(routeUrl.href, "_blank");
-}
 // 删除操作
 const handleDelete = (id) => {
     
