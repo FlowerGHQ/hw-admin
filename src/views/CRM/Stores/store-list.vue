@@ -349,16 +349,18 @@ export default {
                     });
                     window.open(routeUrl.href, "_blank");
                     break;
-               /*  case "detail": // 查看
+
+                    case "detail": // 查看
                     if (!this.$Util.isEmptyObj(item)) {
                         this.nameColor.push({ id: item.id });
                     }
                     routeUrl = this.$router.resolve({
-                        path: "/crm-order-income/order-income-detail",
+                        path: "/stores-vehicle/stores-detail",
                         query: { id: item.id },
                     });
                     window.open(routeUrl.href, "_blank");
                     break;
+               /*  
                 case "edit": // 编辑
                     routeUrl = this.$router.resolve({
                         path: "/crm-order-income/order-income-edit",
