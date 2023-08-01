@@ -4,7 +4,8 @@
             <div class="title-container">
                 <div class="title-area">门店管理</div>
                 <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('addStore')" v-if="$auth('crm-order.save')"><i class="icon i_add" />{{ $t("crm_st.add_st") }}</a-button>
+                    <!-- v-if="$auth('crm-order.save')" -->
+                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add" />{{ $t("crm_st.add_st") }}</a-button>
                 </div>
             </div>
             <div class="search-container">
@@ -155,11 +156,11 @@
                             {{ $Util[column.util](text, $i18n.locale) }}
                         </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('editStore', record)">{{
+                            <a-button type="link" @click="routerChange('detail', record)">{{
                                 $t("def.see")
                             }}</a-button>
 
-                            <a-button type="link" @click="routerChange('storeDetail', record)">{{
+                            <a-button type="link" @click="routerChange('edit', record)">{{
                                 $t("def.edit")
                             }}</a-button>
 
@@ -340,10 +341,11 @@ export default {
             let routeUrl = "";
             switch (type) {
                 // 创建门店
-                case "addStore": 
+                case "edit": 
                     
                     routeUrl = this.$router.resolve({
-                        path: "/stores-vehicle/store-edit"
+                        path: "/stores-vehicle/store-edit",
+                        query: { id: item.id }
                     });
                     window.open(routeUrl.href, "_blank");
                     break;

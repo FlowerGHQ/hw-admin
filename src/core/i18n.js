@@ -224,7 +224,8 @@ const messages = {
             after: '售后',
             sales: '销售',
             production: '生产',
-            select_country: '国家/地区'
+            select_country: '国家/地区',
+            store_pic:'门店形象照片',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -1160,7 +1161,7 @@ const messages = {
             distributor: '该分销商吗？',
             success_disable: '禁用',
             success_enable: '启用',
-            success: '成功',
+            success: '成功', 
             yes: '确定',
             open: '开启',
             close: '关闭',
@@ -1373,7 +1374,10 @@ const messages = {
             intentionality: '意向度',
             be_added: '待补充',
             output: '输入品牌',
-            choose_class: '选择类别'
+            choose_class: '选择类别',
+            address:'地址',
+            sto_con:'门店配置',
+            sto_person:'门店人员',
         },
         crm_t: {
             track_record: '跟进记录',
@@ -1531,8 +1535,26 @@ const messages = {
             level:'门店级别',
             search_placeholder:'名称/店长',
             add_st:'创建门店',
+            edit_st:'编辑门店',
             manager:'店长',
             people:'人员',
+            sel_reg:'选择区域城市',
+            open_time:'开业时间',
+            com_affil:'所属公司',
+            con_phone:'联系手机',
+            con_email:'联系邮箱',
+            sto_area:'门店面积',
+            park_space:'车位数',
+            above_ground_park:'地上车位',
+            charg_station:'充电桩数',
+            above_charg_station:'地上充电桩数',
+            under_charg_station:'地下充电桩数',
+            add_peo:'添加人员',
+            Work_status:'工作状态',
+            office:'职务',
+            bound_thread:'绑定线索数',
+            job_time:'上岗时间',
+
         },
         crm_d: {
             list: '试驾单列表',
@@ -2649,7 +2671,9 @@ const messages = {
             after: 'After Sales',
             sales: 'Sales',
             production: "Production",
-            select_country: 'Country/Region'
+            select_country: 'Country/Region',
+            store_pic:'Store Image Photos',
+
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -3741,6 +3765,10 @@ const messages = {
             custom_area: 'Customer Address',
             intentionality: 'Intentionality',
             be_added: 'To be added',
+            address:'Address',
+            sto_con:'Store Configuration',
+            sto_person:'Store Personnel',
+
         },
         crm_t: {
             track_record: 'Track Record',
@@ -3897,9 +3925,25 @@ const messages = {
             level:'Store Level',
             search_placeholder:'Name/Store Manager',
             add_st:'Create Store',
+            edit_st:'Edit Store',
             manager:'Store Manager',
             people:'personnel',
-
+            sel_reg:'Select Regional City',
+            open_time:'Opening Time',
+            com_affil:'Company Affiliation',
+            con_phone:'Contact Your Phone',
+            con_email:'Contact Email',
+            sto_area:'Store Area',
+            park_space:'Parking Spaces',
+            above_ground_park:'Above-Ground Parking',
+            charg_station:'Number of Charging Stations',
+            above_charg_station:'Number of charging piles above ground',
+            under_charg_station:'Number of underground charging piles',
+            add_peo:'Add People',
+            Work_status:'Working Status',
+            office:'office',
+            bound_thread:'The Number of Bound Threads',
+            job_time:'On-The-job Time',
 
         },
 
