@@ -1709,8 +1709,8 @@ let Const = {
 			'40': { key: 40, zh: 'Hot',en: 'Hot' },
         },
         SEX:{            
-			'1': { key: 1, zh: '男',en: 'M'},
-			'2': { key: 2, zh: '女',en: 'W' },
+			'1': { key: 1, zh: '男',en: 'male'},
+			'2': { key: 2, zh: '女',en: 'female'},
         },
         RidingExperience:{
             '-1': { key: -1, zh: '无经验',en: 'Inexperienced' },            
@@ -2211,8 +2211,34 @@ let Const = {
             to_be_paid: 2, // 待支付
             apply_refund: 3, // 申请退订/退款
             unsubscribed_refunded: 4, // 已退订/退款
+        },
+        // 服装尺寸
+        Outfit_Size:{
+            '1':{key:1, value:"S"},
+            '2':{key:2, value:"M"},
+            '3':{key:3, value:"L"},
+            '4':{key:4, value:"XL"},
+            '5':{key:5, value:"XXL"},
+            '6':{key:6, value:"XXXL"},
+            '7':{key:7, value:"XXXXL"},
+        },
+        // 工作状态
+        Working_condition:{
+            '1':{key:1, zh:"在职", en:'Be on the job'},
+            '2':{key:2, zh:"培训", en:'train'},
+            '3':{key:3, zh:"离职", en:'dimission'},
+        },
+        // 职务
+        Job:{
+            '1':{key:1, zh:"国内市场管理员", en:'Home market manager'},
+            '2':{key:2, zh:"大区经理", en:'Regional manager'},
+            '3':{key:3, zh:"城市经理", en:'City manager'},
+            '4':{key:4, zh:"门店店长", en:'Store manager'},
+            '5':{key:5, zh:"用户体验官", en:'User experience officer'},
         }
     }
 };
+
+
 
 export default Const;

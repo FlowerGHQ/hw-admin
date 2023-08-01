@@ -2089,7 +2089,7 @@ const routes = [
                     title_en: 'Personnel List',
                     icon: 'i_s_user',
                     roles: [LOGIN_TYPE.ADMIN],
-                },       
+                },
             },
             {
                 path: 'role-permiss-man',
@@ -2101,6 +2101,16 @@ const routes = [
                     icon: 'i_s_user',
                     roles: [LOGIN_TYPE.ADMIN],
                 },       
+            },
+            {
+                path: 'personnel-detail',
+                name: 'personnelDetail',
+                component: () => import('@/views/retail-crm/personnel/detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '人员详情',
+                    title_en: 'Personnel Detail',
+                },
             }
         ]
     },

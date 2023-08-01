@@ -257,7 +257,7 @@ const stepItems = computed(() => {
         },
         {
             id: 5,
-            title: 'retail.to_be_delivered ',        
+            title: 'retail.to_be_delivered',        
         },
         {
             id: 6,
@@ -529,9 +529,8 @@ const refundHandleCancel = () => {
 
 <style lang="less" scoped>
 .order-detail{
-    width: 100%;
-    height: 100%;
-    font-family: PingFang SC;
+    width: 100%;    
+    font-family: PingFang SC;   
     .title{
         color: var(--color-text-5, #1D2129);            
         font-size: 18px;
@@ -554,7 +553,7 @@ const refundHandleCancel = () => {
     }
 
     .d-top{
-        width: 100%;
+        width: 100%;        
         padding: 20px;        
         box-sizing: border-box;        
         border-radius: 6px;
@@ -609,8 +608,7 @@ const refundHandleCancel = () => {
             }
         }
     }
-    .d-bottom{
-        min-height: calc(100% - 260px);        
+    .d-bottom{            
         margin-top: 20px;
         padding: 20px;        
         box-sizing: border-box; 

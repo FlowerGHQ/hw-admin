@@ -164,15 +164,15 @@
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
                         <!-- 详情 -->
-                        <a-button type="link" @click="handleView(record.id)">
+                        <a-button type="link" @click="routerChange('detail', record)">
                             {{ $t("retail.detail")}}
                         </a-button>                      
                         <!-- 退订审核 (只有在申请退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link" @click="handleView(record.id)">
+                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link">
                             {{ $t("retail.unsubscribe_review")}}
                         </a-button>    
                         <!-- 查看原因 (只有已退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link" @click="handleView(record.id)">
+                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link">
                             {{ $t("retail.view_reason")}}
                         </a-button>                      
                     </template>
@@ -307,8 +307,8 @@ const routerChange = (type, item = {}) => {
     switch (type) {
         case "detail": // 详情
             routeUrl = router.resolve({
-                path: "/crm-order-income/order-income-detail",
-                query: { id: item.id },
+                path: "/retail-order/order-detail",
+                // query: { id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
@@ -323,16 +323,6 @@ const handleSearch = () => {};
 // 重置按钮
 const handleSearchReset = () => {};
 const handleOtherSearch = (params) => {};
-// 查看操作
-const handleView = (id) => {
-    let routeUrl = "";
-    routeUrl = router.resolve({
-        path: "/retail-order/order-detail",
-        // query: { id },
-    });
-    window.open(routeUrl.href, "_blank");
-};
-
 // 申请车辆
 const addVehicle = () => {};
 // 分页事件

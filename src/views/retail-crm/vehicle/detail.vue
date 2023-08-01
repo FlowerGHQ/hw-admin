@@ -1,5 +1,5 @@
 <template>
-    <div class="vehicle-detail" >
+    <div class="vehicle-detail">
         <div class="d-top">
             <div class="title">
                 {{ $t('retail.vehicle_detail') }} 
@@ -126,11 +126,10 @@ const activeKey = ref('test_drive_records')
 
 <style lang="less" scoped>
 .vehicle-detail{
-    width: 100%;
-    height: 100%;
+    width: 100%;    
     font-family: PingFang SC;
     .d-top{
-        width: 100%;
+        width: 100%;        
         padding: 20px;        
         box-sizing: border-box;        
         border-radius: 6px;
@@ -199,10 +198,10 @@ const activeKey = ref('test_drive_records')
             }
         }
     }
-    .d-bottom{
-        min-height: calc(100% - 260px);        
+    .d-bottom{     
+        min-height: 260px;         
         margin-top: 20px;        
-        padding: 0 20px;        
+        padding: 0 20px;
         box-sizing: border-box; 
         border-radius: 6px;
         border: 1px solid #E7E9F0;
