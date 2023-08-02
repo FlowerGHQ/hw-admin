@@ -111,15 +111,12 @@
                     <ShopCarList />
                 </a-tab-pane>
                 <a-tab-pane key="store_shift" :tab="$t('s.store_shift')">
-                    <!-- <maintenanceRecordsCom/> -->
-                    store_shift
+                    <ShiftCon />
                 </a-tab-pane>
                 <a-tab-pane key="contract_info" :tab="$t('s.contract_info')">
-                    <!-- <maintenanceRecordsCom/> -->
                     <ContentInfo />
                 </a-tab-pane>
                 <a-tab-pane key="licenses" :tab="$t('s.licenses')">
-                    <!-- <maintenanceRecordsCom/> -->
                     <UploadLicenses />
                 </a-tab-pane>
             </a-tabs>
@@ -134,6 +131,7 @@ import CrmEditStorePeo from '@/components/crm/panel/CrmEditStorePeo.vue';
 import ShopCarList from './components/shop-car-list.vue';
 import ContentInfo from './components/content-info.vue';
 import UploadLicenses from './components/upload-licenses.vue';
+import ShiftCon from './components/ShiftCon.vue';
 
 const activeKey = ref('sto_car')
 </script>
@@ -248,6 +246,7 @@ const activeKey = ref('sto_car')
         font-weight: 400;
         line-height: normal;
         min-width: 200px;
+
         .key {
             display: inline-block;
             color: #86909C;

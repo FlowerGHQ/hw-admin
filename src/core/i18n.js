@@ -1577,7 +1577,8 @@ const messages = {
             rental_costs_placeholder:'请输入租金费用',
             property_costs_placeholder:'请输入物业费用',
             renovation_costs_placeholder:'请输入装修费用',
-            
+            enabled:'已启用',
+            no_enabled:'未启用',
 
         },
         crm_d: {
@@ -4015,7 +4016,8 @@ const messages = {
             rental_costs_placeholder:'Please enter the rental fee',
             property_costs_placeholder:'Please enter the property fee',
             renovation_costs_placeholder:'Please enter the renovation cost',
-
+            enabled:'Enabled',
+            no_enabled:'Not Enabled',
         },
 
         crm_d: {
