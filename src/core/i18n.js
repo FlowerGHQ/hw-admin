@@ -17,6 +17,7 @@ import { createI18n } from 'vue-i18n'
  * s: 门店
  * ar: 销售区域
  * dis: 试驾单
+ * wt: 三包管理
  */
 const messages = {
     zh: {
@@ -1687,9 +1688,12 @@ const messages = {
             business: '商机',
             contract_order: '合同订单',
             receipt: '回款单',
-
-
-
+        },
+        wt: {
+            effective_time: '生效时间',
+            reason: '根据',
+            postpone: '顺延',
+            effect_days: '天后生效',
         },
         authority: {
             title: {
@@ -3966,6 +3970,12 @@ const messages = {
             business: 'Business',
             contract_order: 'Contract Order',
             receipt: 'Receipt',
+        },
+        wt: {
+            effective_time: 'Effective Time',
+            reason: 'On The Basis Of',
+            postpone: 'Postpone',
+            effect_days: 'Take Effect Days Later',
         },
         authority: {
             title: {
