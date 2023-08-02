@@ -2092,17 +2092,6 @@ const routes = [
                 },
             },
             {
-                path: 'role-permiss-man',
-                name: 'rolePermissMan',
-                component: () => import('@/views/retail-crm/personnel/rolePermissMan.vue'),
-                meta: {
-                    title: '角色权限管理',
-                    title_en: 'Role Permission Management',
-                    icon: 'i_s_user',
-                    roles: [LOGIN_TYPE.ADMIN],
-                },       
-            },
-            {
                 path: 'personnel-detail',
                 name: 'personnelDetail',
                 component: () => import('@/views/retail-crm/personnel/detail.vue'),
@@ -2111,7 +2100,29 @@ const routes = [
                     title: '人员详情',
                     title_en: 'Personnel Detail',
                 },
-            }
+            },
+            {
+                path: 'role-permiss-man',
+                name: 'rolePermissMan',
+                component: () => import('@/views/retail-crm/personnel/rolePermiss-man.vue'),
+                meta: {
+                    title: '角色权限管理',
+                    title_en: 'Role Permission Management',
+                    icon: 'i_s_user',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },       
+            },
+            {
+                path: 'role-permiss-detail',
+                name: 'rolePermissDetail',
+                component: () => import('@/views/retail-crm/personnel/rolePermiss-detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '创建身份',
+                    title_en: 'Create Identity',
+                },
+            },
+            
         ]
     },
     { // 车辆管理

@@ -26,71 +26,71 @@
                     </a-row>
                     <a-row class="row-detail">
                         <!-- 系列 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.series') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6" class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.series') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 型号 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.model') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.model') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 颜色 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.color') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.color') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 入库时间 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.warehousing_time') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.warehousing_time') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 车辆用途 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.vehicle_usage') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.vehicle_usage') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 使用状态 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.use_status') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.use_status') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 所属大区 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.subregion') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.subregion') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 所属城市 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.home_city') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.home_city') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 所属门店 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.affiliated_store') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.affiliated_store') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 名称 -->
-                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t('retail.name') }}：</span>
+                        <a-col :xs="24" :sm="24" :xl="6" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t('retail.name') }}：</span>
                             <span class="value">
                                 你好
                             </span>
@@ -206,24 +206,6 @@ const activeKey = ref('test_drive_records')
         border-radius: 6px;
         border: 1px solid #E7E9F0;
         background: #FFF;        
-    }
-}
-
-.row-detail{
-    .row-item{                        
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        .key{
-            display: inline-block;
-            color: #86909C;   
-            width: 100px; 
-            text-align: right;            
-        }
-        .value{
-            color: #1D2129;
-        }
     }
 }
 

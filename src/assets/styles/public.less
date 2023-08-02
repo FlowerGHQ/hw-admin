@@ -2487,38 +2487,80 @@ p {
     -webkit-box-orient: vertical;
 }
 
-// 筛选
 .search{
-    .search-row{
-        position: relative;
-        .search-col {
-            display: flex;
-            justify-content: flex-start;
-            flex-wrap: wrap; 
-            align-items: center;                 
-            padding-right: 20px; 
-            margin-top: 20px;   
-            .key {
-                width: 100px;
-                text-align: right;
-                // flex: 1;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+// form | search
+.row-detail{
+    .row-item{ 
+        width: 100%;      
+        display: flex;
+        align-items: center;                 
+        font-size: 14px;        
+        font-weight: 400;
+        margin-top: 16px;
+        // 无宽度
+        .key{            
+            color:#1D2129;
+            white-space: nowrap;
+        }
+        // 有宽度右边对其
+        .key-w{
+            width: 100px;
+            color:#1D2129;
+            text-align: right;             
+            // white-space: nowrap;
+        }
+        .key-form-86909C{
+            color: #86909C;
+        }
+        // 必选图标
+        .key::before{
+            content: "*";            
+            color: @TC_required;
+            margin-right: 4px;
+            vertical-align: middle;
+            display: none;
+        }
+        .key-w::before{
+            content: "*";
+            display: none;
+            color: @TC_required;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        &.required{
+            .key::before{
+                display: inline-block;
             }
+            .key-w::before{
+                display: inline-block;
+            }
+        }
 
-            .value {
-                width: calc(100% - 100px);
-                // flex: 3;
-                padding-left: 10px;  
-                .select-st{
-                    width: 100%;
-                }            
-            }
-        }        
-        .search-text {
-            color: #006ef9;
-            cursor: pointer;    
+        .value{   
+            width: 100%;
+            color:#1D2129;
+            padding-right: 20px;
         }
-        .retract-icon{
-            margin-right: 8px;
-        }
-    }  
+    }
+
+    // 收起操作
+    .option-text {
+        color: #006ef9 !important;
+        cursor: pointer;    
+    }
+    // 箭头图标
+    .allow-icon{
+        margin-right: 8px;
+    }
+   
+    // 选择框的宽度
+    .select-w{
+        width: 100%;
+    }
+    .select-w-9{
+        width: 90%;
+    }
 }
