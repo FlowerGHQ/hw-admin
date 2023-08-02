@@ -20,10 +20,9 @@
                     <div class="form-item">
                         <div class="key">{{ $t('n.store_pic') }}：</div>
                         <div class="value">
-                            <a-upload :file-list="upload.detailList" class="image-uploader" name="file"
-                                accept="image/*" list-type="picture-card" :headers="upload.headers" :data="upload.data"
-                                :show-upload-list="false" :action="upload.action" :before-upload="handleImgCheck"
-                                @change="handleCoverChange">
+                            <a-upload :file-list="upload.detailList" class="image-uploader" name="file" accept="image/*"
+                                list-type="picture-card" :headers="upload.headers" :data="upload.data"
+                                :action="upload.action" :before-upload="handleImgCheck" @change="handleCoverChange">
                                 <div class="image-inner" v-if="upload.detailList.length < 10">
                                     <i class="icon i_upload" />
                                 </div>
@@ -227,7 +226,7 @@
 
             <!-- 门店人员 -->
             <div class="form-block">
-                <div class="form-title">
+                <div class="form-title" style="margin-right: 20px;">
                     <div class="title-colorful">{{ $t('s.sto_person') }}</div>
                 </div>
 
@@ -346,4 +345,14 @@ export default {
 }
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.edit-container {
+    .key {
+        width: 120px !important;
+        text-align: right;
+        padding-right: 20px !important;
+        box-sizing: border-box;
+    }
+
+}
+</style>
