@@ -5,21 +5,20 @@
                 <div class="title-area">{{ $t("retail.personnel_list") }}</div>
             </div>            
             <div class="search">
-                <a-row class="search-row">
+                <a-row class="row-detail">
                     <!-- 搜索人员 -->
                     <a-col
                         :xs="24"
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <div class="key">{{ $t("retail.searcher") }}：</div>                        
                         <div class="value">
                             <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
+                                :placeholder="$t('retail.person_or_name')"
+                                v-model:value="searchForm.person"                                
                             />
                         </div>
                     </a-col>
@@ -29,24 +28,14 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     > 
                         <div class="key">{{ $t("retail.working_condition") }}：</div>                        
                         <div class="value">
-                            <a-select
-                                class="select-st"
-                                v-model:value="searchForm.status"
-                                :placeholder="$t('def.select')"
-                                @change="handleSearch"
-                            >                    
-                                <a-select-option
-                                    v-for="item of CRM_STATUS_MAP"
-                                    :key="item.key"
-                                    :value="item.value"
-                                    >{{
-                                        lang === "zh" ? item.zh : item.en
-                                    }}</a-select-option
-                                >
+                            <a-select v-model:value="searchForm.working_condition" class="select-w">
+                                <a-select-option v-for="(item,key) in Core.Const.RETAIL.Working_condition" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -56,24 +45,14 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <div class="key">{{ $t("retail.job") }}：</div>                        
                         <div class="value">
-                            <a-select
-                                class="select-st" 
-                                v-model:value="searchForm.status"
-                                :placeholder="$t('def.select')"
-                                @change="handleSearch"
-                            >                    
-                                <a-select-option
-                                    v-for="item of CRM_STATUS_MAP"
-                                    :key="item.key"
-                                    :value="item.value"
-                                    >{{
-                                        lang === "zh" ? item.zh : item.en
-                                    }}</a-select-option
-                                >
+                            <a-select v-model:value="searchForm.job" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Job" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>                    
@@ -84,12 +63,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.subregion") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -111,12 +90,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.home_city") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -138,12 +117,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.affiliated_store") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -160,12 +139,16 @@
                             </div>
                         </a-col>                    
                     </template>
-                    <a-col                        
-                        class="search-col search-text"
+                    <a-col   
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"                     
+                        class="row-item"
                         @click="moreSearch"
                     >       
-                        <span class="key">
-                            <span class="retract-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                        <span class="key option-text">
+                            <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
                             <i v-if="!show" class="icon i_xialajiantouxiao"></i>
                             <i v-else class="icon i_shouqijiantouxiao"></i>
                         </span>
@@ -214,6 +197,7 @@
                 </a-table>
             </div>
         </div>
+        <addPersonComponent v-if="isShow" v-model:isShow="isShow"/>
     </div>
 </template>
 
@@ -222,16 +206,20 @@ import Core from "@/core";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-
-const CRM_STATUS_MAP = Core.Const.CRM_ORDER_INCOME.STATUS_MAP; // 回款单状态
-const CRM_TYPE_MAP = Core.Const.CRM_ORDER_INCOME.TYPE_MAP; // 回款类型
-const CRM_PAYMENT_TYPE_MAP = Core.Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP; // 支付方式
+import addPersonComponent from './components/addPerson.vue'
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const searchForm = ref({
-   
+    person: undefined, // 搜索人员
+    working_condition: undefined, // 工作状态
+    job: undefined, // 职务
 });
+// 添加人员弹窗
+const isShow = ref(false)
+
+
+
 const tableData = ref([]);
 const channelPagination = ref({
   current: 1,
@@ -335,6 +323,10 @@ const getTableDataFetch = (params = {}) => {
 };
 /* 接口 end*/
 /* methods */
+// 条件初始化
+const init = () => {
+    searchForm.value = {}
+}
 const routerChange = (type, item = {}) => {
     let routeUrl = "";
     switch (type) {
@@ -352,12 +344,7 @@ const routerChange = (type, item = {}) => {
             });
             window.open(routeUrl.href, "_blank");
             break;
-        case "delete": // 删除
-            routeUrl = router.resolve({
-                path: "/retail-personnel/personnel-detail",
-                // query: { id: item.id },
-            });
-            window.open(routeUrl.href, "_blank");
+        case "delete": // 删除           
             break;
     }
 }
@@ -366,13 +353,17 @@ const moreSearch = () => {
     show.value = !show.value
 };
 // 查询按钮
-const handleSearch = () => {}; 
+const handleSearch = () => {
+    console.log("searchForm", searchForm.value);
+}; 
 // 重置按钮
-const handleSearchReset = () => {};
+const handleSearchReset = () => {
+    init()
+};
 
 // 添加人员
 const addPerson = () => {
-
+    isShow.value = true
 }
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {

@@ -1,18 +1,18 @@
 <template>
-    <div id="OrderList">
+    <div class="vehicle-list">
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">{{ $t("retail.vehicle_list") }}</div>
             </div>            
             <div class="search">
-                <a-row class="search-row">
+                <a-row class="row-detail">
                     <!-- 搜索车辆 -->
                     <a-col
                         :xs="24"
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <div class="key">{{ $t("retail.search_vehicle") }}：</div>                        
                         <div class="value">
@@ -29,24 +29,22 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <div class="key">{{ $t("retail.vehicle_usage") }}：</div>                        
                         <div class="value">
                             <a-select
-                                class="select-st"
-                                v-model:value="searchForm.status"
-                                :placeholder="$t('def.select')"
-                                @change="handleSearch"
+                                class="select-w"
+                                v-model:value="searchForm.vehicle_usage"
+                                :placeholder="$t('def.select')"                                
                             >                    
                                 <a-select-option
-                                    v-for="item of CRM_STATUS_MAP"
+                                    v-for="item of Core.Const.RETAIL.Vehicle_Usage"
                                     :key="item.key"
                                     :value="item.value"
-                                    >{{
-                                        lang === "zh" ? item.zh : item.en
-                                    }}</a-select-option
-                                >
+                                    >
+                                    {{ item[$i18n.locale] }}    
+                                </a-select-option>
                             </a-select>
                         </div>
                     </a-col>
@@ -56,12 +54,12 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <div class="key">{{ $t("retail.vehicle_series") }}：</div>                        
                         <div class="value">
                             <a-select
-                                class="select-st" 
+                                class="select-w" 
                                 v-model:value="searchForm.status"
                                 :placeholder="$t('def.select')"
                                 @change="handleSearch"
@@ -84,12 +82,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.subregion") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -111,12 +109,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.home_city") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -138,12 +136,12 @@
                             :sm="24"
                             :xl="8"
                             :xxl="6"
-                            class="search-col"
+                            class="row-item"
                         >
                             <div class="key">{{ $t("retail.affiliated_store") }}：</div>                        
                             <div class="value">
                                 <a-select
-                                    class="select-st"
+                                    class="select-w"
                                     v-model:value="searchForm.status"
                                     :placeholder="$t('def.select')"
                                     @change="handleSearch"
@@ -161,11 +159,15 @@
                         </a-col>                    
                     </template>
                     <a-col
-                        class="search-col search-text"
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="row-item"
                         @click="moreSearch"
                     >       
-                        <span class="key">
-                            <span class="retract-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                        <span class="key option-text">
+                            <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
                             <i v-if="!show" class="icon i_xialajiantouxiao"></i>
                             <i v-else class="icon i_shouqijiantouxiao"></i>
                         </span>
@@ -175,7 +177,7 @@
             <div class="table-container">
                 <div class="btns">
                     <div class="btn-left">
-                        <a-button class="left-btn-style" @click="addVehicle">{{ $t("retail.apply_vehicle") }}</a-button>
+                        <a-button v-if="false" class="left-btn-style" @click="addVehicle">{{ $t("retail.apply_vehicle") }}</a-button>
                     </div>
                     <div class="btn-right">                        
                         <a-button @click="handleSearchReset">{{
@@ -216,13 +218,11 @@ import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const CRM_STATUS_MAP = Core.Const.CRM_ORDER_INCOME.STATUS_MAP; // 回款单状态
-const CRM_TYPE_MAP = Core.Const.CRM_ORDER_INCOME.TYPE_MAP; // 回款类型
-const CRM_PAYMENT_TYPE_MAP = Core.Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP; // 支付方式
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const searchForm = ref({
-   
+    vehicle_usage: undefined, // 车辆用途
 });
 const tableData = ref([]);
 const channelPagination = ref({
@@ -372,5 +372,10 @@ const handleTableChange = (pagination, filters, sorter) => {
     }
     .btn-right {
     }
+}
+
+.search{
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 </style>

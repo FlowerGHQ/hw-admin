@@ -21,55 +21,55 @@
                     </a-row>
                     <a-row class="row-detail">
                         <!-- 手机 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t("retail.phone")}} ：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                            <span class="key key-form-86909C">{{ $t("retail.phone")}} ：</span>
                             <span class="value">
-                                18370239885
-                            </span>
-                            <span style="color: #0061FF;">
-                                查看
-                            </span>
-                            <span>
-                                【北京联通】 
+                                <span>1234567</span>
+                                <span style="color: #0061FF;">
+                                    查看
+                                </span>
+                                <span>
+                                    【北京联通】 
+                                </span>
                             </span>
                         </a-col>
                         <!-- 邮箱 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{ $t("retail.email")}}：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{ $t("retail.email")}}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 用户体验官 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.user_experience_officer')}}：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{$t('retail.user_experience_officer')}}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 省份 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.province')}}：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{$t('retail.province')}}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 城市 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.city')}}：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{$t('retail.city')}}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
                         <!-- 订单地址 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.order_address')}}：</span>
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item">
+                            <span class="key key-form-86909C">{{$t('retail.order_address')}}：</span>
                             <span class="value">
                                 你好
+                                <span style="color: #0061FF;">
+                                    {{$t('retail.push_to_customers')}}
+                                </span> 
                             </span>
-                            <span style="color: #0061FF;">
-                                {{$t('retail.push_to_customers')}}
-                            </span> 
                         </a-col>                      
                     </a-row>
                 </div>
@@ -175,10 +175,10 @@
                     </template>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
-                        <a-button type="link" @click="viewReson(1)">
+                        <a-button type="link" @click="viewReson('view')">
                             {{ $t('retail.view_reason') }}
                         </a-button>                      
-                        <a-button type="link" @click="viewReson(2)">
+                        <a-button type="link" @click="viewReson">
                             {{ $t('retail.unsubscribe_review') }}
                         </a-button>                      
                     </template>
@@ -505,9 +505,9 @@ const modifyFetch = (params = {}) => {
 
 /* methods start*/
 // 查看原因
-const viewReson = (id) => {
+const viewReson = (v) => {
     refundVisible.value = true
-    if(id == 2){
+    if(v == 'view'){
         isFooterDisabled.value = true
     }else {
         isFooterDisabled.value = false
@@ -668,24 +668,6 @@ const refundHandleCancel = () => {
         }
         .modify-msg{
             margin-top: 20px;
-        }
-    }
-}
-
-.row-detail{
-    .row-item{                        
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        .key{
-            display: inline-block;
-            color: #86909C;   
-            // width: 100px; 
-            // text-align: right;            
-        }
-        .value{
-            color: #1D2129;
         }
     }
 }

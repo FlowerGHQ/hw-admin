@@ -1,9 +1,9 @@
 <template>
     <div class="have-paid">
         <div class="search">
-            <a-row class="search-row">
+            <a-row class="row-detail">
                 <!-- 订单搜索 -->
-                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("retail.order_search") }}：</span>
                     <span class="value">
                         <a-input
@@ -14,7 +14,7 @@
                     </span>
                 </a-col>
                 <!-- 车辆系列 -->
-                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("retail.vehicle_series") }}：</span>
                     <span class="value">
                         <a-input
@@ -25,11 +25,11 @@
                     </span>
                 </a-col>
                 <!-- 订单状态： -->
-                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("retail.order_status") }}：</span>
                     <span class="value">
                         <a-select
-                            class="select-st"                            
+                            class="select-w"                            
                             v-model:value="searchForm.status"
                             :placeholder="$t('def.select')"
                             @change="handleSearch"
@@ -47,7 +47,7 @@
                 </a-col>
                 <template v-if="show">
                     <!-- 所属大区 -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                         <span class="key">{{ $t("retail.subregion") }}：</span>
                         <span class="value">
                             <a-input
@@ -63,7 +63,7 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <span class="key">{{ $t("retail.home_city") }}：</span>
                         <span class="value">
@@ -80,7 +80,7 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <span class="key">{{ $t("retail.affiliated_store") }}：</span>
                         <span class="value">
@@ -97,15 +97,15 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <span class="key">{{ $t("retail.order_progress") }}：</span>
                         <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
+                            <a-select v-model:value="searchForm.order_progress" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Progress" :value="item.key">
+                                    {{ $t(item.value )}}
+                                </a-select-option>
+                            </a-select>
                         </span>
                     </a-col>
                     <!-- 创建时间 -->
@@ -114,7 +114,7 @@
                         :sm="24"
                         :xl="8"
                         :xxl="6"
-                        class="search-col"
+                        class="row-item"
                     >
                         <span class="key">{{ $t("retail.creat_time") }}：</span>
                         <span class="value">
@@ -127,11 +127,15 @@
                     </a-col>
                 </template>
                 <a-col
-                    class="search-col search-text"
+                    :xs="24"
+                    :sm="24"
+                    :xl="8"
+                    :xxl="6"
+                    class="row-item"
                     @click="moreSearch"
                 >       
-                    <span class="key">
-                        <span class="retract-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                    <span class="key option-text">
+                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
                         <i v-if="!show" class="icon i_xialajiantouxiao"></i>
                         <i v-else class="icon i_shouqijiantouxiao"></i>
                     </span>
@@ -190,7 +194,9 @@ import { useRoute, useRouter } from "vue-router";
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
-const searchForm = ref({});
+const searchForm = ref({
+    order_progress: undefined, // 订单进度
+});
 const tableData = ref([]);
 const channelPagination = ref({
     current: 1,
@@ -342,8 +348,6 @@ const handleTableChange = (pagination, filters, sorter) => {
 </script>
 
 <style lang="less" scoped>
-.have-paid {
-}
 .btns {
     .fcc(space-between);
     .btn-left {

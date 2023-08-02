@@ -2213,7 +2213,7 @@ let Const = {
             unsubscribed_refunded: 4, // 已退订/退款
         },
         // 服装尺寸
-        Outfit_Size:{
+        Outfit_Size:{            
             '1':{key:1, value:"S"},
             '2':{key:2, value:"M"},
             '3':{key:3, value:"L"},
@@ -2223,22 +2223,56 @@ let Const = {
             '7':{key:7, value:"XXXXL"},
         },
         // 工作状态
-        Working_condition:{
+        Working_condition:{            
             '1':{key:1, zh:"在职", en:'Be on the job'},
             '2':{key:2, zh:"培训", en:'train'},
             '3':{key:3, zh:"离职", en:'dimission'},
         },
         // 职务
-        Job:{
+        Job:{            
             '1':{key:1, zh:"国内市场管理员", en:'Home market manager'},
             '2':{key:2, zh:"大区经理", en:'Regional manager'},
             '3':{key:3, zh:"城市经理", en:'City manager'},
             '4':{key:4, zh:"门店店长", en:'Store manager'},
             '5':{key:5, zh:"用户体验官", en:'User experience officer'},
+        },
+        // 车辆用途
+        Vehicle_Usage:{
+            '1':{key:1, zh:"试驾车", en:'Test Drive'},
+            '2':{key:2, zh:"展车", en:'Display Car'},
+            '3':{key:3, zh:"工具车", en:'Tool Car'},
+        },
+        // 使用状态
+        Use_Status:{
+            '1':{key:1, zh:"配置中", en:'Configuring'},
+            '2':{key:2, zh:"使用中", en:'In use'},
+            '3':{key:3, zh:"停用中", en:'Out of use'},
+            '4':{key:4, zh:"维保中", en:'Maintenance in progress'},
+        },
+        // 支付状态
+        Payment_Status:{
+            '1':{key: 1, zh:"下单未付款", en:'Unpaid order placement'},
+            '2':{key: 2, zh:"已付意向金", en:'Intention deposit paid'},
+            '3':{key: 3, zh:"已付小订", en:'Paid small order'},
+            '4':{key: 4, zh:"已付大定", en:'Paid Da Ding'},
+            '5':{key: 5, zh:"已付尾款", en:'Final payment paid'},
+            '6':{key: 6, zh:"待交付", en:'To be delivered'},
+            '7':{key: 7, zh:"已交付", en:'Delivered'},
+            '8':{key: 8, zh:"待开票", en:'To be invoiced'},
+            '9':{key: 9, zh:"已完成", en:'Completed'},
+        },
+        // 订单进度
+        Order_Progress:{
+            '1':{key: 1, value:'retail.intention_deposit_paid'},
+            '2':{key: 2, value:'retail.paid_small_order'},
+            '3':{key: 3, value:'retail.paid_large_order'},
+            '4':{key: 4, value:'retail.final_payment_paid'},
+            '5':{key: 5, value:'retail.to_be_delivered'},
+            '6':{key: 6, value:'retail.delivered'},
+            '7':{key: 7, value:'retail.to_be_invoiced'},
+            '8':{key: 8, value:'retail.completed'},
         }
     }
 };
-
-
 
 export default Const;

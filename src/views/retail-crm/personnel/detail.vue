@@ -26,21 +26,21 @@
                     <a-row class="row-detail">
                         <!-- 手机号码 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item m-t-16">
-                            <div class="key">{{ $t("retail.phone1")}} ：</div>
+                            <div class="key key-form-86909C">{{ $t("retail.phone1")}} ：</div>
                             <div class="value">
                                 {{ fill_out.phone }}
                             </div>                          
                         </a-col>
                         <!-- 邮箱 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <div class="key">{{ $t("retail.email")}}：</div>
+                            <div class="key key-form-86909C">{{ $t("retail.email")}}：</div>
                             <div class="value">
                                 <a-input v-model:value="fill_out.email" :placeholder="$t('def.select')"/>
                             </div>
                         </a-col>
                         <!-- 性别 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.sex')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.sex')}}：</span>
                             <span class="value">
                                 <a-radio-group v-model:value="fill_out.sex" :placeholder="$t('def.select')">                                    
                                     <a-radio v-for="item in Core.Const.CRM_ORDER.SEX" :value="item.key">
@@ -51,35 +51,35 @@
                         </a-col>
                         <!-- 年龄 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.age')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.age')}}：</span>
                             <span class="value">
                                 <a-input v-model:value="fill_out.age" :placeholder="$t('def.select')"/>
                             </span>
                         </a-col>                        
                         <!-- 工号 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.job_number')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.job_number')}}：</span>
                             <span class="value">
                                 写死
                             </span>
                         </a-col>
                         <!-- 部门 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.section')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.section')}}：</span>
                             <span class="value">
                                 写死
                             </span>                                        
                         </a-col>  
                         <!-- 入职时间 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.on_borard_time')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.on_borard_time')}}：</span>
                             <span class="value">
                                 写死
                             </span>
                         </a-col>
                         <!-- 工服尺寸 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key">{{$t('retail.workwear_size')}}：</span>
+                            <span class="key key-form-86909C">{{$t('retail.workwear_size')}}：</span>
                             <span class="value">
                                 <a-select v-model:value="fill_out.size" class="select-w">
                                     <a-select-option v-for="item in Core.Const.RETAIL.Outfit_Size" :value="item.key">
@@ -100,9 +100,9 @@
                 <a-row class="row-detail">
                     <!-- 工作状态 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item m-t-16">
-                        <span class="key">{{ $t("retail.working_condition")}}：</span>
+                        <span class="key key-form-86909C">{{ $t("retail.working_condition")}}：</span>
                         <span class="value">
-                            <a-select v-model:value="fill_out.size" class="select-w">
+                            <a-select v-model:value="fill_out.working_condition" class="select-w">
                                 <a-select-option v-for="item in Core.Const.RETAIL.Working_condition" :value="item.key">
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
@@ -111,16 +111,16 @@
                     </a-col>
                     <!-- 上岗时间 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                        <span class="key">{{ $t("retail.start_date")}}：</span>
+                        <span class="key key-form-86909C">{{ $t("retail.start_date")}}：</span>
                         <span class="value">
                             你好
                         </span>
                     </a-col>
                     <!-- 职务 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                        <span class="key">{{$t('retail.job')}}：</span>
+                        <span class="key key-form-86909C">{{$t('retail.job')}}：</span>
                         <span class="value">
-                            <a-select v-model:value="fill_out.size" class="select-w">
+                            <a-select v-model:value="fill_out.job" class="select-w">
                                 <a-select-option v-for="item in Core.Const.RETAIL.Job" :value="item.key">
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
@@ -129,21 +129,21 @@
                     </a-col>
                     <!-- 所属大区 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                        <span class="key">{{$t('retail.subregion')}}：</span>
+                        <span class="key key-form-86909C">{{$t('retail.subregion')}}：</span>
                         <span class="value">
                             你好
                         </span>
                     </a-col>
                     <!-- 所属城市 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                        <span class="key">{{$t('retail.home_city')}}：</span>
+                        <span class="key key-form-86909C">{{$t('retail.home_city')}}：</span>
                         <span class="value">
                             你好
                         </span>
                     </a-col>
                     <!-- 所属门店 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                        <span class="key">{{$t('retail.affiliated_store')}}：</span>
+                        <span class="key key-form-86909C">{{$t('retail.affiliated_store')}}：</span>
                         <span class="value">
                             你好
                         </span>                                        
@@ -156,23 +156,31 @@
                 {{ $t("retail.role_authority")}} 
             </div> 
             <div class="search">
-                <a-row class="search-row">
+                <a-row class="row-detail">
                     <!-- 角色1: -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">
-                        <span class="key">{{ $t("retail.role")}}：</span>
-                        <span class="value">
-                            <a-select
-                                class="i-s-w"                              
-                                :placeholder="$t('def.select')"
-                            >
-                            </a-select>
-                            <span class="delete-icon"><i class="icon i_delete" /></span>
-                        </span>                    
+                    <template v-for="($1,index) in selectList" :key="index">                
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                            <span class="key">{{ $t("retail.role")}}{{ index + 1 }}：</span>
+                            <span class="value">
+                                <a-select 
+                                    v-model:value="$1.id" 
+                                    class="select-w-9" 
+                                    :placeholder="$t('def.select')"
+                                    @change="roleSelectEvent"
+                                    >
+                                    <a-select-option v-for="$2 in roleList" :value="$2.id">
+                                        {{ $2.value }}
+                                    </a-select-option>
+                                </a-select>
+                                <span class="delete-icon" @click="deleterole(index)"><i class="icon i_delete" /></span>
+                            </span>                    
+                        </a-col>                    
+                    </template>
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                        <a-button type="primary" ghost @click="addrole">{{ $t("retail.add_a_role")}}</a-button>                   
                     </a-col>                    
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-col">                        
-                        <a-button type="primary" ghost>{{ $t("retail.add_a_role")}}</a-button>                        
-                    </a-col>
                 </a-row>
+               
             </div>        
         </div>
     </div>
@@ -183,13 +191,26 @@ import Core from "@/core";
 import { computed, onMounted, reactive, ref } from 'vue';
 
 // 数据
-const fill_out = reactive({
+const fill_out = ref({
     phone:'1837029', // 手机号
     email:'', // 邮箱
     sex: 1, // 性别
     age: undefined, // 年龄
     size: undefined, // 尺码
+    working_condition: undefined, // 工作状态
+    job: undefined, // 职务
 })
+
+// 角色权限下拉选择框
+const roleList = ref([
+    {id:1, value:"超级管理员"},
+    {id:2, value:"管理员"},
+]) 
+// 选中的角色数组
+const selectList = ref([
+    {id:1},
+    {id:2},
+])
 
 onMounted(() => {
 
@@ -200,16 +221,17 @@ const updateFetch = (params = {}) => {
 /* Fetch end*/
 
 /* methods start*/
-// 查看原因
-const viewReson = (id) => {
-    refundVisible.value = true
-    if(id == 2){
-        isFooterDisabled.value = true
-    }else {
-        isFooterDisabled.value = false
-    }
+// 角色权限 //
+const addrole = () => {
+    selectList.value.push({})
 }
-
+const deleterole = (index) => {
+    selectList.value.splice(index,1)
+}
+const roleSelectEvent = (value) => {
+    console.log("输出", value);
+}
+// 角色权限 //
 </script>
 
 <style lang="less" scoped>
@@ -217,6 +239,8 @@ const viewReson = (id) => {
     width: 100%;    
     height: 100%;
     font-family: PingFang SC;
+    display: flex;
+    flex-direction: column;
      
     .title{
         color: var(--color-text-5, #1D2129);            
@@ -315,28 +339,6 @@ const viewReson = (id) => {
         border-radius: 6px;
         border: 1px solid #E7E9F0;
         background: #FFF;
-    }
-}
-
-.row-detail{
-    .row-item{ 
-        width: 100%;      
-        display: flex;
-        align-items: center;                 
-        font-size: 14px;        
-        font-weight: 400;        
-        .key{            
-            color: #86909C;   
-            white-space: nowrap;
-        }
-        .value{   
-            width: 100%;
-            color: #1D2129;
-            padding-right: 20px;
-        }
-    }
-    .select-w{
-        width: 100%;
     }
 }
 
