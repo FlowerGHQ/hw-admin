@@ -472,8 +472,8 @@ const routes = [
         name: 'ItemManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
-            title: '商品管理',
-            title_en: 'Product',
+            title: '商品档案',
+            title_en: 'Product Archives',
             icon: 'i_s_item',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['item.list','item-category.list'],
@@ -1626,6 +1626,7 @@ const routes = [
             },
         ]
     },
+
 
     // CRM
 	{ // 客户管理

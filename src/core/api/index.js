@@ -249,7 +249,7 @@ const apiList = {
         deleteItemComponent: ['PostJson', 'item/delete-item-component'], // 解绑零部件
 	    saveSalesAreaByCategory: ['PostJson', 'item/save-sales-area-by-category'], // 解绑零部件
 	    ItemAccessoryModify: ['PostJson', 'item-accessory/modify'], // 商品详情上传配件修改数量
-
+        ItemCategory: ['PostJson', 'item-category/primary/list'], // 获取商品分类一级分类tab列表
     },
 	ItemAccessory: { // 商品
 		// save: ['PostJson', 'item-accessory/save'],   // 单选

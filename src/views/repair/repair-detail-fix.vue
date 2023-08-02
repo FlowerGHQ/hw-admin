@@ -723,7 +723,7 @@ export default {
 
     .block {
         width: 100%;
-        height: 20px;
+        height: 60px;
         background-color: #FFFFFF;
         border-radius: 4px;
     }
