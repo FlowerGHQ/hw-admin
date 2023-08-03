@@ -8,8 +8,8 @@
         <div class="tips-container">
             <div class="tips-block">
                 <img src="../../assets/images/warn-tip.png" alt="">
-                <div class="tips-text" v-for="item in tipList" :key="index">
-                    {{ item }}
+                <div class="tips-text" v-for="(item, index) in tipList" :key="index">
+                    {{ item[$i18n.locale] }}
                 </div>
             </div>
         </div>
@@ -62,6 +62,12 @@
                             <!-- 通用展示 -->
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
+                            </template>
+                            <template v-if="column.key === 'detail'">
+                                <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
+                                    {{ record.item_name }}
+                                </a-button>
+                                <span v-else>-</span>
                             </template>
                             <template v-if="column.key === 'frame_uid'">
                                 <a-tooltip placement="top" :title='text'>
@@ -127,9 +133,9 @@
                         <!-- 故障类型 -->
                         <div class="form-wrap required mt" v-if="$1.failure_type === 1">
                             <div class="key">{{ $t('r.fault_types') }}:</div>
-                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" :disabled="falgEdit">
+                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category">
                                 <a-checkbox v-for="item in faultTypesList" :value="item.value">
-                                    {{ item[$i18n.locale] }}
+                                    {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
                                 </a-checkbox>
                             </a-checkbox-group>
                         </div>
@@ -150,9 +156,9 @@
                             <!-- 故障类型 -->
                             <div class="form-wrap required mt" v-if="isShow($1.failure_type)">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
-                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" :disabled="falgEdit">
-                                    <a-checkbox v-for="item in faultTypesList" :value="item.value">
-                                        {{ item[$i18n.locale] }}
+                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" @change="differentCheckChange">
+                                    <a-checkbox v-for="item in faultTypesList" :value="item">
+                                        {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
                                     </a-checkbox>
                                 </a-checkbox-group>
                             </div>
@@ -395,10 +401,19 @@
                         }}</a-button>
                     </template>
                 </a-modal>
+                <!-- 添加商品弹框 -->
+                <ItemSelect
+                    v-if="selectAllItemModalShow" 
+                    btnType='primary' 
+                    :btnText="$t('i.select_item')" 
+                    btnClass="item-select-btn"
+                    :disabled-checked='disabledChecked' 
+                    @select="handleSelectItem" 
+                />
             </template>
         </div>
         <div class="fix-container">
-            <div class="pay-method-key">
+            <div :class="$i18n.locale === 'zh' ? 'pay-method-key' : 'pay-method-key w1080'">
                 {{ $t(/*赔付方式*/'r.payment_method') }}：
                 <div class="pay-method-radio">
                     <a-radio-group v-model:value="form.compensation_method">
@@ -426,11 +441,12 @@ const REPAIR = Core.Const.REPAIR
 import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue';
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import ItemTable from '@/components/table/ItemTable.vue'
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 import { get } from 'lodash';
 
 export default {
     name: 'RepairEdit',
-    components: { ChinaAddressCascader, AddressCascader, SimpleImageEmpty, ItemTable },
+    components: { ChinaAddressCascader, AddressCascader, SimpleImageEmpty, ItemTable, ItemSelect },
     props: {},
     data() {
         return {
@@ -439,9 +455,9 @@ export default {
             // 加载
             loading: false,
             tipList: [
-                "1. 当前新增工单时，请填写出现同一工单类型的车架号信息",
-                "2. 同一车型的车架号会生成一个工单",
-                "3. 提交后的工单在没有审核前，可以点击取消并重新编辑工单，也可直接作废该工单，作废的工单不可再次编辑；取消的工单在【已关闭】状态的工单列表中查找",
+                { zh: "1. 当前新增工单时，请填写出现同一工单类型的车架号信息", en: "1. When adding a work order, please fill in the frame number of the same type of work order" },
+                { zh: "2. 同一车型的车架号会生成一个工单", en: "2. The frame number of the same model will generate a work order" },
+                { zh: "3. 提交后的工单在没有审核前，可以点击取消并重新编辑工单，也可直接作废该工单，作废的工单不可再次编辑；取消的工单在【已关闭】状态的工单列表中查找", en: '3. Before the submitted work order is reviewed, you can click to cancel and edit the work order again, or directly cancel the work order. The invalid work order cannot be edited again. The cancelled work order is found in the work order column table in the Closed state' }
             ],
             itemTableData: [],
             mileage: undefined,
@@ -495,75 +511,84 @@ export default {
                     zh: '电池组',
                     en: 'Identical Fault',
                     value: 1,
+                    count: 3
                 },
                 {
                     key: 2,
                     zh: '电机组',
                     en: 'Different Fault',
                     value: 2,
+                    count: 0
                 },
                 {
                     key: 3,
                     zh: '方向组',
                     en: 'Identical Fault',
                     value: 3,
-
+                    count: 0
                 },
                 {
                     key: 4,
                     zh: '制动组',
                     en: 'Different Fault',
                     value: 4,
-
+                    count: 0
                 },
                 {
                     key: 5,
                     zh: '前叉组',
                     en: 'Different Fault',
                     value: 5,
-
+                    count: 0
                 },
                 {
                     key: 6,
                     zh: '前轮组',
                     en: 'Different Fault',
                     value: 6,
+                    count: 0
                 },
                 {
                     key: 7,
                     zh: '后轮组',
                     en: 'Different Fault',
                     value: 7,
+                    count: 0
                 },
                 {
                     key: 8,
                     zh: '车架组',
                     en: 'Different Fault',
                     value: 8,
+                    count: 0
                 },
                 {
                     key: 9,
                     zh: '支撑组',
                     en: 'Different Fault',
                     value: 9,
+                    count: 0
                 },
                 {
                     key: 9,
                     zh: '前部塑件组',
                     en: 'Different Fault',
                     value: 9,
+                    count: 0
                 },
                 {
                     key: 10,
                     zh: '尾部塑件组',
                     en: 'Identical Fault',
                     value: 10,
+                    count: 0
                 },
                 {
                     key: 11,
                     zh: '坐垫组',
                     en: 'Different Fault',
                     value: 11,
+                    count: 0
                 },
             ],
             vehicleGroupList: [],
@@ -587,6 +612,7 @@ export default {
             currentItemId: undefined, // 当前上传附件商品id
             finishUploadData: [], // 上传文件中间数组
             selectItemModalShow: false,
+            selectAllItemModalShow: false,
             pointerList: [], // 点位列表
             // 无爆炸图
             explodeShow: true,
@@ -613,6 +639,7 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
+            disabledChecked: [], // 传给上传配件选择商品中哪些不选中的
         };
     },
     watch: {},
@@ -620,7 +647,7 @@ export default {
         itemTableColumns() {
             let columns = [
                 { title: this.$t('search.vehicle_no'), dataIndex: 'frame_uid', key: 'frame_uid' }, // 车架号
-                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' }, // 商品名称
                 { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
@@ -701,9 +728,29 @@ export default {
         }
     },
     methods: {
+        handleModalClose() {
+
+        },
+        handleOrderChange() {
+
+        },
+        handleConfirm() {
+
+        },
+        handleCancel() {
+
+        },
+        differentCheckChange(checkout) {
+            console.log('e', e);
+            checkout.forEach(item => {
+                if(item.count) {
+                    this.selectAllItemModalShow = true
+                }
+            })
+        },
         handleSelectItemModal() {
             this.selectItemModalShow = true
-            this.getItemExploreList(this.id)
+            this.getItemExploreList()
             this.modalTableData = [
                 {
                     id: 7458,
@@ -835,6 +882,14 @@ export default {
                         path: "/repair/repair-detail",
                         query: {
                             id: item.id
+                        }
+                    })
+                    break;
+                case 'itemDetail':  // 维修单详情
+                    routeUrl = this.$router.replace({
+                        path: "/item/item-detail",
+                        query: {
+                            id: item.item_id
                         }
                     })
                     break;
@@ -1005,7 +1060,10 @@ export default {
         handleSubmitVehicle() {
             this.isVehicle = true
             this.uidList = this.form.vehicle_no.trim().split('\n').map(str => str.trim());;
+            let duplicates = this.uidList.length - new Set(this.uidList).size;
+            this.form.vehicle_no = undefined
             console.log('uidList', this.uidList);
+            this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
         },
         /** 获取 商品爆炸图 */
         getItemExploreList() {
@@ -1301,7 +1359,7 @@ export default {
         box-sizing: border-box;
 
         .item-table-container {
-            margin-top: 104px;
+            margin-top: 24px;
             padding-left: 88px;
             box-sizing: border-box;
             width: 100%;
@@ -1473,6 +1531,10 @@ export default {
             color: #1D2129;
             font-size: 14px;
             font-weight: 400;
+
+            &.w1080 {
+                width: 1080px;
+            }
 
             .pay-method-radio {
                 margin-left: 16px;

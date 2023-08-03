@@ -876,7 +876,8 @@ const routes = [
                 component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '维修单编辑',
+                    title: '新增工单',
+                    title_en: 'New Work Order',
                     parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['repair-order.save'],

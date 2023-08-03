@@ -394,6 +394,8 @@ const messages = {
             repair_account_type: '工单帐类',
             operation_content: '操作内容',
             operating_time: '操作时间',
+            filtered: '已过滤',
+            duplicate_frame: '重复的车架号',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2746,6 +2748,8 @@ const messages = {
             repair_account_type: 'Work order accounting class',
             operation_content: 'Operation content',
             operating_time: 'Operation time',
+            filtered: 'Filtered',
+            duplicate_frame: 'Duplicate Frame Number',
         },
         d: {
             distributor_detail: 'Distributor Details',

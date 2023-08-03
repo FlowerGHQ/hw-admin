@@ -9,7 +9,7 @@
                 </div>
             </div>
             <div class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.status" @change='handleTabSearch()'>
+                <a-tabs v-model:activeKey="searchForm.parent_id" @change='handleTabSearch'>
                     <a-tab-pane :key="item.id" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">{{ $i18n.locale === 'zh' ? item.name : item.name_en }}</div>
@@ -18,7 +18,7 @@
                 </a-tabs>
             </div>
             <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :loading="loading"
                     :row-key="record => record.id" :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
                     @expand='handleExpandedChange'>
                     <template #bodyCell="{ column, text, record }">
@@ -44,7 +44,7 @@
                             </a-button>
                             <!-- <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> {{ $t('i.product_configuration') }}
                             </a-button> -->
-                            <a-button type='link' @click="handleModalShow({ parent_id: record.id }, null, record)"><i
+                            <a-button type='link' v-if="!record.flag" @click="handleModalShow({ parent_id: record.id }, null, record)"><i
                                     class="icon i_add" /> {{ $t('i.subcategory') }}
                             </a-button>
                             <a-button type='link' class="danger" @click="handleDelete(record)"><i class="icon i_delete" />
@@ -70,18 +70,6 @@
                             <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')" />
                         </div>
                     </div>
-                    <!-- <div class="form-item">
-                        <div class="key">{{ $t('n.index') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('i.home_page_redirect_number') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.index_key" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div> -->
                 </div>
             </a-modal>
             <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630"
@@ -137,16 +125,11 @@ export default {
             salesAreaVisible: false,
             salesList: [],
             salesAreaIds: [],
-            statusStatus: [
-                { name: '整  车', name_en: 'All', id: 1 },
-                { name: '零部件', name_en: 'Awaiting review', id: 2 },
-                { name: '周边件', name_en: 'Passed', id: 3 },
-                { name: '广宣品', name_en: 'Rejected', id: 4 },
-                { name: '检测工具', name_en: 'Closed', id: 5 },
-            ],
+            statusList: [],
             searchForm: {
-                status: 1
+                parent_id: 1
             },
+            currentTableData: [],
         };
     },
     watch: {},
@@ -160,13 +143,10 @@ export default {
             ]
             return columns
         },
-        statusList() {
-            return this.statusStatus
-        }
     },
     mounted() {
-        this.getDataByParent();
-        // this.getStatusList();
+        this.getDataByParent(this.searchForm.parent_id);
+        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -189,18 +169,19 @@ export default {
             }
         },
         handleSearch() {  // 搜索
-            console.log(111);
             this.expandedRowKeys = []
-            this.getDataById();
+            this.getDataByParent(this.searchForm.parent_id);
         },
         handleTabSearch() {
             this.expandedRowKeys = []
-            this.getDataByParent(this.searchForm.status)
+            console.log('this.searchForm.parent_id', this.searchForm.parent_id);
+            this.getDataByParent(this.searchForm.parent_id)
         },
+        // 获取tab标签切换列表
         getStatusList() {
             Core.Api.Item.ItemCategory().then(res => {
                 console.log('getStatusList res', res);
-                this.statusList = res.category_list
+                this.statusList = res.list.list
             }).catch(err => {
                 console.log('getStatusList err', err);
             })
@@ -216,12 +197,21 @@ export default {
                     item.has_children ? item.children = [] : item.children = null
                 });
                 console.log('getDataByParent res.list:', res.list)
-                if (parent_id === 0) {
-                    this.tableData = res.list;
-                    this.calculateItemQuantity(this.tableData);
-                } else if (parentNode) {
+                if (parentNode) {
                     console.log('parentNode', parentNode);
                     parentNode.children = res.list
+                    parentNode.children.forEach(item => {
+                        // item.push({
+                        //     flag: true
+                        // })
+                        item.flag = true
+                        console.log('item', item.flag);
+                    })
+                } else {
+                    this.tableData = res.list;
+                    this.calculateItemQuantity(this.tableData);
+                    this.currentTableData = res.list
+                    this.calculateItemQuantity(this.currentTableData);
                 }
                 if (!res.list.length) {
                     this.handleSearch();
@@ -274,14 +264,26 @@ export default {
                 id: id,
                 name: name,
                 name_en: name_en,
-                parent_id: parent_id,
+                parent_id: parent_id ? parent_id : this.searchForm.parent_id,
                 index: index,
                 index_key: index_key,
+            };
+
+            let foundObj = null;
+            if (parent?.parent_id) {
+                foundObj = this.statusList.find(obj => obj.id === parent.parent_id);
+            } else {
+                foundObj = this.statusList.find(obj => obj.id === this.searchForm.parent_id);
             }
-            console.log('this.editForm:', this.editForm)
-            this.parentNode = parent
-            this.editNode = node
-            this.modalVisible = true
+
+            if (foundObj) {
+                this.editForm.type = foundObj.type;
+            }
+            console.log('parent', parent);
+            console.log('this.editForm:', this.editForm);
+            this.parentNode = parent;
+            this.editNode = node;
+            this.modalVisible = true;
         },
         handleModalSubmit() {
             let form = Core.Util.deepCopy(this.editForm)
@@ -385,8 +387,7 @@ export default {
                     item.item_quantity += childrenItemQuantitySum;
                 }
             });
-        }
-
+        },
     }
 };
 </script>
