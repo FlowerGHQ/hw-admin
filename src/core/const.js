@@ -1220,6 +1220,16 @@ let Const = {
             '501': {key: 501, zh: '维修单', en: 'Repair order'},
         }
     },
+    WARRANTY: {
+        STATUS_MAP: {
+            '0': { value: 0, zh: '已上架', en: 'Already Listed', color: 'green' },
+            '1': { value: 1, zh: '已下架', en: 'No Longer Available', color: 'red' },
+        },
+        STATUS_COLOR_MAP: {
+            '0': 'green',
+            '1': 'red',
+        },
+    },
     FAULT_ENTITY: { //故障件
         STATUS: { // 故障件审核状态
             INIT: 0, // 初始化

@@ -1261,7 +1261,25 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-
+    /* =============== 三包 ================ */
+    warrantyStatusFilter(val, to = 'zh') {
+        // const MAP = Const.WARRANTY.STATUS_MAP
+        // const COLOR_MAP = Const.WARRANTY.STATUS_COLOR_MAP
+        // switch (to) {
+        //     case 'zh':
+        //         let item = MAP[val + ''] || {}
+        //         return item[to] || ''
+        //     case 'en':
+        //         let en_item = MAP[val + ''] || {}
+        //         return en_item[to] || ''
+        //     case 'color':
+        //         return COLOR_MAP[val + ''] || 'grey'
+        // }
+        const MAP = Const.WARRANTY.STATUS_MAP
+        let value = MAP[val] || {}
+        return value[to] || '-'
+    },
+    /* =============== 三包 ================ */
     /* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */
     CRMToDoStatusFilter(val, to = 'zh') {

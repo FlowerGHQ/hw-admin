@@ -2,101 +2,175 @@
     <div id="WarrantyList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{ $t('i.categories') }}</div>
+                <div class="title-area">{{ $t(/*三包管理*/'wt.warranty_management') }}</div>
             </div>
             <div class="tabs-container colorful">
                 <a-tabs v-model:activeKey="searchForm.status" @change='handleTabSearch()'>
-                    <a-tab-pane :key="item.id" v-for="item of statusList">
+                    <a-tab-pane :key="item.value" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">{{ $i18n.locale === 'zh' ? item.name : item.name_en }}</div>
                         </template>
                     </a-tab-pane>
                 </a-tabs>
             </div>
-            <div class="table-container">
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false' v-model:expandedRowKeys='expandedRowKeys'
-                    @expand='handleExpandedChange'>
+            <div class="search-container">
+                <a-row class="search-area">
+                    <!-- 商品分类 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="searchForm.status === 1">
+                        <div class="key">{{ $t('i.categories') }}:</div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.categories"
+                                @keydown.enter='handleSearch' />
+                        </div>
+                    </a-col>
+                    <!-- 选择类型 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="searchForm.status === 3">
+                        <div class="key">{{ $t('wt.select_type') }}:</div>
+                        <div class="value">
+                            <a-select v-model:value="searchForm.type" @change='handleSearch'
+                                :placeholder="$t('def.select')">
+                                <a-select-option v-for="item of selectTypeList" :key="item.key" :value="item.value">{{
+                                    item[$i18n.locale] }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </a-col>
+                    <!-- 商品名称 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item"
+                        v-if="searchForm.status !== 1 && searchForm.type !== 1">
+                        <div class="key">{{ $t('r.item_name') }}:</div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.categories"
+                                @keydown.enter='handleSearch' />
+                        </div>
+                    </a-col>
+                    <!-- 商品分类 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item" v-if="searchForm.status !== 1">
+                        <div class="key">{{ $t('i.categories') }}:</div>
+                        <div class="value">
+                            <CategoryTreeSelect @change="handleCategorySelect" :category-id='searchForm.category_id' />
+                        </div>
+                    </a-col>
+                    <!-- 商品编码 -->
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item"
+                        v-if="searchForm.status !== 1 && searchForm.type !== 1">
+                        <div class="key">{{ $t('i.code') }}:</div>
+                        <div class="value">
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.item_code"
+                                @keydown.enter='handleSearch' />
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
+                    <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
+                </div>
+            </div>
+            <div class="table-container" v-if="searchForm.status === 1">
+                <a-table :columns="categoryTableColumns" :data-source="categoryTableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
-                        <template v-if="column.key === 'tip_item'">
-                            <a-tooltip placement="top" :title='text'>
-                                <div class="ell" style="max-width: 160px">{{ text || '-' }}</div>
-                            </a-tooltip>
+                        <template v-if="column.key === 'warranty_period'">
+                            <template v-if="record.type !== 2">
+                                <a-input-number style="width: 60px; margin-right: 4px;" :min="0" :precision="0"
+                                    v-model:value="record.month" :placeholder="$t(/*请输入*/'def.input')" />
+                                {{ $t(/*个月*/'wt.month') }}
+                            </template>
+                            <template v-if="record.type !== 1">
+                                ,{{ $t(/*或*/'wt.or') }}
+                                <a-input-number style="width: 60px; margin-right: 4px;" :min="0" :precision="0"
+                                    v-model:value="record.km" :placeholder="$t(/*请输入*/'def.input')" />
+                                {{ $t(/*公里*/'r.km') }}
+                            </template>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="table-container" v-if="searchForm.status === 2">
+                <a-table :columns="itemTableColumns" :data-source="itemTableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'detail'">
+                            <a-button type="link" @click="routerChange('detail', record)">
+                                {{ record.item ? record.item.name || '-' : '-' }}
+                            </a-button>
+                        </template>
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.dataIndex === 'status'">
+                            <div class="status status-bg status-tag"
+                                :class="$Util.warrantyStatusFilter(record.status, 'color')">
+                                {{ $Util.warrantyStatusFilter(record.status, $i18n.locale) }}
+                            </div>
+                        </template>
+                        <template v-if="column.key === 'warranty_period'">
+                            <template v-if="record.target_type === 1">
+                                <div class="flex-wrap">
+                                    <span>{{ record.month }}</span>{{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}<span>{{
+                                        record.km
+                                    }}</span>{{ $t(/*公里*/'r.km') }}<i class="icon i_edit" @click="handleEditWarrantyPeriod"
+                                        style="cursor: pointer; margin-left: 4px;" />
+                                    <div class="tag">
+                                        {{ $t(/*按商品分类*/'wt.classification_commodity') }}
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="record.target_type === 2">
+                                <div class="flex-wrap">
+                                    <span>{{ record.month }}</span>{{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}<span>{{
+                                        record.km
+                                    }}</span>{{ $t(/*公里*/'r.km') }}<i class="icon i_edit" @click="handleEditWarrantyPeriod"
+                                        style="cursor: pointer; margin-left: 4px;" />
+                                    <div class="tag">
+                                        {{ $t(/*自定义*/'crm_set.unpreset') }}
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="record.target_type === 0">
+                                <a-input-number style="width: 60px; margin-right: 4px;" :min="0" :precision="0"
+                                    v-model:value="record.month" :placeholder="$t(/*请输入*/'def.input')" />
+                                {{ $t(/*个月*/'wt.month') }}
+                                ,{{ $t(/*或*/'wt.or') }}
+                                <a-input-number style="width: 60px; margin-right: 4px;" :min="0" :precision="0"
+                                    v-model:value="record.km" :placeholder="$t(/*请输入*/'def.input')" />
+                                {{ $t(/*公里*/'r.km') }}
+                            </template>
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="table-container" v-if="searchForm.status === 3">
+                <a-table :columns="trackTableColumns" :data-source="trackTableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="handleSalesAreaByIdsShow(record.id)"><i class="icon i_edit" /> {{
-                                $t('ar.set_sales') }} </a-button>
-                            <a-button type='link' @click="routerChange('explored', record)"><i class="icon i_edit" />{{
-                                $t('i.edit_bom') }}
-                            </a-button>
-                            <a-button type='link' @click="handleModalShow(record, record)"><i class="icon i_edit" />{{
-                                $t('i.edit_name') }}
-                            </a-button>
-                            <!-- <a-button type='link' @click="routerChange('config', record)"><i class="icon i_hint"/> {{ $t('i.product_configuration') }}
-                            </a-button> -->
-                            <a-button type='link' @click="handleModalShow({ parent_id: record.id }, null, record)"><i
-                                    class="icon i_add" /> {{ $t('i.subcategory') }}
-                            </a-button>
-                            <a-button type='link' class="danger" @click="handleDelete(record)"><i class="icon i_delete" />
-                                {{ $t('def.delete') }}</a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
         </div>
         <template class="modal-container">
-            <a-modal v-model:visible="modalVisible" :title="editForm.id ? $t('i.edit_a') : $t('i.add_category')"
-                @ok="handleModalSubmit">
+            <a-modal v-model:visible="modalVisible" :title="$t(/*设置期限*/'wt.set_deadline')" @ok="handleModalSubmit">
                 <div class="modal-content">
                     <div class="form-item required">
-                        <div class="key">{{ $t('m.category_name') }}</div>
+                        <div class="key">{{ $t(/*三包期限*/'wt.warranty_period') }}:</div>
                         <div class="value">
-                            <a-input v-model:value="editForm.name" :placeholder="$t('def.input')" />
-                        </div>
-                    </div>
-                    <div class="form-item required">
-                        <div class="key">{{ $t('n.name_en') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.name_en" :placeholder="$t('def.input')" />
-                        </div>
-                    </div>
-                    <!-- <div class="form-item">
-                        <div class="key">{{ $t('n.index') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.index" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t('i.home_page_redirect_number') }}</div>
-                        <div class="value">
-                            <a-input v-model:value="editForm.index_key" :placeholder="$t('def.input')"/>
-                        </div>
-                    </div> -->
-                </div>
-            </a-modal>
-            <a-modal v-model:visible="salesAreaVisible" :title="$t('ar.set_sale')" class="field-select-modal" :width="630"
-                :after-close='handleSalesAreaByIdsClose'>
-                <div class="modal-content">
-                    <div class="form-item required">
-                        <div class="key">{{ $t('d.sales_area') }}</div>
-                        <div class="value">
-                            <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
-                                <a-select-option v-for="(val, key) in salesList" :key="key" :value="val.id">{{ val.name
-                                }}</a-select-option>
-                            </a-select>
+                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :precision="0"
+                                v-model:value="editForm.month" :placeholder="$t(/*请输入*/'def.input')" />
+                            {{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}
+                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :precision="0"
+                                v-model:value="editForm.km" :placeholder="$t(/*请输入*/'def.input')" />
+                            {{ $t(/*公里*/'r.km') }}
                         </div>
                     </div>
                 </div>
-                <template #footer>
-                    <a-button type="primary" @click="handleSalesAreaByIdsConfirm">{{ $t('def.sure') }}</a-button>
-                    <a-button @click="handleSalesAreaByIdsClose">{{ $t('def.cancel') }}</a-button>
-                </template>
             </a-modal>
         </template>
     </div>
@@ -104,10 +178,14 @@
 
 <script>
 import Core from '../../core';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue';
+const ITEM = Core.Const.ITEM
 
 export default {
     name: 'ItemCategory',
-    components: {},
+    components: {
+        CategoryTreeSelect
+    },
     props: {},
     data() {
         return {
@@ -123,46 +201,83 @@ export default {
             parentNode: null,
             modalVisible: false,
             editForm: {
-                id: '',
-                parent_id: '',
-                name: '',
-                name_en: '',
-                index: '',
-                index_key: '',
+                month: undefined,
+                km: undefined,
             },
             salesAreaVisible: false,
             salesList: [],
             salesAreaIds: [],
-            statusStatus: [
-                { name: '整  车', name_en: 'All', id: 1 },
-                { name: '零部件', name_en: 'Awaiting review', id: 2 },
-                { name: '周边件', name_en: 'Passed', id: 3 },
-                { name: '广宣品', name_en: 'Rejected', id: 4 },
-                { name: '检测工具', name_en: 'Closed', id: 5 },
+            statusList: [
+                { name: '商品分类', name_en: 'Commodity Classification', key: 1, value: 1 },
+                { name: '商品列表', name_en: 'Commodity List', key: 2, value: 2 },
+                { name: '变更记录', name_en: 'Change Log', key: 3, value: 3 },
             ],
             searchForm: {
-                status: 1
+                status: 1,
+                categories: undefined,
+                category_id: undefined,
+                item_code: undefined,
+                type: 1,
             },
+            selectTypeList: [
+                {
+                    key: 1,
+                    zh: '按商品分类',
+                    en: 'Classification by commodity',
+                    value: 1
+                },
+                {
+                    key: 2,
+                    zh: '按商品列表',
+                    en: 'By product list',
+                    value: 2
+                },
+            ],
+            categoryTableData: [],
+            trackTableData: [],
+            itemTableData: [],
         };
     },
     watch: {},
     computed: {
-        tableColumns() {
+        categoryTableColumns() {
             let columns = [
-                { title: this.$t('m.category_name'), dataIndex: 'name' },
-                { title: this.$t('n.name_en'), dataIndex: 'name_en' },
-                { title: this.$t('i.commodity_quantity'), dataIndex: 'item_quantity', key: 'item' },
-                { title: this.$t('def.operate'), key: 'operation', fixed: 'right', width: 100, },
+                { title: this.$t('i.categories'), dataIndex: 'categories', key: 'item' },
+                { title: this.$t('wt.warranty_period'), dataIndex: 'warranty_period', key: 'warranty_period' },
             ]
             return columns
         },
-        statusList() {
-            return this.statusStatus
+        itemTableColumns() {
+            let columns = [
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' },
+                { title: this.$t('i.categories'), dataIndex: 'categories', key: 'item' },
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' },
+                { title: this.$t('i.commercial_specification'), dataIndex: 'commercial_specification', key: 'item' },
+                { title: this.$t('i.status'), dataIndex: 'status' },
+                { title: this.$t('wt.warranty_period'), dataIndex: 'warranty_period', key: 'warranty_period' },
+            ]
+            return columns
+        },
+        trackTableColumns() {
+            let columns = [
+                { title: this.$t('wt.product_type'), dataIndex: 'product_type', key: 'item' },
+                { title: this.$t('wt.before_change'), dataIndex: 'before_change', key: 'item' },
+                { title: this.$t('wt.after_change'), dataIndex: 'after_change', key: 'item' },
+                { title: this.$t('wt.change_time'), dataIndex: 'change_time', key: 'time' },
+            ]
+            if (this.searchForm.type === 2) {
+                columns.splice(1, 0,
+                    { title: this.$t('i.categories'), dataIndex: 'categories', key: 'item' },
+                    { title: this.$t('i.code'), dataIndex: 'code', key: 'item' }
+                )
+            }
+            return columns
         }
     },
     mounted() {
         this.getDataByParent();
-        // this.getStatusList();
+        this.getCategoryTableData();
+        this.getItemTableData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -182,7 +297,17 @@ export default {
                     })
                     window.open(routeUrl.href, '_self')
                     break;
+                case 'detail':  // 整车详情
+                    routeUrl = this.$router.resolve({
+                        path: "/entity/entity-detail",
+                        query: { id: item.default_item_id || item.id, set_id: item.set_id }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
+        },
+        handleEditWarrantyPeriod() {
+            this.modalVisible = true
         },
         handleSearch() {  // 搜索
             console.log(111);
@@ -192,14 +317,6 @@ export default {
         handleTabSearch() {
             this.expandedRowKeys = []
             this.getDataByParent(this.searchForm.status)
-        },
-        getStatusList() {
-            Core.Api.Item.ItemCategory().then(res => {
-                console.log('getStatusList res', res);
-                this.statusList = res.category_list
-            }).catch(err => {
-                console.log('getStatusList err', err);
-            })
         },
         getDataByParent(parent_id = 0, parentNode, node) {  // 通过父节点获取子级数据
             console.log('getDataByParent parent_id:', parent_id, 'parentNode', parentNode)
@@ -381,12 +498,131 @@ export default {
                     item.item_quantity += childrenItemQuantitySum;
                 }
             });
-        }
-
+        },
+        getCategoryTableData() {
+            let res = [
+                {
+                    categories: '车辆',
+                    type: 3,
+                    month: 0,
+                    km: 0,
+                    children: [
+                        {
+                            categories: 'SK3',
+                            type: 3,
+                            month: 0,
+                            km: 0,
+                        },
+                        {
+                            categories: 'SK1',
+                            type: 3,
+                            month: 0,
+                            km: 0,
+                        },
+                        {
+                            categories: 'EK3',
+                            type: 3,
+                            month: 0,
+                            km: 0,
+                        },
+                    ]
+                },
+                {
+                    categories: '零配件',
+                    type: 3,
+                    month: 0,
+                    km: 0,
+                    children: [
+                        {
+                            categories: '电机组',
+                            type: 3,
+                            month: 0,
+                            km: 0,
+                        },
+                        {
+                            categories: '方向组',
+                            type: 1,
+                            month: 0,
+                            km: 0,
+                        },
+                        {
+                            categories: '制动组',
+                            type: 1,
+                            month: 0,
+                            km: 0,
+                        },
+                    ]
+                },
+            ]
+            this.categoryTableData = res
+        },
+        getItemTableData() {
+            let res = [
+                {
+                    item_name: 'SK1',
+                    categories: 'SK1/电机组',
+                    code: 'TLA3-B8-0000',
+                    commercial_specification: '颜色：银蓝 ，时速：45',
+                    status: 0,
+                    target_type: 0,
+                    month: 0,
+                    km: 0,
+                },
+                {
+                    item_name: 'SK3',
+                    categories: '电机组',
+                    code: 'TLA3-B8-0000',
+                    commercial_specification: '颜色：银蓝 ，时速：45',
+                    status: 1,
+                    target_type: 1,
+                    month: 12,
+                    km: 1000,
+                },
+                {
+                    item_name: 'EK3',
+                    categories: '电池组',
+                    code: 'TLA3-B8-0000',
+                    commercial_specification: '颜色：银蓝 ，时速：45',
+                    status: 1,
+                    target_type: 2,
+                    month: 12,
+                    km: 1000,
+                },
+            ]
+            this.itemTableData = res
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
 // #WarrantyList {}
+.flex-wrap {
+    display: flex;
+    align-items: center;
+
+    .tag {
+        max-width: 100px;
+        padding: 0 10px;
+        height: 24px;
+        line-height: 22px;
+        text-align: center;
+        font-size: 12px;
+        color: #00cc33;
+        background-color: #d9f7e1;
+        border-radius: 12px;
+        margin-left: 4px;
+    }
+}
+
+.modal-container {
+    .modal-content {
+        .form-item {
+            .value {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+}
 </style>
