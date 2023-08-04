@@ -133,6 +133,7 @@ export default {
                     }
                 })
                 if (this.form.id) {
+                    console.log("this.authItems", this.authItems);
                     this.getRoleSelectedAuth();
                 }
             }).catch(err => {

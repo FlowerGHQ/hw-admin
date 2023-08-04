@@ -190,7 +190,7 @@
                     <template #bodyCell="{ column, text, record }">
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)">{{ $t("retail.view") }}</a-button>
-                            <a-button type="link" @click="routerChange('deit', record)">{{ $t("retail.edit") }}</a-button>
+                            <a-button type="link" @click="routerChange('edit', record)">{{ $t("retail.edit") }}</a-button>
                             <a-button type="link" danger @click="routerChange('delete',record)">{{ $t("retail.delete") }}</a-button>
                         </template>
                     </template>
@@ -333,14 +333,14 @@ const routerChange = (type, item = {}) => {
         case "detail": // 详情
             routeUrl = router.resolve({
                 path: "/retail-personnel/personnel-detail",
-                // query: { id: item.id },
+                query: { type: "detail" },
             });
             window.open(routeUrl.href, "_blank");
             break;
         case "edit": // 编辑
             routeUrl = router.resolve({
                 path: "/retail-personnel/personnel-detail",
-                // query: { id: item.id },
+                query: { type: "edit" },
             });
             window.open(routeUrl.href, "_blank");
             break;

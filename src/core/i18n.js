@@ -2528,6 +2528,13 @@ const messages = {
             save: '保存',
             basic_information: '基本信息',
             permission_allocation: '权限分配',
+            not_order:"未下单",
+            unsubscribing:"退订中",
+            unsubscribed:"已退订",
+            being_refunded:"退款中",
+            refunded:"已退款",
+            increase:"添加",
+            search_personnel_name:"搜索人员名称",
         }
     },
 
@@ -4935,6 +4942,13 @@ const messages = {
             save: 'save',
             basic_information: 'Basic information',
             permission_allocation: 'Permission allocation',
+            not_order:"Do not place an order",
+            unsubscribing:"unsubscribing",
+            unsubscribed:"unsubscribed",
+            being_refunded:"Being refunded",
+            refunded:"Refunded",
+            increase:"Increase",
+            search_personnel_name:"Search Personnel Name",
         }
     },
 }
