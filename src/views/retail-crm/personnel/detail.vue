@@ -42,7 +42,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.sex')}}：</span>
                             <span class="value">
-                                <a-radio-group v-model:value="fill_out.sex" :placeholder="$t('def.select')">                                    
+                                <a-radio-group v-model:value="fill_out.gender" :placeholder="$t('def.select')">                                    
                                     <a-radio v-for="item in Core.Const.CRM_ORDER.SEX" :value="item.key">
                                         {{ item[$i18n.locale] }}
                                     </a-radio>
@@ -74,7 +74,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.on_borard_time')}}：</span>
                             <span class="value">
-                                写死
+                                {{ $Util.timeFilter(fill_out.join_time, 3) }}
                             </span>
                         </a-col>
                         <!-- 工服尺寸 -->
@@ -113,7 +113,7 @@
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                         <span class="key key-form-86909C">{{ $t("retail.start_date")}}：</span>
                         <span class="value">
-                            你好
+                            {{ $Util.timeFilter(fill_out.job_time, 3) }}
                         </span>
                     </a-col>
                     <!-- 职务 -->
@@ -131,21 +131,33 @@
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                         <span class="key key-form-86909C">{{$t('retail.subregion')}}：</span>
                         <span class="value">
-                            你好
+                            <a-select v-model:value="fill_out.subregion" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Working_condition" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
+                            </a-select>
                         </span>
                     </a-col>
                     <!-- 所属城市 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                         <span class="key key-form-86909C">{{$t('retail.home_city')}}：</span>
                         <span class="value">
-                            你好
+                            <a-select v-model:value="fill_out.city" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Working_condition" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
+                            </a-select>
                         </span>
                     </a-col>
                     <!-- 所属门店 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                         <span class="key key-form-86909C">{{$t('retail.affiliated_store')}}：</span>
                         <span class="value">
-                            你好
+                            <a-select v-model:value="fill_out.store_id" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Working_condition" :value="item.key">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
+                            </a-select>
                         </span>                                        
                     </a-col>                      
                 </a-row>
@@ -189,16 +201,27 @@
 <script setup>
 import Core from "@/core";
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useRoute, useRouter } from "vue-router";
 
+const route = useRoute()
+const router = useRouter()
 // 数据
 const fill_out = ref({
+    name: "十安", // 名称
     phone:'1837029', // 手机号
     email:'', // 邮箱
-    sex: 1, // 性别
+    gender: 1, // 性别
     age: undefined, // 年龄
+    department_id: undefined, // 工号
+    department_naem: undefined, // 部门名称
+    join_time: "1691136428", // 入职时间
     size: undefined, // 尺码
     working_condition: undefined, // 工作状态
+    job_time: "1691136428", // 上岗时间
     job: undefined, // 职务
+    subregion: undefined, // 所属大区
+    city: undefined, // 所属城市
+    store_id: undefined, // 门店id    
 })
 
 // 角色权限下拉选择框
@@ -213,10 +236,32 @@ const selectList = ref([
 ])
 
 onMounted(() => {
-
+    if(route.query?.type)
+    console.log(route.query?.type);
 })
 /* Fetch start*/
-const updateFetch = (params = {}) => {    
+// 获取详情接口(新创建的时候不执行这个)
+const personDetailFetch = (params = {}) => {    
+    Core.Api.RETAIL.personDetail({
+        id: route.query?.id || undefined,
+        ...params
+    }).then((res) => {
+
+    })
+    .catch((err) => {
+        console.log("getTableData err:", err);
+    })
+}
+// 更新创建接口
+const personUpdateFetch = (params = {}) => {
+    Core.Api.RETAIL.personUpdate({       
+        ...params
+    }).then((res) => {
+
+    })
+    .catch((err) => {
+        console.log("getTableData err:", err);
+    })
 }
 /* Fetch end*/
 

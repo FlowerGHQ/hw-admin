@@ -4,8 +4,8 @@
         :okText="$t('def.save')"
         @ok="handleOk"
         @cancel="handleCancel" >
-        <div class="box-model">
-            <a-input v-model:value="userName" placeholder="Basic usage">
+        <div class="box-model" @scroll="handleScroll">
+            <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')">
                 <template #prefix>
                     <search-outlined :style="{ fontSize: '16px' }" />
                 </template>              
@@ -14,8 +14,8 @@
             <div class="tag-box">
                 <template v-for="(item,index) in selectList" :key="index">
                     <a-tag color="processing">
-                        <img class="tag-box-img" src="https://img1.baidu.com/it/u=1502675700,2100106106&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750" alt="">
-                        <span>李鹏程</span>                
+                        <img class="tag-box-img" :src="item.avatar" alt="">
+                        <span>{{ item.name }}</span>                
                         <span class="cha" @click="onClose(item,index)">×</span>
                     </a-tag>
                 </template>
@@ -28,14 +28,14 @@
                     </div>
                     <div class="middle">
                         <span>{{ item.name }}</span>
-                        <span>杭州研发中心 | 杭州研发中心 | 杭州研发中心</span>
+                        <span>{{ item.department_name }}</span>
                     </div>
 
                     <div class="right">
                         <span v-if="item.isTick" class="tick-img">
                             <img class="img" src="~@/assets/images/retail/tick.png" alt="">
                         </span>
-                        <span v-else class="add cursor" @click="onAdd(item)">添加</span>
+                        <span v-else class="add cursor" @click="onAdd(item)">{{$t('retail.increase')}}</span>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
 
 import Core from '@/core';
 import { SearchOutlined, CloseCircleFilled } from '@ant-design/icons-vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue';
 
 const props = defineProps({
     isShow: {
@@ -60,33 +60,19 @@ const emits = defineEmits(['update:isShow'])
 
 const userName = ref("") // 搜索用户名称
 const selectList = ref([]) // 选中的人员数组
-const fsList = ref(
-    [
-        {
-            id:1, 
-            name:"十安1", 
-            avatar:"https://img1.baidu.com/it/u=1502675700,2100106106&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
-            isTick: false,
-        },
-        {
-            id:2, 
-            name:"十安2", 
-            avatar:"https://img1.baidu.com/it/u=1502675700,2100106106&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
-            isTick: false,
-        },
-        {
-            id:3, 
-            name:"十安3", 
-            avatar:"https://img1.baidu.com/it/u=1502675700,2100106106&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
-            isTick: false,
-        },
-    ]
-) // 飞书的人员计算属性
+const fsList = ref([]) 
+const pagination = reactive({
+    page_size: 10,
+    page: 1,
+    total: 0,
+    total_page: 0
+})
+// 飞书的人员计算属性
 const fsListComput = computed(() => {
     let result = []
     result = fsList.value.map($1 => {
-        const bool = selectList.value.find(el => {
-            return el.id == $1.id
+        const bool = selectList.value.find($2 => {
+            return $2.id == $1.id
         })
         if(bool){
             $1.isTick = true           
@@ -97,15 +83,53 @@ const fsListComput = computed(() => {
             ...$1
         }
     })
-    console.log("fsListComput", result);
+    // console.log("fsListComput", result);
     return result
 })
 
 onMounted(() => {
-
+    userListFetch()
 })
 /* fetch start*/
+// 人员list
+const userListFetch = (params = {}) => {
+    // Core.Api.CRMCustomer.list 测试接口
+    // Core.Api.RETAIL.externalList({
+    Core.Api.CRMCustomer.list({        
+        key:userName.value,
+        page_size: pagination.page_size,
+        page: pagination.page,
+        ...params
+    }).then(res => {
+        pagination.total = res.count
+        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
+        let arr = res.list.map(el => {
+            return  {
+                id: el.id,
+                name:el.name, 
+                avatar:"https://img1.baidu.com/it/u=1502675700,2100106106&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750",
+                department_id: 1, //部门id
+                department_name: "软件研发部门",     //部门名称                       
+            }   
+        })
+        fsList.value = fsList.value.concat(arr)
+        
 
+        console.log("获取人员list", res);
+    }).catch(err => {
+        console.log("获取人员list", err);
+    })
+}
+// 保存接口
+const saveFetch = (params = {}) => {    
+    Core.Api.RETAIL.addPerson({ 
+        ...params
+    }).then(res => {        
+        console.log("保存成功", res);
+    }).catch(err => {
+        console.log("保存失败", err);
+    })
+}
 /* fetch end*/
 
 // methods
@@ -120,10 +144,26 @@ const onAdd = (item) => {
 }
 // 确定
 const handleOk = () => {
+    // console.log("selectList.value", selectList.value);
+
+    const selectFilter = selectList.value.map(el => {
+        return el.id
+    })
+    // saveFetch({outer_user_id_list: selectFilter})
+    console.log("selectFilter 过滤出来的", selectFilter);
 }
 // 取消
 const handleCancel = () => {
     emits('update:isShow', false)    
+}
+// 监听滚轮事件
+const handleScroll = (e) => {
+    const element = e.target;    
+    if(element.scrollTop + element.clientHeight >= element.scrollHeight){       
+        // console.log('滑到底部');
+        pagination.page++
+        userListFetch({page: pagination.page,})
+    }    
 }
 </script>
 

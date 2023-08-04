@@ -17,31 +17,21 @@
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("retail.vehicle_series") }}：</span>
                     <span class="value">
-                        <a-input
-                            :placeholder="$t('def.input')"
-                            v-model:value="searchForm.uid"
-                            @keydown.enter="handleSearch"
-                        />
+                        <a-select v-model:value="searchForm.Series" class="select-w">
+                            <a-select-option v-for="item in Core.Const.RETAIL.Vehicle_Series" :value="item.key">
+                                {{ item.value}}
+                            </a-select-option>
+                        </a-select>
                     </span>
                 </a-col>
                 <!-- 订单状态： -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("retail.order_status") }}：</span>
                     <span class="value">
-                        <a-select
-                            class="select-w"                            
-                            v-model:value="searchForm.status"
-                            :placeholder="$t('def.select')"
-                            @change="handleSearch"
-                        >                    
-                            <a-select-option                            
-                                v-for="item of CRM_STATUS_MAP"
-                                :key="item.key"
-                                :value="item.value"
-                                >{{
-                                    lang === "zh" ? item.zh : item.en
-                                }}</a-select-option
-                            >
+                        <a-select v-model:value="searchForm.order_status" class="select-w">
+                            <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
+                                {{ $t(item.value )}}
+                            </a-select-option>
                         </a-select>
                     </span>
                 </a-col>
@@ -90,24 +80,7 @@
                                 @keydown.enter="handleSearch"
                             />
                         </span>
-                    </a-col>
-                    <!-- 订单进度 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="row-item"
-                    >
-                        <span class="key">{{ $t("retail.order_progress") }}：</span>
-                        <span class="value">
-                            <a-select v-model:value="searchForm.order_progress" class="select-w">
-                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Progress" :value="item.key">
-                                    {{ $t(item.value )}}
-                                </a-select-option>
-                            </a-select>
-                        </span>
-                    </a-col>
+                    </a-col>                  
                     <!-- 创建时间 -->
                     <a-col
                         :xs="24"
@@ -195,7 +168,8 @@ import { useRoute, useRouter } from "vue-router";
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const searchForm = ref({
-    order_progress: undefined, // 订单进度
+    Series: undefined, // 车辆系列
+    Order_Status: undefined, // 订单状态
 });
 const tableData = ref([]);
 const channelPagination = ref({

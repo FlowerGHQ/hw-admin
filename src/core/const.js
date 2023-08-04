@@ -2249,30 +2249,41 @@ let Const = {
             '2':{key:2, zh:"使用中", en:'In use'},
             '3':{key:3, zh:"停用中", en:'Out of use'},
             '4':{key:4, zh:"维保中", en:'Maintenance in progress'},
+        },     
+        // 订单状态
+        Order_Status:{
+            '1':{key: 1, value:'retail.not_order'},  // 未下单
+            '1':{key: 1, value:'retail.intention_deposit_paid'},// 已付意向金
+            '2':{key: 2, value:'retail.paid_small_order'},      // 已付小订
+            '3':{key: 3, value:'retail.paid_large_order'},      // 已付大订
+            '4':{key: 4, value:'retail.final_payment_paid'},    // 已付尾款
+            '5':{key: 5, value:'retail.to_be_delivered'},       // 待交付
+            '6':{key: 6, value:'retail.delivered'},             // 已交付
+            '7':{key: 7, value:'retail.to_be_invoiced'},        // 待开票
+            '8':{key: 8, value:'retail.completed'},             // 已完成
+            '9':{key: 9, value:'retail.unsubscribing'},         // 退订中
+            '10':{key: 10, value:'retail.unsubscribed'},        // 已退订
+            '11':{key: 11, value:'retail.being_refunded'},      // 退款中
+            '12':{key: 12, value:'retail.refunded'},            // 已退款
+        },
+        // 车辆系列
+        Vehicle_Series:{
+            '1':{key: 1, value:'SENMENTI 0'},
+            '2':{key: 2, value:'SENMENTI X'},
         },
         // 支付状态
         Payment_Status:{
-            '1':{key: 1, zh:"下单未付款", en:'Unpaid order placement'},
-            '2':{key: 2, zh:"已付意向金", en:'Intention deposit paid'},
-            '3':{key: 3, zh:"已付小订", en:'Paid small order'},
-            '4':{key: 4, zh:"已付大定", en:'Paid Da Ding'},
-            '5':{key: 5, zh:"已付尾款", en:'Final payment paid'},
-            '6':{key: 6, zh:"待交付", en:'To be delivered'},
-            '7':{key: 7, zh:"已交付", en:'Delivered'},
-            '8':{key: 8, zh:"待开票", en:'To be invoiced'},
-            '9':{key: 9, zh:"已完成", en:'Completed'},
+            '1':{key: 1, zh:"已支付", en:'Have Paid'},
+            '2':{key: 2, zh:"未支付", en:'Non Payment'},
         },
-        // 订单进度
-        Order_Progress:{
-            '1':{key: 1, value:'retail.intention_deposit_paid'},
-            '2':{key: 2, value:'retail.paid_small_order'},
-            '3':{key: 3, value:'retail.paid_large_order'},
-            '4':{key: 4, value:'retail.final_payment_paid'},
-            '5':{key: 5, value:'retail.to_be_delivered'},
-            '6':{key: 6, value:'retail.delivered'},
-            '7':{key: 7, value:'retail.to_be_invoiced'},
-            '8':{key: 8, value:'retail.completed'},
-        }
+        // 支付方式
+        Payment_Method:{
+            // 国内的是支付方式只有 微信
+            '1':{key: 1, zh:"微信", en:'wechat'},
+            '2':{key: 2, zh:"支付宝", en:'Alipay'},
+            '3':{key: 3, zh:"银行卡", en:'Bank card'},
+        },
+        
     }
 };
 

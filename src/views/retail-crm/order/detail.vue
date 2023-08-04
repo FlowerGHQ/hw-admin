@@ -138,6 +138,7 @@
                 </div>
                 <div class="sub-title m-b-16">
                     <div>
+                        <!-- 当前的订单进度 -->
                         <span class="key">{{ $t("retail.order_progress")}}：</span>
                         <span class="value">已付意向金</span>
                     </div>
@@ -306,7 +307,7 @@ const paymentTableData  = ref([ ]) // 支付信息table
 const paymentTableColumns = computed(() => {
     return [
         {
-            title: "retail.order_progress",
+            title: "retail.order_status",
             dataIndex: "id",
             key: "id",             
         },
