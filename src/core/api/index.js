@@ -810,6 +810,13 @@ const apiList = {
         purchaseOrder: ['PostJson', 'data-board/purchase-order'],
         repairOrder: ['PostJson', 'data-board/repair-order'],
         repairRank: ['PostJson', 'data-board/fault_rank'],
+    },
+    Warranty: {
+        saveTime: ['PostJson', 'warranty-config/save/effect-time'], // 设置三包生效时间
+        categoryList: ['PostJson', 'warranty-config/list/category'], // 根据商品分类展示列表
+        warrantyConfigSave: ['PostJson', 'warranty-config/save'], // 三包管理的新增或修改
+        itemList: ['PostJson', 'warranty-config/list/item'], // 根据商品列表展示列表
+        updateLogList: ['PostJson', 'warranty-config/list/update-log'], // 查询三包管理变更记录
     }
 };
 

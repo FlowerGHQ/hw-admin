@@ -16,14 +16,14 @@
                         <div class="value-text">
                             {{ $t(/*根据*/'wt.reason') }}
                         </div>
-                        <a-select v-model:value="form.type" :placeholder="$t('def.select')">
+                        <a-select v-model:value="form.effect_time_type" :placeholder="$t('def.select')">
                             <a-select-option v-for="item of reasonList" :key="item.key" :value="item.value">{{ $i18n.locale
                                 === 'zh' ? item.name : item.name_en }}</a-select-option>
                         </a-select>
                         <div class="value-text">
                             {{ $t(/*顺延*/'wt.postpone') }}
                         </div>
-                        <a-input-number v-model:value="form.day" :min="0" :precision="0" />
+                        <a-input-number v-model:value="form.effect_time_day" :min="0" :precision="0" />
                         <div class="value-text">
                             {{ $t(/*天后生效*/'wt.effect_days') }}。
                         </div>
@@ -53,8 +53,8 @@ export default {
                 }
             ],
             form: {
-                type: 1,
-                day: undefined
+                effect_time_type: 1,
+                effect_time_day: undefined
             }
         };
     },
@@ -74,9 +74,17 @@ export default {
                 title: _this.$t(/*确定要提交吗*/'pop_up.sure_audit'),
                 okText: _this.$t('def.sure'),
                 okType: 'primary',
-                cancelText: this.$t('def.cancel'),
+                cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    console.log("提交");
+                    let params = Core.Util.deepCopy(_this.form)
+                    Core.Api.Warranty.saveTime({
+                        ...params
+                    }).then(res => {
+                        console.log('handleSubmit res', res);
+                        _this.$message.success(_this.$t('pop_up.save_success'))
+                    }).catch(err => {
+                        console.log('handleSubmit err', err);
+                    })
                 },
             });
         }

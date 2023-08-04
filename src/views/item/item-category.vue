@@ -201,9 +201,6 @@ export default {
                     console.log('parentNode', parentNode);
                     parentNode.children = res.list
                     parentNode.children.forEach(item => {
-                        // item.push({
-                        //     flag: true
-                        // })
                         item.flag = true
                         console.log('item', item.flag);
                     })

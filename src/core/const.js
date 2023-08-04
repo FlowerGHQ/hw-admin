@@ -31,10 +31,10 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.101:8889' // my
+        URL_POINT = 'http://10.0.0.101:8889' // my
         // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
 }
@@ -1221,7 +1221,7 @@ let Const = {
     WARRANTY: {
         STATUS_MAP: {
             '0': { value: 0, zh: '已上架', en: 'Already Listed', color: 'green' },
-            '1': { value: 1, zh: '已下架', en: 'No Longer Available', color: 'red' },
+            '-1': { value: -1, zh: '已下架', en: 'No Longer Available', color: 'red' },
         },
         STATUS_COLOR_MAP: {
             '0': 'green',
