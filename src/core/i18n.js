@@ -966,7 +966,8 @@ const messages = {
             store_shift:'门店班次',
             contract_info:'签约信息',
             licenses:'证照',
-
+            search_place:'搜索区域城市',
+            create_area:'创建区域',
         },
         af: { // 售后单
             list: '售后单列表',
@@ -1142,7 +1143,7 @@ const messages = {
             uploaded: '上传成功',
             export_as_supplier_report: '以供应商报表方式导出',
             error_phone: '手机号输入不正确',
-
+            search_se:'搜索',
         },
         search: {
             repair_sn: '工单编号',
@@ -1308,6 +1309,8 @@ const messages = {
             add: '添加区域管理员',
             user_count: '用户数量',
             customer_count: '客户数量',
+            area_man:'区域经理',
+            region_info:'区域信息'
         },
         crm_region_e: {
             list: '区域用户列表',
@@ -1442,6 +1445,7 @@ const messages = {
             edit_type: '修改权限',
             type: '权限',
             administrator: '区域管理员',
+            group_man:'区域管理',
         },
         crm_g: {
             business_opportunities_phase: '商机阶段',
@@ -1579,7 +1583,10 @@ const messages = {
             renovation_costs_placeholder:'请输入装修费用',
             enabled:'已启用',
             no_enabled:'未启用',
-
+            include_city:'包含城市',
+            city_count:'城市数量',
+            store_count:'门店数量',
+            add_city:'添加城市',
         },
         crm_d: {
             list: '试驾单列表',
@@ -3444,7 +3451,8 @@ const messages = {
             store_shift:'Store Shifts',
             contract_info:'Contract Information',
             licenses:'Licenses',
-
+            search_place:'Search For A Regional City',
+            create_area:'Create A Zone',
 
         },
         af: {//售后单
@@ -3504,6 +3512,7 @@ const messages = {
             confirm_order: 'Do You Confirm To Generate A Refund Form?',
             cancel_refund: 'Do You Confirm To Cancel This Refund?',
             create_refund: 'Create A Refund Bill',
+
         },
         u: { //用户
             list: 'Employee List',
@@ -3617,6 +3626,7 @@ const messages = {
             uploaded: 'Successfully Upload',
             export_as_supplier_report: 'Export as a supplier report',
             error_phone: 'The mobile phone number is not entered correctly',
+            search_se:'Search',
         },
         search: {
             repair_sn: 'Warranty Claim Number',
@@ -3764,6 +3774,8 @@ const messages = {
             add: 'Add Area Administrator',
             user_count: 'Number of User',
             customer_count: 'Number of Customers',
+            area_man:'Regional Manager',
+            region_info:'Region Information'
         },
         crm_region_e: {
             list: 'Regional User List',
@@ -3897,6 +3909,8 @@ const messages = {
             edit_type: 'Modify the permissions',
             type: 'Permissions',
             administrator: 'Area Administrator',
+            group_man:'Regional Management',
+
         },
         crm_g: {
             business_opportunities_phase: 'Business opportunities phase',
@@ -4033,6 +4047,11 @@ const messages = {
             renovation_costs_placeholder:'Please enter the renovation cost',
             enabled:'Enabled',
             no_enabled:'Not Enabled',
+            include_city:'Include Cities',
+            city_count:'City Count',
+            store_count:'Number Of Stores',
+            add_city:'Add City',
+
         },
 
         crm_d: {
