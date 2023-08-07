@@ -1,97 +1,101 @@
 <template>
     <div>
-        <div id="container" class="chart"></div>
-
-        <a-input v-model:value="testValue" v-focus placeholder="Basic usage" />
-
-        <a-button @click="btns">点击 <span class="icon i-a-Group790"></span></a-button>
-
-        
-    </div>       
+        <div style="display: flex;">
+            <template v-for="(item, index) in arr" :key="item.id">
+                <div class="drag-box" :id="index" draggable="true" @dragstart="dragStart"
+                    @dragend="(event) => dragend(event, item)">
+                    {{ item.name }}
+                </div>
+            </template>
+        </div>
+        <div class="time">
+            <div class="item-m">
+                <div v-for="(item, index) in 3" :key="index" :id="'drop-con'+index" class="drop-box" @dragover="dragOver" @drop="drop">
+                    <div class="top"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { onMounted, ref, defineComponent, reactive, toRefs, watch } from "vue";
-import { Chart } from "@antv/g2";
+import { ref } from 'vue';
 
-const chart = ref(null);
-const testValue = ref("")
 
-onMounted(() => {
-    // charts()
-});
+const arr = ref([
+    { id: 1, name: "门店1" },
+    { id: 2, name: "门店2" },
+    { id: 3, name: "门店3" },
+    { id: 4, name: "门店4" },
+])
 
-// 试验charts
-const charts = () => {
-    chart.value = new Chart({
-        container: "container",
-        autoFit: true,
-        height: 500,
-    });
+/*
+    在拖动目标上触发事件 (源元素):
+        ondragstart - 用户开始拖动元素时触发
+        ondrag - 元素正在拖动时触发
+        ondragend - 用户完成元素拖动后触发
 
-    const data = [
-        { country: "Asia", year: "1750", value: 502 },
-        { country: "Asia", year: "1800", value: 635 },
-        { country: "Asia", year: "1850", value: 809 },
-        { country: "Asia", year: "1900", value: 5268 },
-        { country: "Asia", year: "1950", value: 4400 },
-        { country: "Asia", year: "1999", value: 3634 },
-        { country: "Asia", year: "2050", value: 947 },
+    释放目标时触发的事件:
+        ondragenter - 当被鼠标拖动的对象进入其容器范围内时触发此事件
+        ondragover - 当某被拖动的对象在另一对象容器范围内拖动时触发此事件
+        ondragleave - 当被鼠标拖动的对象离开其容器范围内时触发此事件
+        ondrop - 在一个拖动过程中，释放鼠标键时触发此事件
 
-        { country: "Africa", year: "1750", value: 106 },
-        { country: "Africa", year: "1800", value: 107 },
-        { country: "Africa", year: "1850", value: 111 },
-        { country: "Africa", year: "1900", value: 1766 },
-        { country: "Africa", year: "1950", value: 221 },
-        { country: "Africa", year: "1999", value: 767 },
-        { country: "Africa", year: "2050", value: 133 },
-
-        { country: "Europe", year: "1750", value: 163 },
-        { country: "Europe", year: "1800", value: 203 },
-        { country: "Europe", year: "1850", value: 276 },
-        { country: "Europe", year: "1900", value: 628 },
-        { country: "Europe", year: "1950", value: 547 },
-        { country: "Europe", year: "1999", value: 729 },
-        { country: "Europe", year: "2050", value: 408 },
-
-        { country: "Oceania", year: "1750", value: 200 },
-        { country: "Oceania", year: "1800", value: 200 },
-        { country: "Oceania", year: "1850", value: 200 },
-        { country: "Oceania", year: "1900", value: 460 },
-        { country: "Oceania", year: "1950", value: 230 },
-        { country: "Oceania", year: "1999", value: 300 },
-        { country: "Oceania", year: "2050", value: 300 },
-    ];
-
-    chart.value.data(data);
-
-    chart.value.scale({
-        year: {
-            type: "cat",
-            range: [0.03, 0.92],
-        },
-        value: {
-            nice: true,
-        },
-    });
-
-    chart.value.area().shape("smooth").position("year*value").color("country");
-    chart.value.line().shape("smooth").position("year*value").color("country");
-
-    chart.value.interaction("element-highlight");
-
-    chart.value.render();
+    
+*/
+const dragStart = (event) => {
+    console.log('dragStart', event);
+    // 设置拖拽数据
+    event.dataTransfer.setData("text/plain", event.target.id);
 };
+const dragOver = (event) => {
+    event.preventDefault(); // 阻止默认行为，使元素可放置
 
-const btns = () => {
-    console.log("输出的", testValue.value);
+};
+const drop = (event) => {
+    event.preventDefault(); // 阻止默认行为，使元素可放置
+    const data = event.dataTransfer.getData("text/plain"); // 获取拖拽数据
+    console.log(data);
+    const draggedElement = document.getElementById(data);
+    event.target.appendChild(draggedElement); // 将拖拽元素放置到目标元素中
+
+    var targetContainerId = event.target.id; //目标容器元素id
+    // 获取拖放后的容器信息
+    // var targetContainer = document.getElementById(targetContainerId);
+    console.log("拖放后的容器ID：", targetContainerId, event);
+}
+
+const dragend = (event, item) => {
+    console.log("完成拖动", item, event);
 }
 </script>
 
-<style lang="less" scoped>
-.chart {
-    width: 800px;
-    margin-top: 100px;
-    margin-left: 40px;
+<style>
+.drag-box {
+    width: 100px;
+    height: 100px;
+    background-color: red;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.drop-box {
+    width: 500px;
+    height: 600px;
+    background-color: yellow;
+    margin-left: 20px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.top {
+    width: 100%;
+    height: 200px;
+    background-color: blue;
+}
+
+.item-m {
+    width: 100%;
+    display: flex;
 }
 </style>

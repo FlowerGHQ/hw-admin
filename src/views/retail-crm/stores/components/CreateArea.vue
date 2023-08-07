@@ -32,18 +32,17 @@
                 </div>
                 <div class="value">
                     <div class="add-city" @click="showAddCity">{{ $t('crm_st.add_city') }}</div>
-                    <!--    <a-tree show-line :tree-data="addressOptions" :fieldNames="{ title: 'name', key: 'name' }">
-                    </a-tree> -->
+                       <a-tree show-line :tree-data="nowAddressList" :fieldNames="{ title: 'name', key: 'name' }">
+                    </a-tree>
                 </div>
             </div>
         </a-drawer>
     </template>
     <template v-if="showAddPop">
-        <a-modal v-model:visible="showAddPop" :title="$t('crm_st.add_city')" :width="360">
+        <a-modal v-model:visible="showAddPop" :title="$t('crm_st.add_city')" :width="360" @ok="addCityOk">
             <div class="aa">
                 <a-tree show-line :tree-data="addressOptions" :fieldNames="{ title: 'name', key: 'name' }" checkable
-                v-model:checkedKeys="checkedKeys" v-model:selectedKeys="selectedKeys" @check="checkCity">
-
+                    v-model:checkedKeys="checkedAddCity" @check="checkCity">
                 </a-tree>
             </div>
         </a-modal>
@@ -102,8 +101,10 @@ export default {
                     select: true   //已选择true,未选择false
                 }
             ],
-            checkedKeys: ["甘肃省"],
-            selectedKeys:['甘肃省']
+            // 接口传来选中-选项
+            checkedKeys: [],
+            // 现有选中情况-变化-添加城市点击情况记录
+            checkedAddCity: []
         }
     },
     components: {
@@ -116,36 +117,20 @@ export default {
 
     },
     computed: {
-        /*  checkedKeys() {
-             let listCheck = [], listDisable = [];
-             this.cityNowList.forEach((el, ind) => {
-                 if (!el.select) {
-                     listCheck.push(el.city);
-                 } else {
-                     listDisable.push(el.city)
-                 }
-             })
-             console.log('checkedKeys', listCheck, listDisable);
-             
-             return { listCheck, listDisable }
-         }, */
-        /*   addressOptionsIntegList() {
-              let list = [];
-              console.log('this.checkedKeys.listDisable',this.checkedKeys.listDisable);
-              list = this.addressOptions.map(($1, ind) => {
-                  $1.children.forEach($2 => {
-                      if (this.checkedKeys.listDisable.includes($2.name)) {
-                          $2.disableCheckbox = true;
-                          $1.disabled = true;
-                          console.log('$2.name',$2.name,$2);
-                      }
-                  })
-                  return $1;
-              })
-  
-              console.log('list--------------addressOptionsIntegList', list);
-              return list;
-          } */
+
+        // 初始化已有城市树形结构
+        nowAddressList() {
+            let list = [];
+            this.addressOptions.forEach(el1 => {
+                if (el1.children.filter(el2 => this.checkedKeys.includes(el2.name)).length > 0)
+                    list.push({
+                        key:el1.name,
+                        name:el1.name,
+                        children: el1.children.filter(el2 => this.checkedKeys.includes(el2.name))
+                    })
+            })
+            return list;
+        }
     },
     mounted() {
         this.getRoughlyAddressList();
@@ -154,11 +139,12 @@ export default {
 
         showAddCity() {
             this.showAddPop = true;
+            this.checkedAddCity = [...this.checkedKeys]
         },
         handleModalShow() {
             this.isDrawer = true;
             console.log('this.isDrawer-----------------this.isDrawer', this.isDrawer);
-            this.getList()
+            this.getList();
         },
 
         closeClick() {
@@ -175,19 +161,87 @@ export default {
         // 选择复选框
         checkCity(checkkeys, e) {
             console.log('checkCity', checkkeys, e, 'pos', e.node.pos);
-            if (!e.checked) {
+            let posList = [], key = e.node.key;
+            posList = e.node.pos.split('-');
+            console.log('postList', posList);
+            if (e.checked && posList.length == 2) {
+                console.log('添加一级目录所有城市', e.node.key);
+                this.updateList(1, key);
+            } else if (e.checked && posList.length == 3) {
+                // 添加二级目录单个城市
+                console.log('添加二级目录单个城市', e.node.key);
+                this.updateList(2, key);
+
+            } else if (!e.checked && posList.length == 2) {
+                // 去除一级目录所有城市
+                console.log('去除一级目录所有城市', e.node.key);
+                this.updateList(3, key);
+
+            } else if (!e.checked && posList.length == 3) {
+                console.log('去除二级目录单个城市', e.node.key);
+                this.updateList(4, key);
 
             }
         },
-       /*  getList() {
+        // 选中城市情况
+        updateList(type, key) {
+            let list = [];
+            if (type == 1) {
+                // type=1 添加一级目录所有城市(防重复添加)
+                this.addressOptions.map(el => {
+                    if (el.name == key) {
+                        el.children.forEach(el2 => {
+                            if (!this.checkedAddCity.includes(el2.name)) {
+                                this.checkedAddCity.push(el2.name);
+                            }
+                        })
+                    }
+                })
+            } else if (type == 2) {
+                this.checkedAddCity.push(key);
+            } else if (type == 3) {
+                // type=3 去除一级目录所有城市(防重复添加)
+                this.addressOptions.map(el => {
+                    if (el.name == key) {
+                        list = el.children.map(el2 => el2.name)
+                        this.checkedAddCity = this.checkedAddCity.filter(item => !list.includes(item))
+                    }
+                })
+            } else if (type == 4) {
+                this.checkedAddCity = this.checkedAddCity.filter(item => item != key);
+            }
+
+        },
+
+        getList() {
             let listCheck = [];
+            let listDisable = [];
             this.cityNowList.forEach((el, ind) => {
                 if (!el.select) {
                     listCheck.push(el.city);
+                } else {
+                    listDisable.push(el.city)
                 }
             })
-            this.checkedKeys = listCheck;
-        } */
+            this.checkedKeys = [...listCheck];
+            this.checkedAddCity = [...listCheck];
+            this.addressOptions = this.addressOptions.map(($1, ind) => {
+                $1.children.forEach($2 => {
+                    if (listDisable.includes($2.name)) {
+                        $2.disableCheckbox = true;
+                        $1.disabled = true;
+                        console.log('$2.name', $2.name, $2);
+                    }
+                })
+                return $1;
+            })
+        },
+        // 点击保存添加城市
+        addCityOk() {
+            this.showAddPop = false;
+            // 发送请求?
+            this.checkedKeys = [...this.checkedAddCity]
+        }
 
     }
 
