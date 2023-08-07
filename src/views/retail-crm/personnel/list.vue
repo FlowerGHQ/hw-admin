@@ -188,6 +188,19 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text, record }">
+                        
+                        <!-- 工作状态 -->
+                        <template v-if="column.key === 'store_user_status'">                                                        
+                            {{ Core.Const.RETAIL.Working_condition[text]? Core.Const.RETAIL.Working_condition[text][$i18n.locale]: '-' }}
+                        </template>
+                        <!-- 职务 -->
+                        <template v-if="column.key === 'store_user_type'">
+                            {{ Core.Const.RETAIL.Job[text]? Core.Const.RETAIL.Job[text][$i18n.locale]: '-' }}
+                        </template>
+                        <!-- 时间统一转换 -->
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text, 3) }}
+                        </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail',record)">{{ $t("retail.view") }}</a-button>
                             <a-button type="link" @click="routerChange('edit', record)">{{ $t("retail.edit") }}</a-button>
@@ -232,9 +245,7 @@ const channelPagination = ref({
 }) // 分页配置
 
 onMounted(() => {
-    getTableDataFetch({
-        page: 1,
-    });
+    getTableDataFetch();
 });
 const {proxy} = getCurrentInstance()
 const router = useRouter()
@@ -245,57 +256,60 @@ const tableColumns = computed(() => {
         {
             title: "retail.name",
             dataIndex: "name",
-            key: "uid",            
+            key: "name",            
         },
+        // 工作状态
         {
             title: "retail.working_condition",
-            dataIndex: ["order", "uid"],
-            key: "order_uid",            
+            dataIndex: "store_user_status",
+            key: "store_user_status",            
         },
         {
             title: "retail.phone",
-            dataIndex: "status",
-            key: "util",
-            util: "CRMOrderIncomeStatusFilter",            
+            dataIndex: "phone",
+            key: "phone",                      
         },
+        // 职务
         {
             title: "retail.job",
-            dataIndex: "money",
-            key: "money",            
+            dataIndex: "store_user_type",
+            key: "store_user_type",            
         },
+        // 所属区域
         {
             title: "retail.area",
-            dataIndex: "refunded",
-            key: "refunded",
+            dataIndex: "group_name",
+            key: "group_name",
         },
+        // 所属门店
         {
             title: "retail.affiliated_store",
-            dataIndex: "date",
-            key: "time",            
+            dataIndex: "store_name",
+            key: "store_name",            
         },
         // 绑定线索数
         {
             title: "retail.number_of_bound_threads",
-            dataIndex: "type",
-            key: "util",                       
+            dataIndex: "clue_count",
+            key: "clue_count",                       
         },
         // 上岗时间
         {
             title: "retail.start_date",
-            dataIndex: "type",
-            key: "util",                       
+            dataIndex: "join_time",
+            key: "time",                       
         },
         // 添加人员
         {
             title: "retail.add_personnel",
-            dataIndex: "type",
-            key: "util",                        
+            dataIndex: "create_user_name",
+            key: "create_user_name",                        
         },
         // 添加时间        
         {
             title: "retail.add_time",
-            dataIndex: "type",
-            key: "util",                       
+            dataIndex: "create_time",
+            key: "time",                       
         },           
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];
@@ -306,20 +320,19 @@ const tableColumns = computed(() => {
 // table接口
 const getTableDataFetch = (params = {}) => {    
     loading.value = true;
-    Core.Api.CRMOrderIncome.list({          
-        search_type: 10,
+    Core.Api.RETAIL.personList({                  
         ...params
     }).then((res) => {
-            channelPagination.value.total = res.count
-            console.log("getTableData res:", res);            
-            tableData.value = res.list;           
-        })
-        .catch((err) => {
-            console.log("getTableData err:", err);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
+        channelPagination.value.total = res.count
+        console.log("table数据接口", res);            
+        tableData.value = res.list;           
+    })
+    .catch((err) => {
+        console.log("getTableData err:", err);
+    })
+    .finally(() => {
+        loading.value = false;
+    });
 };
 /* 接口 end*/
 /* methods */

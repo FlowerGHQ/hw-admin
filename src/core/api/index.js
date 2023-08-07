@@ -820,11 +820,11 @@ const apiList = {
         regionsList: ['PostJson', 'group/city/list'], //门店-区域列表/crm/1/store/list
 
         // 人员管理接口
-        // personList:['Post', 'store/user/list'],  // 人员列表
-        externalList: ['Post', 'out/user/list'],  // 人员列表(外部【飞书】)
-        addPerson: ['Post', 'outer/user/save'],  // 添加人员(外部【飞书】)
+        personList:['PostJson', 'user/list'],  // 人员列表
+        externalList: ['PostJson', 'out/user/list'],  // 人员列表(外部【飞书】)
+        addPerson: ['PostJson', 'out/user/save'],  // 添加人员(外部【飞书】)
         personDetail: ['Get', 'store/user/detail'],  // 人员信息详情
-        personUpdate: ['Post', 'store/user/save'],  // 人员信息更新 
+        personUpdate: ['PostJson', 'store/user/save'],  // 人员信息更新 
 
         // 车辆管理接口
         // 订单管理接口
