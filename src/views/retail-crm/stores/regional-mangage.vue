@@ -3,7 +3,7 @@
 
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">{{$t('crm_group.group_man')}}</div>
+                <div class="title-area">{{ $t('crm_group.group_man') }}</div>
                 <div class="btns-area">
                     <!-- v-if="$auth('crm-order.save')" -->
                     <!-- <a-button type="primary" @click="routerChange('edit')">{{ $t("s.create_area")
@@ -16,8 +16,8 @@
                 <a-row class="search-area">
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <!-- 搜索门店 -->
-                        <a-input :placeholder="$t('s.search_place')" />
-                        <a-button type="primary" @click="routerChange('edit')">{{
+                        <a-input :placeholder="$t('s.search_place')" v-model:value="searchName" @pressEnter="searchCity" />
+                        <a-button type="primary" @click="searchCity">{{
                             $t("def.search_se")
                         }}</a-button>
                     </a-col>
@@ -94,13 +94,15 @@ export default {
     name: "StoreList",
     data() {
         return {
+            searchName: '',//v-model
+            searchFrom:'',
             // 表格
             tableData: [],
             currPage: 1,
             pageSize: 20,
         }
     },
-    components:{
+    components: {
         CreateArea
     },
     watch: {
@@ -149,14 +151,11 @@ export default {
     },
     methods: {
         getTableData() {
-            Core.Api.CRMStores.regionsList({
-                ...this.searchForm,
-                order_by_fields: this.orderByFields,
+            Core.Api.RETAIL.regionsList({
+                key: this.searchName,
                 page: this.currPage,
                 page_size: this.pageSize,
-                search_type: 10,
-            })
-                .then((res) => {
+            }).then((res) => {
                     console.log("getTableData res:", res);
                     /*   this.total = res.count;
                       this.tableData = res.list;
@@ -179,6 +178,23 @@ export default {
                     console.log("getTableData err:", err);
                 })
         },
+        // 搜索区域城市
+        searchCity() {
+            /*  console.log('搜索区域城市', this.searchName);
+             Core.Api.CRMStores.regionsList({
+                 key:this.searchName,
+                 page: this.currPage,
+                 page_size: this.pageSize,
+             })
+                 .then((res) => {
+                     console.log("getTableData res:", res);
+                 
+                 })
+                 .catch((err) => {
+                     console.log("getTableData err:", err);
+                 }) */
+        },
+
     }
 
 }

@@ -196,19 +196,13 @@ export default {
             loading: false,
             orderByFields: {},
             searchForm: {
-
-                name: "",
-                status: 0,
-                phone: "",
+                
+                key: "",
+                group_id:'',
                 type: 0,
-                payment_type: 0,
-                create_user_id: undefined,
-                money_interval_low: "",
-                money_interval_high: "",
-                date_begin_time: "",
-                date_end_time: "",
-                begin_time: "",
-                end_time: ""
+                level:'',  // 1:零售体验中心 2:零售体验店 3:交付中心 4:维修服务中心 5:体验展厅 6:活动展会
+                status: 0, // 1:装修 2:试营业 3:开业
+
             },
             dateTime: ["date_begin_time", "date_end_time"],
             createUserOptions: [], // 创建人列表
@@ -254,51 +248,45 @@ export default {
             let columns = [
                 {
                     title: "crm_c.name",
-                    dataIndex: "uid",
-                    key: "uid",
-                    sorter: true,
+                    dataIndex: "name",
+                    key: "name",
                 },
                 {
                     title: "crm_c.group",
-                    dataIndex: ["order", "uid"],
-                    key: "order_uid",
-                    sorter: true,
+                    dataIndex: "group_name",
+                    key: "group_name",
                 },
                 {
                     title: "crm_st.type",
-                    dataIndex: "status",
-                    key: "util",
+                    dataIndex: "type",
+                    key: "type",
                     util: "CRMOrderIncomeStatusFilter",
-                    sorter: true,
                 },
                 {
                     title: "crm_st.level",
-                    dataIndex: "money",
-                    key: "money",
-                    sorter: true,
+                    dataIndex: "level",
+                    key: "level",
                 },
                 {
                     title: "crm_st.manager",
-                    dataIndex: "refunded",
-                    key: "refunded",
+                    dataIndex: "user_name",
+                    key: "user_name",
                 },
                 {
                     title: "crm_st.people",
-                    dataIndex: "date",
-                    key: "time",
-                    sorter: true,
+                    dataIndex: "user_count",
+                    key: "user_count",
                 },
                 {
                     title: "crm_st.status",
-                    dataIndex: "type",
-                    key: "util",
+                    dataIndex: "status",
+                    key: "status",
                     util: "CRMOrderIncomeTypeFilter",
-                    sorter: true,
                 },
                 {
                     title: "ad.specific_address",
-                    dataIndex: "update_time",
-                    key: "time",
+                    dataIndex: "address",
+                    key: "address",
                     sorter: true,
                 },
                 { title: "def.operate", key: "operation", fixed: "right" },
@@ -310,7 +298,7 @@ export default {
         },
     },
     mounted() {
-        // this.getTableData();
+        this.getTableData();
         // this.createUserFetch();
     },
     methods: {
@@ -385,12 +373,12 @@ export default {
         getTableData() {
             // 获取 表格 数据
             this.loading = true;
-            Core.Api.CRMOrderIncome.list({
+            Core.Api.RETAIL.storeList({
                 ...this.searchForm,
                 order_by_fields: this.orderByFields,
                 page: this.currPage,
                 page_size: this.pageSize,
-                search_type: 10,
+                search_type: 10, // 1: key按店铺名搜索 2:key按店长名搜索
             })
                 .then((res) => {
                     console.log("getTableData res:", res);
