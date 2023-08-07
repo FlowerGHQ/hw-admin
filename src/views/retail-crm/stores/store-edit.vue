@@ -254,7 +254,27 @@ export default {
     data() {
         return {
             form: {
-                id: ''
+                id: '', //店铺主键id 传递时更新
+                name:'',
+                logo:'',//logo--img
+                type:'',
+                level:'',
+                province:'',
+                city:'',
+                address:'',
+                status:'',
+                open_time:'',
+                business_time:'',
+                // 所属公司
+                contact_phone:'',
+                contact_email:'',
+                
+                square:'',// 面积
+                ground_park_count:'',   // 地上停车位数量
+                underground_park_count:'', //地下停车位数量
+                ground_charge_pile_count:'',  // 地上充电桩数量
+                underground_charge_pile_count:'', //地下充电桩数量
+                user_id:'', //店长用户id
             },
 
             // 上传图片

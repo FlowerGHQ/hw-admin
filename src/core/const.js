@@ -2287,6 +2287,27 @@ let Const = {
             '3': { key: 3, zh: "银行卡", en: 'Bank card' },
         },
 
+        STORE_STATUS: { // 门店状态
+            '1': { key: 1, zh: '装修', en: 'fitment', value: 1 },
+            '2': { key: 2, zh: '试营业', en: 'Soft opening', value: 2 },
+            '3': { key: 3, zh: '开业', en: 'Opening', value: 3 },
+        },
+
+        STORE_TYPE: { // 门店类型
+            '1': { key: 1, zh: 'A类', en: 'A kind', value: 1 },
+            '2': { key: 2, zh: 'B类', en: 'B kind', value: 2 },
+            '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
+        },
+
+        STORE_LEVEL: { // 门店等级
+            '1': { key: 1, zh: '零售体验中心', en: 'Retail Experience Center', value: 1 },
+            '2': { key: 2, zh: '零售体验店', en: 'Retail Experience Store', value: 2 },
+            '3': { key: 3, zh: '交付中心', en: 'Delivery Center', value: 3 },
+            '3': { key: 3, zh: '维修服务中心', en: 'Repair service center', value: 3 },
+            '3': { key: 3, zh: '体验展厅', en: 'Experience the showroom', value: 3 },
+            '3': { key: 3, zh: '活动展会', en: 'Event exhibition', value: 3 },
+        }
+
     }
 };
 

@@ -5,30 +5,44 @@
                 <div class="title-area">门店管理</div>
                 <div class="btns-area">
                     <!-- v-if="$auth('crm-order.save')" -->
-                    <a-button type="primary" @click="routerChange('edit')" ><i class="icon i_add" />{{ $t("crm_st.add_st") }}</a-button>
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
+                    }}</a-button>
                 </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-                        <div class="key">{{ $t("crm_st.search_name") }}：</div>
+                        <div class="key" style="width: 110px;margin-left: -10px;display: flex;align-items: center;">{{
+                            searchForm.search_type == 1 ? $t("crm_st.search_name") : $t("crm_st.search_man") }}：<div
+                                class="triangle" @click="triangleClick"><img
+                                    src="../../../assets//images/retail/CaretDown.png" alt=""
+                                    style="height: 16px;width: 16px;" />
+                                <div class="triangle-pop" v-if="ispop">
+                                    <div class="sel" :class="{ 'checked': searchForm.search_type == 1 }"
+                                        @click.stop="changeSearch(1)">{{
+                                            $t("crm_st.search_name") }}</div>
+                                    <div class="sel" :class="{ 'checked': searchForm.search_type == 2 }"
+                                        @click.stop="changeSearch(2)">{{
+                                            $t("crm_st.search_man") }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <!-- 搜索门店 -->
                         <div class="value">
-                            <a-input :placeholder="$t('crm_st.search_placeholder')" v-model:value="searchForm.name"
-                                @keydown.enter="handleSearch" />
+                            <a-input :placeholder="$t('crm_st.search_placeholder')" v-model:value="searchForm.key" />
                         </div>
                     </a-col>
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key">{{ $t("crm_st.area") }}：</div>
                         <!-- 所属区域 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')"
-                                @change="handleSearch">
-                                <a-select-option :value="0">
+                            <a-select v-model:value="searchForm.group_id" :placeholder="$t('def.select')" allowClear>
+                                <!-- <a-select-option :value="0">
                                     {{ lang === "zh" ? "全部" : "all" }}
-                                </a-select-option>
-                                <a-select-option v-for="item of CRM_STATUS_MAP" :key="item.key" :value="item.value">{{
-                                    lang === "zh" ? item.zh : item.en
+                                </a-select-option> -->
+                                <a-select-option v-for="item of regionsList" :key="item.id" :value="item.value">{{
+                                    item.name
                                 }}</a-select-option>
                             </a-select>
                         </div>
@@ -37,15 +51,7 @@
                         <div class="key">{{ $t("crm_st.city") }}：</div>
                         <!-- 所属城市 -->
                         <div class="value">
-                            <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')"
-                                @change="handleSearch">
-                                <a-select-option :value="0">
-                                    {{ lang === "zh" ? "全部" : "all" }}
-                                </a-select-option>
-                                <a-select-option v-for="item of CRM_STATUS_MAP" :key="item.key" :value="item.value">{{
-                                    lang === "zh" ? item.zh : item.en
-                                }}</a-select-option>
-                            </a-select>
+                            <China2Address @search="handleOtherSearch" ref='CountryCascader' />
                         </div>
                     </a-col>
                     <template v-if="show">
@@ -53,15 +59,10 @@
                             <div class="key">{{ $t("crm_st.type") }}：</div>
                             <!-- 门店类型 -->
                             <div class="value">
-                                <a-select v-model:value="searchForm.payment_type" :placeholder="$t('def.select')"
-                                    @change="handleSearch">
-                                    <a-select-option :value="0">
-                                        {{ lang === "zh" ? "全部" : "all" }}
-                                    </a-select-option>
-                                    <a-select-option v-for="item of CRM_PAYMENT_TYPE_MAP" :key="item.key"
-                                        :value="item.value">{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option>
+                                <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')" allowClear>
+                                    <a-select-option v-for="item of STORE_TYPE" :key="item.key" :value="item.value">{{
+                                        lang === "zh" ? item.zh : item.en
+                                    }}</a-select-option>
                                 </a-select>
                             </div>
                         </a-col>
@@ -70,13 +71,10 @@
                             <div class="key">{{ $t("crm_st.status") }}：</div>
                             <!-- 营业状态 -->
                             <div class="value">
-                                <a-select v-model:value="searchForm.payment_type" show-search :placeholder="$t('def.input')"
-                                    :default-active-first-option="false" :show-arrow="false" :filter-option="false"
-                                    :not-found-content="null" allowClear @search="handleCreateUserSearch">
-                                    <a-select-option v-for="item in CRM_PAYMENT_TYPE_MAP" :key="item.key"
-                                        :value="item.value">{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}
+                                <a-select v-model:value="searchForm.status" :placeholder="$t('def.select')" allowClear>
+                                    <a-select-option v-for="item in STORE_STATUS" :key="item.key" :value="item.value">{{
+                                        lang === "zh" ? item.zh : item.en
+                                    }}
                                     </a-select-option>
                                 </a-select>
                             </div>
@@ -86,13 +84,10 @@
                             <div class="key">{{ $t("crm_st.level") }}：</div>
                             <!-- 门店级别 -->
                             <div class="value">
-                                <a-select v-model:value="searchForm.payment_type" show-search :placeholder="$t('def.input')"
-                                    :default-active-first-option="false" :show-arrow="false" :filter-option="false"
-                                    :not-found-content="null" allowClear @search="handleCreateUserSearch">
-                                    <a-select-option v-for="item in CRM_PAYMENT_TYPE_MAP" :key="item.key"
-                                        :value="item.value">{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}
+                                <a-select v-model:value="searchForm.level" :placeholder="$t('def.select')" allowClear>
+                                    <a-select-option v-for="item in STORE_LEVEL" :key="item.key" :value="item.value">{{
+                                        lang === "zh" ? item.zh : item.en
+                                    }}
                                     </a-select-option>
                                 </a-select>
                             </div>
@@ -126,12 +121,12 @@
                         {{ $t(title) }}
                     </template>
                     <template #bodyCell="{ column, text, record }">
-                       
+
                         <template v-if="column.key === 'uid'">
                             <a-tooltip placement="top" :title="text">
-                                <a-button type="link" @click="routerChange('detail', record)" ><span :class="{
-                                        nameStyle: nameBoolean(record),
-                                    }">
+                                <a-button type="link" @click="routerChange('detail', record)"><span :class="{
+                                    nameStyle: nameBoolean(record),
+                                }">
                                         {{ text || "-" }}
                                     </span></a-button>
                             </a-tooltip>
@@ -186,6 +181,7 @@
 <script>
 
 import Core from "@/core";
+import China2Address from '@/components/common/China2Address.vue'
 export default {
     name: "StoreList",
     data() {
@@ -193,28 +189,38 @@ export default {
             nameColor: [], // 表格名字点击存进去数组,判断点击跳转后原先name颜色的
             show: false,
             // 加载
-            loading: false,
+            // loading: false,
             orderByFields: {},
+            // 搜索门店名称及弹窗
+            ispop: false,
             searchForm: {
-                
-                key: "",
-                group_id:'',
-                type: 0,
-                level:'',  // 1:零售体验中心 2:零售体验店 3:交付中心 4:维修服务中心 5:体验展厅 6:活动展会
-                status: 0, // 1:装修 2:试营业 3:开业
 
+                search_type: 1,
+                key: "",
+                group_id: undefined,
+                type: undefined,    // 1:A类 2:B类 3:C类
+                level: undefined,  // 1:零售体验中心 2:零售体验店 3:交付中心 4:维修服务中心 5:体验展厅 6:活动展会
+                status: undefined,  // 1:装修 2:试营业 3:开业
+                province: '',
+                city: '',
             },
+            // 区域列表
+            regionsList: [],
             dateTime: ["date_begin_time", "date_end_time"],
             createUserOptions: [], // 创建人列表
-            CRM_STATUS_MAP: Core.Const.CRM_ORDER_INCOME.STATUS_MAP, // 回款单状态
-            CRM_TYPE_MAP: Core.Const.CRM_ORDER_INCOME.TYPE_MAP, // 回款类型
-            CRM_PAYMENT_TYPE_MAP: Core.Const.CRM_ORDER_INCOME.PAYMENT_TYPE_MAP, // 支付方式
+            STORE_STATUS: Core.Const.RETAIL.STORE_STATUS, // 门店状态
+            STORE_LEVEL: Core.Const.RETAIL.STORE_LEVEL, // 门店等级
+            STORE_TYPE: Core.Const.RETAIL.STORE_TYPE, // 门店类型
             // 表格
             tableData: [],
 
             currPage: 1,
             pageSize: 20,
+            defAddr: []
         }
+    },
+    components: {
+        China2Address
     },
     watch: {
         $route: {
@@ -299,6 +305,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getRegionsData();
         // this.createUserFetch();
     },
     methods: {
@@ -329,8 +336,8 @@ export default {
             let routeUrl = "";
             switch (type) {
                 // 创建门店
-                case "edit": 
-                    
+                case "edit":
+
                     routeUrl = this.$router.resolve({
                         path: "/stores-vehicle/store-edit",
                         query: { id: item.id }
@@ -338,7 +345,7 @@ export default {
                     window.open(routeUrl.href, "_blank");
                     break;
 
-                    case "detail": // 查看
+                case "detail": // 查看
                     if (!this.$Util.isEmptyObj(item)) {
                         this.nameColor.push({ id: item.id });
                     }
@@ -348,63 +355,97 @@ export default {
                     });
                     window.open(routeUrl.href, "_blank");
                     break;
-               /*  
-                case "edit": // 编辑
-                    routeUrl = this.$router.resolve({
-                        path: "/crm-order-income/order-income-edit",
-                        query: { id: item.id },
-                    });
-                    window.open(routeUrl.href, "_blank");
-                    break;
-                case "detail-order": 
-                    {
-                        routeUrl = this.$router.resolve({
-                            path: "/crm-order/order-detail",
-                            query: { id: item.order.id },
-                        });
-                        window.open(routeUrl.href, "_blank");
-                        break;
-                    } */
+                /*  
+                 case "edit": // 编辑
+                     routeUrl = this.$router.resolve({
+                         path: "/crm-order-income/order-income-edit",
+                         query: { id: item.id },
+                     });
+                     window.open(routeUrl.href, "_blank");
+                     break;
+                 case "detail-order": 
+                     {
+                         routeUrl = this.$router.resolve({
+                             path: "/crm-order/order-detail",
+                             query: { id: item.order.id },
+                         });
+                         window.open(routeUrl.href, "_blank");
+                         break;
+                     } */
             }
         },
-        handleSearch() { },
-        handleOtherSearch(params) { },
-        handleSearchReset() { },
+        handleSearch() {
+            console.log('this.sea', this.searchForm);
+            this.getTableData();
+        },
+        handleOtherSearch(params) {
+            console.log('params---------store-list', params);
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+        },
+        /*    
+        handleOtherSearch(params) { // 大洲/国家 搜索
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+            this.pageChange(1);
+        },
+        
+        */
+        handleSearchReset() {
+            this.ispop = false;
+            // 重置搜索
+            Object.assign(this.searchForm, this.$options.data().searchForm)
+            this.$refs.CountryCascader.handleReset();
+            this.getTableData();
+            this.pageChange(1);
+        },
         getTableData() {
             // 获取 表格 数据
-            this.loading = true;
+            // this.loading = true;
             Core.Api.RETAIL.storeList({
                 ...this.searchForm,
-                order_by_fields: this.orderByFields,
                 page: this.currPage,
                 page_size: this.pageSize,
-                search_type: 10, // 1: key按店铺名搜索 2:key按店长名搜索
             })
                 .then((res) => {
                     console.log("getTableData res:", res);
-                    this.total = res.count;
                     this.tableData = res.list;
-                    this.tableData.map((item, index) => {
-                        switch (item.currency) {
-                            case "usd":
-                                item.mType = "$";
-                                break;
-                            case "eur":
-                                item.mType = "€";
-                                break;
-                        }
-                    });
-                    console.log(
-                        "🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData",
-                        this.tableData
-                    );
+                    /*    this.total = res.count;
+                       this.tableData = res.list;
+                       this.tableData.map((item, index) => {
+                           switch (item.currency) {
+                               case "usd":
+                                   item.mType = "$";
+                                   break;
+                               case "eur":
+                                   item.mType = "€";
+                                   break;
+                           }
+                       });
+                       console.log(
+                           "🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData",
+                           this.tableData
+                       ); */
                 })
                 .catch((err) => {
                     console.log("getTableData err:", err);
                 })
                 .finally(() => {
-                    this.loading = false;
+                    // this.loading = false;
                 });
+        },
+        // 获取区域
+        getRegionsData() {
+            Core.Api.RETAIL.regionsList({
+                key: '',
+            }).then((res) => {
+                console.log("getRegionsData res:", res);
+                this.regionsList = res.list;
+            }).catch((err) => {
+                console.log("getRegionsData err:", err);
+            })
         },
         getTableDataSorter(paginate, sort, filter) {
             this.orderByFields = {};
@@ -424,6 +465,7 @@ export default {
                 create_user_name: name,
             });
         },
+
         handleDelete(id) {
             let _this = this;
             this.$confirm({
@@ -445,6 +487,25 @@ export default {
                 },
             });
         },
+
+        // 城市选择
+        handleAddressSelect(address = []) {
+
+            this.defAddr = Core.Util.deepCopy(address)
+            console.log('handleAddressSelect', address, 'this.defAddr', this.defAddr);
+            this.msgForm.province = address[0] ? address[0] : ''
+            this.msgForm.city = address[1] ? address[1] : ''
+            this.msgForm.county = address[2] ? address[2] : ''
+
+        },
+        // 点击搜索门店-切换pop
+        triangleClick() {
+            this.ispop = true;
+        },
+        changeSearch(num) {
+            this.ispop = false;
+            this.searchForm.search_type = num;
+        }
     },
 
 }
@@ -459,5 +520,35 @@ export default {
 
 .nameStyle {
     color: #9000f0;
+}
+
+.triangle {
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+
+    .triangle-pop {
+        width: 100px;
+        position: absolute;
+        left: -80px;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 4px;
+        border: 1px solid var(--color-border-2, #E5E6EB);
+        box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.10);
+        padding-top: 5px;
+
+        .sel {
+            height: 24px;
+            line-height: 24px;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .checked {
+            background: var(--color-fill-2, #F2F3F5);
+        }
+    }
 }
 </style>

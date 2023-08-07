@@ -1536,7 +1536,8 @@ const messages = {
             order_uid: '合同订单号',
         },
         crm_st:{
-            search_name:'搜索门店',
+            search_name:'门店名称',
+            search_man:'店长名称',
             area:'所属区域',
             city:'所属城市',
             type:'门店类型',
@@ -4007,7 +4008,8 @@ const messages = {
         },
         
         crm_st:{
-            search_name:'Search Store',
+            search_name:'Store Name',
+            search_man:'Manager  Name',
             area:'Region Belongs',
             city:'City',
             type:'Store Type',
