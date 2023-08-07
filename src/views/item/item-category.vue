@@ -78,9 +78,17 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('d.sales_area') }}</div>
                         <div class="value">
-                            <a-select v-model:value="salesAreaIds" mode="multiple" :placeholder="$t('def.select')">
-                                <a-select-option v-for="(val, key) in salesList" :key="key" :value="val.id">{{ val.name
-                                }}</a-select-option>
+                            <a-select
+                                v-model:value="salesAreaIds"
+                                :show-search="true"
+                                :placeholder="$t('def.select')"                                                                
+                                :filter-option="false"                                
+                                mode="multiple" 
+                                @search="onSearch"                                
+                            >                          
+                                <a-select-option v-for="(val, key) in salesList" :key="key" :value="val.id">
+                                    {{ val.name}}
+                                </a-select-option>
                             </a-select>
                         </div>
                     </div>
@@ -128,8 +136,7 @@ export default {
             statusList: [],
             searchForm: {
                 parent_id: 1
-            },
-            currentTableData: [],
+            },            
         };
     },
     watch: {},
@@ -186,30 +193,18 @@ export default {
                 console.log('getStatusList err', err);
             })
         },
-        getDataByParent(parent_id = 0, parentNode, node) {  // 通过父节点获取子级数据
-            console.log('getDataByParent parent_id:', parent_id, 'parentNode', parentNode)
+        getDataByParent(parent_id = 0) {  // 通过父节点获取子级数据
+            console.log('getDataByParent parent_id:', parent_id, this.loading)
             this.loading = true;
             Core.Api.ItemCategory.tree({
                 page: 0,
                 parent_id: parent_id,
             }).then(res => {
-                res.list.forEach(item => {
-                    item.has_children ? item.children = [] : item.children = null
-                });
                 console.log('getDataByParent res.list:', res.list)
-                if (parentNode) {
-                    console.log('parentNode', parentNode);
-                    parentNode.children = res.list
-                    parentNode.children.forEach(item => {
-                        item.flag = true
-                        console.log('item', item.flag);
-                    })
-                } else {
-                    this.tableData = res.list;
-                    this.calculateItemQuantity(this.tableData);
-                    this.currentTableData = res.list
-                    this.calculateItemQuantity(this.currentTableData);
-                }
+                this.treeFilter(res.list)
+
+                this.tableData = res.list;
+                    this.calculateItemQuantity(this.tableData);                
                 if (!res.list.length) {
                     this.handleSearch();
                 }
@@ -219,39 +214,25 @@ export default {
                 this.loading = false;
             });
         },
-        getDataById(id = 0, node) {  // 通过本节点获取本级数据
-            console.log('getDataById id:', id, 'node', node)
-            this.loading = true;
+        // 通过本节点获取本级数据  不知用处是什么
+        getDataById(id = 0) {
             Core.Api.ItemCategory.tree({
                 page: 0,
                 id: id,
             }).then(res => {
-                res.list.forEach(item => {
-                    item.has_children ? item.children = [] : item.children = null
-                });
-                if (id === 0) {
-                    this.tableData = res.list;
-                    this.calculateItemQuantity(this.tableData);
-                } else if (node) {
-                    node = res.list
-                }
-                console.log('getDataById res.list:', res.list)
+                console.log('通过本节点获取本级数据', res.list)
             }).catch(err => {
-                console.log('getDataById err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                console.log('通过本节点获取本级数据 err', err)
+            })
         },
         // 节点展开与关闭
-        handleExpandedChange(expanded, record) {
+        handleExpandedChange(expanded, record) {            
             console.log('handleExpandedChange expanded:', expanded, 'record', record)
             if (expanded) {
-                this.getDataByParent(record.id, record)
                 this.expandedRowKeys.push(record.id)
             } else {
                 let index = this.expandedRowKeys.indexOf(record.id)
-                this.expandedRowKeys.splice(index, 1)
-                record.children = []
+                this.expandedRowKeys.splice(index, 1)                
             }
         },
 
@@ -266,6 +247,8 @@ export default {
                 index_key: index_key,
             };
 
+            // console.log("输出", this.editForm);
+
             let foundObj = null;
             if (parent?.parent_id) {
                 foundObj = this.statusList.find(obj => obj.id === parent.parent_id);
@@ -278,7 +261,7 @@ export default {
             }
             console.log('parent', parent);
             console.log('this.editForm:', this.editForm);
-            this.parentNode = parent;
+            this.parentNode= parent;
             this.editNode = node;
             this.modalVisible = true;
         },
@@ -292,22 +275,16 @@ export default {
             }
             form.key = form.index_key
             this.loading = true
-            let apiName = form.id ? 'update' : 'save';
-            Core.Api.ItemCategory[apiName](form).then(res => {
+            let apiName = form.id ? 'update' : 'save';            
+            Core.Api.ItemCategory[apiName](form).then(res => {                
+                this.getDataByParent(this.searchForm.parent_id)
+                // if (form.parent_id !== 0) {
+                //     let index = this.expandedRowKeys.indexOf(form.parent_id)
+                //     this.expandedRowKeys.splice(index, 1)
+                // } else {
+                //     this.expandedRowKeys = []
+                // }
                 this.$message.success(this.$t('pop_up.save_success'))
-                if (form.parent_id == 0) {
-                    this.getDataById()
-                } else if (form.id) {
-                    this.getDataById(form.id, this.editNode)
-                } else {
-                    this.getDataByParent(form.parent_id, this.parentNode)
-                }
-                if (form.parent_id !== 0) {
-                    let index = this.expandedRowKeys.indexOf(form.parent_id)
-                    this.expandedRowKeys.splice(index, 1)
-                } else {
-                    this.expandedRowKeys = []
-                }
                 this.modalVisible = false
             }).catch(err => {
                 console.log('handleModalSubmit err:', err)
@@ -335,8 +312,8 @@ export default {
                         if (record.parent_id !== 0) {
                             let index = _this.expandedRowKeys.indexOf(record.parent_id)
                             _this.expandedRowKeys.splice(index, 1)
-                        }
-                        _this.getDataByParent(record.parent_id)
+                        }                        
+                        _this.getDataByParent(_this.searchForm.parent_id)
                     }).catch(err => {
                         console.log('handleDelete err', err)
                     }).finally(() => {
@@ -368,8 +345,9 @@ export default {
             })
 
         },
-        getSalesAreaList() {
-            Core.Api.SalesArea.list({ page: 0 }).then(res => {
+        // 销售区域接口
+        getSalesAreaList(params = {}) {
+            Core.Api.SalesArea.list({ page: 1, ...params}).then(res => {
                 this.salesList = res.list;
             });
         },
@@ -385,6 +363,25 @@ export default {
                 }
             });
         },
+        // 销售 下拉选择搜索 onSearch
+        onSearch(value){
+            // console.log("你好", value);            
+            this.getSalesAreaList({name: value})            
+        },
+        // 树型展开数据过滤
+        treeFilter(list, isChildren = false){            
+            // console.log("树型数据过滤", list);
+            list.forEach(item => {
+                item?.has_children ? "" : item.children = null
+                if(isChildren){
+                    // 存在children 添加一个字段(没有新增子类的按钮)
+                    item.flag = true 
+                }
+                if(item.children){                    
+                    this.treeFilter(item.children,true)  
+                }
+            });
+        }
     }
 };
 </script>

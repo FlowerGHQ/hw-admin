@@ -277,6 +277,7 @@ const apiList = {
         save: ['PostJson', 'item-category/save'],
         update: ['PostJson', 'item-category/update'],
         tree: ['PostJson', 'item-category/tree'],
+        treeList: ['PostJson', 'item-category/list/tree'],  // 三包管理 - 商品详情
         delete: ['PostJson', 'item-category/delete'],
         detail: ['PostJson', 'item-category/detail'],
         // 是否显示爆炸图

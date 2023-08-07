@@ -83,20 +83,26 @@ export default {
     methods: {
         getFirstItemCategory() {
             let key = ''
+            let api = 'tree'
             switch (this.type) {
                 case 'item':
                     key = 'ItemCategory'
-                    this.form = { parent_id: this.parentId }
-                        ; break
+                    this.form = { parent_id: this.parentId }; 
+                    break;
+                case 'list-item':
+                    key = 'ItemCategory'
+                    api = 'treeList'
+                    this.form = { parent_id: this.parentId }; 
+                    break;
                 case 'material':
                     key = 'MaterialCategory'
                     this.form = {
                         parent_id: this.parentId,
                         type: this.inventoryType,
-                    }
-                        ; break
+                    }; 
+                    break;
             }
-            Core.Api[key].tree({ ...this.form }).then(res => {
+            Core.Api[key][api]({ ...this.form }).then(res => {
                 this.treeData = res.list
                 console.log("treeData", this.treeData)
             })

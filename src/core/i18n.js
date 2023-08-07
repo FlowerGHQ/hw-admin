@@ -1702,11 +1702,14 @@ const messages = {
             month: '个月',
             or: '或',
             product_type: '商品类型',
+            product_sort: '商品分类',
             before_change: '变更前',
             after_change: '变更后',
             change_time: '变更时间',
             classification_commodity: '按商品分类',
             set_deadline: '设置期限',
+            item_name: '商品名称',
+            max_range: '已超出最大范围',
         },
         authority: {
             title: {
@@ -3997,11 +4000,14 @@ const messages = {
             month: 'month',
             or: 'or',
             product_type: 'Product Type',
+            product_sort: 'Product Sort',
             before_change: 'Before Change',
             after_change: 'After Change',
             change_time: 'Change Time',
             classification_commodity: 'Classification by commodity',
             set_deadline: 'Set A Deadline',
+            item_name: 'Product Name',
+            max_range: 'Max Range',
         },
         authority: {
             title: {
