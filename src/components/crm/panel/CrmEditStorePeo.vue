@@ -1,9 +1,8 @@
 <template>
     <div>
         <div class="form-item ">
-            <!-- <div class="key">{{ $t('crm_st.manager') }}：</div> -->
             <div class="value">
-                <a-button type="primary" v-if="$auth('customer.detail')">{{ $t('crm_st.add_man') }}</a-button>
+                <addStorePeo />
             </div>
         </div>
         <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id"
@@ -42,7 +41,6 @@
                 </template>
             </template>
         </a-table>
-        <addStorePeo :isShow="isShow"></addStorePeo>
 
     </div>
 </template>
@@ -67,7 +65,7 @@ export default {
     },
     data() {
         return {
-            isShow:false,
+            
         }
     },
     watch: {},
@@ -92,7 +90,6 @@ export default {
 
     },
     methods: {
-
     }
 
 }

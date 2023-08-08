@@ -32,7 +32,7 @@ export default {
             let obj = {}
             obj[this.keys[0]] = this.createTime[0]
             obj[this.keys[1]] = this.createTime[1]
-            console.log('handleSearch obj:', obj)
+            console.log('handleSearch obj:', obj,this.createTime)
             this.$emit('search', obj);
         },
         handleReset() {

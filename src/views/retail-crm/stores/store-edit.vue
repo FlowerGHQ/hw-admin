@@ -3,44 +3,40 @@
         <div class="edit-container">
             <div class="title-container">
                 <div class="title-area">{{ form.id ? $t('crm_st.edit_st') : $t('crm_st.add_st') }}</div>
-                <a-button type="primary" v-if="$auth('customer.detail')">{{ $t('def.save') }}</a-button>
+                <a-button type="primary" v-if="$auth('customer.detail')" @click="handelSave">{{ $t('def.save') }}</a-button>
             </div>
             <div class="form-block">
                 <div class="form-title">
                     <div class="title-colorful">{{ $t('n.information') }}</div>
                 </div>
                 <div class="form-content">
+                    <!-- 门店名称 -->
                     <div class="form-item required">
                         <div class="key">{{ $t('n.store_n') }}：</div>
                         <div class="value">
                             <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
                         </div>
                     </div>
-
+                    <!-- 图片 -->
                     <div class="form-item">
                         <div class="key">{{ $t('n.store_pic') }}：</div>
                         <div class="value">
                             <a-upload :file-list="upload.detailList" class="image-uploader" name="file" accept="image/*"
                                 list-type="picture-card" :headers="upload.headers" :data="upload.data"
                                 :action="upload.action" :before-upload="handleImgCheck" @change="handleCoverChange">
-                                <div class="image-inner" v-if="upload.detailList.length < 10">
+                                <div class="image-inner" v-if="upload.detailList.length < 1">
                                     <i class="icon i_upload" />
                                 </div>
                             </a-upload>
                         </div>
                     </div>
-
+                    <!-- 门店类型 -->
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_st.type') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="form.country_code" :placeholder="$t('def.input')"
-                                @select="setPhoneCountryCode" :disabled="form.id > 0 && detail.country_code != ''"
-                                show-search option-filter-prop="key" allow-clear>
-                                <a-select-option v-for="item of phoneCountryCodeList"
-                                    :key="item.phoneAreaCode + item.name + item.enName" :value="item.code">
-
-                                    <span class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
-                                    {{ lang === 'zh' ? item.name : item.enName }}
+                            <a-select v-model:value="form.type" :placeholder="$t('def.select')" allow-clear>
+                                <a-select-option v-for="item of STORE_TYPE" :key="item.key" :value="item.value">
+                                    {{ lang === 'zh' ? item.zh : item.en }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -49,14 +45,9 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_st.level') }}：</div>
                         <div class="value">
-                            <a-select v-model:value="form.country_code" :placeholder="$t('def.input')"
-                                @select="setPhoneCountryCode" :disabled="form.id > 0 && detail.country_code != ''"
-                                show-search option-filter-prop="key" allow-clear>
-                                <a-select-option v-for="item of phoneCountryCodeList"
-                                    :key="item.phoneAreaCode + item.name + item.enName" :value="item.code">
-
-                                    <span class="phoneCountryCode">{{ item.phoneAreaCode }}</span>
-                                    {{ lang === 'zh' ? item.name : item.enName }}
+                            <a-select v-model:value="form.level" :placeholder="$t('def.select')" allow-clear>
+                                <a-select-option v-for="item of STORE_LEVEL" :key="item.key" :value="item.value">
+                                    {{ lang === 'zh' ? item.zh : item.en }}
                                 </a-select-option>
                             </a-select>
                         </div>
@@ -65,68 +56,49 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_c.group') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur"
-                                :disabled="form.id > 0 && detail.email || form.country_code == undefined" />
+                            <a-select v-model:value="form.group_id" :placeholder="$t('def.select')" allowClear>
+                                <!-- <a-select-option :value="0">
+                                    {{ lang === "zh" ? "全部" : "all" }}
+                                </a-select-option> -->
+                                <a-select-option v-for="item of regionsList" :key="item.id" :value="item.value">{{
+                                    item.name
+                                }}</a-select-option>
+                            </a-select>
                         </div>
                     </div>
 
-                    <div class="form-item">
-                        <div class="key"></div>
-                        <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('crm_st.sel_reg')"
-                                @blur="handleCustomerEmailBlur"
-                                :disabled="form.id > 0 && detail.email || form.country_code == undefined" />
-                        </div>
-                    </div>
 
                     <!-- 地址 -->
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_c.address') }}：</div>
                         <div class="value">
-
-                            <a-tree-select class="CategoryTreeSelect" v-model:value="form.group_id"
-                                :placeholder="$t('def.select')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                :tree-data="groupOptions" tree-default-expand-all @select="setGroupId" />
-
+                            <China2Address @search="handleOtherSearch" ref='CountryCascader' />
                         </div>
                     </div>
-
-                    <!-- 城市 -->
-                    <div class="form-item ">
-                        <div class="key"></div>
-                        <div class="value">
-
-                            <a-tree-select class="CategoryTreeSelect" v-model:value="form.group_id"
-                                :placeholder="$t('def.select')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                :tree-data="groupOptions" tree-default-expand-all @select="setGroupId" />
-                        </div>
-                    </div>
-
 
                     <!-- 详细地址 -->
                     <div class="form-item ">
                         <div class="key"></div>
                         <div class="value">
-                            <a-tree-select class="CategoryTreeSelect" v-model:value="form.group_id"
-                                :placeholder="$t('def.select')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-                                :tree-data="groupOptions" tree-default-expand-all @select="setGroupId" />
+                            <a-input v-model:value="form.address" :placeholder="$t('def.input')" />
                         </div>
                     </div>
                     <!-- 营业状态 -->
                     <div class="form-item required ">
                         <div class="key">{{ $t('crm_st.status') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
+                            <a-select v-model:value="form.status" :placeholder="$t('def.select')" allow-clear>
+                                <a-select-option v-for="item of STORE_STATUS" :key="item.key" :value="item.value">
+                                    {{ lang === 'zh' ? item.zh : item.en }}
+                                </a-select-option>
+                            </a-select>
                         </div>
                     </div>
                     <!-- 开业时间 -->
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.open_time') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
+                            <a-date-picker v-model:value="form.open_time" valueFormat="YYYY-MM-DD" />
                         </div>
                     </div>
 
@@ -134,17 +106,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('dis.business_hours') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
-                        </div>
-                    </div>
-
-                    <!-- 所属公司 -->
-                    <div class="form-item ">
-                        <div class="key">{{ $t('crm_st.com_affil') }}：</div>
-                        <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
+                            <a-time-range-picker v-model:value="form.business_time" valueFormat="HH:mm:ss" />
                         </div>
                     </div>
 
@@ -152,8 +114,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.con_phone') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
+                            <a-input v-model:value="form.contact_phone" :placeholder="$t('def.input')" />
                         </div>
                     </div>
 
@@ -161,8 +122,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.con_email') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.email" :placeholder="$t('def.input')"
-                                @blur="handleCustomerEmailBlur" />
+                            <a-input v-model:value="form.contact_email" :placeholder="$t('def.input')" />
                         </div>
                     </div>
                 </div>
@@ -184,7 +144,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.park_space') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input-number v-model:value="all_park_count" disabled style="width: 100%" />
                         </div>
                     </div>
 
@@ -192,7 +152,17 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.above_ground_park') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input-number v-model:value="form.ground_park_count" style="width: 100%"
+                                :placeholder="$t('def.input')" :min="0" />
+                        </div>
+                    </div>
+
+                    <!-- 地下车位 -->
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_st.under_ground_park') }}：</div>
+                        <div class="value">
+                            <a-input-number v-model:value="form.underground_park_count" style="width: 100%"
+                                :placeholder="$t('def.input')" :min="0" />
                         </div>
                     </div>
 
@@ -200,24 +170,43 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.charg_station') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input-number v-model:value="all_charge_pile_count" disabled style="width: 100%" />
                         </div>
                     </div>
 
                     <!-- 地上充电桩数 -->
                     <div class="form-item ">
-                        <div class="key">{{ $t('crm_st.above_ground_park') }}：</div>
+                        <div class="key">{{ $t('crm_st.above_charg_station') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input-number v-model:value="form.ground_charge_pile_count" style="width: 100%"
+                                :placeholder="$t('def.input')" :min="0" />
                         </div>
                     </div>
 
 
                     <!-- 地下充电桩数 -->
                     <div class="form-item ">
-                        <div class="key">{{ $t('crm_st.above_ground_park') }}：</div>
+                        <div class="key">{{ $t('crm_st.under_charg_station') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input-number v-model:value="form.underground_charge_pile_count" style="width: 100%"
+                                :placeholder="$t('def.input')" :min="0" />
+                        </div>
+                    </div>
+
+                    <!-- 经度 -->
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_st.longitude') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.localtio.longitude" :placeholder="$t('def.input')" />
+                        </div>
+                    </div>
+
+
+                    <!-- 纬度 -->
+                    <div class="form-item ">
+                        <div class="key">{{ $t('crm_st.latitude') }}：</div>
+                        <div class="value">
+                            <a-input v-model:value="form.localtio.latitude" :placeholder="$t('def.input')" />
                         </div>
                     </div>
 
@@ -234,49 +223,56 @@
                     <!-- 门店人员-表格 -->
                     <CrmEditStorePeo />
                 </div>
-
             </div>
-
         </div>
-
     </div>
 </template>
 
 <script>
 import Core from "../../../core";
 import CrmEditStorePeo from '../../../components/crm/panel/CrmEditStorePeo.vue';
+import China2Address from '@/components/common/China2Address.vue'
+import dayjs from "dayjs";
+
 export default {
 
     name: "store-edit",
-    components: {
-        CrmEditStorePeo,
-    },
     data() {
         return {
+            // 请求（回显）表单
             form: {
                 id: '', //店铺主键id 传递时更新
-                name:'',
-                logo:'',//logo--img
-                type:'',
-                level:'',
-                province:'',
-                city:'',
-                address:'',
-                status:'',
-                open_time:'',
-                business_time:'',
-                // 所属公司
-                contact_phone:'',
-                contact_email:'',
-                
-                square:'',// 面积
-                ground_park_count:'',   // 地上停车位数量
-                underground_park_count:'', //地下停车位数量
-                ground_charge_pile_count:'',  // 地上充电桩数量
-                underground_charge_pile_count:'', //地下充电桩数量
-                user_id:'', //店长用户id
+                name: '',
+                logo: '',//logo--img
+                type: undefined,
+                level: undefined,
+                province: '',
+                city: '',
+                address: '',
+                status: undefined,
+                open_time: '',
+                business_time: '',
+                contact_email: '',
+                contact_phone: '',
+
+                square: '',// 面积
+                ground_park_count: '',   // 地上停车位数量
+                underground_park_count: '', //地下停车位数量
+                ground_charge_pile_count: '',  // 地上充电桩数量
+                underground_charge_pile_count: '', //地下充电桩数量
+
+                localtio: {
+                    latitude: '',// 纬度
+                    longitude: '',// 经度
+                },
+                user_id: '', //店长用户id
             },
 
+            STORE_STATUS: Core.Const.RETAIL.STORE_STATUS, // 门店状态
+            STORE_LEVEL: Core.Const.RETAIL.STORE_LEVEL, // 门店等级
+            STORE_TYPE: Core.Const.RETAIL.STORE_TYPE, // 门店类型
+            // 区域列表
+            regionsList: [],
             // 上传图片
             upload: {
                 // 上传图片
@@ -301,10 +297,25 @@ export default {
 
     },
     computed: {
+        // 总充电桩数
+        all_charge_pile_count() {
+            return this.form.ground_charge_pile_count +  this.form.underground_charge_pile_count
+        },
+        // 总车位数
+        all_park_count() {
 
+            return this.form.ground_park_count +  this.form.underground_park_count
+        },
+        lang() {
+            return this.$store.state.lang
+        },
+    },
+    components: {
+        China2Address,CrmEditStorePeo
     },
     mounted() {
-        this.form.id = Number(this.$route.query.id) || 0
+        this.form.id = Number(this.$route.query.id) || 0;
+        this.getRegionsData();
     },
     methods: {
         // 校验图片
@@ -359,6 +370,40 @@ export default {
 
             this.upload.detailList = fileList;
             console.log('handleCoverChange------------follow', file, 'fileList', fileList, 'this.upload.detailList ', this.upload.detailList, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list, 'this.upload.coverList', this.upload.coverList);
+        },
+        // 获取区域
+        getRegionsData() {
+            Core.Api.RETAIL.regionsList({
+                key: '',
+            }).then((res) => {
+                console.log("getRegionsData res:", res);
+                this.regionsList = res.list;
+            }).catch((err) => {
+                console.log("getRegionsData err:", err);
+            })
+        },
+        // 保存
+        handelSave() {
+            console.log('保存', this.form);
+            let form = Core.Util.deepCopy(this.form)
+            let time = { time: { morning: { begin: "", end: "" }, afternoon: { begin: "", end: "" } } }
+            time.time.morning.begin = form.business_time[0];
+            time.time.afternoon.end = form.business_time[1];
+            form.business_time = time;
+            if (this.trackRecordForm.image_attachment_list.length) {
+                form.logo = this.trackRecordForm.image_attachment_list[0].path;
+                // console.log('666666666666666666666666',this.$Util.imageFilter(form.logo));
+            }
+            // form.open_time = form.open_time ? dayjs.unix(form.open_time[0]).format("YYYY-MM-DD") : undefined // 日期转时间戳
+            console.log('保存form', form);
+
+        },
+
+        handleOtherSearch(params) {
+            console.log('params---------store-list', params);
+            for (const key in params) {
+                this.form[key] = params[key]
+            }
         },
     }
 
