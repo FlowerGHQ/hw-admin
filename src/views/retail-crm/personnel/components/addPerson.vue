@@ -59,7 +59,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits(['update:isShow'])
+const emits = defineEmits(['update:isShow','update'])
 
 const userName = ref("") // 搜索用户名称
 const selectList = ref([]) // 选中的人员数组
@@ -125,9 +125,9 @@ const saveFetch = (params = {}) => {
     Core.Api.RETAIL.addPerson({
         ...params
     }).then(res => {
-        proxy.$message.success(proxy.$t('pop_up.save_success'))
-        handleCancel()
-        userListFetch() // 更新列表
+        proxy.$message.success(proxy.$t('pop_up.save_success'))    
+        handleCancel()    
+        emits('update') // 更新外部     
         console.log("保存成功", res);
     }).catch(err => {
         console.log("保存失败", err);

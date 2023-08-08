@@ -2545,6 +2545,8 @@ const messages = {
             increase:"添加",
             search_personnel_name:"搜索人员名称",
             max_man_message:"店长最多一个",
+            delete_success: '删除成功',
+            delete_error: '删除失败',
         }
     },
 
@@ -4975,6 +4977,8 @@ const messages = {
             search_personnel_name:"Search Personnel Name",
             max_man_message:"Store Manager up to One",
 
+            delete_success:"Delete Success",
+            delete_error: 'Delete Error',
         }
     },
 }
