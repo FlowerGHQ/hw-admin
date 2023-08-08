@@ -2307,9 +2307,9 @@ let Const = {
             '1': { key: 1, zh: '零售体验中心', en: 'Retail Experience Center', value: 1 },
             '2': { key: 2, zh: '零售体验店', en: 'Retail Experience Store', value: 2 },
             '3': { key: 3, zh: '交付中心', en: 'Delivery Center', value: 3 },
-            '3': { key: 3, zh: '维修服务中心', en: 'Repair service center', value: 3 },
-            '3': { key: 3, zh: '体验展厅', en: 'Experience the showroom', value: 3 },
-            '3': { key: 3, zh: '活动展会', en: 'Event exhibition', value: 3 },
+            '4': { key: 4, zh: '维修服务中心', en: 'Repair service center', value: 4 },
+            '5': { key: 5, zh: '体验展厅', en: 'Experience the showroom', value: 5 },
+            '6': { key: 6, zh: '活动展会', en: 'Event exhibition', value: 6 },
         }
 
     }

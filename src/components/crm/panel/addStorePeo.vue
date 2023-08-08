@@ -1,47 +1,54 @@
 <template>
-    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" open="isModalOpen" onOk="handleOk"
-        onCancel="handleCancel" :okText="$t('def.save')">
-        <div class="box-model">
-            <a-input v-model:value="userName" placeholder="Basic usage">
-                <template #prefix>
-                    <search-outlined :style="{ fontSize: '16px' }" />
-                </template>
-                <template #suffix>
-                    <a-tooltip title="Extra information">
-                        <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
-                    </a-tooltip>
-                </template>
-            </a-input>
-            <div style="margin: 20px 0px;" class="tag-box">
-                <a-tag color="processing" v-for="item in 10">
-                    <span class="tag-name">鹏程</span>
-                    李鹏程
-                    <!-- <close-circle-filled class="tab-close" @click="popTabClick(item, false)" /> -->
-                    <span class="cha">×</span>
-                </a-tag>
-            </div>
+    <a-button type="primary" v-if="$auth('customer.detail')" @click="addMan">
+        <slot>{{ $t('crm_st.add_man') }}</slot>
+    </a-button>
+    <template v-if="isShow">
 
-            <div class="per-box">
-                <div class="person" v-for="item in 20">
-                    <div class="left">
-                        鹏程
-                    </div>
-                    <div class="middle">
-                        <span>李鹏程</span>
-                        <span>杭州研发中心 | 杭州研发中心 | 杭州研发中心</span>
-                    </div>
+        <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" open="isModalOpen" onOk="handleOk"
+            onCancel="handleCancel" :okText="$t('def.save')">
+            <div class="box-model">
+                <a-input v-model:value="userName" placeholder="Basic usage">
+                    <template #prefix>
+                        <search-outlined :style="{ fontSize: '16px' }" />
+                    </template>
+                    <template #suffix>
+                        <a-tooltip title="Extra information">
+                            <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
+                        </a-tooltip>
+                    </template>
+                </a-input>
+                <div style="margin: 20px 0px;" class="tag-box">
+                    <a-tag color="processing" v-for="item in 10">
+                        <span class="tag-name">鹏程</span>
+                        李鹏程
+                        <!-- <close-circle-filled class="tab-close" @click="popTabClick(item, false)" /> -->
+                        <span class="cha">×</span>
+                    </a-tag>
+                </div>
 
-                    <div class="right">
-                        <span class="add">添加</span>
-                        <span>
-                            
-                        </span>
+                <div class="per-box">
+                    <div class="person" v-for="item in 20">
+                        <div class="left">
+                            鹏程
+                        </div>
+                        <div class="middle">
+                            <span>李鹏程</span>
+                            <span>杭州研发中心 | 杭州研发中心 | 杭州研发中心</span>
+                        </div>
+
+                        <div class="right">
+                            <span class="add">添加</span>
+                            <span>
+
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </a-modal>
+        </a-modal>
+
+    </template>
 </template>
 
 <script>
@@ -56,10 +63,6 @@ export default {
         CloseCircleFilled,
     },
     props: {
-        isShow: {
-            type: Boolean,
-            default: false,
-        },
         orderId: {
             type: Number,
             default: 0
@@ -67,6 +70,7 @@ export default {
     },
     data() {
         return {
+            isShow: false
         }
     },
     watch: {},
@@ -87,6 +91,11 @@ export default {
         },
         handleCancel() {
 
+        },
+
+        addMan() {
+            this.isShow = true;
+            console.log('addMan---------', this.isShow);
         }
     }
 }
