@@ -18,7 +18,7 @@
                         <div class="value">
                             <a-input
                                 :placeholder="$t('retail.person_or_name')"
-                                v-model:value="searchForm.person"                                
+                                v-model:value="searchForm.key"                                
                             />
                         </div>
                     </a-col>
@@ -32,7 +32,7 @@
                     > 
                         <div class="key">{{ $t("retail.working_condition") }}：</div>                        
                         <div class="value">
-                            <a-select v-model:value="searchForm.working_condition" class="select-w">
+                            <a-select v-model:value="searchForm.store_user_status" class="select-w">
                                 <a-select-option v-for="(item,key) in Core.Const.RETAIL.Working_condition" :value="item.key">
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
@@ -49,7 +49,7 @@
                     >
                         <div class="key">{{ $t("retail.job") }}：</div>                        
                         <div class="value">
-                            <a-select v-model:value="searchForm.job" class="select-w">
+                            <a-select v-model:value="searchForm.store_user_type" class="select-w">
                                 <a-select-option v-for="item in Core.Const.RETAIL.Job" :value="item.key">
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
@@ -69,18 +69,16 @@
                             <div class="value">
                                 <a-select
                                     class="select-w"
-                                    v-model:value="searchForm.status"
-                                    :placeholder="$t('def.select')"
-                                    @change="handleSearch"
+                                    v-model:value="searchForm.group_id"
+                                    :placeholder="$t('def.select')"                                    
                                 >                    
-                                    <a-select-option
-                                        v-for="item of CRM_STATUS_MAP"
-                                        :key="item.key"
-                                        :value="item.value"
-                                        >{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option
+                                    <a-select-option 
+                                        v-for="item of regionsList" 
+                                        :key="item.id" 
+                                        :value="item.id"
                                     >
+                                        {{ item.name}}
+                                    </a-select-option>
                                 </a-select>
                             </div>
                         </a-col>
@@ -93,22 +91,8 @@
                             class="row-item"
                         >
                             <div class="key">{{ $t("retail.home_city") }}：</div>                        
-                            <div class="value">
-                                <a-select
-                                    class="select-w"
-                                    v-model:value="searchForm.status"
-                                    :placeholder="$t('def.select')"
-                                    @change="handleSearch"
-                                >                    
-                                    <a-select-option
-                                        v-for="item of CRM_STATUS_MAP"
-                                        :key="item.key"
-                                        :value="item.value"
-                                        >{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option
-                                    >
-                                </a-select>
+                            <div class="value">                              
+                                <China2Address class="select-w" @search="handleOtherSearch" ref='CountryCascader' />
                             </div>
                         </a-col>
                         <!-- 所属门店 -->
@@ -123,18 +107,16 @@
                             <div class="value">
                                 <a-select
                                     class="select-w"
-                                    v-model:value="searchForm.status"
-                                    :placeholder="$t('def.select')"
-                                    @change="handleSearch"
+                                    v-model:value="searchForm.store_id"
+                                    :placeholder="$t('def.select')"                                    
                                 >                    
                                     <a-select-option
-                                        v-for="item of CRM_STATUS_MAP"
-                                        :key="item.key"
-                                        :value="item.value"
-                                        >{{
-                                            lang === "zh" ? item.zh : item.en
-                                        }}</a-select-option
-                                    >
+                                        v-for="item of storeList"
+                                        :key="item.id"
+                                        :value="item.id"
+                                        >
+                                        {{ item.name }}
+                                    </a-select-option>
                                 </a-select>
                             </div>
                         </a-col>                    
@@ -189,6 +171,18 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         
+                        <!-- 名称 -->
+                        <template v-if="column.key === 'name'">                                                        
+                            <img v-if="record.avatar" class="avatar-style" :src="record.avatar" alt="">
+                            <span class="user-name">{{ text }}</span>
+                            <span>{{ record.employee_no }}</span>
+                        </template>
+                        <!-- 添加人员 -->
+                        <template v-if="column.key === 'create_user_name'">                                                        
+                            <img v-if="record.create_user_avatar" class="avatar-style" :src="record.create_user_avatar">
+                            <span class="user-name">{{ text || '-' }}</span>
+                            <span>{{ record.create_employee_no }}</span>
+                        </template>
                         <!-- 工作状态 -->
                         <template v-if="column.key === 'store_user_status'">                                                        
                             {{ Core.Const.RETAIL.Working_condition[text]? Core.Const.RETAIL.Working_condition[text][$i18n.locale]: '-' }}
@@ -210,29 +204,33 @@
                 </a-table>
             </div>
         </div>
-        <addPersonComponent v-if="isShow" v-model:isShow="isShow"/>
+        <addPersonComponent v-if="isShow" v-model:isShow="isShow" @update="onUpdate"/>
     </div>
 </template>
 
 <script setup>
 import Core from "@/core";
-import TimeSearch from "@/components/common/TimeSearch.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import addPersonComponent from './components/addPerson.vue'
+import China2Address from '@/components/common/China2Address.vue'
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const searchForm = ref({
-    person: undefined, // 搜索人员
-    working_condition: undefined, // 工作状态
-    job: undefined, // 职务
+    key: undefined,        //搜索名称/手机号
+    store_user_status: undefined,     //工作状态
+    store_user_type: undefined, //职务
+    group_id: undefined,   //所属大区id
+    group_city: undefined, //所属城市
+    store_id: undefined,   //所属门店      
 });
 // 添加人员弹窗
 const isShow = ref(false)
 
 
-
+const regionsList = ref([]) // 所属区域
+const storeList = ref([])  // 门店list
 const tableData = ref([]);
 const channelPagination = ref({
   current: 1,
@@ -245,7 +243,9 @@ const channelPagination = ref({
 }) // 分页配置
 
 onMounted(() => {
-    getTableDataFetch();
+    getTableDataFetch()
+    getRegionsData()
+    getStoreData()
 });
 const {proxy} = getCurrentInstance()
 const router = useRouter()
@@ -320,7 +320,9 @@ const tableColumns = computed(() => {
 // table接口
 const getTableDataFetch = (params = {}) => {    
     loading.value = true;
-    Core.Api.RETAIL.personList({                  
+    Core.Api.RETAIL.personList({ 
+        page_size: channelPagination.pageSize,
+        page: channelPagination.current,                 
         ...params
     }).then((res) => {
         channelPagination.value.total = res.count
@@ -333,7 +335,36 @@ const getTableDataFetch = (params = {}) => {
     .finally(() => {
         loading.value = false;
     });
-};
+}
+// 删除
+const deleteTableRowFetch = (params = {}) => {
+    Core.Api.RETAIL.deletePersonList({                  
+        ...params
+    }).then(res => {
+        getTableDataFetch({page: 1})
+        proxy.$message.success(proxy.$t('retail.delete_success'))
+    }).catch(err => {
+        proxy.$message.success(proxy.$t('retail.delete_error')) 
+    })
+}
+// 获得所属区域
+const getRegionsData = () => {
+    Core.Api.RETAIL.regionsList().then((res) => {
+        // console.log("获得所属区域 sucess", res);
+        regionsList.value = res.list;
+    }).catch((err) => {
+        console.log("获得所属区域 err", err);
+    })
+}
+// 门店list
+const getStoreData = () => {
+    Core.Api.RETAIL.storeList().then((res) => {
+        // console.log("门店list sucess", res);
+        storeList.value = res.list;
+    }).catch((err) => {
+        console.log("门店list err", err);
+    })
+}
 /* 接口 end*/
 /* methods */
 // 条件初始化
@@ -346,18 +377,19 @@ const routerChange = (type, item = {}) => {
         case "detail": // 详情
             routeUrl = router.resolve({
                 path: "/retail-personnel/personnel-detail",
-                query: { type: "detail" },
+                query: { type: "detail", id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
         case "edit": // 编辑
             routeUrl = router.resolve({
                 path: "/retail-personnel/personnel-detail",
-                query: { type: "edit" },
+                query: { type: "edit", id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
-        case "delete": // 删除           
+        case "delete": // 删除        
+            deleteTableRowFetch({id: item.id})
             break;
     }
 }
@@ -368,15 +400,29 @@ const moreSearch = () => {
 // 查询按钮
 const handleSearch = () => {
     console.log("searchForm", searchForm.value);
+    getTableDataFetch({
+        page: 1,
+        ...searchForm.value
+    })
 }; 
 // 重置按钮
 const handleSearchReset = () => {
     init()
+    getTableDataFetch({ page: 1 })
 };
 
 // 添加人员
 const addPerson = () => {
     isShow.value = true
+}
+
+// 添加组件更新
+const onUpdate = () => {
+    getTableDataFetch({ page: 1 })
+}
+// 所属城市选择框
+const handleOtherSearch = (obj) => {
+    console.log("输出", obj);
 }
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
@@ -406,5 +452,15 @@ const handleTableChange = (pagination, filters, sorter) => {
     }
     .btn-right {
     }
+}
+
+.avatar-style{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.user-name{
+    margin-right: 8px;
 }
 </style>

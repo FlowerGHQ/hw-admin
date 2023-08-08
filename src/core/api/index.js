@@ -821,6 +821,7 @@ const apiList = {
 
         // 人员管理接口
         personList:['PostJson', 'user/list'],  // 人员列表
+        deletePersonList:['PostJson', 'user/delete'],  // 删除人员
         externalList: ['PostJson', 'out/user/list'],  // 人员列表(外部【飞书】)
         addPerson: ['PostJson', 'out/user/save'],  // 添加人员(外部【飞书】)
         personDetail: ['Get', 'store/user/detail'],  // 人员信息详情

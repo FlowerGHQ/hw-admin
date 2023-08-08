@@ -1716,6 +1716,10 @@ let Const = {
             '1': { key: 1, zh: '男', en: 'male' },
             '2': { key: 2, zh: '女', en: 'female' },
         },
+        SEX_MAP: {
+            male: 1,
+            female: 2,
+        },
         RidingExperience: {
             '-1': { key: -1, zh: '无经验', en: 'Inexperienced' },
             '1': { key: 1, zh: '0-3年', en: '0-3 years' },
@@ -2218,13 +2222,13 @@ let Const = {
         },
         // 服装尺寸
         Outfit_Size: {
-            '1': { key: 1, value: "S" },
-            '2': { key: 2, value: "M" },
-            '3': { key: 3, value: "L" },
-            '4': { key: 4, value: "XL" },
-            '5': { key: 5, value: "XXL" },
-            '6': { key: 6, value: "XXXL" },
-            '7': { key: 7, value: "XXXXL" },
+            'S': { key: 1, value: "S" },
+            'M': { key: 2, value: "M" },
+            'L': { key: 3, value: "L" },
+            'XL': { key: 4, value: "XL" },
+            'XXL': { key: 5, value: "XXL" },
+            'XXXL': { key: 6, value: "XXXL" },
+            'XXXXL': { key: 7, value: "XXXXL" },
         },
         // 工作状态
         Working_condition: {

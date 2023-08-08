@@ -2543,6 +2543,8 @@ const messages = {
             refunded:"已退款",
             increase:"添加",
             search_personnel_name:"搜索人员名称",
+            delete_success: '删除成功',
+            delete_error: '删除失败',
         }
     },
 
@@ -4970,6 +4972,8 @@ const messages = {
             refunded:"Refunded",
             increase:"Increase",
             search_personnel_name:"Search Personnel Name",
+            delete_success:"Delete Success",
+            delete_error: 'Delete Error',
         }
     },
 }

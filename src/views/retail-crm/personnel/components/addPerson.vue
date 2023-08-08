@@ -66,7 +66,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits(['update:isShow'])
+const emits = defineEmits(['update:isShow','update'])
 
 const userName = ref("") // 搜索用户名称
 const selectList = ref([]) // 选中的人员数组
@@ -132,8 +132,8 @@ const saveFetch = (params = {}) => {
         ...params
     }).then(res => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))    
-        handleCancel()
-        userListFetch() // 更新列表
+        handleCancel()    
+        emits('update') // 更新外部     
         console.log("保存成功", res);
     }).catch(err => {
         console.log("保存失败", err);
@@ -163,7 +163,7 @@ const handleOk = () => {
 }
 // 取消
 const handleCancel = () => {
-    emits('update:isShow', false)    
+    emits('update:isShow', false)
 }
 // 输入框失去焦点/回车/点击
 const inputEvent = () => {    
