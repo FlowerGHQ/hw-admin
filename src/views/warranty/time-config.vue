@@ -65,7 +65,7 @@ export default {
 
     },
     mounted() {
-
+        this.getDetail();
     },
     methods: {
         handleSubmit() {
@@ -82,11 +82,23 @@ export default {
                     }).then(res => {
                         console.log('handleSubmit res', res);
                         _this.$message.success(_this.$t('pop_up.save_success'))
+                        _this.getDetail();
                     }).catch(err => {
                         console.log('handleSubmit err', err);
                     })
                 },
             });
+        },
+        // 详情
+        getDetail() {
+            Core.Api.Warranty.getTimeDetail({
+                effect_time_type: this.form.effect_time_type
+            }).then(res => {
+                console.log('getDetail res', res);
+                this.form.effect_time_day = res.effect_time_day
+            }).catch(err => {
+                console.log('getDetail err', err);
+            })
         }
     }
 };

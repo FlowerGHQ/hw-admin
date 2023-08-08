@@ -80,6 +80,7 @@
                                     :placeholder="$t(/*请输入*/'def.input')" 
                                     :precision="0" 
                                     :min="0"                                    
+                                    :max="120"
                                     @blur="handleSaveWarranty(record)" 
                                     />
                                 {{ $t(/*个月*/'wt.month') }}
@@ -91,6 +92,7 @@
                                     style="width: 60px; 
                                     margin-right: 4px;"
                                     :min="0" 
+                                    :max="20000"
                                     :precision="0" 
                                     :placeholder="$t(/*请输入*/'def.input')" 
                                     @blur="handleSaveWarranty(record)" 
@@ -145,12 +147,12 @@
                             </div>
                             <div v-show="record.label === 0">
                                 <a-input-number @blur="handleSaveWarranty(record)" style="width: 60px; margin-right: 4px;"
-                                    :min="0" :precision="0" v-model:value="record.month"
+                                    :min="0" :max="120" :precision="0" v-model:value="record.month"
                                     :placeholder="$t(/*请输入*/'def.input')" />
                                 {{ $t(/*个月*/'wt.month') }}
                                 ,{{ $t(/*或*/'wt.or') }}
                                 <a-input-number @blur="handleSaveWarranty(record)" style="width: 60px; margin-right: 4px;"
-                                    :min="0" :precision="0" v-model:value="record.mileage"
+                                    :min="0" :max="20000" :precision="0" v-model:value="record.mileage"
                                     :placeholder="$t(/*请输入*/'def.input')" />
                                 {{ $t(/*公里*/'r.km') }}
                             </div>
@@ -212,10 +214,10 @@
                     <div class="form-item required">
                         <div class="key">{{ $t(/*三包期限*/'wt.warranty_period') }}:</div>
                         <div class="value">
-                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :precision="0"
+                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :max="120" :precision="0"
                                 v-model:value="editForm.month" :placeholder="$t(/*请输入*/'def.input')" />
                             {{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}
-                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :precision="0"
+                            <a-input-number style="width: 80px; margin-right: 4px;" :min="0" :max="20000" :precision="0"
                                 v-model:value="editForm.mileage" :placeholder="$t(/*请输入*/'def.input')" />
                             {{ $t(/*公里*/'r.km') }}
                         </div>
@@ -461,26 +463,26 @@ export default {
         handleSaveWarranty(record) {
             console.log('record', record.month, record.mileage);
             // 时效的上限: 20000公里，120月
-            if(record.month > 120 || record.mileage > 20000){
-                return this.$message.error(this.$t('wt.max_range'))
-            }
-            // let params = {
-            //     id: record.id,
-            //     target_id: record.target_id,
-            //     target_type: record.target_type,
-            //     month: record.month,
-            //     mileage: record.mileage,
-            //     type: record.type
+            // if(record.month > 120 || record.mileage > 20000){
+            //     return this.$message.error(this.$t('wt.max_range'))
             // }
-            // Core.Api.Warranty.warrantyConfigSave({
-            //     ...params
-            // }).then(res => {
-            //     console.log('hanldeSaveMonth res', res);
-            //     this.getCategoryTableData();
-            //     this.getItemTableData();
-            // }).catch(err => {
-            //     console.log('hanldeSaveMonth err', err);
-            // })
+            let params = {
+                id: record.id,
+                target_id: record.target_id,
+                target_type: record.target_type,
+                month: record.month,
+                mileage: record.mileage,
+                type: record.type
+            }
+            Core.Api.Warranty.warrantyConfigSave({
+                ...params
+            }).then(res => {
+                console.log('hanldeSaveMonth res', res);
+                this.getCategoryTableData();
+                this.getItemTableData();
+            }).catch(err => {
+                console.log('hanldeSaveMonth err', err);
+            })
         },
         handleModalSubmit() {
             let params = Core.Util.deepCopy(this.editForm)
