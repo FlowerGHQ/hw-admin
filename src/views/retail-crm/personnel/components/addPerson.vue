@@ -1,51 +1,44 @@
 <template>
-    <a-modal v-model:visible="isShow" 
-        :title="$t('crm_st.add_peo')" 
-        :okText="$t('def.save')"
-        @ok="handleOk"
-        @cancel="handleCancel" >
+    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" :okText="$t('def.save')" @ok="handleOk"
+        @cancel="handleCancel">
         <div class="box-model" @scroll="handleScroll">
-            <a-input 
-                v-model:value="userName" 
-                :placeholder="$t('retail.search_personnel_name')" 
-                @blur="inputEvent" 
-                @pressEnter="inputEvent" 
-                >
+            <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @blur="inputEvent"
+                @pressEnter="inputEvent">
                 <template #prefix>
                     <search-outlined :style="{ fontSize: '16px' }" />
-                </template>              
+                </template>
             </a-input>
             <!-- 选好的人员 -->
             <div class="tag-box">
-                <template v-for="(item,index) in selectList" :key="index">
+                <template v-for="(item, index) in selectList" :key="index">
                     <a-tag color="processing">
                         <img class="tag-box-img" :src="item.avatar" alt="">
-                        <span>{{ item.name }}</span>                
-                        <span class="cha" @click="onClose(item,index)">×</span>
+                        <span>{{ item.name }}</span>
+                        <span class="cha" @click="onClose(item, index)">×</span>
                     </a-tag>
                 </template>
             </div>
             <!-- 飞书的人员 -->
             <div class="per-box">
-                <div class="person" v-for="(item,index) in fsListComput" :key="index">
+                <div class="person" v-for="(item, index) in fsListComput" :key="index">
                     <div class="left">
                         <img class="img" :src="item.avatar">
                     </div>
                     <div class="middle">
                         <div>{{ item.name }}</div>
                         <div class="department-style">
-                            <span v-for="($1,index) in item.department_list" :key="$1.id" class="department-item">
+                            <span v-for="($1, index) in item.department_list" :key="$1.id" class="department-item">
                                 <span class="text">{{ $1.name }}</span>
-                                <span v-if="(item.department_list.length - 1) != index " class="v-line">|</span>
+                                <span v-if="(item.department_list.length - 1) != index" class="v-line">|</span>
                             </span>
-                        </div>                        
+                        </div>
                     </div>
 
-                    <div class="right">                        
+                    <div class="right">
                         <span v-if="item.isTick" class="tick-img">
                             <img class="img" src="~@/assets/images/retail/tick.png" alt="">
                         </span>
-                        <span v-else class="add cursor" @click="onAdd(item)">{{$t('retail.increase')}}</span>
+                        <span v-else class="add cursor" @click="onAdd(item)">{{ $t('retail.increase') }}</span>
                     </div>
                 </div>
             </div>
@@ -70,7 +63,7 @@ const emits = defineEmits(['update:isShow'])
 
 const userName = ref("") // 搜索用户名称
 const selectList = ref([]) // 选中的人员数组
-const fsList = ref([]) 
+const fsList = ref([])
 const pagination = reactive({
     page_size: 10,
     page: 1,
@@ -80,14 +73,14 @@ const pagination = reactive({
 // 飞书的人员计算属性
 const fsListComput = computed(() => {
     let result = []
-    result = fsList.value.map($1 => {     
+    result = fsList.value.map($1 => {
         const bool = selectList.value.find($2 => {
             return $2.id == $1.id
         })
-        if(bool){
-            $1.isTick = true           
-        }else{
-            $1.isTick = false            
+        if (bool) {
+            $1.isTick = true
+        } else {
+            $1.isTick = false
         }
         return {
             ...$1
@@ -106,32 +99,33 @@ const { proxy } = getCurrentInstance()
 // 人员list
 const userListFetch = (params = {}, isSearch = false) => {
     // Core.Api.CRMCustomer.list 测试接口    
-    Core.Api.RETAIL.externalList({        
-        key:userName.value,
+    Core.Api.RETAIL.externalList({
+        key: userName.value,
         page_size: pagination.page_size,
         page: pagination.page,
         ...params
     }).then(res => {
         pagination.total = res.count
-        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)        
+        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
 
         // 是否是搜索的
-        if(isSearch){
+        if (isSearch) {
             fsList.value = []
         }
 
-        fsList.value = fsList.value.concat(res.list)        
+        fsList.value = fsList.value.concat(res.list)
         // console.log("获取人员list", res);
+        console.log("获取人员list", res, fsList.value);
     }).catch(err => {
         console.log("获取人员list err", err);
     })
 }
 // 保存接口
-const saveFetch = (params = {}) => {    
-    Core.Api.RETAIL.addPerson({ 
+const saveFetch = (params = {}) => {
+    Core.Api.RETAIL.addPerson({
         ...params
     }).then(res => {
-        proxy.$message.success(proxy.$t('pop_up.save_success'))    
+        proxy.$message.success(proxy.$t('pop_up.save_success'))
         handleCancel()
         userListFetch() // 更新列表
         console.log("保存成功", res);
@@ -143,8 +137,8 @@ const saveFetch = (params = {}) => {
 
 // methods
 // tag close 删除
-const onClose = (item,index) => {
-    selectList.value.splice(index,1)
+const onClose = (item, index) => {
+    selectList.value.splice(index, 1)
 }
 
 // 添加
@@ -159,30 +153,31 @@ const handleOk = () => {
         return el.id
     })
     console.log("selectFilter 过滤出来的", selectFilter);
-    saveFetch({outer_user_id_list: selectFilter})    
+    saveFetch({ outer_user_id_list: selectFilter })
 }
 // 取消
 const handleCancel = () => {
-    emits('update:isShow', false)    
+    emits('update:isShow', false)
 }
 // 输入框失去焦点/回车/点击
-const inputEvent = () => {    
-    userListFetch({page: 1}, true)
+const inputEvent = () => {
+    userListFetch({ page: 1 }, true)
 }
 // 监听滚轮事件
 const handleScroll = (e) => {
-    const element = e.target;    
-    if(element.scrollTop + element.clientHeight >= element.scrollHeight){       
+    const element = e.target;
+    if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
         // console.log('滑到底部');
         pagination.page++
-        userListFetch({page: pagination.page})
-    }    
+        userListFetch({ page: pagination.page })
+    }
 }
 </script>
 
 <style lang="less" scoped>
 .tag-box {
     margin-top: 20px;
+
     .ant-tag-processing {
         color: var(--color-text-1, #1D2129);
         border-radius: 24px;
@@ -253,7 +248,7 @@ const handleScroll = (e) => {
         font-size: 10px;
     }
 
-    .tag-box-img{
+    .tag-box-img {
         width: 24px;
         height: 24px;
         object-fit: cover;
@@ -264,6 +259,7 @@ const handleScroll = (e) => {
 
 .per-box {
     width: 100%;
+
     .person {
         display: flex;
         height: 56px;
@@ -271,8 +267,8 @@ const handleScroll = (e) => {
         box-sizing: border-box;
         margin-top: 12px;
 
-        .left {           
-            .img{
+        .left {
+            .img {
                 width: 40px;
                 height: 40px;
                 object-fit: cover;
@@ -288,18 +284,20 @@ const handleScroll = (e) => {
             justify-content: space-between;
             padding: 0px 12px;
 
-            .department-style{
-                .department-item{                   
+            .department-style {
+                .department-item {
                     font-family: PingFang SC;
-                    font-size: 12px;                    
-                    font-weight: 400;  
-                    .text{
+                    font-size: 12px;
+                    font-weight: 400;
+
+                    .text {
                         color: var(--color-text-3, #86909C);
                     }
-                    .v-line{
+
+                    .v-line {
                         margin: 0 5px;
                         color: #F0F0F0;
-                    }                  
+                    }
                 }
             }
         }
@@ -307,7 +305,7 @@ const handleScroll = (e) => {
         .right {
             line-height: 40px;
 
-            .add {                
+            .add {
                 height: 30px;
                 width: 36px;
                 line-height: 30px;
@@ -317,12 +315,13 @@ const handleScroll = (e) => {
                 font-size: 14px;
                 border-radius: 2px;
                 color: var(--brand-6, #0061FF);
-            }   
-            .img{
+            }
+
+            .img {
                 display: inline-block;
                 width: 24px;
-                height: 24px; 
-            }     
+                height: 24px;
+            }
         }
     }
 }

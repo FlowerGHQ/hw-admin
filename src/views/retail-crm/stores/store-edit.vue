@@ -137,7 +137,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.sto_area') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.name" :placeholder="$t('def.input')" />
+                            <a-input v-model:value="form.square" :placeholder="$t('def.input')" />
                         </div>
                     </div>
                     <!-- 车位数 -->
@@ -221,7 +221,7 @@
 
                 <div class="form-content">
                     <!-- 门店人员-表格 -->
-                    <CrmEditStorePeo />
+                    <CrmEditStorePeo  :id="form.id" @userid="getUserId"/>
                 </div>
             </div>
         </div>
@@ -390,13 +390,44 @@ export default {
             time.time.morning.begin = form.business_time[0];
             time.time.afternoon.end = form.business_time[1];
             form.business_time = time;
+
             if (this.trackRecordForm.image_attachment_list.length) {
                 form.logo = this.trackRecordForm.image_attachment_list[0].path;
                 // console.log('666666666666666666666666',this.$Util.imageFilter(form.logo));
             }
+            form.open_time = dayjs(form.open_time).unix();
             // form.open_time = form.open_time ? dayjs.unix(form.open_time[0]).format("YYYY-MM-DD") : undefined // 日期转时间戳
             console.log('保存form', form);
+            if (!form.name) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.type) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
 
+            if (!form.level) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if (!form.group_id) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
+            if (!form.city && !form.address) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
+            if (!form.status) {
+                return this.$message.warning(this.$t('def.enter'))
+            }
+
+            Core.Api.RETAIL.editStore(form).then(res => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                console.log('保存完成',res);
+            }).catch(err => {
+                console.log('editStore err:', err)
+            }).finally(() => {
+                
+            })
         },
 
         handleOtherSearch(params) {
@@ -405,6 +436,9 @@ export default {
                 this.form[key] = params[key]
             }
         },
+        getUserId(data){
+            this.form.user_id = data;
+        }
     }
 
 }

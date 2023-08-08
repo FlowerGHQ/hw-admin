@@ -815,7 +815,7 @@ const apiList = {
     RETAIL: {
         // 门店管理接口
         storeList: ['PostJson', 'store/list'], //门店-门店列表
-
+        editStore:['PostJson', 'store/save'],
         // 区域管理接口          
         regionsList: ['PostJson', 'group/city/list'], //门店-区域列表/crm/1/store/list
 

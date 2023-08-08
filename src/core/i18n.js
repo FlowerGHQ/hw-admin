@@ -2544,6 +2544,7 @@ const messages = {
             refunded:"已退款",
             increase:"添加",
             search_personnel_name:"搜索人员名称",
+            max_man_message:"店长最多一个",
         }
     },
 
@@ -4972,6 +4973,8 @@ const messages = {
             refunded:"Refunded",
             increase:"Increase",
             search_personnel_name:"Search Personnel Name",
+            max_man_message:"Store Manager up to One",
+
         }
     },
 }
