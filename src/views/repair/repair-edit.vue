@@ -133,8 +133,8 @@
                         <!-- 故障类型 -->
                         <div class="form-wrap required mt" v-if="$1.failure_type === 1">
                             <div class="key">{{ $t('r.fault_types') }}:</div>
-                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category">
-                                <a-checkbox v-for="item in faultTypesList" :value="item.value">
+                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" @change="differentCheckChange">
+                                <a-checkbox v-for="item in faultTypesList" :value="item">
                                     {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
                                 </a-checkbox>
                             </a-checkbox-group>
@@ -203,7 +203,7 @@
                                                     </a-tooltip>
                                                 </div>
                                                 <div v-if="record.attachment_list.length > 1" class="divide-line"></div>
-                                                <a-popover placement="bottom" trigger="click" :visible="clicked"
+                                                <a-popover placement="bottom" trigger="click"
                                                     @visibleChange="handleClickChange">
                                                     <template #content>
                                                         <div class="file-list" v-for="item in record.attachment_list">
@@ -247,7 +247,7 @@
                                 </a-table>
                                 <div class="vehicle-item-footer">
                                     <a-button v-if="!$1.model" class="add-btn" type="primary"
-                                        @click="handleSelectItemModal">{{
+                                        @click="handleSelectAllItemModal">{{
                                             $t(/*添加商品*/'i.add')
                                         }}</a-button>
                                     <div class="total">
@@ -402,13 +402,11 @@
                     </template>
                 </a-modal>
                 <!-- 添加商品弹框 -->
-                <ItemSelect
-                    v-if="selectAllItemModalShow" 
-                    btnType='primary' 
-                    :btnText="$t('i.select_item')" 
-                    btnClass="item-select-btn"
-                    :disabled-checked='disabledChecked' 
+                <AddItemModal
+                    v-if="selectAllItemModalShow"
+                    :modalShow="selectAllItemModalShow" 
                     @select="handleSelectItem" 
+                    @close="closeAddItemModal"
                 />
             </template>
         </div>
@@ -442,11 +440,13 @@ import ChinaAddressCascader from '@/components/common/ChinaAddressCascader.vue';
 import AddressCascader from '@/components/common/AddressCascader.vue';
 import ItemTable from '@/components/table/ItemTable.vue'
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
+import AddItemModal from './components/AddItemModal.vue';
 import { get } from 'lodash';
 
 export default {
     name: 'RepairEdit',
-    components: { ChinaAddressCascader, AddressCascader, SimpleImageEmpty, ItemTable, ItemSelect },
+    components: { ChinaAddressCascader, AddressCascader, SimpleImageEmpty, ItemTable, ItemSelect, CategoryTreeSelect, AddItemModal },
     props: {},
     data() {
         return {
@@ -591,7 +591,6 @@ export default {
                     count: 0
                 },
             ],
-            vehicleGroupList: [],
             itemVehicleTableData: [],
             question_desc: undefined,
             uploadModalShow: false, // 上传文件弹框
@@ -639,7 +638,6 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
-            disabledChecked: [], // 传给上传配件选择商品中哪些不选中的
         };
     },
     watch: {},
@@ -740,13 +738,12 @@ export default {
         handleCancel() {
 
         },
+        // 选择故障判断是否对应多个商品
         differentCheckChange(checkout) {
-            console.log('e', e);
-            checkout.forEach(item => {
-                if(item.count) {
-                    this.selectAllItemModalShow = true
-                }
-            })
+            console.log('checkout1', checkout);
+            if(checkout[checkout.length - 1].count) {
+                this.handleSelectItemModal();
+            }
         },
         handleSelectItemModal() {
             this.selectItemModalShow = true
@@ -794,13 +791,23 @@ export default {
                 },
             ]
         },
+        handleSelectAllItemModal() {
+            this.selectAllItemModalShow = true
+        },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
+            if(this.selectItemIds.length) {
+                this.$message.success(this.$t(/*添加成功*/'pop_up.add'));
+            }
+            this.closeAddItemModal();
         },
         handleSelectItemSubmit() {
             this.selectItemModalShow = false
+        },
+        closeAddItemModal() {
+            this.selectAllItemModalShow = false
         },
         handleClickChange() {
 
@@ -930,7 +937,7 @@ export default {
                 vehicle_group_list: [
                     {
                         model: "",
-                        failure_type: 1,
+                        // failure_type: 1,
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000007",
@@ -991,7 +998,7 @@ export default {
                     },
                     {
                         model: "EK3",
-                        failure_type: 1,
+                        // failure_type: 1,
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000009",
@@ -1044,6 +1051,9 @@ export default {
             this.itemTableDetail.executing_number = res.executing_number
             this.itemTableDetail.special_number = res.special_number
             this.vehicleGroupList = res.vehicle_group_list
+            this.vehicleGroupList.forEach(item => {
+                item.failure_type = 1
+            })
         },
         handleDeleteItemTable() {
             let _this = this;
@@ -1063,7 +1073,9 @@ export default {
             let duplicates = this.uidList.length - new Set(this.uidList).size;
             this.form.vehicle_no = undefined
             console.log('uidList', this.uidList);
-            this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
+            if(duplicates) {
+                this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
+            }
         },
         /** 获取 商品爆炸图 */
         getItemExploreList() {
@@ -1356,6 +1368,7 @@ export default {
         min-height: 650px;
         background-color: #FFF;
         padding: 0 20px 20px 0px;
+        margin-bottom: 60px;
         box-sizing: border-box;
 
         .item-table-container {

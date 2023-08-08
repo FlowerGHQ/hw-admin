@@ -204,14 +204,14 @@ const apiList = {
         detailByUid: ['PostJson', 'transfer-order/detail-by-uid'], // 取消调货单
     },
     Repair: { // 维修单
-        list: ['PostJson', 'repair/list'], // 列表
+        list: ['PostJson', 'repair-order/list'], // 列表
 	    create: ['PostJson', 'repair-order/save'], // 新建工单
 	    hand: ['PostJson', 'repair-order/hand'],
-        detail: ['PostJson', 'repair/detail'], // 工单详情
+        detail: ['PostJson', 'repair-order/detail'], // 工单详情
 	    check: ['PostJson', 'repair-order/check'], // 确认
 	    audit: ['PostJson', 'repair-order/audit'], // 审批
 	    delete: ['PostJson', 'repair-order/delete'], // 审批
-        statusList: ['PostJson', 'repair/status-list'], // 保存
+        statusList: ['PostJson', 'repair-order/status-list'], // 保存
 	    repair: ['PostJson', 'repair-order/repair'], // 维修结束
 	    secondDoor: ['PostJson', 'repair-order/second-door'], // 二次上门
 	    settlement: ['PostJson', 'repair-order/settlement'], // 结算
@@ -219,11 +219,12 @@ const apiList = {
 	    update: ['PostJson', 'repair-order/update'], // 维修结束
 	    post: ['PostJson', 'repair-order/post-for-transfer'], // 增加快递
 	    export: ['PostJson', 'repair-order/export-repair-order-record'], // 导出
-        detailByUid: ['PostJson', 'repair/detail-by-uid'],
+        detailByUid: ['PostJson', 'repair-order/detail-by-uid'],
         pay: ['PostJson', 'repair-order/pay'],
         stock: ['PostJson', 'repair-order/save-to-invoice'], //入库
 	    remark: ['PostJson', 'repair-order/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
+        saveVehicleList: ['PostJson', 'repair-order/vehicle/list']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
