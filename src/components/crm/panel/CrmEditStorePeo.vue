@@ -13,7 +13,7 @@
                 {{ $t(title) }}
             </template>
             <template #bodyCell="{ column, text, record }">
-                <!--                        <template v-if="column.key === 'detail'">
+                <!--  <template v-if="column.key === 'detail'">
                                                 <a-tooltip placement="top" :title='text'>
                                                      <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                                                 </a-tooltip>
@@ -44,7 +44,14 @@
                 </template>
             </template>
         </a-table>
-        <addStorePeo v-if="isShow" :isShow="isShow" @Cancel="addStorePeoClose" :isMan="true" @save="saveMan" />
+
+        <div class="paging-container" v-if="!isMan">
+            <a-pagination v-model:current="currPage" :page-size="pageSize" :total="total" show-quick-jumper
+                show-size-changer show-less-items :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')"
+                :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
+                @showSizeChange="pageSizeChange" />
+        </div>
+        <addStorePeo v-if="isShow" :isShow="isShow" @Cancel="addStorePeoClose" :isMan="isMan" @save="saveMan" />
     </div>
 </template>
 <script>
@@ -65,11 +72,20 @@ export default {
             type: Number,
             default: 0
         },
+        // 是否是：店长列表展示（添加店长）
+        isMan: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
             isShow: false,
-            manList: []
+            manList: [],
+
+            currPage: 1,
+            pageSize: 20,
+            total: 0,
         }
     },
     watch: {
@@ -78,13 +94,39 @@ export default {
             deep: true,
             immediate: true,
             handler(value) {
-                if(value.length){
-                    this.$emit('userid',value[0].id)
-                }else {
-                    this.$emit('userid','')
+                if (value) {
+                    this.$emit('userid', value[0]?.id)
+                } else {
+                    this.$emit('userid', '')
                 }
+                /* if (oldValue === newValue) {
+                    this.currPage = 1;
+                    this.pageSize = 20;
+                } */
             }
-        }
+        },
+        id(value) {
+            if (value) {
+                console.log('id', this.id);
+                this.getTableData();
+            }
+        },
+        $route: {
+            deep: true,
+            immediate: true,
+            handler() {
+                // 这两句刷新页面的时候，页数在之前的页数
+                this.currPage = Core.Data.getItem("currPage")
+                    ? Core.Data.getItem("currPage")
+                    : 1;
+                this.pageSize = Core.Data.getItem("pageSize")
+                    ? Core.Data.getItem("pageSize")
+                    : 20;
+                // this.getTableData();
+                // this.handleSearchReset(false);
+                // this.getUserData();
+            },
+        },
     },
     computed: {
         tableColumns() {
@@ -139,12 +181,12 @@ export default {
                         }
                     })
                     window.open(routeUrl.href, '_self') */
-                    if (!this.id) {
-                        this.manList = [];
-                    } else {
-                        // 编辑页面-请求移出店长
-                        console.log('请求移出店长');
-                    }
+                    /*  if (!this.id) { */
+                    this.manList = [];
+                    /*  } else {
+                         // 编辑页面-请求移出店长
+                         console.log('请求移出店长');
+                     } */
                     break;
                 case 'detail':    // 详情
                     // routeUrl = this.$router.resolve({
@@ -155,6 +197,41 @@ export default {
                     break;
             }
         },
+
+        // 分页
+        pageChange(curr) {  // 页码改变
+            console.log('pageChange-------', curr);
+            this.currPage = curr;
+            this.getTableData();
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size--------:', current, size)
+            this.pageSize = size;
+            this.getTableData();
+        },
+        getTableData() {
+
+            let type;
+            this.isMan ? type = 4 : type = '';
+            Core.Api.RETAIL.storeUserList({
+                storeId: this.id,
+                type,
+                page: this.currPage,
+                page_size: this.pageSize,
+            })
+                .then((res) => {
+                    console.log("storeUserList res:", res);
+                    this.total = res.count;
+                    this.manList = res.list;
+
+                })
+                .catch((err) => {
+                    console.log("storeUserList err:", err);
+                })
+                .finally(() => {
+
+                });
+        }
     }
 
 }

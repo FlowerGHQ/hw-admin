@@ -1,5 +1,6 @@
 <template>
     <div id="store-edit">
+        <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
         <div class="edit-container">
             <div class="title-container">
                 <div class="title-area">{{ form.id ? $t('crm_st.edit_st') : $t('crm_st.add_st') }}</div>
@@ -72,7 +73,8 @@
                     <div class="form-item required">
                         <div class="key">{{ $t('crm_c.address') }}：</div>
                         <div class="value">
-                            <China2Address @search="handleOtherSearch" ref='CountryCascader' />
+                            <China2Address @search="handleOtherSearch" :defArea="[form.province, form.city]"
+                                ref='CountryCascader' />
                         </div>
                     </div>
 
@@ -197,7 +199,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.longitude') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.localtio.longitude" :placeholder="$t('def.input')" />
+                            <a-input v-model:value="form.localtion.longitude" :placeholder="$t('def.input')" />
                         </div>
                     </div>
 
@@ -206,7 +208,7 @@
                     <div class="form-item ">
                         <div class="key">{{ $t('crm_st.latitude') }}：</div>
                         <div class="value">
-                            <a-input v-model:value="form.localtio.latitude" :placeholder="$t('def.input')" />
+                            <a-input v-model:value="form.localtion.latitude" :placeholder="$t('def.input')" />
                         </div>
                     </div>
 
@@ -221,7 +223,7 @@
 
                 <div class="form-content">
                     <!-- 门店人员-表格 -->
-                    <CrmEditStorePeo  :id="form.id" @userid="getUserId"/>
+                    <CrmEditStorePeo :id="form.id" :isMan="true" @userid="getUserId" />
                 </div>
             </div>
         </div>
@@ -254,14 +256,14 @@ export default {
                 business_time: '',
                 contact_email: '',
                 contact_phone: '',
-
+                group_id: '',
                 square: '',// 面积
                 ground_park_count: '',   // 地上停车位数量
                 underground_park_count: '', //地下停车位数量
                 ground_charge_pile_count: '',  // 地上充电桩数量
                 underground_charge_pile_count: '', //地下充电桩数量
 
-                localtio: {
+                localtion: {
                     latitude: '',// 纬度
                     longitude: '',// 经度
                 },
@@ -290,6 +292,7 @@ export default {
             trackRecordForm: {
                 image_attachment_list: [],
             },
+            loading: false,
 
         }
     },
@@ -299,22 +302,26 @@ export default {
     computed: {
         // 总充电桩数
         all_charge_pile_count() {
-            return this.form.ground_charge_pile_count +  this.form.underground_charge_pile_count
+            return this.form.ground_charge_pile_count + this.form.underground_charge_pile_count
         },
         // 总车位数
         all_park_count() {
 
-            return this.form.ground_park_count +  this.form.underground_park_count
+            return this.form.ground_park_count + this.form.underground_park_count
         },
         lang() {
             return this.$store.state.lang
         },
     },
     components: {
-        China2Address,CrmEditStorePeo
+        China2Address, CrmEditStorePeo
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0;
+        console.log('this.form.id-----------', this.form.id);
+        if (this.form.id) {
+            this.getStoreDetail();
+        }
         this.getRegionsData();
     },
     methods: {
@@ -389,7 +396,8 @@ export default {
             let time = { time: { morning: { begin: "", end: "" }, afternoon: { begin: "", end: "" } } }
             time.time.morning.begin = form.business_time[0];
             time.time.afternoon.end = form.business_time[1];
-            form.business_time = time;
+            form.business_time = JSON.stringify(time);
+            form.localtion = JSON.stringify(form.localtion);
 
             if (this.trackRecordForm.image_attachment_list.length) {
                 form.logo = this.trackRecordForm.image_attachment_list[0].path;
@@ -422,11 +430,11 @@ export default {
 
             Core.Api.RETAIL.editStore(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'))
-                console.log('保存完成',res);
+                console.log('保存完成', res);
             }).catch(err => {
                 console.log('editStore err:', err)
             }).finally(() => {
-                
+
             })
         },
 
@@ -436,8 +444,38 @@ export default {
                 this.form[key] = params[key]
             }
         },
-        getUserId(data){
+        getUserId(data) {
             this.form.user_id = data;
+        },
+
+        // 获取门店详情
+        getStoreDetail() {
+            this.loading = true;
+            Core.Api.RETAIL.storeDetail({
+                id: this.form.id,
+            }).then((res) => {
+                console.log("getStoreDetail res:", res);
+                let d = res;
+                d.open_time = d.open_time ? dayjs.unix(d.open_time).format('YYYY-MM-DD') : undefined;
+                d.business_time = d.business_time ? [JSON.parse(d.business_time).time.morning.begin, JSON.parse(d.business_time).time.afternoon.end] : undefined;
+                d.localtion = d.localtion ? JSON.parse(d.localtion) : {
+                    latitude: '',// 纬度
+                    longitude: '',// 经度
+                };
+                for (const key in this.form) {
+                    if (d[key] !== 0) {
+                        this.form[key] = d[key]
+                    } else {
+                        this.form[key] = undefined
+                    }
+                }
+                console.log('this.form', this.form, 'd', d);
+
+            }).catch((err) => {
+                console.log("getStoreDetail err:", err);
+            }).finally(() => {
+                this.loading = false;
+            })
         }
     }
 

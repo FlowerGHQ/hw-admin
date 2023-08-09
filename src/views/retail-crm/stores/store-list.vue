@@ -159,19 +159,18 @@
                                 $t("def.edit")
                             }}</a-button>
 
-                            <a-button type="link" danger @click="routerChange('delete', record)">{{
+                            <a-button type="link" danger @click="handleDelete(record.id)">{{
                                 $t("def.delete")
                             }}</a-button>
                         </template>
                     </template>
                 </a-table>
             </div>
-
             <div class="paging-container">
                 <a-pagination v-model:current="currPage" :page-size="pageSize" :total="total" show-quick-jumper
-                    show-size-changer show-less-items :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
-                        " :hide-on-single-page="false" :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
-                    @showSizeChange="pageSizeChange" />
+                    show-size-changer show-less-items
+                    :show-total="(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')" :hide-on-single-page="false"
+                    :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange" @showSizeChange="pageSizeChange" />
             </div>
 
         </div>
@@ -216,6 +215,7 @@ export default {
 
             currPage: 1,
             pageSize: 20,
+            total: 0,
             defAddr: []
         }
     },
@@ -338,7 +338,7 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = "";
             switch (type) {
-                // 创建门店
+                // 创建（编辑）门店
                 case "edit":
 
                     routeUrl = this.$router.resolve({
@@ -359,13 +359,6 @@ export default {
                     window.open(routeUrl.href, "_blank");
                     break;
                 /*  
-                 case "edit": // 编辑
-                     routeUrl = this.$router.resolve({
-                         path: "/crm-order-income/order-income-edit",
-                         query: { id: item.id },
-                     });
-                     window.open(routeUrl.href, "_blank");
-                     break;
                  case "detail-order": 
                      {
                          routeUrl = this.$router.resolve({
@@ -379,29 +372,19 @@ export default {
         },
         handleSearch() {
             console.log('this.sea', this.searchForm);
-            this.getTableData();
-        },
-        handleOtherSearch(params) {
-            console.log('params---------store-list', params);
-            for (const key in params) {
-                this.searchForm[key] = params[key]
-            }
-        },
-        /*    
-        handleOtherSearch(params) { // 大洲/国家 搜索
-            for (const key in params) {
-                this.searchForm[key] = params[key]
-            }
             this.pageChange(1);
         },
-        
-        */
+        handleOtherSearch(params) {
+            for (const key in params) {
+                this.searchForm[key] = params[key]
+            }
+        },
         handleSearchReset() {
             this.ispop = false;
             // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.CountryCascader.handleReset();
-            this.getTableData();
+            // this.getTableData();
             this.pageChange(1);
         },
         getTableData() {
@@ -414,6 +397,7 @@ export default {
             })
                 .then((res) => {
                     console.log("getTableData res:", res);
+                    this.total = res.count;
                     this.tableData = res.list;
                     /*    this.total = res.count;
                        this.tableData = res.list;
@@ -474,10 +458,11 @@ export default {
             this.$confirm({
                 title: this.$t("pop_up.sure_delete"),
                 okText: this.$t("def.sure"),
-                okType: "danger",
+                // okType: "danger",
                 cancelText: this.$t("def.cancel"),
                 onOk() {
-                    Core.Api.Order.delete({ id })
+                    console.log('确定删除');
+                    Core.Api.RETAIL.deleteStore({ id })
                         .then(() => {
                             _this.$message.success(
                                 _this.$t("pop_up.delete_success")
@@ -488,7 +473,7 @@ export default {
                             console.log("handleDelete err", err);
                         });
                 },
-            });
+            })
         },
 
         // 城市选择
@@ -505,10 +490,23 @@ export default {
         triangleClick() {
             this.ispop = true;
         },
+        // 切换搜索名称类型（门店、店铺）
         changeSearch(num) {
             this.ispop = false;
             this.searchForm.search_type = num;
-        }
+        },
+        // 分页
+        pageChange(curr) {  // 页码改变
+            console.log('pageChange-------', curr);
+            this.currPage = curr
+            this.getTableData();
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size--------:', current, size)
+            this.pageSize = size
+            this.getTableData();
+        },
+
     },
 
 }

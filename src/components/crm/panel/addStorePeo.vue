@@ -132,7 +132,7 @@ export default {
         // 人员list
         userListFetch(params = {}, isSearch = false) {
             // Core.Api.CRMCustomer.list 测试接口    
-            Core.Api.RETAIL.externalList({
+            Core.Api.RETAIL.personList({
                 key: this.userName,
                 page_size: this.pagination.page_size,
                 page: this.pagination.page,

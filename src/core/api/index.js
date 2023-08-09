@@ -814,13 +814,18 @@ const apiList = {
     // 国内零售模块 【零售相关的接口都得放这里面, 调用的接口前缀是 crm/1/.........】
     RETAIL: {
         // 门店管理接口
-        storeList: ['PostJson', 'store/list'], //门店-门店列表
-        editStore:['PostJson', 'store/save'],
+        storeList: ['PostJson', 'store/list'],              // 门店-门店列表
+        editStore:['PostJson', 'store/save'],               // 编辑-创建门店
+        deleteStore:['PostJson','store/delete'],            // 删除-门店
+        storeDetail:['Get','store/detail'],                 // 门店-详情
+        storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
         // 区域管理接口          
-        regionsList: ['PostJson', 'group/city/list'], //门店-区域列表/crm/1/store/list
-
+        regionsList: ['PostJson', 'group/city/list'],       //门店-区域列表/crm/1/store/list
+        deleteRegion:['PostJson', 'group/city/delete'],     //删除区域
+        detailRegion:['PostJson', 'group/city/detail'],     //区域-详情
+        saveRegion:['PostJson', 'group/city/save'],         //区域-更新
         // 人员管理接口
-        personList:['PostJson', 'user/list'],  // 人员列表
+        personList:['PostJson', 'user/list'],  // 人员列表（添加店长可用）
         deletePersonList:['PostJson', 'user/delete'],  // 删除人员
         externalList: ['PostJson', 'out/user/list'],  // 人员列表(外部【飞书】)
         addPerson: ['PostJson', 'out/user/save'],  // 添加人员(外部【飞书】)

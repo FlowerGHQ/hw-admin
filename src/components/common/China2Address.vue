@@ -60,7 +60,7 @@ export default {
             })
         },
         handleChange(value, selectedOptions) {
-            console.log('handleChange value:', value, 'selectedOptions', selectedOptions)
+            console.log('handleChange value:', value, 'selectedOptions', selectedOptions,'this.selectCode',this.selectCode)
             this.selectItems = selectedOptions
             if (value?.length) {
 
