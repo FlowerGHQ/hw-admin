@@ -33,7 +33,12 @@
                         <div class="key">{{ $t("retail.working_condition") }}：</div>                        
                         <div class="value">
                             <a-select v-model:value="searchForm.store_user_status" class="select-w">
-                                <a-select-option v-for="(item,key) in Core.Const.RETAIL.Working_condition" :value="item.key">
+                                <a-select-option 
+                                    v-for="(item,key) in Core.Const.RETAIL.Working_condition" 
+                                    :key="item.key"
+                                    :value="item.key"
+                                    :disabled="item.key === 3"
+                                    >
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
                             </a-select>
@@ -71,11 +76,13 @@
                                     class="select-w"
                                     v-model:value="searchForm.group_id"
                                     :placeholder="$t('def.select')"                                    
+                                    @select="allChange"
+                                    allowClear
                                 >                    
                                     <a-select-option 
                                         v-for="item of regionsList" 
                                         :key="item.id" 
-                                        :value="item.id"
+                                        :value="item.id"                                        
                                     >
                                         {{ item.name}}
                                     </a-select-option>
@@ -92,7 +99,20 @@
                         >
                             <div class="key">{{ $t("retail.home_city") }}：</div>                        
                             <div class="value">                              
-                                <China2Address class="select-w" @search="handleOtherSearch" ref='CountryCascader' />
+                                <a-select
+                                    class="select-w"
+                                    v-model:value="searchForm.city"
+                                    :placeholder="$t('retail.p_s_region')"
+                                    allowClear
+                                >                    
+                                    <a-select-option 
+                                        v-for="item of cityList" 
+                                        :key="item.city" 
+                                        :value="item.city"                                        
+                                    >
+                                        {{ item.city}}
+                                    </a-select-option>
+                                </a-select>
                             </div>
                         </a-col>
                         <!-- 所属门店 -->
@@ -108,7 +128,8 @@
                                 <a-select
                                     class="select-w"
                                     v-model:value="searchForm.store_id"
-                                    :placeholder="$t('def.select')"                                    
+                                    :placeholder="$t('def.select')"
+                                    allowClear
                                 >                    
                                     <a-select-option
                                         v-for="item of storeList"
@@ -230,6 +251,7 @@ const isShow = ref(false)
 
 
 const regionsList = ref([]) // 所属区域
+const cityList = ref([])  // 城市list
 const storeList = ref([])  // 门店list
 const tableData = ref([]);
 const channelPagination = ref({
@@ -423,6 +445,14 @@ const onUpdate = () => {
 // 所属城市选择框
 const handleOtherSearch = (obj) => {
     console.log("输出", obj);
+}
+// 所属大区 select
+const allChange = () => {
+    const result = regionsList.value.find(el => {
+        return el.id == searchForm.value.group_id
+    })  
+    // console.log("输出结果", result);
+    cityList.value = result?.city_list || []
 }
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
