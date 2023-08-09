@@ -132,7 +132,7 @@
                                     record.mileage
                                 }}</span>{{ $t(/*公里*/'r.km') }}<i class="icon i_edit"
                                     @click="handleEditWarrantyPeriod(record)" style="cursor: pointer; margin-left: 4px;" />
-                                <div class="tag">
+                                <div class="tag orange">
                                     {{ $t(/*按商品分类*/'wt.classification_commodity') }}
                                 </div>
                             </div>
@@ -527,10 +527,16 @@ export default {
         line-height: 22px;
         text-align: center;
         font-size: 12px;
-        color: #00cc33;
-        background-color: #d9f7e1;
-        border-radius: 12px;
+        border-radius: 2px;
+        border: 1px solid #3491FA;
+        background-color: #E8F7FF;
+        color: #3491FA;
         margin-left: 4px;
+        &.orange {
+            color: #F77234;
+            border: 1px solid #F77234;
+            background-color: #FFF3E8;
+        }
     }
 }
 
