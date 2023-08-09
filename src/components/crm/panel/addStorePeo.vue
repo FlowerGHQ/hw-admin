@@ -118,12 +118,40 @@ export default {
     methods: {
 
         handleOk() {
-
+            console.log('this.selectList', this.selectList);
             const selectFilter = this.selectList.map(el => {
                 return el.id
             })
-            console.log("selectFilter 过滤出来的", selectFilter);
-            this.saveFetch({ outer_user_id_list: selectFilter })
+            console.log("selectFilter 过滤出来的", selectFilter, this.selectList);
+            if (this.isMan) {
+                // console.log('保存店长',this.selectList);
+                let arr = [];
+                arr = this.selectList.map($1 => {
+                    return {
+                        ...$1,
+                        user_name: $1.name,
+                        status: $1.store_user_status,
+                        user_phone:$1.phone,
+                        type:$1.store_user_type,
+                    }
+                })
+                this.$emit('save', arr)
+                // this.userListFetch() // 更新列表
+            } else {
+                /*  Core.Api.RETAIL.addStoreUser({
+                     ...params
+                 }).then(res => {
+                     // proxy.$message.success(proxy.$t('pop_up.save_success'))
+                     this.handleCancel()
+                     // this.userListFetch() // 更新列表
+                     console.log("保存人员成功", res);
+                 }).catch(err => {
+                     console.log("保存人员失败", err);
+                 }) */
+                this.$emit('save', selectFilter)
+            }
+            this.handleCancel()
+            // this.saveFetch({ outer_user_id_list: selectFilter })
         },
         handleCancel() {
             this.$emit('Cancel', false)
@@ -175,27 +203,6 @@ export default {
         inputEvent() {
             this.userListFetch({ page: 1 }, true)
         },
-        // 保存接口
-        saveFetch(params = {}) {
-            if (this.isMan) {
-                console.log('保存店长',this.selectList);
-                this.$emit('save',this.selectList)
-                this.handleCancel()
-                // this.userListFetch() // 更新列表
-            } else {
-                Core.Api.RETAIL.addPerson({
-                    ...params
-                }).then(res => {
-                    // proxy.$message.success(proxy.$t('pop_up.save_success'))
-                    this.handleCancel()
-                    // this.userListFetch() // 更新列表
-                    console.log("保存成功", res);
-                }).catch(err => {
-                    console.log("保存失败", err);
-                })
-            }
-
-        }
     }
 }
 

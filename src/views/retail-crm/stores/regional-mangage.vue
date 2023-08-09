@@ -95,7 +95,7 @@ export default {
     data() {
         return {
             searchName: '',//v-model
-            searchFrom:'',
+            searchFrom: '',
             // 表格
             tableData: [],
             currPage: 1,
@@ -156,30 +156,34 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize,
             }).then((res) => {
-                    console.log("getTableData res:", res);
-                    /*   this.total = res.count;
-                      this.tableData = res.list;
-                      this.tableData.map((item, index) => {
-                          switch (item.currency) {
-                              case "usd":
-                                  item.mType = "$";
-                                  break;
-                              case "eur":
-                                  item.mType = "€";
-                                  break;
-                          }
-                      });
-                      console.log(
-                          "🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData",
-                          this.tableData
-                      ); */
-                })
+                console.log("getTableData res:", res);
+                this.total = res.count;
+                this.tableData = res.list;
+                /*   this.total = res.count;
+                  this.tableData = res.list;
+                  this.tableData.map((item, index) => {
+                      switch (item.currency) {
+                          case "usd":
+                              item.mType = "$";
+                              break;
+                          case "eur":
+                              item.mType = "€";
+                              break;
+                      }
+                  });
+                  console.log(
+                      "🚀 ~ file: order-list.vue ~ line 229 ~ getTableData ~ this.tableData",
+                      this.tableData
+                  ); */
+            })
                 .catch((err) => {
                     console.log("getTableData err:", err);
                 })
         },
         // 搜索区域城市
         searchCity() {
+            
+            this.pageChange(1);
             /*  console.log('搜索区域城市', this.searchName);
              Core.Api.CRMStores.regionsList({
                  key:this.searchName,
@@ -193,6 +197,18 @@ export default {
                  .catch((err) => {
                      console.log("getTableData err:", err);
                  }) */
+        },
+        
+        // 分页
+        pageChange(curr) {  // 页码改变
+            console.log('pageChange-------', curr);
+            this.currPage = curr
+            this.getTableData();
+        },
+        pageSizeChange(current, size) {  // 页码尺寸改变
+            console.log('pageSizeChange size--------:', current, size)
+            this.pageSize = size
+            this.getTableData();
         },
 
     }

@@ -105,7 +105,7 @@
         <div class="d-bottom">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="sto_person" :tab="$t('s.sto_person')">
-                    <CrmEditStorePeo />
+                    <CrmEditStorePeo :id="id"/>
                 </a-tab-pane>
                 <a-tab-pane key="sto_car" :tab="$t('s.sto_car')">
                     <ShopCarList />
@@ -126,14 +126,24 @@
 
 <script setup>
 
-import { ref } from 'vue';
+import { ref, onMounted, computed  } from 'vue';
+import { useRoute } from 'vue-router'
 import CrmEditStorePeo from '@/components/crm/panel/CrmEditStorePeo.vue';
 import ShopCarList from './components/shop-car-list.vue';
 import ContentInfo from './components/content-info.vue';
 import UploadLicenses from './components/upload-licenses.vue';
 import ShiftCon from './components/ShiftCon.vue';
 
-const activeKey = ref('sto_car')
+const route = useRoute()
+const activeKey = ref('sto_person')
+const id = ref('')
+
+onMounted(() => {
+    // getWarehouseDetail()
+    id.value =  Number(route.query.id) || 0;
+})
+
+
 </script>
 
 <style lang="less" scoped>

@@ -819,6 +819,8 @@ const apiList = {
         deleteStore:['PostJson','store/delete'],            // 删除-门店
         storeDetail:['Get','store/detail'],                 // 门店-详情
         storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
+        addStoreUser:['PostJson','store/user/add'],         // 门店-添加人员
+        deleteStoreUser:['PostJson','store/user/delete'],         // 门店-添加人员
         // 区域管理接口          
         regionsList: ['PostJson', 'group/city/list'],       //门店-区域列表/crm/1/store/list
         deleteRegion:['PostJson', 'group/city/delete'],     //删除区域
