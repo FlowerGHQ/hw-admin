@@ -1,8 +1,13 @@
 <template>
     <div class="personnel-detail" >
         <div class="d-top">
-            <div class="title">
-                {{ $t("retail.personnel_list")}} 
+            <div class="header">
+                <div class="title">
+                    {{ $t("retail.personnel_list")}} 
+                </div>
+                <div class="btn">
+                    <a-button type="primary" @click="onBtn">{{ $t('retail.save') }}</a-button>
+                </div>
             </div>
             <div class="container">
                 <div class="d-img">
@@ -44,8 +49,7 @@
                             <div class="value">
                                 <a-input
                                     v-model:value="fill_out.email" 
-                                    :placeholder="$t('def.select')"
-                                    @blur="allChange"                                    
+                                    :placeholder="$t('def.select')"                                                                       
                                     />
                             </div>
                         </a-col>
@@ -55,8 +59,7 @@
                             <span class="value">
                                 <a-radio-group
                                     v-model:value="fill_out.gender" 
-                                    :placeholder="$t('def.select')"
-                                    @change="allChange"
+                                    :placeholder="$t('def.select')"                                    
                                     >
                                     <a-radio v-for="item in Core.Const.CRM_ORDER.SEX" :value="item.key">
                                         {{ item[$i18n.locale] }}
@@ -68,7 +71,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.age')}}：</span>
                             <span class="value">
-                                <a-input v-model:value="fill_out.age" @blur="allChange" :placeholder="$t('def.select')"/>
+                                <a-input v-model:value="fill_out.age" :placeholder="$t('def.select')"/>
                             </span>
                         </a-col>                        
                         <!-- 工号 -->
@@ -99,7 +102,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.workwear_size')}}：</span>
                             <span class="value">
-                                <a-select v-model:value="fill_out.work_wear_size" @change="allChange"  class="select-w">
+                                <a-select v-model:value="fill_out.work_wear_size"  class="select-w">
                                     <a-select-option 
                                         v-for="item in Core.Const.RETAIL.Outfit_Size" 
                                         :key="item.key" 
@@ -114,10 +117,11 @@
                 </div>
             </div>
         </div>
+        <!-- 人员归属 -->
         <template v-for="(item, index) in fill_out.store_user_list" :key="item.id">
             <div class="d-center m-t-16">
                 <div class="title">
-                    {{ $t("retail.personnel_list")}}{{ index + 1 }}
+                    {{ $t("retail.personnel_attribution")}}{{ index + 1 }}
                 </div>
                 <div class="container">
                     <a-row class="row-detail">
@@ -125,11 +129,12 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item m-t-16">
                             <span class="key key-form-86909C">{{ $t("retail.working_condition")}}：</span>
                             <span class="value">
-                                <a-select v-model:value="item.status" class="select-w" @change="allChange">
+                                <a-select v-model:value="item.status" class="select-w">
                                     <a-select-option 
                                         v-for="(item,index) in Core.Const.RETAIL.Working_condition" 
                                         :key="index"
-                                        :value="item.key" 
+                                        :value="item.key"
+                                        :disabled="item.key === 3"
                                         >
                                         {{ item[$i18n.locale] }}
                                     </a-select-option>
@@ -147,7 +152,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.job')}}：</span>
                             <span class="value">
-                                <a-select v-model:value="item.type" class="select-w"  @change="allChange">
+                                <a-select v-model:value="item.type" class="select-w">
                                     <a-select-option 
                                         v-for="item in Core.Const.RETAIL.Job" 
                                         :value="item.key" 
@@ -173,13 +178,7 @@
                                         :value="item.id"
                                     >
                                         {{ item.name}}
-                                    </a-select-option>
-                                    <a-select-option 
-                                        v-for="item of 1" 
-                                        :key="2"                                        
-                                    >
-                                        背景
-                                    </a-select-option>
+                                    </a-select-option>                            
                                 </a-select>
                             </span>
                         </a-col>
@@ -187,7 +186,11 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.home_city')}}：</span>
                             <span class="value">
-                                <a-select v-model:value="item.city" class="select-w" @change="allChange">
+                                <a-select 
+                                    v-model:value="item.city" 
+                                    class="select-w"
+                                    :placeholder="$t('retail.p_s_region')"
+                                    >
                                     <a-select-option 
                                         v-for="$1 in item.cityList"                                         
                                         :value="$1.city"
@@ -319,7 +322,11 @@ const personDetailFetch = (params = {}) => {
                 // 默认需要给个人归属有个填信息
                 fill_out.value.store_user_list = [{}]
             }else{
-                fill_out.value.store_user_list.forEach($1 => {                    
+                fill_out.value.store_user_list.forEach($1 => {
+                    // 为了让 placeholder 显示
+                    if($1.city == ""){
+                        $1.city = undefined
+                    }                   
                     const result = regionsList.value.find($2 => {
                         return $2.id == $1.group_id
                     })
@@ -408,9 +415,12 @@ const allChange = (type, item) => {
             let arr = fill_out.value.role_id_list
             fill_out.value.role_id_list = [...new Set(arr.map(item => item.id))]
             break;
-    }
-    console.log("更新 fill_out.value", fill_out.value);
-    // personUpdateFetch(fill_out.value)
+    }    
+}
+// 按钮
+const onBtn = () => {    
+    console.log("最后结果 fill_out.value", fill_out.value);
+    personUpdateFetch(fill_out.value)
 }
 </script>
 
@@ -421,15 +431,23 @@ const allChange = (type, item) => {
     font-family: PingFang SC;
     display: flex;
     flex-direction: column;
+
+    .header{
+        display: flex;
+        justify-content: space-between;
+        .title{
+            color: var(--color-text-5, #1D2129);            
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 600;
+            line-height: normal;
+            margin-bottom: 16px;
+        }  
+        .btn{
+
+        }     
+    }
      
-    .title{
-        color: var(--color-text-5, #1D2129);            
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        margin-bottom: 16px;
-    }       
 
     .d-top{
         width: 100%;
