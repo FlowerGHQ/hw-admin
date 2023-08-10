@@ -2548,6 +2548,11 @@ const messages = {
             delete_success: '删除成功',
             delete_error: '删除失败',
             p_s_region: '请先选择大区',  // Please select a region first
+
+            add_content:'添加内容',
+            directory:'目录',
+            add_directory:'添加目录',
+
         }
     },
 
@@ -4981,6 +4986,10 @@ const messages = {
             delete_success:"Delete Success",
             delete_error: 'Delete Error',
             p_s_region: 'Please select a region first',
+
+            add_content:'Add Content',
+            directory:'Directory',
+            add_directory:'Add Directory',
         }
     },
 }
