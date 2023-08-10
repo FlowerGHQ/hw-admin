@@ -2,11 +2,11 @@
     <div class="list-container">
         <!-- 标题 -->
         <div class="title">
-            <span>{{ $t('crm_dash.business_analysis') }}</span>
+            <span>来源</span>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="NewBoStatisticsChartId" class="chart" ref='NewBoStatisticsChartId'></div>
+            <div id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
         </div>
     </div>
 </template>
@@ -25,6 +25,10 @@ export default {
             type: Object,
             default: () => { }
         },
+        title: {
+            type: String,
+            default: '来源'
+        }
     },
     data() {
         return {
@@ -64,7 +68,7 @@ export default {
         this.purchaseIntentStatistics()
     },
     beforeUnmount() {
-        this.$refs.NewBoStatisticsChartId.innerHTML = ''
+        this.$refs.ChannelRingChartId.innerHTML = ''
     },
     methods: {
         // 点击tab
@@ -79,9 +83,9 @@ export default {
                 this.boStatisticsChart.destroy()
             }
             const chart = new Chart({
-                container: 'NewBoStatisticsChartId',
+                container: 'ChannelRingChartId',
                 autoFit: true,
-                height: 274,
+                height: 254,
             });
             // 新建一个 view 用来单独渲染Annotation
             const innerView = chart.createView();
@@ -179,7 +183,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#5b8ff9', '#5ad8a6', '#5d7092', '#f6bd16', '#6f5ef9', '#6dc8ec'])
+                .color('item', ['#056DFF', '#FFBC48', '#15BFEF', '#FB6381', '#26D0A1'])
                 .style({
                     fillOpacity: 1,
                 })
@@ -222,10 +226,10 @@ export default {
                 // this.testDriveIntentList = res.list;
                 const dv = [];
                 res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item,index) => {
+                    this.groupStatusTableData.forEach((item, index) => {
 
-                        if (index == it.status){
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count/res.total, 1,2)});
+                        if (index == it.status) {
+                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
                         }
                     })
 
@@ -239,11 +243,11 @@ export default {
                 //     { item: '已交付', count: 9, percent: 0.09 },
                 // ]
                 // const dv = []
-                // res.list.forEach(res => {
-                //     if(res.type !== 0){
-                //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                //     }
-                // })
+                res.list.forEach(res => {
+                    if (res.type !== 0) {
+                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
+                    }
+                })
                 this.drawBoStatisticsChart(dv)
 
             }).catch(err => {

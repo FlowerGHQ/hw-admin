@@ -2,11 +2,11 @@
     <div class="list-container">
         <!-- 标题 -->
         <div class="title">
-            <span>{{ $t('crm_dash.business_analysis') }}</span>
+            <span>来源</span>
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="NewBoStatisticsChartId" class="chart" ref='NewBoStatisticsChartId'></div>
+            <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
         </div>
     </div>
 </template>
@@ -25,6 +25,10 @@ export default {
             type: Object,
             default: () => { }
         },
+        title: {
+            type: String,
+            default: '来源'
+        }
     },
     data() {
         return {
@@ -64,7 +68,7 @@ export default {
         this.purchaseIntentStatistics()
     },
     beforeUnmount() {
-        this.$refs.NewBoStatisticsChartId.innerHTML = ''
+        this.$refs.ColorDistChartId.innerHTML = ''
     },
     methods: {
         // 点击tab
@@ -79,9 +83,9 @@ export default {
                 this.boStatisticsChart.destroy()
             }
             const chart = new Chart({
-                container: 'NewBoStatisticsChartId',
+                container: 'ColorDistChartId',
                 autoFit: true,
-                height: 274,
+                height: 254,
             });
             // 新建一个 view 用来单独渲染Annotation
             const innerView = chart.createView();
@@ -98,29 +102,7 @@ export default {
                 innerRadius: 0.8,
             });
             // 声明需要进行自定义图例字段： 'item'
-            chart.legend('item', {
-                position: 'bottom',                                  // 配置图例显示位置
-                custom: true,                                       // 关键字段，告诉 G2，要使用自定义的图例
-                items: data.map((obj, index) => {
-                    return {
-                        name: obj.item,                                 // 对应 itemName
-                        value: obj.percent,                             // 对应 itemValue
-                        marker: {
-                            symbol: 'circle',                             // marker 的形状
-                            style: {
-                                r: 5,                                       // marker 图形半径
-                                fill: chart.getTheme().colors10[index],     // marker 颜色，使用默认颜色，同图形对应
-                            },
-                        },                                              // marker 配置
-                    };
-                }),
-                itemValue: {
-                    style: {
-                        fill: '#999',
-                    },                                               // 配置 itemValue 样式
-                    formatter: val => `${val * 100}%`                // 格式化 itemValue 内容
-                },
-            });
+            chart.legend(false);
             // 监听 element 上状态的变化来动态更新 Annotation 信息
             chart.on('element:statechange', (ev) => {
                 const { state, stateStatus, element } = ev.gEvent.originalEvent;
@@ -179,7 +161,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#5b8ff9', '#5ad8a6', '#5d7092', '#f6bd16', '#6f5ef9', '#6dc8ec'])
+                .color('item', ['#056DFF', '#FFBC48', '#15BFEF', '#FB6381', '#26D0A1'])
                 .style({
                     fillOpacity: 1,
                 })
@@ -222,10 +204,10 @@ export default {
                 // this.testDriveIntentList = res.list;
                 const dv = [];
                 res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item,index) => {
+                    this.groupStatusTableData.forEach((item, index) => {
 
-                        if (index == it.status){
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count/res.total, 1,2)});
+                        if (index == it.status) {
+                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
                         }
                     })
 
@@ -239,11 +221,11 @@ export default {
                 //     { item: '已交付', count: 9, percent: 0.09 },
                 // ]
                 // const dv = []
-                // res.list.forEach(res => {
-                //     if(res.type !== 0){
-                //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                //     }
-                // })
+                res.list.forEach(res => {
+                    if (res.type !== 0) {
+                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
+                    }
+                })
                 this.drawBoStatisticsChart(dv)
 
             }).catch(err => {
