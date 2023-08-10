@@ -2191,6 +2191,61 @@ const routes = [
                 },
             }
         ]
+    },  
+    { // 探索
+
+        path:'/retail-explore',
+        component: Layout, 
+        redirect: '/retail-explore/file-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '探索',
+            title_en: 'Explore',
+            icon: 'i_tansuo',
+        },       
+        children: [
+            {
+                path: 'file-list',
+                name: 'fileList',
+                component: () => import('@/views/retail-crm/explore/file-list.vue'),
+                meta: {
+                    title: '文件',
+                    title_en: 'File',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },       
+            },
+            {
+                path: 'que-answer-list',
+                name: 'queAnswerList',
+                component: () => import('@/views/retail-crm/explore/que-answer-list.vue'),
+                meta: {
+                    // hidden: true,
+                    title: '问卷解答',
+                    title_en: 'Questionnaire Answers',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },
+            },
+            {
+                path: 'que-naire-list',
+                name: 'queNaireList',
+                component: () => import('@/views/retail-crm/explore/que-naire-list.vue'),
+                meta: {
+                    title: '问卷列表',
+                    title_en: 'List Of Questionnaires',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },
+            },
+            {
+                path: 'naire-edit',
+                name: 'naireEdit',
+                component: () => import('@/views/retail-crm/explore/naire-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '编辑问卷',
+                    title_en: 'Edit The Questionnaire',                    
+                },
+            }
+        ]
     },
 	{ // 系统设置
 		path: '/crm-setting',

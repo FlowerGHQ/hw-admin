@@ -1,8 +1,8 @@
 @font-face {
   font-family: "icon"; /* Project id 3000141 */
-  src: url('iconfont.woff2?t=1690856815773') format('woff2'),
-       url('iconfont.woff?t=1690856815773') format('woff'),
-       url('iconfont.ttf?t=1690856815773') format('truetype');
+  src: url('iconfont.woff2?t=1691649265942') format('woff2'),
+       url('iconfont.woff?t=1691649265942') format('woff'),
+       url('iconfont.ttf?t=1691649265942') format('truetype');
 }
 
 .icon {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.i_tansuo:before {
+  content: "\e604";
 }
 
 .i_renyuan-:before {

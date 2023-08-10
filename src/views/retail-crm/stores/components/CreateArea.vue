@@ -3,7 +3,8 @@
         <slot>{{ $t("s.create_area") }}</slot>
     </a-button>
     <template v-if="isDrawer && !showAddPop" class="modal-container">
-        <a-drawer v-model:visible="isDrawer" class="custom-class" :closable="false" placement="right">
+        <a-drawer v-model:visible="isDrawer" class="custom-class" :closable="false" placement="right"
+            :footer-style="{ textAlign: 'right' }">
             <template #title>
                 <div class="title">
                     <div>{{ $t('s.create_area') }}</div>
@@ -32,10 +33,15 @@
                 </div>
                 <div class="value">
                     <div class="add-city" @click="showAddCity">{{ $t('crm_st.add_city') }}</div>
-                       <a-tree show-line :tree-data="nowAddressList" :fieldNames="{ title: 'name', key: 'name' }">
+                    <a-tree show-line :tree-data="nowAddressList" defaultExpandAll :fieldNames="{ title: 'name', key: 'name' }">
                     </a-tree>
                 </div>
             </div>
+
+            <template #footer>
+                <!-- <a-button style="margin-right: 8px" @click="onClose">Cancel</a-button> -->
+                <a-button type="primary" @click="saveRegional">{{ $t('retail.save') }}</a-button>
+            </template>
         </a-drawer>
     </template>
     <template v-if="showAddPop">
@@ -58,7 +64,7 @@ export default {
     name: "CreateArea",
     data() {
         return {
-
+            
             isDrawer: false,
             addressOptions: '',
             showAddPop: false,
@@ -124,8 +130,8 @@ export default {
             this.addressOptions.forEach(el1 => {
                 if (el1.children.filter(el2 => this.checkedKeys.includes(el2.name)).length > 0)
                     list.push({
-                        key:el1.name,
-                        name:el1.name,
+                        key: el1.name,
+                        name: el1.name,
                         children: el1.children.filter(el2 => this.checkedKeys.includes(el2.name))
                     })
             })
@@ -241,6 +247,10 @@ export default {
             this.showAddPop = false;
             // 发送请求?
             this.checkedKeys = [...this.checkedAddCity]
+        },
+        // 保存区域编辑
+        saveRegional() {
+            
         }
 
     }
@@ -313,6 +323,7 @@ export default {
     font-style: normal;
     font-weight: 400;
     margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .aa {
