@@ -733,7 +733,10 @@ export default {
 
         },
         handleConfirm() {
-
+            this.vehicleGroupList.forEach(item => {
+                item.compensation_method = this.form.compensation_method
+            })
+            console.log('vehicleGroupList', this.vehicleGroupList);
         },
         handleCancel() {
 

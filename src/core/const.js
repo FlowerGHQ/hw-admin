@@ -31,11 +31,11 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.153:8889' // my
-        URL_POINT = 'http://10.0.0.234:8889' // yxy
+        // URL_POINT = 'http://10.0.0.234:8889' // yxy
         // URL_POINT = 'http://10.0.0.190:8889' // zy
         break;
 }
