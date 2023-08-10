@@ -393,10 +393,9 @@ export default {
         getCategoryTableData() {
             this.loading = true
             Core.Api.Warranty.categoryList().then(res => {
-                console.log('getCategoryTableData res', res.data.warranty_config_list);
-                this.treeFilter(res.data.warranty_config_list)
-
-                this.categoryTableData = res.data.warranty_config_list
+                console.log('getCategoryTableData res', res);
+                this.treeFilter(res.warranty_config_list)
+                this.categoryTableData = res.warranty_config_list
             }).catch(err => {
                 console.log('getCategoryTableData err', err);
             }).finally(() => {
@@ -413,8 +412,8 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log('getItemTableData res', res);
-                this.itemTableData = res.data.warranty_config_list
-                this.total = res.data.count
+                this.itemTableData = res.warranty_config_list
+                this.total = res.count
                 // 处理商品分类字段 数组拆分用/连接
                 this.itemTableData.forEach(el => {
                     el.item_category_name_list = el.item_category_name_list.length ? el.item_category_name_list.join('/') : '-'
@@ -435,8 +434,8 @@ export default {
                 page_size: this.pageSize
             }).then(res => {
                 console.log('getTrackTableData res', res);
-                this.trackTableData = res.data.warranty_config_list
-                this.total = res.data.count
+                this.trackTableData = res.warranty_config_list
+                this.total = res.count
                 // 处理商品分类字段 数组拆分用/连接
                 this.trackTableData.forEach(item => {
                     item.category_name_list = item.category_name_list.join('/')
