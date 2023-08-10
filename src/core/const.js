@@ -1662,16 +1662,23 @@ let Const = {
 			'50': { key: 50, zh: '其他',en: 'Others', value: 50 },
 		},
 		STATUS: {
-            WAIT_AUDIT: 20,        // 20待审核
-            REFUSE: 30,            // 30审核拒绝
-            EXECUTING: 40,         // 40执行中
-            FINISH: 50,            // 50已结束
+            // 对应下面 STATUS_MAP
+            WAIT_AUDIT: 20,      
+            REFUSE: 30,          
+            TOBEPAID: 35,        
+            EXECUTING: 40,       
+            REFUND: 44,          
+            REFUND_PROGRESS: 44, 
+            FINISH: 50,          
         },
 		STATUS_MAP: {
 			'10': { key: 10, zh: '初始化',en: 'Init', value: 10 },
 			'20': { key: 20, zh: '待审核',en: 'Pending Review', value: 20 },
 			'30': { key: 30, zh: '审核拒绝',en: 'Review Rejected', value: 30 },
+			'35': { key: 35, zh: '待支付',en: 'To be paid', value: 35 },
 			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
+			'44': { key: 44, zh: '申请退款',en: 'Apply for a refund', value: 44 },            
+			'46': { key: 46, zh: '退款中',en: 'Refund in progress', value: 46 },
 			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
 		},
         CUSTOMER_MAP: {
