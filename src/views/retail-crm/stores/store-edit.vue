@@ -67,7 +67,19 @@
                             </a-select>
                         </div>
                     </div>
-
+                    <!-- 城市 
+                    <div class="form-item">
+                        <div class="key">{{ $t('crm_o.city') }}：</div>
+                        <div class="value">
+                            <a-select v-model:value="form.group_id" :placeholder="$t('def.select')" allowClear>
+                                
+                                <a-select-option v-for="item of regionsList" :key="item.id" :value="item.value">{{
+                                    item.name
+                                }}</a-select-option>
+                            </a-select>
+                        </div>
+                    </div>
+                    -->
 
                     <!-- 地址 -->
                     <div class="form-item required">
@@ -429,7 +441,8 @@ export default {
             }
 
             Core.Api.RETAIL.editStore(form).then(res => {
-                this.$message.success(this.$t('pop_up.save_success'))
+                this.$message.success(this.$t('pop_up.save_success'));
+                this.routerChange('back')
                 console.log('保存完成', res);
             }).catch(err => {
                 console.log('editStore err:', err)

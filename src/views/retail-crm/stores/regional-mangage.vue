@@ -5,10 +5,7 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('crm_group.group_man') }}</div>
                 <div class="btns-area">
-                    <!-- v-if="$auth('crm-order.save')" -->
-                    <!-- <a-button type="primary" @click="routerChange('edit')">{{ $t("s.create_area")
-                    }}</a-button> -->
-                    <CreateArea />
+                    <CreateArea @refreshc="refreshc" />
                 </div>
             </div>
 
@@ -61,11 +58,12 @@
                             {{ $Util[column.util](text, $i18n.locale) }}
                         </template> -->
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('edit', record)">{{
+                            <!-- <a-button type="link" @click="routerChange('edit', record)">{{
                                 $t("def.edit")
-                            }}</a-button>
+                            }}</a-button> -->
 
-                            <a-button type="link" danger @click="routerChange('delete', record)">{{
+                            <CreateArea :id="record.id" @refreshc="refreshc" />
+                            <a-button type="link" danger @click="handleDelete(record.id)">{{
                                 $t("def.delete")
                             }}</a-button>
                         </template>
@@ -150,6 +148,11 @@ export default {
         // this.createUserFetch();
     },
     methods: {
+        // 刷新列表-子组件控制
+        refreshc(data) {
+            this.searchName = '';
+            this.pageChange(1);
+        },
         getTableData() {
             Core.Api.RETAIL.regionsList({
                 key: this.searchName,
@@ -182,7 +185,7 @@ export default {
         },
         // 搜索区域城市
         searchCity() {
-            
+
             this.pageChange(1);
             /*  console.log('搜索区域城市', this.searchName);
              Core.Api.CRMStores.regionsList({
@@ -198,7 +201,7 @@ export default {
                      console.log("getTableData err:", err);
                  }) */
         },
-        
+
         // 分页
         pageChange(curr) {  // 页码改变
             console.log('pageChange-------', curr);
@@ -209,6 +212,28 @@ export default {
             console.log('pageSizeChange size--------:', current, size)
             this.pageSize = size
             this.getTableData();
+        },
+        handleDelete(id) {
+            let _this = this;
+            this.$confirm({
+                title: this.$t("pop_up.sure_delete"),
+                okText: this.$t("def.sure"),
+                // okType: "danger",
+                cancelText: this.$t("def.cancel"),
+                onOk() {
+                    console.log('确定删除');
+                    Core.Api.RETAIL.deleteRegion({ id })
+                        .then(() => {
+                            _this.$message.success(
+                                _this.$t("pop_up.delete_success")
+                            ),
+                                _this.getTableData();
+                        })
+                        .catch((err) => {
+                            console.log("handleDelete err", err);
+                        });
+                },
+            })
         },
 
     }

@@ -824,7 +824,7 @@ const apiList = {
         // 区域管理接口          
         regionsList: ['PostJson', 'group/city/list'],       //门店-区域列表/crm/1/store/list
         deleteRegion:['PostJson', 'group/city/delete'],     //删除区域
-        detailRegion:['PostJson', 'group/city/detail'],     //区域-详情
+        detailRegion:['Get', 'group/city/detail'],     //区域-详情
         saveRegion:['PostJson', 'group/city/save'],         //区域-更新
         // 人员管理接口
         personList:['PostJson', 'user/list'],  // 人员列表（添加店长可用）

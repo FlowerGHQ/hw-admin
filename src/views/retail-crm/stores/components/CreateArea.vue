@@ -1,13 +1,17 @@
 <template>
-    <a-button class="CreateArea" type="primary" @click.stop="handleModalShow">
+    <a-button class="CreateArea" type="primary" @click.stop="handleModalShow" v-if="!id">
         <slot>{{ $t("s.create_area") }}</slot>
     </a-button>
+
+    <a-button v-else type="link" @click="handleModalShow">{{
+        $t("def.edit")
+    }}</a-button>
     <template v-if="isDrawer && !showAddPop" class="modal-container">
         <a-drawer v-model:visible="isDrawer" class="custom-class" :closable="false" placement="right"
-            :footer-style="{ textAlign: 'right' }">
+            :footer-style="{ textAlign: 'right' }" width="400">
             <template #title>
                 <div class="title">
-                    <div>{{ $t('s.create_area') }}</div>
+                    <div>{{ id ? $t('crm_region.edit') : $t('s.create_area') }}</div>
                     <div class="close" @click="closeClick">
                         <close-outlined />
                     </div>
@@ -23,23 +27,26 @@
                     {{ $t('crm_region.name') }}
                 </div>
                 <div class="value">
-                    <a-input :placeholder="$t('s.search_place')" />
+                    <a-input :placeholder="$t('s.search_place')" v-model:value="regionalName" />
                 </div>
             </div>
 
+            <div class="danger-text" v-if="messageText.length">
+                {{ messageText }}
+            </div>
             <div class="region-tree form-item required ">
                 <div class="key">
                     {{ $t('crm_region.name') }}
                 </div>
                 <div class="value">
                     <div class="add-city" @click="showAddCity">{{ $t('crm_st.add_city') }}</div>
-                    <a-tree show-line :tree-data="nowAddressList" defaultExpandAll :fieldNames="{ title: 'name', key: 'name' }">
+                    <a-tree show-line :tree-data="nowAddressList" defaultExpandAll
+                        :fieldNames="{ title: 'name', key: 'name' }">
                     </a-tree>
                 </div>
             </div>
 
             <template #footer>
-                <!-- <a-button style="margin-right: 8px" @click="onClose">Cancel</a-button> -->
                 <a-button type="primary" @click="saveRegional">{{ $t('retail.save') }}</a-button>
             </template>
         </a-drawer>
@@ -48,7 +55,7 @@
         <a-modal v-model:visible="showAddPop" :title="$t('crm_st.add_city')" :width="360" @ok="addCityOk">
             <div class="aa">
                 <a-tree show-line :tree-data="addressOptions" :fieldNames="{ title: 'name', key: 'name' }" checkable
-                    v-model:checkedKeys="checkedAddCity" @check="checkCity">
+                    v-model:checkedKeys="checkedAddCity">
                 </a-tree>
             </div>
         </a-modal>
@@ -58,55 +65,21 @@
 <script>
 import { CloseOutlined, CarryOutOutlined } from '@ant-design/icons-vue';
 import axios from 'axios';
+import Core from "../../../../core";
 
 export default {
 
     name: "CreateArea",
     data() {
         return {
-            
+            // 区域名称
+            regionalName: '',
+            // 请求区域名称相同提示文字
+            messageText: '',
             isDrawer: false,
-            addressOptions: '',
+            addressOptions: [],
             showAddPop: false,
-            cityNowList: [
-                {
-                    id: 1, // 关联区域信息表id
-                    city: "北京",//城市名称
-                    select: false   //已选择true,未选择false
-                }, {
-                    id: 2, // 关联区域信息表id
-                    city: "唐山",//城市名称
-                    select: true   //已选择true,未选择false
-                }, {
-                    id: 3, // 关联区域信息表id
-                    city: "杭州市",//城市名称
-                    select: false   //已选择true,未选择false
-                }, {
-                    id: 4, // 关联区域信息表id
-                    city: "石家庄",//城市名称
-                    select: true   //已选择true,未选择false
-                }, {
-                    id: 5, // 关联区域信息表id
-                    city: "邢台",//城市名称
-                    select: true   //已选择true,未选择false
-                }, {
-                    id: 6, // 关联区域信息表id
-                    city: "沧州",//城市名称
-                    select: false   //已选择true,未选择false
-                }, {
-                    id: 7, // 关联区域信息表id
-                    city: "镇江市",//城市名称
-                    select: false   //已选择true,未选择false
-                }, {
-                    id: 8, // 关联区域信息表id
-                    city: "台州市",//城市名称
-                    select: false   //已选择true,未选择false
-                }, {
-                    id: 9, // 关联区域信息表id
-                    city: "香港",//城市名称
-                    select: true   //已选择true,未选择false
-                }
-            ],
+            cityNowList: [],
             // 接口传来选中-选项
             checkedKeys: [],
             // 现有选中情况-变化-添加城市点击情况记录
@@ -117,10 +90,15 @@ export default {
         CloseOutlined, CarryOutOutlined
     },
     props: {
-
+        id: {
+            type: Number,
+            default: 0
+        }
     },
     watch: {
-
+        regionalName(newvalue, oldValue) {
+            this.messageText = '';
+        }
     },
     computed: {
 
@@ -139,89 +117,105 @@ export default {
         }
     },
     mounted() {
-        this.getRoughlyAddressList();
     },
     methods: {
-
+        // 点击添加城市-按钮
         showAddCity() {
             this.showAddPop = true;
-            this.checkedAddCity = [...this.checkedKeys]
+            this.checkedAddCity = [...this.checkedKeys];
         },
+        // 显示城市按钮
         handleModalShow() {
             this.isDrawer = true;
-            console.log('this.isDrawer-----------------this.isDrawer', this.isDrawer);
-            this.getList();
+            // 获取城市列表
+            let url = '/ext/China.json'
+            axios.get(url).then(response => {
+                this.addressOptions = response.data;
+                this.getList();
+            })
         },
 
         closeClick() {
             this.isDrawer = false;
         },
-        // 获取 地址选择列表
-        getRoughlyAddressList() {
-            console.log('getRoughlyAddressList');
-            let url = '/ext/China.json'
-            axios.get(url).then(response => {
-                this.addressOptions = response.data;
-            })
-        },
         // 选择复选框
-        checkCity(checkkeys, e) {
-            console.log('checkCity', checkkeys, e, 'pos', e.node.pos);
-            let posList = [], key = e.node.key;
-            posList = e.node.pos.split('-');
-            console.log('postList', posList);
-            if (e.checked && posList.length == 2) {
-                console.log('添加一级目录所有城市', e.node.key);
-                this.updateList(1, key);
-            } else if (e.checked && posList.length == 3) {
-                // 添加二级目录单个城市
-                console.log('添加二级目录单个城市', e.node.key);
-                this.updateList(2, key);
+        // checkCity(checkkeys, e) {
+        // let posList = [], key = e.node.key;
+        // posList = e.node.pos.split('-');
 
-            } else if (!e.checked && posList.length == 2) {
-                // 去除一级目录所有城市
-                console.log('去除一级目录所有城市', e.node.key);
-                this.updateList(3, key);
-
-            } else if (!e.checked && posList.length == 3) {
-                console.log('去除二级目录单个城市', e.node.key);
-                this.updateList(4, key);
-
-            }
-        },
+        /*   if (e.checked && posList.length == 2) {
+              console.log('添加一级目录所有城市', e.node.key);
+              this.updateList(1, key);
+          } else if (e.checked && posList.length == 3) {
+              // 添加二级目录单个城市
+              console.log('添加二级目录单个城市', e.node.key);
+              console.log('checkedAddCity-------------111111111', this.checkedAddCity);
+              this.updateList(2, key);
+ 
+          } else if (!e.checked && posList.length == 2) {
+              // 去除一级目录所有城市
+              console.log('去除一级目录所有城市', e.node.key);
+              this.updateList(3, key);
+ 
+          } else if (!e.checked && posList.length == 3) {
+              console.log('去除二级目录单个城市', e.node.key);
+              this.updateList(4, key);
+ 
+          } */
+        // console.log('checkedAddCity-------------', this.checkedAddCity);
+        // },
         // 选中城市情况
-        updateList(type, key) {
-            let list = [];
-            if (type == 1) {
-                // type=1 添加一级目录所有城市(防重复添加)
-                this.addressOptions.map(el => {
-                    if (el.name == key) {
-                        el.children.forEach(el2 => {
-                            if (!this.checkedAddCity.includes(el2.name)) {
-                                this.checkedAddCity.push(el2.name);
+        /*         updateList(type, key) {
+                    console.log('type, key', type, key, 'this.checkedAddCity', this.checkedAddCity);
+                    let list = [];
+                    if (type == 1) {
+                        // type=1 添加一级目录所有城市(防重复添加)
+                        this.addressOptions.map(el => {
+                            if (el.name == key) {
+                                el.children.forEach(el2 => {
+                                    if (!this.checkedAddCity.includes(el2.name)) {
+                                        this.checkedAddCity.push(el2.name);
+                                    }
+                                })
                             }
                         })
+                    } else if (type == 2) {
+                        // if (!this.checkedAddCity.includes(key)) {
+                        this.checkedAddCity.push(key);
+                        console.log('checkedAddCity-------------9999', this.checkedAddCity);
+                        // }
+                    } else if (type == 3) {
+                        // type=3 去除一级目录所有城市(防重复添加)
+                        this.addressOptions.map(el => {
+                            if (el.name == key) {
+                                list = el.children.map(el2 => el2.name)
+                                this.checkedAddCity = this.checkedAddCity.filter(item => !list.includes(item))
+                            }
+                        })
+                    } else if (type == 4) {
+                        this.checkedAddCity = this.checkedAddCity.filter(item => item != key);
                     }
-                })
-            } else if (type == 2) {
-                this.checkedAddCity.push(key);
-            } else if (type == 3) {
-                // type=3 去除一级目录所有城市(防重复添加)
-                this.addressOptions.map(el => {
-                    if (el.name == key) {
-                        list = el.children.map(el2 => el2.name)
-                        this.checkedAddCity = this.checkedAddCity.filter(item => !list.includes(item))
-                    }
-                })
-            } else if (type == 4) {
-                this.checkedAddCity = this.checkedAddCity.filter(item => item != key);
-            }
+        
+                }, */
+        // 获取区域详情
+        async getRegionalDetail() {
+            await Core.Api.RETAIL.detailRegion({
+                id: this.id
+            }).then((res) => {
+                console.log("getRegionalDetail res:", res);
+                this.cityNowList = res.city_list;
+                this.regionalName = res.name;
+            }).catch((err) => {
+                console.log("getRegionalDetail err:", err);
+            })
 
         },
-
-        getList() {
+        // 获取列表
+        async getList() {
+            await this.getRegionalDetail()
             let listCheck = [];
             let listDisable = [];
+
             this.cityNowList.forEach((el, ind) => {
                 if (!el.select) {
                     listCheck.push(el.city);
@@ -236,7 +230,6 @@ export default {
                     if (listDisable.includes($2.name)) {
                         $2.disableCheckbox = true;
                         $1.disabled = true;
-                        console.log('$2.name', $2.name, $2);
                     }
                 })
                 return $1;
@@ -246,11 +239,30 @@ export default {
         addCityOk() {
             this.showAddPop = false;
             // 发送请求?
-            this.checkedKeys = [...this.checkedAddCity]
+            this.checkedKeys = [...this.checkedAddCity];
         },
         // 保存区域编辑
         saveRegional() {
-            
+            if(!this.checkedKeys.length){
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            if(!this.regionalName){
+                return this.$message.warning(this.$t('def.enter'))
+            }
+            // debugger:
+            Core.Api.RETAIL.saveRegion({
+                id: this.id,
+                name: this.regionalName,
+                city_list: this.checkedKeys
+            }).then((res) => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                console.log("saveRegional res:", res);
+                this.$emit('refreshc');
+                this.isDrawer = false;
+            }).catch((err) => {
+                console.log("saveRegional err:", err?.data?.message);
+                this.messageText = err?.data?.message;
+            })
         }
 
     }
@@ -287,11 +299,24 @@ export default {
 
 .region-con {
     height: 32px;
-    margin: 20px 0px;
+    margin-top: 20px;
+}
+
+.danger-text {
+    margin-top: -8px;
+    color: var(--color-danger-6, #F53F3F);
+    font-family: PingFang SC;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    box-sizing: border-box;
+    padding-left: 111px;
 }
 
 .region-tree {
     .fsb(flex-start);
+    margin-top: 20px;
 }
 
 :deep(.ant-tree-checkbox) {
