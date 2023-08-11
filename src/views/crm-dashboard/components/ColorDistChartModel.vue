@@ -2,7 +2,7 @@
     <div class="list-container">
         <!-- 标题 -->
         <div class="title">
-            <span>来源</span>
+            <span>投票颜色分布</span>
         </div>
         <!-- echarts -->
         <div class="table-container">
@@ -152,6 +152,7 @@ export default {
                             content: data.percent * 100 + '%',
                             style: {
                                 fontSize: 14,
+                                fontWeight: 600,
                                 fill: '#1D2129',
                                 textAlign: 'center',
                             },

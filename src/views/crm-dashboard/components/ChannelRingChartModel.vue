@@ -7,6 +7,15 @@
         <!-- echarts -->
         <div class="table-container">
             <div id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
+            <div class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item.name }}</div>
+                    </div>
+                    <div class="legend-value">{{ item.percent }}</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -36,7 +45,18 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-
+            legendList: [
+                {
+                    name: '1.白日梦影',
+                    color: '#056DFF',
+                    percent: '64%'
+                },
+                {
+                    name: '2.月影年华',
+                    color: '#FFBC48',
+                    percent: '64%'
+                },
+            ]
         };
     },
     watch: {
@@ -102,29 +122,7 @@ export default {
                 innerRadius: 0.8,
             });
             // 声明需要进行自定义图例字段： 'item'
-            chart.legend('item', {
-                position: 'bottom',                                  // 配置图例显示位置
-                custom: true,                                       // 关键字段，告诉 G2，要使用自定义的图例
-                items: data.map((obj, index) => {
-                    return {
-                        name: obj.item,                                 // 对应 itemName
-                        value: obj.percent,                             // 对应 itemValue
-                        marker: {
-                            symbol: 'circle',                             // marker 的形状
-                            style: {
-                                r: 5,                                       // marker 图形半径
-                                fill: chart.getTheme().colors10[index],     // marker 颜色，使用默认颜色，同图形对应
-                            },
-                        },                                              // marker 配置
-                    };
-                }),
-                itemValue: {
-                    style: {
-                        fill: '#999',
-                    },                                               // 配置 itemValue 样式
-                    formatter: val => `${val * 100}%`                // 格式化 itemValue 内容
-                },
-            });
+            chart.legend(false);
             // 监听 element 上状态的变化来动态更新 Annotation 信息
             chart.on('element:statechange', (ev) => {
                 const { state, stateStatus, element } = ev.gEvent.originalEvent;
@@ -153,8 +151,9 @@ export default {
                             position: ['50%', '46%'],
                             content: data.percent * 100 + '%',
                             style: {
-                                fontSize: 30,
-                                fill: '#DC6E38',
+                                fontSize: 14,
+                                fontWeight: 600,
+                                fill: '#1D2129',
                                 textAlign: 'center',
                             },
                         })
@@ -278,7 +277,49 @@ export default {
 }
 
 .chart {
-    width: 100%;
+    width: 200px;
     height: auto
 }
-</style>
+
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .legend-container {
+        .legend-wrap {
+            width: 140px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 16px;
+
+            .legend-block {
+                width: 82px;
+                margin-right: 13px;
+                display: flex;
+                align-items: center;
+
+                .legend-circle {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    margin-right: 4px;
+                }
+
+                .legend-key {
+                    color: #4E5969;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+
+            .legend-value {
+                color: #1D2129;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    }
+}</style>

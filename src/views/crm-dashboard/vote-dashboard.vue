@@ -6,7 +6,7 @@
       <a-col :xs="24" :sm="24" :xl="15" :xxl="12">
         <a-row :gutter="[8, 0]">
           <a-col :span="24">
-            <DataTrendStatistics :searchForm="searchForm" :isPeople="isPeople" :list="list" />
+            <DailyVotingNumbersChartModel :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
@@ -29,6 +29,20 @@
         <a-row :gutter="[8, 0]">
           <a-col :span="24">
             <ColorDistChartModel :searchForm="searchForm" />
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="12">
+        <a-row :gutter="[8, 0]">
+          <a-col :span="24">
+            <ChinaMapChartModel :searchForm="searchForm" />
+          </a-col>
+        </a-row>
+      </a-col>
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="12">
+        <a-row :gutter="[8, 0]">
+          <a-col :span="24">
+            <votingChannelChartModel :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
@@ -65,6 +79,9 @@ import VoteTimeSearch from "./components/VoteTimeSearch.vue";
 import ChannelRingChartModel from "./components/ChannelRingChartModel.vue"
 import ColorDistChartModel from "./components/ColorDistChartModel.vue"
 import PartRatioRingChartModel from "./components/PartRatioRingChartModel.vue"
+import ChinaMapChartModel from "./components/ChinaMapChartModel.vue"
+import votingChannelChartModel from "./components/votingChannelChartModel.vue"
+import DailyVotingNumbersChartModel from "./components/DailyVotingNumbersChartModel.vue"
 import Backlog from "./components/Backlog.vue";
 import FollowUpStatistics from "./components/FollowUpStatistics.vue";
 import NewBoStatistics from "./components/NewBoStatistics.vue";
@@ -90,6 +107,9 @@ export default {
     ChannelRingChartModel,
     PartRatioRingChartModel,
     ColorDistChartModel,
+    ChinaMapChartModel,
+    votingChannelChartModel,
+    DailyVotingNumbersChartModel,
     Backlog,
     FollowUpStatistics,
     NewBoStatistics,
