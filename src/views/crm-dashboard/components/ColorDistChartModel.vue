@@ -7,6 +7,15 @@
         <!-- echarts -->
         <div class="table-container">
             <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
+            <div class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item.name }}</div>
+                    </div>
+                    <div class="legend-value">{{ item.percent }}</div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -36,7 +45,18 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-
+            legendList: [
+                {
+                    name: '1.白日梦影',
+                    color: '#056DFF',
+                    percent: '64%'
+                },
+                {
+                    name: '2.月影年华',
+                    color: '#FFBC48',
+                    percent: '64%'
+                },
+            ]
         };
     },
     watch: {
@@ -131,8 +151,8 @@ export default {
                             position: ['50%', '46%'],
                             content: data.percent * 100 + '%',
                             style: {
-                                fontSize: 30,
-                                fill: '#DC6E38',
+                                fontSize: 14,
+                                fill: '#1D2129',
                                 textAlign: 'center',
                             },
                         })
@@ -256,7 +276,44 @@ export default {
 }
 
 .chart {
-    width: 100%;
+    width: 200px;
     height: auto
+}
+.table-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .legend-container {
+        .legend-wrap {
+            width: 140px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            margin-bottom: 16px;
+            .legend-block {
+                width: 82px;
+                margin-right: 13px;
+                display: flex;
+                align-items: center;
+                .legend-circle {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    margin-right: 4px;
+                }
+                .legend-key {
+                    color: #4E5969;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            }
+            .legend-value {
+                color: #1D2129;
+                font-size: 14px;
+                font-weight: 600;
+            }
+        }
+    }
 }
 </style>
