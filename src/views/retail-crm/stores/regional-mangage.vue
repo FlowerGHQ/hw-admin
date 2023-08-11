@@ -205,7 +205,7 @@ export default {
         // 分页
         pageChange(curr) {  // 页码改变
             console.log('pageChange-------', curr);
-            this.currPage = curr
+            this.currPage = curr;
             this.getTableData();
         },
         pageSizeChange(current, size) {  // 页码尺寸改变

@@ -820,19 +820,19 @@ const apiList = {
         storeDetail:['Get','store/detail'],                 // 门店-详情
         storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
         addStoreUser:['PostJson','store/user/add'],         // 门店-添加人员
-        deleteStoreUser:['PostJson','store/user/delete'],         // 门店-添加人员
+        deleteStoreUser:['PostJson','store/user/delete'],   // 门店-添加人员
         // 区域管理接口          
-        regionsList: ['PostJson', 'group/city/list'],       //门店-区域列表/crm/1/store/list
-        deleteRegion:['PostJson', 'group/city/delete'],     //删除区域
-        detailRegion:['Get', 'group/city/detail'],     //区域-详情
-        saveRegion:['PostJson', 'group/city/save'],         //区域-更新
+        regionsList: ['PostJson', 'group/city/list'],       // 门店-区域列表/crm/1/store/list
+        deleteRegion:['PostJson', 'group/city/delete'],     // 删除区域
+        detailRegion:['Get', 'group/city/detail'],          // 区域-详情
+        saveRegion:['PostJson', 'group/city/save'],         // 区域-更新
         // 人员管理接口
-        personList:['PostJson', 'user/list'],  // 人员列表（添加店长可用）
-        deletePersonList:['PostJson', 'user/delete'],  // 删除人员
-        externalList: ['PostJson', 'out/user/list'],  // 人员列表(外部【飞书】)
-        addPerson: ['PostJson', 'out/user/save'],  // 添加人员(外部【飞书】)
-        personDetail: ['Get', 'store/user/detail'],  // 人员信息详情
-        personUpdate: ['PostJson', 'store/user/save'],  // 人员信息更新 
+        personList:['PostJson', 'user/list'],               // 人员列表（添加店长可用）
+        deletePersonList:['PostJson', 'user/delete'],       // 删除人员
+        externalList: ['PostJson', 'out/user/list'],        // 人员列表(外部【飞书】)
+        addPerson: ['PostJson', 'out/user/save'],           // 添加人员(外部【飞书】)
+        personDetail: ['Get', 'store/user/detail'],         // 人员信息详情
+        personUpdate: ['PostJson', 'store/user/save'],      // 人员信息更新 
 
         // 车辆管理接口
         // 订单管理接口

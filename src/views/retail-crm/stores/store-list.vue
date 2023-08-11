@@ -51,7 +51,16 @@
                         <div class="key">{{ $t("crm_st.city") }}：</div>
                         <!-- 所属城市 -->
                         <div class="value">
-                            <China2Address @search="handleOtherSearch" ref='CountryCascader' />
+                            <!-- <China2Address @search="handleOtherSearch" ref='CountryCascader' /> -->
+                            <a-select v-model:value="searchForm.city" :disabled="searchForm.group_id == undefined"
+                                :placeholder="$t('def.select')" allowClear>
+                                <!-- <a-select-option :value="0">
+                                    {{ lang === "zh" ? "全部" : "all" }}
+                                </a-select-option> -->
+                                <a-select-option v-for="item of cityList" :key="item.id" :value="item.city">{{
+                                    item.city
+                                }}</a-select-option>
+                            </a-select>
                         </div>
                     </a-col>
                     <template v-if="show">
@@ -201,7 +210,7 @@ export default {
                 level: undefined,  // 1:零售体验中心 2:零售体验店 3:交付中心 4:维修服务中心 5:体验展厅 6:活动展会
                 status: undefined,  // 1:装修 2:试营业 3:开业
                 province: '',
-                city: '',
+                city: undefined,
             },
             // 区域列表
             regionsList: [],
@@ -246,6 +255,12 @@ export default {
                     this.currPage = 1;
                     this.pageSize = 20;
                 }
+
+                console.log('searchForm', oldValue, newValue);
+                if (newValue.group_id == undefined || oldValue.group_id != newValue.group_id) {
+                    this.searchForm.city = undefined;
+                }
+                console.log('newValue.group_id', newValue.group_id);
             },
         },
     },
@@ -305,6 +320,15 @@ export default {
         lang() {
             return this.$store.state.lang;
         },
+
+        // 区域城市
+        cityList() {
+            let list = [];
+            list = this.regionsList.filter(el => {
+                return this.searchForm.group_id == el.id
+            })
+            return list[0]?.city_list || [];
+        }
     },
     mounted() {
         this.getTableData();
@@ -374,16 +398,17 @@ export default {
             console.log('this.sea', this.searchForm);
             this.pageChange(1);
         },
-        handleOtherSearch(params) {
-            for (const key in params) {
-                this.searchForm[key] = params[key]
-            }
-        },
+        // 外部组件方法
+        /*  handleOtherSearch(params) {
+             for (const key in params) {
+                 this.searchForm[key] = params[key]
+             }
+         }, */
         handleSearchReset() {
             this.ispop = false;
             // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.CountryCascader.handleReset();
+            // this.$refs.CountryCascader.handleReset();
             // this.getTableData();
             this.pageChange(1);
         },
@@ -461,7 +486,6 @@ export default {
                 // okType: "danger",
                 cancelText: this.$t("def.cancel"),
                 onOk() {
-                    console.log('确定删除');
                     Core.Api.RETAIL.deleteStore({ id })
                         .then(() => {
                             _this.$message.success(

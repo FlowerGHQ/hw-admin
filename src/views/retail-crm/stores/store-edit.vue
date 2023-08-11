@@ -81,18 +81,24 @@
                     </div>
                     -->
 
-                    <!-- 地址 -->
+                    <!-- 城市 -->
                     <div class="form-item required">
-                        <div class="key">{{ $t('crm_c.address') }}：</div>
+                        <div class="key">{{ $t('crm_o.city') }}：</div>
                         <div class="value">
-                            <China2Address @search="handleOtherSearch" :defArea="[form.province, form.city]"
-                                ref='CountryCascader' />
+                            <!-- <China2Address @search="handleOtherSearch" :defArea="[form.province, form.city]" -->
+                                <!-- ref='CountryCascader' /> -->
+                                <a-select v-model:value="form.city" :disabled="form.group_id==undefined" :placeholder="$t('def.select')" allowClear>
+                                
+                                <a-select-option v-for="item of cityList" :key="item.id" :value="item.city">{{
+                                    item.city
+                                }}</a-select-option>
+                            </a-select>
                         </div>
                     </div>
 
                     <!-- 详细地址 -->
                     <div class="form-item ">
-                        <div class="key"></div>
+                        <div class="key">{{ $t('crm_c.address') }}：</div>
                         <div class="value">
                             <a-input v-model:value="form.address" :placeholder="$t('def.input')" />
                         </div>
@@ -261,7 +267,7 @@ export default {
                 type: undefined,
                 level: undefined,
                 province: '',
-                city: '',
+                city: undefined,
                 address: '',
                 status: undefined,
                 open_time: '',
@@ -324,6 +330,14 @@ export default {
         lang() {
             return this.$store.state.lang
         },
+        // 区域城市
+        cityList() {
+            let list = [];
+            list = this.regionsList.filter(el => {
+                return this.form.group_id == el.id
+            })
+            return list[0]?.city_list || [];
+        }
     },
     components: {
         China2Address, CrmEditStorePeo
@@ -413,7 +427,6 @@ export default {
 
             if (this.trackRecordForm.image_attachment_list.length) {
                 form.logo = this.trackRecordForm.image_attachment_list[0].path;
-                // console.log('666666666666666666666666',this.$Util.imageFilter(form.logo));
             }
             form.open_time = dayjs(form.open_time).unix();
             // form.open_time = form.open_time ? dayjs.unix(form.open_time[0]).format("YYYY-MM-DD") : undefined // 日期转时间戳
@@ -451,12 +464,12 @@ export default {
             })
         },
 
-        handleOtherSearch(params) {
+       /*  handleOtherSearch(params) {
             console.log('params---------store-list', params);
             for (const key in params) {
                 this.form[key] = params[key]
             }
-        },
+        }, */
         getUserId(data) {
             this.form.user_id = data;
         },
