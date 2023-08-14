@@ -190,6 +190,7 @@
                                     v-model:value="item.city" 
                                     class="select-w"
                                     :placeholder="$t('retail.p_s_region')"
+                                    @select="allChange('city', item)"
                                     >
                                     <a-select-option 
                                         v-for="$1 in item.cityList"                                         
@@ -290,11 +291,11 @@ const storeList = ref([])  // 门店list
 
 onMounted(async() => {    
     try {
-        await getRegionsData()        
+        await getRegionsDataFetch()   
     } catch (error) {
         console.log("获取详情接口失败", error);
     } 
-    getStoreData()
+    getStoreDataFetch()
     personDetailFetch()
     getRoleData()
 })
@@ -356,9 +357,9 @@ const personUpdateFetch = (params = {}) => {
     })
 }
 // 获得所属区域
-const getRegionsData = () => {
+const getRegionsDataFetch = (params = {}) => {
     return new Promise((resolve,reject) => {
-        Core.Api.RETAIL.regionsList().then((res) => {
+        Core.Api.RETAIL.regionsList({...params}).then((res) => {
             resolve()   
             console.log("获得所属区域 success", res);
             regionsList.value = res.list;    
@@ -369,8 +370,8 @@ const getRegionsData = () => {
     })
 }
 // 门店list
-const getStoreData = () => {
-    Core.Api.RETAIL.storeList().then((res) => {
+const getStoreDataFetch = (params = {}) => {
+    Core.Api.RETAIL.storeList({...params}).then((res) => {
         // console.log("门店list success", res);
         storeList.value = res.list;
     }).catch((err) => {
@@ -378,8 +379,8 @@ const getStoreData = () => {
     })
 }
 // 获取角色list数据
-const getRoleData = () => {
-    Core.Api.Authority.roleList().then((res) => {
+const getRoleData = (params = {}) => {
+    Core.Api.Authority.roleList({...params}).then((res) => {
         // console.log("获取角色 success", res);
         roleList.value = res.list
     }).catch((err) => {
@@ -408,7 +409,10 @@ const allChange = (type, item) => {
             })   
             console.log("result",result);
             item.cityList = result?.city_list || []
-
+            getStoreDataFetch({group_id: item.group_id})
+            break;
+        case 'city':            
+            getStoreDataFetch({group_id: item.group_id, city: item.city})
             break;
         case 'role': 
             console.log("role");

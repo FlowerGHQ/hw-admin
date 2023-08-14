@@ -76,7 +76,7 @@
                                     class="select-w"
                                     v-model:value="searchForm.group_id"
                                     :placeholder="$t('def.select')"                                    
-                                    @select="allChange"
+                                    @select="allChange('group_id')"
                                     allowClear
                                 >                    
                                     <a-select-option 
@@ -104,6 +104,7 @@
                                     v-model:value="searchForm.city"
                                     :placeholder="$t('retail.p_s_region')"
                                     allowClear
+                                    @select="allChange('city')"
                                 >                    
                                     <a-select-option 
                                         v-for="item of cityList" 
@@ -266,8 +267,8 @@ const channelPagination = ref({
 
 onMounted(() => {
     getTableDataFetch()
-    getRegionsData()
-    getStoreData()
+    getRegionsDataFetch()
+    getStoreDataFetch()
 });
 const {proxy} = getCurrentInstance()
 const router = useRouter()
@@ -353,13 +354,12 @@ const getTableDataFetch = (params = {}) => {
     })
     .catch((err) => {
         console.log("getTableData err:", err);
-    })
-    .finally(() => {
+    }).finally(() => {
         loading.value = false;
     });
 }
 // 删除
-const deleteTableRowFetch = (params = {}) => {
+const deleteTableRowFetch = (params = {}) => {        
     Core.Api.RETAIL.deletePersonList({                  
         ...params
     }).then(res => {
@@ -370,8 +370,8 @@ const deleteTableRowFetch = (params = {}) => {
     })
 }
 // 获得所属区域
-const getRegionsData = () => {
-    Core.Api.RETAIL.regionsList().then((res) => {
+const getRegionsDataFetch = (params = {}) => {
+    Core.Api.RETAIL.regionsList({...params}).then((res) => {
         // console.log("获得所属区域 sucess", res);
         regionsList.value = res.list;
     }).catch((err) => {
@@ -379,8 +379,8 @@ const getRegionsData = () => {
     })
 }
 // 门店list
-const getStoreData = () => {
-    Core.Api.RETAIL.storeList().then((res) => {
+const getStoreDataFetch = (params = {}) => {
+    Core.Api.RETAIL.storeList({...params}).then((res) => {
         // console.log("门店list sucess", res);
         storeList.value = res.list;
     }).catch((err) => {
@@ -391,7 +391,13 @@ const getStoreData = () => {
 /* methods */
 // 条件初始化
 const init = () => {
+    regionsList.value = []
+    cityList.value = []
+    storeList.value = []
     searchForm.value = {}
+    getTableDataFetch({ page: 1 })
+    getRegionsDataFetch()
+    getStoreDataFetch()
 }
 const routerChange = (type, item = {}) => {
     let routeUrl = "";
@@ -429,8 +435,7 @@ const handleSearch = () => {
 }; 
 // 重置按钮
 const handleSearchReset = () => {
-    init()
-    getTableDataFetch({ page: 1 })
+    init()    
 };
 
 // 添加人员
@@ -442,17 +447,21 @@ const addPerson = () => {
 const onUpdate = () => {
     getTableDataFetch({ page: 1 })
 }
-// 所属城市选择框
-const handleOtherSearch = (obj) => {
-    console.log("输出", obj);
-}
 // 所属大区 select
-const allChange = () => {
-    const result = regionsList.value.find(el => {
-        return el.id == searchForm.value.group_id
-    })  
-    // console.log("输出结果", result);
-    cityList.value = result?.city_list || []
+const allChange = (type, item = {}) => {
+    switch(type){
+        case 'group_id':
+            const result = regionsList.value.find(el => {
+                return el.id == searchForm.value.group_id
+            })  
+            // console.log("输出结果", result);
+            cityList.value = result?.city_list || []
+            getStoreDataFetch({group_id: searchForm.value.group_id})
+            break;
+        case 'city':
+            getStoreDataFetch({group_id: searchForm.value.group_id, city: searchForm.value.city})
+            break;
+    }
 }
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
