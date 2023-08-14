@@ -166,7 +166,7 @@
                                 {{ $t(/*零部件更换*/'r.replacement_items') }}：
                             </div>
                             <div class="vehicle-item-table">
-                                <a-table :columns="itemVehicleTableColumns" :data-source="$2.itemVehicleTableData"
+                                <a-table :columns="itemVehicleTableColumns" :data-source="$2.repair_order_item_list"
                                     :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                                     <template #headerCell="{ column }">
                                         <div v-html="column.title"></div>
@@ -591,7 +591,7 @@ export default {
                     count: 0
                 },
             ],
-            itemVehicleTableData: [],
+            repair_order_item_list: [],
             question_desc: undefined,
             uploadModalShow: false, // 上传文件弹框
             upload: { // upload
@@ -665,8 +665,8 @@ export default {
                 { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
                 { title: this.$t('i.spec'), dataIndex: 'item_spec', key: 'item' }, // 规格
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'price' }, // 单价
-                { title: this.$t('i.total_price'), dataIndex: 'total_price', key: 'price' }, // 总价
+                { title: this.$t('i.unit_price'), dataIndex: 'cost', key: 'price' }, // 单价
+                { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
                 { title: this.$t('r.fault_types'), dataIndex: 'fault_type', key: 'fault_type' }, // 故障类型
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 {   // 上传附件
@@ -689,8 +689,8 @@ export default {
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' }, // 商品编码
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'price' }, // 单价
-                { title: this.$t('i.total_price'), dataIndex: 'total_price', key: 'price' }, // 总价
+                { title: this.$t('i.unit_price'), dataIndex: 'cost', key: 'price' }, // 单价
+                { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
             ]
             return modalTableColumns
@@ -944,15 +944,15 @@ export default {
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000007",
-                                itemVehicleTableData: [
+                                repair_order_item_list: [
                                     {
                                         item_name: '电池',
                                         item_id: 1,
                                         item_code: 'TLA3-B8-0000',
                                         item_spec: '珍珠白；100/80-14’’',
                                         amount: 1,
-                                        unit_price: 10000,
-                                        total_price: 20000,
+                                        cost: 10000,
+                                        price: 20000,
                                         fault_type: '电池故障',
                                         warranty_status: 1,
                                         attachment_list: [],
@@ -964,8 +964,8 @@ export default {
                                         item_code: 'TLA3-B8-0000',
                                         item_spec: '珍珠白；100/80-14’’',
                                         amount: 1,
-                                        unit_price: 10000,
-                                        total_price: 20000,
+                                        cost: 10000,
+                                        price: 20000,
                                         fault_type: '电池故障',
                                         warranty_status: 1,
                                         attachment_list: [],
@@ -978,15 +978,15 @@ export default {
                             },
                             {
                                 frame_uid: "R45BB2B60P3000008",
-                                itemVehicleTableData: [
+                                repair_order_item_list: [
                                     {
                                         item_name: '电池',
                                         item_id: 1,
                                         item_code: 'TLA3-B8-0000',
                                         item_spec: '珍珠白；100/80-14’’',
                                         amount: 1,
-                                        unit_price: 10000,
-                                        total_price: 20000,
+                                        cost: 10000,
+                                        price: 20000,
                                         fault_type: '电池故障',
                                         warranty_status: 1,
                                         attachment_list: [],
@@ -1005,15 +1005,15 @@ export default {
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000009",
-                                itemVehicleTableData: [
+                                repair_order_item_list: [
                                     {
                                         item_name: '电池',
                                         item_id: 2,
                                         item_code: 'TLA3-B8-0000',
                                         item_spec: '珍珠白；100/80-14’’',
                                         amount: 1,
-                                        unit_price: 10000,
-                                        total_price: 20000,
+                                        cost: 10000,
+                                        price: 20000,
                                         fault_type: '电池故障',
                                         warranty_status: 1,
                                         attachment_list: [],
@@ -1026,14 +1026,14 @@ export default {
                             },
                             {
                                 frame_uid: "R45BB2B60P3000010",
-                                itemVehicleTableData: [
+                                repair_order_item_list: [
                                     {
                                         item_name: '电池',
                                         item_code: 'TLA3-B8-0000',
                                         item_spec: '珍珠白；100/80-14’’',
                                         amount: 1,
-                                        unit_price: 10000,
-                                        total_price: 20000,
+                                        cost: 10000,
+                                        price: 20000,
                                         fault_type: '电池故障',
                                         warranty_status: 1,
                                         attachment_list: [],
@@ -1079,6 +1079,11 @@ export default {
             if(duplicates) {
                 this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
             }
+            Core.Api.Repair.saveVehicleList({
+                frame_uid_list: this.uidList
+            }).then(res => {
+                console.log('handleSubmitVehicle res', res);
+            })
         },
         /** 获取 商品爆炸图 */
         getItemExploreList() {
