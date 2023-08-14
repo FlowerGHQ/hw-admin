@@ -1993,7 +1993,7 @@ const routes = [
     { // 门店管理
         path:'/stores-vehicle',
         component: Layout, 
-        redirect: '/retail-stores/stores-list',
+        redirect: '/stores-vehicle/stores-list',
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '门店管理',

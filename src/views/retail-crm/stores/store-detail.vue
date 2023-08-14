@@ -6,58 +6,57 @@
             </div>
             <div class="container">
                 <div class="d-img">
-                    <img class="img"
-                        src="https://ts1.cn.mm.bing.net/th/id/R-C.eec02321ea106169d757f427b98b358d?rik=%2bgK43uKTPrZbCw&riu=http%3a%2f%2f00.minipic.eastday.com%2f20170823%2f20170823152907_d41d8cd98f00b204e9800998ecf8427e_4.jpeg&ehk=FsISayQ5Gjp%2boHXA8OW7nhrZdn2JEzUKk3lfW%2br0P70%3d&risl=&pid=ImgRaw&r=0"
-                        alt="">
+                    <img class="img" :src="$Util.imageFilter(form.logo?.path)" alt="">
                 </div>
                 <div class="d-content">
                     <a-row class="all-msg">
                         <div class="vehicle-msg">
-                            <span>上海浦东新区五角场零售中心</span>
+                            <span>{{ form.name }}</span>
                             <!-- 店铺 -->
-                            <span class="use tabsty">{{ $t('retail.use') }}零售体验中心</span>
+                            <span class="use tabsty">{{ $Util.storeLevel(form.level) }}</span>
                             <!-- 等级 -->
-                            <span class="test-drive tabsty">{{ $t('retail.test_drive') }}{{ form.level }}</span>
+                            <span class="test-drive tabsty">{{ $Util.storeType(form.type) }}</span>
                             <!-- 状态 -->
-                            <span class="store-type tabsty">{{ $t('retail.test_drive') }}开业</span>
+                            <span class="store-type tabsty">{{ $Util.storeSTATUS(form.status) }}</span>
                         </div>
                         <div class="vehicle-id">
-                            <span class="key">{{form.address}}</span>
-                            <span class="key">{{form.group_name}}-{{ form.city }}</span>
-                            <span class="key">编码：123456</span>
+                            <span class="key">{{ form.address }}</span>
+                            <span class="key">{{ form.group_name }}-{{ form.city }}</span>
+                            <span class="key">编码：{{ form.id }}</span>
                         </div>
                     </a-row>
                     <a-row class="row-detail">
-                        <!-- 京都 -->
+                        <!-- 经度 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key" style="text-align: left;">{{ $t('crm_st.longitude') }}：</span>
                             <span class="value">
-                                {{form.localtion.longitude?form.localtion.longitude:''}}
+                                {{ form.localtion.longitude ? form.localtion.longitude : '' }}
                             </span>
                         </a-col>
                         <!-- 纬度 -->
                         <a-col :xs="24" :sm="12" :xl="18" :xxl="6" class="row-item m-t-16">
                             <span class="key" style="width: 80px;text-align: left;">{{ $t('crm_st.latitude') }}：</span>
                             <span class="value">
-                                {{form.localtion.latitude?form.localtion.latitude:''}}
+                                {{ form.localtion.latitude ? form.localtion.latitude : '' }}
                             </span>
                         </a-col>
                         <!-- 开业时间 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.open_time') }}：</span>
                             <span class="value">
-                                {{form.open_time}}
+                                {{ form.open_time }}
                             </span>
                         </a-col>
                         <!-- 营业时间 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('dis.business_hours') }}：</span>
                             <span class="value">
-                                你好
+                                {{ form.business_time?.length ? form.business_time[0] + '&nbsp;~&nbsp;' +
+                                    form.business_time[1] : '' }}
                             </span>
                         </a-col>
                         <!-- 所属门店 -->
-                       <!--  <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                        <!--  <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('dis.business_hours') }}：</span>
                             <span class="value">
                                 你好
@@ -74,28 +73,29 @@
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.con_email') }}：</span>
                             <span class="value">
-                                你好
+                                {{ form.contact_email }}
                             </span>
                         </a-col>
                         <!-- 门店面积 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.sto_area') }}：</span>
                             <span class="value">
-                                你好
+                                {{ form.square }}
                             </span>
                         </a-col>
                         <!-- 车位数 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.park_space') }}：</span>
                             <span class="value">
-                                你好
+                                {{ form.ground_charge_pile_count + form.underground_charge_pile_count }}
                             </span>
                         </a-col>
                         <!-- 充电桩数 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.charg_station') }}：</span>
                             <span class="value">
-                                你好
+
+                                {{ form.underground_park_count + form.ground_park_count }}
                             </span>
                         </a-col>
                     </a-row>
@@ -105,19 +105,19 @@
         <div class="d-bottom">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="sto_person" :tab="$t('s.sto_person')">
-                    <CrmEditStorePeo :id="id" />
+                    <CrmEditStorePeo :id="form.id" />
                 </a-tab-pane>
                 <a-tab-pane key="sto_car" :tab="$t('s.sto_car')">
                     <ShopCarList />
                 </a-tab-pane>
                 <a-tab-pane key="store_shift" :tab="$t('s.store_shift')">
                     <ShiftCon />
-                </a-tab-pane>
+                </a-tab-pane> 
                 <a-tab-pane key="contract_info" :tab="$t('s.contract_info')">
                     <ContentInfo />
                 </a-tab-pane>
                 <a-tab-pane key="licenses" :tab="$t('s.licenses')">
-                    <UploadLicenses />
+                    <UploadLicenses /> 
                 </a-tab-pane>
             </a-tabs>
         </div>
@@ -190,15 +190,11 @@ const getStoreDetail = () => {
             latitude: '',// 纬度
             longitude: '',// 经度
         };
+        d.logo = d.logo ? JSON.parse(d.logo) : '';
         for (const key in form.value) {
-            if (d[key] !== 0) {
-                form.value[key] = d[key]
-            } else {
-                form.value[key] = undefined
-            }
+            form.value[key] = d[key]
         }
         console.log('form.value', form.value, 'd', d);
-
     }).catch((err) => {
         console.log("getStoreDetail err:", err);
     }).finally(() => {
@@ -317,6 +313,7 @@ const getStoreDetail = () => {
         font-weight: 400;
         line-height: normal;
         min-width: 200px;
+
         .key {
             display: inline-block;
             color: #86909C;

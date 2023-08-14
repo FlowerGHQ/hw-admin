@@ -1589,6 +1589,7 @@ const messages = {
             city_count:'城市数量',
             store_count:'门店数量',
             add_city:'添加城市',
+            square_text:'面积格式为数字',
         },
         crm_d: {
             list: '试驾单列表',
@@ -4106,6 +4107,7 @@ const messages = {
             city_count:'City Count',
             store_count:'Number Of Stores',
             add_city:'Add City',
+            square_text:'The area format is numeric',
 
         },
 

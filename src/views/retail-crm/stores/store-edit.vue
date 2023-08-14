@@ -86,9 +86,10 @@
                         <div class="key">{{ $t('crm_o.city') }}：</div>
                         <div class="value">
                             <!-- <China2Address @search="handleOtherSearch" :defArea="[form.province, form.city]" -->
-                                <!-- ref='CountryCascader' /> -->
-                                <a-select v-model:value="form.city" :disabled="form.group_id==undefined" :placeholder="$t('def.select')" allowClear>
-                                
+                            <!-- ref='CountryCascader' /> -->
+                            <a-select v-model:value="form.city" :disabled="form.group_id == undefined"
+                                :placeholder="$t('def.select')" allowClear>
+
                                 <a-select-option v-for="item of cityList" :key="item.id" :value="item.city">{{
                                     item.city
                                 }}</a-select-option>
@@ -315,7 +316,7 @@ export default {
         }
     },
     watch: {
-        
+
         form: {
             deep: true,
             handler(oldValue, newValue) {
@@ -355,7 +356,6 @@ export default {
     },
     mounted() {
         this.form.id = Number(this.$route.query.id) || 0;
-        console.log('this.form.id-----------', this.form.id);
         if (this.form.id) {
             this.getStoreDetail();
         }
@@ -385,7 +385,6 @@ export default {
         // 上传图片
         handleCoverChange({ file, fileList }) {
             // 上传成功后在添加   
-            console.log('handleCoverChange--------------------file', file, 'fileList', fileList);
             if (file.status == "done") {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message);
@@ -405,15 +404,17 @@ export default {
                 this.trackRecordForm.image_attachment_list.push(imageAttachment);
                 console.log('imageAttachment', imageAttachment);
             }
+            console.log('file----1212', file, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list);
             // 删除的时候
             if (file.status == "removed") {
                 this.trackRecordForm.image_attachment_list = this.trackRecordForm.image_attachment_list.filter(el => {
-                    return el.id != file.uid
+                    return el.uid != file.uid
                 })
+                console.log('99999', this.trackRecordForm.image_attachment_list);
             }
 
             this.upload.detailList = fileList;
-            console.log('handleCoverChange------------follow', file, 'fileList', fileList, 'this.upload.detailList ', this.upload.detailList, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list, 'this.upload.coverList', this.upload.coverList);
+            // console.log('handleCoverChange------------follow', file, 'fileList', fileList, 'this.upload.detailList ', this.upload.detailList, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list, 'this.upload.coverList', this.upload.coverList);
         },
         // 获取区域
         getRegionsData() {
@@ -437,9 +438,12 @@ export default {
             form.localtion = JSON.stringify(form.localtion);
 
             if (this.trackRecordForm.image_attachment_list.length) {
-                form.logo = this.trackRecordForm.image_attachment_list[0].path;
+                form.logo = JSON.stringify(this.trackRecordForm.image_attachment_list[0]);
+                // form.logo = this.trackRecordForm.image_attachment_list[0].path;
+            } else {
+                form.logo = '';
             }
-            form.open_time = dayjs(form.open_time).unix();
+            form.open_time = form.open_time?dayjs(form.open_time).unix():'';
             // form.open_time = form.open_time ? dayjs.unix(form.open_time[0]).format("YYYY-MM-DD") : undefined // 日期转时间戳
             console.log('保存form', form);
             if (!form.name) {
@@ -463,8 +467,12 @@ export default {
             if (!form.status) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-
-           /*  Core.Api.RETAIL.editStore(form).then(res => {
+            const age = /^[0-9]*$/ 
+            console.log(age.test(form.square));
+            if (!age.test(form.square)) {
+                return this.$message.warning(this.$t('crm_st.square_text'))
+            }
+            Core.Api.RETAIL.editStore(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'));
                 this.routerChange('back')
                 console.log('保存完成', res);
@@ -472,17 +480,30 @@ export default {
                 console.log('editStore err:', err)
             }).finally(() => {
 
-            }) */
+            })
+        },
+        routerChange(type, item) {
+            switch (type) {
+                case 'back':    // 详情
+                    let routeUrl = this.$router.resolve({
+                        path: "/stores-vehicle/stores-list",
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                /*   case 'back':
+                  this.$router.go(-1)
+                  break;  */
+            }
         },
 
-       /*  handleOtherSearch(params) {
-            console.log('params---------store-list', params);
-            for (const key in params) {
-                this.form[key] = params[key]
-            }
-        }, */
+        /*  handleOtherSearch(params) {
+             console.log('params---------store-list', params);
+             for (const key in params) {
+                 this.form[key] = params[key]
+             }
+         }, */
         getUserId(data) {
-            
+
             console.log("getUserId", data);
             this.form.user_id = data;
         },
@@ -501,6 +522,19 @@ export default {
                     latitude: '',// 纬度
                     longitude: '',// 经度
                 };
+                let obj_img = d.logo ? JSON.parse(d.logo) : '';
+                if (obj_img) {
+                    this.trackRecordForm.image_attachment_list.push(obj_img)
+                }
+
+                // 让编辑文件显示
+                this.trackRecordForm.image_attachment_list.forEach(el => {
+                    this.upload.detailList.push({
+                        uid: el.uid,
+                        name: el.name,
+                        url: Core.Const.NET.FILE_URL_PREFIX + el.path
+                    })
+                });
                 for (const key in this.form) {
                     if (d[key] !== 0) {
                         this.form[key] = d[key]
@@ -508,6 +542,8 @@ export default {
                         this.form[key] = undefined
                     }
                 }
+
+
                 console.log('this.form', this.form, 'd', d);
 
             }).catch((err) => {

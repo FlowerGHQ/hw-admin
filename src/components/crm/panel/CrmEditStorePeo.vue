@@ -19,7 +19,7 @@
                                                 <a-tooltip placement="top" :title='text'>
                                                      <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
                                                 </a-tooltip>
-                                            </template>-->
+                    </template>-->
                     <template v-if="column.key === 'money'">
                         {{ text / 100 || '-' }}
                     </template>
@@ -231,15 +231,15 @@ export default {
         // 请求保存-门店详情的添加门店人员
         savePeo(data) {
             console.log('savePeo', data);
-            if(!data.length){
+            if (!data.length) {
                 return;
             }
-            Core.Api.RETAIL.addStoreUser({ user_id_list:data,store_id:this.id })
+            Core.Api.RETAIL.addStoreUser({ user_id_list: data, store_id: this.id })
                 .then(() => {
                     this.$message.success(
-                        this.$t("pop_up.delete_success")
+                        this.$t("i.add_success")
                     ),
-                        this.getTableData();
+                    this.getTableData();
                 })
                 .catch((err) => {
                     console.log("handleDelete err", err);
