@@ -2,7 +2,10 @@
     <div class="list-container">
         <!-- 标题 -->
         <div class="title">
-            <span>投票颜色分布</span>
+            <div>{{ title }}</div>
+            <div class="detail-title" @click="goToDetail('detail')">
+                详情
+            </div>
         </div>
         <!-- echarts -->
         <div class="table-container">
@@ -56,7 +59,8 @@ export default {
                     color: '#FFBC48',
                     percent: '64%'
                 },
-            ]
+            ],
+            title: '投票颜色分布'
         };
     },
     watch: {
@@ -254,6 +258,20 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        goToDetail(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-dashboard/vote-detail",
+                        query: {
+                            title: this.title
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
         }
 
 
@@ -265,25 +283,39 @@ export default {
 .list-container {
     padding-top: 13px;
     padding-left: 18px;
+    padding-right: 18px;
     box-sizing: border-box;
 }
 
 .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
     font-size: 15px;
     font-weight: 600;
     color: #333333;
-    margin-bottom: 36px;
+    margin-bottom: 16px;
+
+    .detail-title {
+        cursor: pointer;
+        color: #0061FF;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+    }
 }
 
 .chart {
     width: 200px;
     height: auto
 }
+
 .table-container {
     display: flex;
     justify-content: center;
     align-items: center;
+
     .legend-container {
         .legend-wrap {
             width: 140px;
@@ -292,23 +324,27 @@ export default {
             align-items: center;
             font-size: 14px;
             margin-bottom: 16px;
+
             .legend-block {
                 width: 82px;
                 margin-right: 13px;
                 display: flex;
                 align-items: center;
+
                 .legend-circle {
                     width: 8px;
                     height: 8px;
                     border-radius: 50%;
                     margin-right: 4px;
                 }
+
                 .legend-key {
                     color: #4E5969;
                     font-size: 14px;
                     font-weight: 400;
                 }
             }
+
             .legend-value {
                 color: #1D2129;
                 font-size: 14px;

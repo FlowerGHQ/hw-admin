@@ -1,7 +1,10 @@
 <template>
     <div class="list-container">
         <div class="title">
-            <span>每日访问参与投票人数</span>
+            <div>{{ title }}</div>
+            <div class="detail-title" @click="goToDetail('detail')">
+                详情
+            </div>
         </div>
         <!-- echarts -->
         <div class="table-container">
@@ -28,6 +31,7 @@ export default {
         return {
             boStatisticsChart: {},
             chartHeight: 254,
+            title: '每日访问参与投票人数',
         };
     },
     watch: {
@@ -73,7 +77,7 @@ export default {
             const chart = new Chart({
                 container: 'votingChannelChartId',
                 autoFit: true,
-                height: 400,
+                height: 410,
             });
             chart.data(data);
             chart.scale('value', {
@@ -99,7 +103,7 @@ export default {
                         marginRatio: 0,
                     },
                 ])
-                // .size(20);
+            // .size(20);
             chart.interaction('active-region');
             chart.render();
             this.boStatisticsChart = chart
@@ -132,9 +136,21 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
+        },
+        goToDetail(type) {
+            let routeUrl = ''
+            switch (type) {
+                case 'detail':    // 编辑
+                    routeUrl = this.$router.resolve({
+                        path: "/crm-dashboard/vote-detail",
+                        query: {
+                            title: this.title
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+            }
         }
-
-
     }
 };
 </script>
@@ -145,11 +161,21 @@ export default {
     box-sizing: border-box;
 
     .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         width: 100%;
         font-size: 15px;
         font-weight: 600;
         color: #333333;
         margin-bottom: 16px;
+        .detail-title {
+            cursor: pointer;
+            color: #0061FF;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 400;
+        }
     }
 }
 

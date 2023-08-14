@@ -1647,6 +1647,17 @@ const routes = [
 					auth: ["crm-label.list"],
 				}
 			},
+			{
+				path: 'vote-detail',
+				name: 'voteDetail',
+				component: () => import('@/views/crm-dashboard/vote-detail.vue'),
+				meta: {
+                    hidden: true,
+					title: '投票详情',
+					title_en: 'Voting Board',
+					auth: ["crm-label.list"],
+				}
+			},
 			// {
 			// 	path: 'employees-home',
 			// 	name: 'EmployeesHome',
