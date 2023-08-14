@@ -316,6 +316,23 @@
             span {
                 white-space: nowrap;
             }
+            .file-list {
+                display: flex;
+                width: 240px;
+                align-items: center;
+                justify-content: space-between;
+    
+                .file-key {
+                    display: flex;
+                    align-items: center;
+                    .file-name {
+                        margin-left: 10px;
+                    }
+                }
+                .file-value {
+                    cursor: pointer;
+                }
+            }
         }
 
         .ant-modal-footer {

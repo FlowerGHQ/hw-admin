@@ -133,7 +133,8 @@
                         <!-- 故障类型 -->
                         <div class="form-wrap required mt" v-if="$1.failure_type === 1">
                             <div class="key">{{ $t('r.fault_types') }}:</div>
-                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" @change="differentCheckChange">
+                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category"
+                                @change="differentCheckChange">
                                 <a-checkbox v-for="item in faultTypesList" :value="item">
                                     {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
                                 </a-checkbox>
@@ -156,7 +157,8 @@
                             <!-- 故障类型 -->
                             <div class="form-wrap required mt" v-if="isShow($1.failure_type)">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
-                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category" @change="differentCheckChange">
+                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category"
+                                    @change="differentCheckChange">
                                     <a-checkbox v-for="item in faultTypesList" :value="item">
                                         {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
                                     </a-checkbox>
@@ -203,26 +205,12 @@
                                                     </a-tooltip>
                                                 </div>
                                                 <div v-if="record.attachment_list.length > 1" class="divide-line"></div>
-                                                <a-popover placement="bottom" trigger="click"
-                                                    @visibleChange="handleClickChange">
-                                                    <template #content>
-                                                        <div class="file-list" v-for="item in record.attachment_list">
-                                                            <!-- <div class="file-list"> -->
-                                                            <a-image :width="24" :height="24"
-                                                                :src="$Util.imageFilter(item?.path.includes('img') ? item?.path : '', 4)"
-                                                                :fallback="$t('def.none')" />
-                                                            <div class="file-name">
-                                                                {{ item.name }}
-                                                            </div>
-                                                            <i class="icon i_delete" />
-                                                            <!-- </div> -->
-                                                        </div>
-                                                    </template>
-                                                    <a-button v-if="record.attachment_list.length > 1" type="link"
-                                                        style="margin-left: 8px; font-size: 14px;">{{
-                                                            $t('n.more')
-                                                        }}</a-button>
-                                                </a-popover>
+                                                <!-- 更多-按钮 -->
+                                                <a-button v-if="record.attachment_list.length > 1" type="link"
+                                                    style="margin-left: 8px; font-size: 14px;"
+                                                    @click="moreAttachModalShow(record.attachment_list)">{{
+                                                        $t('n.more')
+                                                    }}</a-button>
                                                 <div v-if="record.attachment_list.length > 1" class="divide-line"></div>
                                                 <img @click="handleUploadModalShow($2.frame_uid, record.item_id, record)"
                                                     class="upload-icon" src="../../assets/images/upload-icon.png" alt="">
@@ -402,12 +390,30 @@
                     </template>
                 </a-modal>
                 <!-- 添加商品弹框 -->
-                <AddItemModal
-                    v-if="selectAllItemModalShow"
-                    :modalShow="selectAllItemModalShow" 
-                    @select="handleSelectItem" 
-                    @close="closeAddItemModal"
-                />
+                <AddItemModal v-if="selectAllItemModalShow" :modalShow="selectAllItemModalShow" @select="handleSelectItem"
+                    @close="closeAddItemModal" />
+                <!-- 查看更多附件列表弹框 -->
+                <a-modal v-model:visible="attachModalShow" :title="$t('n.upload_attachment')"
+                    class="attachment-file-upload-modal" :after-close="handleModalClose">
+                    <div class="file-list" v-for="(item, index) in currentAttachmentList" :key="index">
+                        <div class="file-key">
+                            <a-image :width="24" :height="24"
+                                :src="$Util.imageFilter(item?.path.includes('img') ? item?.path : '', 4)"
+                                :fallback="$t('def.none')" />
+                            <div class="file-name">
+                                {{ item.name }}
+                            </div>
+                        </div>
+                        <div class="file-value">
+                            <i class="icon i_delete" @click="handleDeleteFile(index)" />
+                        </div>
+                    </div>
+                    <template #footer>
+                        <a-button @click="attachModalShow = false">{{ $t('def.cancel') }}</a-button>
+                        <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure')
+                        }}</a-button>
+                    </template>
+                </a-modal>
             </template>
         </div>
         <div class="fix-container">
@@ -638,6 +644,8 @@ export default {
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
+            attachModalShow: false,
+            currentAttachmentList: [],
         };
     },
     watch: {},
@@ -744,9 +752,18 @@ export default {
         // 选择故障判断是否对应多个商品
         differentCheckChange(checkout) {
             console.log('checkout1', checkout);
-            if(checkout[checkout.length - 1].count) {
+            if (checkout[checkout.length - 1].count) {
                 this.handleSelectItemModal();
             }
+        },
+        // 查看更多附件弹框
+        moreAttachModalShow(list) {
+            console.log('list', list);
+            this.currentAttachmentList = list
+            this.attachModalShow = true
+        },
+        handleDeleteFile(index) {
+            this.currentAttachmentList.splice(index, 1);
         },
         handleSelectItemModal() {
             this.selectItemModalShow = true
@@ -801,7 +818,7 @@ export default {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
-            if(this.selectItemIds.length) {
+            if (this.selectItemIds.length) {
                 this.$message.success(this.$t(/*添加成功*/'pop_up.add'));
             }
             this.closeAddItemModal();
@@ -1076,7 +1093,7 @@ export default {
             let duplicates = this.uidList.length - new Set(this.uidList).size;
             this.form.vehicle_no = undefined
             console.log('uidList', this.uidList);
-            if(duplicates) {
+            if (duplicates) {
                 this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
             }
             Core.Api.Repair.saveVehicleList({
@@ -1614,5 +1631,20 @@ export default {
             align-items: center;
         }
     }
+
+    .attachment-file-upload-modal {
+        .file-list {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: space-between;
+
+            .file-key {
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
 }
 </style>
