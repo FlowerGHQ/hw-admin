@@ -6,7 +6,7 @@
             </div>
             <div class="container">
                 <div class="d-img">
-                    <img class="img" :src="$Util.imageFilter(form.logo)" alt="">
+                    <img class="img" :src="$Util.imageFilter(form.logo?.path)" alt="">
                 </div>
                 <div class="d-content">
                     <a-row class="all-msg">
@@ -190,6 +190,7 @@ const getStoreDetail = () => {
             latitude: '',// 纬度
             longitude: '',// 经度
         };
+        d.logo = d.logo ? JSON.parse(d.logo) : '';
         for (const key in form.value) {
             form.value[key] = d[key]
         }

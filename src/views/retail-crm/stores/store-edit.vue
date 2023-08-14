@@ -443,7 +443,7 @@ export default {
             } else {
                 form.logo = '';
             }
-            form.open_time = dayjs(form.open_time).unix();
+            form.open_time = form.open_time?dayjs(form.open_time).unix():'';
             // form.open_time = form.open_time ? dayjs.unix(form.open_time[0]).format("YYYY-MM-DD") : undefined // 日期转时间戳
             console.log('保存form', form);
             if (!form.name) {
@@ -467,7 +467,11 @@ export default {
             if (!form.status) {
                 return this.$message.warning(this.$t('def.enter'))
             }
-
+            const age = /^[0-9]*$/ 
+            console.log(age.test(form.square));
+            if (!age.test(form.square)) {
+                return this.$message.warning(this.$t('crm_st.square_text'))
+            }
             Core.Api.RETAIL.editStore(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'));
                 this.routerChange('back')
