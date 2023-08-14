@@ -1732,6 +1732,7 @@ const messages = {
 
 
         },
+        // 权限
         authority: {
             title: {
                 'distributor': '分销商管理',
@@ -1776,6 +1777,11 @@ const messages = {
                 'crm-dict': 'CRM数据字典',
                 'crm-test-drive': 'CRM试驾单',
                 'crm-group': '区域',
+
+                'data': '数据看板',
+                'crm-store': '门店管理',
+                'crm-user': '人员管理',
+                'feishu-data': '飞书管理',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2080,6 +2086,34 @@ const messages = {
                 'detail': '查看存货档案分类详情',
                 'delete': '删除存货档案分类',
             },
+            'data':{
+                'board':"时效看板",
+            },
+            'crm-store':{
+                'list':"门店列表",
+                'detail':"门店详情",
+                'save':"门店编辑",
+                'delete': "门店删除",
+                'group-list':"区域列表",
+                'group-detail':"区域详情",
+                'group-save':"区域编辑",
+                'group-delete':"区域删除",
+            },
+            'crm-user':{
+                'list':"人员列表",
+                'detail':"人员详情",
+                'save':"人员编辑",
+                'delete': "人员删除",
+            },
+            'feishu-data':{
+                'per-order':"2.0车辆预定单量",
+                'sale-order':"1.0车辆预定单量",
+                'crm':"crm数据",
+                'after-sale-order':"售后数据",
+                'repair-order':"维修数据",
+                'production':"生产数据",
+                'test-report':"测试数据",
+            }
         },
         error_code: {
             expire: '登录状态已过期，请重新登录',
@@ -2552,6 +2586,7 @@ const messages = {
             add_content:'添加内容',
             directory:'目录',
             add_directory:'添加目录',
+            add_Tips:'该人员已添加，请勿重复添加!',
 
         }
     },
@@ -4213,6 +4248,7 @@ const messages = {
             contract_order: 'Contract Order',
             receipt: 'Receipt',
         },
+        // 权限
         authority: {
             title: {
                 'distributor': 'Distributor Management',
@@ -4252,7 +4288,12 @@ const messages = {
                 'crm-order': 'CRM contract order',
                 'crm-order-income': 'CRM receipt order',
                 'crm-label': 'CRM label',
-                'crm-dict': 'CRM dictionary'
+                'crm-dict': 'CRM dictionary',
+
+                'data': 'Data kanban',
+                'crm-store': 'Store management',
+                'crm-user': 'Personnel management',
+                'feishu-data': 'Flying book management'
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4546,7 +4587,34 @@ const messages = {
                 'detail': 'Inventory category details',
                 'delete': 'Delete inventory category',
             },
-
+            'data':{
+                'board':"Aging kanban",                
+            },
+            'crm-store':{
+                'list':"Store list",
+                'detail':"Store details",
+                'save':"Store editor",
+                'delete': "Store delete",
+                'group-list':"Region list",
+                'group-detail':"Region details",
+                'group-save':"Region editing",
+                'group-delete':"Region delete",
+            },
+            'crm-user':{
+                'list':"Personnel list",
+                'detail':"Personnel details",
+                'save':"Personnel editor",
+                'delete': "Personnel Delete",
+            }, 
+            'feishu-data':{
+                'per-order':"2.0 Vehicle order quantity",
+                'sale-order':"1.0 Vehicle order quantity",
+                'crm':"crm data",
+                'after-sale-order':"After-sales data",
+                'repair-order':"Maintenance data",
+                'production':"Production data",
+                'test-report':"Test data",
+            }       
         },
         error_code: {
             expire: 'The Login Status Has Expired, Please Log In Again',
@@ -4990,6 +5058,7 @@ const messages = {
             add_content:'Add Content',
             directory:'Directory',
             add_directory:'Add Directory',
+            add_Tips:'This person has been added, please do not add again!',
         }
     },
 }

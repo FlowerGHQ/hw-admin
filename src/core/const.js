@@ -137,7 +137,7 @@ let Const = {
 
     USER: { // 用户、账号、用户
         TYPE: {
-            ADMIN: 10, // 管理员
+            ADMIN: 10, // 平台方
             DISTRIBUTOR: 15, //分销商
             AGENT: 20, // 零售商
             STORE: 30, // 门店
@@ -911,6 +911,7 @@ let Const = {
 
     AUTH_LIST_TEMP: [ // 权限
         { list: [], select: [], key: 'home', name: '总览' },
+        { list: [], select: [], key: 'data', name: '时效看板' },
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
         { list: [], select: [], key: 'agent', name: '零售商管理' },
         { list: [], select: [], key: 'store', name: '门店管理' },
@@ -953,6 +954,10 @@ let Const = {
         { list: [], select: [], key: 'crm-label', name: 'CRM标签' },
         { list: [], select: [], key: 'crm-dict', name: 'CRM数据字典' },
         { list: [], select: [], key: 'crm-group', name: 'CRM区域' },
+        // 新加的2023/8/14
+        { list: [], select: [], key: 'crm-store', name: '门店管理' },
+        { list: [], select: [], key: 'crm-user', name: '人员管理' },
+        { list: [], select: [], key: 'feishu-data', name: '飞书管理' }, // (需要小程序判断权限(还未接入))
 
     ],
 
@@ -2233,7 +2238,7 @@ let Const = {
         Working_condition: {
             '1': { key: 1, zh: "在职", en: 'Be on the job' },
             '2': { key: 2, zh: "培训", en: 'train' },
-            '3': { key: 3, zh: "离职", en: 'dimission' },
+            '3': { key: 3, zh: "离职（系统判断）", en: 'dimission' },
         },
         // 职务
         Job: {
