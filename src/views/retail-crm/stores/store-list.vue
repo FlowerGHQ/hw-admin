@@ -491,7 +491,7 @@ export default {
                             _this.$message.success(
                                 _this.$t("pop_up.delete_success")
                             ),
-                                _this.getTableData();
+                            _this.getTableData();
                         })
                         .catch((err) => {
                             console.log("handleDelete err", err);

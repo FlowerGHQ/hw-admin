@@ -141,7 +141,7 @@ export default {
             immediate: true,
             handler(value) {
                 if (value) {
-                    this.$emit('userid', value[0]?.id)
+                    this.$emit('userid', value[0]?.id || '')
                 } else {
                     this.$emit('userid', '')
                 }

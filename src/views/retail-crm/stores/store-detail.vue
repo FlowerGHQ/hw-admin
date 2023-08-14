@@ -17,57 +17,57 @@
                             <!-- 店铺 -->
                             <span class="use tabsty">{{ $t('retail.use') }}零售体验中心</span>
                             <!-- 等级 -->
-                            <span class="test-drive tabsty">{{ $t('retail.test_drive') }}A级</span>
+                            <span class="test-drive tabsty">{{ $t('retail.test_drive') }}{{ form.level }}</span>
                             <!-- 状态 -->
                             <span class="store-type tabsty">{{ $t('retail.test_drive') }}开业</span>
                         </div>
                         <div class="vehicle-id">
-                            <span class="key">江苏省常州市天宁区万达购物商场15幢12楼0812号</span>
-                            <span class="key">上海大区-上海</span>
+                            <span class="key">{{form.address}}</span>
+                            <span class="key">{{form.group_name}}-{{ form.city }}</span>
                             <span class="key">编码：123456</span>
                         </div>
                     </a-row>
                     <a-row class="row-detail">
                         <!-- 京都 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('crm_st.longitude') }}：</span>
+                            <span class="key" style="text-align: left;">{{ $t('crm_st.longitude') }}：</span>
                             <span class="value">
-                                你好
+                                {{form.localtion.longitude?form.localtion.longitude:''}}
                             </span>
                         </a-col>
                         <!-- 纬度 -->
                         <a-col :xs="24" :sm="12" :xl="18" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('crm_st.latitude') }}：</span>
+                            <span class="key" style="width: 80px;text-align: left;">{{ $t('crm_st.latitude') }}：</span>
                             <span class="value">
-                                你好
+                                {{form.localtion.latitude?form.localtion.latitude:''}}
                             </span>
                         </a-col>
                         <!-- 开业时间 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.open_time') }}：</span>
                             <span class="value">
-                                你好
+                                {{form.open_time}}
                             </span>
                         </a-col>
                         <!-- 营业时间 -->
-                        <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
-                            <span class="key">{{ $t('crm_st.com_affil') }}：</span>
-                            <span class="value">
-                                你好
-                            </span>
-                        </a-col>
-                        <!-- 所属门店 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('dis.business_hours') }}：</span>
                             <span class="value">
                                 你好
                             </span>
                         </a-col>
+                        <!-- 所属门店 -->
+                       <!--  <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
+                            <span class="key">{{ $t('dis.business_hours') }}：</span>
+                            <span class="value">
+                                你好
+                            </span>
+                        </a-col> -->
                         <!-- 联系手机 -->
                         <a-col :xs="24" :sm="12" :xl="6" :xxl="6" class="row-item m-t-16">
                             <span class="key">{{ $t('crm_st.con_phone') }}：</span>
                             <span class="value">
-                                你好
+                                {{ form.contact_phone }}
                             </span>
                         </a-col>
                         <!-- 联系邮箱 -->
@@ -105,7 +105,7 @@
         <div class="d-bottom">
             <a-tabs v-model:activeKey="activeKey">
                 <a-tab-pane key="sto_person" :tab="$t('s.sto_person')">
-                    <CrmEditStorePeo :id="id"/>
+                    <CrmEditStorePeo :id="id" />
                 </a-tab-pane>
                 <a-tab-pane key="sto_car" :tab="$t('s.sto_car')">
                     <ShopCarList />
@@ -126,24 +126,85 @@
 
 <script setup>
 
-import { ref, onMounted, computed  } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router'
 import CrmEditStorePeo from '@/components/crm/panel/CrmEditStorePeo.vue';
 import ShopCarList from './components/shop-car-list.vue';
 import ContentInfo from './components/content-info.vue';
 import UploadLicenses from './components/upload-licenses.vue';
 import ShiftCon from './components/ShiftCon.vue';
+import Core from "../../../core";
+import dayjs from "dayjs";
 
 const route = useRoute()
 const activeKey = ref('sto_person')
 const id = ref('')
+const form = ref({
+    id: '', //店铺主键id 传递时更新
+    name: '',
+    logo: '',//logo--img
+    type: undefined,
+    level: undefined,
+    province: '',
+    city: undefined,
+    address: '',
+    status: undefined,
+    open_time: '',
+    business_time: '',
+    contact_email: '',
+    contact_phone: '',
+    group_id: '',
+    group_name: '',
+    square: '',// 面积
+    ground_park_count: '',   // 地上停车位数量
+    underground_park_count: '', //地下停车位数量
+    ground_charge_pile_count: '',  // 地上充电桩数量
+    underground_charge_pile_count: '', //地下充电桩数量
 
+    localtion: {
+        latitude: '',// 纬度
+        longitude: '',// 经度
+    },
+    user_id: '', //店长用户id
+})
 onMounted(() => {
     // getWarehouseDetail()
-    id.value =  Number(route.query.id) || 0;
+    form.value.id = Number(route.query.id) || 0;
+    if (form.value.id) {
+        getStoreDetail();
+    }
 })
 
 
+// 获取门店详情
+const getStoreDetail = () => {
+    // this.loading = true;
+    Core.Api.RETAIL.storeDetail({
+        id: form.value.id,
+    }).then((res) => {
+        console.log("getStoreDetail res:", res);
+        let d = res;
+        d.open_time = d.open_time ? dayjs.unix(d.open_time).format('YYYY-MM-DD') : undefined;
+        d.business_time = d.business_time ? [JSON.parse(d.business_time).time.morning.begin, JSON.parse(d.business_time).time.afternoon.end] : undefined;
+        d.localtion = d.localtion ? JSON.parse(d.localtion) : {
+            latitude: '',// 纬度
+            longitude: '',// 经度
+        };
+        for (const key in form.value) {
+            if (d[key] !== 0) {
+                form.value[key] = d[key]
+            } else {
+                form.value[key] = undefined
+            }
+        }
+        console.log('form.value', form.value, 'd', d);
+
+    }).catch((err) => {
+        console.log("getStoreDetail err:", err);
+    }).finally(() => {
+        // this.loading = false;
+    })
+}
 </script>
 
 <style lang="less" scoped>
@@ -256,7 +317,6 @@ onMounted(() => {
         font-weight: 400;
         line-height: normal;
         min-width: 200px;
-
         .key {
             display: inline-block;
             color: #86909C;

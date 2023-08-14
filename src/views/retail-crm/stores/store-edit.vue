@@ -315,7 +315,18 @@ export default {
         }
     },
     watch: {
+        
+        form: {
+            deep: true,
+            handler(oldValue, newValue) {
 
+                console.log('searchForm', oldValue, newValue);
+                if (newValue.group_id == undefined || oldValue.group_id != newValue.group_id) {
+                    this.form.city = undefined;
+                }
+                console.log('newValue.group_id', newValue.group_id);
+            },
+        },
     },
     computed: {
         // 总充电桩数
@@ -453,7 +464,7 @@ export default {
                 return this.$message.warning(this.$t('def.enter'))
             }
 
-            Core.Api.RETAIL.editStore(form).then(res => {
+           /*  Core.Api.RETAIL.editStore(form).then(res => {
                 this.$message.success(this.$t('pop_up.save_success'));
                 this.routerChange('back')
                 console.log('保存完成', res);
@@ -461,7 +472,7 @@ export default {
                 console.log('editStore err:', err)
             }).finally(() => {
 
-            })
+            }) */
         },
 
        /*  handleOtherSearch(params) {
@@ -471,6 +482,8 @@ export default {
             }
         }, */
         getUserId(data) {
+            
+            console.log("getUserId", data);
             this.form.user_id = data;
         },
 
