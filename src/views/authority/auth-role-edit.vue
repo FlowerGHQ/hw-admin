@@ -99,7 +99,8 @@ export default {
                     break;
             }
         },
-        getAuthRoleDetail() { // 获取角色详情
+        // 获取角色详情
+        getAuthRoleDetail() { 
             this.loading = true;
             Core.Api.Authority.roleDetail({
                 id: this.form.id,
@@ -116,12 +117,13 @@ export default {
                 this.loading = false;
             });
         },
-        getAuthOptions() { // 获取 某个身份下 可选的权限项
+        // 获取 某个身份下 可选的权限项
+        getAuthOptions() { 
             let apiName = this.$auth('ADMIN') ? 'allOptions' : 'authOptions'
             Core.Api.Authority[apiName]({
                 org_type: Core.Data.getOrgType(),
             }).then(res => {
-                console.log('getAuthOptions res:', res)
+                console.log('获取权限', res)
                 let list = res.list
                 list.map(auth => {
                     let key = auth.key.split('.')[0];

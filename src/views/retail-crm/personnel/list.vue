@@ -32,7 +32,10 @@
                     > 
                         <div class="key">{{ $t("retail.working_condition") }}：</div>                        
                         <div class="value">
-                            <a-select v-model:value="searchForm.store_user_status" class="select-w">
+                            <a-select 
+                                v-model:value="searchForm.store_user_status" 
+                                :placeholder="$t('def.select')"
+                                class="select-w">
                                 <a-select-option 
                                     v-for="(item,key) in Core.Const.RETAIL.Working_condition" 
                                     :key="item.key"
@@ -54,7 +57,11 @@
                     >
                         <div class="key">{{ $t("retail.job") }}：</div>                        
                         <div class="value">
-                            <a-select v-model:value="searchForm.store_user_type" class="select-w">
+                            <a-select 
+                                v-model:value="searchForm.store_user_type" 
+                                :placeholder="$t('def.select')"
+                                class="select-w"
+                                >
                                 <a-select-option v-for="item in Core.Const.RETAIL.Job" :value="item.key">
                                     {{ item[$i18n.locale] }}
                                 </a-select-option>
@@ -189,7 +196,9 @@
                     @change="handleTableChange"                  
                 >
                     <template #headerCell="{ title }">
-                        {{ $t(title) }}
+                        <span class="title-style">
+                            {{ $t(title) }}
+                        </span>
                     </template>
                     <template #bodyCell="{ column, text, record }">
                         
@@ -209,18 +218,42 @@
                         <template v-if="column.key === 'store_user_status'">                                                        
                             {{ Core.Const.RETAIL.Working_condition[text]? Core.Const.RETAIL.Working_condition[text][$i18n.locale]: '-' }}
                         </template>
+                        <!-- 所属区域 -->
+                        <template v-if="column.key === 'group_name'">
+                            {{ text }}{{ record?.city?"-":"" }}{{ record?.city }}
+                        </template>
                         <!-- 职务 -->
                         <template v-if="column.key === 'store_user_type'">
                             {{ Core.Const.RETAIL.Job[text]? Core.Const.RETAIL.Job[text][$i18n.locale]: '-' }}
                         </template>
                         <!-- 时间统一转换 -->
-                        <template v-if="column.key === 'time'">
+                        <template v-if="column.key === 'join_time'">
                             {{ $Util.timeFilter(text, 3) }}
                         </template>
+                        <template v-if="column.key === 'create_time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
                         <template v-if="column.key === 'operation'">
-                            <a-button type="link" @click="routerChange('detail',record)">{{ $t("retail.view") }}</a-button>
-                            <a-button type="link" @click="routerChange('edit', record)">{{ $t("retail.edit") }}</a-button>
-                            <a-button type="link" danger @click="routerChange('delete',record)">{{ $t("retail.delete") }}</a-button>
+                            <!-- $auth页面按钮显示与否 具体可以看i18n 文件中authority的配置 -->
+                            <a-button 
+                                v-if="$auth('crm-user.detail')"
+                                type="link" 
+                                @click="routerChange('detail',record)">
+                                {{ $t("retail.view") }}
+                            </a-button>
+                            <a-button 
+                                v-if="$auth('crm-user.save')"
+                                type="link" 
+                                @click="routerChange('edit', record)">
+                                {{ $t("retail.edit") }}
+                            </a-button>
+                            <!-- v-if="$auth('crm-user.delete')" -->
+                            <a-button 
+                                type="link" 
+                                danger 
+                                @click="routerChange('delete',record)">
+                                {{ $t("retail.delete") }}
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -235,7 +268,6 @@ import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import addPersonComponent from './components/addPerson.vue'
-import China2Address from '@/components/common/China2Address.vue'
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
@@ -320,7 +352,7 @@ const tableColumns = computed(() => {
         {
             title: "retail.start_date",
             dataIndex: "join_time",
-            key: "time",                       
+            key: "join_time",                       
         },
         // 添加人员
         {
@@ -332,10 +364,16 @@ const tableColumns = computed(() => {
         {
             title: "retail.add_time",
             dataIndex: "create_time",
-            key: "time",                       
-        },           
-        { title: "retail.operate", key: "operation", fixed: "right" },
+            key: "create_time",                       
+        },
+        { title: "retail.operate", key: "operation", fixed: "right" }
     ];
+
+    // 判断权限有这个权限之一就显示
+    if(proxy.$auth('crm-user.detail','crm-user.save','crm-user.delete')){
+        columns.push({ title: "retail.operate", key: "operation", fixed: "right" },)
+    }
+
     return columns;
 });
 
@@ -501,5 +539,12 @@ const handleTableChange = (pagination, filters, sorter) => {
 }
 .user-name{
     margin-right: 8px;
+}
+
+.title-style{
+    color: var(--color-text-5, #1D2129);
+    font-family: PingFang SC;
+    font-size: 14px;    
+    font-weight: 500;
 }
 </style>

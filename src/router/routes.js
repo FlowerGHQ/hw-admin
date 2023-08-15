@@ -2079,6 +2079,7 @@ const routes = [
             title: '人员管理',
             title_en: 'Personnel Management',
             icon: 'i_renyuan-',
+            // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
         },       
         children: [
             {
@@ -2089,7 +2090,7 @@ const routes = [
                     title: '人员列表',
                     title_en: 'Personnel List',
                     icon: 'i_s_user',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    roles: [LOGIN_TYPE.ADMIN],                    
                 },
             },
             {
@@ -2099,31 +2100,30 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '人员详情',
-                    title_en: 'Personnel Detail',
+                    title_en: 'Personnel Detail',                    
                 },
             },
-            {
-                path: 'role-permiss-man',
-                name: 'rolePermissMan',
-                component: () => import('@/views/retail-crm/personnel/rolePermiss-man.vue'),
-                meta: {
-                    title: '角色权限管理',
-                    title_en: 'Role Permission Management',
-                    icon: 'i_s_user',
-                    roles: [LOGIN_TYPE.ADMIN],
-                },       
-            },
-            {
-                path: 'role-permiss-detail',
-                name: 'rolePermissDetail',
-                component: () => import('@/views/retail-crm/personnel/rolePermiss-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '创建身份',
-                    title_en: 'Create Identity',
-                },
-            },
-            
+            // {
+            //     path: 'role-permiss-man',
+            //     name: 'rolePermissMan',
+            //     component: () => import('@/views/retail-crm/personnel/rolePermiss-man.vue'),
+            //     meta: {
+            //         title: '角色权限管理',
+            //         title_en: 'Role Permission Management',
+            //         icon: 'i_s_user',
+            //         roles: [LOGIN_TYPE.ADMIN],
+            //     },       
+            // },
+            // {
+            //     path: 'role-permiss-detail',
+            //     name: 'rolePermissDetail',
+            //     component: () => import('@/views/retail-crm/personnel/rolePermiss-detail.vue'),
+            //     meta: {
+            //         hidden: true,
+            //         title: '创建身份',
+            //         title_en: 'Create Identity',
+            //     },
+            // },            
         ]
     },
     { // 车辆管理
