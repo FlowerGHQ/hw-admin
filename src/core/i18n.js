@@ -1447,6 +1447,8 @@ const messages = {
             type: '权限',
             administrator: '区域管理员',
             group_man:'区域管理',
+            search_city:'搜索城市',
+
         },
         crm_g: {
             business_opportunities_phase: '商机阶段',
@@ -3965,7 +3967,9 @@ const messages = {
             edit_type: 'Modify the permissions',
             type: 'Permissions',
             administrator: 'Area Administrator',
-            group_man:'Regional Management',
+            group_man:'Regional Management',           
+            search_city:'Search For A City',
+
 
         },
         crm_g: {
