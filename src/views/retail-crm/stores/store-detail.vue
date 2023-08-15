@@ -23,10 +23,10 @@
             <div class="vehicle-msg">
               <span>{{ form.name }}</span>
               <!-- 店铺 -->
-              <span class="use tabsty">{{ $Util.storeLevel(form.level) }}</span>
+              <span class="use tabsty">{{ $Util.storeType(form.type) }}</span>
               <!-- 等级 -->
               <span class="test-drive tabsty">{{
-                $Util.storeType(form.type)
+                $Util.storeLevel(form.level)
               }}</span>
               <!-- 状态 -->
               <span class="store-type tabsty">{{

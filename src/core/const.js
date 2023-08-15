@@ -2302,18 +2302,18 @@ let Const = {
         },
 
         STORE_TYPE: { // 门店类型
-            '1': { key: 1, zh: 'A类', en: 'A kind', value: 1 },
-            '2': { key: 2, zh: 'B类', en: 'B kind', value: 2 },
-            '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
-        },
-
-        STORE_LEVEL: { // 门店等级
             '1': { key: 1, zh: '零售体验中心', en: 'Retail Experience Center', value: 1 },
             '2': { key: 2, zh: '零售体验店', en: 'Retail Experience Store', value: 2 },
             '3': { key: 3, zh: '交付中心', en: 'Delivery Center', value: 3 },
             '4': { key: 4, zh: '维修服务中心', en: 'Repair service center', value: 4 },
             '5': { key: 5, zh: '体验展厅', en: 'Experience the showroom', value: 5 },
             '6': { key: 6, zh: '活动展会', en: 'Event exhibition', value: 6 },
+        },
+
+        STORE_LEVEL: { // 门店等级
+            '1': { key: 1, zh: 'A类', en: 'A kind', value: 1 },
+            '2': { key: 2, zh: 'B类', en: 'B kind', value: 2 },
+            '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
         }
 
     }

@@ -29,7 +29,7 @@
                         </div>
                         <!-- 搜索门店 -->
                         <div class="value">
-                            <a-input :placeholder="$t('crm_st.search_placeholder')" v-model:value="searchForm.key" />
+                            <a-input :placeholde ="$t('crm_st.search_placeholder')" v-model:value="searchForm.key" />
                         </div>
                     </a-col>
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
@@ -156,11 +156,11 @@
                     </template>
                     <template #bodyCell="{ column, text, record }">
 
-                        <template v-if="column.key === 'uid'">
+                        <template v-if="column.key === 'name'">
                             <a-tooltip placement="top" :title="text">
                                 <a-button type="link" @click="routerChange('detail', record)"><span :class="{
                                     nameStyle: nameBoolean(record),
-                                }">
+                                }" class="hid">
                                         {{ text || "-" }}
                                     </span></a-button>
                             </a-tooltip>
@@ -168,21 +168,15 @@
                         <template v-if="column.key === 'order_uid'">
                             {{ text || "-" }}
                         </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || "-" }}
+                       
+                        <template v-if="column.key === 'level'">
+                            {{ $Util.storeLevel(text) || "-" }}
                         </template>
-                        <template v-if="column.key === 'money'">
-                            {{ record.mType
-                            }}{{ $Util.countFilter(text) || "-" }}
+                        <template v-if="column.key === 'status'">
+                            {{ $Util.storeSTATUS(text) || "-" }}
                         </template>
-                        <template v-if="column.key === 'refunded'">
-                            {{ record.mType }}{{ text / 100 || "-" }}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'util'">
-                            {{ $Util[column.util](text, $i18n.locale) }}
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.storeType(text) || "-" }}
                         </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('detail', record)">{{
@@ -336,7 +330,6 @@ export default {
                     title: "ad.specific_address",
                     dataIndex: "address",
                     key: "address",
-                    sorter: true,
                 },
                 { title: "def.operate", key: "operation", fixed: "right" },
             ];
@@ -614,6 +607,17 @@ export default {
     }
     .btn-right {
     }
+}
+
+.hid {
+    width: 20em;
+    overflow: hidden;
+    /* 显示省略符号来代表被修剪的文本。 */
+    text-overflow:ellipsis; 
+    /* 文本不换行 */
+    white-space:nowrap;
+
+
 }
 
 </style>
