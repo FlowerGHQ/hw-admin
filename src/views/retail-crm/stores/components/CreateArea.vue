@@ -11,7 +11,7 @@
   <a-button v-else type="link" @click="handleModalShow">{{
     $t("def.edit")
   }}</a-button>
-  <template v-if="isDrawer && !showAddPop" class="modal-container">
+  <template v-if="isDrawer && !showAddPop" >
     <a-drawer
       v-model:visible="isDrawer"
       class="custom-class"

@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-row class="row-box">
-            <a-col :xs="24" :sm="12" :xl="8" :xxl="6"  class="col-item" v-for="$1 in msgList">
+            <a-col :xs="24" :sm="12" :xl="8" :xxl="6"  class="col-item" v-for="$1 in msgList" :key="$1.value">
                 <span class="title">{{ $t($1.title) }}:</span>
                 <div class="value">
                     <a-input style="width: 80%; font-size: 14px;" :placeholder="$t($1.placeholder)" />
