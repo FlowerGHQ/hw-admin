@@ -3,14 +3,14 @@
         "id": "35",
         "key": "province",
         "code": "CHN011",
-        "name": "北京市",
+        "name": "北京",
         "name_en": "Beijing",
         "children": [
             {
                 "id": "35",
                 "key": "province",
                 "code": "CHN011",
-                "name": "北京",
+                "name": "北京市",
                 "name_en": "Beijing"
             }
         ]
@@ -19,7 +19,7 @@
         "id": "36",
         "key": "province",
         "code": "CHN012",
-        "name": "天津市",
+        "name": "天津直辖市",
         "name_en": "Tianjin",
         "children": [
             {
@@ -1714,7 +1714,7 @@
         "id": "54",
         "key": "province",
         "code": "CHN045",
-        "name": "广西省",
+        "name": "广西壮族自治区",
         "name_en": "Guangxi",
         "children": [
             {

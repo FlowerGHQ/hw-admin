@@ -26,21 +26,21 @@
           {{ $t(title) }}
         </template>
         <template #bodyCell="{ column, text, record }">
-          <!--  <template v-if="column.key === 'detail'">
-                                                <a-tooltip placement="top" :title='text'>
-                                                     <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                                                </a-tooltip>
-                    </template>-->
-          <template v-if="column.key === 'money'">
-            {{ text / 100 || "-" }}
-          </template>
-          <template v-if="column.key === 'item'">
-            {{ text || "-" }}
+          <template v-if="column.key === 'name'">
+            <img
+              v-if="record.avatar"
+              class="avatar-style"
+              :src="record.avatar"
+            />
+            <span class="user-name">{{ text || "-" }}</span>
+            <span>{{ record.employee_no }}</span>
           </template>
           <template v-if="column.key === 'status'">
-                                                                
-            {{ Core.Const.RETAIL.Working_condition[text]? Core.Const.RETAIL.Working_condition[text][$i18n.locale]: '-' }}
-                       
+            {{
+              Core.Const.RETAIL.Working_condition[text]
+                ? Core.Const.RETAIL.Working_condition[text][$i18n.locale]
+                : "-"
+            }}
           </template>
           <template v-if="column.key === 'type'">
             {{
@@ -49,10 +49,7 @@
                 : "-"
             }}
           </template>
-          <template v-if="column.key === 'time'">
-            {{ $Util.timeFilter(text) }}
-          </template>
-          <template v-if="column.key === 'estimated_deal_time'">
+          <template v-if="column.key === 'join_time'">
             {{ $Util.timeFilter(text, 3) }}
           </template>
 
@@ -69,7 +66,6 @@
               @click="routerChange('delete', record)"
               >{{ $t("def.remove") }}</a-button
             >
-            <!--                        <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('customer.delete')"><i class="icon i_delete"/> {{ $t('def.delete') }}</a-button>-->
           </template>
         </template>
       </a-table>
@@ -96,44 +92,39 @@
         <template #headerCell="{ title }">
           {{ $t(title) }}
         </template>
+
         <template #bodyCell="{ column, text, record }">
-          <!--  <template v-if="column.key === 'detail'">
-                                                <a-tooltip placement="top" :title='text'>
-                                                     <a-button type="link" @click="routerChange('detail', record)">{{text || '-'}}</a-button>
-                                                </a-tooltip>
-                                            </template>-->
-          <template v-if="column.key === 'money'">
-            {{ text / 100 || "-" }}
+          <template v-if="column.key === 'name'">
+            <img
+              v-if="record.avatar"
+              class="avatar-style"
+              :src="record.avatar"
+            />
+            <span class="user-name">{{ text || "-" }}</span>
+            <span>{{ record.employee_no }}</span>
           </template>
-          <template v-if="column.key === 'item'">
-            {{ text || "-" }}
+          <template v-if="column.key === 'status'">
+            {{
+              Core.Const.RETAIL.Working_condition[text]
+                ? Core.Const.RETAIL.Working_condition[text][$i18n.locale]
+                : "-"
+            }}
           </template>
-          <template v-if="column.key === 'store_user_status'">
-                                                                 
-            {{ Core.Const.RETAIL.Working_condition[text]? Core.Const.RETAIL.Working_condition[text][$i18n.locale]: '-' }}
-                       
-          </template>
-          <template v-if="column.key === 'store_user_type'">
+          <template v-if="column.key === 'type'">
             {{
               Core.Const.RETAIL.Job[text]
                 ? Core.Const.RETAIL.Job[text][$i18n.locale]
                 : "-"
             }}
           </template>
-          <template v-if="column.key === 'time'">
-            {{ $Util.timeFilter(text) }}
-          </template>
-          <template v-if="column.key === 'estimated_deal_time'">
+          <template v-if="column.key === 'join_time'">
             {{ $Util.timeFilter(text, 3) }}
           </template>
 
           <template v-if="column.key === 'operation'">
-            <a-button
-              type="link"
-              @click="routerChange('detail', record)"
-              v-if="$auth('customer.detail')"
-              >{{ $t("def.see") }}</a-button
-            >
+            <a-button type="link" @click="routerChange('detail', record)">{{
+              $t("def.see")
+            }}</a-button>
             <a-button
               type="link"
               class="danger"
@@ -246,44 +237,20 @@ export default {
     },
   },
   computed: {
-    tableColumns() {
-      let columns = [
-        { title: "n.name", dataIndex: "name", key: "name" },
-        {
-          title: "crm_st.Work_status",
-          dataIndex: "store_user_status",
-          key: "store_user_status",
-        },
-        { title: "n.phone", dataIndex: "phone", key: "phone" },
-        {
-          title: "crm_st.office",
-          dataIndex: "store_user_type",
-          key: "store_user_type",
-        },
-        {
-          title: "crm_st.bound_thread",
-          dataIndex: "estimated_deal_time",
-          key: "estimated_deal_time",
-        },
-        { title: "crm_st.job_time", dataIndex: "join_time", key: "join_time" },
-        { title: "def.operate", key: "operation", fixed: "right" },
-      ];
-      return columns;
-    },
     tableColumnsPeo() {
       let columns = [
         { title: "n.name", dataIndex: "user_name", key: "name" },
         {
           title: "crm_st.Work_status",
           dataIndex: "status",
-          key: "store_user_status",
+          key: "status",
         },
         { title: "n.phone", dataIndex: "user_phone", key: "phone" },
-        { title: "crm_st.office", dataIndex: "type", key: "store_user_type" },
+        { title: "crm_st.office", dataIndex: "type", key: "type" },
         {
           title: "crm_st.bound_thread",
-          dataIndex: "store_user_type",
-          key: "estimated_deal_time",
+          dataIndex: "clue_count",
+          key: "clue_count",
         },
         { title: "crm_st.job_time", dataIndex: "join_time", key: "join_time" },
         { title: "def.operate", key: "operation", fixed: "right" },
@@ -359,14 +326,15 @@ export default {
                      } */
           break;
         case "detail": // 详情
-          // routeUrl = this.$router.resolve({
-          //     path: "/system/user-detail",
-          //     query: {id: item.id}
-          // })
-          // window.open(routeUrl.href, '_blank')
+          routeUrl = this.$router.resolve({
+            path: "/retail-personnel/personnel-detail",
+            query: { id: item.user_id },
+          });
+          window.open(routeUrl.href, "_blank");
           break;
       }
     },
+
     // 删除门店人员
     handleDelete(id) {
       let _this = this;
@@ -425,5 +393,17 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+
+
+.avatar-style{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.user-name{
+    margin-right: 8px;
+}
+</style>
 
