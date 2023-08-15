@@ -968,6 +968,9 @@ const messages = {
             licenses:'证照',
             search_place:'搜索区域城市',
             create_area:'创建区域',
+            place_store_name:'请输入门店名称',
+            place_store_man:'请输入店长名称',
+
         },
         af: { // 售后单
             list: '售后单列表',
@@ -3511,6 +3514,8 @@ const messages = {
             licenses:'Licenses',
             search_place:'Search For A Regional City',
             create_area:'Create A Zone',
+            place_store_name:'Please enter the store name',
+            place_store_man:"Please enter the store manager's name",
 
         },
         af: {//售后单

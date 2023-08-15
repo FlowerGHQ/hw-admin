@@ -29,7 +29,7 @@
                         </div>
                         <!-- 搜索门店 -->
                         <div class="value">
-                            <a-input :placeholde ="$t('crm_st.search_placeholder')" v-model:value="searchForm.key" />
+                            <a-input :placeholder ="searchForm.search_type == 1 ? $t('s.place_store_name') : $t('s.place_store_man')" v-model:value="searchForm.key" />
                         </div>
                     </a-col>
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
