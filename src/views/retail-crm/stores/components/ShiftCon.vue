@@ -17,11 +17,10 @@
                 </div>
             </template>
             <a-radio-group v-model:value="value">
-                <div class="con" v-for="(item,inde) in 5">
+                <div class="con" v-for="(item,inde) in 5" :key="inde">
                     <a-radio :style="radioStyle" :value="inde">Option {{ inde }}</a-radio>
                     <ShfitItem />
                 </div>
-                
             </a-radio-group>
         </a-modal>
     </div>

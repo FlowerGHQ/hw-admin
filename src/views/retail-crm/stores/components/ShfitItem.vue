@@ -1,6 +1,6 @@
 <template>
     <div class="shift">
-        <div class="shift-box" v-for="item in list">
+        <div class="shift-box" v-for="item in list" :key="item.id">
             <div class="type wei">{{ item.type }}</div>
             <div>{{ item.time }}</div>
             <div :class="[item.open ? 'type open' : 'open']">{{ item.open ? $t('crm_st.enabled') : $t('crm_st.no_enabled')
@@ -24,26 +24,31 @@ export default {
     computed: {
         list() {
             let arr = [{
+                id:1,
                 type: '早',
                 time: '8:00 - 9:30',
                 open: false,
 
             }, {
+                id:2,
                 type: '上',
                 time: '8:00 - 9:30',
                 open: false,
 
             }, {
+                id:3,
                 type: '中',
                 time: '8:00 - 9:30',
                 open: false,
 
             }, {
+                id:4,
                 type: '下',
                 time: '8:00 - 9:30',
                 open: false,
 
             }, {
+                id:5,
                 type: '晚',
                 time: '8:00 - 9:30',
                 open: false,

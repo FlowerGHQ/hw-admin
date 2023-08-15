@@ -67,7 +67,7 @@
             <template v-if="column.key === 'city_list'">
               <!-- {{ text || "-" }} -->
 
-              <text v-for="(item, index) in text">{{
+              <text v-for="(item, index) in text" :key="index">{{
                 item.city + (index + 1 < text.length ? "、" : "")
               }}</text>
             </template>

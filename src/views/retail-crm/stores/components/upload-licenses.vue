@@ -9,7 +9,7 @@
         </div>
 
         <div class="pic-list">
-            <UploadLic v-for="($1, ind) in trackRecordForm.image_attachment_list" :imgObj="$1" @delete="deleteItemImg"
+            <UploadLic v-for="$1 in trackRecordForm.image_attachment_list" :key="$1.uid" :imgObj="$1" @delete="deleteItemImg"
                 @reupload="reuploadImg" />
         </div>
     </div>
