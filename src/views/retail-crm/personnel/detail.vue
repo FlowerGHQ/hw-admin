@@ -3,7 +3,7 @@
         <div class="d-top">
             <div class="header">
                 <div class="title">
-                    {{ $t("retail.personnel_list")}} 
+                    {{ $t("retail.personnel_detail")}} 
                 </div>
                 <div class="btn">
                     <a-button type="primary" @click="onBtn">{{ $t('retail.save') }}</a-button>
@@ -331,7 +331,7 @@ const personDetailFetch = (params = {}) => {
                     const result = regionsList.value.find($2 => {
                         return $2.id == $1.group_id
                     })
-                    $1.cityList = result.city_list
+                    $1.cityList = result?.city_list || []
                 });
             }
 
@@ -345,7 +345,7 @@ const personDetailFetch = (params = {}) => {
 // 更新创建接口
 const personUpdateFetch = (params = {}) => { 
     Core.Api.RETAIL.personUpdate({
-        id: fill_out.value.id,       
+        id: fill_out.value.id,
         ...params
     }).then((res) => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
@@ -395,7 +395,7 @@ const addrole = () => {
     fill_out.value.role_id_list.push({})
 }
 const deleterole = (index) => {    
-    fill_out.value.role_id_list.value.splice(index,1)
+    fill_out.value.role_id_list.splice(index,1)
 }
 // 角色权限 //
 
@@ -421,7 +421,7 @@ const allChange = (type, item) => {
             break;
     }    
 }
-// 按钮
+// 保存按钮
 const onBtn = () => {    
     console.log("最后结果 fill_out.value", fill_out.value);
     personUpdateFetch(fill_out.value)

@@ -2535,6 +2535,7 @@ const messages = {
             modification_time:"修改时间",  // Modification time   
             
             personnel_list:'人员列表', // Personnel list
+            personnel_detail:'人员详情', // Personnel detail
             searcher:"搜索人员", // searcher
             working_condition:"工作状态", // Working condition
             job:"职务", // job
@@ -5007,6 +5008,7 @@ const messages = {
             modification_time:"Modification time",
 
             personnel_list:'Personnel List',
+            personnel_detail:'personnel Detail',
             searcher:"Searcher",
             working_condition:"Working Condition",
             job:"Job",
