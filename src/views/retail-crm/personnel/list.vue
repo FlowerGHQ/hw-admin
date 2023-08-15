@@ -235,25 +235,29 @@
                         </template>
                         <template v-if="column.key === 'operation'">
                             <!-- $auth页面按钮显示与否 具体可以看i18n 文件中authority的配置 -->
+                                <!-- v-if="$auth('crm-user.detail')" -->
                             <a-button 
-                                v-if="$auth('crm-user.detail')"
                                 type="link" 
                                 @click="routerChange('detail',record)">
                                 {{ $t("retail.view") }}
                             </a-button>
+                                <!-- v-if="$auth('crm-user.save')" -->
                             <a-button 
-                                v-if="$auth('crm-user.save')"
                                 type="link" 
                                 @click="routerChange('edit', record)">
                                 {{ $t("retail.edit") }}
                             </a-button>
                             <!-- v-if="$auth('crm-user.delete')" -->
-                            <a-button 
-                                type="link" 
-                                danger 
-                                @click="routerChange('delete',record)">
-                                {{ $t("retail.delete") }}
-                            </a-button>
+                            <a-popconfirm                                    
+                                    :title="$t('retail.confirm_deletion')"
+                                    :ok-text="$t('retail.confirm')"
+                                    :cancel-text="$t('retail.cancel')"
+                                    @confirm="routerChange('delete',record)"                                    
+                                >                                                                    
+                                <a-button type="link" danger>
+                                    {{ $t("retail.delete") }}
+                                </a-button>
+                            </a-popconfirm>
                         </template>
                     </template>
                 </a-table>

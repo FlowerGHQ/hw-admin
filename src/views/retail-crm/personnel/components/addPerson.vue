@@ -114,20 +114,20 @@ const userListFetch = (params = {}, isSearch = false) => {
         }
 
         fsList.value = fsList.value.concat(res.list)
-        // console.log("获取人员list", res);
         console.log("获取人员list", res, fsList.value);
-        // 如果fsList少于五个就在调动一次接口以便于达到滚动条出现
+        
+        // 过滤掉已经添加的数据
         const arr_le = fsList.value.filter(el => {
             return !el.select
         })
-        // 搜索人员的话找不到的不走下面逻辑
-        if(!userName.value){
+        if(!isSearch || !userName.value){
+            // 搜索调用接口的
             if(arr_le.length < 5){
                 pagination.page++
                 userListFetch({ page: pagination.page, page_size: 5 })
             }
         }else{
-            console.log("输出de", arr_le.length);
+            // 搜索人员的时候如果为空就提示
             if(arr_le.length == 0){
                 proxy.$message.warning(proxy.$t('retail.add_Tips'))
             }
