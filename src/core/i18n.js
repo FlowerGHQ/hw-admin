@@ -1301,7 +1301,8 @@ const messages = {
         },
         crm_region: {
             list: '区域列表',
-            name: '区域名称',
+            name: '区域名称',            
+            city: '区域城市',
             sub: '下级区域',
             new_top: '新增顶级区域',
             edit: '编辑区域',
@@ -1446,6 +1447,8 @@ const messages = {
             type: '权限',
             administrator: '区域管理员',
             group_man:'区域管理',
+            search_city:'搜索城市',
+
         },
         crm_g: {
             business_opportunities_phase: '商机阶段',
@@ -3822,6 +3825,7 @@ const messages = {
         crm_region: {
             list: 'Area List',
             name: 'Area Name',
+            city: 'Area City',
             sub: 'Sub Zone',
             new_top: 'Add Top Level Region',
             edit: 'Edit Area',
@@ -3964,7 +3968,9 @@ const messages = {
             edit_type: 'Modify the permissions',
             type: 'Permissions',
             administrator: 'Area Administrator',
-            group_man:'Regional Management',
+            group_man:'Regional Management',           
+            search_city:'Search For A City',
+
 
         },
         crm_g: {
