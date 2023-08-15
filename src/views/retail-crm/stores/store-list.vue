@@ -2,15 +2,14 @@
     <div id="StoreList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">门店管理</div>
-                <div class="btns-area">
-                    <!-- v-if="$auth('crm-order.save')" -->
+                <div class="title-area">{{$t('s.store_list')}}</div>
+                <!-- <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
                     }}</a-button>
-                </div>
+                </div> -->
             </div>
-            <div class="search-container">
-                <a-row class="search-area">
+            <div class="search-container" style="background-color: #FFF;">
+                <a-row class="search-area" style="width: 100%;">
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
                         <div class="key" style="width: 110px;margin-left: -10px;display: flex;align-items: center;">{{
                             searchForm.search_type == 1 ? $t("crm_st.search_name") : $t("crm_st.search_man") }}：<div
@@ -115,15 +114,41 @@
                     </a-col>
                 </a-row>
 
-                <div class="btn-area">
+               <!--  <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">{{
                         $t("def.search")
                     }}</a-button>
                     <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
-                </div>
+                </div> -->
             </div>
 
             <div class="table-container">
+
+               <!--  <div class="btns-area">
+                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
+                    }}</a-button>
+                </div>  -->
+                <div class="btns">
+                    <div class="btn-left">
+                        <!-- 添加人员 -->
+                        <a-button 
+                            type="primary" 
+                            @click="routerChange('edit')" 
+                        >
+                            <i class="icon i_add" />
+                            {{ $t("crm_st.add_st") }}
+                        </a-button>
+                    </div>
+                    <div class="btn-right">
+                        <a-button @click="handleSearchReset">
+                            {{ $t("def.reset")}}
+                        </a-button>
+                        <a-button @click="handleSearch" type="primary">
+                            {{ $t("def.search")}}
+                        </a-button> 
+                    </div>
+                </div>
+
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :row-key="(record) => record.id" :pagination="false" @change="getTableDataSorter">
                     <template #headerCell="{ title }">
@@ -576,4 +601,19 @@ export default {
         }
     }
 }
+
+.btns {
+    .fcc(space-between);
+    margin-bottom: 20px;
+    margin-top: -15px;
+    .btn-left {
+        .left-btn-style {
+            background-color: #94bfff;
+            color: #ffffff;
+        }
+    }
+    .btn-right {
+    }
+}
+
 </style>

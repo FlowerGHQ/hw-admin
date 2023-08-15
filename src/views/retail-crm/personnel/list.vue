@@ -37,7 +37,7 @@
                                 :placeholder="$t('def.select')"
                                 class="select-w">
                                 <a-select-option 
-                                    v-for="(item,key) in Core.Const.RETAIL.Working_condition" 
+                                    v-for="(item , key) in Core.Const.RETAIL.Working_condition" 
                                     :key="item.key"
                                     :value="item.key"
                                     :disabled="item.key === 3"
