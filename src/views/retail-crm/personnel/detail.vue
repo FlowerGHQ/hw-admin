@@ -417,13 +417,17 @@ const allChange = (type, item) => {
         case 'role': 
             console.log("role");
             let arr = fill_out.value.role_id_list
-            fill_out.value.role_id_list = [...new Set(arr.map(item => item.id))]
+            fill_out.value.role_id_list = [...new Set(arr.map(item => {
+                return { id:item.id }
+            }))]
             break;
     }    
 }
 // 保存按钮
 const onBtn = () => {    
     console.log("最后结果 fill_out.value", fill_out.value);
+    // 提交的时候role_id_list传给后端是[1,2,3]  回显的时候编辑的成 [{id}] 回显
+    fill_out.value.role_id_list = [...new Set(fill_out.value.role_id_list.map(item => item.id))]
     personUpdateFetch(fill_out.value)
 }
 </script>
