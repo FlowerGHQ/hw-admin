@@ -1301,7 +1301,8 @@ const messages = {
         },
         crm_region: {
             list: '区域列表',
-            name: '区域名称',
+            name: '区域名称',            
+            city: '区域城市',
             sub: '下级区域',
             new_top: '新增顶级区域',
             edit: '编辑区域',
@@ -3786,6 +3787,7 @@ const messages = {
         crm_region: {
             list: 'Area List',
             name: 'Area Name',
+            city: 'Area City',
             sub: 'Sub Zone',
             new_top: 'Add Top Level Region',
             edit: 'Edit Area',

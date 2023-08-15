@@ -23,7 +23,7 @@
             </div>
 
             <div class="form-item required region-con">
-                <div class="key">
+                <div class="key" >
                     {{ $t('crm_region.name') }}
                 </div>
                 <div class="value">
@@ -35,8 +35,8 @@
                 {{ messageText }}
             </div>
             <div class="region-tree form-item required ">
-                <div class="key">
-                    {{ $t('crm_region.name') }}
+                <div class="key"  style="height: 32px;line-height: 32px;">
+                    {{ $t('crm_region.city') }}
                 </div>
                 <div class="value">
                     <div class="add-city" @click="showAddCity">{{ $t('crm_st.add_city') }}</div>
