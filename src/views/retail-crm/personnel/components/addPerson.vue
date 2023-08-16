@@ -1,11 +1,9 @@
 <template>
-    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" :okText="$t('def.save')" @ok="handleOk"
-        @cancel="handleCancel">
+    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')">
         <div class="box-model" @scroll="handleScroll">
-            <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @blur="inputEvent"
-                @pressEnter="inputEvent">
+            <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @pressEnter="inputEvent">
                 <template #prefix>
-                    <search-outlined :style="{ fontSize: '16px' }" />
+                    <search-outlined class="search-icon-style" @click="inputEvent"  />
                 </template>
             </a-input>
             <!-- 选好的人员 -->
@@ -43,6 +41,10 @@
                 </div>
             </div>
         </div>
+        <template #footer>
+            <a-button @click="handleCancel">{{ $t('def.cancel') }}</a-button>
+            <a-button @click="handleOk" type="primary">{{ $t('def.ok') }}</a-button>
+        </template>
     </a-modal>
 </template>
 
@@ -108,6 +110,8 @@ const userListFetch = (params = {}, isSearch = false) => {
         pagination.total = res.count
         pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
 
+        
+
         // 是否是搜索的
         if (isSearch) {
             fsList.value = []
@@ -115,8 +119,10 @@ const userListFetch = (params = {}, isSearch = false) => {
 
         fsList.value = fsList.value.concat(res.list)
         console.log("获取人员list", res, fsList.value);
-        
-        // 过滤掉已经添加的数据
+                
+        if(res.list.length == 0){ return proxy.$message.warning(proxy.$t('当前搜索人员不存在'))}  // 当前搜索人员不存在
+
+        // 过滤掉已经选中的数据
         const arr_le = fsList.value.filter(el => {
             return !el.select
         })
@@ -124,7 +130,7 @@ const userListFetch = (params = {}, isSearch = false) => {
             // 搜索调用接口的
             if(arr_le.length < 5){
                 pagination.page++
-                userListFetch({ page: pagination.page, page_size: 5 })
+                userListFetch({ page: pagination.page, page_size: pagination.page_size })
             }
         }else{
             // 搜索人员的时候如果为空就提示
@@ -173,6 +179,7 @@ const handleOk = () => {
 }
 // 取消
 const handleCancel = () => {
+    console.log("点击的东西");
     emits('update:isShow', false)
 }
 // 输入框失去焦点/回车/点击
@@ -346,6 +353,9 @@ const handleScroll = (e) => {
     max-height: 360px;
     overflow: auto;
     padding: 0px 10px;
+    .search-icon-style{
+        font-size: 16px;
+    }
 }
 
 .box-model::-webkit-scrollbar {

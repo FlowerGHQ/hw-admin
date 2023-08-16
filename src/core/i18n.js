@@ -2595,7 +2595,7 @@ const messages = {
             directory:'目录',
             add_directory:'添加目录',
             add_Tips:'该人员已添加，请勿重复添加!',
-
+            confirm_delete_person:"确认移除该人员"
         }
     },
 
@@ -5074,6 +5074,7 @@ const messages = {
             directory:'Directory',
             add_directory:'Add Directory',
             add_Tips:'This person has been added, please do not add again!',
+            confirm_delete_person:"Confirm removal of the person"
         }
     },
 }

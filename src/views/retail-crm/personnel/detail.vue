@@ -170,6 +170,7 @@
                                 <a-select 
                                     v-model:value="item.group_id" 
                                     class="select-w" 
+                                    :placeholder="$t('n.choose')"
                                     @change="allChange('group_id', item)"
                                 >
                                     <a-select-option 
@@ -205,7 +206,11 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.affiliated_store')}}：</span>
                             <span class="value">
-                                <a-select v-model:value="item.store_id" class="select-w">
+                                <a-select 
+                                    v-model:value="item.store_id" 
+                                    class="select-w"
+                                    :placeholder="$t('n.choose')"
+                                    >
                                     <a-select-option
                                         v-for="item of storeList"
                                         :key="item.id"
@@ -325,9 +330,15 @@ const personDetailFetch = (params = {}) => {
             }else{
                 fill_out.value.store_user_list.forEach($1 => {
                     // 为了让 placeholder 显示
-                    if($1.city == ""){
+                    if($1.city == "" || $1.city == 0){
                         $1.city = undefined
                     }                   
+                    if($1.group_id == "" || $1.group_id == 0){
+                        $1.group_id = undefined
+                    }                   
+                    if($1.store_id == "" || $1.store_id == 0){
+                        $1.store_id = undefined
+                    }
                     const result = regionsList.value.find($2 => {
                         return $2.id == $1.group_id
                     })
@@ -344,8 +355,11 @@ const personDetailFetch = (params = {}) => {
 }
 // 更新创建接口
 const personUpdateFetch = (params = {}) => { 
+    const obj = proxy.$Util.deepCopy(fill_out.value)
+    obj.role_id_list = [...new Set(fill_out.value.role_id_list.map(item => item.id))].filter(el => el)
+    // console.log("输出", obj);
     Core.Api.RETAIL.personUpdate({
-        id: fill_out.value.id,
+        ...obj,
         ...params
     }).then((res) => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
@@ -382,7 +396,7 @@ const getStoreDataFetch = (params = {}) => {
 const getRoleData = (params = {}) => {
     Core.Api.Authority.roleList({...params}).then((res) => {
         // console.log("获取角色 success", res);
-        roleList.value = res.list
+        roleList.value = res.list        
     }).catch((err) => {
         console.log("获取角色 err", err);
     })
@@ -392,7 +406,7 @@ const getRoleData = (params = {}) => {
 /* methods start*/
 // 角色权限 //
 const addrole = () => {    
-    fill_out.value.role_id_list.push({})
+    fill_out.value.role_id_list.push({id: ""})
 }
 const deleterole = (index) => {    
     fill_out.value.role_id_list.splice(index,1)
@@ -403,7 +417,7 @@ const deleterole = (index) => {
 const allChange = (type, item) => { 
     console.log("输出", item);   
     switch(type){
-        case 'group_id':            
+        case 'group_id':
             const result = regionsList.value.find(el => {
                 return el.id == item.group_id
             })   
@@ -424,11 +438,10 @@ const allChange = (type, item) => {
     }    
 }
 // 保存按钮
-const onBtn = () => {    
-    console.log("最后结果 fill_out.value", fill_out.value);
-    // 提交的时候role_id_list传给后端是[1,2,3]  回显的时候编辑的成 [{id}] 回显
-    fill_out.value.role_id_list = [...new Set(fill_out.value.role_id_list.map(item => item.id))]
-    personUpdateFetch(fill_out.value)
+const onBtn = () => {
+    // 提交的时候role_id_list传给后端是[1,2,3]  回显的时候编辑成 [{id:}] 回显
+    console.log("最后结果 fill_out.value", fill_out.value);    
+    personUpdateFetch()
 }
 </script>
 

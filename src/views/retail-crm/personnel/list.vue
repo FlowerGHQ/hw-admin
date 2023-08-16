@@ -14,7 +14,7 @@
                         :xxl="6"
                         class="row-item"
                     >
-                        <div class="key">{{ $t("retail.searcher") }}：</div>                        
+                        <div class="key ">{{ $t("retail.searcher") }}：</div>                        
                         <div class="value">
                             <a-input
                                 :placeholder="$t('retail.person_or_name')"
@@ -248,12 +248,16 @@
                                 {{ $t("retail.edit") }}
                             </a-button>
                             <!-- v-if="$auth('crm-user.delete')" -->
-                            <a-popconfirm                                    
-                                    :title="$t('retail.confirm_deletion')"
+                            <a-popconfirm
                                     :ok-text="$t('retail.confirm')"
                                     :cancel-text="$t('retail.cancel')"
                                     @confirm="routerChange('delete',record)"                                    
-                                >                                                                    
+                                >
+                                <template #title>
+                                    <span>{{ $t('retail.confirm_delete_person') }}</span>
+                                    <span class="name-employeeno">{{ record.name }}</span>
+                                    <span class="name-employeeno">{{ record.employee_no }}</span>
+                                </template>
                                 <a-button type="link" danger>
                                     {{ $t("retail.delete") }}
                                 </a-button>
@@ -550,5 +554,10 @@ const handleTableChange = (pagination, filters, sorter) => {
     font-family: PingFang SC;
     font-size: 14px;    
     font-weight: 500;
+}
+.name-employeeno{
+    font-weight: 600;
+    color: #1D2129;
+    margin-left: 10px;
 }
 </style>
