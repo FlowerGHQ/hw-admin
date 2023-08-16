@@ -1649,6 +1649,44 @@ const routes = [
 			// },
 		]
 	},
+	{ // 好物订单
+		path: '/good-things-order',
+		component: Layout,
+		redirect: '/good-things-order/order-list',
+		name: 'GoodThingsOrder',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '好物订单',
+			title_en: 'Good Things Order',
+			icon: 'i_s_customer',
+			// auth: ["crm-customer.list"],
+		},
+		children: [
+			{
+				path: 'order-list',
+				name: 'OrderList',
+				component: () => import('@/views/good_things_order/order-list.vue'),
+				meta: {
+					title: '订单列表',
+					title_en: 'Order List',
+					// type: 'region',
+					// auth: ['MANAGER_GROUP','MANAGER'],
+				}
+			},
+			{
+				path: 'private-customer-list',
+				name: 'PrivateCustomerList',
+				component: () => import('@/views/good_things_order/order-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '订单详情',
+					title_en: 'Order Detail',
+					// type: 'private',
+                    // auth: ["crm-customer.list"],
+				}
+			},
+		]
+	},
 	{ // 客户管理
 		path: '/crm-customer',
 		component: Layout,
