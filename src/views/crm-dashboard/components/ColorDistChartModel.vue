@@ -9,16 +9,26 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
-            <div class="legend-container" v-if="legendFlag">
-                <div class="legend-wrap" v-for="item in legendList">
-                    <div class="legend-block">
-                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.item }}</div>
+            <template v-if="isEmpty">
+                <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
+                <div class="legend-container">
+                    <div class="legend-wrap" v-for="item in legendList">
+                        <div class="legend-block">
+                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                            <div class="legend-key">{{ item.item }}</div>
+                        </div>
+                        <div class="legend-value">{{ item.percent + '%' }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent + '%' }}</div>
                 </div>
-            </div>
+            </template>
+            <template v-else>
+                <div class="empty-wrap">
+                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                    <div class="empty-desc">
+                        暂无数据
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -50,7 +60,7 @@ export default {
             groupStatusTableData: [],
             legendList: [],
             title: '投票颜色分布',
-            legendFlag: false,
+            isEmpty: false,
         };
     },
     watch: {
@@ -258,7 +268,7 @@ export default {
                     item.color = color[index + 1]
                 })
                 if (transformedData) {
-                    this.legendFlag = true
+                    this.isEmpty = true
                 }
                 this.drawBoStatisticsChart(transformedData);
             } catch (error) {
@@ -360,6 +370,20 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    .empty-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        >img {
+            width: 280px;
+        }
+        .empty-desc {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #86909C;
+        }
+    }
 
     .legend-container {
         .legend-wrap {

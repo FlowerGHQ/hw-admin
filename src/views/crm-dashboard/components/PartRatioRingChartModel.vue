@@ -9,16 +9,26 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
-            <div class="legend-container" v-if="legendFlag">
-                <div class="legend-wrap" v-for="item in legendList">
-                    <div class="legend-block">
-                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.name }}</div>
+            <template v-if="isEmpty">
+                <div id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
+                <div class="legend-container">
+                    <div class="legend-wrap" v-for="item in legendList">
+                        <div class="legend-block">
+                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                            <div class="legend-key">{{ item.name }}</div>
+                        </div>
+                        <div class="legend-value">{{ item.percent }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent }}</div>
                 </div>
-            </div>
+            </template>
+            <template v-else>
+                <div class="empty-wrap">
+                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                    <div class="empty-desc">
+                        暂无数据
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -48,7 +58,7 @@ export default {
             groupStatusTableData: [],
             legendList: [],
             title: '已支付用户参与比例',
-            legendFlag: false,
+            isEmpty: false,
         };
     },
     watch: {
@@ -61,7 +71,7 @@ export default {
         },
     },
     computed: {},
-    created() {},
+    created() { },
     mounted() {
         this.getPartRatioRingChartData()
     },
@@ -194,7 +204,7 @@ export default {
                 ];
                 this.legendList = formattedData
                 if (formattedData[0].count) {
-                    this.legendFlag = true
+                    this.isEmpty = true
                 }
                 console.log('formattedData part', formattedData);
                 const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
@@ -261,6 +271,23 @@ export default {
     justify-content: center;
     align-items: center;
 
+    .empty-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        >img {
+            width: 280px;
+        }
+
+        .empty-desc {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #86909C;
+        }
+    }
+
     .legend-container {
         .legend-wrap {
             width: 140px;
@@ -297,5 +324,4 @@ export default {
             }
         }
     }
-}
-</style>
+}</style>

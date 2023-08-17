@@ -9,16 +9,26 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
-            <div class="legend-container">
-                <div class="legend-wrap" v-for="item in legendList">
-                    <div class="legend-block">
-                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.type }}</div>
+            <template v-if="isEmpty">
+                <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
+                <div class="legend-container">
+                    <div class="legend-wrap" v-for="item in legendList">
+                        <div class="legend-block">
+                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                            <div class="legend-key">{{ item.type }}</div>
+                        </div>
+                        <div class="legend-value">{{ item.value }}</div>
                     </div>
-                    <div class="legend-value">{{ item.value }}</div>
                 </div>
-            </div>
+            </template>
+            <template v-else>
+                <div class="empty-wrap">
+                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                    <div class="empty-desc">
+                        暂无数据
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -48,6 +58,7 @@ export default {
             groupStatusTableData: [],
             legendList: [],
             title: '投票地区分布',
+            isEmpty: false,
         };
     },
     watch: {
@@ -166,6 +177,9 @@ export default {
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
                 })
+                if (formattedData.length) {
+                    this.isEmpty = true
+                }
                 this.drawMap(formattedData)
             } catch (error) {
                 console.log('Error in getChinaMapChartData err', error);
@@ -224,6 +238,23 @@ export default {
 .table-container {
     display: flex;
     align-items: center;
+
+    .empty-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        >img {
+            width: 280px;
+        }
+
+        .empty-desc {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #86909C;
+        }
+    }
 
     .legend-container {
         margin-left: 20px;
