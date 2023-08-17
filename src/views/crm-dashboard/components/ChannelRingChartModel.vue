@@ -10,7 +10,7 @@
         <!-- echarts -->
         <div class="table-container">
             <div id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
-            <div class="legend-container">
+            <div class="legend-container" v-if="legendFlag">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
@@ -50,7 +50,8 @@ export default {
             groupStatusTableData: [],
             legendList: [],
             title: '来源',
-            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP
+            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP,
+            legendFlag: false
         };
     },
     watch: {
@@ -263,14 +264,15 @@ export default {
                     const percent = ((count / (totalVotes + 1)) * 100).toFixed(2);
                     formattedData.push({ item: text, count, percent: parseFloat(percent) });
                 });
-                console.log('formattedData', formattedData);
                 const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
                 this.legendList = formattedData
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
                     item.percent = item.percent + '%'
                 })
-                console.log('this.legendList', this.legendList);
+                if (formattedData.length) {
+                    this.legendFlag = true   
+                }
                 this.drawBoStatisticsChart(formattedData)
             } catch (error) {
                 console.log('Error in getChannelChartData err', error);

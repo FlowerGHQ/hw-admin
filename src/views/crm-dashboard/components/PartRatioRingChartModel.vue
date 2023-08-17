@@ -10,7 +10,7 @@
         <!-- echarts -->
         <div class="table-container">
             <div id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
-            <div class="legend-container">
+            <div class="legend-container" v-if="legendFlag">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
@@ -26,8 +26,6 @@
 <script>
 import { Chart } from '@antv/g2'
 import Core from "../../../core";
-import data from '../../../core/data';
-
 export default {
     name: 'Cards',
     components: {
@@ -50,6 +48,7 @@ export default {
             groupStatusTableData: [],
             legendList: [],
             title: '已支付用户参与比例',
+            legendFlag: false,
         };
     },
     watch: {
@@ -60,16 +59,9 @@ export default {
                 this.getPartRatioRingChartData()
             }
         },
-
     },
-    computed: {
-        lang() {
-            return this.$store.state.lang
-        },
-    },
-    created() {
-
-    },
+    computed: {},
+    created() {},
     mounted() {
         this.getPartRatioRingChartData()
     },
@@ -189,9 +181,9 @@ export default {
                 let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
                 console.log('getPartRatioRingChartData res', res);
                 // 计算已支付人数总和
-                const totalPaidCount = data.reduce((sum, item) => sum + item.pay_count, 0);
+                const totalPaidCount = res.reduce((sum, item) => sum + item.pay_count, 0);
                 // 计算未支付人数总和
-                const totalUnpaidCount = data.reduce((sum, item) => sum + (item.uv - item.pay_count), 0);
+                const totalUnpaidCount = res.reduce((sum, item) => sum + (item.uv - item.pay_count), 0);
                 // 已支付人数百分比
                 const totalPaidPercent = ((totalPaidCount / (totalPaidCount + totalUnpaidCount)) * 100).toFixed(2)
                 // 未支付人数百分比
@@ -201,6 +193,10 @@ export default {
                     { item: '未支付', count: totalUnpaidCount, percent: totalUnpaidPercent + '%' }
                 ];
                 this.legendList = formattedData
+                if (formattedData[0].count) {
+                    this.legendFlag = true
+                }
+                console.log('formattedData part', formattedData);
                 const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]

@@ -10,13 +10,13 @@
         <!-- echarts -->
         <div class="table-container">
             <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
-            <div class="legend-container">
+            <div class="legend-container" v-if="legendFlag">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.name }}</div>
+                        <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent }}</div>
+                    <div class="legend-value">{{ item.percent + '%' }}</div>
                 </div>
             </div>
         </div>
@@ -48,19 +48,9 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-            legendList: [
-                {
-                    name: '1.白日梦影',
-                    color: '#056DFF',
-                    percent: '64%'
-                },
-                {
-                    name: '2.月影年华',
-                    color: '#FFBC48',
-                    percent: '64%'
-                },
-            ],
-            title: '投票颜色分布'
+            legendList: [],
+            title: '投票颜色分布',
+            legendFlag: false,
         };
     },
     watch: {
@@ -69,27 +59,17 @@ export default {
             immediate: true,
             handler(n) {
                 console.log("purchaseIntentStatistics")
-                this.purchaseIntentStatistics()
+                // this.purchaseIntentStatistics()
+                this.getResultChartData();
             }
         },
 
     },
-    computed: {
-        lang() {
-            return this.$store.state.lang
-        },
-    },
-    created() {
-        this.getGroupStatusDetail();
-    },
+    computed: {},
+    created() { },
     mounted() {
-        // const ths = this;
-        // window.onresize =  () => {
-        //     ths.resetChart();
-        // }
-        // this.drawBoStatisticsChart(this.tableData)
-
-        this.purchaseIntentStatistics()
+        this.getResultChartData();
+        // this.purchaseIntentStatistics();
     },
     beforeUnmount() {
         this.$refs.ColorDistChartId.innerHTML = ''
@@ -208,17 +188,82 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
-        getGroupStatusDetail() {    // 获取 表格 数据
-            this.loading = true;
-            Core.Api.CRMBoStatusGroup.detail({
-                id: 1,
-            }).then(res => {
-                this.groupStatusTableData = JSON.parse(res.detail.status_list)
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+        async getResultChartData() {
+            try {
+                let res = await Core.Api.VoteData.resultStatistics({ ...this.searchForm });
+                console.log('getResultChartData res', res);
+                const data = [
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                code: "red", // 投票结果
+                                vote_count: 102 //投票数量
+                            }
+                        ],
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                code: "yellow", // 投票结果
+                                vote_count: 203 //投票数量
+                            }
+                        ],
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                code: "blue", // 投票结果
+                                vote_count: 304 //投票数量
+                            }
+                        ],
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                code: "black", // 投票结果
+                                vote_count: 405 //投票数量
+                            }
+                        ],
+                    },
+                ]
+                const resultDataMap = {};
+                data.forEach((item) => {
+                    const code = item.source_list[0].code;
+                    const voteCount = item.source_list[0].vote_count;
+
+                    if (resultDataMap[code]) {
+                        resultDataMap[code].count += voteCount;
+                    } else {
+                        resultDataMap[code] = {
+                            count: voteCount
+                        };
+                    }
+                });
+                const totalVoteCount = Object.values(resultDataMap).reduce((sum, item) => sum + item.count, 0);
+                const transformedData = Object.entries(resultDataMap).map(([code, item]) => {
+                    const percent = (item.count / totalVoteCount * 100).toFixed(2);
+                    return {
+                        item: code,
+                        count: item.count,
+                        percent: parseFloat(percent)
+                    };
+                });
+                this.legendList = transformedData
+                const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
+                this.legendList.forEach((item, index) => {
+                    item.color = color[index + 1]
+                })
+                if (transformedData) {
+                    this.legendFlag = true
+                }
+                this.drawBoStatisticsChart(transformedData);
+            } catch (error) {
+                console.log('Error in getResultChartData', error);
+            }
         },
         purchaseIntentStatistics() {
             this.loading = true;
