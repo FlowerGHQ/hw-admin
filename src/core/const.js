@@ -31,13 +31,10 @@ switch (window.location.hostname) {
 		// URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
 		break;
     default:
-	    URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+	    // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.0.0.190:8889' // zy
+        URL_POINT = 'http://10.10.12.78:8889' // hh
         break;
 }
 
@@ -2203,6 +2200,14 @@ let Const = {
     // 用户判断
     USERNAME:{
         'admin1': true
+    },
+    VOTE: {
+        SOURCE_TYPE_MAP: {
+            '1': { value: 1,  text: '好友分享'},
+		    '2': { value: 2,  text: '官网'},
+		    '3': { value: 3,  text: '公众号二维码'},
+		    '4': { value: 4,  text: '微博链接'},
+        },   
     }
 };
 

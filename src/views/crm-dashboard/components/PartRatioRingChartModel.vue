@@ -48,18 +48,7 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-            legendList: [
-                {
-                    name: '1.白日梦影',
-                    color: '#056DFF',
-                    percent: '64%'
-                },
-                {
-                    name: '2.月影年华',
-                    color: '#FFBC48',
-                    percent: '64%'
-                },
-            ],
+            legendList: [],
             title: '已支付用户参与比例',
         };
     },
@@ -68,8 +57,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log("purchaseIntentStatistics")
-                this.purchaseIntentStatistics()
+                this.getPartRatioRingChartData()
             }
         },
 
@@ -80,27 +68,15 @@ export default {
         },
     },
     created() {
-        this.getGroupStatusDetail();
+
     },
     mounted() {
-        // const ths = this;
-        // window.onresize =  () => {
-        //     ths.resetChart();
-        // }
-        // this.drawBoStatisticsChart(this.tableData)
-
-        this.purchaseIntentStatistics()
+        this.getPartRatioRingChartData()
     },
     beforeUnmount() {
         this.$refs.PartRatioRingChartId.innerHTML = ''
     },
     methods: {
-        // 点击tab
-        clickTab(key) {
-            this.currentTab = key;
-            console.log('切换tab >>', key);
-        },
-
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
@@ -153,7 +129,7 @@ export default {
                         .annotation()
                         .text({
                             position: ['50%', '46%'],
-                            content: data.percent * 100 + '%',
+                            content: data.count,
                             style: {
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -186,7 +162,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#056DFF', '#FFBC48', '#15BFEF', '#FB6381', '#26D0A1'])
+                .color('item', ['#056DFF', '#FFBC48'])
                 .style({
                     fillOpacity: 1,
                 })
@@ -208,56 +184,31 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
-        getGroupStatusDetail() {    // 获取 表格 数据
-            this.loading = true;
-            Core.Api.CRMBoStatusGroup.detail({
-                id: 1,
-            }).then(res => {
-                this.groupStatusTableData = JSON.parse(res.detail.status_list)
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        purchaseIntentStatistics() {
-            this.loading = true;
-            Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = [];
-                res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item, index) => {
-
-                        if (index == it.status) {
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
-                        }
-                    })
-
+        async getPartRatioRingChartData() {
+            try {
+                let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
+                console.log('getPartRatioRingChartData res', res);
+                // 计算已支付人数总和
+                const totalPaidCount = data.reduce((sum, item) => sum + item.pay_count, 0);
+                // 计算未支付人数总和
+                const totalUnpaidCount = data.reduce((sum, item) => sum + (item.uv - item.pay_count), 0);
+                // 已支付人数百分比
+                const totalPaidPercent = ((totalPaidCount / (totalPaidCount + totalUnpaidCount)) * 100).toFixed(2)
+                // 未支付人数百分比
+                const totalUnpaidPercent = ((totalUnpaidCount / (totalPaidCount + totalUnpaidCount)) * 100).toFixed(2)
+                const formattedData = [
+                    { item: '已支付', count: totalPaidCount, percent: totalPaidPercent + '%' },
+                    { item: '未支付', count: totalUnpaidCount, percent: totalUnpaidPercent + '%' }
+                ];
+                this.legendList = formattedData
+                const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
+                this.legendList.forEach((item, index) => {
+                    item.color = color[index + 1]
                 })
-                // const dv = [
-                //     { item: '咨询', count: 20, percent: 0.2 },
-                //     { item: '支付定金', count: 20, percent: 0.2 },
-                //     { item: '等待交付', count: 21, percent: 0.21 },
-                //     { item: '预约试驾', count: 17, percent: 0.17 },
-                //     { item: '订单支付', count: 13, percent: 0.13 },
-                //     { item: '已交付', count: 9, percent: 0.09 },
-                // ]
-                // const dv = []
-                res.list.forEach(res => {
-                    if (res.type !== 0) {
-                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                    }
-                })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                this.drawBoStatisticsChart(formattedData)
+            } catch (error) {
+                console.log('Error in getPartRatioRingChartData', error);
+            }
         },
         goToDetail(type) {
             let routeUrl = ''

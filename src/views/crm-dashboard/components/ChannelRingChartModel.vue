@@ -14,9 +14,9 @@
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.name }}</div>
+                        <div class="legend-key">{{ item?.item }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent }}</div>
+                    <div class="legend-value">{{ item?.percent }}</div>
                 </div>
             </div>
         </div>
@@ -48,19 +48,9 @@ export default {
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-            legendList: [
-                {
-                    name: '1.白日梦影',
-                    color: '#056DFF',
-                    percent: '64%'
-                },
-                {
-                    name: '2.月影年华',
-                    color: '#FFBC48',
-                    percent: '64%'
-                },
-            ],
-            title: '来源'
+            legendList: [],
+            title: '来源',
+            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP
         };
     },
     watch: {
@@ -68,8 +58,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log("purchaseIntentStatistics")
-                this.purchaseIntentStatistics()
+                this.getChannelChartData()
             }
         },
 
@@ -80,27 +69,15 @@ export default {
         },
     },
     created() {
-        this.getGroupStatusDetail();
+
     },
     mounted() {
-        // const ths = this;
-        // window.onresize =  () => {
-        //     ths.resetChart();
-        // }
-        // this.drawBoStatisticsChart(this.tableData)
-
-        this.purchaseIntentStatistics()
+        this.getChannelChartData();
     },
     beforeUnmount() {
         this.$refs.ChannelRingChartId.innerHTML = ''
     },
     methods: {
-        // 点击tab
-        clickTab(key) {
-            this.currentTab = key;
-            console.log('切换tab >>', key);
-        },
-
         drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
@@ -116,7 +93,7 @@ export default {
             chart.data(data);
             chart.scale('percent', {
                 formatter: val => {
-                    val = val * 100 + '%';
+                    val = val + '%';
                     return val;
                 },
             });
@@ -153,7 +130,7 @@ export default {
                         .annotation()
                         .text({
                             position: ['50%', '46%'],
-                            content: data.percent * 100 + '%',
+                            content: data.count + '人',
                             style: {
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -186,7 +163,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#056DFF', '#FFBC48', '#15BFEF', '#FB6381', '#26D0A1'])
+                .color('item', ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'])
                 .style({
                     fillOpacity: 1,
                 })
@@ -208,56 +185,96 @@ export default {
             chart.render();
             this.boStatisticsChart = chart
         },
-        getGroupStatusDetail() {    // 获取 表格 数据
-            this.loading = true;
-            Core.Api.CRMBoStatusGroup.detail({
-                id: 1,
-            }).then(res => {
-                this.groupStatusTableData = JSON.parse(res.detail.status_list)
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        purchaseIntentStatistics() {
-            this.loading = true;
-            Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = [];
-                res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item, index) => {
+        async getChannelChartData() {
+            try {
+                const res = await Core.Api.VoteData.cityStatistics({ ...this.searchForm });
+                console.log('getChannelChartData res', res);
+                const formattedData = [];
+                const typeCounts = {};
+                /* mock */
+                // const data = [
+                //     {
+                //         date: 1692242388,
+                //         source_list: [
+                //             {
+                //                 type: 1,
+                //                 vote_count: 500,
+                //             },
+                //             {
+                //                 type: 2,
+                //                 vote_count: 400,
+                //             },
+                //             {
+                //                 type: 3,
+                //                 vote_count: 300,
+                //             },
+                //         ]
+                //     },
+                //     {
+                //         date: 1692242388,
+                //         source_list: [
+                //             {
+                //                 type: 1,
+                //                 vote_count: 200,
+                //             },
+                //             {
+                //                 type: 2,
+                //                 vote_count: 300,
+                //             },
+                //             {
+                //                 type: 3,
+                //                 vote_count: 400,
+                //             },
 
-                        if (index == it.status) {
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
-                        }
-                    })
-
-                })
-                // const dv = [
-                //     { item: '咨询', count: 20, percent: 0.2 },
-                //     { item: '支付定金', count: 20, percent: 0.2 },
-                //     { item: '等待交付', count: 21, percent: 0.21 },
-                //     { item: '预约试驾', count: 17, percent: 0.17 },
-                //     { item: '订单支付', count: 13, percent: 0.13 },
-                //     { item: '已交付', count: 9, percent: 0.09 },
+                //         ]
+                //     },
+                //     {
+                //         date: 1692242388,
+                //         source_list: [
+                //             {
+                //                 type: 1,
+                //                 vote_count: 200,
+                //             },
+                //             {
+                //                 type: 2,
+                //                 vote_count: 400,
+                //             },
+                //             {
+                //                 type: 3,
+                //                 vote_count: 300,
+                //             },
+                //         ]
+                //     },
                 // ]
-                // const dv = []
-                res.list.forEach(res => {
-                    if (res.type !== 0) {
-                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                    }
+                res.forEach((item) => {
+                    item.source_list.forEach((source) => {
+                        const type = source.type || '其他';
+                        const voteCount = source.vote_count || 0;
+                        if (typeCounts[type]) {
+                            typeCounts[type] += voteCount;
+                        } else {
+                            typeCounts[type] = voteCount;
+                        }
+                    });
+                });
+                const totalVotes = Object.values(typeCounts).reduce((sum, count) => sum + count, 0);
+                Object.entries(typeCounts).forEach(([type, count]) => {
+                    const text = this.SOURCE_TYPE_MAP[type]?.text;
+                    const percent = ((count / (totalVotes + 1)) * 100).toFixed(2);
+                    formattedData.push({ item: text, count, percent: parseFloat(percent) });
+                });
+                console.log('formattedData', formattedData);
+                const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
+                this.legendList = formattedData
+                this.legendList.forEach((item, index) => {
+                    item.color = color[index + 1]
+                    item.percent = item.percent + '%'
                 })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                console.log('this.legendList', this.legendList);
+                this.drawBoStatisticsChart(formattedData)
+            } catch (error) {
+                console.log('Error in getChannelChartData err', error);
+            }
         },
         goToDetail(type) {
             let routeUrl = ''
@@ -316,7 +333,7 @@ export default {
 
     .legend-container {
         .legend-wrap {
-            width: 140px;
+            width: 160px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -324,7 +341,7 @@ export default {
             margin-bottom: 16px;
 
             .legend-block {
-                width: 82px;
+                width: 120px;
                 margin-right: 13px;
                 display: flex;
                 align-items: center;

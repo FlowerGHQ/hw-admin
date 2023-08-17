@@ -1,6 +1,6 @@
 <template>
     <div class="list-container">
-        <!-- 标题 -->
+        <!-- title -->
         <div class="title">
             <div>{{ title }}</div>
             <div class="detail-title" @click="goToDetail('detail')">
@@ -14,7 +14,7 @@
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.name }}</div>
+                        <div class="legend-key">{{ item.type }}</div>
                     </div>
                     <div class="legend-value">{{ item.value }}</div>
                 </div>
@@ -26,7 +26,6 @@
 <script>
 import { Chart } from '@antv/g2'
 import Core from "../../../core";
-import data from '../../../core/data';
 
 export default {
     name: 'Cards',
@@ -44,67 +43,10 @@ export default {
     },
     data() {
         return {
-            currentTab: '',
             myChart: null,
             boStatisticsChart: {},
             groupStatusTableData: [],
-            legendList: [
-                {
-                    name: '上海市',
-                    color: '#001A66',
-                    value: '300'
-                },
-                {
-                    name: '北京市',
-                    color: '#00288C',
-                    value: '240'
-                },
-                {
-                    name: '深圳市',
-                    color: '#0039B3',
-                    value: '200'
-                },
-                {
-                    name: '重庆市',
-                    color: '#004CD9',
-                    value: '160'
-                },
-                {
-                    name: '广州市',
-                    color: '#0061FF',
-                    value: '120'
-                },
-                {
-                    name: '成都市',
-                    color: '#3381FF',
-                    value: '80'
-                },
-                {
-                    name: '天津市',
-                    color: '#66A0FF',
-                    value: '60'
-                },
-                {
-                    name: '武汉市',
-                    color: '#99C0FF',
-                    value: '50'
-                },
-                {
-                    name: '东莞市',
-                    color: '#CCDFFF',
-                    value: '20'
-                },
-                {
-                    name: '西安市',
-                    color: '#E6EFFF',
-                    value: '10'
-                },
-                {
-                    name: '其他',
-                    color: '#F3F8FF',
-                    value: '6'
-                },
-            ],
+            legendList: [],
             title: '投票地区分布',
         };
     },
@@ -113,8 +55,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log("purchaseIntentStatistics")
-                // this.purchaseIntentStatistics()
+                this.getChinaMapChartData()
             }
         },
 
@@ -128,36 +69,31 @@ export default {
 
     },
     mounted() {
-        this.drawMap();
-        // this.purchaseIntentStatistics()
+        this.getChinaMapChartData()
     },
     beforeUnmount() {
         this.$refs.ChannelRingChartId.innerHTML = ''
     },
     methods: {
-        // 点击tab
-        clickTab(key) {
-            this.currentTab = key;
-            console.log('切换tab >>', key);
-        },
-        drawMap() {
+        drawMap(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
-            const data = [
-                { type: '上海市', value: 34 },
-                { type: '北京市', value: 85 },
-                { type: '深圳市', value: 103 },
-                { type: '重庆市', value: 142 },
-                { type: '广州市', value: 251 },
-                { type: '成都市', value: 367 },
-                { type: '天津市', value: 491 },
-                { type: '武汉市', value: 672 },
-                { type: '东莞市', value: 868 },
-                { type: '西安市', value: 1234 },
-                { type: '其他', value: 1334 },
-            ];
+            /* mock */
+            // const data = [
+            //     { type: '上海市', value: 34 },
+            //     { type: '北京市', value: 85 },
+            //     { type: '深圳市', value: 103 },
+            //     { type: '重庆市', value: 142 },
+            //     { type: '广州市', value: 251 },
+            //     { type: '成都市', value: 367 },
+            //     { type: '天津市', value: 491 },
+            //     { type: '武汉市', value: 672 },
+            //     { type: '东莞市', value: 868 },
+            //     { type: '西安市', value: 1234 },
+            //     { type: '其他', value: 1334 },
+            // ];
             const chart = new Chart({
                 container: 'ChinaMapChartId',
                 autoFit: true,
@@ -201,50 +137,40 @@ export default {
                     offset: 10,
                 });
             chart.interaction('element-active');
-            // chart.theme({ "styleSheet": { "brandColor": "#5B8FF9", "paletteQualitative10": ["#5B8FF9", "#61DDAA", "#65789B", "#F6BD16", "#7262fd", "#78D3F8", "#9661BC", "#F6903D", "#008685", "#F08BB4"], "paletteQualitative20": ["#5B8FF9", "#CDDDFD", "#61DDAA", "#CDF3E4", "#65789B", "#CED4DE", "#F6BD16", "#FCEBB9", "#7262fd", "#D3CEFD", "#78D3F8", "#D3EEF9", "#9661BC", "#DECFEA", "#F6903D", "#FFE0C7", "#008685", "#BBDEDE", "#F08BB4", "#FFE0ED"] } });
             chart.render();
 
             this.boStatisticsChart = chart
         },
-        // purchaseIntentStatistics() {
-        //     this.loading = true;
-        //     Core.Api.CRMDashboard.boStatistics({
-        //         ...this.searchForm
-        //     }).then(res => {
-        //         console.log('getTableData err', res)
-        //         // this.testDriveIntentList = res.list;
-        //         const dv = [];
-        //         res.list.forEach(it => {
-        //             this.groupStatusTableData.forEach((item, index) => {
-
-        //                 if (index == it.status) {
-        //                     dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
-        //                 }
-        //             })
-
-        //         })
-        //         // const dv = [
-        //         //     { item: '咨询', count: 20, percent: 0.2 },
-        //         //     { item: '支付定金', count: 20, percent: 0.2 },
-        //         //     { item: '等待交付', count: 21, percent: 0.21 },
-        //         //     { item: '预约试驾', count: 17, percent: 0.17 },
-        //         //     { item: '订单支付', count: 13, percent: 0.13 },
-        //         //     { item: '已交付', count: 9, percent: 0.09 },
-        //         // ]
-        //         // const dv = []
-        //         res.list.forEach(res => {
-        //             if (res.type !== 0) {
-        //                 dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-        //             }
-        //         })
-        //         this.drawBoStatisticsChart(dv)
-
-        //     }).catch(err => {
-        //         console.log('getTableData err', err)
-        //     }).finally(() => {
-        //         this.loading = false;
-        //     });
-        // }
+        async getChinaMapChartData() {
+            try {
+                const res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
+                console.log('ChinaMapChartData res', res);
+                const formattedData = [];
+                const cityMap = {};
+                res.forEach(item => {
+                    item.source_list.forEach(source => {
+                        const city = source.code;
+                        const voteCount = source.vote_count;
+                        if (cityMap[city]) {
+                            cityMap[city] += voteCount;
+                        } else {
+                            cityMap[city] = voteCount;
+                        }
+                    });
+                });
+                for (const city in cityMap) {
+                    formattedData.push({ type: city, value: cityMap[city] });
+                }
+                const color = ['#001A66', '#00288C', '#0039B3', '#004CD9', '#0061FF', '#3381FF', '#66A0FF', '#99C0FF', '#CCDFFF', '#E6EFFF', '#F3F8FF'] // 配置项的颜色
+                this.legendList = formattedData
+                this.legendList.forEach((item, index) => {
+                    item.color = color[index + 1]
+                })
+                this.drawMap(formattedData)
+            } catch (error) {
+                console.log('Error in getChinaMapChartData err', error);
+            }
+        },
         goToDetail(type) {
             let routeUrl = ''
             switch (type) {
@@ -259,7 +185,6 @@ export default {
                     break;
             }
         }
-
     }
 };
 </script>
@@ -298,7 +223,6 @@ export default {
 
 .table-container {
     display: flex;
-    // justify-content: center;
     align-items: center;
 
     .legend-container {
@@ -339,4 +263,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

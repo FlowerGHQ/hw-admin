@@ -810,6 +810,13 @@ const apiList = {
         purchaseOrder: ['PostJson', 'data-board/purchase-order'],
         repairOrder: ['PostJson', 'data-board/repair-order'],
         repairRank: ['PostJson', 'data-board/fault_rank'],
+    },
+    // 投票统计
+    VoteData: { 
+        getActivityId: ['PostJson', 'vote/activity/current'], // get 活动Id
+        cityStatistics: ['PostJson', 'vote/activity/statistics/city'], // 投票城市统计
+        sourceStatistics: ['PostJson', 'vote/activity/statistics/source'], // 投票来源统计
+        numberStatistics: ['PostJson', 'vote/activity/statistics/number'], // 投票数量统计
     }
 };
 
