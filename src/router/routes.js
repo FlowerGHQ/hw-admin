@@ -1676,8 +1676,8 @@ const routes = [
             },
             {
                 path: 'order-edit',
-                name: 'OrderEdit',
-                component: () => import('@/views/good_items_order/order-detail.vue'),
+                name: 'orderEdit',
+                component: () => import('@/views/good-items-order/order-detail.vue'),
                 meta: {
                     hidden: true,
                     title: '订单详情',
