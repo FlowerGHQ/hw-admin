@@ -1651,14 +1651,14 @@ const routes = [
         ]
     },
     { // 好物订单
-        path: '/good-things-order',
+        path: '/good-items-order',
         component: Layout,
-        redirect: '/good-things-order/order-list',
+        redirect: '/good-items-order/order-list',
         name: 'GoodThingsOrder',
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '好物订单',
-            title_en: 'Good Things Order',
+            title_en: 'Good Items Order',
             icon: 'i_s_customer',
             // auth: ["crm-customer.list"],
         },
@@ -1666,7 +1666,7 @@ const routes = [
             {
                 path: 'order-list',
                 name: 'orderList',
-                component: () => import('@/views/good-things-order/order-list.vue'),
+                component: () => import('@/views/good-items-order/order-list.vue'),
                 meta: {
                     title: '订单列表',
                     title_en: 'Order List',
@@ -1677,14 +1677,14 @@ const routes = [
             {
                 path: 'order-edit',
                 name: 'OrderEdit',
-                component: () => import('@/views/good_things_order/order-detail.vue'),
+                component: () => import('@/views/good_items_order/order-detail.vue'),
                 meta: {
                     hidden: true,
                     title: '订单详情',
                     title_en: 'Order Edit',
-                    parent: '/good-things-order/order-edit',
-                    type: 'private',
-                    auth: ["crm-customer.list"],
+                    parent: '/good-items-order/order-list',
+                    // type: 'private',
+                    // auth: ["crm-customer.list"],
                 }
             },
         ]
