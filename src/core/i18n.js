@@ -561,7 +561,7 @@ const messages = {
             no_search_list: '暂无满足搜索条件的商品',
             no_bom_list: '暂无爆炸图列表',
             pcs: '个',
-            pcs2: '件',
+            pcs2: '件',         
             uploaded: '上传成功',
             sure_export: '确认要导出吗？',
             item_favorite: '该商品已在收藏夹中',
@@ -2596,6 +2596,10 @@ const messages = {
             add_directory:'添加目录',
             add_Tips:'该人员已添加，请勿重复添加!',
             confirm_delete_person:"确认移除该人员"
+        },
+        item_order:{
+            order_summary:'订单摘要',
+            commodity_image:'商品图片'
         }
     },
 
@@ -5075,6 +5079,10 @@ const messages = {
             add_directory:'Add Directory',
             add_Tips:'This person has been added, please do not add again!',
             confirm_delete_person:"Confirm removal of the person"
+        },
+        item_order:{
+            order_summary:'Order Summary',
+            commodity_image:'Commodity Image',
         }
     },
 }
