@@ -64,6 +64,7 @@ import ChinaMapChartModel from "./components/ChinaMapChartModel.vue"
 import votingChannelChartModel from "./components/votingChannelChartModel.vue"
 import DailyVotingNumbersChartModel from "./components/DailyVotingNumbersChartModel.vue"
 import Core from "../../core";
+import dayjs from "dayjs";
 
 export default {
   name: "VoteDashboard",
@@ -80,9 +81,10 @@ export default {
   data() {
     return {
       searchForm: {
-        begin_time: (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000,
-        end_time: Date.now() / 1000,
+        begin_time: undefined,
+        end_time: undefined,
         activity_id: 0,
+        defaultTime: [],
       },
     };
   },
@@ -91,11 +93,22 @@ export default {
   created() { },
   mounted() {
     this.getActivityId();
+    this.getDefaultTime();
   },
   methods: {
+    // 获取时间选择组件改变时间
     searchFormOperation(searchForm) {
       this.searchForm = searchForm
     },
+    // 获取当天默认时间
+    getDefaultTime() {
+      const currentTime = dayjs(); // 当前时间
+      const todayStart = dayjs().startOf('day'); // 今天0点
+      this.defaultTime = [todayStart, currentTime];
+      this.searchForm.begin_time = this.defaultTime[0].unix(); // 获取开始时间的时间戳
+      this.searchForm.end_time = this.defaultTime[1].unix(); // 获取结束时间的时间戳
+    },
+    // get活动Id
     async getActivityId() {
       try {
         const res = await Core.Api.VoteData.getActivityId({

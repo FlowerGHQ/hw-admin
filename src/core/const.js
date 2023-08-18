@@ -2208,6 +2208,14 @@ let Const = {
 		    '3': { value: 3,  text: '公众号二维码'},
 		    '4': { value: 4,  text: '微博链接'},
         },   
+        TYPE: {
+            DAILYVOTE: 1,
+            SOURCE: 2,
+            PAID: 3,
+            COLOR: 4,
+            AREA: 5,
+            SHARE: 6,
+        },
     }
 };
 

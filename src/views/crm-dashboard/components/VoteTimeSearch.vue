@@ -38,22 +38,11 @@ export default {
             time: [],
         };
     },
-    watch: {
-        searchForm: {
-            deep: true,
-            handler(n) {
-                // this.salesStatistics();
-            },
-        },
-    },
-    computed: {
-
-    },
-    created() { },
-    mounted() {
-        
-    },
-    beforeUnmount() { },
+    watch: {},
+    computed: {},
+    created() {},
+    mounted() {},
+    beforeUnmount() {},
     methods: {
         // 时间转换
         handleTimeTypeChange() {

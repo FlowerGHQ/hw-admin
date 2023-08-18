@@ -68,8 +68,6 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log("purchaseIntentStatistics")
-                // this.purchaseIntentStatistics()
                 this.getResultChartData();
             }
         },
@@ -79,7 +77,6 @@ export default {
     created() { },
     mounted() {
         this.getResultChartData();
-        // this.purchaseIntentStatistics();
     },
     beforeUnmount() {
         this.$refs.ColorDistChartId.innerHTML = ''
@@ -277,45 +274,6 @@ export default {
                 this.$message.warning('数据无法加载，请稍后重试！')
             }
         },
-        purchaseIntentStatistics() {
-            this.loading = true;
-            Core.Api.CRMDashboard.boStatistics({
-                ...this.searchForm
-            }).then(res => {
-                console.log('getTableData err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = [];
-                res.list.forEach(it => {
-                    this.groupStatusTableData.forEach((item, index) => {
-
-                        if (index == it.status) {
-                            dv.push({ item: item.zh, item_en: item.en, count: it.count, percent: this.$Util.countFilter(it.count / res.total, 1, 2) });
-                        }
-                    })
-
-                })
-                // const dv = [
-                //     { item: '咨询', count: 20, percent: 0.2 },
-                //     { item: '支付定金', count: 20, percent: 0.2 },
-                //     { item: '等待交付', count: 21, percent: 0.21 },
-                //     { item: '预约试驾', count: 17, percent: 0.17 },
-                //     { item: '订单支付', count: 13, percent: 0.13 },
-                //     { item: '已交付', count: 9, percent: 0.09 },
-                // ]
-                // const dv = []
-                res.list.forEach(res => {
-                    if (res.type !== 0) {
-                        dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
-                    }
-                })
-                this.drawBoStatisticsChart(dv)
-
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
         goToDetail(type) {
             let routeUrl = ''
             switch (type) {
@@ -323,7 +281,11 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/crm-dashboard/vote-detail",
                         query: {
-                            title: this.title
+                            title: this.title,
+                            apiName: 'resultStatistics',
+                            begin_time: this.searchForm.begin_time,
+                            end_time: this.searchForm.end_time,
+                            columnType: Core.Const.VOTE.TYPE.COLOR
                         }
                     })
                     window.open(routeUrl.href, '_blank')

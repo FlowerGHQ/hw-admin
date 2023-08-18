@@ -24,7 +24,7 @@
   
 <script>
 import Core from "../../core";
-
+import dayjs from "dayjs";
 export default {
     name: "Demo",
     components: {
@@ -33,16 +33,14 @@ export default {
     props: {},
     data() {
         return {
-            searchForm: {
-                begin_time: (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000,
-                end_time: Date.now() / 1000,
-            },
             title: '详情',
-            time: [],
+            apiName: '',
+            time: [null, null],
             searchForm: {
                 begin_time: "",
                 end_time: "",
             },
+            columnType: 1,
             tableData: [
                 {
                     id: 1,
@@ -74,129 +72,85 @@ export default {
                     paid_user: 10,
                     unpaid_user: 10
                 },
-                {
-                    id: 4,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 5,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 6,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 7,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 8,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 9,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 10,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 11,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 12,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
-                {
-                    id: 13,
-                    date: '12-01',
-                    visitors: 100,
-                    votes: 30,
-                    total: 30,
-                    turnout_rate: '80%',
-                    paid_user: 10,
-                    unpaid_user: 10
-                },
             ]
         };
     },
     watch: {},
     computed: {
         tableColumns() {
-            let columns = [
-                { title: '日期', dataIndex: 'date', key: 'item' },
-                { title: '访客人数', dataIndex: 'visitors', key: 'item' },
-                { title: '投票人数', dataIndex: 'votes', key: 'item' },
-                { title: '总投票数', dataIndex: 'total', key: 'item' },
-                { title: '投票率', dataIndex: 'turnout_rate', key: 'item' },
-                { title: '已支付用户', dataIndex: 'paid_user', key: 'item' },
-                { title: '未支付用户', dataIndex: 'unpaid_user', key: 'item' },
-            ]
-            return columns
+            const columnMap = {
+                [Core.Const.VOTE.TYPE.DAILYVOTE]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '访客人数', dataIndex: 'visitors', key: 'item' },
+                    { title: '投票人数', dataIndex: 'votes', key: 'item' },
+                    { title: '投票率', dataIndex: 'turnout_rate', key: 'item' },
+                    { title: '已支付用户', dataIndex: 'paid_user', key: 'item' },
+                    { title: '未支付用户', dataIndex: 'unpaid_user', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+                [Core.Const.VOTE.TYPE.SOURCE]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '访客人数', dataIndex: 'visitors', key: 'item' },
+                    { title: '投票人数', dataIndex: 'votes', key: 'item' },
+                    { title: '小程序推送', dataIndex: 'total', key: 'item' },
+                    { title: '公众号二维码', dataIndex: 'turnout_rate', key: 'item' },
+                    { title: '微博跳转', dataIndex: 'paid_user', key: 'item' },
+                    { title: '好友分享', dataIndex: 'unpaid_user', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+                [Core.Const.VOTE.TYPE.PAID]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '访客人数', dataIndex: 'visitors', key: 'item' },
+                    { title: '投票人数', dataIndex: 'votes', key: 'item' },
+                    { title: '投票率', dataIndex: 'turnout_rate', key: 'item' },
+                    { title: '已支付用户', dataIndex: 'paid_user', key: 'item' },
+                    { title: '未支付用户', dataIndex: 'unpaid_user', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+                [Core.Const.VOTE.TYPE.COLOR]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '总投票数', dataIndex: 'total', key: 'item' },
+                    { title: '颜色', dataIndex: 'color', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+                [Core.Const.VOTE.TYPE.AREA]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '总投票数', dataIndex: 'total', key: 'item' },
+                    { title: '城市', dataIndex: 'city', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+                [Core.Const.VOTE.TYPE.FRIEND]: [
+                    { title: '日期', dataIndex: 'date', key: 'item' },
+                    { title: '好友访问人数', dataIndex: 'date', key: 'item' },
+                    { title: '好友投票人数', dataIndex: 'date', key: 'item' },
+                    { title: '好友投票率', dataIndex: 'date', key: 'item' },
+                    { title: '公众号二维码访问人数', dataIndex: 'date', key: 'item' },
+                    { title: '公众号二维码投票人数', dataIndex: 'date', key: 'item' },
+                    { title: '公众号二维码投票率', dataIndex: 'date', key: 'item' },
+                    { title: '微博跳转访问人数', dataIndex: 'date', key: 'item' },
+                    { title: '微博跳转投票人数', dataIndex: 'date', key: 'item' },
+                    { title: '微博跳转投票率', dataIndex: 'date', key: 'item' },
+                    { title: '总投票数', dataIndex: 'total', key: 'item' },
+                    { title: '城市', dataIndex: 'city', key: 'item' },
+                    { title: '汇总', dataIndex: 'total', key: 'total' },
+                ],
+            };
+
+            return columnMap[this.columnType] || [];
         },
     },
     created() { },
     mounted() {
         this.title = this.$route.query.title || ''
+        this.apiName = this.$route.query.apiName || ''
+        this.columnType = this.$route.query.columnType || 1
+        this.searchForm.begin_time = this.$route.query.begin_time || 0
+        this.searchForm.end_time = this.$route.query.end_time || 0
+        this.getTableData();
+        this.getQueryTime();
     },
     methods: {
+        // 时间选择器change
         handleChange() {
             let begin_time = dayjs(this.time[0]);
             let end_time = dayjs(this.time[1]);
@@ -204,8 +158,23 @@ export default {
             searchForm.begin_time = begin_time.startOf("day").unix();
             searchForm.end_time = end_time.endOf("day").unix();
             this.searchForm = searchForm;
-            console.log('this.searchForm', this.searchForm);
         },
+        // 获取父组件传入时间
+        getQueryTime() {
+            const startDate = dayjs(this.searchForm.begin_time * 1000);
+            const endDate = dayjs(this.searchForm.end_time * 1000);
+            this.time = [startDate, endDate];
+        },
+        // 获取表格数据
+        async getTableData() {
+            try {
+                let res = await Core.Api.VoteData[this.apiName]({ ...this.searchForm });
+                console.log('getTableData res', res);
+            } catch (error) {
+                console.log('Error in getTableData', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
+            }
+        }
     },
 };
 </script>

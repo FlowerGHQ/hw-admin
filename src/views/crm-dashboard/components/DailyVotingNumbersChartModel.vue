@@ -54,7 +54,7 @@ export default {
         },
     },
     computed: {},
-    created() {},
+    created() { },
     mounted() {
         this.getDailyVotingChartData();
     },
@@ -96,76 +96,53 @@ export default {
                         marginRatio: 0,
                     },
                 ])
-                // .size(20);
+            // .size(20);
             chart.interaction('active-region');
             chart.render();
             this.boStatisticsChart = chart
         },
         async getDailyVotingChartData() {
             try {
-                let res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
+                let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
                 const data = [
                     {
                         date: 1692201600,
-                        source_list: [
-                            {
-                                count: 20,
-                                vote_count: 10,
-                                type: 1
-                            }
-                        ]
+                        vote_count: 10,
+                        uv: 10
                     },
                     {
                         date: 1692288000,
-                        source_list: [
-                            {
-                                count: 30,
-                                vote_count: 20,
-                                type: 2
-                            }
-                        ]
+                        vote_count: 20,
+                        uv: 20
                     },
                     {
                         date: 1692242388,
-                        source_list: [
-                            {
-                                count: 40,
-                                vote_count: 60,
-                                type: 3
-                            }
-                        ]
+                        vote_count: 60,
+                        uv: 30
                     },
                     {
                         date: 1692242388,
-                        source_list: [
-                            {
-                                count: 10,
-                                vote_count: 10,
-                                type: 1
-                            }
-                        ]
+                        vote_count: 10,
+                        uv: 40
                     }
                 ];
                 const transformedData = [];
                 data.forEach((item) => {
                     const date = item.date;
-                    item.source_list.forEach((source) => {
-                        const count = source.count;
-                        const voteCount = source.vote_count;
-                        const countData = {
-                            name: '访客人数',
-                            month: dayjs(date * 1000).format('MM.DD'),
-                            value: count
-                        };
-                        const voteCountData = {
-                            name: '投票人数',
-                            month: dayjs(date * 1000).format('MM.DD'),
-                            value: voteCount
-                        };
-                        transformedData.push(countData, voteCountData);
-                    });
+                    const count = item.uv;
+                    const voteCount = item.vote_count;
+                    const countData = {
+                        name: '访客人数',
+                        month: dayjs(date * 1000).format('MM.DD'),
+                        value: count
+                    };
+                    const voteCountData = {
+                        name: '投票人数',
+                        month: dayjs(date * 1000).format('MM.DD'),
+                        value: voteCount
+                    };
+                    transformedData.push(countData, voteCountData);
                 });
-                console.log('transformedData yxy', transformedData);
                 if (!transformedData.length) {
                     this.isEmpty = true
                 } else {
@@ -183,7 +160,11 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/crm-dashboard/vote-detail",
                         query: {
-                            title: this.title
+                            title: this.title,
+                            apiName: 'numberStatistics',
+                            begin_time: this.searchForm.begin_time,
+                            end_time: this.searchForm.end_time,
+                            columnType: Core.Const.VOTE.TYPE.DAILYVOTE
                         }
                     })
                     window.open(routeUrl.href, '_blank')
@@ -218,6 +199,7 @@ export default {
         }
     }
 }
+
 .table-container {
     .empty-wrap {
         display: flex;

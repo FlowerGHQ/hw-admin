@@ -297,7 +297,11 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/crm-dashboard/vote-detail",
                         query: {
-                            title: this.title
+                            title: this.title,
+                            apiName: 'cityStatistics',
+                            begin_time: this.searchForm.begin_time,
+                            end_time: this.searchForm.end_time,
+                            columnType: Core.Const.VOTE.TYPE.SOURCE
                         }
                     })
                     window.open(routeUrl.href, '_blank')
