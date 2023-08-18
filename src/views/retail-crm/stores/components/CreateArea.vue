@@ -409,4 +409,8 @@ export default {
     visibility: hidden;
   }
 }
+
+:deep(.ant-tree-node-selected){
+  background: #FFF !important;
+}
 </style>

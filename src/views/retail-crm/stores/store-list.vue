@@ -172,7 +172,7 @@
             class="search-item search-text"
             @click="moreSearch"
           >
-            {{ show ? $t("search.stow") : $t("search.advanced_search") }}
+            {{ show ? $t("search.stow") : $t("retail.more_screening") }}
             <i
               class="icon i_xialajiantouxiao"
               style="margin-left: 5px"
@@ -198,7 +198,7 @@
         <!--  <div class="btns-area">
                     <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
                     }}</a-button>
-                </div>  -->
+        </div>  -->
         <div class="btns">
           <div class="btn-left">
             <!-- 添加人员 -->
@@ -243,20 +243,29 @@
                 >
               </a-tooltip>
             </template>
-            <template v-if="column.key === 'order_uid'">
+            <template v-else-if="column.key === 'order_uid'">
               {{ text || "-" }}
             </template>
+            <template v-else-if="column.key === 'address'">
+              <a-tooltip placement="top" :title="text">
+                <span
+                    class="hid"
+                  >
+                    {{ text || "-" }}
+                  </span>
+              </a-tooltip>
+            </template>
 
-            <template v-if="column.key === 'level'">
+            <template v-else-if="column.key === 'level'">
               {{ $Util.storeLevel(text) || "-" }}
             </template>
-            <template v-if="column.key === 'status'">
+            <template v-else-if="column.key === 'status'">
               {{ $Util.storeSTATUS(text) || "-" }}
             </template>
-            <template v-if="column.key === 'type'">
+            <template v-else-if="column.key === 'type'">
               {{ $Util.storeType(text) || "-" }}
             </template>
-            <template v-if="column.key === 'user_list'">
+            <template v-else-if="column.key === 'user_list'">
               <!-- {{ text || "-" }} -->
 
               <div v-if="text.length">
@@ -273,7 +282,7 @@
                 -
               </div>
             </template>
-            <template v-if="column.key === 'operation'">
+            <template v-else-if="column.key === 'operation'">
               <a-button type="link" @click="routerChange('detail', record)">{{
                 $t("def.see")
               }}</a-button>
@@ -712,6 +721,7 @@ export default {
 }
 
 .hid {
+  display: block;
   width: 20em;
   overflow: hidden;
   /* 显示省略符号来代表被修剪的文本。 */
