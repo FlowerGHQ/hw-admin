@@ -8,7 +8,17 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
+            <template v-if="!isEmpty">
+                <div id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
+            </template>
+            <template v-else>
+                <div class="empty-wrap">
+                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                    <div class="empty-desc">
+                        暂无数据
+                    </div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
@@ -32,6 +42,7 @@ export default {
             boStatisticsChart: {},
             chartHeight: 254,
             title: '每日访问参与投票人数',
+            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP
         };
     },
     watch: {
@@ -39,7 +50,7 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.testDriveIntentStatistics()
+                this.getDailyVoteChartData();
             }
         },
 
@@ -53,27 +64,28 @@ export default {
 
     },
     mounted() {
-        this.testDriveIntentStatistics()
+        this.getDailyVoteChartData();
     },
     beforeUnmount() {
         this.$refs.votingChannelChartId.innerHTML = ''
     },
     methods: {
-        drawBoStatisticsChart() {
+        drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
-            const data = [
-                { name: '访客人数', type: '好友', value: 80 },
-                { name: '访客人数', type: '公众号二维码', value: 28 },
-                { name: '访客人数', type: '微博跳转', value: 39 },
-                { name: '访客人数', type: '来源', value: 81 },
-                { name: '投票人数', type: '好友', value: 60 },
-                { name: '投票人数', type: '公众号二维码', value: 23 },
-                { name: '投票人数', type: '微博跳转', value: 34 },
-                { name: '投票人数', type: '来源', value: 99 },
-            ];
+            /* mock */
+            // const data = [
+            //     { name: '访客人数', type: '好友', value: 80 },
+            //     { name: '访客人数', type: '公众号二维码', value: 28 },
+            //     { name: '访客人数', type: '微博跳转', value: 39 },
+            //     { name: '访客人数', type: '来源', value: 81 },
+            //     { name: '投票人数', type: '好友', value: 60 },
+            //     { name: '投票人数', type: '公众号二维码', value: 23 },
+            //     { name: '投票人数', type: '微博跳转', value: 34 },
+            //     { name: '投票人数', type: '来源', value: 99 },
+            // ];
             const chart = new Chart({
                 container: 'votingChannelChartId',
                 autoFit: true,
@@ -103,39 +115,90 @@ export default {
                         marginRatio: 0,
                     },
                 ])
-            // .size(20);
             chart.interaction('active-region');
             chart.render();
             this.boStatisticsChart = chart
         },
-        testDriveIntentStatistics() {
-            this.loading = true;
-            Core.Api.CRMDashboard.performanceList({
-                ...this.searchForm
-            }).then(res => {
-                console.log('performanceList err', res)
-                // this.testDriveIntentList = res.list;
-                const dv = []
-                res.list.forEach(it => {
-                    dv.push({ name: it.user_name + "", sales: it.money / 10000 })
-                })
-                // const _data = [
-                //     { name: '李小明', sales: 80 },
-                //     { name: '黄丹', sales: 52 },
-                //     { name: '徐鹏', sales: 201 },
-                //     { name: '王一鸣', sales: 145 },
-                //     { name: '乔治', sales: 48 },
-                //     { name: '佩奇', sales: 68 },
-                //     { name: '张三', sales: 18 },
-                //     { name: '李四', sales: 138 },
-                // ];
-                this.drawBoStatisticsChart(dv)
+        async getDailyVoteChartData() {
+            try {
+                let res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
+                console.log('getDailyVoteChartData res', res);
+                const data = [
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                count: 20,
+                                vote_count: 10,
+                                type: 1
+                            }
+                        ]
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                count: 30,
+                                vote_count: 20,
+                                type: 2
+                            }
+                        ]
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                count: 40,
+                                vote_count: 60,
+                                type: 3
+                            }
+                        ]
+                    },
+                    {
+                        date: 1692242388,
+                        source_list: [
+                            {
+                                count: 10,
+                                vote_count: 10,
+                                type: 1
+                            }
+                        ]
+                    }
+                ];
+                const transformedData = [];
+                data.forEach((item) => {
+                    item.source_list.forEach((source) => {
+                        const sourceType = source.type;
+                        const count = source.count;
+                        const voteCount = source.vote_count;
 
-            }).catch(err => {
-                console.log('getTableData err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+                        const sourceTypeText = this.SOURCE_TYPE_MAP[sourceType].text;
+
+                        const countData = {
+                            name: '访客人数',
+                            type: sourceTypeText,
+                            value: count
+                        };
+
+                        const voteCountData = {
+                            name: '投票人数',
+                            type: sourceTypeText,
+                            value: voteCount
+                        };
+
+                        transformedData.push(countData, voteCountData);
+                    });
+                });
+                console.log('transformedData', transformedData);
+                if (!transformedData.length) {
+                    this.isEmpty = true
+                } else {
+                    this.drawBoStatisticsChart(transformedData);
+                }
+            } catch (error) {
+                console.log('Error in getDailyVoteChartData', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
+            }
         },
         goToDetail(type) {
             let routeUrl = ''
@@ -169,6 +232,7 @@ export default {
         font-weight: 600;
         color: #333333;
         margin-bottom: 16px;
+
         .detail-title {
             cursor: pointer;
             color: #0061FF;
@@ -178,7 +242,22 @@ export default {
         }
     }
 }
-
+.table-container {
+    .empty-wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        >img {
+            width: 280px;
+        }
+        .empty-desc {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #86909C;
+        }
+    }
+}
 .unit {
     width: 100%;
     font-size: 12px;

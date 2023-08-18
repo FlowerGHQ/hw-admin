@@ -9,7 +9,7 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="isEmpty">
+            <template v-if="!isEmpty">
                 <div id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
                 <div class="legend-container">
                     <div class="legend-wrap" v-for="item in legendList">
@@ -280,12 +280,14 @@ export default {
                     item.color = color[index + 1]
                     item.percent = item.percent + '%'
                 })
-                if (formattedData.length) {
+                if (!formattedData.length) {
                     this.isEmpty = true
+                } else {
+                    this.drawBoStatisticsChart(formattedData)                    
                 }
-                this.drawBoStatisticsChart(formattedData)
             } catch (error) {
                 console.log('Error in getChannelChartData err', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
             }
         },
         goToDetail(type) {
@@ -339,6 +341,7 @@ export default {
 }
 
 .table-container {
+    margin-bottom: 46px;
     display: flex;
     justify-content: center;
     align-items: center;

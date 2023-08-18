@@ -8,27 +8,25 @@
             </div>
         </div>
         <!-- echarts -->
-        <div class="table-container">
-            <template v-if="isEmpty">
-                <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
-                <div class="legend-container">
-                    <div class="legend-wrap" v-for="item in legendList">
-                        <div class="legend-block">
-                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                            <div class="legend-key">{{ item.type }}</div>
-                        </div>
-                        <div class="legend-value">{{ item.value }}</div>
+        <div class="table-container" v-if="!isEmpty">
+            <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
+            <div class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item.type }}</div>
                     </div>
+                    <div class="legend-value">{{ item.value }}</div>
                 </div>
-            </template>
-            <template v-else>
-                <div class="empty-wrap">
-                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                    <div class="empty-desc">
-                        暂无数据
-                    </div>
+            </div>
+        </div>
+        <div class="table-container jus" v-else>
+            <div class="empty-wrap">
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                <div class="empty-desc">
+                    暂无数据
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -83,7 +81,7 @@ export default {
         this.getChinaMapChartData()
     },
     beforeUnmount() {
-        this.$refs.ChannelRingChartId.innerHTML = ''
+        this.$refs.ChinaMapChartId.innerHTML = ''
     },
     methods: {
         drawMap(data) {
@@ -177,12 +175,14 @@ export default {
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
                 })
-                if (formattedData.length) {
+                if (!formattedData.length) {
                     this.isEmpty = true
+                } else {
+                    this.drawMap(formattedData)                    
                 }
-                this.drawMap(formattedData)
             } catch (error) {
                 console.log('Error in getChinaMapChartData err', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
             }
         },
         goToDetail(type) {
@@ -238,6 +238,10 @@ export default {
 .table-container {
     display: flex;
     align-items: center;
+    &.jus {
+        justify-content: center;
+        height: 430px;
+    }
 
     .empty-wrap {
         display: flex;

@@ -9,7 +9,7 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="isEmpty">
+            <template v-if="!isEmpty">
                 <div id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
                 <div class="legend-container">
                     <div class="legend-wrap" v-for="item in legendList">
@@ -203,17 +203,19 @@ export default {
                     { item: '未支付', count: totalUnpaidCount, percent: totalUnpaidPercent + '%' }
                 ];
                 this.legendList = formattedData
-                if (formattedData[0].count) {
-                    this.isEmpty = true
-                }
                 console.log('formattedData part', formattedData);
                 const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
                 })
-                this.drawBoStatisticsChart(formattedData)
+                if (!formattedData[0].count) {
+                    this.isEmpty = true
+                } else {
+                    this.drawBoStatisticsChart(formattedData)
+                }
             } catch (error) {
                 console.log('Error in getPartRatioRingChartData', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
             }
         },
         goToDetail(type) {

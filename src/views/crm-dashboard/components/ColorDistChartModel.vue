@@ -9,7 +9,7 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="isEmpty">
+            <template v-if="!isEmpty">
                 <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
                 <div class="legend-container">
                     <div class="legend-wrap" v-for="item in legendList">
@@ -143,7 +143,7 @@ export default {
                         .annotation()
                         .text({
                             position: ['50%', '46%'],
-                            content: data.percent * 100 + '%',
+                            content: data.percent + '%',
                             style: {
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -267,12 +267,14 @@ export default {
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
                 })
-                if (transformedData) {
+                if (!transformedData.length) {
                     this.isEmpty = true
+                } else {
+                    this.drawBoStatisticsChart(transformedData);
                 }
-                this.drawBoStatisticsChart(transformedData);
             } catch (error) {
                 console.log('Error in getResultChartData', error);
+                this.$message.warning('数据无法加载，请稍后重试！')
             }
         },
         purchaseIntentStatistics() {
