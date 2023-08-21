@@ -208,10 +208,10 @@ export default {
                         path: "/crm-dashboard/vote-detail",
                         query: {
                             title: this.title,
-                            apiName: 'sourceStatistics',
+                            api_name: 'sourceStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            columnType: Core.Const.VOTE.TYPE.SHARE
+                            column_type: Core.Const.VOTE.TYPE.SHARE
                         }
                     })
                     window.open(routeUrl.href, '_blank')

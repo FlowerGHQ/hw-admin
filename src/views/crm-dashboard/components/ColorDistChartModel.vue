@@ -282,10 +282,10 @@ export default {
                         path: "/crm-dashboard/vote-detail",
                         query: {
                             title: this.title,
-                            apiName: 'resultStatistics',
+                            api_name: 'resultStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            columnType: Core.Const.VOTE.TYPE.COLOR
+                            column_type: Core.Const.VOTE.TYPE.COLOR
                         }
                     })
                     window.open(routeUrl.href, '_blank')

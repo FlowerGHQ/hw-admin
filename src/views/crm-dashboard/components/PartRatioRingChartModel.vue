@@ -226,10 +226,10 @@ export default {
                         path: "/crm-dashboard/vote-detail",
                         query: {
                             title: this.title,
-                            apiName: 'numberStatistics',
+                            api_name: 'numberStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
-                            columnType: Core.Const.VOTE.TYPE.PAID
+                            column_type: Core.Const.VOTE.TYPE.PAID
                         }
                     })
                     window.open(routeUrl.href, '_blank')
