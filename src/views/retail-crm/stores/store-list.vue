@@ -266,11 +266,9 @@
               {{ $Util.storeType(text) || "-" }}
             </template>
             <template v-else-if="column.key === 'user_list'">
-              <!-- {{ text || "-" }} -->
-
               <div v-if="text.length">
                 <img
-                  v-if="text[0].avatar"
+                  v-if="text[0].avatar" 
                   class="avatar-style"
                   :src="text[0].avatar"
                   alt=""
@@ -363,22 +361,6 @@ export default {
     China2Address,
   },
   watch: {
-    $route: {
-      deep: true,
-      immediate: true,
-      handler() {
-        // 这两句刷新页面的时候，页数在之前的页数
-        this.currPage = Core.Data.getItem("currPage")
-          ? Core.Data.getItem("currPage")
-          : 1;
-        this.pageSize = Core.Data.getItem("pageSize")
-          ? Core.Data.getItem("pageSize")
-          : 20;
-        this.getTableData();
-        // this.handleSearchReset(false);
-        // this.getUserData();
-      },
-    },
     searchForm: {
       deep: true,
       handler(oldValue, newValue) {
@@ -682,6 +664,7 @@ export default {
   position: relative;
 
   .triangle-pop {
+    
     width: 100px;
     position: absolute;
     left: -80px;
@@ -715,8 +698,6 @@ export default {
       background-color: #94bfff;
       color: #ffffff;
     }
-  }
-  .btn-right {
   }
 }
 
