@@ -215,7 +215,7 @@ export default {
                 { zh: '待审核', en: 'Awaiting review', value: '0', color: 'yellow', key: 30 },
                 { zh: '通过', en: 'Passed', value: '0', color: 'green', key: 90 },
                 { zh: '不通过', en: 'Rejected', value: '0', color: 'red', key: -30 },
-                { zh: '已关闭', en: 'Closed', value: '0', color: 'grey', key: -100 },
+                { zh: '已关闭', en: 'Closed', value: '0', color: 'grey', key: -60 },
             ],
             // 赔付方式
             payMethodList: [
@@ -257,10 +257,8 @@ export default {
             filteredInfo = filteredInfo || {};
             let columns = [
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' }, // 工单编号
-                // { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item' }, // 车架号
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('r.repair_status'), dataIndex: 'status' }, // 工单状态
-                // { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item_name' }, // 商品名称
                 { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
                 { title: this.$t('r.category_type'), dataIndex: 'category' }, // 工单类型
                 { title: this.$t('r.payment_method'), dataIndex: 'compensation_method', key: 'compensation_method' }, // 赔付方式
@@ -280,6 +278,7 @@ export default {
     },
     mounted() {
         this.getTableData();
+        this.getStatusList();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -311,12 +310,12 @@ export default {
         },
         pageChange(curr) {  // 页码改变
             this.currPage = curr
-            this.getTableData()
+            this.getTableData();
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
             console.log('pageSizeChange size:', size)
             this.pageSize = size
-            this.getTableData()
+            this.getTableData();
         },
         handleTableChange(page, filters, sorter) { // 表格搜索
             console.log('handleTableChange filters:', filters)
@@ -382,31 +381,23 @@ export default {
                 console.log('getTableData err:', err)
             }).finally(() => {
                 this.loading = false;
-                this.getStatusStat()
+                // this.getStatusList()
             });
         },
-        getStatusStat() {  // 获取 状态数量
+        getStatusList() {  // 获取 状态数量
             this.loading = true;
-            Core.Api.Repair.statusList({
-                ...this.searchForm,
-                page: this.currPage,
-                page_size: this.pageSize
-            }).then(res => {
-                console.log("getStatusStat res:", res)
-                let total = 0
-                this.statusStatus.forEach(statusItem => {
-                    res.status_list.forEach(item => {
-                        if (statusItem.key == item.status) {
-                            statusItem.value = item.amount
-                        }
-                    })
-                })
-                res.status_list.forEach(item => {
-                    total += item.amount
-                })
-                this.statusStatus[0].value = total
+            Core.Api.Repair.statusList().then(res => {
+                console.log("getStatusList res:", res)
+                this.statusStatus = this.statusStatus.map(item => {
+                    const foundItem = res.status_list.find(data => data.status === item.key);
+                    if (foundItem) {
+                        item.value = foundItem.amount;
+                    }
+                    return item;
+                });
             }).catch(err => {
-                console.log('getStatusStat err:', err)
+                console.log('getStatusList err:', err)
+                this.$message.warning(this.$t('error_code.system'))
             }).finally(() => {
                 this.loading = false;
             });

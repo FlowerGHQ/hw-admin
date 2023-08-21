@@ -224,7 +224,8 @@ const apiList = {
         stock: ['PostJson', 'repair-order/save-to-invoice'], //入库
 	    remark: ['PostJson', 'repair-order/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
-        saveVehicleList: ['PostJson', 'repair-order/vehicle/list']
+        saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
+        statusList: ['PostJson', 'repair-order/status-count'], // 不同状态下工单类型数量
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
