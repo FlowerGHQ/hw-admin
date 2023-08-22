@@ -2597,6 +2597,8 @@ const messages = {
             add_Tips:'该人员已添加，请勿重复添加!',
             confirm_delete_person:"确认移除该人员",
             re_name:'重命名',
+            to_top:'置顶',
+            cancle_top:'取消置顶',
         }
     },
 
@@ -5077,6 +5079,9 @@ const messages = {
             add_Tips:'This person has been added, please do not add again!',
             confirm_delete_person:"Confirm removal of the person",
             re_name:'rename',
+            to_top:'top',
+            cancle_top:'cancle top',
+
 
         }
     },
