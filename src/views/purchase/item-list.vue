@@ -268,7 +268,8 @@ export default {
                 code: searchForm.code,
                 page: this.currPage,
                 is_authority: 1,
-                page_size: this.pageSize
+                page_size: this.pageSize,
+                has_price: true
             }
 
             Core.Api.Item.list(Core.Util.searchFilter(params)).then(res => {
