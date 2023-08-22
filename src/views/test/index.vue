@@ -1,58 +1,62 @@
 <template>
-    <div id="Index">
-        <div>这是一个测试页面</div> 
-        <button class="btn" @click="test">
-            测试按钮
-        </button>
+    <div>
+        <div>
+            <div v-for="(item, index) in itemList" :key="index" @contextmenu.prevent="showContextMenu(item, index, $event)">
+                {{ item.name }}
+            </div>
+        </div>
+        <!-- 右键弹框 -->
+        <div v-if="contextMenuVisible" class="custom-context-menu"
+            :style="{ top: contextMenuY + 'px', left: contextMenuX + 'px' }">
+            <div>
+                <div @click="renameItem">重命名</div>
+                <div @click="deleteItem">删除</div>
+            </div>
+        </div>
     </div>
 </template>
-
+  
 <script>
-import jsapi from '../../core/jsapi';
-import Core from '../../core';
-import axios from 'axios';
 export default {
-    name: 'Index',
     data() {
         return {
-            token: ''
+            itemList: [
+                { name: 'Item 1' },
+                { name: 'Item 2' },
+                { name: 'Item 3' },
+            ],
+            contextMenuVisible: false,
+            contextMenuX: 0,
+            contextMenuY: 0,
+            selectedItemIndex: null,
         };
     },
-    mounted() {
-        this.token = Core.Data.getToken()
-        console.log('this.token', this.token);
-        // this.drawQrcode()
-    },
     methods: {
-        test() {
-            // console.log('测试');
-            // axios.post('http://horwintest.natapp1.cc/feishu/authorize/jsapi', {}, {
-            //     headers: {
-            //         'token': this.token
-            //     }
-            // })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         console.log('返回数据', data);
-            //     });
-            jsapi.apiAuth();
+        showContextMenu(item, index, event) {
+            this.contextMenuVisible = true;
+            this.contextMenuX = event.clientX;
+            this.contextMenuY = event.clientY;
+            this.selectedItemIndex = index;
         },
-    }
+        renameItem() {
+            this.hideContextMenu();
+        },
+        deleteItem() {
+            this.hideContextMenu();
+        },
+        hideContextMenu() {
+            this.contextMenuVisible = false;
+            this.selectedItemIndex = null;
+        },
+    },
 };
 </script>
-
-<style scoped>
-#Index {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-.btn {
-    margin-left: 100px;
-    width: 100px;        
-    height: 100px;
-    border: 1px solid red;
+  
+<style>
+.custom-context-menu {
+    position: absolute;
+    background-color: #bfa;
+    border: 1px solid #ccc;
+    padding: 5px;
 }
 </style>
