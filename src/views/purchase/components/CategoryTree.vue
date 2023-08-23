@@ -56,6 +56,7 @@ export default {
             Core.Api.ItemCategory.tree({
                 page: 0,
                 parent_id: parent_id,
+                is_authority: 1,
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
