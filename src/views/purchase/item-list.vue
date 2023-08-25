@@ -132,6 +132,7 @@ export default {
             menaKey: 1,
             currency: '',
             MONETARY_TYPE_MAP: ITEM.MONETARY_TYPE_MAP, // 单位
+            query_item_id: 0
         };
     },
     computed: {
@@ -148,7 +149,10 @@ export default {
         this.getTableData();
         this.getCategoryList()
         this.getShopCartData();
-
+        this.query_item_id = Number(this.$route.query.id) || 0
+        if(this.query_item_id) {
+            this.$emit('changeDisplay', true, this.query_item_id)
+        }
     },
 
     methods: {

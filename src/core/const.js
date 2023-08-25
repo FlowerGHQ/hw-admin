@@ -274,8 +274,22 @@ let Const = {
             { zh: '维修', en: 'repair', value: 1 },
             // { zh: '换车', en: 'replace car', value: 2 },
             { zh: '开箱损', en: 'unpacking damage', value: 3 },
-            { zh: '电池维修', en: 'battery', value: 4 },
+            // { zh: '电池维修', en: 'battery', value: 4 },
         ],
+        // 维修单类别
+        CATEGORY_LIST_MAP: {
+            '1': { zh: '维修', en: 'repair', value: 1 },
+            // { zh: '换车', en: 'replace car', value: 2 },
+            '3': { zh: '开箱损', en: 'unpacking damage', value: 3 },
+            // { zh: '电池维修', en: 'battery', value: 4 },
+        },
+        LOG_MAP: {
+            '201': { zh: '创建', en: 'Create', value: 201 },   
+            '212': { zh: '审核', en: 'Audit Success', value: 212 },   
+            '211': { zh: '审核不通过', en: 'Audit Fail', value: 211 },   
+            '205': { zh: '取消', en: 'Cancel', value: 205 },   
+            '206': { zh: '作废', en: 'Voided', value: 206 },   
+        },
         // 维修单类别
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
@@ -363,6 +377,8 @@ let Const = {
             CLOSE: -10, // 订单取消
             AUDIT_FAIL: -30, // 审核未通过
             FAULT_ENTITY_AUDIT_FAIL: -40, // 故障件审核未通过
+            STATUS_VOIDED: -50, // 已作废 不可再次编辑
+            STATUS_TIMEOUT_CLOSE: -60, // 已关闭 审核不通过后超时未处理的工单的状态
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect'},

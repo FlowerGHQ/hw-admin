@@ -519,8 +519,23 @@ const Util = {
     /* =============== 维修单 ================ */
     repairStatusFilter(val, to = 'key') {
         const MAP = Const.REPAIR.NEW_STATUS_MAP
+        switch (to) {
+            case 'key':
+                let value = MAP[val + ''] || {}
+                return value[to] || '-'
+            case 'color':
+                return MAP[val + ''].color || 'grey'
+        }
+    },
+    repairNewTypeFilter(val) {
+        const MAP = Const.REPAIR.CATEGORY_LIST_MAP
         let value = MAP[val + ''] || {}
-        return value[to] || '-'
+        return value || '-'
+    },
+    repairLogTypeFilter(val) {
+        const MAP = Const.REPAIR.LOG_MAP
+        let value = MAP[val + ''] || {}
+        return value || '-'
     },
     repairTypeFilter(val, to = 'key') {
         const MAP = Const.REPAIR.DEVICE_LIST_OBJ

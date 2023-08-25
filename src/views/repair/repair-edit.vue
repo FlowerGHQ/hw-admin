@@ -76,11 +76,11 @@
                             </template>
                             <!-- 行驶公里数 -->
                             <template v-if="column.key === 'input'">
-                                <a-input v-model:value="mileage" style="width: 140px; margin-right: 4px;"
+                                <a-input v-model:value="record.warranty_period_mileage" style="width: 140px; margin-right: 4px;"
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
                             <template v-if="column.key === 'operation'">
-                                <a-button type="link" class="danger" @click="handleDeleteItemTable">{{ $t('def.delete')
+                                <a-button type="link" class="danger" @click="handleDeleteItemTable(record.frame_uid)">{{ $t('def.delete')
                                 }}</a-button>
                             </template>
                         </template>
@@ -466,7 +466,6 @@ export default {
                 { zh: "3. 提交后的工单在没有审核前，可以点击取消并重新编辑工单，也可直接作废该工单，作废的工单不可再次编辑；取消的工单在【已关闭】状态的工单列表中查找", en: '3. Before the submitted work order is reviewed, you can click to cancel and edit the work order again, or directly cancel the work order. The invalid work order cannot be edited again. The cancelled work order is found in the work order column table in the Closed state' }
             ],
             itemTableData: [],
-            mileage: undefined,
             category: 1,
             repairTypeList: [ // 工单类型
                 { zh: '维修', en: 'Repair', value: 1, key: 1 },
@@ -482,7 +481,7 @@ export default {
             isVehicle: false,
             uidList: [],
             itemTableDetail: {
-                count: 5, //车架号数量
+                count: 0, //车架号数量
                 filter_number: 2, //过滤掉的重复车架号数量
                 executing_number: 1, //在执行中的工单数量
                 special_number: 1, //特殊的车架号数量
@@ -659,7 +658,7 @@ export default {
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
                 {
                     title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('r.km_travelled')}`,
-                    dataIndex: 'mileage',
+                    dataIndex: 'warranty_period_mileage',
                     key: 'input'
                 },
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
@@ -892,33 +891,20 @@ export default {
             this.uploadModalShow = false;
         },
         // 页面跳转
-        routerChange(type, item) {
+        routerChange(type, item = {}) {
             let routeUrl
             switch (type) {
                 case 'back':
                     this.$router.go(-1)
                     break;
-                case 'customer':  // 新建客户
-                    routeUrl = this.$router.resolve({
-                        path: "/eos-customer/eos-customer-edit",
-                    })
-                    window.open(routeUrl.href, '_blank')
-                    break;
-                case 'detail':  // 维修单详情
-                    routeUrl = this.$router.replace({
-                        path: "/repair/repair-detail",
-                        query: {
-                            id: item.id
-                        }
-                    })
-                    break;
                 case 'itemDetail':  // 维修单详情
-                    routeUrl = this.$router.replace({
-                        path: "/item/item-detail",
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-list",
                         query: {
                             id: item.item_id
                         }
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
@@ -1075,7 +1061,7 @@ export default {
                 item.failure_type = 1
             })
         },
-        handleDeleteItemTable() {
+        handleDeleteItemTable(frame_uid) {
             let _this = this;
             this.$confirm({
                 title: _this.$t('pop_up.sure_delete'),
@@ -1084,6 +1070,11 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     console.log('handleDeleteItemTable ok');
+                    const index = _this.itemTableData.findIndex(item => item.frame_uid === frame_uid);
+                    if (index !== -1) {
+                        _this.itemTableData.splice(index, 1);
+                        _this.$message.success(_this.$t(/*删除成功*/'pop_up.delete_success'));
+                    }
                 },
             });
         },
@@ -1100,6 +1091,11 @@ export default {
                 frame_uid_list: this.uidList
             }).then(res => {
                 console.log('handleSubmitVehicle res', res);
+                this.itemTableData = res.vehicle_info_list
+                this.itemTableDetail.count = res.vehicle_info_list.length
+                this.itemTableDetail.filter_number = res.duplicate_frame_uid_list.length
+                this.itemTableDetail.executing_number = res.executing_frame_uid_list.length
+                this.itemTableDetail.special_number = res.special_frame_uid_list.length
             })
         },
         /** 获取 商品爆炸图 */

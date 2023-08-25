@@ -70,7 +70,7 @@
                         <div class="value">
                             <a-select v-model:value="searchForm.category" @change='handleSearch'
                                 :placeholder="$t('def.select')">
-                                <a-select-option v-for="item of repairStatusList" :key="item.id" :value="item.status">{{
+                                <a-select-option v-for="item of repairTypeList" :key="item.key" :value="item.value">{{
                                     item[$i18n.locale] }}</a-select-option>
                             </a-select>
                         </div>
@@ -203,8 +203,8 @@ export default {
                 begin_time: undefined, // 开始时间
                 end_time: undefined, // 结束时间
                 compensation_method: 0, // 赔付方式
-                model: 0, // 车型
-                category: 100, // 工单类型
+                model: '', // 车型
+                category: 0, // 工单类型
             },
             // 表格
             tableFields: [],
@@ -224,11 +224,10 @@ export default {
                 { zh: '赔付至账户', en: 'Allocated Account', status: 2, key: 3 }
             ],
             // 工单类型
-            repairStatusList: [
-                { zh: '全部', en: 'All', status: 100, key: 1 },
-                { zh: '待审核', en: 'Awaiting review', status: 70, key: 2 },
-                { zh: '通过', en: 'Passed', status: 90, key: 3 },
-                { zh: '不通过', en: 'Rejected', status: -30, key: 4 },
+            repairTypeList: [
+                { zh: '全部', en: 'All', value: 0, key: 0 },
+                { zh: '维修', en: 'Repair', value: 1, key: 1 },
+                { zh: '开箱损', en: 'Unpacking Damage', value: 2, key: 2 },
             ],
             // 车型列表
             modelTypeList: [
@@ -259,15 +258,15 @@ export default {
                 { title: this.$t('r.repair_sn'), dataIndex: 'uid', key: 'detail' }, // 工单编号
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('r.repair_status'), dataIndex: 'status' }, // 工单状态
-                { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
                 { title: this.$t('r.category_type'), dataIndex: 'category' }, // 工单类型
                 { title: this.$t('r.payment_method'), dataIndex: 'compensation_method', key: 'compensation_method' }, // 赔付方式
                 { title: this.$t('def.create_time'), dataIndex: 'create_time', key: 'time' }, // 创建时间
             ]
             if (this.$auth('ADMIN')) { // 平台方权限可见
                 columns.splice(6, 0,
+                    { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
                     { title: this.$t('p.person'), dataIndex: 'customer_name', key: 'item' }, // 客户姓名
-                    { title: this.$t('p.contact'), dataIndex: 'contact', key: 'item' } // 联系方式
+                    { title: this.$t('p.contact'), dataIndex: 'contact', key: 'item' }, // 联系方式
                 )
             }
             return columns

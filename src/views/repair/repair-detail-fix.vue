@@ -4,25 +4,27 @@
         <div class="title-container">
             <div class="title-area fl-js">{{ $t('r.repair_detail') }}</div>
             <div class="repair-order-sn">
-                {{ $t(/*工单编号*/'r.repair_sn') }}：{{ detail.sn || '-' }}
+                {{ $t(/*工单编号*/'r.repair_sn') }}：{{ detail.uid || '-' }}
             </div>
         </div>
         <!-- 步骤条 -->
         <div class="step-container">
             <div class="steps">
-                <a-steps :current="1">
+                <a-steps :current="currStep">
                     <a-step>
                         <template #title>{{ $t(/*提交工单*/'r.submit_work_order') }}</template>
                         <template #description>
-                            <span>2023-04-24 10:19:27</span>
+                            <div class="step-time">
+                                {{ $Util.timeFilter(detail?.create_time || '') }}
+                            </div>
                         </template>
                     </a-step>
                     <a-step>
                         <template #title>{{ $t(/*审核*/'p.audit') }}</template>
                         <template #description>
-                            <div class="step-tab-wrap">
-                                <div class="step-tab green">
-                                    通过
+                            <div class="step-tab-wrap" v-if="currStep !== 0">
+                                <div class="step-tab green" :style="$Util.repairStatusFilter(detail?.status, 'color')">
+                                    {{ $Util.repairStatusFilter(detail?.status) }}
                                 </div>
                             </div>
                             <div class="step-time">
@@ -33,13 +35,13 @@
                     <a-step>
                         <template #title>{{ $t(/*处理结果*/'r.process_result') }}</template>
                         <template #description>
-                            <div class="step-tab-wrap">
+                            <div class="step-tab-wrap" v-if="currStep !== 0">
                                 <div class="step-tab yellow">
                                     {{ $t(/*赔付至账户*/'r.Allocated_account') }}
                                 </div>
                                 <a-button type="link" style="font-size: 14px;">账户钱包</a-button>
                             </div>
-                            <div class="step-time">
+                            <div class="step-time" v-if="currStep !== 0">
                                 可用余额：€100
                             </div>
                         </template>
@@ -47,7 +49,7 @@
                     <a-step>
                         <template #title>{{ $t(/*完成*/'in.finish') }}</template>
                         <template #description>
-                            <div class="step-time">
+                            <div class="step-time" v-if="currStep !== 0">
                                 2023-04-24 10:19:27
                             </div>
                         </template>
@@ -65,6 +67,12 @@
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'detail'">
+                        <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
+                            {{ record.item_name }}
+                        </a-button>
+                        <span v-else>-</span>
                     </template>
                     <template v-if="column.key === 'mileage'">
                         {{ text || '-' }}{{ $t(/*公里*/'r.km') }}
@@ -89,18 +97,10 @@
         <div class="repair-info-container">
             <div class="info-form-item">
                 <div class="info-key">
-                    {{ $t(/*工单帐类*/'r.repair_account_type') }}：
-                </div>
-                <div class="info-value" :class="$Util.threePagFilter(1, 'color')">
-                    {{ $Util.threePagFilter(1, $i18n.locale) }}
-                </div>
-            </div>
-            <div class="info-form-item">
-                <div class="info-key">
                     {{ $t(/*工单类型*/'r.device_classify') }}：
                 </div>
                 <div class="info-value">
-                    维修
+                    {{ $Util.repairNewTypeFilter(detail?.category)[$i18n.locale] }}
                 </div>
             </div>
             <div class="info-form-item">
@@ -108,7 +108,7 @@
                     {{ $t(/*备注*/'r.remark_a') }}：
                 </div>
                 <div class="info-value">
-                    --
+                    {{ detail?.remark || '-' }}
                 </div>
             </div>
             <div class="info-form-item">
@@ -116,20 +116,20 @@
                     {{ $t(/*创建时间*/'r.create_time') }}：
                 </div>
                 <div class="info-value">
-                    2023-03-23 11:27:17
+                    {{ $Util.timeFilter(detail?.create_time || '') }}
                 </div>
             </div>
         </div>
         <div class="table-container">
-            <div class="border-wrap" v-for="(item, index) in vehicle_list" :key="index">
+            <div class="border-wrap" v-for="(item, index) in vehicle_frame_list" :key="index">
                 <div class="vehicle-item-head-wrap">
                     <div class="vehicle-item-head">
                         {{ $t(/*车架号*/'search.vehicle_no') }}：{{ item.frame_uid }}
                     </div>
                 </div>
                 <div class="vehicle-item-table">
-                    <a-table :columns="itemVehicleTableColumns" :data-source="item.itemVehicleTableData"
-                        :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                    <a-table :columns="itemVehicleTableColumns" :data-source="item.item_list" :scroll="{ x: true }"
+                        :row-key="record => record.id" :pagination='false'>
                         <template #headerCell="{ column }">
                             <div v-html="column.title"></div>
                         </template>
@@ -149,8 +149,17 @@
                             <template v-if="column.key === 'item'">
                                 {{ text || '-' }}
                             </template>
+                            <template v-if="column.key === 'detail'">
+                                <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
+                                    {{ record.item_name }}
+                                </a-button>
+                                <span v-else>-</span>
+                            </template>
                             <template v-if="column.key === 'price'">
-                                {{ $Util.countFilter(text) || '-' }}€
+                                {{ $Util.countFilter(record?.price) || '-' }}€
+                            </template>
+                            <template v-if="column.key === 'total_price'">
+                                {{ Number($Util.countFilter(record.price)) * record.amount || '-' }}€
                             </template>
                             <template v-if="column.key === 'upload'">
                                 <div class="table-upload">
@@ -163,6 +172,7 @@
                                                 record.attachment_list[0]?.name || '-' }}</p>
                                         </a-tooltip>
                                     </div>
+                                    <div v-else>-</div>
                                 </div>
                             </template>
                         </template>
@@ -172,13 +182,13 @@
                             {{ $t(/*合计*/'p.total') }}
                         </div>
                         <div class="total-amount">
-                            {{ $t(/*总数量*/'i.total_quantity') }}: {{ item.amount }}
+                            {{ $t(/*总数量*/'i.total_quantity') }}: {{ item?.total_count || '-' }}
                         </div>
                         <div class="total-amount">
-                            {{ $t(/*总金额*/'r.total_amount') }}: €{{ item.price }}
+                            {{ $t(/*总金额*/'r.total_amount') }}: €{{ $Util.countFilter(item?.total_price) || 0 }}
                         </div>
                         <div class="total-amount">
-                            {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ item.pay_price }}
+                            {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ item?.total_charge || 0 }}
                         </div>
                     </div>
                 </div>
@@ -194,6 +204,9 @@
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'item'">
                         {{ text || '-' }}
+                    </template>
+                    <template v-if="column.key === 'type'">
+                        {{ $Util.repairLogTypeFilter(record.type)[$i18n.locale] || '-' }}
                     </template>
                     <template v-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
@@ -224,112 +237,9 @@ export default {
     data() {
         return {
             Core,
-            detail: {
-                sn: 'CN222202306300002'
-            },
-            vehicleTableData: [
-                {
-                    vehicle_no: 'R45LA1C20P2000043',
-                    vehicle_code: 'TLA30000BX263U39G',
-                    motor_uid: 'TLA30000BX263U39G',
-                    vcu_uid: '122122481322',
-                    item_name: '液压升降小推车--MAUTO',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    mileage: 100,
-                    warranty_status: 1,
-                },
-                {
-                    vehicle_no: 'R45LA1C20P2000043',
-                    vehicle_code: 'TLA30000BX263U39G',
-                    motor_uid: 'TLA30000BX263U39G',
-                    vcu_uid: '122122481322',
-                    item_name: '液压升降小推车--MAUTO',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    mileage: 100,
-                    warranty_status: 2,
-                },
-                {
-                    vehicle_no: 'R45LA1C20P2000043',
-                    vehicle_code: 'TLA30000BX263U39G',
-                    motor_uid: 'TLA30000BX263U39G',
-                    vcu_uid: '122122481322',
-                    item_name: '液压升降小推车--MAUTO',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    mileage: 100,
-                    warranty_status: 3,
-                },
-                {
-                    vehicle_no: 'R45LA1C20P2000043',
-                    vehicle_code: 'TLA30000BX263U39G',
-                    motor_uid: 'TLA30000BX263U39G',
-                    vcu_uid: '122122481322',
-                    item_name: '液压升降小推车--MAUTO',
-                    model: 'SK3',
-                    item_spec: '银色；100/80-14’’',
-                    mileage: 100,
-                    warranty_status: 1,
-                }
-            ],
-            vehicle_list: [
-                {
-                    frame_uid: "R45BB2B60P3000007",
-                    itemVehicleTableData: [
-                        {
-                            item_name: '电池',
-                            item_id: 1,
-                            item_code: 'TLA3-B8-0000',
-                            item_spec: '珍珠白；100/80-14’’',
-                            amount: 1,
-                            unit_price: 10000,
-                            total_price: 20000,
-                            fault_type: '电池故障',
-                            warranty_status: 1,
-                            attachment_list: [],
-                            question_desc: '',
-                        },
-                        {
-                            item_name: '电池',
-                            item_id: 2,
-                            item_code: 'TLA3-B8-0000',
-                            item_spec: '珍珠白；100/80-14’’',
-                            amount: 1,
-                            unit_price: 10000,
-                            total_price: 20000,
-                            fault_type: '电池故障',
-                            warranty_status: 1,
-                            attachment_list: [],
-                            question_desc: '',
-                        },
-                    ],
-                    amount: 10,
-                    price: 100,
-                    pay_price: 1000,
-                },
-                {
-                    frame_uid: "R45BB2B60P3000008",
-                    itemVehicleTableData: [
-                        {
-                            item_name: '电池',
-                            item_id: 1,
-                            item_code: 'TLA3-B8-0000',
-                            item_spec: '珍珠白；100/80-14’’',
-                            amount: 1,
-                            unit_price: 10000,
-                            total_price: 20000,
-                            fault_type: '电池故障',
-                            warranty_status: 1,
-                            attachment_list: [],
-                            question_desc: '',
-                        }
-                    ],
-                    amount: 10,
-                    price: 100,
-                    pay_price: 1000,
-                },
-            ],
+            detail: {},
+            vehicleTableData: [],
+            vehicle_frame_list: [],
             recordTableData: [
                 {
                     type: '创建',
@@ -350,20 +260,21 @@ export default {
                     create_time: 1690889450
                 },
             ],
+            currStep: 0, // 步骤索引
         };
     },
     watch: {},
     computed: {
         vehicleTableColumns() {
             let vehicleTableColumns = [
-                { title: this.$t('search.vehicle_no'), dataIndex: 'vehicle_no', key: 'item' }, // 车架号
-                { title: this.$t('v.vehicle_code'), dataIndex: 'vehicle_code', key: 'item' }, // 整车码
+                { title: this.$t('search.vehicle_no'), dataIndex: 'frame_uid', key: 'item' }, // 车架号
+                { title: this.$t('v.vehicle_code'), dataIndex: 'uid', key: 'item' }, // 整车码
                 { title: this.$t('v.motor_coding'), dataIndex: 'motor_uid', key: 'item' }, // 电机码
                 { title: this.$t('v.control_code'), dataIndex: 'vcu_uid', key: 'item' }, // 中控码
-                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' }, // 商品名称
                 { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
-                { title: this.$t('r.km_travelled'), dataIndex: 'mileage', key: 'mileage' },
+                { title: this.$t('r.km_travelled'), dataIndex: 'warranty_period_mileage', key: 'mileage' },
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
             ]
             return vehicleTableColumns
@@ -373,22 +284,22 @@ export default {
         },
         itemVehicleTableColumns() {
             let columns = [
-                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' }, // 商品名称
                 { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
                 { title: this.$t('i.spec'), dataIndex: 'item_spec', key: 'item' }, // 规格
+                { title: this.$t('i.unit_price'), dataIndex: 'price', key: 'price' }, // 单价
+                { title: this.$t('i.total_price'), dataIndex: 'price', key: 'total_price' }, // 总价
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'price' }, // 单价
-                { title: this.$t('i.total_price'), dataIndex: 'total_price', key: 'price' }, // 总价
-                { title: this.$t('r.fault_types'), dataIndex: 'fault_type', key: 'fault_type' }, // 故障类型
+                { title: this.$t('r.fault_types'), dataIndex: 'fault_category_name', key: 'item' }, // 故障类型
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 {   // 上传附件
-                    title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('p.attachment')}`,
+                    title: this.$t('p.attachment'),
                     dataIndex: 'attachment_list',
                     key: 'upload'
                 },
                 {   // 问题描述
                     title: this.$t('r.description'),
-                    dataIndex: 'question_desc',
+                    dataIndex: 'description',
                     key: 'item'
                 },
             ]
@@ -396,20 +307,22 @@ export default {
         },
         recordTableColumns() {
             let columns = [
-                { title: this.$t('n.operation'), dataIndex: 'type', key: 'item' }, // 操作类型
-                { title: this.$t('r.operation_content'), dataIndex: 'info', key: 'item' }, // 操作内容
-                { title: this.$t('n.operator'), dataIndex: 'user', key: 'item' }, // 操作人
+                { title: this.$t('n.operation'), dataIndex: 'type', key: 'type' }, // 操作类型
+                { title: this.$t('r.operation_content'), dataIndex: 'content', key: 'item' }, // 操作内容
+                { title: this.$t('n.operator'), dataIndex: ['user','name'], key: 'item' }, // 操作人
                 { title: this.$t('r.operating_time'), dataIndex: 'create_time', key: 'time' }, // 操作时间
             ]
             return columns
         },
     },
     created() {
-        // this.id = Number(this.$route.query.id) || 0
+        this.id = Number(this.$route.query.id) || 0
+        this.getRepairDetail();
+        this.getLogList();
     },
     methods: {
         // 页面跳转
-        routerChange(type, item) {
+        routerChange(type, item = {}) {
             let routeUrl
             switch (type) {
                 case 'back':
@@ -432,6 +345,15 @@ export default {
                         query: { id: this.id },
                     })
                     break;
+                case 'itemDetail':  // 维修单详情
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-list",
+                        query: {
+                            id: item.item_id
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
             }
             window.open(routeUrl.href, '_self')
         },
@@ -443,23 +365,41 @@ export default {
             }).then(res => {
                 console.log('getRepairDetail res', res)
                 this.detail = res
+                this.vehicleTableData = this.detail.vehicle_list
+                this.vehicle_frame_list = this.detail.vehicle_frame_list
+                // 计算总价
+                let total_price = 0;
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.item_list.forEach(item => {
+                        total_price += item.price;
+                    });
+                });
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.total_price = total_price;
+                });
+                // 计算实付金额
+                let total_charge = 0;
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.item_list.forEach(item => {
+                        total_charge += item.charge;
+                    });
+                });
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.total_charge = total_charge;
+                });
+                // 计算总数量
+                let total_count = 0;
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.item_list.forEach(item => {
+                        total_count += item.amount;
+                    });
+                });
+                this.vehicle_frame_list.forEach(frame => {
+                    frame.total_count = total_count;
+                });
                 this.getCurrStep(this.detail.status)
-                this.getFaultData()
             }).catch(err => {
                 console.log('getRepairDetail err', err)
-            }).finally(() => {
-                this.loading = false;
-            });
-        },
-        getTableData() {  // 获取 表格 数据
-            this.loading = true;
-            Core.Api.RepairItem.list({
-                repair_order_id: this.id
-            }).then(res => {
-                console.log("测试", res)
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -467,29 +407,48 @@ export default {
         // 获取当前工单进度
         getCurrStep(status) {
             switch (status) {
-                case STATUS.WAIT_DETECTION:
+                case STATUS.WAIT_DETECTION: // 订单创建，等待检测
                     this.currStep = 0;
                     break;
-                case STATUS.WAIT_REPAIR:
+                case STATUS.WAIT_REPAIR: // 维修中
                     this.currStep = 1;
                     break;
-                case STATUS.REPAIR_END:
-                    this.currStep = 2;
+                case STATUS.REPAIR_END: // 维修完成
+                    this.currStep = 1;
                     break;
-                case STATUS.SETTLEMENT:
+                case STATUS.SETTLEMENT: // 已结算，待审核(零售商创建)
+                    this.currStep = 1;
+                    break;
+                case STATUS.SETTLEMENT_DISTRIBUTOR: // 已结算，待审核(分销商创建)
+                    this.currStep = 1;
+                    break;
+                case STATUS.AUDIT_SUCCESS: // 平台方审核通过
                     this.currStep = 3;
                     break;
-                case STATUS.SETTLEMENT_DISTRIBUTOR:
+                case STATUS.FINISH: // 保外结算直接完成，不需要审核
                     this.currStep = 3;
                     break;
-                case STATUS.AUDIT_SUCCESS:
-                    this.currStep = 3;
+                case STATUS.AUDIT_FAIL: // 审核未通过
+                    this.currStep = 1;
                     break;
-                case STATUS.FINISH:
-                    this.currStep = 3;
+                case STATUS.FAULT_ENTITY_AUDIT_FAIL: // 故障件审核未通过
+                    this.currStep = 1;
+                    break;
+                case STATUS.CLOSE: // 订单取消
+                    this.currStep = 1;
                     break;
             }
         },
+        getLogList() {
+            Core.Api.ActionLog.list({
+                source_type: 20,
+                source_id: this.id   
+            }).then(res => {
+                this.recordTableData = res.list   
+            }).catch(err => {
+                console.log('getLogList err', err);
+            })   
+        }
     }
 };
 </script>
@@ -497,6 +456,7 @@ export default {
 <style lang="less" scoped>
 #RepairDetail {
     position: relative;
+
     .title-container {
         .repair-order-sn {
             color: #86909C;
