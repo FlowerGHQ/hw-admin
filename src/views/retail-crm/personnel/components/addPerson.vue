@@ -191,8 +191,10 @@ const handleScroll = (e) => {
     const element = e.target;
     if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
         // console.log('滑到底部');
-        pagination.page++
-        userListFetch({ page: pagination.page })
+        if (pagination.page <= pagination.total_page) {
+            pagination.page++
+            userListFetch({ page: pagination.page })
+        }
     }
 }
 </script>
