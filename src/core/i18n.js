@@ -2599,7 +2599,17 @@ const messages = {
         },
         item_order:{
             order_summary:'订单摘要',
-            commodity_image:'商品图片'
+            commodity_image:'商品图片',
+            active_entrance:'活动入口',
+            order_source:'奖品名单来源',
+            awards:'奖项',
+            receiver_phone: '收件人手机号',
+            shipping_address: '收件地址',
+            winning_time:'中奖时间',
+            prize_shipment_status:'奖品发货状态',
+            search_order_number:'搜索订单号',
+            search_phone_number:'搜索手机号',
+            search_recipients:'搜索收件人',
         }
     },
 
@@ -5083,6 +5093,17 @@ const messages = {
         item_order:{
             order_summary:'Order Summary',
             commodity_image:'Commodity Image',
+            active_entrance:'Active Entrance',
+            order_source:'Source Of The Prize List',
+            awards:'Awards',
+            receiver_phone: 'Receiver Phone',
+            shipping_address: 'Shipping Address',
+            winning_time:'Winning Time',
+            prize_shipment_status:'Prize Shipment Status',
+            search_order_number:'Search Order Number',
+            search_phone_number:'Search Phone Number',
+            search_recipients:'Search For Recipients',
+
         }
     },
 }

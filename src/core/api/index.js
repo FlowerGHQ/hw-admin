@@ -810,7 +810,15 @@ const apiList = {
         purchaseOrder: ['PostJson', 'data-board/purchase-order'],
         repairOrder: ['PostJson', 'data-board/repair-order'],
         repairRank: ['PostJson', 'data-board/fault_rank'],
+    },
+    // crm 好物订单接口
+    GoodItemsOrder: {
+
+        orderList: ['PostJson', 'app-order/list'],                      // 订单列表
+        orderDetail: ['PostJson', 'order/deatail'],                     // 订单详情
+        updateTrackingNumber: ['PostJson', 'app-waybill/save'],         // 更新快递单号
+        logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
     }
-};
+}; 
 
 export default new Api(baseUrl, apiList);

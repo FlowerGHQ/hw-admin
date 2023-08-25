@@ -2,119 +2,46 @@
     <div class="have-paid">
         <div class="search">
             <a-row class="row-detail">
-                <!-- 订单搜索 -->
+                <!-- 订单号 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">{{ $t("retail.order_search") }}：</span>
+                    <span class="key">{{ $t("in.order_number") }}：</span>
                     <span class="value">
-                        <a-input
-                            :placeholder="$t('def.input')"
-                            v-model:value="searchForm.uid"
-                            @keydown.enter="handleSearch"
-                        />
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.sn" @keydown.enter="handleSearch" />
                     </span>
                 </a-col>
-               
-                <!-- 订单状态： -->
+                <!-- 手机号 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">{{ $t("retail.order_status") }}：</span>
+                    <span class="key">{{ $t("n.phone") }}：</span>
                     <span class="value">
-                        <a-select v-model:value="searchForm.order_status" class="select-w">
-                            <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
-                                {{ $t(item.value )}}
-                            </a-select-option>
-                        </a-select>
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.user_phone" />
                     </span>
                 </a-col>
-                <template v-if="show">
-                    <!-- 所属大区 -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                        <span class="key">{{ $t("retail.subregion") }}：</span>
-                        <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
-                        </span>
-                    </a-col>
-                    <!-- 所属城市 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="row-item"
-                    >
-                        <span class="key">{{ $t("retail.home_city") }}：</span>
-                        <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
-                        </span>
-                    </a-col>
-                    <!-- 所属门店 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="row-item"
-                    >
-                        <span class="key">{{ $t("retail.affiliated_store") }}：</span>
-                        <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
-                        </span>
-                    </a-col>                  
-                    <!-- 创建时间 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="row-item"
-                    >
-                        <span class="key">{{ $t("retail.creat_time") }}：</span>
-                        <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
-                        </span>
-                    </a-col>
-                </template>
-                <a-col
-                    :xs="24"
-                    :sm="24"
-                    :xl="8"
-                    :xxl="6"
-                    class="row-item"
-                    @click="moreSearch"
-                >       
-                    <span class="key option-text">
-                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
-                        <i v-if="!show" class="icon i_xialajiantouxiao"></i>
-                        <i v-else class="icon i_shouqijiantouxiao"></i>
+                <!-- 收件人 -->
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item" >
+                    <span class="key">{{ $t("wb.receiver") }}：</span>
+                    <span class="value">
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.to_name" />
+                    </span>
+                </a-col>
+                <!-- 快递单号 -->
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                    <span class="key">{{ $t("af.courier_number") }}：</span>
+                    <span class="value">
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.courier_number" />
                     </span>
                 </a-col>
             </a-row>
         </div>
         <div> 
-            <div class="btns m-b-20">
-                <div class="btn-left"></div>
+            <div class="btns m-b -20" >
+                <div class="btn-left" ></div>
                 <div class="btn-right">                  
-                    <a-button @click="handleSearch" type="primary">{{
-                        $t("def.search")
-                    }}</a-button>
-                    <a-button @click="handleSearchReset">{{
-                        $t("def.reset")
-                    }}</a-button>
+                    <a-button @click="handleSearch" type="primary" >
+                        {{ $t("def.search") }}
+                    </a-button>
+                    <a-button @click="handleSearchReset" >
+                        {{ $t("def.reset") }}
+                    </a-button>
                 </div>
             </div>
             <a-table
@@ -130,18 +57,21 @@
                 </template>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
-                        <!-- 详情 -->
+                        <!-- 详情 --> 
+                        <a-button type="link" @click="routerChange('ship', record)">
+                            {{ $t("p.ship")}}
+                        </a-button>       
                         <a-button type="link" @click="routerChange('detail', record)">
                             {{ $t("retail.detail")}}
-                        </a-button>                      
+                        </a-button>                    
                         <!-- 退订审核 (只有在申请退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link">
+                        <!-- <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link">
                             {{ $t("retail.unsubscribe_review")}}
-                        </a-button>    
-                        <!-- 查看原因 (只有已退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link">
+                        </a-button>  -->
+                        <!-- 查看原因 (只有已退订/退款) -->
+                        <!-- <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link">
                             {{ $t("retail.view_reason")}}
-                        </a-button>                      
+                        </a-button>     -->                  
                     </template>
                 </template>
             </a-table>
@@ -155,11 +85,12 @@ import TimeSearch from "@/components/common/TimeSearch.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
-const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const searchForm = ref({
-    Series: undefined, // 车辆系列
-    Order_Status: undefined, // 订单状态
+    sn: undefined,                  // 订单号
+    user_phone: undefined,          // 手机号 without000
+    to_name: undefined,             // 收件人 without000
+    courier_number: undefined,      // 快递单号 without000
 });
 const tableData = ref([]);
 const channelPagination = ref({
@@ -173,11 +104,6 @@ const channelPagination = ref({
         `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 }); // 分页配置
 
-onMounted(() => {
-    getTableDataFetch({
-        page: 1,
-    });
-});
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 const props = defineProps({
@@ -186,64 +112,80 @@ const props = defineProps({
     }
 })
 
+onMounted(() => {
+    getTableDataFetch({
+        page: 1,
+        status:props.activeKey
+    });
+});
 /* 计算属性 */
 const tableColumns = computed(() => {
     let columns = [
-        {
-            title: "车辆系列",
-            dataIndex: "uid",
-            key: "uid",
+        {/* 订单号 */
+            title: "in.order_number",
+            dataIndex: "sn",
+            key: "sn",
         },
-        {
-            title: "订单号",
-            dataIndex: ["order", "uid"],
-            key: "order_uid",
+        {/* 用户名称 */
+            title: "dis.user_name",
+            dataIndex: "user_name",
+            key: "user_name",
         },
-        {
-            title: "用户",
-            dataIndex: "status",
-            key: "util",
-            util: "CRMOrderIncomeStatusFilter",
+        {/* 手机号 */
+            title: "n.phone",
+            dataIndex: "user_phone",
+            key: "user_phone",
+            // util: "CRMOrderIncomeStatusFilter",
+        }, 
+        {/* 活动入口 */      // without000
+            title: "item_order.active_entrance",
+            dataIndex: "active_entrance",
+            key: "active_entrance",
         },
-        {
-            title: "订单状态",
-            dataIndex: "money",
-            key: "money",
+        {/* 奖品名单来源 */
+            title: "item_order.order_source",
+            dataIndex: "channel",
+            key: "channel",
         },
-        {
-            title: "订单金额",
-            dataIndex: "refunded",
-            key: "refunded",
-        },
-        {
-            title: "已付金额",
+        {/* 奖项 */         // without000
+            title: "item_order.awards",
             dataIndex: "date",
             key: "time",
         },
-        {
-            title: "购车方案",
-            dataIndex: "type",
-            key: "util",            
+        {/* 收件人 */       
+            title: "wb.receiver",
+            dataIndex: "to_name",
+            key: "to_name",             
         },
-        {
-            title: "区域 ",
-            dataIndex: "payment_type",
-            key: "util",            
+        {/* 收件人手机号 */
+            title: "item_order.receiver_phone",
+            dataIndex: "to_phone",
+            key: "to_phone",            
         },
-        {
-            title: "门店 ",
-            dataIndex: "payment_type",
-            key: "util",            
+        {/* 收件地址 */
+            title: "item_order.shipping_address",
+            dataIndex: "to_address",
+            key: "to_address",            
         },
-        {
-            title: "体验官 ",
-            dataIndex: "payment_type",
-            key: "util",            
+        {/* 中奖时间 */     // without000
+            title: "item_order.winning_time",
+            dataIndex: "create_time",
+            key: "create_time",            
         },
-        {
-            title: "申请时间 ",
-            dataIndex: "payment_type",
-            key: "util",            
+        {/* 奖品发货状态 */
+            title: "item_order.prize_shipment_status",
+            dataIndex: "status",
+            key: "status",            
+        },
+        {/* 快递单号 */     // without000
+            title: "af.courier_number",
+            dataIndex: "courier_number",
+            key: "courier_number",            
+        },
+        {/* 快递公司 */     // without000
+            title: "af.courier",
+            dataIndex: "courier",
+            key: "courier",            
         },
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];
@@ -254,17 +196,16 @@ const tableColumns = computed(() => {
 // table接口
 const getTableDataFetch = (params = {}) => {
     loading.value = true;
-    Core.Api.CRMOrderIncome.list({
-        search_type: 10,
+    Core.Api.GoodItemsOrder.orderList({
         ...params,
     })
         .then((res) => {
             channelPagination.value.total = res.count;
-            console.log("getTableData res:", res);
+            console.log("getTableData333333 res:", res);
             tableData.value = res.list;
         })
         .catch((err) => {
-            console.log("getTableData err:", err);
+            console.log("getTableData333333 err:", err);
         })
         .finally(() => {
             loading.value = false;
@@ -284,12 +225,21 @@ const routerChange = (type, item = {}) => {
             break;
     }
 };
-// 收起更多按钮
-const moreSearch = () => {
-    show.value = !show.value;
-};
+
 // 查询按钮
-const handleSearch = () => {};
+const handleSearch = () => {
+
+    console.log('点击查询按钮');
+    Core.Api.GoodItemsOrder.orderList({
+        status:0
+    }).then((res) => {
+        console.log("handleSearch res:", res);
+    }).catch((err) => {
+        console.log("handleSearch err:", err);
+    }).finally(() => {
+
+    });
+};
 // 重置按钮
 const handleSearchReset = () => {};
 const handleOtherSearch = (params) => {};
@@ -304,9 +254,12 @@ const handleTableChange = (pagination, filters, sorter) => {
         pager.pageSize = pagination.pageSize;
     }
     channelPagination.value = pager;
+
     getTableDataFetch({
+
         page_size: channelPagination.value.pageSize,
         page: channelPagination.value.current,
+        status:props.activeKey
     });
 };
 </script>

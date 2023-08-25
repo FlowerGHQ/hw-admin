@@ -31,13 +31,14 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     default:
-        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
+        URL_POINT = 'http://10.10.12.78:8889' // hh
         break;
 }
 
@@ -2214,11 +2215,12 @@ let Const = {
     // 国内零售业务
     RETAIL: {
         Order_Status_Map: {
-            paid: 1,  // 已支付
-            to_be_paid: 2, // 待支付
-            apply_refund: 3, // 申请退订/退款
-            unsubscribed_refunded: 4, // 已退订/退款
+            all: 0,                     // 全部0
+            to_be_shipped: 300,           // 待发货300
+            to_be_received: 400,          // 待收货400
+            completed: 500,               // 已完成
         },
+
     },
 };
 
