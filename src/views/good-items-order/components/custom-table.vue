@@ -33,7 +33,7 @@
             </a-row>
         </div>
         <div> 
-            <div class="btns m-b -20" >
+            <div class="btns m-b-20" >
                 <div class="btn-left" ></div>
                 <div class="btn-right">                  
                     <a-button @click="handleSearch" type="primary" >
@@ -57,11 +57,12 @@
                 </template>
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
-                        <!-- 详情 --> 
-                        <a-button type="link" @click="routerChange('ship', record)">
+                        <!-- 发货按钮  根据状态判断是否显示 -->
+                        <a-button type="link" v-if="Number(record.status) === Core.Const.RETAIL.Order_Status_Map['2'].value" @click="routerChange('ship', record)">
                             {{ $t("p.ship")}}
                         </a-button>       
-                        <a-button type="link" @click="routerChange('detail', record)">
+                        <!-- 详情 --> 
+                        <a-button type="link"  @click="routerChange('detail', record)">
                             {{ $t("retail.detail")}}
                         </a-button>                    
                         <!-- 退订审核 (只有在申请退订/退款)-->
@@ -82,15 +83,19 @@
 <script setup>
 import Core from "@/core";
 import TimeSearch from "@/components/common/TimeSearch.vue";
-import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, reactive, ref,toRaw } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const loading = ref(false); // 加载
+const { proxy } = getCurrentInstance();
+// 定义要发送的emit事件
+const emit = defineEmits(['getTabNumber'])
+
 const searchForm = ref({
-    sn: undefined,                  // 订单号
-    user_phone: undefined,          // 手机号 without000
-    to_name: undefined,             // 收件人 without000
-    courier_number: undefined,      // 快递单号 without000
+    sn: '',                  // 订单号
+    user_phone: '',          // 手机号 without000
+    to_name: '',             // 收件人 without000
+    courier_number: '',      // 快递单号 without000
 });
 const tableData = ref([]);
 const channelPagination = ref({
@@ -104,7 +109,6 @@ const channelPagination = ref({
         `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 }); // 分页配置
 
-const { proxy } = getCurrentInstance();
 const router = useRouter();
 const props = defineProps({
     activeKey:{
@@ -198,19 +202,21 @@ const getTableDataFetch = (params = {}) => {
     loading.value = true;
     Core.Api.GoodItemsOrder.orderList({
         ...params,
-    })
-        .then((res) => {
-            channelPagination.value.total = res.count;
-            console.log("getTableData333333 res:", res);
-            tableData.value = res.list;
-        })
-        .catch((err) => {
-            console.log("getTableData333333 err:", err);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
+        ...searchForm
+    }).then((res) => {
+        channelPagination.value.total = res.count;
+        console.log("getTableData res:", res);
+        tableData.value = res.list;
+        
+    }).catch((err) => {
+        console.log("getTableData err:", err);
+    }).finally(() => {
+        loading.value = false;
+        emit('getTabNumber', {type:props.activeKey,data:80});
+
+    });
 };
+
 /* 接口 end*/
 /* methods */
 const routerChange = (type, item = {}) => {
@@ -228,20 +234,18 @@ const routerChange = (type, item = {}) => {
 
 // 查询按钮
 const handleSearch = () => {
-
-    console.log('点击查询按钮');
-    Core.Api.GoodItemsOrder.orderList({
-        status:0
-    }).then((res) => {
-        console.log("handleSearch res:", res);
-    }).catch((err) => {
-        console.log("handleSearch err:", err);
-    }).finally(() => {
-
+    console.log(searchForm.value);
+    getTableDataFetch({
+        page_size: channelPagination.value.pageSize,
+        page: 1,
+        status:props.activeKey
     });
 };
 // 重置按钮
-const handleSearchReset = () => {};
+const handleSearchReset = () => {
+    Object.assign(searchForm.value, {sn: '',user_phone: '',to_name: '',courier_number: ''})
+    handleSearch();
+};
 const handleOtherSearch = (params) => {};
 // 申请车辆
 const addVehicle = () => {};
