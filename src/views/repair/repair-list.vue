@@ -127,7 +127,7 @@
                         <template v-if="column.dataIndex === 'status'">
                             <div class="status status-bg status-tag" :class="$Util.repairStatusFilter(text, 'color')">
                                 <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.repairStatusFilter(text, $i18n.locale) }}
+                                    {{ $Util.repairStatusFilter(text, 'key')[$i18n.locale] || '未知' }}
                                 </a-tooltip>
                             </div>
                         </template>

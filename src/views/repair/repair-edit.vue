@@ -76,11 +76,13 @@
                             </template>
                             <!-- 行驶公里数 -->
                             <template v-if="column.key === 'input'">
-                                <a-input v-model:value="record.warranty_period_mileage" style="width: 140px; margin-right: 4px;"
+                                <a-input v-model:value="record.warranty_period_mileage"
+                                    style="width: 140px; margin-right: 4px;"
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
                             <template v-if="column.key === 'operation'">
-                                <a-button type="link" class="danger" @click="handleDeleteItemTable(record.frame_uid)">{{ $t('def.delete')
+                                <a-button type="link" class="danger" @click="handleDeleteItemTable(record.frame_uid)">{{
+                                    $t('def.delete')
                                 }}</a-button>
                             </template>
                         </template>
@@ -115,36 +117,11 @@
                                     item[$i18n.locale] }}</a-select-option>
                             </a-select>
                         </div>
-
                     </div>
                     <!-- 故障分类 故障类型 -->
                     <div class="form-container pl">
-                        <!-- 故障种类 -->
-                        <div class="form-wrap required">
-                            <div class="key">{{ $t('r.fault_type') }}:</div>
-                            <div class="value">
-                                <a-radio-group v-model:value="$1.failure_type">
-                                    <a-radio v-for="item in faultTypeList" :value="item.key">
-                                        {{ lang === 'zh' ? item.zh : item.en }}
-                                    </a-radio>
-                                </a-radio-group>
-                            </div>
-                        </div>
-                        <!-- 故障类型 -->
-                        <div class="form-wrap required mt" v-if="$1.failure_type === 1">
-                            <div class="key">{{ $t('r.fault_types') }}:</div>
-                            <a-checkbox-group class="checkbox-wrap" v-model:value="form.category"
-                                @change="differentCheckChange">
-                                <a-checkbox v-for="item in faultTypesList" :value="item">
-                                    {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
-                                </a-checkbox>
-                            </a-checkbox-group>
-                        </div>
                     </div>
                     <div class="parts-replace-container">
-                        <div class="parts-replace-title" v-if="$1.failure_type === 1">
-                            {{ $t(/*零部件更换*/'r.replacement_items') }}：
-                        </div>
                         <div class="border-wrap" v-for="($2, index) in $1.vehicle_list" :key="index">
                             <div class="vehicle-item-head-wrap">
                                 <div class="vehicle-item-head">
@@ -155,16 +132,16 @@
                                 </div>
                             </div>
                             <!-- 故障类型 -->
-                            <div class="form-wrap required mt" v-if="isShow($1.failure_type)">
+                            <div class="form-wrap required mt">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
                                 <a-checkbox-group class="checkbox-wrap" v-model:value="form.category"
-                                    @change="differentCheckChange">
-                                    <a-checkbox v-for="item in faultTypesList" :value="item">
-                                        {{ item[$i18n.locale] }}<span v-if="item.count">({{ item?.count }})</span>
+                                    @change="selectCheckChange">
+                                    <a-checkbox v-for="item in $1.fault_types_list" :value="item.id" @change="handleCheckboxChange">
+                                        {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
                                     </a-checkbox>
                                 </a-checkbox-group>
                             </div>
-                            <div class="parts-replace-title mb" v-if="isShow($1.failure_type)">
+                            <div class="parts-replace-title mb">
                                 {{ $t(/*零部件更换*/'r.replacement_items') }}：
                             </div>
                             <div class="vehicle-item-table">
@@ -337,7 +314,7 @@
                         </div>
                         <SimpleImageEmpty v-else :desc="$t('p.no_item_explode')" />
                         <div class="table-container">
-                            <a-table :columns="modalTableColumns" :data-source="modalTableData" :scroll="{ x: true }"
+                            <a-table :columns="modalTableColumns" :data-source="selectItemTableData" :scroll="{ x: true }"
                                 :row-key="record => record.id" :loading='loading' :pagination='false'
                                 :row-selection="rowSelection">
                                 <template #bodyCell="{ record, column, text }">
@@ -474,7 +451,7 @@ export default {
             form: {
                 vehicle_no: undefined,
                 failure_type: 1,
-                category: [],
+                category: '',
                 compensation_method: 1,
             },
             vehicleGroupList: [], // 车型
@@ -486,18 +463,6 @@ export default {
                 executing_number: 1, //在执行中的工单数量
                 special_number: 1, //特殊的车架号数量
             },
-            faultTypeList: [ // 故障种类
-                {
-                    key: 1,
-                    zh: '同一故障',
-                    en: 'Identical Fault'
-                },
-                {
-                    key: 2,
-                    zh: '不同故障',
-                    en: 'Different Fault'
-                },
-            ],
             payMethodList: [ // 赔付方式
                 {
                     key: 1,
@@ -510,94 +475,7 @@ export default {
                     en: 'Allocated Account'
                 },
             ],
-            faultTypesList: [ // 故障类型
-                {
-                    key: 1,
-                    zh: '电池组',
-                    en: 'Identical Fault',
-                    value: 1,
-                    count: 3
-                },
-                {
-                    key: 2,
-                    zh: '电机组',
-                    en: 'Different Fault',
-                    value: 2,
-                    count: 0
-                },
-                {
-                    key: 3,
-                    zh: '方向组',
-                    en: 'Identical Fault',
-                    value: 3,
-                    count: 0
-                },
-                {
-                    key: 4,
-                    zh: '制动组',
-                    en: 'Different Fault',
-                    value: 4,
-                    count: 0
-                },
-                {
-                    key: 5,
-                    zh: '前叉组',
-                    en: 'Different Fault',
-                    value: 5,
-                    count: 0
-                },
-                {
-                    key: 6,
-                    zh: '前轮组',
-                    en: 'Different Fault',
-                    value: 6,
-                    count: 0
-                },
-                {
-                    key: 7,
-                    zh: '后轮组',
-                    en: 'Different Fault',
-                    value: 7,
-                    count: 0
-                },
-                {
-                    key: 8,
-                    zh: '车架组',
-                    en: 'Different Fault',
-                    value: 8,
-                    count: 0
-                },
-                {
-                    key: 9,
-                    zh: '支撑组',
-                    en: 'Different Fault',
-                    value: 9,
-                    count: 0
-                },
-                {
-                    key: 9,
-                    zh: '前部塑件组',
-                    en: 'Different Fault',
-                    value: 9,
-                    count: 0
-                },
-                {
-                    key: 10,
-                    zh: '尾部塑件组',
-                    en: 'Identical Fault',
-                    value: 10,
-                    count: 0
-                },
-                {
-                    key: 11,
-                    zh: '坐垫组',
-                    en: 'Different Fault',
-                    value: 11,
-                    count: 0
-                },
-            ],
             repair_order_item_list: [],
-            question_desc: undefined,
             uploadModalShow: false, // 上传文件弹框
             upload: { // upload
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -639,7 +517,7 @@ export default {
             },
             currency: '',
             mediaWidth: null,
-            modalTableData: [],
+            selectItemTableData: [],
             selectedRowKeys: [],
             selectedRowItems: [],
             selectedRowItemsAll: [],
@@ -649,6 +527,12 @@ export default {
     },
     watch: {},
     computed: {
+        // 货币单位
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        },
         itemTableColumns() {
             let columns = [
                 { title: this.$t('search.vehicle_no'), dataIndex: 'frame_uid', key: 'frame_uid' }, // 车架号
@@ -694,7 +578,7 @@ export default {
             let modalTableColumns = [
                 { title: this.$t('r.item_name'), dataIndex: 'name', key: 'detail' }, // 商品名称
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' }, // 商品编码
-                { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
+                { title: this.$t('i.commercial_specification'), dataIndex: ['material', 'spec'], key: 'item' }, // 商品规格
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
                 { title: this.$t('i.unit_price'), dataIndex: 'cost', key: 'price' }, // 单价
                 { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
@@ -725,9 +609,8 @@ export default {
         },
     },
     mounted() {
-        this.getTableData()
         this.currency = Core.Data.getCurrency();
-        // 适配
+        // 爆炸图适配
         if (window.screen.width <= 1280) {
             this.mediaWidth = '700px'
         }
@@ -749,10 +632,13 @@ export default {
 
         },
         // 选择故障判断是否对应多个商品
-        differentCheckChange(checkout) {
-            console.log('checkout1', checkout);
-            if (checkout[checkout.length - 1].count) {
-                this.handleSelectItemModal();
+        selectCheckChange(itemId) {
+            console.log('itemId', itemId);
+        },
+        // 监听故障选择多选按钮事件
+        handleCheckboxChange(e) {
+            if(e.target.checked === true) {
+                this.handleSelectItemModal(e.target.value)
             }
         },
         // 查看更多附件弹框
@@ -764,55 +650,56 @@ export default {
         handleDeleteFile(index) {
             this.currentAttachmentList.splice(index, 1);
         },
-        handleSelectItemModal() {
+        handleSelectItemModal(category_id) {
             this.selectItemModalShow = true
-            this.getItemExploreList()
-            this.modalTableData = [
-                {
-                    id: 7458,
-                    imgs: "",
-                    name: '360旋转自拍台',
-                    category_list: [
-                        {
-                            category_id: 59,
-                            category_name: "广宣品",
-                            category_name_en: "Publicity products",
-                            create_time: 1690819397,
-                            id: 56507,
-                            item_id: 7458,
-                            update_time: 1690819397,
-                            weight: 0
-                        }
-                    ],
-                    model: "ZST01-0080",
-                    code: 'ZST01-0080',
-                    attr_list: ''
-                },
-                {
-                    id: 7459,
-                    imgs: "",
-                    name: '液压升降小推车--MAUTO',
-                    category_list: [
-                        {
-                            category_id: 59,
-                            category_name: "周边件",
-                            category_name_en: "Publicity products",
-                            create_time: 1690819397,
-                            id: 56507,
-                            item_id: 7458,
-                            update_time: 1690819397,
-                            weight: 0
-                        }
-                    ],
-                    model: "ZST01-0080",
-                    code: 'ZST01-0080',
-                    attr_list: ''
-                },
-            ]
+            this.getItemExploreList(category_id);
+            // this.selectItemTableData = [
+            //     {
+            //         id: 7458,
+            //         imgs: "",
+            //         name: '360旋转自拍台',
+            //         category_list: [
+            //             {
+            //                 category_id: 59,
+            //                 category_name: "广宣品",
+            //                 category_name_en: "Publicity products",
+            //                 create_time: 1690819397,
+            //                 id: 56507,
+            //                 item_id: 7458,
+            //                 update_time: 1690819397,
+            //                 weight: 0
+            //             }
+            //         ],
+            //         model: "ZST01-0080",
+            //         code: 'ZST01-0080',
+            //         attr_list: ''
+            //     },
+            //     {
+            //         id: 7459,
+            //         imgs: "",
+            //         name: '液压升降小推车--MAUTO',
+            //         category_list: [
+            //             {
+            //                 category_id: 59,
+            //                 category_name: "周边件",
+            //                 category_name_en: "Publicity products",
+            //                 create_time: 1690819397,
+            //                 id: 56507,
+            //                 item_id: 7458,
+            //                 update_time: 1690819397,
+            //                 weight: 0
+            //             }
+            //         ],
+            //         model: "ZST01-0080",
+            //         code: 'ZST01-0080',
+            //         attr_list: ''
+            //     },
+            // ]
         },
         handleSelectAllItemModal() {
             this.selectAllItemModalShow = true
         },
+        // 添加商品
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
@@ -822,22 +709,15 @@ export default {
             }
             this.closeAddItemModal();
         },
-        handleSelectItemSubmit() {
-            this.selectItemModalShow = false
-        },
+        // 关闭添加商品弹框
         closeAddItemModal() {
             this.selectAllItemModalShow = false
         },
-        handleClickChange() {
-
+        // 提交选择商品
+        handleSelectItemSubmit() {
+            this.selectItemModalShow = false
         },
-        isShow(item) {
-            if (item === 2) {
-                return true
-            } else {
-                return false
-            }
-        },
+        // 展示上传文件弹框
         handleUploadModalShow(uid, id, record) {
             this.submitDisabled = true
             this.uploadModalShow = true
@@ -908,6 +788,7 @@ export default {
                     break;
             }
         },
+        // mock
         getTableData() {
             let res = {
                 count: 5, //车架号数量
@@ -943,7 +824,6 @@ export default {
                 vehicle_group_list: [
                     {
                         model: "",
-                        // failure_type: 1,
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000007",
@@ -1004,7 +884,6 @@ export default {
                     },
                     {
                         model: "EK3",
-                        // failure_type: 1,
                         vehicle_list: [
                             {
                                 frame_uid: "R45BB2B60P3000009",
@@ -1057,10 +936,8 @@ export default {
             this.itemTableDetail.executing_number = res.executing_number
             this.itemTableDetail.special_number = res.special_number
             this.vehicleGroupList = res.vehicle_group_list
-            this.vehicleGroupList.forEach(item => {
-                item.failure_type = 1
-            })
         },
+        // 删除车架
         handleDeleteItemTable(frame_uid) {
             let _this = this;
             this.$confirm({
@@ -1078,6 +955,7 @@ export default {
                 },
             });
         },
+        // 车架号输入框 根据车架号获取信息
         handleSubmitVehicle() {
             this.isVehicle = true
             this.uidList = this.form.vehicle_no.trim().split('\n').map(str => str.trim());;
@@ -1096,18 +974,54 @@ export default {
                 this.itemTableDetail.filter_number = res.duplicate_frame_uid_list.length
                 this.itemTableDetail.executing_number = res.executing_frame_uid_list.length
                 this.itemTableDetail.special_number = res.special_frame_uid_list.length
+                this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
+                console.log('this.vehicleGroupList', this.vehicleGroupList);
             })
         },
-        /** 获取 商品爆炸图 */
-        getItemExploreList() {
+        // 对分组车型数据的转换处理方法
+        transformGroupData(data) {
+            const transformedData = data.map(group => {
+                this.getItemCategory(group.model);
+                return {
+                    model: group.model,
+                    vehicle_list: group.frame_uid_list.map(frameUid => {
+                        return {
+                            frame_uid: frameUid,
+                            repair_order_item_list: [],
+                            fault_types_list: [],
+                            amount: 0,
+                            price: 0,
+                            pay_price: 0
+                        };
+                    })
+                };
+            });
+            return transformedData
+        },
+        // 获取故障类型
+        getItemCategory(model) {
+            Core.Api.Repair.getItemCategory({
+                model: model,
+                type: 2   
+            }).then(res => {
+                console.log('getItemCategory res', res);   
+                const group = this.vehicleGroupList.find(item => item.model === model);
+                if (group) {
+                    group.fault_types_list = res;
+                }
+            }).catch(err => {
+                console.log('Error in getItemCategory', err);   
+            })
+        },
+        /*======== 爆炸图 ========*/
+        /* 获取 商品爆炸图 */
+        getItemExploreList(category_id) {
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                // target_id: id, 
-                // target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY
-                target_id: 21,
-                target_type: 2
+                target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY, // 代表零配件
+                target_id: category_id,
             }).then((res) => {
                 this.tabsArray = get(res, "list.list", []);
                 this.parsePoint();
@@ -1116,6 +1030,7 @@ export default {
                         ths.loadImage(item.img, index);
                     })
                 })
+                this.selectItemTableData = res.list.list[0].item_component_list.map(item => item.item);
             }).catch(err => {
                 console.log('getItemExploreList err', err);
             });
@@ -1129,7 +1044,7 @@ export default {
                 })
             })
         },
-        /** 加载图片，获取宽高 */
+        /* 加载图片，获取宽高 */
         loadImage(url, index) {
             let img = new Image();
             const ths = this;
@@ -1160,7 +1075,7 @@ export default {
                 this.canvasUpdata(canvas, index, rate);
             })
         },
-        /** 刷新canvas画布 */
+        /* 刷新canvas画布 */
         canvasUpdata(cv, index, rate) {
             let ctx = cv.getContext("2d");
             let pointerList = get(this.tabsArray, `[${index}].item_component_list`, []);
@@ -1176,7 +1091,7 @@ export default {
             })
             ctx.stroke();
         },
-        /** 显示点位详情 */
+        /* 显示点位详情 */
         showDetail(i, j) {
             let delay = 350;
             if (i > -1) {
@@ -1198,11 +1113,12 @@ export default {
                 ths.timer = null;
             }, delay)
         },
-        // 增加指示点
+        /* 增加指示点 */
         addPoint(id) {
             console.log(id)
             this.pointIndex = id
         },
+        /*======== 爆炸图 ========*/
     }
 };
 </script>

@@ -521,10 +521,9 @@ const Util = {
         const MAP = Const.REPAIR.NEW_STATUS_MAP
         switch (to) {
             case 'key':
-                let value = MAP[val + ''] || {}
-                return value[to] || '-'
+                return MAP[val + ''] || {}
             case 'color':
-                return MAP[val + ''].color || 'grey'
+                return MAP[val + '']?.color || 'grey'
         }
     },
     repairNewTypeFilter(val) {

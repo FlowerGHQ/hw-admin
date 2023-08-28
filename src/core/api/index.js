@@ -226,6 +226,7 @@ const apiList = {
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
         saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
         statusList: ['PostJson', 'repair-order/status-count'], // 不同状态下工单类型数量
+        getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表
