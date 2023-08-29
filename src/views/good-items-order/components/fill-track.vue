@@ -1,35 +1,31 @@
 <template>
-  <a-button type="link" class="fill-track" @click="isShow"
-    >填写快递编号</a-button
-  >
+  <a-button type="link" class="fill-track" @click="isShow">{{detail?.waybill_uid !== 0 && detail?.waybill_uid !== ''  ?$t('item_order.modify_courier_number'):$t('item_order.fill_courier_number')}}</a-button>
   <!-- 填写快递编号 -->
-  <a-modal
-    v-model:visible="refundVisible"
-    title="填写订单号"
-    @cancel="refundHandleCancel"
-    @ok="refundHandleOk"
-  >
-    <div class="title">收件信息</div>
+  <a-modal v-model:visible="refundVisible" :title="detail?.waybill_uid !== 0 && detail?.waybill_uid !== '' ? $t('item_order.modify_courier_number'):$t('item_order.fill_courier_number')"
+    @cancel="refundHandleCancel" @ok="refundHandleOk" >
+    <div class="title">{{ $t('item_order.receiving_information') }}</div>
     <div class="content">
       <div class="form-item" v-for="(item, index) in list" :key="index + '#'">
-        <div class="key">{{ item.title }}:</div>
-        <div class="value">{{item.value}}</div>
+        <div class="key">{{ $t(item.title) }}:</div>
+        <div class="value">{{detail[item.value]}}</div>
       </div>
       <div class="form-item">
-        <div class="key track">快递单号:</div>
+        <div class="key track">{{ $t('af.courier_number') }}:</div>
         <div class="value">
-            <a-input />
+            <a-input  v-model:value="updateObj.uid" :placeholder="$t('item_order.fill_tracking_number')"  />
+        </div>
+      </div>
+      <div class="form-item">
+        <div class="key track">{{ $t('af.courier') }}:</div>
+        <div class="value">
+            <a-input  v-model:value="updateObj.company" :placeholder="$t('item_order.fill_name_courier_company')"  />
         </div>
       </div>
     </div>
     <template #footer>
-      <a-button @click="refundHandleCancel"> 取消 </a-button>
-      <a-button
-        type="primary"
-        @click="refundHandleOk"
-        :disabled="isFooterDisabled"
-      >
-        提交
+      <a-button @click="refundHandleCancel"> {{ $t('def.cancel') }} </a-button>
+      <a-button type="primary" @click="refundHandleOk" >
+         {{ $t('def.submit') }}
       </a-button>
     </template>
   </a-modal>
@@ -42,26 +38,50 @@ import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const refundVisible = ref(false);
 const list = ref([
-    {title:'收件人',value:'name',key:'name'},
-    {title:'省',value:'province',key:'province'},
-    {title:'市',value:'city',key:'city'},
-    {title:'详细地址',value:'address',key:'address'},
+    { title:'wb.receiver',value:'to_name',key:'to_name' },
+    { title:'crm_c.province',value:'to_province',key:'to_province' },
+    { title:'crm_c.city',value:'to_city',key:'to_city' },
+    { title:'ad.specific_address',value:'to_address',key:'to_address' },
 
 ])
+const props = defineProps({
+    detail:{
+        type:Object
+    }
+})
+const updateObj = ref({
+
+  id:'',        // 物流id
+  uid:'',       // 快递单号
+  target_id: 0, // 好物订单id
+  company:'',   // 快递公司
+})
+// 定义要发送的emit事件
+const emit = defineEmits(['changeType'])
+
 const refundHandleOk = () => {
-  console.log("确定");
   refundVisible.value = false;
+  emit('changeType')
 };
 const refundHandleCancel = () => {
   refundVisible.value = false;
 };
 
 const isShow = () => {
-  console.log("99999");
+  
   refundVisible.value = true;
 };
 
 const isFooterDisabled = ref(false);
+
+onMounted (()=>{
+  updateObj.value.id = props.detail?.waybill_id;
+  updateObj.value.uid = props.detail?.waybill_uid;
+  updateObj.value.target_id = props.detail?.id;
+  updateObj.value.company = props.detail?.id;
+
+  console.log('props.detail',props.detail,'updateObj.value',updateObj.value);
+}) 
 </script>
 
 <style lang="less" scoped>

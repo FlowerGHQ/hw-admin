@@ -27,7 +27,7 @@
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">{{ $t("af.courier_number") }}：</span>
                     <span class="value">
-                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.courier_number" />
+                        <a-input :placeholder="$t('def.input')" v-model:value="searchForm.waybill_uid" />
                     </span>
                 </a-col>
             </a-row>
@@ -58,19 +58,20 @@
                 <template #bodyCell="{ column, text, record }">
                     <template v-if="column.key === 'operation'">
                         <!-- 发货按钮  根据状态判断是否显示 -->
-                        <a-button type="link" v-if="Number(record.status) === Core.Const.RETAIL.Order_Status_Map['2'].value" @click="routerChange('ship', record)">
+                        <!-- <a-button type="link" v-if="Number(record.status) === Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" @click="routerChange('ship', record)">
                             {{ $t("p.ship")}}
-                        </a-button>       
+                        </a-button>    --> 
+                        <Shipments v-if="Number(record.status) === Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" :id="record.id"></Shipments>   
                         <!-- 详情 --> 
                         <a-button type="link"  @click="routerChange('detail', record)">
                             {{ $t("retail.detail")}}
                         </a-button>                    
                         <!-- 退订审核 (只有在申请退订/退款)-->
-                        <!-- <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link">
+                        <!-- <a-button v-if="Number(activeKey) === Core.Const.GOODITEMORDER.Order_Status_Map.apply_refund" type="link">
                             {{ $t("retail.unsubscribe_review")}}
                         </a-button>  -->
                         <!-- 查看原因 (只有已退订/退款) -->
-                        <!-- <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link">
+                        <!-- <a-button v-if="Number(activeKey) === Core.Const.GOODITEMORDER.Order_Status_Map.unsubscribed_refunded" type="link">
                             {{ $t("retail.view_reason")}}
                         </a-button>     -->                  
                     </template>
@@ -82,8 +83,8 @@
 
 <script setup>
 import Core from "@/core";
-import TimeSearch from "@/components/common/TimeSearch.vue";
-import { computed, getCurrentInstance, onMounted, reactive, ref,toRaw } from "vue";
+import Shipments from "./shipments.vue";
+import { computed ,getCurrentInstance, defineExpose, onMounted, reactive, watchEffect, ref, toRaw } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const loading = ref(false); // 加载
@@ -95,9 +96,10 @@ const searchForm = ref({
     sn: '',                  // 订单号
     user_phone: '',          // 手机号 without000
     to_name: '',             // 收件人 without000
-    courier_number: '',      // 快递单号 without000
+    waybill_uid: '',         // 快递单号 without000
 });
 const tableData = ref([]);
+// 分页配置
 const channelPagination = ref({
     current: 1,
     pageSizeOptions: ["20", "40", "60", "80", "100"],
@@ -105,20 +107,21 @@ const channelPagination = ref({
     showQuickJumper: true, // 是否可以快速跳转至某页
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
-    showTotal: (total) =>
-        `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
-}); // 分页配置
+    showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
+}); 
 
 const router = useRouter();
 const props = defineProps({
     activeKey:{
+
         type:[String,Number]
     }
 })
-
 onMounted(() => {
+    
     getTableDataFetch({
-        page: 1,
+        page_size: channelPagination.value.pageSize,
+        page: channelPagination.value.current,
         status:props.activeKey
     });
 });
@@ -139,7 +142,6 @@ const tableColumns = computed(() => {
             title: "n.phone",
             dataIndex: "user_phone",
             key: "user_phone",
-            // util: "CRMOrderIncomeStatusFilter",
         }, 
         {/* 活动入口 */      // without000
             title: "item_order.active_entrance",
@@ -198,7 +200,7 @@ const tableColumns = computed(() => {
 
 /* 接口 start*/
 // table接口
-const getTableDataFetch = (params = {}) => {
+const getTableDataFetch = (params = {}) => { 
     loading.value = true;
     Core.Api.GoodItemsOrder.orderList({
         ...params,
@@ -212,7 +214,7 @@ const getTableDataFetch = (params = {}) => {
         console.log("getTableData err:", err);
     }).finally(() => {
         loading.value = false;
-        emit('getTabNumber', {type:props.activeKey,data:80});
+        emit('getTabNumber');
 
     });
 };
@@ -225,7 +227,7 @@ const routerChange = (type, item = {}) => {
         case "detail": // 详情
             routeUrl = router.resolve({
                 path: "/good-items-order/order-edit",
-                // query: { id: item.id },
+                query: { id: item.id },
             });
             window.open(routeUrl.href, "_blank");
             break;
@@ -234,16 +236,18 @@ const routerChange = (type, item = {}) => {
 
 // 查询按钮
 const handleSearch = () => {
-    console.log(searchForm.value);
+    let {  sn, user_phone,to_name,waybill_uid } = searchForm.value;
     getTableDataFetch({
         page_size: channelPagination.value.pageSize,
-        page: 1,
-        status:props.activeKey
+        page: channelPagination.value.current,
+        status:props.activeKey,sn, user_phone,to_name,waybill_uid
     });
 };
 // 重置按钮
 const handleSearchReset = () => {
+    let Pag = toRaw({...channelPagination.value});
     Object.assign(searchForm.value, {sn: '',user_phone: '',to_name: '',courier_number: ''})
+    Object.assign(channelPagination.value, {...Pag})
     handleSearch();
 };
 const handleOtherSearch = (params) => {};
@@ -266,6 +270,8 @@ const handleTableChange = (pagination, filters, sorter) => {
         status:props.activeKey
     });
 };
+
+defineExpose({ handleSearchReset })
 </script>
 
 <style lang="less" scoped>
@@ -278,6 +284,7 @@ const handleTableChange = (pagination, filters, sorter) => {
         }
     }
     .btn-right {
+
     }
 }
 

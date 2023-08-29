@@ -31,7 +31,7 @@
                 </div>
 
             </div>
-            <div class="table-container">
+            <div class="table-container">6666
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                          :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record,index}">

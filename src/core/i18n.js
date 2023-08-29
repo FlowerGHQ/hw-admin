@@ -2610,6 +2610,16 @@ const messages = {
             search_order_number:'搜索订单号',
             search_phone_number:'搜索手机号',
             search_recipients:'搜索收件人',
+            actual_payment: '实付款',
+            receiving_information: '收件信息',
+            modify_courier_number:'修改快递编号',
+            fill_courier_number:'填写快递编号',
+            fill_tracking_number:'填写快递单号',
+            fill_name_courier_company:'填写快递公司名称',
+            tracking_courier_company_warn_text:'请仔细核对填写的快递单号和快递公司是否正确',
+            editor:'编辑人',
+
+
         }
     },
 
@@ -5103,6 +5113,14 @@ const messages = {
             search_order_number:'Search Order Number',
             search_phone_number:'Search Phone Number',
             search_recipients:'Search For Recipients',
+            actual_payment: 'Actual Payment',
+            receiving_information: 'Receiving Information',
+            modify_courier_number:'Modify Courier Number',
+            fill_courier_number:'Fill Courier Number',
+            fill_tracking_number:'Fill Tracking Number',
+            fill_name_courier_company:'Fill Name Courier Company',
+            tracking_courier_company_warn_text:'Please Carefully Check Whether The Tracking Number And Courier Company Filled In Are Correct',
+            editor:'Editor',
 
         }
     },

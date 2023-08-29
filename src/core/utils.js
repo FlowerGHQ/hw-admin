@@ -1313,8 +1313,15 @@ const Util = {
         if (!Number(denominator)) return 0 + type
         let result = Number(numerator) / Number(denominator) * 100 + type
         return result
-    }
+    },
     /* ======== 百分比 ========== */
+
+    /* ======== 好物订单修改记录 ========== */
+    goodItemOrderUpdateRecordFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Update_Record
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 }
 
 export default Util

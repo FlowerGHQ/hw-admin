@@ -815,9 +815,12 @@ const apiList = {
     GoodItemsOrder: {
 
         orderList: ['PostJson', 'app-order/list'],                      // 订单列表
-        orderDetail: ['PostJson', 'order/deatail'],                     // 订单详情
+        orderDetail: ['PostJson', 'app-order/detail'],                  // 订单详情
         updateTrackingNumber: ['PostJson', 'app-waybill/save'],         // 更新快递单号
         logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
+        statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
+        seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
+
     }
 }; 
 

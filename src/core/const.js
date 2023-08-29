@@ -31,14 +31,14 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     default:
-        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
-        // URL_POINT = 'http://10.10.12.78:8889' // hh
+        URL_POINT = 'http://10.10.12.78:8889' // hh
         break;
 }
 
@@ -2212,20 +2212,21 @@ let Const = {
     USERNAME: {
         'admin1': true
     },
-    // 国内零售业务
-    RETAIL: {
-        Order_Status_Map: {
+
+    // 好物订单
+    GOODITEMORDER:{
+        Order_Status_Map:{
+            
             '1': { key: 1, zh: '全部', en: 'All',value:0 },
             '2': { key: 2, zh: '待发货', en: 'To Be Paid',value:300  },
             '3': { key: 3, zh: '已发货', en: 'Shipped',value:400  },
             '4': { key: 4, zh: '已完成', en: 'Completed',value:500  },
-           /*  all: 0,                       // 全部0
-            to_be_shipped: 300,           // 待发货300
-            to_be_received: 400,          // 待收货400
-            completed: 500,               // 已完成 */
         },
-
-    },
+        // 修改好物订单记录
+        Update_Record:{
+            '1': { key: 1, zh: '修改快递单号', en: 'Modify Tracking Number',value:1 }
+        }
+    }
 };
 
 export default Const;

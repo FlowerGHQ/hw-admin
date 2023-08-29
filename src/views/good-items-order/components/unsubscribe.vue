@@ -1,30 +1,14 @@
 <template>
-    <a-button type="link" class="fill-track" @click="isShow"
-      >填写快递编号</a-button
-    >
+    <a-button type="link" class="fill-track" @click="isShow" >填写快递编号</a-button >
     <!-- 填写快递编号 -->
-    <a-modal
-      v-model:visible="refundVisible"
-      title="退订审核"
-      @cancel="refundHandleCancel"
-      @ok="refundHandleOk"
-    >
+    <a-modal v-model:visible="refundVisible" title="退订审核" @cancel="refundHandleCancel" @ok="refundHandleOk" >
       <template #footer> 
         <a-button @click="refundHandleCancel"> 取消 </a-button>
-        <a-button
-          type="primary"
-          @click="refundHandleOk"
-          :disabled="isFooterDisabled"
-        >
+        <a-button type="primary" @click="refundHandleOk" :disabled="isFooterDisabled" >
           同意退订
         </a-button>
       </template>
-      <a-textarea
-        v-model:value="value2"
-        placeholder="填写原因"
-        :rows="4"
-        allow-clear
-      />
+      <a-textarea v-model:value="value2" placeholder="填写原因" :rows="4" allow-clear />
     </a-modal>
   </template>
   

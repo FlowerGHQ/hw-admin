@@ -1,46 +1,25 @@
 <template>
   <a-button type="link" class="fill-track" @click="isShow">查看详情</a-button>
   <!-- 填写快递编号 -->
-  <a-modal
-    v-model:visible="refundVisible"
-    title="运输中详情"
-    @cancel="refundHandleCancel"
-    @ok="refundHandleOk"
-    :width="600"
-  >
+  <a-modal v-model:visible="refundVisible" title="运输中详情"  @cancel="refundHandleCancel" @ok="refundHandleOk" :width="600" >
     <div class="title">顺丰快递：JDV001093900768</div>
     <div class="content">
       <div class="record-box" v-for="(item, index) in 5" :key="index + '#'">
         <div class="head-record">
           <span class="time">12:13:14 2023.12.12</span>
-          <span
-            class="icon-record"
-            :class="{ 'color-click': index === 3, 'color-top': index === 0 ||index===1 }"
-          >
-        {{ index==0?'收':'' }}
-        <img v-if="index===1" class="color-img" :src="getTestActiveSrc('car')"/>
-    </span>
-          <span
-            class="line"
-            :class="{ 'del-top': index === 4, 'del-bot': index === 0 }"
-          ></span>
+          <span class="icon-record" :class="{ 'color-click': index === 3, 'color-top': index === 0 ||index===1 }" >
+            {{ index==0?'收':'' }}
+            <img v-if="index===1" class="color-img" :src="getTestActiveSrc('car')"/>
+          </span>
+          <span class="line" :class="{ 'del-top': index === 4, 'del-bot': index === 0 }" ></span>
           <span class="peo-record">编辑人：李开智</span>
         </div>
-        <div
-          class="body-record"
-          :class="{ 'border-left': index + 1 < 5 }"
-        ></div>
+        <div class="body-record" :class="{ 'border-left': index + 1 < 5 }" ></div>
       </div>
     </div>
     <template #footer>
       <a-button @click="refundHandleCancel"> 取消 </a-button>
-      <a-button
-        type="primary"
-        @click="refundHandleOk"
-        :disabled="isFooterDisabled"
-      >
-        提交
-      </a-button>
+      <a-button type="primary" @click="refundHandleOk" :disabled="isFooterDisabled" > 提交 </a-button>
     </template>
   </a-modal>
 </template>
@@ -68,7 +47,7 @@ const list = ref([
   { title: "详细地址", value: "address", key: "address" },
 ]);
 const refundHandleOk = () => {
-  console.log("确定");
+
   refundVisible.value = false;
 };
 const refundHandleCancel = () => {
@@ -76,11 +55,11 @@ const refundHandleCancel = () => {
 };
 
 const isShow = () => {
-  console.log("99999");
   refundVisible.value = true;
 };
 
 const isFooterDisabled = ref(false);
+
 </script>
   
   <style lang="less" scoped>

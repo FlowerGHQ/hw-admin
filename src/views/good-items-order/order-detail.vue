@@ -6,71 +6,51 @@
       </div>
       <div class="container">
         <div class="d-img">
-          <img
-            class="img"
-            src="https://img0.baidu.com/it/u=2220978215,658189084&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=768"
-            alt=""
-          />
+          <img class="img" :src="detail.avatar" alt="" />
         </div>
         <div class="d-content">
           <a-row class="all-msg">
             <div class="order-msg">
-              <span>赵先生</span>
-              <span class="use">
-                <img class="img" :src="getTestActiveSrc('man')" alt="" />
-                <span>25</span>
-              </span>
-              <span class="test-drive">小程序</span>
+              <span>{{detail?.user_name}}</span>
+              <!-- 
+                  <span class="use">
+                    <img class="img" :src="getTestActiveSrc('man')" alt="" />
+                    <span>25</span>
+                    </span>
+                  <span class="test-drive">小程序</span>
+               --> 
             </div>
           </a-row>
           <a-row class="row-detail">
             <!-- 手机 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C"
-                >{{ $t("retail.phone") }} ：</span
-              >
+              <span class="key key-form-86909C">{{ $t(/* 手机号 */"retail.phone") }} ：</span>
               <span class="value">
-                <span>1234567</span>
-                <!-- <span style="color: #0061ff"> 查看 </span> -->
-                <span> 【北京联通】 </span>
+                <span>{{ detail?.user_phone || '-' }}</span>
+                <span class="see-phone" v-if="detail?.user_phone?.length && isShowPhone" @click="seePhoneNumber"> 查看 </span>
+                <span v-if="detail?.user_phone?.length"> 【{{detail?.user_phone_info}}】 </span>
               </span>
-            </a-col>
-            <!-- 邮箱 -->
-            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C"
-                >{{ $t("retail.email") }}：</span
-              >
-              <span class="value"> 你好 </span>
-            </a-col>
-            <!-- 用户体验官 -->
-            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C"
-                >{{ $t("retail.user_experience_officer") }}：</span
-              >
-              <span class="value"> 你好 </span>
             </a-col>
             <!-- 省份 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C"
-                >{{ $t("retail.province") }}：</span
-              >
-              <span class="value"> 你好 </span>
+              <span class="key key-form-86909C">{{ $t(/* 省份 */"retail.province") }}：</span>
+              <span class="value"> {{ detail?.to_province }} </span>
             </a-col>
             <!-- 城市 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C">{{ $t("retail.city") }}：</span>
-              <span class="value"> 你好 </span>
+              <span class="key key-form-86909C">{{ $t(/* 城市 */"retail.city") }}：</span>
+              <span class="value"> {{ detail?.to_city }} </span>
             </a-col>
             <!-- 订单地址 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-              <span class="key key-form-86909C"
-                >{{ $t("retail.order_address") }}：</span
-              >
+              <span class="key key-form-86909C">{{ $t(/* 订单地址 */"retail.order_address") }}：</span>
               <span class="value">
-                你好
-                <span style="color: #0061ff">
-                  {{ $t("retail.push_to_customers") }}
-                </span>
+                {{ detail?.to_address }}
+                <!-- 
+                    <span style="color: #0061ff">
+                    {{ $t("retail.push_to_customers") }}
+                    </span> 
+                -->
               </span>
             </a-col>
           </a-row>
@@ -84,7 +64,7 @@
           {{ $t("retail.order_progress") }}
           <div class="order-number-box">
             订单编号:
-            <span id="order-number" ref="myorderNumber">1234546566</span>
+            <span id="order-number" ref="myorderNumber">{{detail?.sn}}</span>
             <a-button type="link" @click="copyOrderNumber">复制</a-button>
           </div>
         </div>
@@ -100,7 +80,7 @@
                 <div class="setp-description">{{ item.description }}</div>
                 <div class="setp-subtitle" v-if="item.logistics">
                   {{ item.logistics }}
-                <transport />
+                  <transport />
                 </div>
               </template>
             </a-step>
@@ -116,20 +96,20 @@
         <div class="sub-title m-b-16">
           <div>
             <!-- 当前的订单进度 -->
-            <span class="key">{{ $t("retail.order_progress") }}：</span>
-            <span class="value">已付意向金</span>
+            <span class="key">{{ $t(/* 订单来源 */"dis.order_source") }}：</span>
+            <span class="value">{{ detail?.channel || '-' }}</span>
           </div>
           <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
+            <span class="key">{{ $t(/* 总价 */"retail.total_price") }}：</span>
+            <span class="value">{{ detail?.price || '-' }}</span>
           </div>
           <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
+            <span class="key">{{ $t(/* 运费 */"p.freight") }}：</span>
+            <span class="value">{{ detail?.waybill_price || '-' }}</span>
           </div>
           <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
+            <span class="key">{{ $t(/* 实付款 */"item_order.actual_payment") }}：</span>
+            <span class="value">{{ detail?.charge || '-' }}</span>
           </div>
         </div>
       </div>
@@ -140,77 +120,25 @@
         </div>
         <div class="sub-title m-b-16">
           <div>
-            <!-- 当前的订单进度 -->
-            <span class="key">{{ $t("retail.order_progress") }}：</span>
-            <span class="value">已付意向金</span>
-          </div>
-          <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
-          </div>
-          <div class="m-L-40">
-            <!-- 当前的订单进度 -->
-            <span class="key">{{ $t("retail.order_progress") }}：</span>
-            <span class="value">已付意向金</span>
-          </div>
-          <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
-            <fillTark />
+            <span class="key">{{ $t("af.courier_number") }}：</span>
+            <span class="value">{{ detail?.waybill_uid === 0? '' : detail?.waybill_uid }}</span>
+            <fillTark :detail="detail" @changeType = "refresh" />
           </div>
         </div>
-        <a-table
-          :columns="commodityTableColumns"
-          :data-source="commodityTableData"
-          :scroll="{ x: true }"
-          :row-key="(record) => record.id"
-          :pagination="false"
-        >
-          <template #headerCell="{ title }">
+        <a-table :columns="commodityTableColumns" :data-source="commodityTableData" :scroll="{ x: true }" :row-key="(record) => record.id"
+          :pagination="false" >
+          <template #headerCell="{ title }" >
             {{ $t(title) }}
           </template>
         </a-table>
       </div>
-      <!-- 支付信息 -->
-      <div class="payment-msg">
-        <div class="title">
-          {{ $t("retail.payment_information") }}
-        </div>
-        <div class="sub-title m-b-16">
-          <div>
-            <!-- 当前的订单进度 -->
-            <span class="key">{{ $t("retail.order_progress") }}：</span>
-            <span class="value">已付意向金</span>
-          </div>
-          <div class="m-L-40">
-            <span class="key">{{ $t("retail.amount_paid") }}：</span>
-            <span class="value">￥500</span>
-          </div>
-        </div>
-        <a-table
-          :columns="paymentTableColumns"
-          :data-source="paymentTableData"
-          :scroll="{ x: true }"
-          :row-key="(record) => record.id"
-          :pagination="false"
-        >
-          <template #headerCell="{ title }">
-            {{ $t(title) }}
-          </template>
-        </a-table>
-      </div>
+   
       <!-- 退订/退款记录 -->
       <div class="refund-msg">
         <div class="title">
           {{ $t("retail.unsubscribe_refund_record") }}
         </div>
-        <a-table
-          :columns="refundTableColumns"
-          :data-source="refundTableData"
-          :scroll="{ x: true }"
-          :row-key="(record) => record.id"
-          :pagination="false"
-        >
+        <a-table :columns="refundTableColumns" :data-source="refundTableData" :scroll="{ x: true }" :row-key="(record) => record.id" :pagination="false" >
           <template #headerCell="{ title }">
             {{ $t(title) }}
           </template>
@@ -227,22 +155,22 @@
         </a-table>
       </div>
       <!-- 修改记录 -->
-      <div class="modify-msg">
+      <div class="modify-msg"> 
         <div class="title">
           {{ $t("retail.modify_record") }}
         </div>
         <!-- 记录盒子 -->
-        <div class="record-box" v-for="(item, index) in 2" :key="index + '#'">
+        <div class="record-box" v-for="(item, index) in logisticsList" :key="item.id">
           <div class="head-record">
             <span class="icon-record"></span>
-            <span class="time">2023.12.12 12:13:14</span>
-            <span class="peo-record">编辑人：李开智</span>
+            <span class="time">{{ item.create_time }}</span>
+            <span class="peo-record">{{$t('item_order.editor')}}：{{item.user_name}}</span>
           </div>
-          <div class="body-record" :class="{ 'border-left': index + 1 < 2 }">
+          <div class="body-record" :class="{ 'border-left': index + 1 < logisticsList?.length }">
             <div class="con-record">
-              <div class="text">修改电话号码</div>
+              <div class="text">{{$Util.goodItemOrderUpdateRecordFilter(item.type,lang)}}</div>
               <div class="text-con">
-                电话号码【155 6763 4857】变更为【134 7654 3454】
+                快递单号【{{item.oldData}}】变更为【{{item.newData}}】
               </div>
             </div>
           </div>
@@ -252,28 +180,14 @@
   </div>
 
   <!-- 退订审核 -->
-  <a-modal
-    v-model:visible="refundVisible"
-    title="退订审核"
-    @cancel="refundHandleCancel"
-    @ok="refundHandleOk"
-  >
+  <a-modal v-model:visible="refundVisible" title="退订审核" @cancel="refundHandleCancel" @ok="refundHandleOk" >
     <template #footer>
       <a-button @click="refundHandleCancel"> 取消 </a-button>
-      <a-button
-        type="primary"
-        @click="refundHandleOk"
-        :disabled="isFooterDisabled"
-      >
+      <a-button type="primary" @click="refundHandleOk" :disabled="isFooterDisabled" >
         同意退订
       </a-button>
     </template>
-    <a-textarea
-      v-model:value="value2"
-      placeholder="填写原因"
-      :rows="4"
-      allow-clear
-    />
+    <a-textarea v-model:value="value2" placeholder="填写原因" :rows="4" allow-clear />
   </a-modal>
 </template>
 
@@ -281,10 +195,9 @@
 import Core from "@/core";
 import fillTark from "./components/fill-track.vue";
 import transport from "./components/transport.vue";
-import { computed, onMounted, reactive, ref } from "vue";
-const testActiveModules = import.meta.globEager(
-  "../../assets/images/good-items/*.png"
-);
+import { computed, onMounted, reactive, ref, getCurrentInstance } from "vue";
+import { useRouter, useRoute } from 'vue-router';
+const testActiveModules = import.meta.globEager("../../assets/images/good-items/*.png");
 // const womanImg =  import.meta.globEager("../../assets/images/test-drive/*.png");
 
 /* 使用图片的方法 */
@@ -297,6 +210,42 @@ const myorderNumber = ref(null);
 // 进度条
 const stepCurrent = ref(2);
 const current = ref(2);
+const { proxy } = getCurrentInstance();
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+})
+const router = useRouter();
+const route = useRoute();
+const id = ref('');
+// - 商品信息columns
+const commodityTableData = ref([{}]); // 商品信息table
+
+
+// - 退订/退款记录columns
+const refundTableData = ref([]); // 退订/退款记录 table
+const refundVisible = ref(false); //  操作
+const isFooterDisabled = ref(false);// - 修改记录columns
+const modifyTableData = ref([]); // 修改记录 table
+const detail = ref({
+  avatar:'',
+  user_name: "",
+  user_phone: "",     //用户手机号 
+  channel: '',         //来源
+  to_address: "",
+  to_city: "",
+  to_province: "",
+  sn: "" ,             //订单编号
+  charge: 0,           //实付款
+  price: 0,            //总价
+  waybill_price: 0,    //运费
+  waybill_uid:'',      //快递单号
+  to_name:'',          //收件人
+  user_phone_info:'',  //手机号信息
+
+})
+const updateWaybillUid = ref('');
+const logisticsList = ref([]);
+const isShowPhone = ref(true);
 const stepItems = computed(() => {
   return [
     {
@@ -344,145 +293,6 @@ const stepItems = computed(() => {
     },
   ];
 });
-
-// - 商品信息columns
-const commodityTableData = ref([]); // 商品信息table
-const commodityTableColumns = computed(() => {
-  return [
-    {
-      title: "item_order.commodity_image",
-      dataIndex: "commodity_image",
-      key: "commodity_image",
-    },
-    {
-      title: "r.item_name",
-      dataIndex: "commodity_image",
-      key: "commodity_image",
-    },
-    {
-      title: "i.commercial_specification",
-      dataIndex: "commercial_specification",
-      key: "commercial_specification",
-    },
-    {
-      title: "retail.configuration_item",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.detail",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.price",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.preferential_policy",
-      dataIndex: "id",
-      key: "id",
-    },
-  ];
-});
-
-// - 支付信息columns
-const paymentTableData = ref([]); // 支付信息table
-const paymentTableColumns = computed(() => {
-  return [
-    {
-      title: "retail.order_status",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.payment_status",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.price",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.preferential_policy",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.amount_actually_paid",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.payment_method",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.order_number",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.time_of_payment",
-      dataIndex: "id",
-      key: "id",
-    },
-  ];
-});
-
-// - 退订/退款记录columns
-const refundTableData = ref([]); // 退订/退款记录 table
-const refundTableColumns = computed(() => {
-  return [
-    {
-      title: "retail.unsubscribe_phase",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.initiator",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.request_cancellation_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refundable_amount",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refundable_amount",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.approval_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refund_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.operate",
-      key: "operation",
-    },
-  ];
-});
-const refundVisible = ref(false); //  操作
-const isFooterDisabled = ref(false);
-// - 修改记录columns
-const modifyTableData = ref([]); // 修改记录 table
 const modifyTableColumns = computed(() => {
   return [
     {
@@ -528,57 +338,150 @@ const modifyTableColumns = computed(() => {
   ];
 });
 
-onMounted(() => {
-  updateFetch();
+const refundTableColumns = computed(() => {
+  return [
+    {
+      title: "retail.unsubscribe_phase",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.initiator",
+      dataIndex: "user_name",
+      key: "user_name",
+    },
+    {
+      title: "retail.request_cancellation_time",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.refundable_amount",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.refundable_amount",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.approval_time",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.refund_time",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.operate",
+      key: "operation",
+    },
+  ];
 });
+
+const commodityTableColumns = computed(() => {
+  
+  return [
+    {
+      title: "item_order.commodity_image",
+      dataIndex: "commodity_image",
+      key: "commodity_image",
+    },
+    {
+      title: "r.item_name",
+      dataIndex: "commodity_image",
+      key: "commodity_image",
+    },
+    {
+      title: "i.commercial_specification",
+      dataIndex: "commercial_specification",
+      key: "commercial_specification",
+    },
+    {
+      title: "retail.configuration_item",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.detail",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.price",
+      dataIndex: "id",
+      key: "id",
+    },
+    {
+      title: "retail.preferential_policy",
+      dataIndex: "id",
+      key: "id",
+    },
+  ];
+});
+
+onMounted(() => {
+  
+  console.log('route.query.id',route.query?.id);
+  if (route.query.id) {
+    id.value = Number(route.query.id);
+    updateFetch();
+ };
+});
+
+const refresh = () => {  
+  if (route.query.id) {
+    id.value = Number(route.query.id);
+    updateFetch();
+ }
+}
+// 查看手机号
+const seePhoneNumber = () => {
+  Core.Api.GoodItemsOrder.seePhone({
+    id:id.value
+  }).then((res) => {
+      detail.value.user_phone = res?.user_phone;
+      if(res?.user_phone.length) isShowPhone.value = false;
+      
+  }).catch((err) => {
+    console.log("getTableData err:", err);
+  });
+}
 /* Fetch start*/
 const updateFetch = (params = {}) => {
-  getCommodityFetch();
-  paymentFetch();
-  refundFetch();
-  modifyFetch();
+  getDetailFetch();
+  // refundFetch();
+  // modifyFetch();
 };
-// 商品信息接口
-const getCommodityFetch = (params = {}) => {
-  Core.Api.CRMOrderIncome.list({
-    search_type: 10,
-    page_size: 6,
-    ...params,
-  })
-    .then((res) => {
-      commodityTableData.value = res.list;
-    })
-    .catch((err) => {
-      console.log("getTableData err:", err);
-    });
+// 详情接口
+const getDetailFetch = (params = {}) => {
+  Core.Api.GoodItemsOrder.orderDetail({
+    id:id.value
+  }).then((res) => {
+      for(let item of Object.keys(res)){
+        detail.value[item] = res[item];
+      };
+      getLogisticsRecords();
+      console.log('detail',detail.value);
+  }).catch((err) => {
+    console.log("getTableData err:666", err);
+  });
 };
-// 支付信息接口
-const paymentFetch = (params = {}) => {
-  Core.Api.CRMOrderIncome.list({
-    search_type: 10,
-    page_size: 6,
-    ...params,
-  })
-    .then((res) => {
-      paymentTableData.value = res.list;
-    })
-    .catch((err) => {
-      console.log("getTableData err:", err);
-    });
-};
+
 // 退订/退款记录接口
 const refundFetch = (params = {}) => {
   Core.Api.CRMOrderIncome.list({
     search_type: 10,
     page_size: 6,
     ...params,
-  })
-    .then((res) => {
+  }).then((res) => {
       refundTableData.value = res.list;
-    })
-    .catch((err) => {
+  }).catch((err) => {
       console.log("getTableData err:", err);
-    });
+  });
 };
 // 修改记录接口
 const modifyFetch = (params = {}) => {
@@ -586,8 +489,7 @@ const modifyFetch = (params = {}) => {
     search_type: 10,
     page_size: 6,
     ...params,
-  })
-    .then((res) => {
+  }).then((res) => {
       modifyTableData.value = res.list;
     })
     .catch((err) => {
@@ -620,6 +522,20 @@ const refundHandleOk = () => {};
 const refundHandleCancel = () => {
   refundVisible.value = false;
 };
+
+const getLogisticsRecords = () => {
+  console.log('getLogisticsRecords------');
+  
+  Core.Api.GoodItemsOrder.logisticsRecords({
+    page_size: 20,
+    page:1,
+    waybill_id:detail.value?.waybill_id
+  }).then((res) => {
+      logisticsList.value = res.list;
+  }).catch((err) => {
+      console.log("getTableData err:", err);
+  }); 
+} 
 </script>
 
 <style lang="less" scoped>
@@ -846,4 +762,10 @@ const refundHandleCancel = () => {
   margin-left: 40px;
 }
 
+
+.see-phone {
+  color: #0061ff;
+  cursor: pointer;
+  margin-right: 10px;
+}
 </style>
