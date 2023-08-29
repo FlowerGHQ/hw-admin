@@ -227,6 +227,8 @@ const apiList = {
         saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
         statusList: ['PostJson', 'repair-order/status-count'], // 不同状态下工单类型数量
         getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
+        getItemStatus:['PostJson', 'warranty-config/list/item/status'], // 根据商品信息查询商品状态7
+        balance: ['PostJson', 'repair-order/get/balance'], // 获取账户余额
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表

@@ -81,7 +81,7 @@
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
                             <template v-if="column.key === 'operation'">
-                                <a-button type="link" class="danger" @click="handleDeleteItemTable(record.frame_uid)">{{
+                                <a-button type="link" class="danger" @click="handleDeleteUidTable(record.frame_uid)">{{
                                     $t('def.delete')
                                 }}</a-button>
                             </template>
@@ -111,8 +111,7 @@
                         <div class="head-wrap">
                             {{ $t(/*车型*/'r.car_type') }}：{{ $1.model || '-' }}
                             <div class="order-type-key">{{ $t(/*工单类型*/'r.device_classify') }}：</div>
-                            <a-select v-model:value="category" @change="handleOrderChange" style="width: 120px;"
-                                :placeholder="$t('def.select')">
+                            <a-select v-model:value="$1.category" style="width: 120px;" :placeholder="$t('def.select')">
                                 <a-select-option v-for="item of repairTypeList" :key="item.id" :value="item.value">{{
                                     item[$i18n.locale] }}</a-select-option>
                             </a-select>
@@ -134,12 +133,14 @@
                             <!-- 故障类型 -->
                             <div class="form-wrap required mt">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
-                                <a-checkbox-group class="checkbox-wrap" v-model:value="form.category"
-                                    @change="selectCheckChange">
-                                    <a-checkbox v-for="item in $1.fault_types_list" :value="item.id" @change="handleCheckboxChange">
+                                <a-radio-group class="checkbox-wrap" v-model:value="$2.fault_types_list"
+                                    @change="selectCheckChange($2.frame_uid)">
+                                    <a-radio v-for="item in $1.fault_types_list"
+                                        :name="$i18n.locale === 'zh' ? item.name : item.name_en" :value="item.id"
+                                        @change="handleCheckboxChange($event.target, item.id, item.name, item.name_en)">
                                         {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
-                                    </a-checkbox>
-                                </a-checkbox-group>
+                                    </a-radio>
+                                </a-radio-group>
                             </div>
                             <div class="parts-replace-title mb">
                                 {{ $t(/*零部件更换*/'r.replacement_items') }}：
@@ -167,28 +168,50 @@
                                         <template v-if="column.key === 'item'">
                                             {{ text || '-' }}
                                         </template>
+                                        <template v-if="column.key === 'amount'">
+                                            1
+                                        </template>
+                                        <template v-if="column.key === 'fault_type'">
+                                            {{ ($i18n.locale === 'zh' ? record.category_name : record.category_name_en) ||
+                                                '-' }}
+                                        </template>
                                         <template v-if="column.key === 'price'">
-                                            {{ $Util.countFilter(text) || '-' }}€
+                                            <div v-if="currency === 'eur' || currency === 'EUR'">
+                                                €{{ $Util.countFilter(record[priceKey + 'eur']) }}
+                                            </div>
+                                            <div v-else>
+                                                ${{ $Util.countFilter(record[priceKey + 'usd']) }}
+                                            </div>
+                                        </template>
+                                        <template v-if="column.key === 'detail'">
+                                            <a-button type="link" v-if="record.name"
+                                                @click="routerChange('itemDetail', record)">
+                                                {{ $i18n.locale === 'zh' ? record.name : record.name_en }}
+                                            </a-button>
+                                            <span v-else>-</span>
                                         </template>
                                         <template v-if="column.key === 'upload'">
                                             <div class="table-upload">
-                                                <div class="table-img" v-if="record.attachment_list.length">
+                                                <div class="table-img" v-if="record.attachment_item_list.length">
                                                     <a-image :width="24" :height="24"
-                                                        :src="$Util.imageFilter(record.attachment_list[0]?.path.includes('img') ? record.attachment_list[0]?.path : '', 4)"
+                                                        :src="$Util.imageFilter(record.attachment_item_list[0]?.path.includes('img') ? record.attachment_item_list[0]?.path : '', 4)"
                                                         :fallback="$t('def.none')" />
-                                                    <a-tooltip placement="top" :title='record.attachment_list[0]?.name'>
+                                                    <a-tooltip placement="top"
+                                                        :title='record.attachment_item_list[0]?.name'>
                                                         <p class="ell" style="max-width:120px;margin-left:12px;">{{
-                                                            record.attachment_list[0]?.name || '-' }}</p>
+                                                            record.attachment_item_list[0]?.name || '-' }}</p>
                                                     </a-tooltip>
                                                 </div>
-                                                <div v-if="record.attachment_list.length > 1" class="divide-line"></div>
+                                                <div v-if="record.attachment_item_list.length > 1" class="divide-line">
+                                                </div>
                                                 <!-- 更多-按钮 -->
-                                                <a-button v-if="record.attachment_list.length > 1" type="link"
+                                                <a-button v-if="record.attachment_item_list.length > 1" type="link"
                                                     style="margin-left: 8px; font-size: 14px;"
-                                                    @click="moreAttachModalShow(record.attachment_list)">{{
+                                                    @click="moreAttachModalShow(record.attachment_item_list)">{{
                                                         $t('n.more')
                                                     }}</a-button>
-                                                <div v-if="record.attachment_list.length > 1" class="divide-line"></div>
+                                                <div v-if="record.attachment_item_list.length > 1" class="divide-line">
+                                                </div>
                                                 <img @click="handleUploadModalShow($2.frame_uid, record.item_id, record)"
                                                     class="upload-icon" src="../../assets/images/upload-icon.png" alt="">
                                                 <div @click="handleUploadModalShow($2.frame_uid, record.item_id, record)"
@@ -204,28 +227,39 @@
                                                 :placeholder="$t(/*请输入问题描述*/'r.fault_description')" />
                                         </template>
                                         <template v-if="column.key === 'operation'">
-                                            <a-button type="link" class="danger" @click="handleDeleteItemTable">{{
-                                                $t('def.delete')
-                                            }}</a-button>
+                                            <a-button type="link" class="danger"
+                                                @click="handleDeleteItem(record.id, $2.repair_order_item_list)">{{
+                                                    $t('def.delete')
+                                                }}</a-button>
                                         </template>
                                     </template>
                                 </a-table>
                                 <div class="vehicle-item-footer">
-                                    <a-button v-if="!$1.model" class="add-btn" type="primary"
+                                    <!-- <a-button v-if="!$1.model" class="add-btn" type="primary"
                                         @click="handleSelectAllItemModal">{{
+                                            $t(/*添加商品*/'i.add')
+                                        }}</a-button> -->
+                                    <a-button class="add-btn" type="primary"
+                                        @click="handleSelectAllItemModal($2.frame_uid)">{{
                                             $t(/*添加商品*/'i.add')
                                         }}</a-button>
                                     <div class="total">
                                         {{ $t(/*合计*/'p.total') }}
                                     </div>
                                     <div class="total-amount">
-                                        {{ $t(/*总数量*/'i.total_quantity') }}: {{ $2.amount }}
+                                        {{ $t(/*总数量*/'i.total_quantity') }}: {{ $2.repair_order_item_list.length }}
                                     </div>
-                                    <div class="total-amount">
-                                        {{ $t(/*总金额*/'r.total_amount') }}: €{{ $2.price }}
+                                    <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
+                                        {{ $t(/*总金额*/'r.total_amount') }}: €{{ $Util.countFilter($2.totalPrice) }}
                                     </div>
-                                    <div class="total-amount">
-                                        {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ $2.pay_price }}
+                                    <div class="total-amount" v-else>
+                                        {{ $t(/*总金额*/'r.total_amount') }}: ${{ $Util.countFilter($2.totalPrice) }}
+                                    </div>
+                                    <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
+                                        {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ $Util.countFilter($2.totalCharge) }}
+                                    </div>
+                                    <div class="total-amount" v-else>
+                                        {{ $t(/*实付金额*/'r.amount_paid') }}: ${{ $Util.countFilter($2.totalCharge) }}
                                     </div>
                                 </div>
                             </div>
@@ -234,7 +268,7 @@
                 </template>
                 <!-- 上传附件弹框 -->
                 <a-modal v-model:visible="uploadModalShow" :title="$t('n.upload_attachment')"
-                    class="attachment-file-upload-modal" :after-close="handleModalClose">
+                    class="attachment-file-upload-modal">
                     <div class="form-title">
                         <div class="form-item required file-upload">
                             <div class="key">{{ $t('f.upload') }}:</div>
@@ -257,22 +291,22 @@
                 </a-modal>
                 <!-- 选择商品弹框 -->
                 <a-modal v-model:visible="selectItemModalShow" :title="$t('i.select_item')" width='860px'
-                    :after-close="handleModalClose">
+                    :after-close="selectItemModalClose">
                     <div class="repair-modal-content">
                         <div class="modal-title-wrap">
                             <div class="modal-title-key">
                                 {{ $t(/*故障选择*/'r.fault_selection') }}
                             </div>
-                            <div class="modal-title-value">
+                            <!-- <div class="modal-title-value">
                                 111
-                            </div>
+                            </div> -->
                         </div>
                         <!-- 爆炸图 -->
                         <div class="explored-content" v-if="tabsArray.length > 0">
                             <div class="explore-content">
                                 <div class="carousel-list">
                                     <div class="carousel-item" v-for="(item, i) of tabsArray" :key="i">
-                                        <img :class="{ carouselImg: mediaWidth }" :src="$Util.imageFilter(item.img)" />
+                                        <img :class="{ carouselImg: mediaWidth }" :src="$Util.imageFilter(item?.img)" />
                                         <canvas :ref="`exploreCanvas${i}`"></canvas>
                                         <div class="point-start" v-for="(point, j) in (item.item_component_list || [])"
                                             :key="j"
@@ -335,6 +369,9 @@
                                         <span v-if="text >= 0">{{ column.unit }}</span>
                                         {{ $Util.countFilter(text) }}
                                     </template>
+                                    <template v-if="column.key === 'amount'">
+                                        1
+                                    </template>
                                     <template v-if="column.key === 'item'">
                                         {{ text || '-' }}
                                     </template>
@@ -349,12 +386,6 @@
                                             :class="$Util.threePagFilter(text, 'color')">
                                             {{ $Util.threePagFilter(text, $i18n.locale) }}
                                         </div>
-                                    </template>
-                                    <template v-if="column.key === 'category_list'">
-                                        <span v-for="(category, index) in text">
-                                            <span v-if="index !== 0">,</span>
-                                            {{ $i18n.locale === 'zh' ? category.category_name : category.category_name_en }}
-                                        </span>
                                     </template>
                                 </template>
                             </a-table>
@@ -371,7 +402,7 @@
                     @close="closeAddItemModal" />
                 <!-- 查看更多附件列表弹框 -->
                 <a-modal v-model:visible="attachModalShow" :title="$t('n.upload_attachment')"
-                    class="attachment-file-upload-modal" :after-close="handleModalClose">
+                    class="attachment-file-upload-modal">
                     <div class="file-list" v-for="(item, index) in currentAttachmentList" :key="index">
                         <div class="file-key">
                             <a-image :width="24" :height="24"
@@ -403,8 +434,11 @@
                         </a-radio>
                     </a-radio-group>
                 </div>
-                <div class="balance">
-                    ( {{ $t(/*可用余额*/'r.available_balance') }}: €100 )
+                <div class="balance" v-if="currency === 'eur' || currency === 'EUR'">
+                    ( {{ $t(/*可用余额*/'r.available_balance') }}: €{{ $Util.countFilter(balance) || 0}} )
+                </div>
+                <div class="balance" v-else>
+                    ( {{ $t(/*可用余额*/'r.available_balance') }}: ${{ $Util.countFilter(balance) || 0}} )
                 </div>
                 <div class="submit-btn-group">
                     <a-button @click="handleCancel">{{ $t(/*取消*/'def.cancel') }}</a-button>
@@ -475,7 +509,6 @@ export default {
                     en: 'Allocated Account'
                 },
             ],
-            repair_order_item_list: [],
             uploadModalShow: false, // 上传文件弹框
             upload: { // upload
                 action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -523,6 +556,7 @@ export default {
             selectedRowItemsAll: [],
             attachModalShow: false,
             currentAttachmentList: [],
+            balance: 0,
         };
     },
     watch: {},
@@ -552,17 +586,16 @@ export default {
         },
         itemVehicleTableColumns() {
             let columns = [
-                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'item' }, // 商品名称
-                { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
-                { title: this.$t('i.spec'), dataIndex: 'item_spec', key: 'item' }, // 规格
-                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('i.unit_price'), dataIndex: 'cost', key: 'price' }, // 单价
-                { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
+                { title: this.$t('r.item_name'), dataIndex: 'name', key: 'detail' }, // 商品名称
+                { title: this.$t('i.code'), dataIndex: 'code', key: 'item' }, // 商品编码
+                { title: this.$t('i.spec'), dataIndex: ['material', 'spec'], key: 'item' }, // 规格
+                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'amount' }, // 数量
+                { title: this.$t('i.price'), dataIndex: 'fob_eur', key: 'price' }, // 价格
                 { title: this.$t('r.fault_types'), dataIndex: 'fault_type', key: 'fault_type' }, // 故障类型
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 {   // 上传附件
                     title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('p.attachment')}`,
-                    dataIndex: 'attachment_list',
+                    dataIndex: 'attachment_item_list',
                     key: 'upload'
                 },
                 {   // 问题描述
@@ -579,9 +612,8 @@ export default {
                 { title: this.$t('r.item_name'), dataIndex: 'name', key: 'detail' }, // 商品名称
                 { title: this.$t('i.code'), dataIndex: 'code', key: 'item' }, // 商品编码
                 { title: this.$t('i.commercial_specification'), dataIndex: ['material', 'spec'], key: 'item' }, // 商品规格
-                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('i.unit_price'), dataIndex: 'cost', key: 'price' }, // 单价
-                { title: this.$t('i.total_price'), dataIndex: 'price', key: 'price' }, // 总价
+                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'amount' }, // 数量
+                { title: this.$t('i.price'), dataIndex: 'cost', key: 'price' }, // 价格
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
             ]
             return modalTableColumns
@@ -603,7 +635,7 @@ export default {
                         selectedRowItems.push(element)
                     });
                     this.selectedRowItems = selectedRowItems
-                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys, 'selectedRowItems:', selectedRowItems)
+                    console.log('rowSelection this.selectedRowKeys:', this.selectedRowKeys, 'selectedRowItems:', this.selectedRowItems)
                 },
             };
         },
@@ -614,31 +646,45 @@ export default {
         if (window.screen.width <= 1280) {
             this.mediaWidth = '700px'
         }
+        this.getBalanceDetail();
     },
     methods: {
-        handleModalClose() {
-
+        getBalanceDetail() {
+            Core.Api.Repair.balance().then(res => {
+                console.log('getBalanceDetail res', res);   
+            }).catch(err => {
+                console.log('Error in getBalanceDetail', err);   
+            })  
         },
-        handleOrderChange() {
-
-        },
+        // 提交工单
         handleConfirm() {
-            this.vehicleGroupList.forEach(item => {
-                item.compensation_method = this.form.compensation_method
-            })
-            console.log('vehicleGroupList', this.vehicleGroupList);
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_audit'),
+                okText: _this.$t('def.sure'),
+                okType: 'primary',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    console.log('handleConfirm ok');
+                    console.log('vehicleGroupList', _this.vehicleGroupList);
+                },
+            });
+            // this.vehicleGroupList.forEach(item => {
+            //     item.compensation_method = this.form.compensation_method
+            // })
         },
+        // 取消
         handleCancel() {
-
+            this.routerChange('back')
         },
-        // 选择故障判断是否对应多个商品
-        selectCheckChange(itemId) {
-            console.log('itemId', itemId);
+        // 监听故障类型多选勾选
+        selectCheckChange(frame_uid) {
+            this.currentFrameUid = frame_uid
         },
         // 监听故障选择多选按钮事件
-        handleCheckboxChange(e) {
-            if(e.target.checked === true) {
-                this.handleSelectItemModal(e.target.value)
+        handleCheckboxChange(e, id, name, name_en) {
+            if (e.checked === true) {
+                this.handleSelectItemModal(id, name, name_en)
             }
         },
         // 查看更多附件弹框
@@ -647,56 +693,25 @@ export default {
             this.currentAttachmentList = list
             this.attachModalShow = true
         },
+        // 删除附件
         handleDeleteFile(index) {
             this.currentAttachmentList.splice(index, 1);
         },
-        handleSelectItemModal(category_id) {
+        // 展示具体故障类型选择商品弹框
+        handleSelectItemModal(category_id, name, name_en) {
             this.selectItemModalShow = true
-            this.getItemExploreList(category_id);
-            // this.selectItemTableData = [
-            //     {
-            //         id: 7458,
-            //         imgs: "",
-            //         name: '360旋转自拍台',
-            //         category_list: [
-            //             {
-            //                 category_id: 59,
-            //                 category_name: "广宣品",
-            //                 category_name_en: "Publicity products",
-            //                 create_time: 1690819397,
-            //                 id: 56507,
-            //                 item_id: 7458,
-            //                 update_time: 1690819397,
-            //                 weight: 0
-            //             }
-            //         ],
-            //         model: "ZST01-0080",
-            //         code: 'ZST01-0080',
-            //         attr_list: ''
-            //     },
-            //     {
-            //         id: 7459,
-            //         imgs: "",
-            //         name: '液压升降小推车--MAUTO',
-            //         category_list: [
-            //             {
-            //                 category_id: 59,
-            //                 category_name: "周边件",
-            //                 category_name_en: "Publicity products",
-            //                 create_time: 1690819397,
-            //                 id: 56507,
-            //                 item_id: 7458,
-            //                 update_time: 1690819397,
-            //                 weight: 0
-            //             }
-            //         ],
-            //         model: "ZST01-0080",
-            //         code: 'ZST01-0080',
-            //         attr_list: ''
-            //     },
-            // ]
+            this.getItemExploreList(category_id, name, name_en);
         },
-        handleSelectAllItemModal() {
+        // 关闭具体故障类型选择商品弹框
+        selectItemModalClose() {
+            this.selectItemTableData = []
+            this.tabsArray = [];
+            this.selectedRowItems = []
+            this.selectedRowKeys = []
+        },
+        // 展示选择宣布商品弹框
+        handleSelectAllItemModal(frameUid) {
+            this.currentFrameUid = frameUid
             this.selectAllItemModalShow = true
         },
         // 添加商品
@@ -704,9 +719,10 @@ export default {
             console.log('handleSelectItem ids, items:', ids, items)
             this.selectItems = items
             this.selectItemIds = ids
-            if (this.selectItemIds.length) {
-                this.$message.success(this.$t(/*添加成功*/'pop_up.add'));
-            }
+            const list = this.selectItems
+            const idArray = list.map(item => item.id);
+            const findItem = this.itemTableData.find(item => item.frame_uid === this.currentFrameUid)
+            this.getCategoryItemList(idArray, findItem.warranty_period_mileage, findItem.delivery_time)
             this.closeAddItemModal();
         },
         // 关闭添加商品弹框
@@ -716,6 +732,26 @@ export default {
         // 提交选择商品
         handleSelectItemSubmit() {
             this.selectItemModalShow = false
+            for (const item of this.vehicleGroupList) {
+                for (const vehicle of item.vehicle_list) {
+                    if (vehicle.frame_uid === this.currentFrameUid) {
+                        this.selectedRowItems.forEach(target => {
+                            vehicle.repair_order_item_list.push(target)
+                        });
+                        // 计算 实付金额 的总和
+                        const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
+                            return sum + item.charge;
+                        }, 0);
+                        // // 计算 金额 的总和
+                        const totalPrice = vehicle.repair_order_item_list.reduce((sum, item) => {
+                            return sum + item.price;
+                        }, 0);
+                        vehicle.totalPrice = totalPrice;
+                        vehicle.totalCharge = totalCharge;
+                        break;
+                    }
+                }
+            }
         },
         // 展示上传文件弹框
         handleUploadModalShow(uid, id, record) {
@@ -760,8 +796,8 @@ export default {
         // 确定上传文件
         handleModalSubmit() {
             if (this.currentRecord) {
-                this.currentRecord.attachment_list = [
-                    ...this.currentRecord.attachment_list,
+                this.currentRecord.attachment_item_list = [
+                    ...this.currentRecord.attachment_item_list,
                     ...this.finishUploadData,
                 ];
                 // 清空上传文件列表
@@ -788,157 +824,8 @@ export default {
                     break;
             }
         },
-        // mock
-        getTableData() {
-            let res = {
-                count: 5, //车架号数量
-                filter_number: 2, //过滤掉的重复车架号数量
-                executing_number: 1, //在执行中的工单数量
-                special_number: 1,
-                vehicle_info_list: [
-                    {
-                        frame_uid: "R45BB2B60P3000006",
-                        item_name: "SK3银蓝",
-                        item_code: "TLA3-B8-0000",
-                        item_spec: "蓝色",
-                        model: "EK1",
-                        warranty_status: 1
-                    },
-                    {
-                        frame_uid: "R45BB2B60P3000007",
-                        item_name: "SK3银蓝",
-                        item_code: "TLA3-B8-0001",
-                        item_spec: "蓝色",
-                        model: "EK3",
-                        warranty_status: 2
-                    },
-                    {
-                        frame_uid: "R45BB2B60P3000008",
-                        item_name: "SK3银蓝",
-                        item_code: "TLA3-B8-0002",
-                        item_spec: "蓝色",
-                        model: "SK3",
-                        warranty_status: 3
-                    },
-                ],
-                vehicle_group_list: [
-                    {
-                        model: "",
-                        vehicle_list: [
-                            {
-                                frame_uid: "R45BB2B60P3000007",
-                                repair_order_item_list: [
-                                    {
-                                        item_name: '电池',
-                                        item_id: 1,
-                                        item_code: 'TLA3-B8-0000',
-                                        item_spec: '珍珠白；100/80-14’’',
-                                        amount: 1,
-                                        cost: 10000,
-                                        price: 20000,
-                                        fault_type: '电池故障',
-                                        warranty_status: 1,
-                                        attachment_list: [],
-                                        question_desc: '',
-                                    },
-                                    {
-                                        item_name: '电池',
-                                        item_id: 2,
-                                        item_code: 'TLA3-B8-0000',
-                                        item_spec: '珍珠白；100/80-14’’',
-                                        amount: 1,
-                                        cost: 10000,
-                                        price: 20000,
-                                        fault_type: '电池故障',
-                                        warranty_status: 1,
-                                        attachment_list: [],
-                                        question_desc: '',
-                                    },
-                                ],
-                                amount: 10,
-                                price: 100,
-                                pay_price: 1000,
-                            },
-                            {
-                                frame_uid: "R45BB2B60P3000008",
-                                repair_order_item_list: [
-                                    {
-                                        item_name: '电池',
-                                        item_id: 1,
-                                        item_code: 'TLA3-B8-0000',
-                                        item_spec: '珍珠白；100/80-14’’',
-                                        amount: 1,
-                                        cost: 10000,
-                                        price: 20000,
-                                        fault_type: '电池故障',
-                                        warranty_status: 1,
-                                        attachment_list: [],
-                                        question_desc: '',
-                                    }
-                                ],
-                                amount: 10,
-                                price: 100,
-                                pay_price: 1000,
-                            },
-                        ]
-                    },
-                    {
-                        model: "EK3",
-                        vehicle_list: [
-                            {
-                                frame_uid: "R45BB2B60P3000009",
-                                repair_order_item_list: [
-                                    {
-                                        item_name: '电池',
-                                        item_id: 2,
-                                        item_code: 'TLA3-B8-0000',
-                                        item_spec: '珍珠白；100/80-14’’',
-                                        amount: 1,
-                                        cost: 10000,
-                                        price: 20000,
-                                        fault_type: '电池故障',
-                                        warranty_status: 1,
-                                        attachment_list: [],
-                                        question_desc: '',
-                                    }
-                                ],
-                                amount: 10,
-                                price: 100,
-                                pay_price: 1000,
-                            },
-                            {
-                                frame_uid: "R45BB2B60P3000010",
-                                repair_order_item_list: [
-                                    {
-                                        item_name: '电池',
-                                        item_code: 'TLA3-B8-0000',
-                                        item_spec: '珍珠白；100/80-14’’',
-                                        amount: 1,
-                                        cost: 10000,
-                                        price: 20000,
-                                        fault_type: '电池故障',
-                                        warranty_status: 1,
-                                        attachment_list: [],
-                                        question_desc: '',
-                                    }
-                                ],
-                                amount: 10,
-                                price: 100,
-                                pay_price: 1000,
-                            },
-                        ]
-                    },
-                ]
-            };
-            this.itemTableData = res.vehicle_info_list
-            this.itemTableDetail.count = res.count
-            this.itemTableDetail.filter_number = res.filter_number
-            this.itemTableDetail.executing_number = res.executing_number
-            this.itemTableDetail.special_number = res.special_number
-            this.vehicleGroupList = res.vehicle_group_list
-        },
         // 删除车架
-        handleDeleteItemTable(frame_uid) {
+        handleDeleteUidTable(frame_uid) {
             let _this = this;
             this.$confirm({
                 title: _this.$t('pop_up.sure_delete'),
@@ -946,11 +833,29 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    console.log('handleDeleteItemTable ok');
+                    console.log('handleDeleteUidTable ok');
                     const index = _this.itemTableData.findIndex(item => item.frame_uid === frame_uid);
                     if (index !== -1) {
                         _this.itemTableData.splice(index, 1);
                         _this.$message.success(_this.$t(/*删除成功*/'pop_up.delete_success'));
+                    }
+                },
+            });
+        },
+        // 删除商品
+        handleDeleteItem(id, targetTableData) {
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure_delete'),
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    console.log('handleDeleteItem ok');
+                    const indexToRemove = targetTableData.findIndex(item => item.id === id);
+                    // 如果找到匹配的索引，则删除该项
+                    if (indexToRemove !== -1) {
+                        targetTableData.splice(indexToRemove, 1);
                     }
                 },
             });
@@ -984,14 +889,15 @@ export default {
                 this.getItemCategory(group.model);
                 return {
                     model: group.model,
+                    category: 1,
                     vehicle_list: group.frame_uid_list.map(frameUid => {
                         return {
                             frame_uid: frameUid,
                             repair_order_item_list: [],
                             fault_types_list: [],
                             amount: 0,
-                            price: 0,
-                            pay_price: 0
+                            totalPrice: 0,
+                            totalCharge: 0
                         };
                     })
                 };
@@ -1002,20 +908,107 @@ export default {
         getItemCategory(model) {
             Core.Api.Repair.getItemCategory({
                 model: model,
-                type: 2   
+                type: 2
             }).then(res => {
-                console.log('getItemCategory res', res);   
+                console.log('getItemCategory res', res);
                 const group = this.vehicleGroupList.find(item => item.model === model);
                 if (group) {
                     group.fault_types_list = res;
                 }
             }).catch(err => {
-                console.log('Error in getItemCategory', err);   
+                console.log('Error in getItemCategory', err);
             })
+        },
+        // 获取具有指定类别的商品列表
+        getCategoryItemList(idArray, mileage, deliveryTime, category_id = '', name = '', name_en = '') {
+            Core.Api.Repair.getItemStatus({
+                item_id_list: idArray,
+                mileage: mileage,
+                delivery_time: deliveryTime
+            }).then(res => {
+                console.log('getCategoryItemList res', res);
+                if (category_id) {
+                    this.selectItemTableData = this.updateItemsWithCategory(
+                        this.selectItemTableData,
+                        res,
+                        category_id,
+                        name,
+                        name_en
+                    );
+                } else {
+                    const updatedItems = this.selectItems.map(result => {
+                        return this.updateItemWithMatchingItem(result, res, category_id, name, name_en);
+                    });
+                    this.addItemsToRepairOrder(updatedItems);
+                }
+            }).catch(err => {
+                console.log('Error in getCategoryItemList', err);
+            });
+        },
+        // 更新具有指定类别的商品列表项
+        updateItemsWithCategory(items, matchingItems, category_id, name, name_en) {
+            return items.map(item => {
+                const matchingItem = matchingItems.find(target => target.target_id === item.id);
+                if (matchingItem) {
+                    return {
+                        ...item,
+                        warranty_status: matchingItem.warranty_status,
+                        charge: matchingItem.warranty_status === 1 || matchingItem.warranty_status === 3 ? 0 : (this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd),
+                        price: this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd,
+                        item_category_id: category_id,
+                        attachment_item_list: [],
+                        question_desc: undefined,
+                        category_name: name,
+                        category_name_en: name_en
+                    };
+                }
+                return item;
+            });
+        },
+        // 使用匹配的商品更新单个商品项(手动添加商品的情况)
+        updateItemWithMatchingItem(item, matchingItems, category_id, name, name_en) {
+            const matchingItem = matchingItems.find(target => target.target_id === item.id);
+            if (matchingItem) {
+                return {
+                    ...item,
+                    warranty_status: matchingItem.warranty_status,
+                    charge: matchingItem.warranty_status === 1 || matchingItem.warranty_status === 3 ? 0 : (this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd),
+                    price: this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd,
+                    item_category_id: category_id,
+                    attachment_item_list: [],
+                    question_desc: undefined,
+                    category_name: name,
+                    category_name_en: name_en
+                };
+            }
+            return item;
+        },
+        // 弹框选中项添加到对应表格中
+        addItemsToRepairOrder(items) {
+            for (const item of items) {
+                for (const vehicleGroup of this.vehicleGroupList) {
+                    for (const vehicle of vehicleGroup.vehicle_list) {
+                        if (vehicle.frame_uid === this.currentFrameUid) {
+                            vehicle.repair_order_item_list.push(item);
+                            // 计算 实付金额 的总和
+                            const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
+                                return sum + item.charge;
+                            }, 0);
+                            // // 计算 金额 的总和
+                            const totalPrice = vehicle.repair_order_item_list.reduce((sum, item) => {
+                                return sum + item.price;
+                            }, 0);
+                            vehicle.totalPrice = totalPrice;
+                            vehicle.totalCharge = totalCharge;
+                            break;
+                        }
+                    }
+                }
+            }
         },
         /*======== 爆炸图 ========*/
         /* 获取 商品爆炸图 */
-        getItemExploreList(category_id) {
+        getItemExploreList(category_id, name, name_en) {
             const ths = this;
             this.pointerList = [];
             this.tabsArray = [];
@@ -1023,14 +1016,23 @@ export default {
                 target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM_CATEGORY, // 代表零配件
                 target_id: category_id,
             }).then((res) => {
-                this.tabsArray = get(res, "list.list", []);
+                const inceptionArray = get(res, "list.list", []);
+                if (inceptionArray.length) {
+                    this.tabsArray = [inceptionArray[0]]
+                }
                 this.parsePoint();
                 ths.$nextTick(() => {
                     ths.tabsArray.forEach((item, index) => {
                         ths.loadImage(item.img, index);
                     })
                 })
-                this.selectItemTableData = res.list.list[0].item_component_list.map(item => item.item);
+                if (res.list.list.length) {
+                    const list = res.list.list[0].item_component_list.map(item => item.item)
+                    const idArray = list.map(item => item.id);
+                    const findItem = this.itemTableData.find(item => item.frame_uid === this.currentFrameUid)
+                    this.selectItemTableData = list
+                    this.getCategoryItemList(idArray, findItem.warranty_period_mileage, findItem.delivery_time, category_id, name, name_en)
+                }
             }).catch(err => {
                 console.log('getItemExploreList err', err);
             });
@@ -1237,12 +1239,15 @@ export default {
             align-content: flex-start;
             flex-flow: row wrap;
 
-            .ant-checkbox-wrapper {
+            .ant-radio-wrapper {
                 width: 25%;
+                height: 22px;
                 margin-left: 0;
                 margin-bottom: 18px;
-                flex: 0 0 20%;
+                flex: 0 0 7%;
             }
+            // .ant-radio-group .ant-radio-wrapper {
+            // }
         }
 
         .value {
