@@ -396,6 +396,9 @@ const messages = {
             operating_time: '操作时间',
             filtered: '已过滤',
             duplicate_frame: '重复的车架号',
+            tip: '提示',
+            tip_desc: '工单执行中，请先完成上一条工单后再添加',
+            enter: '请完善必填信息!',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2753,6 +2756,9 @@ const messages = {
             operating_time: 'Operation time',
             filtered: 'Filtered',
             duplicate_frame: 'Duplicate Frame Number',
+            tip: 'Tip',
+            tip_desc: 'During work order execution, complete the previous work order before adding it',
+            enter: 'Please complete the required information!',
         },
         d: {
             distributor_detail: 'Distributor Details',

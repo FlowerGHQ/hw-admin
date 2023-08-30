@@ -133,7 +133,7 @@
                             <!-- 故障类型 -->
                             <div class="form-wrap required mt">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
-                                <a-radio-group class="checkbox-wrap" v-model:value="$2.fault_types_list"
+                                <a-radio-group class="checkbox-wrap" v-model:value="$2.item_category_id"
                                     @change="selectCheckChange($2.frame_uid)">
                                     <a-radio v-for="item in $1.fault_types_list"
                                         :name="$i18n.locale === 'zh' ? item.name : item.name_en" :value="item.id"
@@ -147,7 +147,7 @@
                             </div>
                             <div class="vehicle-item-table">
                                 <a-table :columns="itemVehicleTableColumns" :data-source="$2.repair_order_item_list"
-                                    :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
+                                    :scroll="{ x: true }" :row-key="record => record.key_id" :pagination='false'>
                                     <template #headerCell="{ column }">
                                         <div v-html="column.title"></div>
                                     </template>
@@ -424,6 +424,19 @@
                 </a-modal>
             </template>
         </div>
+        <!-- 过滤提示弹框 -->
+        <a-modal v-model:visible="tipModalShow" :title="$t(/*提示*/'r.tip')" class="attachment-file-upload-modal">
+            <div class="form-title">
+                <div class="form-item">
+                    {{ executingFrameUid || '-' }}{{ $t(/*工单执行中，请先完成上一条工单后再添加*/'r.tip_desc') }}
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="handleTipModalShow">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleTipModalShow" type="primary">{{ $t('def.sure')
+                }}</a-button>
+            </template>
+        </a-modal>
         <div class="fix-container">
             <div :class="$i18n.locale === 'zh' ? 'pay-method-key' : 'pay-method-key w1080'">
                 {{ $t(/*赔付方式*/'r.payment_method') }}：
@@ -435,10 +448,10 @@
                     </a-radio-group>
                 </div>
                 <div class="balance" v-if="currency === 'eur' || currency === 'EUR'">
-                    ( {{ $t(/*可用余额*/'r.available_balance') }}: €{{ $Util.countFilter(balance) || 0}} )
+                    ( {{ $t(/*可用余额*/'r.available_balance') }}: €{{ $Util.countFilter(balance) || 0 }} )
                 </div>
                 <div class="balance" v-else>
-                    ( {{ $t(/*可用余额*/'r.available_balance') }}: ${{ $Util.countFilter(balance) || 0}} )
+                    ( {{ $t(/*可用余额*/'r.available_balance') }}: ${{ $Util.countFilter(balance) || 0 }} )
                 </div>
                 <div class="submit-btn-group">
                     <a-button @click="handleCancel">{{ $t(/*取消*/'def.cancel') }}</a-button>
@@ -557,6 +570,8 @@ export default {
             attachModalShow: false,
             currentAttachmentList: [],
             balance: 0,
+            tipModalShow: false,
+            executingFrameUid: '',
         };
     },
     watch: {},
@@ -651,13 +666,18 @@ export default {
     methods: {
         getBalanceDetail() {
             Core.Api.Repair.balance().then(res => {
-                console.log('getBalanceDetail res', res);   
+                console.log('getBalanceDetail res', res);
             }).catch(err => {
-                console.log('Error in getBalanceDetail', err);   
-            })  
+                console.log('Error in getBalanceDetail', err);
+            })
         },
         // 提交工单
         handleConfirm() {
+            const paramsList = this.transformSaveParams();
+            const isValid = this.checkParams(paramsList);
+            if (!isValid) {
+                return;
+            }
             let _this = this;
             this.$confirm({
                 title: _this.$t('pop_up.sure_audit'),
@@ -666,20 +686,100 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     console.log('handleConfirm ok');
-                    console.log('vehicleGroupList', _this.vehicleGroupList);
+                    const list = _this.transformSaveParams();
+                    Core.Api.Repair.create({
+                        list
+                    }).then(res => {
+                        console.log('handleConfirm res', res);
+                        _this.routerChange('back')
+                    }).catch(err => {
+                        console.log('Error in handleConfirm', err);
+                    })
                 },
             });
-            // this.vehicleGroupList.forEach(item => {
-            //     item.compensation_method = this.form.compensation_method
-            // })
         },
-        // 取消
+        // 转换提交工单的数据格式
+        transformSaveParams() {
+            const targetInfo = this.vehicleGroupList.map((item) => {
+                const vehicle_list = item.vehicle_list.map((vehicle) => {
+                    const targetFrameItem = this.itemTableData.find(frameItem => frameItem.frame_uid === vehicle.frame_uid)
+                    const item_list = vehicle.repair_order_item_list.map((repairOrderItem) => {
+                        return {
+                            item_id: repairOrderItem.id,
+                            item_category_id: repairOrderItem.item_category_id,
+                            description: repairOrderItem.question_desc,
+                            price: this.currency === 'eur' || this.currency === 'EUR' ? repairOrderItem.fob_eur : repairOrderItem.fob_usd,
+                            charge: repairOrderItem.warranty_status === 2 ? (this.currency === 'eur' || this.currency === 'EUR' ? repairOrderItem.fob_eur : repairOrderItem.fob_usd) : 0,
+                            attachment_item_list: repairOrderItem.attachment_item_list,
+                            warranty_status: repairOrderItem.warranty_status
+                        };
+                    });
+                    const fault_types_list = item.fault_types_list.map((faultType) => {
+                        return {
+                            id: faultType.id,
+                            name: faultType.name,
+                            nameEn: faultType.name_en,
+                            parentId: faultType.parent_id
+                        };
+                    });
+                    return {
+                        mileage: targetFrameItem.warranty_period_mileage,
+                        delivery_time: targetFrameItem.delivery_time,
+                        warranty_status: targetFrameItem.warranty_status,
+                        frame_uid: vehicle.frame_uid,
+                        item_list,
+                        fault_types_list
+                    };
+                });
+                return {
+                    category: item.category,
+                    model: item.model,
+                    vehicle_list,
+                };
+            });
+            targetInfo.forEach(item => {
+                item.compensation_method = this.form.compensation_method
+            })
+            console.log('targetInfo', targetInfo)
+            return targetInfo
+        },
+        // 判断必填
+        checkParams(list) {
+            for (const val of list) {
+                if (!val.category || !val.vehicle_list.length) {
+                    this.$message.warning(this.$t(/*请完善必填信息*/'r.enter'));
+                    return false;
+                }
+                const vehicleList = val.vehicle_list;
+                for (const vehicle of vehicleList) {
+                    if (!vehicle.item_list.length || !vehicle.mileage) {
+                        this.$message.warning(this.$t(/*请完善必填信息*/'r.enter'));
+                        return false;
+                    }
+                    const itemList = vehicle.item_list;
+                    for (const item of itemList) {
+                        if (!item.attachment_item_list.length || !item.description) {
+                            this.$message.warning(this.$t(/*请完善必填信息*/'r.enter'));
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true
+        },
+        // 取消提交工单
         handleCancel() {
             this.routerChange('back')
+        },
+        // 隐藏提示弹框
+        handleTipModalShow() {
+            this.tipModalShow = false
+            this.isVehicle = false
         },
         // 监听故障类型多选勾选
         selectCheckChange(frame_uid) {
             this.currentFrameUid = frame_uid
+            console.log('this.currentFrameUid', this.currentFrameUid);
         },
         // 监听故障选择多选按钮事件
         handleCheckboxChange(e, id, name, name_en) {
@@ -709,9 +809,10 @@ export default {
             this.selectedRowItems = []
             this.selectedRowKeys = []
         },
-        // 展示选择宣布商品弹框
+        // 展示选择全部商品弹框
         handleSelectAllItemModal(frameUid) {
             this.currentFrameUid = frameUid
+            console.log('this.currentFrameUid', this.currentFrameUid);
             this.selectAllItemModalShow = true
         },
         // 添加商品
@@ -735,7 +836,9 @@ export default {
             for (const item of this.vehicleGroupList) {
                 for (const vehicle of item.vehicle_list) {
                     if (vehicle.frame_uid === this.currentFrameUid) {
-                        this.selectedRowItems.forEach(target => {
+                        let _selectedRowItems = Core.Util.deepCopy(this.selectedRowItems)
+                        _selectedRowItems.forEach(target => {
+                            target.key_id = vehicle.frame_uid + target.id
                             vehicle.repair_order_item_list.push(target)
                         });
                         // 计算 实付金额 的总和
@@ -862,7 +965,6 @@ export default {
         },
         // 车架号输入框 根据车架号获取信息
         handleSubmitVehicle() {
-            this.isVehicle = true
             this.uidList = this.form.vehicle_no.trim().split('\n').map(str => str.trim());;
             let duplicates = this.uidList.length - new Set(this.uidList).size;
             this.form.vehicle_no = undefined
@@ -874,13 +976,20 @@ export default {
                 frame_uid_list: this.uidList
             }).then(res => {
                 console.log('handleSubmitVehicle res', res);
-                this.itemTableData = res.vehicle_info_list
-                this.itemTableDetail.count = res.vehicle_info_list.length
-                this.itemTableDetail.filter_number = res.duplicate_frame_uid_list.length
-                this.itemTableDetail.executing_number = res.executing_frame_uid_list.length
-                this.itemTableDetail.special_number = res.special_frame_uid_list.length
-                this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
-                console.log('this.vehicleGroupList', this.vehicleGroupList);
+                if (res.executing_frame_uid_list.length) {
+                    this.executingFrameUid = res.executing_frame_uid_list.join('，')
+                    this.tipModalShow = true
+                    this.isVehicle = false
+                } else {
+                    this.isVehicle = true
+                    this.itemTableData = res.vehicle_info_list
+                    this.itemTableDetail.count = res.vehicle_info_list.length
+                    this.itemTableDetail.filter_number = res.duplicate_frame_uid_list.length
+                    this.itemTableDetail.executing_number = res.executing_frame_uid_list.length
+                    this.itemTableDetail.special_number = res.special_frame_uid_list.length
+                    this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
+                    console.log('this.vehicleGroupList', this.vehicleGroupList);
+                }
             })
         },
         // 对分组车型数据的转换处理方法
@@ -989,6 +1098,7 @@ export default {
                 for (const vehicleGroup of this.vehicleGroupList) {
                     for (const vehicle of vehicleGroup.vehicle_list) {
                         if (vehicle.frame_uid === this.currentFrameUid) {
+                            item.key_id = vehicle.frame_uid + item.id
                             vehicle.repair_order_item_list.push(item);
                             // 计算 实付金额 的总和
                             const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
@@ -1246,6 +1356,7 @@ export default {
                 margin-bottom: 18px;
                 flex: 0 0 7%;
             }
+
             // .ant-radio-group .ant-radio-wrapper {
             // }
         }
