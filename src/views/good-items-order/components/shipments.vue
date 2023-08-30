@@ -37,19 +37,27 @@
 <script setup>
 
 import Core from "@/core";
-import { computed, getCurrentInstance, onMounted, reactive, ref, toRaw, inject } from "vue";
-
-const tabNumber = inject('tabNumber');
+import { computed, getCurrentInstance, onMounted, reactive, ref, toRaw  } from "vue";
+/**inject
+ *用法:更新订单列表tab-length 
+ *这里emit('refesh');更新了父组件列表，
+ *父组件更新了订单列表tab-length,
+ *所以注释掉暂时不用
+ */
+// const tabNumber = inject('tabNumber');
+const { proxy } = getCurrentInstance();
 const props = defineProps({
     id:{
         type:[String,Number]
     }
 }) 
+const emit = defineEmits(['refesh'])
 const isShow = ref(false);
 // 发货参数对象
 const shipObj = ref({
-    uid:'',
-    company:''
+    
+  uid:'',       // 快递单号
+  company:'',   // 快递公司
 })
 // 显示发货弹窗
 const isShowShip = (type) => {
@@ -63,20 +71,17 @@ const isShowShip = (type) => {
 const shipHandleOk = () => {
     let obj = {};
     obj = {...shipObj.value,target_id:props.id};
-    console.log('obj------',obj);
-
     Core.Api.GoodItemsOrder.updateTrackingNumber(obj).then((res) => {
        
-        console.log('updateTrackingNumber--------res',res);
-
+        proxy.$message.success(proxy.$t('p.shipped'));
     }).catch((err) => {
         console.log("getTableData err:", err);
 
     }).finally(() => {
-
-        if (tabNumber) tabNumber();
+        emit('refesh');
+        /* 暂时不用 */
+        // if (tabNumber) tabNumber();
     });
-
 
 }
 </script>

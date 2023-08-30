@@ -6,7 +6,8 @@
       </div>
       <div class="container">
         <div class="d-img">
-          <img class="img" :src="detail.avatar" alt="" />
+          <img class="img" v-if="detail.avatar" :src="detail.avatar" alt="" />
+          <img class="img" v-else src="../../assets/images/good-items/head_sculpture.png" alt="" />
         </div>
         <div class="d-content">
           <a-row class="all-msg">
@@ -34,18 +35,18 @@
             <!-- 省份 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
               <span class="key key-form-86909C">{{ $t(/* 省份 */"retail.province") }}：</span>
-              <span class="value"> {{ detail?.to_province }} </span>
+              <span class="value"> {{ detail?.to_province || '-' }} </span>
             </a-col>
             <!-- 城市 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
               <span class="key key-form-86909C">{{ $t(/* 城市 */"retail.city") }}：</span>
-              <span class="value"> {{ detail?.to_city }} </span>
+              <span class="value"> {{ detail?.to_city || '-' }} </span>
             </a-col>
             <!-- 订单地址 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
               <span class="key key-form-86909C">{{ $t(/* 订单地址 */"retail.order_address") }}：</span>
               <span class="value">
-                {{ detail?.to_address }}
+                {{ detail?.to_address || '-' }}
                 <!-- 
                     <span style="color: #0061ff">
                     {{ $t("retail.push_to_customers") }}
@@ -63,9 +64,9 @@
         <div class="title">
           {{ $t("retail.order_progress") }}
           <div class="order-number-box">
-            订单编号:
+            {{$t('p.order_number')}}:
             <span id="order-number" ref="myorderNumber">{{detail?.sn}}</span>
-            <a-button type="link" @click="copyOrderNumber">复制</a-button>
+            <a-button type="link" v-if="detail?.sn" @click="copyOrderNumber('innerText')">{{$t('in.copy')}}</a-button>
           </div>
         </div>
         <div class="steps">
@@ -97,19 +98,19 @@
           <div>
             <!-- 当前的订单进度 -->
             <span class="key">{{ $t(/* 订单来源 */"dis.order_source") }}：</span>
-            <span class="value">{{ detail?.channel || '-' }}</span>
+            <span class="value">{{ $Util.goodSourceChannelFilter(detail?.channel) || '-' }}</span>
           </div>
           <div class="m-L-40">
             <span class="key">{{ $t(/* 总价 */"retail.total_price") }}：</span>
-            <span class="value">{{ detail?.price || '-' }}</span>
+            <span class="value">￥{{ $Util.countFilter(detail?.price) || '-' }}{{ $t('item_order.yuan') }}</span>
           </div>
           <div class="m-L-40">
             <span class="key">{{ $t(/* 运费 */"p.freight") }}：</span>
-            <span class="value">{{ detail?.waybill_price || '-' }}</span>
+            <span class="value">￥{{ $Util.countFilter(detail?.waybill_price) || '-' }}{{ $t('item_order.yuan') }}</span>
           </div>
           <div class="m-L-40">
             <span class="key">{{ $t(/* 实付款 */"item_order.actual_payment") }}：</span>
-            <span class="value">{{ detail?.charge || '-' }}</span>
+            <span class="value">￥{{ $Util.countFilter(detail?.charge) || '-' }}{{ $t('item_order.yuan') }}</span>
           </div>
         </div>
       </div>
@@ -121,7 +122,8 @@
         <div class="sub-title m-b-16">
           <div>
             <span class="key">{{ $t("af.courier_number") }}：</span>
-            <span class="value">{{ detail?.waybill_uid === 0? '' : detail?.waybill_uid }}</span>
+            <span class="value">{{ detail?.waybill_uid === 0 ? '' : detail?.waybill_uid }}</span>
+            <a-button type="link" v-if="detail?.waybill_uid" @click="copyOrderNumber('waybill_uid')">{{$t('in.copy')}}</a-button>
             <fillTark :detail="detail" @changeType = "refresh" />
           </div>
         </div>
@@ -130,10 +132,16 @@
           <template #headerCell="{ title }" >
             {{ $t(title) }}
           </template>
+          <template #bodyCell="{ column,text }">
+            <template v-if="column.key === 'product_pic'">
+              <!-- <img class="table-img" :src="text" alt=""> -->
+              <a-image :width="44" :height="44" :src="text" :fallback="$t('def.none')"/>
+            </template>
+          </template>
         </a-table>
       </div>
    
-      <!-- 退订/退款记录 -->
+      <!-- 退订/退款记录
       <div class="refund-msg">
         <div class="title">
           {{ $t("retail.unsubscribe_refund_record") }}
@@ -153,14 +161,15 @@
             </template>
           </template>
         </a-table>
-      </div>
+      </div> -->
+
       <!-- 修改记录 -->
       <div class="modify-msg"> 
         <div class="title">
           {{ $t("retail.modify_record") }}
         </div>
         <!-- 记录盒子 -->
-        <div class="record-box" v-for="(item, index) in logisticsList" :key="item.id">
+        <div class="record-box" v-for="(item, index) in logisticsList" :key="item.id" >
           <div class="head-record">
             <span class="icon-record"></span>
             <span class="time">{{ item.create_time }}</span>
@@ -168,18 +177,22 @@
           </div>
           <div class="body-record" :class="{ 'border-left': index + 1 < logisticsList?.length }">
             <div class="con-record">
-              <div class="text">{{$Util.goodItemOrderUpdateRecordFilter(item.type,lang)}}</div>
+              <div class="text">{{$t(/* 修改 */'n.amend')}} {{$Util.goodItemOrderUpdateRecordFilter(item.type,lang)}}</div>
               <div class="text-con">
-                快递单号【{{item.oldData}}】变更为【{{item.newData}}】
+                {{$Util.goodItemOrderUpdateRecordFilter(item.type,lang)}}【{{item.old_data}}】{{$t('item_order.change_to')}}【{{item.new_data}}】
               </div>
             </div>
           </div>
+        </div>
+
+        <div v-if="logisticsList?.length === 0">
+          {{ $t('item_order.no_record') }}
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 退订审核 -->
+  <!-- 退订审核 
   <a-modal v-model:visible="refundVisible" title="退订审核" @cancel="refundHandleCancel" @ok="refundHandleOk" >
     <template #footer>
       <a-button @click="refundHandleCancel"> 取消 </a-button>
@@ -188,7 +201,7 @@
       </a-button>
     </template>
     <a-textarea v-model:value="value2" placeholder="填写原因" :rows="4" allow-clear />
-  </a-modal>
+  </a-modal>-->
 </template>
 
 <script setup>
@@ -209,7 +222,6 @@ const getTestActiveSrc = (name) => {
 const myorderNumber = ref(null);
 // 进度条
 const stepCurrent = ref(2);
-const current = ref(2);
 const { proxy } = getCurrentInstance();
 const lang = computed(() => {
     return proxy.$store.state.lang;
@@ -220,12 +232,6 @@ const id = ref('');
 // - 商品信息columns
 const commodityTableData = ref([{}]); // 商品信息table
 
-
-// - 退订/退款记录columns
-const refundTableData = ref([]); // 退订/退款记录 table
-const refundVisible = ref(false); //  操作
-const isFooterDisabled = ref(false);// - 修改记录columns
-const modifyTableData = ref([]); // 修改记录 table
 const detail = ref({
   avatar:'',
   user_name: "",
@@ -382,20 +388,25 @@ const refundTableColumns = computed(() => {
   ];
 });
 
-const commodityTableColumns = computed(() => {
+const  commodityTableColumns = computed(() => { 
   
   return [
-    {
+    {/* 图片 */
       title: "item_order.commodity_image",
-      dataIndex: "commodity_image",
-      key: "commodity_image",
+      dataIndex: "product_pic",
+      key: "product_pic",
     },
-    {
+    {/* 名称 */
       title: "r.item_name",
-      dataIndex: "commodity_image",
-      key: "commodity_image",
+      dataIndex: "product_name",
+      key: "product_name",
     },
-    {
+    {/* 数量 */
+      title: "r.quantity",
+      dataIndex: "amount",
+      key: "amount",
+    },
+    /* {
       title: "i.commercial_specification",
       dataIndex: "commercial_specification",
       key: "commercial_specification",
@@ -419,7 +430,7 @@ const commodityTableColumns = computed(() => {
       title: "retail.preferential_policy",
       dataIndex: "id",
       key: "id",
-    },
+    }, */
   ];
 });
 
@@ -453,78 +464,38 @@ const seePhoneNumber = () => {
 /* Fetch start*/
 const updateFetch = (params = {}) => {
   getDetailFetch();
-  // refundFetch();
-  // modifyFetch();
 };
 // 详情接口
 const getDetailFetch = (params = {}) => {
   Core.Api.GoodItemsOrder.orderDetail({
     id:id.value
   }).then((res) => {
+      commodityTableData.value = res?.item_list;
       for(let item of Object.keys(res)){
         detail.value[item] = res[item];
       };
       getLogisticsRecords();
       console.log('detail',detail.value);
   }).catch((err) => {
-    console.log("getTableData err:666", err);
+    console.log("getTableData err:", err);
   });
 };
 
-// 退订/退款记录接口
-const refundFetch = (params = {}) => {
-  Core.Api.CRMOrderIncome.list({
-    search_type: 10,
-    page_size: 6,
-    ...params,
-  }).then((res) => {
-      refundTableData.value = res.list;
-  }).catch((err) => {
-      console.log("getTableData err:", err);
-  });
-};
-// 修改记录接口
-const modifyFetch = (params = {}) => {
-  Core.Api.CRMOrderIncome.list({
-    search_type: 10,
-    page_size: 6,
-    ...params,
-  }).then((res) => {
-      modifyTableData.value = res.list;
-    })
-    .catch((err) => {
-      console.log("getTableData err:", err);
-    });
-};
 
 // 复制订单号
-const copyOrderNumber = () => {
-  return navigator.clipboard
-    .writeText(myorderNumber.value.innerText)
-    .then(() => {});
+const copyOrderNumber = (type) => {
+  let value = '';
+  if(type==='innerText') {
+
+    value = myorderNumber.value.innerText;
+  }else if(type==='waybill_uid') {
+
+    value = detail.value?.waybill_uid;
+  }
+  return navigator.clipboard.writeText(value).then(() => {});
 };
 /* Fetch end*/
-
-/* methods start*/
-// 查看原因
-const viewReson = (v) => {
-  refundVisible.value = true;
-  if (v == "view") {
-    isFooterDisabled.value = true;
-  } else {
-    isFooterDisabled.value = false;
-  }
-};
-
-// 退订审核 model ok
-const refundHandleOk = () => {};
-// cancel
-const refundHandleCancel = () => {
-  refundVisible.value = false;
-};
-
 const getLogisticsRecords = () => {
-  console.log('getLogisticsRecords------');
   
   Core.Api.GoodItemsOrder.logisticsRecords({
     page_size: 20,
@@ -541,9 +512,8 @@ const getLogisticsRecords = () => {
 <style lang="less" scoped>
 .order-detail {
   width: 100%;
-  font-family: PingFang SC;
   .title {
-    color: var(--color-text-5, #1d2129);
+    color: #1d2129;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
@@ -551,7 +521,7 @@ const getLogisticsRecords = () => {
     margin-bottom: 16px;
 
     .order-number-box {
-      color: var(--color-text-3, #86909c);
+      color: #86909c;
       text-align: right;
       font-size: 14px;
       font-weight: 400;
@@ -559,14 +529,13 @@ const getLogisticsRecords = () => {
       margin-left: 16px;
 
       #order-number {
-        color: var(--color-text-1, #1d2129);
+        color: #1d2129;
         margin: 0px 10px;
       }
     }
   }
   .sub-title {
     display: flex;
-    font-family: PingFang SC;
     font-size: 14px;
     font-weight: 400;
     .key {
@@ -574,6 +543,7 @@ const getLogisticsRecords = () => {
     }
     .value {
       color: #1d2129;
+      margin-right: 16px;
     }
   }
 
@@ -608,7 +578,6 @@ const getLogisticsRecords = () => {
             color: #1d2129;
             font-size: 16px;
             font-weight: 600;
-            font-family: PingFang SC;
             .use {
               display: flex;
               align-items: center;
@@ -645,20 +614,17 @@ const getLogisticsRecords = () => {
       .steps {
         .step-title {
           color: #1d2129;
-          font-family: PingFang SC;
           font-size: 16px;
           font-weight: 600;
         }
         .setp-subtitle {
           color: #4e5969;
-          font-family: PingFang SC;
           font-size: 14px;
           font-weight: 600;
           margin-top: 6px;
         }
         .setp-description {
           color: #86909c;
-          font-family: PingFang SC;
           font-size: 12px;
           font-weight: 400;
           margin-top: 6px;
@@ -705,9 +671,7 @@ const getLogisticsRecords = () => {
             width: 16px;
             height: 16px;
             flex-shrink: 0;
-            // stroke-width: 2px;
-            // stroke: var(--color-border-2, #e5e6eb);
-            border: solid 2px var(--color-border-2, #e5e6eb);
+            border: solid 2px #e5e6eb;
             border-radius: 50%;
           }
           .time {
@@ -734,12 +698,12 @@ const getLogisticsRecords = () => {
             padding: 14px 12px 12px;
 
             .text {
-              color: var(--color-text-1, #1d2129);
+              color: #1d2129;
               font-weight: 800;
             }
 
             .text-con {
-              color: var(--color-text-2, #4e5969);
+              color: #4e5969;
               font-weight: 400;
             }
           }
@@ -762,10 +726,14 @@ const getLogisticsRecords = () => {
   margin-left: 40px;
 }
 
-
 .see-phone {
   color: #0061ff;
   cursor: pointer;
   margin-right: 10px;
+}
+
+:deep(.ant-image) {
+  line-height: 44px;
+  cursor: pointer;
 }
 </style>

@@ -2222,10 +2222,26 @@ let Const = {
             '3': { key: 3, zh: '已发货', en: 'Shipped',value:400  },
             '4': { key: 4, zh: '已完成', en: 'Completed',value:500  },
         },
+        Source_Channel:{
+            
+            '1': { key: 1, zh: '投票分享', en: 'Vote Sharing',value:1 },
+            '2': { key: 2, zh: '投票抽奖', en: 'Voting Lottery',value:2  },
+        },
         // 修改好物订单记录
         Update_Record:{
-            '1': { key: 1, zh: '修改快递单号', en: 'Modify Tracking Number',value:1 }
+            
+            '1': { key: 1, zh: '快递单号', en: 'Modify Tracking Number',value:1 }
+        },
+        // 来源类型1好友分享 2官网 3公众号 4 微博 5 直接进入
+        Source_Type:{
+
+            '1': { key: 1, zh: '好友分享', en: 'Friends Share',value:1 },
+            '2': { key: 1, zh: '官网', en: 'Official Website',value:2 },
+            '3': { key: 1, zh: '公众号', en: 'Official Account',value:3 },
+            '4': { key: 1, zh: '微博', en: 'Weibo',value:4 },
+            '5': { key: 1, zh: '直接进入', en: 'Direct Entry',value:5 },
         }
+
     }
 };
 

@@ -56,24 +56,26 @@
                     {{ $t(title) }}
                 </template>
                 <template #bodyCell="{ column, text, record }">
-                    <template v-if="column.key === 'operation'">
+
+                    <template v-if="column.key === 'source_type'">
+                        {{ $Util.goodSourceChannelFilter(text,lamg) || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'activity_source_type'">
+                        {{ $Util.goodSourceTypeFilter(text,lang) || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'item_list'">
+                        {{ $Util.goodItemListFilter(text,'product_name') || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'create_time'">
+                        {{ $Util.timeFilter(text) || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'operation'">
                         <!-- 发货按钮  根据状态判断是否显示 -->
-                        <!-- <a-button type="link" v-if="Number(record.status) === Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" @click="routerChange('ship', record)">
-                            {{ $t("p.ship")}}
-                        </a-button>    --> 
-                        <Shipments v-if="Number(record.status) === Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" :id="record.id"></Shipments>   
+                        <Shipments v-if="Number(record.status) === Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" :id="record.id" @refesh="handleSearchReset"></Shipments>   
                         <!-- 详情 --> 
                         <a-button type="link"  @click="routerChange('detail', record)">
                             {{ $t("retail.detail")}}
-                        </a-button>                    
-                        <!-- 退订审核 (只有在申请退订/退款)-->
-                        <!-- <a-button v-if="Number(activeKey) === Core.Const.GOODITEMORDER.Order_Status_Map.apply_refund" type="link">
-                            {{ $t("retail.unsubscribe_review")}}
-                        </a-button>  -->
-                        <!-- 查看原因 (只有已退订/退款) -->
-                        <!-- <a-button v-if="Number(activeKey) === Core.Const.GOODITEMORDER.Order_Status_Map.unsubscribed_refunded" type="link">
-                            {{ $t("retail.view_reason")}}
-                        </a-button>     -->                  
+                        </a-button>             
                     </template>
                 </template>
             </a-table>
@@ -94,9 +96,9 @@ const emit = defineEmits(['getTabNumber'])
 
 const searchForm = ref({
     sn: '',                  // 订单号
-    user_phone: '',          // 手机号 without000
-    to_name: '',             // 收件人 without000
-    waybill_uid: '',         // 快递单号 without000
+    user_phone: '',          // 手机号 
+    to_name: '',             // 收件人 
+    waybill_uid: '',         // 快递单号 
 });
 const tableData = ref([]);
 // 分页配置
@@ -126,6 +128,9 @@ onMounted(() => {
     });
 });
 /* 计算属性 */
+const lang = computed(() => {
+    return proxy.$store.state.lang;
+})
 const tableColumns = computed(() => {
     let columns = [
         {/* 订单号 */
@@ -143,20 +148,20 @@ const tableColumns = computed(() => {
             dataIndex: "user_phone",
             key: "user_phone",
         }, 
-        {/* 活动入口 */      // without000
+        {/* 活动入口 */      
             title: "item_order.active_entrance",
-            dataIndex: "active_entrance",
-            key: "active_entrance",
+            dataIndex: "activity_source_type",
+            key: "activity_source_type",
         },
         {/* 奖品名单来源 */
             title: "item_order.order_source",
-            dataIndex: "channel",
-            key: "channel",
+            dataIndex: "source_type",
+            key: "source_type",
         },
         {/* 奖项 */         // without000
             title: "item_order.awards",
-            dataIndex: "date",
-            key: "time",
+            dataIndex: "item_list",
+            key: "item_list",
         },
         {/* 收件人 */       
             title: "wb.receiver",
@@ -165,33 +170,33 @@ const tableColumns = computed(() => {
         },
         {/* 收件人手机号 */
             title: "item_order.receiver_phone",
-            dataIndex: "to_phone",
-            key: "to_phone",            
+            dataIndex: "user_phone_info",
+            key: "user_phone_info",            
         },
         {/* 收件地址 */
             title: "item_order.shipping_address",
             dataIndex: "to_address",
             key: "to_address",            
         },
-        {/* 中奖时间 */     // without000
+        {/* 中奖时间 */     
             title: "item_order.winning_time",
             dataIndex: "create_time",
             key: "create_time",            
         },
-        {/* 奖品发货状态 */
+        /*{ 奖品发货状态 
             title: "item_order.prize_shipment_status",
             dataIndex: "status",
             key: "status",            
-        },
-        {/* 快递单号 */     // without000
+        },*/
+        {/* 快递单号 */     
             title: "af.courier_number",
-            dataIndex: "courier_number",
-            key: "courier_number",            
+            dataIndex: "waybill_uid",
+            key: "waybill_uid",            
         },
         {/* 快递公司 */     // without000
             title: "af.courier",
-            dataIndex: "courier",
-            key: "courier",            
+            dataIndex: "company",
+            key: "company",            
         },
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];

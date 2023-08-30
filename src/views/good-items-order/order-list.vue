@@ -42,8 +42,11 @@ const tabNumber = (obj) => {
         
     });
 }
-
-provide('tabNumber', tabNumber);
+/**provide
+ *用法:发布更新方法 
+ *注释掉暂时不用
+ */
+// provide('tabNumber', tabNumber);
 const tabChange = () => {
     proxy.$nextTick(()=>{
         

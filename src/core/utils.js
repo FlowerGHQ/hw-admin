@@ -3,6 +3,7 @@ import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
+import { forEach } from 'lodash';
 
 const Util = {
     /* =============== 通用方法 ================ */
@@ -1322,6 +1323,35 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    /* ======== 好物订单来源 ========== */
+    goodSourceChannelFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Source_Channel
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* ======== 好物订单activity_Source_Type来源 ========== */
+    goodSourceTypeFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Source_Type
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /**
+     * @description:字符串拼接 将后端传来的数组转换成字符串拼接
+     * @param {Array} list     数组
+     * @param {String} keyName 项的属性名称
+     * @return {String}        逗号拼接的字符串
+     */
+    goodItemListFilter( list, keyName, to = 'zh') {
+        if(!list?.length){
+            return ''
+        }
+        let str = '', dotext ='';
+        list.forEach((item,index) => {
+            if(index<list.length-1) {dotext = ','}else {dotext = ''};
+            if(item[keyName]) {str += item[keyName] || '' + dotext};
+        })
+        return str || ''
+    }
 }
 
 export default Util

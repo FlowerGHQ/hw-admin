@@ -34,10 +34,11 @@
 <script setup>
 import Core from "@/core";
 import TimeSearch from "@/components/common/TimeSearch.vue";
-import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
+import { computed, getCurrentInstance, reactive, ref, watchEffect } from "vue";
 import { useRoute, useRouter } from "vue-router";
 const refundVisible = ref(false);
 const list = ref([
+  
     { title:'wb.receiver',value:'to_name',key:'to_name' },
     { title:'crm_c.province',value:'to_province',key:'to_province' },
     { title:'crm_c.city',value:'to_city',key:'to_city' },
@@ -48,7 +49,7 @@ const props = defineProps({
     detail:{
         type:Object
     }
-})
+}) 
 const updateObj = ref({
 
   id:'',        // 物流id
@@ -56,32 +57,33 @@ const updateObj = ref({
   target_id: 0, // 好物订单id
   company:'',   // 快递公司
 })
+watchEffect(() => {
+  updateObj.value.id = props.detail?.waybill_id;
+  updateObj.value.uid = props.detail?.waybill_uid;
+  updateObj.value.target_id = props.detail?.id;
+  updateObj.value.company = props.detail?.id;
+});
 // 定义要发送的emit事件
 const emit = defineEmits(['changeType'])
 
 const refundHandleOk = () => {
   refundVisible.value = false;
-  emit('changeType')
+  Core.Api.GoodItemsOrder.updateTrackingNumber({...updateObj.value}).then((res) => {
+    proxy.$message.success(proxy.$t('p.shipped'));
+  }).catch((err) => {
+      console.log("refundHandleOk err:", err);
+  }).finally(() => {
+      emit('changeType')
+  });
 };
 const refundHandleCancel = () => {
   refundVisible.value = false;
 };
 
 const isShow = () => {
-  
   refundVisible.value = true;
 };
 
-const isFooterDisabled = ref(false);
-
-onMounted (()=>{
-  updateObj.value.id = props.detail?.waybill_id;
-  updateObj.value.uid = props.detail?.waybill_uid;
-  updateObj.value.target_id = props.detail?.id;
-  updateObj.value.company = props.detail?.id;
-
-  console.log('props.detail',props.detail,'updateObj.value',updateObj.value);
-}) 
 </script>
 
 <style lang="less" scoped>

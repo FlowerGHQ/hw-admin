@@ -820,6 +820,7 @@ const apiList = {
         logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
         statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
         seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
+        wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
 
     }
 }; 

@@ -2618,7 +2618,9 @@ const messages = {
             fill_name_courier_company:'填写快递公司名称',
             tracking_courier_company_warn_text:'请仔细核对填写的快递单号和快递公司是否正确',
             editor:'编辑人',
-
+            no_record:'暂无修改记录',
+            change_to:'变更为',
+            yuan:'元',
 
         }
     },
@@ -5121,6 +5123,9 @@ const messages = {
             fill_name_courier_company:'Fill Name Courier Company',
             tracking_courier_company_warn_text:'Please Carefully Check Whether The Tracking Number And Courier Company Filled In Are Correct',
             editor:'Editor',
+            no_record:'There Are No Shanges To The Record',
+            change_to:'Change To',
+            yuan:'yuan',
 
         }
     },
