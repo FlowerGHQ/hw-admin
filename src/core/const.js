@@ -2222,6 +2222,7 @@ let Const = {
             '3': { key: 3, zh: '已发货', en: 'Shipped',value:400  },
             '4': { key: 4, zh: '已完成', en: 'Completed',value:500  },
         },
+        // 奖品订单来源
         Source_Channel:{
             
             '1': { key: 1, zh: '投票分享', en: 'Vote Sharing',value:1 },
@@ -2232,7 +2233,7 @@ let Const = {
             
             '1': { key: 1, zh: '快递单号', en: 'Modify Tracking Number',value:1 }
         },
-        // 来源类型1好友分享 2官网 3公众号 4 微博 5 直接进入
+        // 活动入口--来源类型1好友分享 2官网 3公众号 4 微博 5 直接进入
         Source_Type:{
 
             '1': { key: 1, zh: '好友分享', en: 'Friends Share',value:1 },

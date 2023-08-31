@@ -57,11 +57,11 @@
                 </template>
                 <template #bodyCell="{ column, text, record }">
 
-                    <template v-if="column.key === 'source_type'">
-                        {{ $Util.goodSourceChannelFilter(text,lamg) || '-' }}
-                    </template>
-                    <template v-else-if="column.key === 'activity_source_type'">
+                    <template v-if="column.key === 'activity_source_type'">
                         {{ $Util.goodSourceTypeFilter(text,lang) || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'source_type'">
+                        {{ $Util.goodSourceChannelFilter(text,lang) || '-' }}
                     </template>
                     <template v-else-if="column.key === 'item_list'">
                         {{ $Util.goodItemListFilter(text,'product_name') || '-' }}
@@ -170,8 +170,8 @@ const tableColumns = computed(() => {
         },
         {/* 收件人手机号 */
             title: "item_order.receiver_phone",
-            dataIndex: "user_phone_info",
-            key: "user_phone_info",            
+            dataIndex: "to_phone",
+            key: "to_phone",            
         },
         {/* 收件地址 */
             title: "item_order.shipping_address",
@@ -195,8 +195,8 @@ const tableColumns = computed(() => {
         },
         {/* 快递公司 */     // without000
             title: "af.courier",
-            dataIndex: "company",
-            key: "company",            
+            dataIndex: "waybill_company",
+            key: "waybill_company",            
         },
         { title: "retail.operate", key: "operation", fixed: "right" },
     ];
