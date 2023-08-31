@@ -1,26 +1,26 @@
 <template>
-  <a-button type="link" class="fill-track" @click="isShow">查看详情</a-button>
+  <a-button type="link" class="fill-track" @click="isShow">{{$t('item_order.see_detail')}}</a-button>
   <!-- 填写快递编号 -->
-  <a-modal v-model:visible="refundVisible" title="运输中详情"  @cancel="refundHandleCancel" @ok="refundHandleOk" :width="600" >
-    <div class="title">顺丰快递：JDV001093900768</div>
+  <a-modal v-model:visible="refundVisible" title="运输中详情"  @cancel="refundHandleCancel" @ok="refundHandleOk" :width="600" :footer="null"	 >
+    <div class="title">{{wayillobj?.company}}:{{  wayillobj?.uid}}</div>
     <div class="content">
-      <div class="record-box" v-for="(item, index) in 5" :key="index + '#'">
+      <div class="record-box" v-for="(item, index) in talk" :key="item.id">
         <div class="head-record">
-          <span class="time">12:13:14 2023.12.12</span>
-          <span class="icon-record" :class="{ 'color-click': index === 3, 'color-top': index === 0 ||index===1 }" >
-            {{ index==0?'收':'' }}
-            <img v-if="index===1" class="color-img" :src="getTestActiveSrc('car')"/>
+          <span class="time"><!-- 12:13:14 2023.12.12 --> {{ item.time }}</span>
+          <span class="icon-record" :class="{ 'color-click': item.type === 'moment', 'color-top': item.type === 'Sign' }" >
+            {{ item.type === 'Sign'?'收':'' }}
+            <!-- <img v-if="index===1" class="color-img" :src="getTestActiveSrc('car')"/> -->
           </span>
-          <span class="line" :class="{ 'del-top': index === 4, 'del-bot': index === 0 }" ></span>
-          <span class="peo-record">编辑人：李开智</span>
+          <span class="line" :class="{ 'del-bot': index === 0 , 'line-last':index === talk?.length-1}" ></span>
+          <span class="peo-record">{{item.sub_title}}</span>
         </div>
-        <div class="body-record" :class="{ 'border-left': index + 1 < 5 }" ></div>
+        <div class="body-record" :class="{ 'border-left': index + 1 < talk?.length }" ></div>
       </div>
     </div>
-    <template #footer>
-      <a-button @click="refundHandleCancel"> 取消 </a-button>
-      <a-button type="primary" @click="refundHandleOk" :disabled="isFooterDisabled" > 提交 </a-button>
-    </template>
+      <!-- <template #footer> -->
+      <!-- <a-button @click="refundHandleCancel"> {{ $t(/* 取消 */'def.cancel') }} </a-button> -->
+      <!-- <a-button type="primary" @click="refundHandleOk" :disabled="isFooterDisabled" > {{  $t(/* 确定 */'def.ok')  }} </a-button> -->
+      <!-- </template> -->
   </a-modal>
 </template>
   
@@ -33,12 +33,17 @@ const testActiveModules = import.meta.globEager(
   "../../../assets/images/good-items/*.png"
 );
 // const womanImg =  import.meta.globEager("../../assets/images/test-drive/*.png");
-
+const props = defineProps({
+  wayillobj:{
+        type:Object
+    }
+}) 
 /* 使用图片的方法 */
 const getTestActiveSrc = (name) => {
   const path = `../../../assets/images/good-items/${name}.png`;
   return testActiveModules[path].default;
 };
+
 const refundVisible = ref(false);
 const list = ref([
   { title: "收件人", value: "name", key: "name" },
@@ -59,6 +64,50 @@ const isShow = () => {
 };
 
 const isFooterDisabled = ref(false);
+const talk = ref(
+    [
+        {
+            id:1,
+            type:'past',
+            title:"已开票", 
+            name:'李',
+            time: "10:30:48",
+            sub_title: "常州市，离开【常州市丽华北路揽投部】，下一站【常州市邮区中心局邮件处理中心】"
+        },
+        {
+            id:2,
+            type:'Sign',
+            title:"已签收", 
+            name:'李',
+            time: "10:30:48",
+            sub_title: "常州市，离开【常州市丽华北路揽投部】，下一站【常州市邮区中心局邮件处理中心】"
+        },
+        {
+            id:3,
+            type:'past',
+            title:"派送中", 
+            name:'李',
+            time: "10:30:48",
+            sub_title: "常州市，离开【常州市丽华北路揽投部】，下一站【常州市邮区中心局邮件处理中心】"
+        },
+        {
+            id:4,
+            type:'moment',
+            title:"派送中", 
+            name:'李开智',
+            time: "10:30:48",
+            sub_title: "常州市，离开【常州市丽华北路揽投部】，下一站【常州市邮区中心局邮件处理中心】"
+        },
+        {
+            id:5,
+            type:'past',
+            title:"派送中", 
+            name:'李开智',
+            time: "10:30:48",
+            sub_title: "常州市，离开【常州市丽华北路揽投部】，下一站【常州市邮区中心局邮件处理中心】"
+        },
+    ]
+)
 
 </script>
   
@@ -90,7 +139,7 @@ const isFooterDisabled = ref(false);
         z-index: 10;
         border-left: #e5e6eb solid 1px;
       }
-      .del-top {
+      .line-last {
         height: 50%;
       }
       .del-bot {
@@ -137,7 +186,9 @@ const isFooterDisabled = ref(false);
         margin-left: 16px;
       }
       .peo-record {
-        margin-left: 16px;
+        width: 440px;
+        white-space: wrap;
+        padding-left: 16px;
       }
     }
 

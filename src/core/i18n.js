@@ -2621,6 +2621,7 @@ const messages = {
             no_record:'暂无修改记录',
             change_to:'变更为',
             yuan:'元',
+            see_detail:'查看详情',
 
         }
     },
@@ -5126,6 +5127,7 @@ const messages = {
             no_record:'There Are No Shanges To The Record',
             change_to:'Change To',
             yuan:'yuan',
+            see_detail:'See Detail',
 
         }
     },

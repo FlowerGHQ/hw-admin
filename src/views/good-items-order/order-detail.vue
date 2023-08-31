@@ -81,7 +81,7 @@
                 <div class="setp-description">{{ item.description }}</div>
                 <div class="setp-subtitle" v-if="item.logistics">
                   {{ item.logistics }}
-                  <transport />
+                  <transport :wayillobj = "wayillDetail" />
                 </div>
               </template>
             </a-step>
@@ -249,9 +249,9 @@ const detail = ref({
   user_phone_info:'',  //手机号信息
 
 })
-const updateWaybillUid = ref('');
 const logisticsList = ref([]);
 const isShowPhone = ref(true);
+const wayillDetail = ref();
 const stepItems = computed(() => {
   return [
     {
@@ -299,95 +299,6 @@ const stepItems = computed(() => {
     },
   ];
 });
-const modifyTableColumns = computed(() => {
-  return [
-    {
-      title: "retail.record_information",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.initiator",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.modified_model",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.modified_version",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.modify_color",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.total_price",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.vehicle_status",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.modification_time",
-      dataIndex: "id",
-      key: "id",
-    },
-  ];
-});
-
-const refundTableColumns = computed(() => {
-  return [
-    {
-      title: "retail.unsubscribe_phase",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.initiator",
-      dataIndex: "user_name",
-      key: "user_name",
-    },
-    {
-      title: "retail.request_cancellation_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refundable_amount",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refundable_amount",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.approval_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.refund_time",
-      dataIndex: "id",
-      key: "id",
-    },
-    {
-      title: "retail.operate",
-      key: "operation",
-    },
-  ];
-});
-
 const  commodityTableColumns = computed(() => { 
   
   return [
@@ -475,6 +386,7 @@ const getDetailFetch = (params = {}) => {
         detail.value[item] = res[item];
       };
       getLogisticsRecords();
+      getWayillDetail();
       console.log('detail',detail.value);
   }).catch((err) => {
     console.log("getTableData err:", err);
@@ -507,6 +419,18 @@ const getLogisticsRecords = () => {
       console.log("getTableData err:", err);
   }); 
 } 
+
+const getWayillDetail = () => {
+    
+  Core.Api.GoodItemsOrder.wayillDetail({
+    id:detail.value?.waybill_id
+  }).then((res) => {
+      wayillDetail.value = res;
+      console.log('getWayillDetail',res);
+  }).catch((err) => {
+      console.log("getTableData err:", err);
+  }); 
+}
 </script>
 
 <style lang="less" scoped>
