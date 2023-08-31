@@ -165,6 +165,7 @@ export default {
     computed: {},
     created() {
         this.distributor_id = Number(this.$route.query.id) || Core.Data.getOrgId()
+        // this.activeKey = this.$route.query.activeKey || 'UserList'
         this.getDistributorDetail();
     },
     methods: {
@@ -189,6 +190,7 @@ export default {
         },
 
         getDistributorDetail() {
+            console.log('this.distributor_id', this.distributor_id);
             this.loading = true;
             Core.Api.Distributor.detail({
                 id: this.distributor_id,

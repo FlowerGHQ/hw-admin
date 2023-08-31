@@ -229,6 +229,10 @@ const apiList = {
         getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
         getItemStatus:['PostJson', 'warranty-config/list/item/status'], // 根据商品信息查询商品状态7
         balance: ['PostJson', 'repair-order/get/balance'], // 获取账户余额
+        cancel: ['PostJson', 'repair-order/cancel'], // 取消工单
+        void: ['PostJson', 'repair-order/voided'], // 作废工单
+        audit: ['PostJson', 'repair-order/audit'], // 审核工单
+        getBalance: ['PostJson', 'repair-order/get/balance']
     },
     RepairItem: { // 维修单
         saveList: ['PostJson', 'repair-order-item/save-list'], // 列表

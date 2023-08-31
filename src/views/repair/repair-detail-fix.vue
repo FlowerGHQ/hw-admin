@@ -14,6 +14,12 @@
                     <a-step>
                         <template #title>{{ $t(/*提交工单*/'r.submit_work_order') }}</template>
                         <template #description>
+                            <div class="step-tab-wrap">
+                                <div class="step-tab green" :style="$Util.repairAllStatusFilter(detail?.status, 'color')">
+                                    {{ $Util.repairAllStatusFilter(detail?.status)[$i18n.locale] }}
+                                </div>
+                            </div>
+                            <!-- 创建时间 -->
                             <div class="step-time">
                                 {{ $Util.timeFilter(detail?.create_time || '') }}
                             </div>
@@ -26,20 +32,38 @@
                                 <div class="step-tab green" :style="$Util.repairStatusFilter(detail?.status, 'color')">
                                     {{ $Util.repairStatusFilter(detail?.status) }}
                                 </div>
+                                <!-- 审核时间 -->
+                                <div class="step-time" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
+                                    {{ $Util.timeFilter(detail?.audit_time || '') }}
+                                </div>
                             </div>
-                            <div class="step-time">
-                                2023-04-24 10:19:27
-                            </div>
+                            <!-- <div class="step-tab-wrap">
+                                <div class="step-tab green" v-if="status === Core.Const.REPAIR.STATUS.CLOSE">
+                                    {{ $t(/*已取消*/'r.canceld_status') }}
+                                </div>
+                                <div class="step-tab red" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_FAIL">
+                                    {{ $t(/*审核不通过*/'r.failed_audit') }}
+                                </div>
+                                <div class="step-tab green" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
+                                    {{ $t(/*通过*/'n.pass') }}
+                                </div>
+                            </div> -->
                         </template>
                     </a-step>
                     <a-step>
                         <template #title>{{ $t(/*处理结果*/'r.process_result') }}</template>
                         <template #description>
                             <div class="step-tab-wrap" v-if="currStep !== 0">
-                                <div class="step-tab yellow">
+                                <div class="step-tab yellow" v-if="detail.compensation_method === 1">
+                                    {{ $t(/*赔付配件*/'r.Compensation_accessories') }}
+                                </div>
+                                <div class="step-tab yellow" v-if="detail.compensation_method === 2">
                                     {{ $t(/*赔付至账户*/'r.Allocated_account') }}
                                 </div>
-                                <a-button type="link" style="font-size: 14px;">账户钱包</a-button>
+                                <a-button v-if="detail.compensation_method === 1" @click="routerChange('order')" type="link"
+                                    style="font-size: 14px;">{{ $t(/*查看订单*/'r.view_order') }}</a-button>
+                                <a-button v-if="detail.compensation_method === 2" @click="routerChange('wallet')"
+                                    type="link" style="font-size: 14px;">{{ $t(/*账户钱包*/'d.account_wallet') }}</a-button>
                             </div>
                             <div class="step-time" v-if="currStep !== 0">
                                 可用余额：€100
@@ -49,8 +73,8 @@
                     <a-step>
                         <template #title>{{ $t(/*完成*/'in.finish') }}</template>
                         <template #description>
-                            <div class="step-time" v-if="currStep !== 0">
-                                2023-04-24 10:19:27
+                            <div class="step-time" v-if="currStep !== 0 && detail?.finish_time">
+                                {{ $Util.timeFilter(detail?.finish_time || '') }}
                             </div>
                         </template>
                     </a-step>
@@ -69,10 +93,12 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'detail'">
-                        <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
-                            {{ record.item_name }}
+                        <a-button type="link" v-if="record.item_name && $auth('ADMIN')" @click="routerChange('detail', record)">
+                            {{ record.item_name || '-' }}
                         </a-button>
-                        <span v-else>-</span>
+                        <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')" @click="routerChange('itemDetail', record)">
+                            {{ record.item_name || '-' }}
+                        </a-button>
                     </template>
                     <template v-if="column.key === 'mileage'">
                         {{ text || '-' }}{{ $t(/*公里*/'r.km') }}
@@ -150,10 +176,12 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'detail'">
-                                <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
-                                    {{ record.item_name }}
+                                <a-button type="link" v-if="record.item_name && $auth('ADMIN')" @click="routerChange('detail', record)">
+                                    {{ record.item_name || '-' }}
                                 </a-button>
-                                <span v-else>-</span>
+                                <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')" @click="routerChange('itemDetail', record)">
+                                    {{ record.item_name || '-' }}
+                                </a-button>
                             </template>
                             <template v-if="column.key === 'price'">
                                 {{ $Util.countFilter(record?.price) || '-' }}€
@@ -216,13 +244,167 @@
         </div>
         <div class="block"></div>
         <div class="fix-container">
-            <div class="pay-method-key">
+            <div :class="status === Core.Const.REPAIR.STATUS.CLOSE || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.WAIT_DETECTION || Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL ? 'pay-method-key left' : 'pay-method-key'">
                 <div class="submit-btn-group">
-                    <a-button @click="handleCancel">{{ $t(/*取消*/'def.cancel') }}</a-button>
-                    <!-- <a-button @click="handleConfirm" type="primary">{{ $t(/*提交工单*/'r.submit_work_order') }}</a-button> -->
+                    <template v-if="$auth('ADMIN')">
+                        <!-- 审核(在这些状态下平台方可以审核) -->
+                        <a-button
+                            v-if="(status === Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_WAREHOUSE || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT || Core.Const.REPAIR.STATUS.STATUS_FAULT_IN_STOCK || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL)"
+                            @click="handleAuditModalShow" type="primary">{{
+                                $t(/*审核*/'p.audit') }}</a-button>
+                    </template>
+                    <template v-else>
+                        <!-- 取消 -->
+                        <a-button @click="handleCancelModalShow">{{ $t(/*取消*/'def.cancel') }}</a-button>
+                        <!-- 作废 -->
+                        <a-button v-if="status === Core.Const.REPAIR.STATUS.CLOSE" @click="handleVoidModalShow"
+                            type="primary" danger ghost>{{ $t(/*作废*/'r.void') }}</a-button>
+                        <!-- 编辑 -->
+                        <a-button @click="handleToEdit" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.WAIT_DETECTION || Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL"
+                            type="primary">{{
+                                $t(/*编辑*/'n.edit') }}</a-button>
+                        <!-- 编辑 -->
+                        <a-button v-if="status === Core.Const.REPAIR.STATUS.FINISH" @click="routerChange('invoice')"
+                            type="primary">{{
+                                $t(/*查看结算单*/'r.bill') }}</a-button>
+                    </template>
                 </div>
             </div>
         </div>
+        <!-- 确认取消工单弹框 -->
+        <a-modal v-model:visible="cancelModalShow" :title="$t(/*取消工单*/'r.cancel_repair')">
+            <div class="form-title">
+                <div class="form-item">
+                    {{ $t(/*当前工单取消后，可再次编辑并重新提交工单，也可以选择作废该工单*/'r.cancel_content') }}
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="cancelModalShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleCancel" type="primary">{{ $t('def.sure')
+                }}</a-button>
+            </template>
+        </a-modal>
+        <!-- 确认作废工单弹框 -->
+        <a-modal v-model:visible="voidModalShow" :title="$t(/*取消工单*/'r.cancel_repair')">
+            <div class="form-title">
+                <div class="form-item">
+                    {{ $t(/*当前工单作废后，不可再次编辑*/'r.void_text') }}
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="voidModalShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleVoid" type="primary">{{ $t('def.sure')
+                }}</a-button>
+            </template>
+        </a-modal>
+        <!-- 平台方审核工单弹框 -->
+        <a-modal v-model:visible="auditModalShow" :title="$t(/*审核*/'p.audit')" class="audit-modal" width='800px'
+            :after-close='auditModalClose'>
+            <div class="audit-modal-title">
+                {{ $t(/*工单信息*/'r.repair_info') }}
+            </div>
+            <div class="audit-modal-head-wrap">
+                <div class="head-form-item">
+                    <div class="head-key">
+                        {{ $t(/*工单类型*/'r.device_classify') }}：
+                    </div>
+                    <div class="head-value">
+                        {{ $Util.repairNewTypeFilter(detail?.category)[$i18n.locale] }}
+                    </div>
+                </div>
+                <div class="head-form-item">
+                    <div class="head-key">
+                        {{ $t(/*赔付方式*/'r.payment_method') }}：
+                    </div>
+                    <div class="head-value" v-if="detail.compensation_method === 1">
+                        {{ $t(/*赔付配件*/'r.Compensation_accessories') }}
+                    </div>
+                    <div class="head-value" v-if="detail.compensation_method === 2">
+                        {{ $t(/*赔付至账户*/'r.Allocated_account') }}
+                    </div>
+                </div>
+                <div class="head-form-item">
+                    <div class="head-key">
+                        {{ $t(/*创建时间*/'d.create_time') }}：
+                    </div>
+                    <div class="head-value" v-if="detail.compensation_method === 1">
+                        {{ $Util.timeFilter(detail?.create_time || '') }}
+                    </div>
+                </div>
+            </div>
+            <div class="audit-modal-title">
+                {{ $t(/*零部件更换*/'r.replacement_items') }}
+            </div>
+            <div class="audit-table">
+                <a-table :columns="auditTableColumns" :data-source="auditTableData" :scroll="{ x: true }"
+                    :row-key="record => record.id" :pagination='false'>
+                    <template #bodyCell="{ column, text, record }">
+                        <template v-if="column.key === 'item'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'type'">
+                            {{ $Util.repairLogTypeFilter(record.type)[$i18n.locale] || '-' }}
+                        </template>
+                        <template v-if="column.key === 'price'">
+                            <div v-if="currency === 'eur' || currency === 'EUR'">
+                                €{{ $Util.countFilter(record?.price) }}
+                            </div>
+                            <div v-else>
+                                ${{ $Util.countFilter(record?.price) }}
+                            </div>
+                        </template>
+                    </template>
+                </a-table>
+                <div class="audit-table-footer">
+                    <div class="total">
+                        {{ $t(/*合计*/'p.total') }}
+                    </div>
+                    <div class="total-amount">
+                        {{ $t(/*总数量*/'i.total_quantity') }}: {{ auditDetail?.total_amount || '-' }}
+                    </div>
+                    <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
+                        {{ $t(/*总金额*/'r.total_amount') }}: €{{ $Util.countFilter(auditDetail?.total_price) || 0 }}
+                    </div>
+                    <div class="total-amount" v-else>
+                        {{ $t(/*总金额*/'r.total_amount') }}: ${{ $Util.countFilter(auditDetail?.total_price) || 0 }}
+                    </div>
+                    <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
+                        {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ $Util.countFilter(auditDetail?.total_charge) || 0 }}
+                    </div>
+                    <div class="total-amount" v-else>
+                        {{ $t(/*实付金额*/'r.amount_paid') }}: ${{ $Util.countFilter(auditDetail?.total_charge) || 0 }}
+                    </div>
+                </div>
+            </div>
+            <div class="audit-modal-title">
+                {{ $t(/*审核*/'p.audit') }}
+            </div>
+            <div class="form-item required">
+                <div class="key">
+                    {{ $t(/*审核结果*/'n.result_a') }}:
+                </div>
+                <div class="value">
+                    <a-radio-group v-model:value="audit_result">
+                        <a-radio v-for="item in auditTypeList" :value="item.value">
+                            {{ lang === 'zh' ? item.zh : item.en }}
+                        </a-radio>
+                    </a-radio-group>
+                </div>
+            </div>
+            <div class="form-item required" v-if="audit_result === 0">
+                <div class="key">
+                    {{ $t(/*备注*/'r.remark_a') }}:
+                </div>
+                <div class="value">
+                    <a-textarea v-model:value="audit_message" :placeholder="$t(/*请输入*/'n.enter')" allow-clear />
+                </div>
+            </div>
+            <template #footer>
+                <a-button @click="auditModalShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleAudit" type="primary">{{ $t('def.sure')
+                }}</a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
     
@@ -239,29 +421,37 @@ export default {
             Core,
             detail: {},
             vehicleTableData: [],
+            auditTableData: [],
             vehicle_frame_list: [],
-            recordTableData: [
-                {
-                    type: '创建',
-                    info: '提交车架号：R45BB2B68P3000787、R45BB2B68P3000787；共 5 条记录，已过滤重复 2 条，特殊 2 条',
-                    user: '222',
-                    create_time: 1690889450
-                },
-                {
-                    type: '创建',
-                    info: '提交车架号：R45BB2B68P3000787、R45BB2B68P3000787；共 5 条记录，已过滤重复 2 条，特殊 2 条',
-                    user: '222',
-                    create_time: 1690889450
-                },
-                {
-                    type: '创建',
-                    info: '提交车架号：R45BB2B68P3000787、R45BB2B68P3000787；共 5 条记录，已过滤重复 2 条，特殊 2 条',
-                    user: '222',
-                    create_time: 1690889450
-                },
-            ],
+            recordTableData: [],
             currStep: 0, // 步骤索引
-        };
+            cancelModalShow: false,
+            voidModalShow: false,
+            status: undefined,
+            auditModalShow: false,
+            auditTypeList: [
+                {
+                    key: 1,
+                    zh: '通过',
+                    en: 'Passed',
+                    value: 1
+                },
+                {
+                    key: 2,
+                    zh: '不通过',
+                    en: 'Rejected',
+                    value: 0
+                }
+            ],
+            audit_result: 1, // 审核结果
+            audit_message: undefined, // 审核不通过备注
+            auditDetail: {
+                total_amount: 0,
+                total_price: 0,
+                total_charge: 0
+            },
+            balance: 0, // 账户余额
+       };
     },
     watch: {},
     computed: {
@@ -290,7 +480,7 @@ export default {
                 { title: this.$t('i.unit_price'), dataIndex: 'price', key: 'price' }, // 单价
                 { title: this.$t('i.total_price'), dataIndex: 'price', key: 'total_price' }, // 总价
                 { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
-                { title: this.$t('r.fault_types'), dataIndex: 'fault_category_name', key: 'item' }, // 故障类型
+                { title: this.$t('r.fault_types'), dataIndex: 'category_name', key: 'item' }, // 故障类型
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 {   // 上传附件
                     title: this.$t('p.attachment'),
@@ -309,16 +499,30 @@ export default {
             let columns = [
                 { title: this.$t('n.operation'), dataIndex: 'type', key: 'type' }, // 操作类型
                 { title: this.$t('r.operation_content'), dataIndex: 'content', key: 'item' }, // 操作内容
-                { title: this.$t('n.operator'), dataIndex: ['user','name'], key: 'item' }, // 操作人
+                { title: this.$t('n.operator'), dataIndex: ['user', 'name'], key: 'item' }, // 操作人
                 { title: this.$t('r.operating_time'), dataIndex: 'create_time', key: 'time' }, // 操作时间
             ]
             return columns
         },
+        auditTableColumns() {
+            let auditTableColumns = [
+                { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' }, // 商品名称
+                { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
+                { title: this.$t('i.amount'), dataIndex: 'amount', key: 'item' }, // 数量
+                { title: this.$t('i.unit_price'), dataIndex: 'price', key: 'price' }, // 单价
+                { title: this.$t('r.fault_types'), dataIndex: 'category_name', key: 'item' }, // 故障类型
+            ]
+            return auditTableColumns
+        },
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
+        if(!this.id) {
+            return 0   
+        }
         this.getRepairDetail();
         this.getLogList();
+        this.getBalance();
     },
     methods: {
         // 页面跳转
@@ -329,13 +533,13 @@ export default {
                     this.$router.go(-1)
                     break;
                 case 'edit':  // 编辑工单
-                    routeUrl = this.$router.resolve({
+                    this.$router.push({
                         path: "/repair/repair-edit",
                         query: { id: this.id },
                     })
                     break;
                 case 'list':  // 工单列表
-                    routeUrl = this.$router.resolve({
+                    this.$router.push({
                         path: "/repair/repair-list",
                     })
                     break;
@@ -344,8 +548,9 @@ export default {
                         path: "/repair/repair-invoice",
                         query: { id: this.id },
                     })
+                    window.open(routeUrl.href, '_blank')
                     break;
-                case 'itemDetail':  // 维修单详情
+                case 'itemDetail':  // 分销商商品详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/item-list",
                         query: {
@@ -354,8 +559,35 @@ export default {
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
+                case 'detail':  // 平台方商品详情
+                    console.log('item.item_id', item);
+                    routeUrl = this.$router.resolve({
+                        path: "/item/item-detail",
+                        query: {
+                            id: item.item_id
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'wallet':  // 账户钱包
+                    routeUrl = this.$router.resolve({
+                        path: "/distributor/distributor-detail-sp",
+                        // query: {
+                        //     activeKey: 'AccountWallet',   
+                        // }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'order':  // 查看采购订单
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/purchase-order-detail",
+                        query: {
+                            id: this.detail.purchase_order_id,
+                        }
+                    })
+                    window.open(routeUrl.href, '_self')
+                    break;
             }
-            window.open(routeUrl.href, '_self')
         },
         // 获取工单详情
         getRepairDetail() {
@@ -404,51 +636,147 @@ export default {
                 this.loading = false;
             });
         },
+        // 获取钱包余额
+        getBalance() {
+          Core.Api.Repair.getBalance().then(res => {
+            console.log('getBalance res', res); 
+            this.balance = res
+          }).catch(err => {
+            console.log('getBalance err', err); 
+          })  
+        },
         // 获取当前工单进度
         getCurrStep(status) {
             switch (status) {
                 case STATUS.WAIT_DETECTION: // 订单创建，等待检测
                     this.currStep = 0;
+                    this.status = STATUS.WAIT_DETECTION
                     break;
                 case STATUS.WAIT_REPAIR: // 维修中
                     this.currStep = 1;
+                    this.status = STATUS.WAIT_REPAIR
                     break;
                 case STATUS.REPAIR_END: // 维修完成
                     this.currStep = 1;
+                    this.status = STATUS.REPAIR_END
                     break;
                 case STATUS.SETTLEMENT: // 已结算，待审核(零售商创建)
                     this.currStep = 1;
+                    this.status = STATUS.SETTLEMENT
                     break;
                 case STATUS.SETTLEMENT_DISTRIBUTOR: // 已结算，待审核(分销商创建)
                     this.currStep = 1;
+                    this.status = STATUS.SETTLEMENT_DISTRIBUTOR
                     break;
                 case STATUS.AUDIT_SUCCESS: // 平台方审核通过
                     this.currStep = 3;
+                    this.status = STATUS.AUDIT_SUCCESS
                     break;
                 case STATUS.FINISH: // 保外结算直接完成，不需要审核
                     this.currStep = 3;
+                    this.status = STATUS.FINISH
                     break;
                 case STATUS.AUDIT_FAIL: // 审核未通过
                     this.currStep = 1;
+                    this.status = STATUS.AUDIT_FAIL
                     break;
                 case STATUS.FAULT_ENTITY_AUDIT_FAIL: // 故障件审核未通过
                     this.currStep = 1;
+                    this.status = STATUS.FAULT_ENTITY_AUDIT_FAIL
                     break;
                 case STATUS.CLOSE: // 订单取消
                     this.currStep = 1;
+                    this.status = STATUS.CLOSE
                     break;
             }
         },
         getLogList() {
             Core.Api.ActionLog.list({
                 source_type: 20,
-                source_id: this.id   
+                source_id: this.id
             }).then(res => {
-                this.recordTableData = res.list   
+                this.recordTableData = res.list
             }).catch(err => {
                 console.log('getLogList err', err);
-            })   
-        }
+            })
+        },
+        // 展示取消工单弹框
+        handleCancelModalShow() {
+            this.cancelModalShow = true
+        },
+        // 展示作废工单弹框
+        handleVoidModalShow() {
+            this.voidModalShow = true
+        },
+        // 展示审核工单弹框 
+        handleAuditModalShow() {
+            this.auditModalShow = true
+            for (const vehicle of this.detail.vehicle_frame_list) {
+                for (const item of vehicle.item_list) {
+                    this.auditTableData.push(item);
+                    this.auditDetail.total_amount += item.amount;
+                    this.auditDetail.total_price += item.price;
+                    this.auditDetail.total_charge += item.charge;
+                }
+            }
+        },
+        // 取消工单
+        handleCancel() {
+            Core.Api.Repair.cancel({
+                id: this.id
+            }).then(res => {
+                this.cancelModalShow = false
+                console.log('handleCancelRepairOrder res', res);
+                this.$message(this.$t(/*取消成功*/'pop_up.canceled'))
+                this.routerChange('list');
+            }).catch(err => {
+                console.log('handleCancelRepairOrder err', err);
+            })
+        },
+        // 作废工单
+        handleVoid() {
+            Core.Api.Repair.void({
+                id: this.id
+            }).then(res => {
+                this.voidModalShow = false
+                console.log('handleVoidRepairOrder res', res);
+                this.$message(this.$t(/*作废成功*/'r.successful_cancellation'))
+                this.getRepairDetail();
+                this.getLogList();
+            }).catch(err => {
+                console.log('handleVoidRepairOrder err', err);
+            })
+        },
+        // 审核工单
+        handleAudit() {
+            if(this.audit_result === 0) {
+                if(!this.audit_message) {
+                    return this.$message.warning(this.$t('audit.reason'))   
+                }
+            }
+            Core.Api.Repair.audit({
+                id: this.id,
+                audit_message: this.audit_message,
+                audit_result: this.audit_result
+            }).then(res => {
+                console.log('handleVoidRepairOrder res', res);
+                this.auditModalShow = false
+                this.$message(this.$t(/*提交成功*/'r.submit_successfully'))
+                this.getRepairDetail();
+                this.getLogList();
+            }).catch(err => {
+                console.log('handleVoidRepairOrder err', err);
+            })
+        },
+        // 审核弹窗关闭回调
+        auditModalClose() {
+            this.audit_message = undefined
+            this.audit_result = 1
+        },
+        // 编辑
+        handleToEdit() {
+            this.routerChange('edit', {});
+        },
     }
 };
 </script>
@@ -700,12 +1028,16 @@ export default {
         background-color: #FFF;
 
         .pay-method-key {
-            width: 340px;
+            width: 330px;
             display: flex;
             align-items: center;
             color: #1D2129;
             font-size: 14px;
             font-weight: 400;
+
+            &.left {
+                width: 390px;
+            }
 
             .pay-method-radio {
                 margin-left: 16px;

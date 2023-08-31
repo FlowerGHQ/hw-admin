@@ -526,6 +526,15 @@ const Util = {
                 return MAP[val + '']?.color || 'grey'
         }
     },
+    repairAllStatusFilter(val, to = 'key') {
+        const MAP = Const.REPAIR.STATUS_MAP
+        switch (to) {
+            case 'key':
+                return MAP[val + ''] || {}
+            case 'color':
+                return MAP[val + '']?.color || 'grey'
+        }
+    },
     repairNewTypeFilter(val) {
         const MAP = Const.REPAIR.CATEGORY_LIST_MAP
         let value = MAP[val + ''] || {}

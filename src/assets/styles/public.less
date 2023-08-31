@@ -272,6 +272,7 @@
 }
 
 .ant-modal {
+
     .ant-modal-content {
         border-radius: 2px;
         overflow: hidden;
@@ -331,6 +332,77 @@
                 }
                 .file-value {
                     cursor: pointer;
+                }
+            }
+            .audit-modal-title {
+                color: #1D2129;
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .audit-modal-head-wrap {
+                padding: 16px 60px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                .head-form-item {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 10px;
+                    .head-key {
+                        color:#86909C;
+                        font-size: 14px;
+                    }
+                    .head-value {
+                        color:#1D2129;
+                        font-size: 14px;
+                    }
+                }
+            }
+            .audit-table {
+                margin-top: 19px;
+                .audit-table-footer {
+                    position: relative;
+                    margin-top: 18px;
+                    margin-bottom: 16px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: flex-end;
+                    color: #1D2129;
+                    font-size: 14px;
+                    font-weight: 400;
+        
+                    .add-btn {
+                        position: absolute;
+                        left: 0;
+                    }
+        
+                    .total,
+                    .total-amount {
+                        margin-right: 24px;
+                    }
+                }
+            }
+            .form-item {
+                margin-top: 16px;
+                .key::before {
+                    opacity: 0;
+                    content: '*';
+                    color: @TC_required;
+                    padding-right: 2px;
+                }
+                .key {
+                    color:#1D2129;
+                    font-size: 14px;
+                    font-weight: 400;
+                }
+            
+                &.required {
+            
+                    // 必填标志
+                    .key::before {
+                        opacity: 1;
+                    }
                 }
             }
         }

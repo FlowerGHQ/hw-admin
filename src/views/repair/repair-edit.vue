@@ -2,10 +2,10 @@
     <div id="RepairEdit" class="edit-container">
         <!-- 标题 -->
         <div class="title-container">
-            <div class="title-area">{{ $t('r.repair_create') }}</div>
+            <div class="title-area">{{ id ? $t(/*编辑工单*/'r.repair_edit') : $t(/*新增工单*/'r.repair_create') }}</div>
         </div>
         <!-- 顶部提示 -->
-        <div class="tips-container">
+        <div class="tips-container" v-if="!id">
             <div class="tips-block">
                 <img src="../../assets/images/warn-tip.png" alt="">
                 <div class="tips-text" v-for="(item, index) in tipList" :key="index">
@@ -21,7 +21,7 @@
             </div>
         </div>
         <!-- 车架号 -->
-        <div class="form-container">
+        <div class="form-container" v-if="!id">
             <div class="form-wrap required">
                 <div class="key">{{ $t('search.vehicle_no') }}:</div>
                 <div class="value">
@@ -32,14 +32,14 @@
             </div>
         </div>
         <div class="detail-container">
-            <template v-if="isVehicle">
+            <template v-if="isVehicle || id">
                 <div class="item-table-container">
                     <div class="item-table-head">
                         <div class="item-table-title">
                             {{ $t(/*商品信息*/'i.product_information') }}
                         </div>
                         <div class="item-table-tip">
-                            {{ $t(/*商品信息*/'r.top_long_tip') }}
+                            {{ $t(/*请将每辆车行驶的公里数填写在列表内，方便审核*/'r.top_long_tip') }}
                         </div>
                     </div>
                     <a-table style="margin-top: 6px;" :columns="itemTableColumns" :data-source="itemTableData"
@@ -87,7 +87,7 @@
                             </template>
                         </template>
                     </a-table>
-                    <div class="table-footer">
+                    <div class="table-footer" v-if="!id">
                         <!-- 共 条记录 -->
                         {{ $t('n.all_total') }}
                         <span class="table-footer-num">{{ itemTableDetail.count || 0 }}</span>
@@ -192,25 +192,25 @@
                                         </template>
                                         <template v-if="column.key === 'upload'">
                                             <div class="table-upload">
-                                                <div class="table-img" v-if="record.attachment_item_list.length">
+                                                <div class="table-img" v-if="record.attachment_list.length">
                                                     <a-image :width="24" :height="24"
-                                                        :src="$Util.imageFilter(record.attachment_item_list[0]?.path.includes('img') ? record.attachment_item_list[0]?.path : '', 4)"
+                                                        :src="$Util.imageFilter(record.attachment_list[0]?.path.includes('img') ? record.attachment_list[0]?.path : '', 4)"
                                                         :fallback="$t('def.none')" />
                                                     <a-tooltip placement="top"
-                                                        :title='record.attachment_item_list[0]?.name'>
+                                                        :title='record.attachment_list[0]?.name'>
                                                         <p class="ell" style="max-width:120px;margin-left:12px;">{{
-                                                            record.attachment_item_list[0]?.name || '-' }}</p>
+                                                            record.attachment_list[0]?.name || '-' }}</p>
                                                     </a-tooltip>
                                                 </div>
-                                                <div v-if="record.attachment_item_list.length > 1" class="divide-line">
+                                                <div v-if="record.attachment_list.length > 1" class="divide-line">
                                                 </div>
                                                 <!-- 更多-按钮 -->
-                                                <a-button v-if="record.attachment_item_list.length > 1" type="link"
+                                                <a-button v-if="record.attachment_list.length > 1" type="link"
                                                     style="margin-left: 8px; font-size: 14px;"
-                                                    @click="moreAttachModalShow(record.attachment_item_list)">{{
+                                                    @click="moreAttachModalShow(record.attachment_list)">{{
                                                         $t('n.more')
                                                     }}</a-button>
-                                                <div v-if="record.attachment_item_list.length > 1" class="divide-line">
+                                                <div v-if="record.attachment_list.length > 1" class="divide-line">
                                                 </div>
                                                 <img @click="handleUploadModalShow($2.frame_uid, record.item_id, record)"
                                                     class="upload-icon" src="../../assets/images/upload-icon.png" alt="">
@@ -235,14 +235,14 @@
                                     </template>
                                 </a-table>
                                 <div class="vehicle-item-footer">
-                                    <!-- <a-button v-if="!$1.model" class="add-btn" type="primary"
+                                    <a-button v-if="!$1.model" class="add-btn" type="primary"
                                         @click="handleSelectAllItemModal">{{
                                             $t(/*添加商品*/'i.add')
-                                        }}</a-button> -->
-                                    <a-button class="add-btn" type="primary"
+                                        }}</a-button>
+                                    <!-- <a-button class="add-btn" type="primary"
                                         @click="handleSelectAllItemModal($2.frame_uid)">{{
                                             $t(/*添加商品*/'i.add')
-                                        }}</a-button>
+                                        }}</a-button> -->
                                     <div class="total">
                                         {{ $t(/*合计*/'p.total') }}
                                     </div>
@@ -572,6 +572,8 @@ export default {
             balance: 0,
             tipModalShow: false,
             executingFrameUid: '',
+            id: 0,
+            detail: {}
         };
     },
     watch: {},
@@ -610,7 +612,7 @@ export default {
                 { title: this.$t('r.three_pack_aging'), dataIndex: 'warranty_status' }, // 三包时效
                 {   // 上传附件
                     title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('p.attachment')}`,
-                    dataIndex: 'attachment_item_list',
+                    dataIndex: 'attachment_list',
                     key: 'upload'
                 },
                 {   // 问题描述
@@ -656,6 +658,10 @@ export default {
         },
     },
     mounted() {
+        this.id = Number(this.$route.query.id) || 0
+        if (this.id) {
+            this.getRepairDetail();
+        }
         this.currency = Core.Data.getCurrency();
         // 爆炸图适配
         if (window.screen.width <= 1280) {
@@ -664,6 +670,37 @@ export default {
         this.getBalanceDetail();
     },
     methods: {
+        // 获取工单详情
+        getRepairDetail() {
+            this.loading = true;
+            Core.Api.Repair.detail({
+                id: this.id,
+            }).then(res => {
+                console.log('getRepairDetail res', res)
+                this.detail = res
+                this.itemTableData = this.detail?.vehicle_list
+                for (const vehicle of this.detail.vehicle_frame_list) {
+                    const newVehicleGroup = {
+                        model: "",
+                        faultTypesList: [],
+                        vehicle_list: []
+                    };
+                    newVehicleGroup.vehicle_list.push({
+                        frame_uid: vehicle.frame_uid,
+                        repair_order_item_list: vehicle.item_list,
+                        totalPrice: 0,
+                        totalCharge: 0,
+                    });
+                    this.vehicleGroupList.push(newVehicleGroup);
+                    // this.vehicleGroupList[0].category = this.detail.category
+                }
+                console.log('this.vehicleGroupList', this.vehicleGroupList);
+            }).catch(err => {
+                console.log('getRepairDetail err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
         getBalanceDetail() {
             Core.Api.Repair.balance().then(res => {
                 console.log('getBalanceDetail res', res);
@@ -710,7 +747,7 @@ export default {
                             description: repairOrderItem.question_desc,
                             price: this.currency === 'eur' || this.currency === 'EUR' ? repairOrderItem.fob_eur : repairOrderItem.fob_usd,
                             charge: repairOrderItem.warranty_status === 2 ? (this.currency === 'eur' || this.currency === 'EUR' ? repairOrderItem.fob_eur : repairOrderItem.fob_usd) : 0,
-                            attachment_item_list: repairOrderItem.attachment_item_list,
+                            attachment_list: repairOrderItem.attachment_list,
                             warranty_status: repairOrderItem.warranty_status
                         };
                     });
@@ -758,7 +795,7 @@ export default {
                     }
                     const itemList = vehicle.item_list;
                     for (const item of itemList) {
-                        if (!item.attachment_item_list.length || !item.description) {
+                        if (!item.attachment_list.length || !item.description) {
                             this.$message.warning(this.$t(/*请完善必填信息*/'r.enter'));
                             return false;
                         }
@@ -899,8 +936,8 @@ export default {
         // 确定上传文件
         handleModalSubmit() {
             if (this.currentRecord) {
-                this.currentRecord.attachment_item_list = [
-                    ...this.currentRecord.attachment_item_list,
+                this.currentRecord.attachment_list = [
+                    ...this.currentRecord.attachment_list,
                     ...this.finishUploadData,
                 ];
                 // 清空上传文件列表
@@ -1065,7 +1102,7 @@ export default {
                         charge: matchingItem.warranty_status === 1 || matchingItem.warranty_status === 3 ? 0 : (this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd),
                         price: this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd,
                         item_category_id: category_id,
-                        attachment_item_list: [],
+                        attachment_list: [],
                         question_desc: undefined,
                         category_name: name,
                         category_name_en: name_en
@@ -1084,7 +1121,7 @@ export default {
                     charge: matchingItem.warranty_status === 1 || matchingItem.warranty_status === 3 ? 0 : (this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd),
                     price: this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd,
                     item_category_id: category_id,
-                    attachment_item_list: [],
+                    attachment_list: [],
                     question_desc: undefined,
                     category_name: name,
                     category_name_en: name_en
