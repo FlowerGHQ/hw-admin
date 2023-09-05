@@ -2225,9 +2225,9 @@ let Const = {
         // 奖品订单来源
         Source_Channel:{
             
-            '1': { key: 1, zh: '新春贺礼订单', en: 'New Year Gift Order',value:1 },
-            '2': { key: 2, zh: '投票分享', en: 'Voting Sharing',value:2  },
-            '2': { key: 3, zh: '抽奖', en: 'Lottery',value:3  },
+            // '1': { key: 1, zh: '新春贺礼订单', en: 'New Year Gift Order',value:1 },
+            '1': { key: 1, zh: '投票分享', en: 'Voting Sharing',value:1  },
+            '2': { key: 2, zh: '抽奖', en: 'Lottery',value:2  },
         },
         // 修改好物订单记录
         Update_Record:{
