@@ -115,7 +115,7 @@
 
 <script setup>
 
-import { ref, computed, onMounted, getCurrentInstance } from 'vue';
+import { ref, computed, onMounted, getCurrentInstance, defineExpose } from 'vue';
 import Core from '@/core';
 
 const loginOrgId = Core.Data.getOrgId()
