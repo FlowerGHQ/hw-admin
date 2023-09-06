@@ -1665,7 +1665,7 @@ const routes = [
         children: [
             {
                 path: 'order-list',
-                name: 'orderList',
+                name: 'orderListItem',
                 component: () => import('@/views/good-items-order/order-list.vue'),
                 meta: {
                     title: '订单列表',
