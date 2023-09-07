@@ -196,8 +196,7 @@
                                                     <a-image :width="24" :height="24"
                                                         :src="$Util.imageFilter(record.attachment_list[0]?.path.includes('img') ? record.attachment_list[0]?.path : '', 4)"
                                                         :fallback="$t('def.none')" />
-                                                    <a-tooltip placement="top"
-                                                        :title='record.attachment_list[0]?.name'>
+                                                    <a-tooltip placement="top" :title='record.attachment_list[0]?.name'>
                                                         <p class="ell" style="max-width:120px;margin-left:12px;">{{
                                                             record.attachment_list[0]?.name || '-' }}</p>
                                                     </a-tooltip>
@@ -679,21 +678,41 @@ export default {
                 console.log('getRepairDetail res', res)
                 this.detail = res
                 this.itemTableData = this.detail?.vehicle_list
-                for (const vehicle of this.detail.vehicle_frame_list) {
-                    const newVehicleGroup = {
-                        model: "",
-                        faultTypesList: [],
-                        vehicle_list: []
+                const vehicle_group_list = this.detail.vehicle_frame_list.map((vehicle) => {
+                    console.log('vehicle.item_list', vehicle.item_list);
+                    return {
+                        model: vehicle.item_list[0].model,
+                        vehicle_list: vehicle.item_list.map((item) => {
+                            this.getItemCategory(item.model);
+                            return {
+                                frame_uid: vehicle.frame_uid,
+                                model: item.model,
+                                repair_order_item_list: vehicle.item_list.map((item) => ({
+                                    name: item.item_name,
+                                    code: item.item_code,
+                                    marterial: {
+                                        spec: item.item_spec
+                                    },
+                                    fob_eur: item.price,
+                                    question_desc: item.description,
+                                    ...item,
+                                })),
+                                fault_types_list: [],
+                                amount: 0,
+                                totalPrice: vehicle.item_list.reduce((sum, item) => {
+                                    return sum + item.price;
+                                }, 0),
+                                totalCharge: vehicle.item_list.reduce((sum, item) => {
+                                    return sum + item.charge;
+                                }, 0)
+                            };
+                        }),
                     };
-                    newVehicleGroup.vehicle_list.push({
-                        frame_uid: vehicle.frame_uid,
-                        repair_order_item_list: vehicle.item_list,
-                        totalPrice: 0,
-                        totalCharge: 0,
-                    });
-                    this.vehicleGroupList.push(newVehicleGroup);
-                    // this.vehicleGroupList[0].category = this.detail.category
-                }
+                });
+                this.vehicleGroupList = vehicle_group_list
+                this.vehicleGroupList[0].category = this.detail.category
+                this.vehicleGroupList[0].vehicle_list = this.vehicleGroupList[0].vehicle_list.slice(0, 1)
+                this.form.compensation_method = this.detail.compensation_method
                 console.log('this.vehicleGroupList', this.vehicleGroupList);
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -701,6 +720,7 @@ export default {
                 this.loading = false;
             });
         },
+        // 获取账户余额
         getBalanceDetail() {
             Core.Api.Repair.balance().then(res => {
                 console.log('getBalanceDetail res', res);
@@ -724,16 +744,32 @@ export default {
                 onOk() {
                     console.log('handleConfirm ok');
                     const list = _this.transformSaveParams();
-                    Core.Api.Repair.create({
-                        list
-                    }).then(res => {
-                        console.log('handleConfirm res', res);
-                        _this.routerChange('back')
-                    }).catch(err => {
-                        console.log('Error in handleConfirm', err);
-                    })
+                    if (_this.id) {
+                        Core.Api.Repair.update({
+                            list,
+                            id: _this.id
+                        }).then(res => {
+                            console.log('handleConfirm res', res);
+                            _this.routerChange('back')
+                        }).catch(err => {
+                            console.log('Error in handleConfirm', err);
+                        })
+                    } else {
+                        Core.Api.Repair.create({
+                            list
+                        }).then(res => {
+                            console.log('handleConfirm res', res);
+                            _this.routerChange('back')
+                        }).catch(err => {
+                            console.log('Error in handleConfirm', err);
+                        })
+                    }
                 },
             });
+        },
+        // 取消提交工单
+        handleCancel() {
+            this.routerChange('back')
         },
         // 转换提交工单的数据格式
         transformSaveParams() {
@@ -803,10 +839,6 @@ export default {
                 }
             }
             return true
-        },
-        // 取消提交工单
-        handleCancel() {
-            this.routerChange('back')
         },
         // 隐藏提示弹框
         handleTipModalShow() {
