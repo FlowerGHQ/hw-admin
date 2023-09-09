@@ -398,8 +398,18 @@ let Const = {
         },
         NEW_STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待审核', en: 'Awaiting Audit'},
+            '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
+	        '45': { key: 40, color: 'blue', zh: '待结算', en: 'Waiting settlement'},
+            '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
+            '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
+            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
             '90': { key: 90, color: 'green', zh: '通过', en: 'Passed'},
+            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: ''},
+            '110': { key: 110, color: 'green', zh: '平台方已入库'},
+            '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
 	        '-30': { key: -30, color: 'red', zh: '不通过', en: 'Rejected'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
             '-100': { key: -100, color: 'gray', zh: '已取消', en: 'Cancelled'},
         },
         // 故障类型 - 放弃使用

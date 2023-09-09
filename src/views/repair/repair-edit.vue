@@ -64,7 +64,7 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'detail'">
-                                <a-button type="link" v-if="record.item_name" @click="routerChange('itemDetail', record)">
+                                <a-button type="link" v-if="record.item_name" @click="routerChange('itemIdDetail', record)">
                                     {{ record.item_name }}
                                 </a-button>
                                 <span v-else>-</span>
@@ -206,7 +206,7 @@
                                                 <!-- 更多-按钮 -->
                                                 <a-button v-if="record.attachment_list.length > 1" type="link"
                                                     style="margin-left: 8px; font-size: 14px;"
-                                                    @click="moreAttachModalShow(record.attachment_list)">{{
+                                                    @click="moreAttachModalShow(record)">{{
                                                         $t('n.more')
                                                     }}</a-button>
                                                 <div v-if="record.attachment_list.length > 1" class="divide-line">
@@ -227,7 +227,7 @@
                                         </template>
                                         <template v-if="column.key === 'operation'">
                                             <a-button type="link" class="danger"
-                                                @click="handleDeleteItem(record.id, $2.repair_order_item_list)">{{
+                                                @click="handleDeleteItem(record.id, $2)">{{
                                                     $t('def.delete')
                                                 }}</a-button>
                                         </template>
@@ -417,7 +417,7 @@
                     </div>
                     <template #footer>
                         <a-button @click="attachModalShow = false">{{ $t('def.cancel') }}</a-button>
-                        <a-button @click="handleModalSubmit" type="primary">{{ $t('def.sure')
+                        <a-button @click="handleMoreAttachmentSubmit" type="primary">{{ $t('def.sure')
                         }}</a-button>
                     </template>
                 </a-modal>
@@ -857,14 +857,30 @@ export default {
             }
         },
         // 查看更多附件弹框
-        moreAttachModalShow(list) {
-            console.log('list', list);
-            this.currentAttachmentList = list
+        moreAttachModalShow(record) {
+            this.currentRecord = record
+            this.currentAttachmentList = record.attachment_list
+            console.log('record.attachment_list', record.attachment_list);
             this.attachModalShow = true
         },
         // 删除附件
         handleDeleteFile(index) {
             this.currentAttachmentList.splice(index, 1);
+        },
+        // 查看更多附件弹框修改保存
+        handleMoreAttachmentSubmit() {
+            for (const item of this.vehicleGroupList) {
+                for (const vehicle of item.vehicle_list) {
+                    if (vehicle.frame_uid === this.currentFrameUid) {
+                        for (const target of vehicle.repair_order_item_list) {
+                            if (target === this.currentRecord) {
+                                target.attachment_list = this.currentAttachmentList
+                            }
+                        }
+                    }
+                }
+            }
+            this.attachModalShow = false
         },
         // 展示具体故障类型选择商品弹框
         handleSelectItemModal(category_id, name, name_en) {
@@ -906,6 +922,8 @@ export default {
                 for (const vehicle of item.vehicle_list) {
                     if (vehicle.frame_uid === this.currentFrameUid) {
                         let _selectedRowItems = Core.Util.deepCopy(this.selectedRowItems)
+                        // 由于故障类型只能选择单一故障 所以每次切换其他故障类型进行添加时把已添加商品清空重新添加
+                        vehicle.repair_order_item_list = []
                         _selectedRowItems.forEach(target => {
                             target.key_id = vehicle.frame_uid + target.id
                             vehicle.repair_order_item_list.push(target)
@@ -975,8 +993,10 @@ export default {
                 // 清空上传文件列表
                 this.upload.fileList = [];
                 this.submitDisabled = true;
+                console.log('yxy', this.vehicleGroupList);
             }
             this.uploadModalShow = false;
+            this.finishUploadData = []
         },
         // 页面跳转
         routerChange(type, item = {}) {
@@ -985,7 +1005,16 @@ export default {
                 case 'back':
                     this.$router.go(-1)
                     break;
-                case 'itemDetail':  // 维修单详情
+                case 'itemDetail':  // 商品详情
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-list",
+                        query: {
+                            id: item.id
+                        }
+                    })
+                    window.open(routeUrl.href, '_blank')
+                    break;
+                case 'itemIdDetail':  // 车辆详情
                     routeUrl = this.$router.resolve({
                         path: "/purchase/item-list",
                         query: {
@@ -1015,7 +1044,7 @@ export default {
             });
         },
         // 删除商品
-        handleDeleteItem(id, targetTableData) {
+        handleDeleteItem(id, target) {
             let _this = this;
             this.$confirm({
                 title: _this.$t('pop_up.sure_delete'),
@@ -1024,10 +1053,13 @@ export default {
                 cancelText: this.$t('def.cancel'),
                 onOk() {
                     console.log('handleDeleteItem ok');
-                    const indexToRemove = targetTableData.findIndex(item => item.id === id);
+                    const indexToRemove = target.repair_order_item_list.findIndex(item => item.id === id);
                     // 如果找到匹配的索引，则删除该项
                     if (indexToRemove !== -1) {
-                        targetTableData.splice(indexToRemove, 1);
+                        target.repair_order_item_list.splice(indexToRemove, 1);
+                    }
+                    if(!target.repair_order_item_list.length) {
+                        target.item_category_id = undefined
                     }
                 },
             });
@@ -1507,12 +1539,14 @@ export default {
                     color: #1D2129;
                     font-size: 16px;
                     font-weight: 600;
+                    margin-top: 70px;
                 }
 
                 .item-table-tip {
                     color: #86909C;
                     font-size: 12px;
                     margin-left: 10px;
+                    margin-top: 72px;
                 }
             }
 
