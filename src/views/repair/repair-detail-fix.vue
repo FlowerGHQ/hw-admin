@@ -30,12 +30,12 @@
                         <template #description>
                             <div class="step-tab-wrap" v-if="currStep !== 0">
                                 <div class="step-tab green" :style="$Util.repairStatusFilter(detail?.status, 'color')">
-                                    {{ $Util.repairStatusFilter(detail?.status) }}
+                                    {{ $Util.repairStatusFilter(detail?.status)[$i18n.locale] }}
                                 </div>
-                                <!-- 审核时间 -->
-                                <div class="step-time" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
-                                    {{ $Util.timeFilter(detail?.audit_time || '') }}
-                                </div>
+                            </div>
+                            <!-- 审核时间 -->
+                            <div class="step-time" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
+                                {{ $Util.timeFilter(detail?.audit_time || '') }}
                             </div>
                             <!-- <div class="step-tab-wrap">
                                 <div class="step-tab green" v-if="status === Core.Const.REPAIR.STATUS.CLOSE">
@@ -66,7 +66,12 @@
                                     type="link" style="font-size: 14px;">{{ $t(/*账户钱包*/'d.account_wallet') }}</a-button>
                             </div>
                             <div class="step-time" v-if="currStep !== 0">
-                                可用余额：€100
+                                <template v-if="currency === 'eur' || currency === 'EUR'">
+                                    {{ $t(/*可用余额*/'r.available_balance') }}：€{{ balance || 0 }}
+                                </template>
+                                <template v-else>
+                                    {{ $t(/*可用余额*/'r.available_balance') }}：${{ balance || 0 }}
+                                </template>
                             </div>
                         </template>
                     </a-step>
@@ -93,10 +98,12 @@
                         {{ text || '-' }}
                     </template>
                     <template v-if="column.key === 'detail'">
-                        <a-button type="link" v-if="record.item_name && $auth('ADMIN')" @click="routerChange('detail', record)">
+                        <a-button type="link" v-if="record.item_name && $auth('ADMIN')"
+                            @click="routerChange('detail', record)">
                             {{ record.item_name || '-' }}
                         </a-button>
-                        <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')" @click="routerChange('itemDetail', record)">
+                        <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')"
+                            @click="routerChange('itemDetail', record)">
                             {{ record.item_name || '-' }}
                         </a-button>
                     </template>
@@ -176,18 +183,30 @@
                                 {{ text || '-' }}
                             </template>
                             <template v-if="column.key === 'detail'">
-                                <a-button type="link" v-if="record.item_name && $auth('ADMIN')" @click="routerChange('detail', record)">
+                                <a-button type="link" v-if="record.item_name && $auth('ADMIN')"
+                                    @click="routerChange('detail', record)">
                                     {{ record.item_name || '-' }}
                                 </a-button>
-                                <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')" @click="routerChange('itemDetail', record)">
+                                <a-button type="link" v-if="record.item_name && $auth('DISTRIBUTOR')"
+                                    @click="routerChange('itemDetail', record)">
                                     {{ record.item_name || '-' }}
                                 </a-button>
                             </template>
                             <template v-if="column.key === 'price'">
-                                {{ $Util.countFilter(record?.price) || '-' }}€
+                                <div v-if="currency === 'eur' || currency === 'EUR'">
+                                    {{ $Util.countFilter(record?.price) || '-' }}€
+                                </div>
+                                <div v-else>
+                                    {{ $Util.countFilter(record?.price) || '-' }}$
+                                </div>
                             </template>
                             <template v-if="column.key === 'total_price'">
-                                {{ Number($Util.countFilter(record.price)) * record.amount || '-' }}€
+                                <div v-if="currency === 'eur' || currency === 'EUR'">
+                                    {{ Number($Util.countFilter(record.price)) * record.amount || '-' }}€
+                                </div>
+                                <div v-else>
+                                    {{ Number($Util.countFilter(record.price)) * record.amount || '-' }}$
+                                </div>
                             </template>
                             <template v-if="column.key === 'upload'">
                                 <div class="table-upload">
@@ -212,11 +231,17 @@
                         <div class="total-amount">
                             {{ $t(/*总数量*/'i.total_quantity') }}: {{ item?.total_count || '-' }}
                         </div>
-                        <div class="total-amount">
+                        <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
                             {{ $t(/*总金额*/'r.total_amount') }}: €{{ $Util.countFilter(item?.total_price) || 0 }}
                         </div>
-                        <div class="total-amount">
+                        <div class="total-amount" v-else>
+                            {{ $t(/*总金额*/'r.total_amount') }}: ${{ $Util.countFilter(item?.total_price) || 0 }}
+                        </div>
+                        <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
                             {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ item?.total_charge || 0 }}
+                        </div>
+                        <div class="total-amount" v-else>
+                            {{ $t(/*实付金额*/'r.amount_paid') }}: ${{ item?.total_charge || 0 }}
                         </div>
                     </div>
                 </div>
@@ -244,29 +269,19 @@
         </div>
         <div class="block"></div>
         <div class="fix-container">
-            <div :class="status === Core.Const.REPAIR.STATUS.CLOSE || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.WAIT_DETECTION || Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL ? 'pay-method-key left' : 'pay-method-key'">
+            <div :class="getPayMethodKeyClass()">
                 <div class="submit-btn-group">
                     <template v-if="$auth('ADMIN')">
-                        <!-- 审核(在这些状态下平台方可以审核) -->
-                        <a-button
-                            v-if="(status === Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_WAREHOUSE || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT || Core.Const.REPAIR.STATUS.STATUS_FAULT_IN_STOCK || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL)"
-                            @click="handleAuditModalShow" type="primary">{{
-                                $t(/*审核*/'p.audit') }}</a-button>
+                        <a-button v-if="canPerformAudit()" @click="handleAuditModalShow" type="primary">{{ $t('p.audit')
+                        }}</a-button>
                     </template>
                     <template v-else>
-                        <!-- 取消 -->
-                        <a-button @click="handleCancelModalShow">{{ $t(/*取消*/'def.cancel') }}</a-button>
-                        <!-- 作废 -->
-                        <a-button v-if="status === Core.Const.REPAIR.STATUS.CLOSE" @click="handleVoidModalShow"
-                            type="primary" danger ghost>{{ $t(/*作废*/'r.void') }}</a-button>
-                        <!-- 编辑 -->
-                        <a-button @click="handleToEdit" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.WAIT_DETECTION || Core.Const.REPAIR.STATUS.WAIT_REPAIR || Core.Const.REPAIR.STATUS.REPAIR_END || Core.Const.REPAIR.STATUS.SETTLEMENT || Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR || Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS || Core.Const.REPAIR.STATUS.AUDIT_FAIL || Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL"
-                            type="primary">{{
-                                $t(/*编辑*/'n.edit') }}</a-button>
-                        <!-- 编辑 -->
-                        <a-button v-if="status === Core.Const.REPAIR.STATUS.FINISH" @click="routerChange('invoice')"
-                            type="primary">{{
-                                $t(/*查看结算单*/'r.bill') }}</a-button>
+                        <a-button @click="handleCancelModalShow">{{ $t('def.cancel') }}</a-button>
+                        <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.CLOSE" @click="handleVoidModalShow"
+                            type="primary" danger ghost>{{ $t('r.void') }}</a-button>
+                        <a-button v-if="canPerformEdit()" @click="handleToEdit" type="primary">{{ $t('n.edit') }}</a-button>
+                        <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.FINISH" @click="routerChange('invoice')"
+                            type="primary">{{ $t('r.bill') }}</a-button>
                     </template>
                 </div>
             </div>
@@ -451,7 +466,7 @@ export default {
                 total_charge: 0
             },
             balance: 0, // 账户余额
-       };
+        };
     },
     watch: {},
     computed: {
@@ -517,8 +532,8 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
-        if(!this.id) {
-            return 0   
+        if (!this.id) {
+            return 0
         }
         this.getRepairDetail();
         this.getLogList();
@@ -638,12 +653,12 @@ export default {
         },
         // 获取钱包余额
         getBalance() {
-          Core.Api.Repair.getBalance().then(res => {
-            console.log('getBalance res', res); 
-            this.balance = res
-          }).catch(err => {
-            console.log('getBalance err', err); 
-          })  
+            Core.Api.Repair.getBalance().then(res => {
+                console.log('getBalance res', res);
+                this.balance = res
+            }).catch(err => {
+                console.log('getBalance err', err);
+            })
         },
         // 获取当前工单进度
         getCurrStep(status) {
@@ -690,6 +705,7 @@ export default {
                     break;
             }
         },
+        // 获取日志列表
         getLogList() {
             Core.Api.ActionLog.list({
                 source_type: 20,
@@ -749,9 +765,9 @@ export default {
         },
         // 审核工单
         handleAudit() {
-            if(this.audit_result === 0) {
-                if(!this.audit_message) {
-                    return this.$message.warning(this.$t('audit.reason'))   
+            if (this.audit_result === 0) {
+                if (!this.audit_message) {
+                    return this.$message.warning(this.$t('audit.reason'))
                 }
             }
             Core.Api.Repair.audit({
@@ -761,7 +777,7 @@ export default {
             }).then(res => {
                 console.log('handleVoidRepairOrder res', res);
                 this.auditModalShow = false
-                this.$message(this.$t(/*提交成功*/'r.submit_successfully'))
+                this.$message.success(this.$t(/*提交成功*/'r.submit_successfully'))
                 this.getRepairDetail();
                 this.getLogList();
             }).catch(err => {
@@ -772,10 +788,64 @@ export default {
         auditModalClose() {
             this.audit_message = undefined
             this.audit_result = 1
+            this.auditTableData = [];
+            this.auditDetail.total_amount = 0;
+            this.auditDetail.total_price = 0;
+            this.auditDetail.total_charge = 0;
         },
         // 编辑
         handleToEdit() {
             this.routerChange('edit', {});
+        },
+        // fix-container样式判断
+        getPayMethodKeyClass() {
+            const status = this.detail.status;
+            const allowedStatuses = [
+                Core.Const.REPAIR.STATUS.CLOSE,
+                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.WAIT_DETECTION,
+                Core.Const.REPAIR.STATUS.WAIT_REPAIR,
+                Core.Const.REPAIR.STATUS.REPAIR_END,
+                Core.Const.REPAIR.STATUS.SETTLEMENT,
+                Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR,
+                Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS,
+                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL
+            ];
+
+            return allowedStatuses.includes(status) ? 'pay-method-key left' : 'pay-method-key';
+        },
+        // 是否展示审核按钮
+        canPerformAudit() {
+            const status = this.detail.status;
+            const allowedStatuses = [
+                Core.Const.REPAIR.STATUS.WAIT_REPAIR,
+                Core.Const.REPAIR.STATUS.REPAIR_END,
+                Core.Const.REPAIR.STATUS.SETTLEMENT,
+                Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR,
+                Core.Const.REPAIR.STATUS.DISTRIBUTOR_WAREHOUSE,
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT,
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL
+            ];
+
+            return allowedStatuses.includes(status);
+        },
+        // 是否展示编辑按钮
+        canPerformEdit() {
+            const status = this.detail.status;
+            const allowedStatuses = [
+                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.WAIT_DETECTION,
+                Core.Const.REPAIR.STATUS.WAIT_REPAIR,
+                Core.Const.REPAIR.STATUS.REPAIR_END,
+                Core.Const.REPAIR.STATUS.SETTLEMENT,
+                Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR,
+                Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS,
+                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL
+            ];
+
+            return allowedStatuses.includes(status);
         },
     }
 };
@@ -805,7 +875,7 @@ export default {
                 display: flex;
 
                 .step-tab {
-                    min-width: 76px;
+                    // min-width: 76px;
                     height: 22px;
                     padding: 0 8px;
                     box-sizing: border-box;
@@ -825,7 +895,7 @@ export default {
 
                     &.green {
                         color: #44CB7C;
-                        width: 44px;
+                        // width: 44px;
                         height: 22px;
                     }
                 }

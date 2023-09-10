@@ -338,6 +338,18 @@ export default {
                 this.$refs.TimeSearch.handleReset()
             }
             this.filteredInfo = null
+            this.searchForm = {
+                uid: undefined, // 工单编号
+                status: -1, // 列表上方状态切换
+                vehicle_no: undefined, // 车架号
+                customer_name: undefined, // 客户姓名
+                item_name: undefined, // 商品名称
+                begin_time: undefined, // 开始时间
+                end_time: undefined, // 结束时间
+                compensation_method: 0, // 赔付方式
+                model: '', // 车型
+                category: 0, // 工单类型
+            }
             this.pageChange(1);
         },
         getTableData() {  // 获取 表格 数据            

@@ -226,10 +226,9 @@
                                                 :placeholder="$t(/*请输入问题描述*/'r.fault_description')" />
                                         </template>
                                         <template v-if="column.key === 'operation'">
-                                            <a-button type="link" class="danger"
-                                                @click="handleDeleteItem(record.id, $2)">{{
-                                                    $t('def.delete')
-                                                }}</a-button>
+                                            <a-button type="link" class="danger" @click="handleDeleteItem(record.id, $2)">{{
+                                                $t('def.delete')
+                                            }}</a-button>
                                         </template>
                                     </template>
                                 </a-table>
@@ -267,7 +266,7 @@
                 </template>
                 <!-- 上传附件弹框 -->
                 <a-modal v-model:visible="uploadModalShow" :title="$t('n.upload_attachment')"
-                    class="attachment-file-upload-modal">
+                    class="attachment-file-upload-modal" :after-close="handleUploadModalClose">
                     <div class="form-title">
                         <div class="form-item required file-upload">
                             <div class="key">{{ $t('f.upload') }}:</div>
@@ -436,7 +435,7 @@
                 }}</a-button>
             </template>
         </a-modal>
-        <div class="fix-container">
+        <div class="fix-container" v-if="isVehicle || id">
             <div :class="$i18n.locale === 'zh' ? 'pay-method-key' : 'pay-method-key w1080'">
                 {{ $t(/*赔付方式*/'r.payment_method') }}：
                 <div class="pay-method-radio">
@@ -709,11 +708,13 @@ export default {
                         }),
                     };
                 });
-                this.vehicleGroupList = vehicle_group_list
-                this.vehicleGroupList[0].category = this.detail.category
-                this.vehicleGroupList[0].vehicle_list = this.vehicleGroupList[0].vehicle_list.slice(0, 1)
+                if (vehicle_group_list.length) {
+                    this.vehicleGroupList = vehicle_group_list
+                    this.vehicleGroupList[0].category = this.detail.category
+                    this.vehicleGroupList[0].vehicle_list = this.vehicleGroupList[0].vehicle_list.slice(0, 1)
+                    console.log('this.vehicleGroupList', this.vehicleGroupList);
+                }
                 this.form.compensation_method = this.detail.compensation_method
-                console.log('this.vehicleGroupList', this.vehicleGroupList);
             }).catch(err => {
                 console.log('getRepairDetail err', err)
             }).finally(() => {
@@ -998,6 +999,11 @@ export default {
             this.uploadModalShow = false;
             this.finishUploadData = []
         },
+        // 上传文件弹框关闭回调
+        handleUploadModalClose() {
+            this.upload.fileList = []
+            this.submitDisabled = false;
+        },
         // 页面跳转
         routerChange(type, item = {}) {
             let routeUrl
@@ -1058,7 +1064,7 @@ export default {
                     if (indexToRemove !== -1) {
                         target.repair_order_item_list.splice(indexToRemove, 1);
                     }
-                    if(!target.repair_order_item_list.length) {
+                    if (!target.repair_order_item_list.length) {
                         target.item_category_id = undefined
                     }
                 },
