@@ -14,11 +14,6 @@
                     <a-step>
                         <template #title>{{ $t(/*提交工单*/'r.submit_work_order') }}</template>
                         <template #description>
-                            <!-- <div class="step-tab-wrap">
-                                <div class="step-tab green" :style="$Util.repairAllStatusFilter(detail?.status, 'color')">
-                                    {{ $Util.repairAllStatusFilter(detail?.status)[$i18n.locale] }}
-                                </div>
-                            </div> -->
                             <!-- 创建时间 -->
                             <div class="step-time">
                                 {{ $Util.timeFilter(detail?.create_time || '') }}
@@ -29,7 +24,7 @@
                         <template #title>{{ $t(/*审核*/'p.audit') }}</template>
                         <template #description>
                             <div class="step-tab-wrap" v-if="currStep !== 0">
-                                <div class="step-tab" :style="$Util.repairStatusFilter(detail?.status, 'color')">
+                                <div class="step-tab" :class="$Util.repairStatusFilter(detail?.status, 'color')">
                                     {{ $Util.repairStatusFilter(detail?.status)[$i18n.locale] }}
                                 </div>
                             </div>
@@ -37,17 +32,6 @@
                             <div class="step-time" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
                                 {{ $Util.timeFilter(detail?.audit_time || '') }}
                             </div>
-                            <!-- <div class="step-tab-wrap">
-                                <div class="step-tab green" v-if="status === Core.Const.REPAIR.STATUS.CLOSE">
-                                    {{ $t(/*已取消*/'r.canceld_status') }}
-                                </div>
-                                <div class="step-tab red" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_FAIL">
-                                    {{ $t(/*审核不通过*/'r.failed_audit') }}
-                                </div>
-                                <div class="step-tab green" v-if="status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS">
-                                    {{ $t(/*通过*/'n.pass') }}
-                                </div>
-                            </div> -->
                         </template>
                     </a-step>
                     <a-step>
