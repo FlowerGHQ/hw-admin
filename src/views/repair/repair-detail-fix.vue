@@ -14,11 +14,11 @@
                     <a-step>
                         <template #title>{{ $t(/*提交工单*/'r.submit_work_order') }}</template>
                         <template #description>
-                            <div class="step-tab-wrap">
+                            <!-- <div class="step-tab-wrap">
                                 <div class="step-tab green" :style="$Util.repairAllStatusFilter(detail?.status, 'color')">
                                     {{ $Util.repairAllStatusFilter(detail?.status)[$i18n.locale] }}
                                 </div>
-                            </div>
+                            </div> -->
                             <!-- 创建时间 -->
                             <div class="step-time">
                                 {{ $Util.timeFilter(detail?.create_time || '') }}
@@ -29,7 +29,7 @@
                         <template #title>{{ $t(/*审核*/'p.audit') }}</template>
                         <template #description>
                             <div class="step-tab-wrap" v-if="currStep !== 0">
-                                <div class="step-tab green" :style="$Util.repairStatusFilter(detail?.status, 'color')">
+                                <div class="step-tab" :style="$Util.repairStatusFilter(detail?.status, 'color')">
                                     {{ $Util.repairStatusFilter(detail?.status)[$i18n.locale] }}
                                 </div>
                             </div>
@@ -62,10 +62,10 @@
                                 </div>
                                 <a-button v-if="detail.compensation_method === 1" @click="routerChange('order')" type="link"
                                     style="font-size: 14px;">{{ $t(/*查看订单*/'r.view_order') }}</a-button>
-                                <a-button v-if="detail.compensation_method === 2" @click="routerChange('wallet')"
+                                <a-button v-if="detail.compensation_method === 2 && $auth('DISTRIBUTOR')" @click="routerChange('wallet')"
                                     type="link" style="font-size: 14px;">{{ $t(/*账户钱包*/'d.account_wallet') }}</a-button>
                             </div>
-                            <div class="step-time" v-if="currStep !== 0">
+                            <div class="step-time" v-if="currStep !== 0 && $auth('DISTRIBUTOR')">
                                 <template v-if="currency === 'eur' || currency === 'EUR'">
                                     {{ $t(/*可用余额*/'r.available_balance') }}：€{{ balance || 0 }}
                                 </template>
@@ -276,13 +276,13 @@
                         }}</a-button>
                     </template>
                     <template v-else>
-                        <a-button @click="handleCancelModalShow">{{ $t('def.cancel') }}</a-button>
-                        <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.CLOSE" @click="handleVoidModalShow"
-                            type="primary" danger ghost>{{ $t('r.void') }}</a-button>
+                        <a-button v-if="canPerformCancel()" @click="handleCancelModalShow">{{ $t('def.cancel') }}</a-button>
+                        <a-button v-if="canPerformEdit()" @click="handleVoidModalShow" type="primary" danger ghost>{{
+                            $t('r.void') }}</a-button>
                         <a-button v-if="canPerformEdit()" @click="handleToEdit" type="primary">{{ $t('n.edit') }}</a-button>
-                        <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.FINISH" @click="routerChange('invoice')"
-                            type="primary">{{ $t('r.bill') }}</a-button>
                     </template>
+                    <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.FINISH || detail.status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS" @click="routerChange('invoice')"
+                            type="primary">{{ $t('r.bill') }}</a-button>
                 </div>
             </div>
         </div>
@@ -466,6 +466,7 @@ export default {
                 total_charge: 0
             },
             balance: 0, // 账户余额
+            currency: '', // 货币
         };
     },
     watch: {},
@@ -529,6 +530,12 @@ export default {
             ]
             return auditTableColumns
         },
+        // 货币单位
+        priceKey() {
+            let priceKey = this.$auth('DISTRIBUTOR') ? 'fob_' : 'purchase_price_'
+            console.log('priceKey:', priceKey)
+            return priceKey
+        },
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -538,6 +545,7 @@ export default {
         this.getRepairDetail();
         this.getLogList();
         this.getBalance();
+        this.currency = Core.Data.getCurrency();
     },
     methods: {
         // 页面跳转
@@ -558,7 +566,7 @@ export default {
                         path: "/repair/repair-list",
                     })
                     break;
-                case 'invoice':  // 工单列表
+                case 'invoice':  // 查看结算单
                     routeUrl = this.$router.resolve({
                         path: "/repair/repair-invoice",
                         query: { id: this.id },
@@ -683,6 +691,14 @@ export default {
                     this.currStep = 1;
                     this.status = STATUS.SETTLEMENT_DISTRIBUTOR
                     break;
+                case STATUS.DISTRIBUTOR_AUDIT_SUCCESS: // 分销商审核通过，待平台方审核
+                    this.currStep = 1;
+                    this.status = STATUS.DISTRIBUTOR_AUDIT_SUCCESS
+                    break;
+                case STATUS.DISTRIBUTOR_WAREHOUSE: // 分销商故障件入库，待平台方审核故障件
+                    this.currStep = 1;
+                    this.status = STATUS.DISTRIBUTOR_WAREHOUSE
+                    break;
                 case STATUS.AUDIT_SUCCESS: // 平台方审核通过
                     this.currStep = 3;
                     this.status = STATUS.AUDIT_SUCCESS
@@ -702,6 +718,14 @@ export default {
                 case STATUS.CLOSE: // 订单取消
                     this.currStep = 1;
                     this.status = STATUS.CLOSE
+                    break;
+                case STATUS.STATUS_VOIDED: // 已作废 不可再次编辑
+                    this.currStep = 1;
+                    this.status = STATUS.STATUS_VOIDED
+                    break;
+                case STATUS.STATUS_TIMEOUT_CLOSE: // 已关闭 审核不通过后超时未处理的工单的状态
+                    this.currStep = 1;
+                    this.status = STATUS.STATUS_TIMEOUT_CLOSE
                     break;
             }
         },
@@ -743,7 +767,7 @@ export default {
             }).then(res => {
                 this.cancelModalShow = false
                 console.log('handleCancelRepairOrder res', res);
-                this.$message(this.$t(/*取消成功*/'pop_up.canceled'))
+                this.$message.success(this.$t(/*取消成功*/'pop_up.canceled'))
                 this.routerChange('list');
             }).catch(err => {
                 console.log('handleCancelRepairOrder err', err);
@@ -810,7 +834,9 @@ export default {
                 Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR,
                 Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS,
                 Core.Const.REPAIR.STATUS.AUDIT_FAIL,
-                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.FINISH,
+                Core.Const.REPAIR.STATUS.AUDIT_SUCCESS,
             ];
 
             return allowedStatuses.includes(status) ? 'pay-method-key left' : 'pay-method-key';
@@ -819,6 +845,7 @@ export default {
         canPerformAudit() {
             const status = this.detail.status;
             const allowedStatuses = [
+                Core.Const.REPAIR.STATUS.WAIT_DETECTION,
                 Core.Const.REPAIR.STATUS.WAIT_REPAIR,
                 Core.Const.REPAIR.STATUS.REPAIR_END,
                 Core.Const.REPAIR.STATUS.SETTLEMENT,
@@ -830,19 +857,27 @@ export default {
 
             return allowedStatuses.includes(status);
         },
-        // 是否展示编辑按钮
+        // 是否展示编辑 作废按钮
         canPerformEdit() {
             const status = this.detail.status;
             const allowedStatuses = [
-                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
+                Core.Const.REPAIR.STATUS.AUDIT_FAIL, // 审核未通过
+                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL, // 故障件审核未通过
+                Core.Const.REPAIR.STATUS.CLOSE, // 订单已取消
+            ];
+
+            return allowedStatuses.includes(status);
+        },
+        // 是否展示取消按钮
+        canPerformCancel() {
+            const status = this.detail.status;
+            const allowedStatuses = [
                 Core.Const.REPAIR.STATUS.WAIT_DETECTION,
                 Core.Const.REPAIR.STATUS.WAIT_REPAIR,
                 Core.Const.REPAIR.STATUS.REPAIR_END,
                 Core.Const.REPAIR.STATUS.SETTLEMENT,
                 Core.Const.REPAIR.STATUS.SETTLEMENT_DISTRIBUTOR,
                 Core.Const.REPAIR.STATUS.DISTRIBUTOR_AUDIT_SUCCESS,
-                Core.Const.REPAIR.STATUS.AUDIT_FAIL,
-                Core.Const.REPAIR.STATUS.FAULT_ENTITY_AUDIT_FAIL
             ];
 
             return allowedStatuses.includes(status);
@@ -871,11 +906,9 @@ export default {
 
         .steps {
             .step-tab-wrap {
-                // position: relative;
                 display: flex;
 
                 .step-tab {
-                    // min-width: 76px;
                     height: 22px;
                     padding: 0 8px;
                     box-sizing: border-box;
@@ -890,13 +923,37 @@ export default {
                     &.yellow {
                         background: rgba(255, 188, 72, 0.10);
                         color: #FFBC48;
-                        margin-right: 10px;
+                        // margin-right: 10px;
                     }
 
                     &.green {
                         color: #44CB7C;
-                        // width: 44px;
-                        height: 22px;
+                        background: rgba(68, 203, 124, 0.10);
+                    }
+
+                    &.red {
+                        background: rgba(245, 34, 45, 0.10);
+                        color: #F5222D;
+                    }
+
+                    &.gray {
+                        background: rgba(134, 144, 156, 0.10);
+                        color: #86909C;
+                    }
+
+                    &.orange {
+                        color: #FF6A3F;
+                        background-color: #FFF0EC;
+                    }
+
+                    &.blue {
+                        color: #4DAAFF;
+                        background-color: #EDF6FF;
+                    }
+
+                    &.purple {
+                        color: #A45DFF;
+                        background-color: rgba(241, 230, 255, 0.9);
                     }
                 }
             }
@@ -1125,6 +1182,5 @@ export default {
             }
         }
     }
-}
-</style>
+}</style>
     

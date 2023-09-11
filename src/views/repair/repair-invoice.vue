@@ -151,7 +151,7 @@ export default {
                     break;
                 case 'back':  // 编辑
                     routeUrl = this.$router.resolve({
-                        path: "/repair/repair-detail",
+                        path: "/repair/repair-detail-fix",
                         query: { id: this.id },
                     })
                     window.open(routeUrl.href, '_self')

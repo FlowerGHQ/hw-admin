@@ -523,7 +523,7 @@ const Util = {
             case 'key':
                 return MAP[val + ''] || {}
             case 'color':
-                return MAP[val + '']?.color || 'grey'
+                return MAP[val + '']?.color || 'gray'
         }
     },
     repairAllStatusFilter(val, to = 'key') {

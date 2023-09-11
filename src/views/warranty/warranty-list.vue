@@ -127,25 +127,20 @@
                             </div>
                         </template>
                         <template v-if="column.key === 'warranty_period'">
-                            <div class="flex-wrap" v-show="record.label === 1">
+                            <!-- <div class="flex-wrap" v-show="record.label === 1">
                                 <span>{{ record.month }}</span>{{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}<span>{{
                                     record.mileage
                                 }}</span>{{ $t(/*公里*/'r.km') }}<i class="icon i_edit"
                                     @click="handleEditWarrantyPeriod(record)" style="cursor: pointer; margin-left: 4px;" />
-                                <div class="tag orange">
-                                    {{ $t(/*按商品分类*/'wt.classification_commodity') }}
-                                </div>
+
                             </div>
-                            <div class="flex-wrap" v-show="record.label === 2">
+                            <div class="flex-wrap" >
                                 <span>{{ record.month }}</span>{{ $t(/*个月*/'wt.month') }}{{ $t(/*或*/'wt.or') }}<span>{{
                                     record.mileage
                                 }}</span>{{ $t(/*公里*/'r.km') }}<i class="icon i_edit"
                                     @click="handleEditWarrantyPeriod(record)" style="cursor: pointer; margin-left: 4px;" />
-                                <div class="tag">
-                                    {{ $t(/*自定义*/'crm_set.unpreset') }}
-                                </div>
-                            </div>
-                            <div v-show="record.label === 0">
+                            </div> -->
+                            <div class="flex-wrap">
                                 <a-input-number @blur="handleSaveWarranty(record)" style="width: 60px; margin-right: 4px;"
                                     :min="0" :max="120" :precision="0" v-model:value="record.month"
                                     :placeholder="$t(/*请输入*/'def.input')" />
@@ -155,6 +150,12 @@
                                     :min="0" :max="20000" :precision="0" v-model:value="record.mileage"
                                     :placeholder="$t(/*请输入*/'def.input')" />
                                 {{ $t(/*公里*/'r.km') }}
+                                <div class="tag" v-show="record.label === 2">
+                                    {{ $t(/*自定义*/'crm_set.unpreset') }}
+                                </div>
+                                <div class="tag orange" v-show="record.label === 1">
+                                    {{ $t(/*按商品分类*/'wt.classification_commodity') }}
+                                </div>
                             </div>
                         </template>
                     </template>

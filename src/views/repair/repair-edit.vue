@@ -96,8 +96,8 @@
                         <span class="table-footer-num">{{ itemTableDetail.filter_number || 0 }}</span>
                         {{ $t('in.total') }}，
                         <!-- 执行中工单 条 -->
-                        {{ $t('r.Execute_intermediate') }}
-                        <span class="table-footer-num">{{ itemTableDetail.executing_number || 0 }}</span>
+                        <!-- {{ $t('r.Execute_intermediate') }}
+                        <span class="table-footer-num">{{ itemTableDetail.executing_number || 0 }}</span> -->
                         <!-- 特殊 条 -->
                         {{ $t('in.total') }}，{{ $t('search.special') }}
                         <span class="table-footer-num">{{ itemTableDetail.special_number || 0 }}</span>
@@ -266,7 +266,7 @@
                 </template>
                 <!-- 上传附件弹框 -->
                 <a-modal v-model:visible="uploadModalShow" :title="$t('n.upload_attachment')"
-                    class="attachment-file-upload-modal" :after-close="handleUploadModalClose">
+                    class="attachment-file-upload-modal">
                     <div class="form-title">
                         <div class="form-item required file-upload">
                             <div class="key">{{ $t('f.upload') }}:</div>
@@ -282,7 +282,7 @@
                         </div>
                     </div>
                     <template #footer>
-                        <a-button @click="uploadModalShow = false">{{ $t('def.cancel') }}</a-button>
+                        <a-button @click="handleUploadModalClose">{{ $t('def.cancel') }}</a-button>
                         <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure')
                         }}</a-button>
                     </template>
@@ -295,9 +295,6 @@
                             <div class="modal-title-key">
                                 {{ $t(/*故障选择*/'r.fault_selection') }}
                             </div>
-                            <!-- <div class="modal-title-value">
-                                111
-                            </div> -->
                         </div>
                         <!-- 爆炸图 -->
                         <div class="explored-content" v-if="tabsArray.length > 0">
@@ -747,7 +744,7 @@ export default {
                     const list = _this.transformSaveParams();
                     if (_this.id) {
                         Core.Api.Repair.update({
-                            list,
+                            ...list,
                             id: _this.id
                         }).then(res => {
                             console.log('handleConfirm res', res);
@@ -894,6 +891,7 @@ export default {
             this.tabsArray = [];
             this.selectedRowItems = []
             this.selectedRowKeys = []
+
         },
         // 展示选择全部商品弹框
         handleSelectAllItemModal(frameUid) {
@@ -999,11 +997,17 @@ export default {
             this.uploadModalShow = false;
             this.finishUploadData = []
         },
-        // 上传文件弹框关闭回调
+        // 关闭上传文件弹框
         handleUploadModalClose() {
+            this.uploadModalShow = false
+            this.finishUploadData = []
             this.upload.fileList = []
-            this.submitDisabled = false;
         },
+        // // 上传文件弹框关闭回调
+        // handleUploadModalClose() {
+        //     this.upload.fileList = []
+        //     this.submitDisabled = false;
+        // },
         // 页面跳转
         routerChange(type, item = {}) {
             let routeUrl
@@ -1046,6 +1050,11 @@ export default {
                         _this.itemTableData.splice(index, 1);
                         _this.$message.success(_this.$t(/*删除成功*/'pop_up.delete_success'));
                     }
+                    let newArr = []
+                    _this.itemTableData.forEach(item => {
+                        newArr.push(item.frame_uid)
+                    })
+                    _this.handleVehicleList(newArr)
                 },
             });
         },
@@ -1079,8 +1088,12 @@ export default {
             if (duplicates) {
                 this.$message.warning(`${this.$t('r.filtered')}${duplicates}${this.$t('in.total')}${this.$t('r.duplicate_frame')}`)
             }
+            this.handleVehicleList(this.uidList);
+        },
+        // 根据车架号查询信息接口
+        handleVehicleList(params) {
             Core.Api.Repair.saveVehicleList({
-                frame_uid_list: this.uidList
+                frame_uid_list: params
             }).then(res => {
                 console.log('handleSubmitVehicle res', res);
                 if (res.executing_frame_uid_list.length) {

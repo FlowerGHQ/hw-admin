@@ -409,8 +409,10 @@ let Const = {
             '110': { key: 110, color: 'green', zh: '平台方已入库'},
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
 	        '-30': { key: -30, color: 'red', zh: '不通过', en: 'Rejected'},
-            '-40': { key: -40, color: 'red', zh: '故障件审核未通过'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过', en: 'The faulty component fails to pass the audit'},
             '-100': { key: -100, color: 'gray', zh: '已取消', en: 'Cancelled'},
+            '-50': { key: -50, color: 'red', zh: '已作废', en: 'Have been voided'},
+            '-60': { key: -60, color: 'gray', zh: '超时不通过', en: 'Timeout fail'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
