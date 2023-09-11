@@ -117,7 +117,7 @@
                     {{ $t(/*工单类型*/'r.device_classify') }}：
                 </div>
                 <div class="info-value">
-                    {{ $Util.repairNewTypeFilter(detail?.category)[$i18n.locale] }}
+                    {{ $Util.repairNewTypeFilter(detail?.category)[$i18n.locale] || '-' }}
                 </div>
             </div>
             <div class="info-form-item">
@@ -528,7 +528,9 @@ export default {
         }
         this.getRepairDetail();
         this.getLogList();
-        this.getBalance();
+        if(this.$auth('DISTRIBUTOR')) {
+            this.getBalance();            
+        }
         this.currency = Core.Data.getCurrency();
     },
     methods: {

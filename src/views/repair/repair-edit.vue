@@ -76,7 +76,7 @@
                             </template>
                             <!-- 行驶公里数 -->
                             <template v-if="column.key === 'input'">
-                                <a-input v-model:value="record.warranty_period_mileage"
+                                <a-input v-model:value="record.mileage"
                                     style="width: 140px; margin-right: 4px;"
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
@@ -219,7 +219,7 @@
                                                 </div>
                                             </div>
                                         </template>
-                                        <!-- 行驶公里数 -->
+                                        <!-- 问题描述 -->
                                         <template v-if="column.key === 'input'">
                                             <a-input v-model:value="record.question_desc"
                                                 style="width: 180px; margin-right: 4px;" show-count :maxlength="500"
@@ -266,7 +266,7 @@
                 </template>
                 <!-- 上传附件弹框 -->
                 <a-modal v-model:visible="uploadModalShow" :title="$t('n.upload_attachment')"
-                    class="attachment-file-upload-modal">
+                    class="attachment-file-upload-modal" :after-close="uploadModalClose">
                     <div class="form-title">
                         <div class="form-item required file-upload">
                             <div class="key">{{ $t('f.upload') }}:</div>
@@ -387,7 +387,7 @@
                         </div>
                     </div>
                     <template #footer>
-                        <a-button @click="selectItemModalShow = false">{{ $t('def.cancel') }}</a-button>
+                        <a-button @click="selectItemModalCancel">{{ $t('def.cancel') }}</a-button>
                         <a-button @click="handleSelectItemSubmit" type="primary">{{ $t('def.sure')
                         }}</a-button>
                     </template>
@@ -488,7 +488,7 @@ export default {
             category: 1,
             repairTypeList: [ // 工单类型
                 { zh: '维修', en: 'Repair', value: 1, key: 1 },
-                { zh: '开箱损', en: 'Unpacking Damage', value: 2, key: 2 },
+                { zh: '开箱损', en: 'Unpacking Damage', value: 3, key: 3 },
             ],
             form: {
                 vehicle_no: undefined,
@@ -568,7 +568,8 @@ export default {
             tipModalShow: false,
             executingFrameUid: '',
             id: 0,
-            detail: {}
+            detail: {},
+            unResponseList: [],
         };
     },
     watch: {},
@@ -742,9 +743,13 @@ export default {
                 onOk() {
                     console.log('handleConfirm ok');
                     const list = _this.transformSaveParams();
+                    const params = list[0]
                     if (_this.id) {
                         Core.Api.Repair.update({
-                            ...list,
+                            category: params.category,
+                            compensation_method: params.compensation_method,
+                            model: params.model,
+                            vehicle_list: params.vehicle_list,
                             id: _this.id
                         }).then(res => {
                             console.log('handleConfirm res', res);
@@ -794,7 +799,7 @@ export default {
                         };
                     });
                     return {
-                        mileage: targetFrameItem.warranty_period_mileage,
+                        mileage: targetFrameItem.mileage,
                         delivery_time: targetFrameItem.delivery_time,
                         warranty_status: targetFrameItem.warranty_status,
                         frame_uid: vehicle.frame_uid,
@@ -857,7 +862,8 @@ export default {
         // 查看更多附件弹框
         moreAttachModalShow(record) {
             this.currentRecord = record
-            this.currentAttachmentList = record.attachment_list
+            this.unResponseList = record.attachment_list
+            this.currentAttachmentList = Core.Util.deepCopy(record.attachment_list)
             console.log('record.attachment_list', record.attachment_list);
             this.attachModalShow = true
         },
@@ -891,7 +897,17 @@ export default {
             this.tabsArray = [];
             this.selectedRowItems = []
             this.selectedRowKeys = []
-
+        },
+        // 取消具体故障类型选择商品弹框
+        selectItemModalCancel() {
+            this.selectItemModalShow = false
+            for (const vehicle of this.vehicleGroupList) {
+                for (const item of vehicle.vehicle_list) {
+                    if (item.frame_uid === this.currentFrameUid) {
+                        item.item_category_id = undefined
+                    }
+                }
+            }
         },
         // 展示选择全部商品弹框
         handleSelectAllItemModal(frameUid) {
@@ -1004,10 +1020,11 @@ export default {
             this.upload.fileList = []
         },
         // // 上传文件弹框关闭回调
-        // handleUploadModalClose() {
-        //     this.upload.fileList = []
-        //     this.submitDisabled = false;
-        // },
+        uploadModalClose() {
+            this.upload.fileList = []
+            this.submitDisabled = false;
+            this.finishUploadData = []
+        },
         // 页面跳转
         routerChange(type, item = {}) {
             let routeUrl
@@ -1108,6 +1125,9 @@ export default {
                     this.itemTableDetail.executing_number = res.executing_frame_uid_list.length
                     this.itemTableDetail.special_number = res.special_frame_uid_list.length
                     this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
+                    this.itemTableData.forEach(item => {
+                        item.mileage = 0   
+                    })
                     console.log('this.vehicleGroupList', this.vehicleGroupList);
                 }
             })
