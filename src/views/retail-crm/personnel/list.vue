@@ -220,7 +220,11 @@
                         </template>
                         <!-- 所属区域 -->
                         <template v-if="column.key === 'group_name'">
-                            {{ text }}{{ record?.city?"-":"" }}{{ record?.city }}
+                            {{ text }}{{ record.city?"-":"" }}{{ record.city || '-' }}
+                        </template>
+                        <!-- 所属门店 -->
+                        <template v-if="column.key === 'store_name'">
+                            {{ text || "-" }}
                         </template>
                         <!-- 职务 -->
                         <template v-if="column.key === 'store_user_type'">

@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')">
+    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" @cancel="handleCancel">
         <div class="box-model" @scroll="handleScroll">
             <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @pressEnter="inputEvent">
                 <template #prefix>

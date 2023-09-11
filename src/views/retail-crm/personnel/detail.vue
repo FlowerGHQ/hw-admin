@@ -191,6 +191,7 @@
                                     v-model:value="item.city" 
                                     class="select-w"
                                     :placeholder="$t('retail.p_s_region')"
+                                    :disabled="cityDisable"
                                     @select="allChange('city', item)"
                                     >
                                     <a-select-option 
@@ -210,6 +211,7 @@
                                     v-model:value="item.store_id" 
                                     class="select-w"
                                     :placeholder="$t('n.choose')"
+                                    :disabled="storeDisable"
                                     >
                                     <a-select-option
                                         v-for="item of storeList"
@@ -293,6 +295,8 @@ const roleList = ref([])
 
 const regionsList = ref([]) // 所属区域
 const storeList = ref([])  // 门店list
+const cityDisable = ref(true) // 所属城市是否禁用选择了所属大区在打开
+const storeDisable = ref(true) // 所属门店是否禁用选择了城市在打开
 
 onMounted(async() => {    
     try {
@@ -424,9 +428,11 @@ const allChange = (type, item) => {
             console.log("result",result);
             item.cityList = result?.city_list || []
             getStoreDataFetch({group_id: item.group_id})
+            cityDisable.value = false
             break;
         case 'city':            
             getStoreDataFetch({group_id: item.group_id, city: item.city})
+            storeDisable.value = false
             break;
         case 'role': 
             console.log("role");
