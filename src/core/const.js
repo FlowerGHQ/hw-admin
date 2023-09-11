@@ -321,7 +321,7 @@ let Const = {
         CATEGORY_TYPE_MAP: {
             '1' : { zh: '维修', en: 'Repair'},
             '2' : { zh: '换车', en: 'Transfer'},
-            '2' : { zh: '开箱损', en: 'Unpacking Damage'},
+            '3' : { zh: '开箱损', en: 'Unpacking Damage'},
             '2' : { zh: '电池维修', en: 'Battery Maintenance'},
             '2' : { zh: '质保', en: 'Quality Guarantee'},
         },
