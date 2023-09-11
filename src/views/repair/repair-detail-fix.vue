@@ -774,7 +774,7 @@ export default {
             }).then(res => {
                 this.voidModalShow = false
                 console.log('handleVoidRepairOrder res', res);
-                this.$message(this.$t(/*作废成功*/'r.successful_cancellation'))
+                this.$message.success(this.$t(/*作废成功*/'r.successful_cancellation'))
                 this.getRepairDetail();
                 this.getLogList();
             }).catch(err => {

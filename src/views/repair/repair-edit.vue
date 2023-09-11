@@ -698,7 +698,11 @@ export default {
                                     return sum + item.price;
                                 }, 0),
                                 totalCharge: vehicle.item_list.reduce((sum, item) => {
-                                    return sum + item.charge;
+                                    if (item.warranty_status === 3) {
+                                        return sum + item.price;
+                                    } else {
+                                        return sum + item.charge;
+                                    }
                                 }, 0)
                             };
                         }),
@@ -943,7 +947,11 @@ export default {
                         });
                         // 计算 实付金额 的总和
                         const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
-                            return sum + item.charge;
+                            if (item.warranty_status === 3) {
+                                return sum + item.price;
+                            } else {
+                                return sum + item.charge;
+                            }
                         }, 0);
                         // // 计算 金额 的总和
                         const totalPrice = vehicle.repair_order_item_list.reduce((sum, item) => {
@@ -1240,7 +1248,11 @@ export default {
                             vehicle.repair_order_item_list.push(item);
                             // 计算 实付金额 的总和
                             const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
-                                return sum + item.charge;
+                                if (item.warranty_status === 3) {
+                                    return sum + item.price;
+                                } else {
+                                    return sum + item.charge;
+                                }
                             }, 0);
                             // // 计算 金额 的总和
                             const totalPrice = vehicle.repair_order_item_list.reduce((sum, item) => {
