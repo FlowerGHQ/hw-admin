@@ -625,7 +625,7 @@ export default {
                 this.vehicle_frame_list.forEach(frame => {
                     frame.item_list.forEach(item => {
                         if (item.warranty_status === 3) {
-                            total_charge += item.price
+                            // total_charge += item.price
                             item.charge = item.price
                         }
                         total_charge += item.charge;
