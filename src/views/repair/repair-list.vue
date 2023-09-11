@@ -266,9 +266,9 @@ export default {
             ]
             if (this.$auth('ADMIN')) { // 平台方权限可见
                 columns.splice(6, 0,
-                    { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
+                    // { title: this.$t('r.warranty'), dataIndex: 'service_type' }, // 工单帐类
                     { title: this.$t('p.person'), dataIndex: 'customer_name', key: 'item' }, // 客户姓名
-                    { title: this.$t('p.contact'), dataIndex: 'contact', key: 'item' }, // 联系方式
+                    { title: this.$t('p.contact'), dataIndex: 'customer_phone', key: 'item' }, // 联系方式
                 )
             }
             return columns
