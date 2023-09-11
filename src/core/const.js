@@ -307,6 +307,7 @@ let Const = {
             { zh: '保外', en: 'out of warranty', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
+            '0' : { zh: '特殊', en: 'Special', color: 'yellow'},
             '1' : { zh: '保内', en: 'Under warranty', color: 'green'},
             '2' : { zh: '保外', en: 'Out of warranty', color: 'red'},
             '3' : { zh: '特殊', en: 'Special', color: 'yellow'},

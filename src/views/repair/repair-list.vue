@@ -41,11 +41,13 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">{{ $t('r.car_type') }}:</div>
                         <div class="value">
-                            <a-select v-model:value="searchForm.model" @change='handleSearch'
+                            <!-- <a-select v-model:value="searchForm.model" @change='handleSearch'
                                 :placeholder="$t('def.select')">
                                 <a-select-option v-for="item of modelTypeList" :key="item.key" :value="item.key">{{
                                     item.name }}</a-select-option>
-                            </a-select>
+                            </a-select> -->
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.model"
+                                @keydown.enter='handleSearch' />
                         </div>
                     </a-col>
                     <!-- 商品名称 -->
@@ -203,7 +205,7 @@ export default {
                 begin_time: undefined, // 开始时间
                 end_time: undefined, // 结束时间
                 compensation_method: 0, // 赔付方式
-                model: '', // 车型
+                model: undefined, // 车型
                 category: 0, // 工单类型
             },
             // 表格

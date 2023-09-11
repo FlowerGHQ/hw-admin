@@ -54,8 +54,7 @@
                                         {{ $Util.threePagFilter(text, $i18n.locale) }}
                                     </div>
                                 </a-tooltip>
-                                <div class="status status-bg status-box" v-else
-                                    :class="$Util.threePagFilter(text, 'color')">
+                                <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
                                     {{ $Util.threePagFilter(text, $i18n.locale) }}
                                 </div>
                             </template>
@@ -76,8 +75,7 @@
                             </template>
                             <!-- 行驶公里数 -->
                             <template v-if="column.key === 'input'">
-                                <a-input v-model:value="record.mileage"
-                                    style="width: 140px; margin-right: 4px;"
+                                <a-input v-model:value="record.mileage" style="width: 140px; margin-right: 4px;"
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
                             <template v-if="column.key === 'operation'">
@@ -1126,7 +1124,7 @@ export default {
                     this.itemTableDetail.special_number = res.special_frame_uid_list.length
                     this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
                     this.itemTableData.forEach(item => {
-                        item.mileage = 0   
+                        item.mileage = 0
                     })
                     console.log('this.vehicleGroupList', this.vehicleGroupList);
                 }

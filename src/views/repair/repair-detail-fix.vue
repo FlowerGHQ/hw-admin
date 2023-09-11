@@ -46,8 +46,9 @@
                                 </div>
                                 <a-button v-if="detail.compensation_method === 1" @click="routerChange('order')" type="link"
                                     style="font-size: 14px;">{{ $t(/*查看订单*/'r.view_order') }}</a-button>
-                                <a-button v-if="detail.compensation_method === 2 && $auth('DISTRIBUTOR')" @click="routerChange('wallet')"
-                                    type="link" style="font-size: 14px;">{{ $t(/*账户钱包*/'d.account_wallet') }}</a-button>
+                                <a-button v-if="detail.compensation_method === 2 && $auth('DISTRIBUTOR')"
+                                    @click="routerChange('wallet')" type="link" style="font-size: 14px;">{{
+                                        $t(/*账户钱包*/'d.account_wallet') }}</a-button>
                             </div>
                             <div class="step-time" v-if="currStep !== 0 && $auth('DISTRIBUTOR')">
                                 <template v-if="currency === 'eur' || currency === 'EUR'">
@@ -125,7 +126,7 @@
                     {{ $t(/*备注*/'r.remark_a') }}：
                 </div>
                 <div class="info-value">
-                    {{ detail?.remark || '-' }}
+                    {{ detail?.audit_message || '-' }}
                 </div>
             </div>
             <div class="info-form-item">
@@ -222,10 +223,10 @@
                             {{ $t(/*总金额*/'r.total_amount') }}: ${{ $Util.countFilter(item?.total_price) || 0 }}
                         </div>
                         <div class="total-amount" v-if="currency === 'eur' || currency === 'EUR'">
-                            {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ item?.total_charge || 0 }}
+                            {{ $t(/*实付金额*/'r.amount_paid') }}: €{{ $Util.countFilter(item?.total_charge) || 0 }}
                         </div>
                         <div class="total-amount" v-else>
-                            {{ $t(/*实付金额*/'r.amount_paid') }}: ${{ item?.total_charge || 0 }}
+                            {{ $t(/*实付金额*/'r.amount_paid') }}: ${{ $Util.countFilter(item?.total_charge) || 0 }}
                         </div>
                     </div>
                 </div>
@@ -265,8 +266,9 @@
                             $t('r.void') }}</a-button>
                         <a-button v-if="canPerformEdit()" @click="handleToEdit" type="primary">{{ $t('n.edit') }}</a-button>
                     </template>
-                    <a-button v-if="detail.status === Core.Const.REPAIR.STATUS.FINISH || detail.status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS" @click="routerChange('invoice')"
-                            type="primary">{{ $t('r.bill') }}</a-button>
+                    <a-button
+                        v-if="detail.status === Core.Const.REPAIR.STATUS.FINISH || detail.status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS"
+                        @click="routerChange('invoice')" type="primary">{{ $t('r.bill') }}</a-button>
                 </div>
             </div>
         </div>
@@ -326,7 +328,7 @@
                     <div class="head-key">
                         {{ $t(/*创建时间*/'d.create_time') }}：
                     </div>
-                    <div class="head-value" v-if="detail.compensation_method === 1">
+                    <div class="head-value">
                         {{ $Util.timeFilter(detail?.create_time || '') }}
                     </div>
                 </div>
@@ -528,8 +530,8 @@ export default {
         }
         this.getRepairDetail();
         this.getLogList();
-        if(this.$auth('DISTRIBUTOR')) {
-            this.getBalance();            
+        if (this.$auth('DISTRIBUTOR')) {
+            this.getBalance();
         }
         this.currency = Core.Data.getCurrency();
     },
@@ -622,6 +624,10 @@ export default {
                 let total_charge = 0;
                 this.vehicle_frame_list.forEach(frame => {
                     frame.item_list.forEach(item => {
+                        if (item.warranty_status === 3) {
+                            total_charge += item.price
+                            item.charge = item.price
+                        }
                         total_charge += item.charge;
                     });
                 });
@@ -638,6 +644,7 @@ export default {
                 this.vehicle_frame_list.forEach(frame => {
                     frame.total_count = total_count;
                 });
+                console.log('vehicle_frame_list', this.vehicle_frame_list);
                 this.getCurrStep(this.detail.status)
             }).catch(err => {
                 console.log('getRepairDetail err', err)
@@ -745,6 +752,7 @@ export default {
                     this.auditDetail.total_charge += item.charge;
                 }
             }
+            console.log('this.auditDetail', this.auditDetail);
         },
         // 取消工单
         handleCancel() {
@@ -783,7 +791,8 @@ export default {
             Core.Api.Repair.audit({
                 id: this.id,
                 audit_message: this.audit_message,
-                audit_result: this.audit_result
+                audit_result: this.audit_result,
+                compensation_method: this.detail.compensation_method
             }).then(res => {
                 console.log('handleVoidRepairOrder res', res);
                 this.auditModalShow = false
@@ -1168,5 +1177,6 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>
     
