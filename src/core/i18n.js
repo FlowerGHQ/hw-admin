@@ -408,6 +408,7 @@ const messages = {
             successful_cancellation: '作废成功',
             view_order: '查看订单',
             submit_successfully: '提交成功',
+            grey_tip: '一行一个车架号',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2777,6 +2778,7 @@ const messages = {
             successful_cancellation: 'Successful Cancellation',
             view_order: 'View order',
             submit_successfully: 'Submit Successfully!',
+            grey_tip: 'One frame number for each line',
         },
         d: {
             distributor_detail: 'Distributor Details',
