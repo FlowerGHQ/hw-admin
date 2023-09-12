@@ -25,14 +25,15 @@
             <div class="form-wrap required">
                 <div class="key">{{ $t('search.vehicle_no') }}:</div>
                 <div class="value">
-                    <a-textarea v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')"
+                    <a-textarea :disabled="isVehicle" v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')"
                         :auto-size="{ minRows: 3, maxRows: 5 }" />
                     <div class="grey-tip">
                         <img src="../../assets/images/warn-tip.png" alt="">
                         {{ $t(/*一行一个车架号*/'r.grey_tip') }}
                     </div>
                 </div>
-                <a-button type="primary" @click="handleSubmitVehicle">{{ $t('i.addition') }}</a-button>
+                <a-button v-if="!isVehicle" type="primary" @click="handleSubmitVehicle">{{ $t(/*添加*/'i.addition') }}</a-button>
+                <a-button v-else type="primary" @click="handleResetVehicle">{{ $t(/*重置*/'def.reset') }}</a-button>
             </div>
         </div>
         <div class="detail-container">
@@ -781,6 +782,10 @@ export default {
         // 取消提交工单
         handleCancel() {
             this.routerChange('back')
+        },
+        // 重置工单
+        handleResetVehicle() {
+            this.$router.go(0);
         },
         // 转换提交工单的数据格式
         transformSaveParams() {
