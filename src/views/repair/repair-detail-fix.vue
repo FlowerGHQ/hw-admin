@@ -44,7 +44,7 @@
                                 <div class="step-tab yellow" v-if="detail.compensation_method === 2">
                                     {{ $t(/*赔付至账户*/'r.Allocated_account') }}
                                 </div>
-                                <a-button v-if="detail.compensation_method === 1" @click="routerChange('order')" type="link"
+                                <a-button v-if="detail.compensation_method === 1 && (status === Core.Const.REPAIR.STATUS.AUDIT_SUCCESS || status === Core.Const.REPAIR.STATUS.FINISH)" @click="routerChange('order')" type="link"
                                     style="font-size: 14px;">{{ $t(/*查看订单*/'r.view_order') }}</a-button>
                                 <a-button v-if="detail.compensation_method === 2 && $auth('DISTRIBUTOR')"
                                     @click="routerChange('wallet')" type="link" style="font-size: 14px;">{{
