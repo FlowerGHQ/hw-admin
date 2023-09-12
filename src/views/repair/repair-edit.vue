@@ -137,21 +137,14 @@
                             <!-- 故障类型 -->
                             <div class="form-wrap required mt">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
-                                <!-- <a-radio-group class="checkbox-wrap" v-model:value="$2.item_category_id"
+                                <a-radio-group class="checkbox-wrap" v-model:value="$2.item_category_id"
                                     @change="selectCheckChange($2.frame_uid)">
                                     <a-radio v-for="item in $1.fault_types_list"
                                         :name="$i18n.locale === 'zh' ? item.name : item.name_en" :value="item.id"
                                         @change="handleCheckboxChange($event.target, item.id, item.name, item.name_en)">
                                         {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
                                     </a-radio>
-                                </a-radio-group> -->
-                                <a-checkbox-group class="checkbox-wrap" v-model:value="$2.item_category_id"
-                                    @change="selectCheckChange($2.frame_uid)">
-                                    <a-checkbox v-for="item in $1.fault_types_list" :value="item.id"
-                                        @change="handleCheckboxChange($event.target, item.id, item.name, item.name_en)">
-                                        {{ $i18n.locale === 'zh' ? item.name : item.name_en }}
-                                    </a-checkbox>
-                                </a-checkbox-group>
+                                </a-radio-group>
                             </div>
                             <div class="parts-replace-title mb">
                                 {{ $t(/*零部件更换*/'r.replacement_items') }}：
@@ -245,9 +238,13 @@
                                 </a-table>
                                 <div class="vehicle-item-footer">
                                     <a-button v-if="!$1.model || !$1.fault_types_list.length" class="add-btn" type="primary"
-                                        @click="handleSelectAllItemModal($2.frame_uid)">{{
+                                        @click="handleSelectAllItemModal">{{
                                             $t(/*添加商品*/'i.add')
                                         }}</a-button>
+                                    <!-- <a-button class="add-btn" type="primary"
+                                        @click="handleSelectAllItemModal($2.frame_uid)">{{
+                                            $t(/*添加商品*/'i.add')
+                                        }}</a-button> -->
                                     <div class="total">
                                         {{ $t(/*合计*/'p.total') }}
                                     </div>
@@ -862,6 +859,7 @@ export default {
         // 监听故障类型多选勾选
         selectCheckChange(frame_uid) {
             this.currentFrameUid = frame_uid
+            console.log('this.currentFrameUid', this.currentFrameUid);
         },
         // 监听故障选择多选按钮事件
         handleCheckboxChange(e, id, name, name_en) {
@@ -907,18 +905,17 @@ export default {
             this.tabsArray = [];
             this.selectedRowItems = []
             this.selectedRowKeys = []
-            console.log('this.vehicleGroupList', this.vehicleGroupList);
         },
         // 取消具体故障类型选择商品弹框
         selectItemModalCancel() {
             this.selectItemModalShow = false
-            // for (const vehicle of this.vehicleGroupList) {
-            //     for (const item of vehicle.vehicle_list) {
-            //         if (item.frame_uid === this.currentFrameUid) {
-            //             item.item_category_id = undefined
-            //         }
-            //     }
-            // }
+            for (const vehicle of this.vehicleGroupList) {
+                for (const item of vehicle.vehicle_list) {
+                    if (item.frame_uid === this.currentFrameUid) {
+                        item.item_category_id = undefined
+                    }
+                }
+            }
         },
         // 展示选择全部商品弹框
         handleSelectAllItemModal(frameUid) {
@@ -947,14 +944,9 @@ export default {
             for (const item of this.vehicleGroupList) {
                 for (const vehicle of item.vehicle_list) {
                     if (vehicle.frame_uid === this.currentFrameUid) {
-                        // let _selectedRowItems = Core.Util.deepCopy(this.selectedRowItems)
-                        // // 由于故障类型只能选择单一故障 所以每次切换其他故障类型进行添加时把已添加商品清空重新添加
-                        // vehicle.repair_order_item_list = []
-                        // _selectedRowItems.forEach(target => {
-                        //     target.key_id = vehicle.frame_uid + target.id
-                        //     vehicle.repair_order_item_list.push(target)
-                        // });
                         let _selectedRowItems = Core.Util.deepCopy(this.selectedRowItems)
+                        // 由于故障类型只能选择单一故障 所以每次切换其他故障类型进行添加时把已添加商品清空重新添加
+                        vehicle.repair_order_item_list = []
                         _selectedRowItems.forEach(target => {
                             target.key_id = vehicle.frame_uid + target.id
                             vehicle.repair_order_item_list.push(target)
@@ -1506,24 +1498,6 @@ export default {
             font-size: 14px;
         }
 
-        // .checkbox-wrap {
-        //     width: 100%;
-        //     text-align: center;
-        //     display: flex;
-        //     align-content: flex-start;
-        //     flex-flow: row wrap;
-
-        //     .ant-radio-wrapper {
-        //         width: 25%;
-        //         height: 22px;
-        //         margin-left: 0;
-        //         margin-bottom: 18px;
-        //         flex: 0 0 14%;
-        //     }
-
-        //     // .ant-radio-group .ant-radio-wrapper {
-        //     // }
-        // }
         .checkbox-wrap {
             width: 100%;
             text-align: center;
@@ -1531,14 +1505,17 @@ export default {
             align-content: flex-start;
             flex-flow: row wrap;
 
-            .ant-checkbox-wrapper {
+            .ant-radio-wrapper {
                 width: 25%;
+                height: 22px;
                 margin-left: 0;
                 margin-bottom: 18px;
-                flex: 0 0 20%;
+                flex: 0 0 14%;
             }
-        }
 
+            // .ant-radio-group .ant-radio-wrapper {
+            // }
+        }
 
         .value {
             width: 400px;
