@@ -884,7 +884,7 @@ const routes = [
                 }
             },
             {
-                path: 'repair-detail',
+                path: 'repair-detail-fix',
                 name: 'RepairDetail',
                 component: () => import('@/views/repair/repair-detail.vue'),
                 meta: {
@@ -917,7 +917,7 @@ const routes = [
                 }
             },
             {
-                path: 'repair-detail-fix',
+                path: 'repair-detail',
                 name: 'RepairDetailFix',
                 component: () => import('@/views/repair/repair-detail-fix.vue'),
                 meta: {
