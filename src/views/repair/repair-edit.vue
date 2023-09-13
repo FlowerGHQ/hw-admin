@@ -25,14 +25,15 @@
             <div class="form-wrap required">
                 <div class="key">{{ $t('search.vehicle_no') }}:</div>
                 <div class="value">
-                    <a-textarea :disabled="isVehicle" v-model:value="form.vehicle_no" :placeholder="$t('search.enter_vehicle_no')"
-                        :auto-size="{ minRows: 3, maxRows: 5 }" />
+                    <a-textarea :disabled="isVehicle" v-model:value="form.vehicle_no"
+                        :placeholder="$t('search.enter_vehicle_no')" :auto-size="{ minRows: 3, maxRows: 5 }" />
                     <div class="grey-tip">
                         <img src="../../assets/images/warn-tip.png" alt="">
                         {{ $t(/*一行一个车架号*/'r.grey_tip') }}
                     </div>
                 </div>
-                <a-button v-if="!isVehicle" type="primary" @click="handleSubmitVehicle">{{ $t(/*添加*/'i.addition') }}</a-button>
+                <a-button v-if="!isVehicle" type="primary" @click="handleSubmitVehicle">{{ $t(/*添加*/'i.addition')
+                }}</a-button>
                 <a-button v-else type="primary" @click="handleResetVehicle">{{ $t(/*重置*/'def.reset') }}</a-button>
             </div>
         </div>
@@ -59,6 +60,12 @@
                                         {{ $Util.threePagFilter(text, $i18n.locale) }}
                                     </div>
                                 </a-tooltip>
+                                <a-tooltip v-else-if="text === 1" placement="top"
+                                    :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + '-' + $Util.timeFilter(record.end_time)">
+                                    <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
+                                        {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                    </div>
+                                </a-tooltip>
                                 <div v-else class="status status-bg status-box"
                                     :class="$Util.threePagFilter(text, 'color')">
                                     {{ $Util.threePagFilter(text, $i18n.locale) }}
@@ -81,7 +88,8 @@
                             </template>
                             <!-- 行驶公里数 -->
                             <template v-if="column.key === 'input'">
-                                <a-input v-model:value="record.mileage" style="width: 140px; margin-right: 4px;"
+                                <a-input @blur="handleMileageBlur(record)" v-model:value="record.mileage"
+                                    style="width: 140px; margin-right: 4px;"
                                     :placeholder="$t(/*请输入里程数*/'search.enter_mile')" /> {{ $t(/*公里*/'r.km') }}
                             </template>
                             <template v-if="column.key === 'operation'">
@@ -164,7 +172,14 @@
                                                     {{ $Util.threePagFilter(text, $i18n.locale) }}
                                                 </div>
                                             </a-tooltip>
-                                            <div class="status status-bg status-box" v-else
+                                            <a-tooltip v-else-if="text === 1" placement="top"
+                                                :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + '-' + $Util.timeFilter(record.end_time)">
+                                                <div class="status status-bg status-box"
+                                                    :class="$Util.threePagFilter(text, 'color')">
+                                                    {{ $Util.threePagFilter(text, $i18n.locale) }}
+                                                </div>
+                                            </a-tooltip>
+                                            <div v-else class="status status-bg status-box"
                                                 :class="$Util.threePagFilter(text, 'color')">
                                                 {{ $Util.threePagFilter(text, $i18n.locale) }}
                                             </div>
@@ -238,8 +253,8 @@
                                     </template>
                                 </a-table>
                                 <div class="vehicle-item-footer">
-                                    <a-button v-if="!$1.model || (!$1.fault_types_list || !$1.fault_types_list.length)" class="add-btn" type="primary"
-                                        @click="handleSelectAllItemModal($2.frame_uid)">{{
+                                    <a-button v-if="!$1.model || (!$1.fault_types_list || !$1.fault_types_list.length)"
+                                        class="add-btn" type="primary" @click="handleSelectAllItemModal($2.frame_uid)">{{
                                             $t(/*添加商品*/'i.add')
                                         }}</a-button>
                                     <!-- <a-button class="add-btn" type="primary"
@@ -587,10 +602,10 @@ export default {
         },
         itemTableColumns() {
             let columns = [
+                { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('search.vehicle_no'), dataIndex: 'frame_uid', key: 'frame_uid' }, // 车架号
                 { title: this.$t('r.item_name'), dataIndex: 'item_name', key: 'detail' }, // 商品名称
                 { title: this.$t('i.code'), dataIndex: 'item_code', key: 'item' }, // 商品编码
-                { title: this.$t('r.car_type'), dataIndex: 'model', key: 'item' }, // 车型
                 { title: this.$t('i.commercial_specification'), dataIndex: 'item_spec', key: 'item' }, // 商品规格
                 {
                     title: `<span style="color: red; margin-right: 2px;">*</span> ${this.$t('r.km_travelled')}`,
@@ -953,8 +968,19 @@ export default {
                         vehicle.repair_order_item_list = []
                         _selectedRowItems.forEach(target => {
                             target.key_id = vehicle.frame_uid + target.id
+                            const targetFrameItem = this.itemTableData.find(frameItem => frameItem.frame_uid === vehicle.frame_uid)
+                            target.delivery_time = targetFrameItem.delivery_time
+                            target.begin_time = targetFrameItem.delivery_time + (targetFrameItem.effect_time_day * 24 * 60 * 60);
+                            target.end_time = target.begin_time + (target.warranty_period_month * 30 * 24 * 60 * 60);
+                            const currentTime = Math.floor(Date.now() / 1000);
+                            if (currentTime > target.end_time) {
+                                target.warranty_status = 2; // 保外
+                            } else {
+                                target.warranty_status = 1; // 保内
+                            }
                             vehicle.repair_order_item_list.push(target)
                         });
+                        console.log('this.vehicleGroupList', this.vehicleGroupList);
                         // 计算 实付金额 的总和
                         const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
                             if (item.warranty_status === 3) {
@@ -969,6 +995,7 @@ export default {
                         }, 0);
                         vehicle.totalPrice = totalPrice;
                         vehicle.totalCharge = totalCharge;
+
                         break;
                     }
                 }
@@ -1143,6 +1170,18 @@ export default {
                     this.vehicleGroupList = this.transformGroupData(res.vehicle_group_list)
                     this.itemTableData.forEach(item => {
                         item.mileage = 0
+                        // 获取当前时间的时间戳
+                        const currentTime = Math.floor(Date.now() / 1000);
+                        // 计算保质期开始时间
+                        item.begin_time = item.delivery_time + (item.effect_time_day * 24 * 60 * 60);
+                        // 计算保质期结束时间
+                        item.end_time = item.begin_time + (item.warranty_period_month * 30 * 24 * 60 * 60);
+                        // 判断保修状态
+                        if (currentTime > item.end_time) {
+                            item.warranty_status = 2; // 保外
+                        } else {
+                            item.warranty_status = 1; // 保内
+                        }
                     })
                     console.log('this.vehicleGroupList', this.vehicleGroupList);
                 }
@@ -1218,6 +1257,8 @@ export default {
                     return {
                         ...item,
                         warranty_status: matchingItem.warranty_status,
+                        warranty_period_month: matchingItem.warranty_period_month,
+                        warranty_period_mileage: matchingItem.warranty_period_mileage,
                         charge: matchingItem.warranty_status === 1 || matchingItem.warranty_status === 3 ? 0 : (this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd),
                         price: this.currency === 'eur' || this.currency === 'EUR' ? item.fob_eur : item.fob_usd,
                         item_category_id: category_id,
@@ -1255,6 +1296,8 @@ export default {
                     for (const vehicle of vehicleGroup.vehicle_list) {
                         if (vehicle.frame_uid === this.currentFrameUid) {
                             item.key_id = vehicle.frame_uid + item.id
+                            item.delivery_time = vehicle.delivery_time
+                            console.log('items', items);
                             vehicle.repair_order_item_list.push(item);
                             // 计算 实付金额 的总和
                             const totalCharge = vehicle.repair_order_item_list.reduce((sum, item) => {
@@ -1274,6 +1317,12 @@ export default {
                         }
                     }
                 }
+            }
+        },
+        // 行驶公里数输入框失焦
+        handleMileageBlur(record) {
+            if (record.mileage > record.warranty_period_mileage) {
+                record.warranty_status = 2
             }
         },
         /*======== 爆炸图 ========*/
