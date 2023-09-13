@@ -61,7 +61,7 @@
                                     </div>
                                 </a-tooltip>
                                 <a-tooltip v-else-if="text === 1" placement="top"
-                                    :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + '-' + $Util.timeFilter(record.end_time)">
+                                    :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + $t(/*至*/'r.to') + $Util.timeFilter(record.end_time)">
                                     <div class="status status-bg status-box" :class="$Util.threePagFilter(text, 'color')">
                                         {{ $Util.threePagFilter(text, $i18n.locale) }}
                                     </div>
@@ -173,7 +173,7 @@
                                                 </div>
                                             </a-tooltip>
                                             <a-tooltip v-else-if="text === 1" placement="top"
-                                                :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + '-' + $Util.timeFilter(record.end_time)">
+                                                :title="$t(/*起止时间*/'r.start_stop_time') + ':' + $Util.timeFilter(record.begin_time) + $t(/*至*/'r.to') + $Util.timeFilter(record.end_time)">
                                                 <div class="status status-bg status-box"
                                                     :class="$Util.threePagFilter(text, 'color')">
                                                     {{ $Util.threePagFilter(text, $i18n.locale) }}
@@ -1323,6 +1323,19 @@ export default {
         handleMileageBlur(record) {
             if (record.mileage > record.warranty_period_mileage) {
                 record.warranty_status = 2
+            } else {
+                // 获取当前时间的时间戳
+                const currentTime = Math.floor(Date.now() / 1000);
+                // 计算保质期开始时间
+                record.begin_time = record.delivery_time + (record.effect_time_day * 24 * 60 * 60);
+                // 计算保质期结束时间
+                record.end_time = record.begin_time + (record.warranty_period_month * 30 * 24 * 60 * 60);
+                // 判断保修状态
+                if (currentTime > record.end_time) {
+                    record.warranty_status = 2; // 保外
+                } else {
+                    record.warranty_status = 1; // 保内
+                }
             }
         },
         /*======== 爆炸图 ========*/

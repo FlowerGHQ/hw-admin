@@ -410,6 +410,7 @@ const messages = {
             submit_successfully: '提交成功',
             grey_tip: '一行一个车架号',
             start_stop_time: '起止时间',
+            to: '至',
         },
         d: { // 分销商
             distributor_detail: '分销商详情',
@@ -2781,6 +2782,7 @@ const messages = {
             submit_successfully: 'Submit Successfully!',
             grey_tip: 'One frame number for each line',
             start_stop_time: 'Start-Stop Time',
+            to: 'to',
         },
         d: {
             distributor_detail: 'Distributor Details',
