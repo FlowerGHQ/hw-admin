@@ -109,7 +109,7 @@
                         {{ $t('in.total') }}，{{ $t('r.spec_tip') }}
                     </div>
                 </div>
-                <template v-for="($1, index) in vehicleGroupList" :key="index">
+                <template v-for="($1, index) in vehicleGroupList">
                     <!-- 车辆信息 -->
                     <div class="head-container pr">
                         <div class="color-block"></div>
@@ -136,7 +136,7 @@
                                 </div>
                             </div>
                             <!-- 故障类型 -->
-                            <div class="form-wrap required mt">
+                            <div class="form-wrap required mt" v-if="$1.fault_types_list && $1.fault_types_list.length">
                                 <div class="key">{{ $t('r.fault_types') }}:</div>
                                 <a-radio-group class="checkbox-wrap" v-model:value="$2.item_category_id"
                                     @change="selectCheckChange($2.frame_uid)">
@@ -238,8 +238,8 @@
                                     </template>
                                 </a-table>
                                 <div class="vehicle-item-footer">
-                                    <a-button v-if="!$1.model || !$1.fault_types_list.length" class="add-btn" type="primary"
-                                        @click="handleSelectAllItemModal">{{
+                                    <a-button v-if="!$1.model || (!$1.fault_types_list || !$1.fault_types_list.length)" class="add-btn" type="primary"
+                                        @click="handleSelectAllItemModal($2.frame_uid)">{{
                                             $t(/*添加商品*/'i.add')
                                         }}</a-button>
                                     <!-- <a-button class="add-btn" type="primary"
@@ -841,7 +841,7 @@ export default {
                 }
                 const vehicleList = val.vehicle_list;
                 for (const vehicle of vehicleList) {
-                    if (!vehicle.item_list.length || !vehicle.mileage) {
+                    if (!vehicle.item_list.length || vehicle.mileage === '' || vehicle.mileage === undefined) {
                         this.$message.warning(this.$t(/*请完善必填信息*/'r.enter'));
                         return false;
                     }
@@ -925,7 +925,6 @@ export default {
         // 展示选择全部商品弹框
         handleSelectAllItemModal(frameUid) {
             this.currentFrameUid = frameUid
-            console.log('this.currentFrameUid', this.currentFrameUid);
             this.selectAllItemModalShow = true
         },
         // 添加商品
@@ -1649,6 +1648,7 @@ export default {
 
                 &.mb {
                     margin-bottom: 16px;
+                    margin-top: 20px;
                 }
             }
 
