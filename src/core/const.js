@@ -2242,11 +2242,13 @@ let Const = {
         },
         // 职务
         Job: {
-            '1': { key: 1, zh: "国内市场管理员", en: 'Home market manager' },
-            '2': { key: 2, zh: "大区经理", en: 'Regional manager' },
-            '3': { key: 3, zh: "城市经理", en: 'City manager' },
-            '4': { key: 4, zh: "门店店长", en: 'Store manager' },
-            '5': { key: 5, zh: "用户体验官", en: 'User experience officer' },
+            '10301': { key: 10301, zh: "国内市场管理员", en: 'Home market manager' },
+            '10302': { key: 10302, zh: "大区经理", en: 'Regional manager' },
+            '10303': { key: 10303, zh: "城市经理", en: 'City manager' },
+            '10304': { key: 10304, zh: "运营", en: 'operate' },
+            '10305': { key: 10305, zh: "客服", en: 'Customer Service' },            
+            '30001': { key: 30001, zh: "门店店长", en: 'Store manager' },
+            '30002': { key: 30002, zh: "用户体验官", en: 'User experience officer' },
         },
         // 车辆用途
         Vehicle_Usage: {

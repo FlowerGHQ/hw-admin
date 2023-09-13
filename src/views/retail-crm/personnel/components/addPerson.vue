@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')">
+    <a-modal v-model:visible="isShow" :title="$t('crm_st.add_peo')" @cancel="handleCancel">
         <div class="box-model" @scroll="handleScroll">
             <a-input v-model:value="userName" :placeholder="$t('retail.search_personnel_name')" @pressEnter="inputEvent">
                 <template #prefix>
@@ -191,8 +191,10 @@ const handleScroll = (e) => {
     const element = e.target;
     if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
         // console.log('滑到底部');
-        pagination.page++
-        userListFetch({ page: pagination.page })
+        if (pagination.page <= pagination.total_page) {
+            pagination.page++
+            userListFetch({ page: pagination.page })
+        }
     }
 }
 </script>
