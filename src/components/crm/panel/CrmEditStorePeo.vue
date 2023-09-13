@@ -373,7 +373,7 @@ export default {
       let type;
       this.isMan ? (type = 4) : (type = "");
       Core.Api.RETAIL.storeUserList({
-        storeId: this.id,
+        store_id: this.id,
         type,
         page: this.currPage,
         page_size: this.pageSize,
