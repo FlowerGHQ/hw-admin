@@ -1,12 +1,13 @@
 <template>
     <div class="personnel-detail" >
+        <!-- 人员详情 -->
         <div class="d-top">
             <div class="header">
                 <div class="title">
                     {{ $t("retail.personnel_detail")}} 
                 </div>
                 <div class="btn">
-                    <a-button type="primary" @click="onBtn">{{ $t('retail.save') }}</a-button>
+                    <a-button type="primary" @click="onBtn">{{ $t('retail.save')/*保存按钮*/ }}</a-button>
                 </div>
             </div>
             <div class="container">
@@ -112,7 +113,22 @@
                                     </a-select-option>
                                 </a-select>
                             </span>
-                        </a-col>                    
+                        </a-col>                                           
+                        <!-- 职务 -->
+                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
+                            <span class="key key-form-86909C">{{$t('retail.job')}}：</span>
+                            <span class="value">
+                                <a-select v-model:value="fill_out.type" class="select-w" @change="allChange('job')">
+                                    <a-select-option 
+                                        v-for="item in Core.Const.RETAIL.Job" 
+                                        :value="item.key" 
+                                        :key="item.key"                                        
+                                        >
+                                        {{ item[$i18n.locale] }}
+                                    </a-select-option>
+                                </a-select>
+                            </span>
+                        </a-col>                                           
                     </a-row>
                 </div>
             </div>
@@ -147,22 +163,7 @@
                             <span class="value">                                
                                 {{ $Util.timeFilter(item.join_time, 3) }}
                             </span>
-                        </a-col>
-                        <!-- 职务 -->
-                        <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
-                            <span class="key key-form-86909C">{{$t('retail.job')}}：</span>
-                            <span class="value">
-                                <a-select v-model:value="item.type" class="select-w">
-                                    <a-select-option 
-                                        v-for="item in Core.Const.RETAIL.Job" 
-                                        :value="item.key" 
-                                        :key="item.key"                                       
-                                        >
-                                        {{ item[$i18n.locale] }}
-                                    </a-select-option>
-                                </a-select>
-                            </span>
-                        </a-col>
+                        </a-col>                                     
                         <!-- 所属大区 -->
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.subregion')}}：</span>
@@ -227,7 +228,8 @@
                 </div>
             </div>
         </template>
-        <div class="d-bottom m-t-16">
+        <!-- 角色权限 -->
+        <div v-if="false" class="d-bottom m-t-16">
             <div class="title">
                 {{ $t("retail.role_authority")}} 
             </div> 
@@ -287,7 +289,8 @@ const fill_out = ref({
     job_time: undefined, // 上岗时间
     role_list:[], // 关联角色 
     role_id_list: [], // 角色保存的ids   
-    store_user_list:[], // 人员归属              
+    store_user_list:[], // 人员归属 
+    type: 0, // 人员类型             
 })  // 保存的shi
 
 // 角色权限下拉选择框
@@ -347,8 +350,9 @@ const personDetailFetch = (params = {}) => {
                         return $2.id == $1.group_id
                     })
                     $1.cityList = result?.city_list || []
-                });
+                });                
             }
+
 
             console.log("fill_out.value", fill_out.value);
         }).catch((err) => {
@@ -368,10 +372,10 @@ const personUpdateFetch = (params = {}) => {
     }).then((res) => {
         proxy.$message.success(proxy.$t('pop_up.save_success'))
         personDetailFetch()
-        // console.log("更新创建接口 success", res);
+        // Core.Logger.log("更新创建接口 success", res);
     })
     .catch((err) => {
-        console.log("更新创建接口 err:", err);
+        Core.Logger.error("更新创建接口 err:", err);
     })
 }
 // 获得所属区域
@@ -379,74 +383,84 @@ const getRegionsDataFetch = (params = {}) => {
     return new Promise((resolve,reject) => {
         Core.Api.RETAIL.regionsList({...params}).then((res) => {
             resolve()   
-            console.log("获得所属区域 success", res);
+            Core.Logger.log("获得所属区域 success", res);
             regionsList.value = res.list;    
         }).catch((err) => {
             reject()
-            console.log("获得所属区域 err", err);
+            Core.Logger.error("获得所属区域 err", err);
         })
     })
 }
 // 门店list
 const getStoreDataFetch = (params = {}) => {
     Core.Api.RETAIL.storeList({...params}).then((res) => {
-        // console.log("门店list success", res);
+        // Core.Logger.log("门店list success", res);
         storeList.value = res.list;
     }).catch((err) => {
-        console.log("门店list err", err);
+        Core.Logger.error("门店list err", err);
     })
 }
 // 获取角色list数据
 const getRoleData = (params = {}) => {
     Core.Api.Authority.roleList({...params}).then((res) => {
-        // console.log("获取角色 success", res);
+        // Core.Logger.log("获取角色 success", res);
         roleList.value = res.list        
     }).catch((err) => {
-        console.log("获取角色 err", err);
+        Core.Logger.error("获取角色 err", err);
     })
 }
 /* Fetch end*/
 
 /* methods start*/
 // 角色权限 //
-const addrole = () => {    
+const addrole = () => {
     fill_out.value.role_id_list.push({id: ""})
 }
-const deleterole = (index) => {    
+const deleterole = (index) => {
     fill_out.value.role_id_list.splice(index,1)
 }
 // 角色权限 //
 
 // 改动所有的事件
-const allChange = (type, item) => { 
-    console.log("输出", item);   
-    switch(type){
+const allChange = (type, item) => {     
+    Core.Logger.log("输出",type, item);   
+    switch(type) {
+        // 选择区域
         case 'group_id':
             const result = regionsList.value.find(el => {
                 return el.id == item.group_id
             })   
-            console.log("result",result);
+            Core.Logger.log("result",result);
             item.cityList = result?.city_list || []
             getStoreDataFetch({group_id: item.group_id})
             cityDisable.value = false
             break;
+        // 选择城市
         case 'city':            
             getStoreDataFetch({group_id: item.group_id, city: item.city})
             storeDisable.value = false
             break;
         case 'role': 
-            console.log("role");
+            Core.Logger.log("role");
             let arr = fill_out.value.role_id_list
             fill_out.value.role_id_list = [...new Set(arr.map(item => {
                 return { id:item.id }
             }))]
+            break;
+        // 职务
+        case 'job':
+            let Items = Core.Const.RETAIL.Job[fill_out.value.type]
+            console.log("选取职务的类型", Items);
+            fill_out.value.store_user_list.forEach(el => {
+                el.type = Items.father_type || 0
+            })
             break;
     }    
 }
 // 保存按钮
 const onBtn = () => {
     // 提交的时候role_id_list传给后端是[1,2,3]  回显的时候编辑成 [{id:}] 回显
-    console.log("最后结果 fill_out.value", fill_out.value);    
+    Core.Logger.log("最后结果 fill_out.value", fill_out.value);    
     personUpdateFetch()
 }
 </script>

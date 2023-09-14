@@ -2102,30 +2102,10 @@ const routes = [
                     title: '人员详情',
                     title_en: 'Personnel Detail',                    
                 },
-            },
-            // {
-            //     path: 'role-permiss-man',
-            //     name: 'rolePermissMan',
-            //     component: () => import('@/views/retail-crm/personnel/rolePermiss-man.vue'),
-            //     meta: {
-            //         title: '角色权限管理',
-            //         title_en: 'Role Permission Management',
-            //         icon: 'i_s_user',
-            //         roles: [LOGIN_TYPE.ADMIN],
-            //     },       
-            // },
-            // {
-            //     path: 'role-permiss-detail',
-            //     name: 'rolePermissDetail',
-            //     component: () => import('@/views/retail-crm/personnel/rolePermiss-detail.vue'),
-            //     meta: {
-            //         hidden: true,
-            //         title: '创建身份',
-            //         title_en: 'Create Identity',
-            //     },
-            // },            
+            }                   
         ]
     },
+    // 车辆管理和订单管理这期隐藏开启 hidden: 用这个字段
     { // 车辆管理
         path:'/retail-vehicle',
         component: Layout, 
@@ -2135,6 +2115,7 @@ const routes = [
             title: '车辆管理',
             title_en: 'Vehicle Management',
             icon: 'i_001motuoche',
+            hidden: true
         },       
         children: [
             {
@@ -2168,6 +2149,7 @@ const routes = [
             title: '订单管理',
             title_en: 'Order Management',
             icon: 'i_dingdan',
+            hidden: true
         },       
         children: [
             {

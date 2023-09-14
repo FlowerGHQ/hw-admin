@@ -9,23 +9,19 @@ import defult_file from '@images/defult_file.png'
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
 // let URL_POINT = 'http://10.0.0.100'  // zy
+let DISABLELOG = false
 
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
         URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
+        DISABLELOG = true        
+        break;
+    case 'eos-release.horwincloud.com':        
+        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
-        break;
-    case 'eos.hw.innotick.com':
-        URL_POINT = 'http://eos-api.horwincloud.com' // 老正式服
-        break;
-    case 'eos-dev.hw.innotick.com':
-        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
-        break;
-    case 'eos-release.horwincloud.com':
-        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        break;
+        break;     
     case "10.0.0.213":
         URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
@@ -38,9 +34,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.75:8889'  // zy
-
-
+        // URL_POINT = 'http://10.10.12.138:8889'  // zy
         break;
 }
 
@@ -50,6 +44,7 @@ let Const = {
         OSS_POINT: OSS_POINT,
         FILE_URL_PREFIX: `${OSS_POINT}/`,
         FILE_UPLOAD_END_POINT: `${URL_POINT}/core/1/file/file-upload`,
+        DISABLELOG,
     },
     DATA: { // 本地存储
         KEY_PREFIX: 'haowan.admin.data.',
@@ -2242,13 +2237,13 @@ let Const = {
         },
         // 职务
         Job: {
-            '10301': { key: 10301, zh: "国内市场管理员", en: 'Home market manager' },
-            '10302': { key: 10302, zh: "大区经理", en: 'Regional manager' },
-            '10303': { key: 10303, zh: "城市经理", en: 'City manager' },
-            '10304': { key: 10304, zh: "运营", en: 'operate' },
-            '10305': { key: 10305, zh: "客服", en: 'Customer Service' },            
-            '30001': { key: 30001, zh: "门店店长", en: 'Store manager' },
-            '30002': { key: 30002, zh: "用户体验官", en: 'User experience officer' },
+            '10301': { father_type: 1, key: 10301, zh: "国内市场管理员", en: 'Home market manager' },
+            '10302': { father_type: 2, key: 10302, zh: "大区经理", en: 'Regional manager' },
+            '10303': { father_type: 3, key: 10303, zh: "城市经理", en: 'City manager' },
+            '10304': { father_type: 6, key: 10304, zh: "运营", en: 'operate' },
+            '10305': { father_type: 7, key: 10305, zh: "客服", en: 'Customer Service' },            
+            '30001': { father_type: 4, key: 30001, zh: "门店店长", en: 'Store manager' },
+            '30002': { father_type: 5, key: 30002, zh: "用户体验官", en: 'User experience officer' },
         },
         // 车辆用途
         Vehicle_Usage: {
@@ -2318,6 +2313,21 @@ let Const = {
             '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
         }
 
+    },
+    // 飞书人员所属类型
+    FEISHUTYPE: {
+        // 人员归属
+        TYPE: {
+            // 对应上面的Job
+            '1': { key: 1, zh: "国内市场管理员", en: 'Home market manager' },
+            '2': { key: 2, zh: "大区经理", en: 'Regional manager' },
+            '3': { key: 3, zh: "城市经理", en: 'City manager' },
+            '4': { key: 4, zh: "门店店长", en: 'Store manager' },
+            '5': { key: 5, zh: "用户体验官", en: 'User experience officer' },
+            // 这两个字段前端自己玩自己的不传给后端
+            '6': { key: 6, zh: "运营", en: 'operate' },
+            '7': { key: 7, zh: "客服", en: 'Customer Service' },
+        }
     }
 };
 
