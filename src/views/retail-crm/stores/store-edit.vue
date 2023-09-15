@@ -637,8 +637,7 @@ export default {
       this.loading = true;
       Core.Api.RETAIL.storeDetail({
         id: this.form.id,
-      })
-        .then((res) => {
+      }).then((res) => {
           console.log("getStoreDetail res:", res);
           let d = res;
           d.open_time = d.open_time
