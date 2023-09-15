@@ -350,7 +350,9 @@ const personDetailFetch = (params = {}) => {
                         return $2.id == $1.group_id
                     })
                     $1.cityList = result?.city_list || []
-                });                
+                });
+                // 这个是为了让其显示一个
+                fill_out.value.store_user_list = [fill_out.value.store_user_list[0]]
             }
 
 
