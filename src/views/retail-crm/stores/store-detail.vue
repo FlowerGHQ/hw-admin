@@ -132,16 +132,16 @@
         <a-tab-pane key="sto_person" :tab="$t('s.sto_person')">
           <CrmEditStorePeo :id="form.id" />
         </a-tab-pane>
-        <a-tab-pane key="sto_car" :tab="$t('s.sto_car')">
+        <a-tab-pane key="sto_car" :tab="$t('s.sto_car')" v-if="false">
           <ShopCarList />
         </a-tab-pane>
-        <a-tab-pane key="store_shift" :tab="$t('s.store_shift')">
+        <a-tab-pane key="store_shift" :tab="$t('s.store_shift')" v-if="false">
           <ShiftCon />
         </a-tab-pane>
-        <a-tab-pane key="contract_info" :tab="$t('s.contract_info')">
+        <a-tab-pane key="contract_info" :tab="$t('s.contract_info')" v-if="false">
           <ContentInfo />
         </a-tab-pane>
-        <a-tab-pane key="licenses" :tab="$t('s.licenses')">
+        <a-tab-pane key="licenses" :tab="$t('s.licenses')" v-if="false">
           <UploadLicenses />
         </a-tab-pane>
       </a-tabs>
