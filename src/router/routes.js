@@ -2032,6 +2032,8 @@ const routes = [
                     title_en: 'Shift Mangage',
                     icon: 'i_home',
                     roles: [LOGIN_TYPE.ADMIN],
+                    hidden:true,
+
                 },       
             },
             {
@@ -2043,6 +2045,7 @@ const routes = [
                     title_en: 'Target Mangage',
                     icon: 'i_home',
                     roles: [LOGIN_TYPE.ADMIN],
+                    hidden:true,
                 },       
             },
 			{
@@ -2184,6 +2187,8 @@ const routes = [
             title: '探索',
             title_en: 'Explore',
             icon: 'i_tansuo',
+            hidden: true,
+
         },       
         children: [
             {
