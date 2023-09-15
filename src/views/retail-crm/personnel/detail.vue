@@ -118,7 +118,7 @@
                         <a-col :xs="24" :sm="24" :xl="8" :xxl="6"  class="row-item m-t-16">
                             <span class="key key-form-86909C">{{$t('retail.job')}}：</span>
                             <span class="value">
-                                <a-select v-model:value="fill_out.type" class="select-w" @change="allChange('job')">
+                                <a-select v-model:value="fill_out.type" class="select-w" @select="allChange('job')">
                                     <a-select-option 
                                         v-for="item in Core.Const.RETAIL.Job" 
                                         :value="item.key" 
@@ -172,7 +172,7 @@
                                     v-model:value="item.group_id" 
                                     class="select-w" 
                                     :placeholder="$t('n.choose')"
-                                    @change="allChange('group_id', item)"
+                                    @select="allChange('group_id', item)"
                                 >
                                     <a-select-option 
                                         v-for="item of regionsList" 
@@ -244,7 +244,7 @@
                                     v-model:value="$1.id" 
                                     class="select-w-9" 
                                     :placeholder="$t('def.select')"
-                                    @change="allChange('role')"
+                                    @select="allChange('role')"
                                     >
                                     <a-select-option v-for="$2 in roleList" :value="$2.id">
                                         {{ $2.name }}
