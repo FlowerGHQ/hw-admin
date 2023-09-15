@@ -153,7 +153,7 @@ export default {
         },
         handleSearchReset() {    // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
-            this.$refs.CountryCascader.handleReset()
+            // this.$refs.CountryCascader.handleReset()
             this.pageChange(1);
         },
         getTableData() {    // 获取 表格 数据

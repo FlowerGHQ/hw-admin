@@ -371,7 +371,7 @@ const Util = {
         }
     },
 
-    
+
     addressFilterZh(obj, lang, type = 1) {
         if (typeof obj !== 'object' || !obj) {
             return '-'
@@ -403,7 +403,7 @@ const Util = {
             }
         }
     },
-    
+
 
     boolFlagFilter(val, name) {
         if (name) {
@@ -631,9 +631,9 @@ const Util = {
             return item[to] || ''
         }
     },
-    purchaseDeliveryMethodFilter(val, to='zh') {
-        console.log('val',val)
-        if ( val === 0) {
+    purchaseDeliveryMethodFilter(val, to = 'zh') {
+        console.log('val', val)
+        if (val === 0) {
             return '-'
         } else {
             const MAP = Const.WAYBILL.COURIER_MAP
@@ -641,7 +641,7 @@ const Util = {
             return item[to] || ''
         }
     },
-    aftersalesTypeFilter(val, to='zh') {
+    aftersalesTypeFilter(val, to = 'zh') {
         const MAP = Const.AFTERSALES.TYPE_MAP
         let value = MAP[val + ''] || {}
         return value[to] || '-'
@@ -1005,7 +1005,7 @@ const Util = {
         const MAP = Const.CRM_CUSTOMER.SOURCE_TYPE_MAP
         let item = MAP[val + ''] || {}
         return item[to] || ''
-    }, 
+    },
 
     /* =============== CRM客户管理 ================ */
 
@@ -1027,7 +1027,7 @@ const Util = {
         const addressLine1 = addressObj.address_line_1;
         const adminArea2 = addressObj.admin_area_2;
         const postalCode = addressObj.postal_code;
-        if(lang === 'zh') {
+        if (lang === 'zh') {
             return `州/省: ${adminArea1} 国家区号: ${countryCode} 街道: ${addressLine1} 城市: ${adminArea2} 邮编: ${postalCode}`;
         } else {
             return `State: ${adminArea1} Country: ${countryCode} Street: ${addressLine1} City: ${adminArea2} Postcode: ${postalCode}`;
@@ -1313,8 +1313,28 @@ const Util = {
         if (!Number(denominator)) return 0 + type
         let result = Number(numerator) / Number(denominator) * 100 + type
         return result
-    }
+    },
     /* ======== 百分比 ========== */
+
+
+    /* ======== 门店等级 ========== */
+    storeLevel(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_LEVEL
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 门店类型
+    storeType(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 门店状态
+    storeSTATUS(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_STATUS
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 }
 
 export default Util

@@ -501,6 +501,7 @@ export default {
       }
 
       this.upload.detailList = fileList;
+      console.log('handleCoverChange------------follow',file,'fileList',fileList,'this.upload.detailList ',this.upload.detailList,'this.trackRecordForm.image_attachment_list',this.trackRecordForm.image_attachment_list ,'this.upload.coverList',this.upload.coverList);
     },
     // 上传文件
     handleFileChange({ file, fileList }) {
