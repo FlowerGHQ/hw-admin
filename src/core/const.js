@@ -2237,13 +2237,13 @@ let Const = {
         },
         // 职务
         Job: {
-            '10301': { father_type: 1, key: 10301, zh: "国内市场管理员", en: 'Home market manager' },
-            '10302': { father_type: 2, key: 10302, zh: "大区经理", en: 'Regional manager' },
-            '10303': { father_type: 3, key: 10303, zh: "城市经理", en: 'City manager' },
-            '10304': { father_type: 6, key: 10304, zh: "运营", en: 'operate' },
-            '10305': { father_type: 7, key: 10305, zh: "客服", en: 'Customer Service' },            
-            '30001': { father_type: 4, key: 30001, zh: "门店店长", en: 'Store manager' },
-            '30002': { father_type: 5, key: 30002, zh: "用户体验官", en: 'User experience officer' },
+            '103001': { father_type: 1, key: 103001, zh: "国内市场管理员", en: 'Home market manager' },
+            '103002': { father_type: 2, key: 103002, zh: "大区经理", en: 'Regional manager' },
+            '103003': { father_type: 3, key: 103003, zh: "城市经理", en: 'City manager' },
+            '103004': { father_type: 6, key: 103004, zh: "运营", en: 'operate' },
+            '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },            
+            '3000001': { father_type: 4, key: 3000001, zh: "门店店长", en: 'Store manager' },
+            '3000002': { father_type: 5, key: 3000002, zh: "用户体验官", en: 'User experience officer' },
         },
         // 车辆用途
         Vehicle_Usage: {
