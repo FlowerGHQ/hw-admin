@@ -1,0 +1,2870 @@
+[
+    {
+        "id": "35",
+        "key": "province",
+        "code": "CHN011",
+        "name": "北京",
+        "name_en": "Beijing",
+        "children": [
+            {
+                "id": "35",
+                "key": "province",
+                "code": "CHN011",
+                "name": "北京市",
+                "name_en": "Beijing"
+            }
+        ]
+    },
+    {
+        "id": "36",
+        "key": "province",
+        "code": "CHN012",
+        "name": "天津直辖市",
+        "name_en": "Tianjin",
+        "children": [
+            {
+                "id": "36",
+                "key": "province",
+                "code": "CHN012",
+                "name": "天津",
+                "name_en": "Tianjin"
+            }
+        ]
+    },
+    {
+        "id": "37",
+        "key": "province",
+        "code": "CHN013",
+        "name": "河北省",
+        "name_en": "Hebei",
+        "children": [
+            {
+                "id": "453",
+                "key": "city",
+                "code": "CHN013001",
+                "name": "石家庄",
+                "name_en": "Shijiazhuang"
+            },
+            {
+                "id": "454",
+                "key": "city",
+                "code": "CHN013002",
+                "name": "唐山",
+                "name_en": "Tangshan"
+            },
+            {
+                "id": "455",
+                "key": "city",
+                "code": "CHN013003",
+                "name": "秦皇岛",
+                "name_en": "Qinhuangdao"
+            },
+            {
+                "id": "456",
+                "key": "city",
+                "code": "CHN013004",
+                "name": "邯郸",
+                "name_en": "Handan"
+            },
+            {
+                "id": "457",
+                "key": "city",
+                "code": "CHN013005",
+                "name": "邢台",
+                "name_en": "Xingtai"
+            },
+            {
+                "id": "458",
+                "key": "city",
+                "code": "CHN013006",
+                "name": "保定",
+                "name_en": "Baoding"
+            },
+            {
+                "id": "459",
+                "key": "city",
+                "code": "CHN013007",
+                "name": "张家口",
+                "name_en": "Zhangjiakou"
+            },
+            {
+                "id": "460",
+                "key": "city",
+                "code": "CHN013008",
+                "name": "承德",
+                "name_en": "Chengde"
+            },
+            {
+                "id": "461",
+                "key": "city",
+                "code": "CHN013009",
+                "name": "沧州",
+                "name_en": "Cangzhou"
+            },
+            {
+                "id": "462",
+                "key": "city",
+                "code": "CHN013010",
+                "name": "廊坊",
+                "name_en": "Langfang"
+            },
+            {
+                "id": "463",
+                "key": "city",
+                "code": "CHN013011",
+                "name": "衡水",
+                "name_en": "Hengshui"
+            }
+        ]
+    },
+    {
+        "id": "38",
+        "key": "province",
+        "code": "CHN014",
+        "name": "山西省",
+        "name_en": "Shanxi",
+        "children": [
+            {
+                "id": "464",
+                "key": "city",
+                "code": "CHN014001",
+                "name": "太原市",
+                "name_en": "Taiyuan"
+            },
+            {
+                "id": "465",
+                "key": "city",
+                "code": "CHN014002",
+                "name": "大同市",
+                "name_en": "Datong"
+            },
+            {
+                "id": "466",
+                "key": "city",
+                "code": "CHN014003",
+                "name": "阳泉市",
+                "name_en": "Yangquan"
+            },
+            {
+                "id": "467",
+                "key": "city",
+                "code": "CHN014004",
+                "name": "长治市",
+                "name_en": "Changzhi"
+            },
+            {
+                "id": "468",
+                "key": "city",
+                "code": "CHN014005",
+                "name": "晋城市",
+                "name_en": "Jincheng"
+            },
+            {
+                "id": "469",
+                "key": "city",
+                "code": "CHN014006",
+                "name": "朔州市",
+                "name_en": "Shuozhou"
+            },
+            {
+                "id": "470",
+                "key": "city",
+                "code": "CHN014007",
+                "name": "晋中市",
+                "name_en": "Jinzhong"
+            },
+            {
+                "id": "471",
+                "key": "city",
+                "code": "CHN014008",
+                "name": "运城市",
+                "name_en": "Yuncheng"
+            },
+            {
+                "id": "472",
+                "key": "city",
+                "code": "CHN014009",
+                "name": "忻州市",
+                "name_en": "Xinzhou"
+            },
+            {
+                "id": "473",
+                "key": "city",
+                "code": "CHN014010",
+                "name": "临汾市",
+                "name_en": "Linfen"
+            },
+            {
+                "id": "474",
+                "key": "city",
+                "code": "CHN014011",
+                "name": "吕梁市",
+                "name_en": "luliang"
+            }
+        ]
+    },
+    {
+        "id": "39",
+        "key": "province",
+        "code": "CHN015",
+        "name": "内蒙古自治区",
+        "name_en": "Inner Mongolia",
+        "children": [
+            {
+                "id": "475",
+                "key": "city",
+                "code": "CHN015001",
+                "name": "呼和浩特市",
+                "name_en": "Hohhot"
+            },
+            {
+                "id": "476",
+                "key": "city",
+                "code": "CHN015002",
+                "name": "包头市",
+                "name_en": "Baotou"
+            },
+            {
+                "id": "477",
+                "key": "city",
+                "code": "CHN015003",
+                "name": "乌海市",
+                "name_en": "Wuhai"
+            },
+            {
+                "id": "478",
+                "key": "city",
+                "code": "CHN015004",
+                "name": "赤峰市",
+                "name_en": "Chifeng"
+            },
+            {
+                "id": "479",
+                "key": "city",
+                "code": "CHN015005",
+                "name": "通辽市",
+                "name_en": "Tongliao"
+            },
+            {
+                "id": "480",
+                "key": "city",
+                "code": "CHN015006",
+                "name": "鄂尔多斯市",
+                "name_en": "Ordos"
+            },
+            {
+                "id": "481",
+                "key": "city",
+                "code": "CHN015007",
+                "name": "呼伦贝尔市",
+                "name_en": "Hulun Buir"
+            },
+            {
+                "id": "482",
+                "key": "city",
+                "code": "CHN015008",
+                "name": "巴彦淖尔市",
+                "name_en": "Bayannur"
+            },
+            {
+                "id": "483",
+                "key": "city",
+                "code": "CHN015009",
+                "name": "乌兰察布市",
+                "name_en": "Ulan Qab"
+            },
+            {
+                "id": "484",
+                "key": "city",
+                "code": "CHN015022",
+                "name": "兴安市",
+                "name_en": "Xing'an"
+            },
+            {
+                "id": "485",
+                "key": "city",
+                "code": "CHN015025",
+                "name": "锡林郭勒市",
+                "name_en": "Xilin Gol"
+            },
+            {
+                "id": "486",
+                "key": "city",
+                "code": "CHN015029",
+                "name": "阿拉善市",
+                "name_en": "Alxa"
+            }
+        ]
+    },
+    {
+        "id": "40",
+        "key": "province",
+        "code": "CHN021",
+        "name": "辽宁省",
+        "name_en": "Liaoning",
+        "children": [
+            {
+                "id": "487",
+                "key": "city",
+                "code": "CHN021001",
+                "name": "沈阳市",
+                "name_en": "Shenyang"
+            },
+            {
+                "id": "488",
+                "key": "city",
+                "code": "CHN021002",
+                "name": "大连市",
+                "name_en": "Dalian"
+            },
+            {
+                "id": "489",
+                "key": "city",
+                "code": "CHN021003",
+                "name": "鞍山市",
+                "name_en": "Anshan"
+            },
+            {
+                "id": "490",
+                "key": "city",
+                "code": "CHN021004",
+                "name": "抚顺市",
+                "name_en": "Fushun"
+            },
+            {
+                "id": "491",
+                "key": "city",
+                "code": "CHN021005",
+                "name": "本溪市",
+                "name_en": "Benxi"
+            },
+            {
+                "id": "492",
+                "key": "city",
+                "code": "CHN021006",
+                "name": "丹东市",
+                "name_en": "Dandong"
+            },
+            {
+                "id": "493",
+                "key": "city",
+                "code": "CHN021007",
+                "name": "锦州市",
+                "name_en": "Jinzhou"
+            },
+            {
+                "id": "494",
+                "key": "city",
+                "code": "CHN021008",
+                "name": "营口市",
+                "name_en": "Yingkou"
+            },
+            {
+                "id": "495",
+                "key": "city",
+                "code": "CHN021009",
+                "name": "阜新市",
+                "name_en": "Fuxin"
+            },
+            {
+                "id": "496",
+                "key": "city",
+                "code": "CHN021010",
+                "name": "辽阳市",
+                "name_en": "Liaoyang"
+            },
+            {
+                "id": "497",
+                "key": "city",
+                "code": "CHN021011",
+                "name": "盘锦市",
+                "name_en": "Panjin"
+            },
+            {
+                "id": "498",
+                "key": "city",
+                "code": "CHN021012",
+                "name": "铁岭市",
+                "name_en": "Tieling"
+            },
+            {
+                "id": "499",
+                "key": "city",
+                "code": "CHN021013",
+                "name": "朝阳市",
+                "name_en": "Chaoyang"
+            },
+            {
+                "id": "500",
+                "key": "city",
+                "code": "CHN021014",
+                "name": "葫芦岛市",
+                "name_en": "Huludao"
+            }
+        ]
+    },
+    {
+        "id": "41",
+        "key": "province",
+        "code": "CHN022",
+        "name": "吉林省",
+        "name_en": "Jilin",
+        "children": [
+            {
+                "id": "501",
+                "key": "city",
+                "code": "CHN022001",
+                "name": "长春市",
+                "name_en": "Changchun"
+            },
+            {
+                "id": "502",
+                "key": "city",
+                "code": "CHN022002",
+                "name": "吉林市",
+                "name_en": "Jilin"
+            },
+            {
+                "id": "503",
+                "key": "city",
+                "code": "CHN022003",
+                "name": "四平市",
+                "name_en": "Siping"
+            },
+            {
+                "id": "504",
+                "key": "city",
+                "code": "CHN022004",
+                "name": "辽源市",
+                "name_en": "Liaoyuan"
+            },
+            {
+                "id": "505",
+                "key": "city",
+                "code": "CHN022005",
+                "name": "通化市",
+                "name_en": "Tonghua"
+            },
+            {
+                "id": "506",
+                "key": "city",
+                "code": "CHN022006",
+                "name": "白山市",
+                "name_en": "Baishan"
+            },
+            {
+                "id": "507",
+                "key": "city",
+                "code": "CHN022007",
+                "name": "松原市",
+                "name_en": "Songyuan"
+            },
+            {
+                "id": "508",
+                "key": "city",
+                "code": "CHN022008",
+                "name": "白城市",
+                "name_en": "Baicheng"
+            },
+            {
+                "id": "509",
+                "key": "city",
+                "code": "CHN022024",
+                "name": "延边市",
+                "name_en": "Yanbian"
+            }
+        ]
+    },
+    {
+        "id": "42",
+        "key": "province",
+        "code": "CHN023",
+        "name": "黑龙江省",
+        "name_en": "Heilongjiang",
+        "children": [
+            {
+                "id": "510",
+                "key": "city",
+                "code": "CHN023001",
+                "name": "哈尔滨市",
+                "name_en": "Harbin"
+            },
+            {
+                "id": "511",
+                "key": "city",
+                "code": "CHN023002",
+                "name": "齐齐哈尔市",
+                "name_en": "Qiqihar"
+            },
+            {
+                "id": "512",
+                "key": "city",
+                "code": "CHN023003",
+                "name": "鸡西市",
+                "name_en": "Jixi"
+            },
+            {
+                "id": "513",
+                "key": "city",
+                "code": "CHN023004",
+                "name": "鹤岗市",
+                "name_en": "Hegang"
+            },
+            {
+                "id": "514",
+                "key": "city",
+                "code": "CHN023005",
+                "name": "双鸭山市",
+                "name_en": "Shuangyashan"
+            },
+            {
+                "id": "515",
+                "key": "city",
+                "code": "CHN023006",
+                "name": "大庆市",
+                "name_en": "Daqing"
+            },
+            {
+                "id": "516",
+                "key": "city",
+                "code": "CHN023007",
+                "name": "伊春市",
+                "name_en": "Yichun"
+            },
+            {
+                "id": "517",
+                "key": "city",
+                "code": "CHN023008",
+                "name": "佳木斯市",
+                "name_en": "Jiamusi"
+            },
+            {
+                "id": "518",
+                "key": "city",
+                "code": "CHN023009",
+                "name": "七台河市",
+                "name_en": "Qitaihe"
+            },
+            {
+                "id": "519",
+                "key": "city",
+                "code": "CHN023010",
+                "name": "牡丹江市",
+                "name_en": "Mudanjiang"
+            },
+            {
+                "id": "520",
+                "key": "city",
+                "code": "CHN023011",
+                "name": "黑河市",
+                "name_en": "Heihe"
+            },
+            {
+                "id": "521",
+                "key": "city",
+                "code": "CHN023012",
+                "name": "绥化市",
+                "name_en": "Suihua"
+            },
+            {
+                "id": "522",
+                "key": "city",
+                "code": "CHN023027",
+                "name": "大兴安岭市",
+                "name_en": "Da Hinggan Ling"
+            }
+        ]
+    },
+    {
+        "id": "43",
+        "key": "province",
+        "code": "CHN031",
+        "name": "上海直辖市",
+        "name_en": "Shanghai",
+        "children": [
+            {
+                "id": "43",
+                "key": "province",
+                "code": "CHN031",
+                "name": "上海",
+                "name_en": "Shanghai"
+            }
+        ]
+    },
+    {
+        "id": "44",
+        "key": "province",
+        "code": "CHN032",
+        "name": "江苏省",
+        "name_en": "Jiangsu",
+        "children": [
+            {
+                "id": "541",
+                "key": "city",
+                "code": "CHN032001",
+                "name": "南京市",
+                "name_en": "Nanjing"
+            },
+            {
+                "id": "542",
+                "key": "city",
+                "code": "CHN032002",
+                "name": "无锡市",
+                "name_en": "Wuxi"
+            },
+            {
+                "id": "543",
+                "key": "city",
+                "code": "CHN032003",
+                "name": "徐州市",
+                "name_en": "Xuzhou"
+            },
+            {
+                "id": "544",
+                "key": "city",
+                "code": "CHN032004",
+                "name": "常州市",
+                "name_en": "Changzhou"
+            },
+            {
+                "id": "545",
+                "key": "city",
+                "code": "CHN032005",
+                "name": "苏州市",
+                "name_en": "Suzhou"
+            },
+            {
+                "id": "546",
+                "key": "city",
+                "code": "CHN032006",
+                "name": "南通市",
+                "name_en": "Nantong"
+            },
+            {
+                "id": "547",
+                "key": "city",
+                "code": "CHN032007",
+                "name": "连云港市",
+                "name_en": "Lianyungang"
+            },
+            {
+                "id": "548",
+                "key": "city",
+                "code": "CHN032008",
+                "name": "淮安市",
+                "name_en": "Huai'an"
+            },
+            {
+                "id": "549",
+                "key": "city",
+                "code": "CHN032009",
+                "name": "盐城市",
+                "name_en": "Yancheng"
+            },
+            {
+                "id": "550",
+                "key": "city",
+                "code": "CHN032010",
+                "name": "扬州市",
+                "name_en": "Yangzhou"
+            },
+            {
+                "id": "551",
+                "key": "city",
+                "code": "CHN032011",
+                "name": "镇江市",
+                "name_en": "Zhenjiang"
+            },
+            {
+                "id": "552",
+                "key": "city",
+                "code": "CHN032012",
+                "name": "泰州市",
+                "name_en": "Taizhou"
+            },
+            {
+                "id": "553",
+                "key": "city",
+                "code": "CHN032013",
+                "name": "宿迁市",
+                "name_en": "Suqian"
+            }
+        ]
+    },
+    {
+        "id": "45",
+        "key": "province",
+        "code": "CHN033",
+        "name": "浙江省",
+        "name_en": "Zhejiang",
+        "children": [
+            {
+                "id": "554",
+                "key": "city",
+                "code": "CHN033001",
+                "name": "杭州市",
+                "name_en": "Hangzhou"
+            },
+            {
+                "id": "555",
+                "key": "city",
+                "code": "CHN033002",
+                "name": "宁波市",
+                "name_en": "Ningbo"
+            },
+            {
+                "id": "556",
+                "key": "city",
+                "code": "CHN033003",
+                "name": "温州市",
+                "name_en": "Wenzhou"
+            },
+            {
+                "id": "557",
+                "key": "city",
+                "code": "CHN033004",
+                "name": "嘉兴市",
+                "name_en": "Jiaxing"
+            },
+            {
+                "id": "558",
+                "key": "city",
+                "code": "CHN033005",
+                "name": "湖州市",
+                "name_en": "Huzhou"
+            },
+            {
+                "id": "559",
+                "key": "city",
+                "code": "CHN033006",
+                "name": "绍兴市",
+                "name_en": "Shaoxing"
+            },
+            {
+                "id": "560",
+                "key": "city",
+                "code": "CHN033007",
+                "name": "金华市",
+                "name_en": "Jinhua"
+            },
+            {
+                "id": "561",
+                "key": "city",
+                "code": "CHN033008",
+                "name": "衢州市",
+                "name_en": "Quzhou"
+            },
+            {
+                "id": "562",
+                "key": "city",
+                "code": "CHN033009",
+                "name": "舟山市",
+                "name_en": "Zhoushan"
+            },
+            {
+                "id": "563",
+                "key": "city",
+                "code": "CHN033010",
+                "name": "台州市",
+                "name_en": "Taizhou"
+            },
+            {
+                "id": "564",
+                "key": "city",
+                "code": "CHN033011",
+                "name": "丽水市",
+                "name_en": "Lishui"
+            }
+        ]
+    },
+    {
+        "id": "46",
+        "key": "province",
+        "code": "CHN034",
+        "name": "安徽省",
+        "name_en": "Anhui",
+        "children": [
+            {
+                "id": "565",
+                "key": "city",
+                "code": "CHN034001",
+                "name": "合肥市",
+                "name_en": "Hefei"
+            },
+            {
+                "id": "566",
+                "key": "city",
+                "code": "CHN034002",
+                "name": "芜湖市",
+                "name_en": "Wuhu"
+            },
+            {
+                "id": "567",
+                "key": "city",
+                "code": "CHN034003",
+                "name": "蚌埠市",
+                "name_en": "Bengbu"
+            },
+            {
+                "id": "568",
+                "key": "city",
+                "code": "CHN034004",
+                "name": "淮南市",
+                "name_en": "Huainan"
+            },
+            {
+                "id": "569",
+                "key": "city",
+                "code": "CHN034005",
+                "name": "马鞍山市",
+                "name_en": "Ma'anshan"
+            },
+            {
+                "id": "570",
+                "key": "city",
+                "code": "CHN034006",
+                "name": "淮北市",
+                "name_en": "Huaibei"
+            },
+            {
+                "id": "571",
+                "key": "city",
+                "code": "CHN034007",
+                "name": "铜陵市",
+                "name_en": "Tongling"
+            },
+            {
+                "id": "572",
+                "key": "city",
+                "code": "CHN034008",
+                "name": "安庆市",
+                "name_en": "Anqing"
+            },
+            {
+                "id": "573",
+                "key": "city",
+                "code": "CHN034010",
+                "name": "黄山市",
+                "name_en": "Huangshan"
+            },
+            {
+                "id": "574",
+                "key": "city",
+                "code": "CHN034011",
+                "name": "滁州市",
+                "name_en": "Chuzhou"
+            },
+            {
+                "id": "575",
+                "key": "city",
+                "code": "CHN034012",
+                "name": "阜阳市",
+                "name_en": "Fuyang"
+            },
+            {
+                "id": "576",
+                "key": "city",
+                "code": "CHN034013",
+                "name": "宿州市",
+                "name_en": "Suzhou"
+            },
+            {
+                "id": "577",
+                "key": "city",
+                "code": "CHN034015",
+                "name": "六安市",
+                "name_en": "Lu'an"
+            },
+            {
+                "id": "578",
+                "key": "city",
+                "code": "CHN034016",
+                "name": "亳州市",
+                "name_en": "Bozhou"
+            },
+            {
+                "id": "579",
+                "key": "city",
+                "code": "CHN034017",
+                "name": "池州市",
+                "name_en": "Chizhou"
+            },
+            {
+                "id": "580",
+                "key": "city",
+                "code": "CHN034018",
+                "name": "宣城市",
+                "name_en": "Xuancheng"
+            }
+        ]
+    },
+    {
+        "id": "47",
+        "key": "province",
+        "code": "CHN035",
+        "name": "福建省",
+        "name_en": "Fujian",
+        "children": [
+            {
+                "id": "581",
+                "key": "city",
+                "code": "CHN035001",
+                "name": "福州市",
+                "name_en": "Fuzhou"
+            },
+            {
+                "id": "582",
+                "key": "city",
+                "code": "CHN035002",
+                "name": "厦门市",
+                "name_en": "Xiamen"
+            },
+            {
+                "id": "583",
+                "key": "city",
+                "code": "CHN035003",
+                "name": "莆田市",
+                "name_en": "Putian"
+            },
+            {
+                "id": "584",
+                "key": "city",
+                "code": "CHN035004",
+                "name": "三明市",
+                "name_en": "Sanming"
+            },
+            {
+                "id": "585",
+                "key": "city",
+                "code": "CHN035005",
+                "name": "泉州市",
+                "name_en": "Quanzhou"
+            },
+            {
+                "id": "586",
+                "key": "city",
+                "code": "CHN035006",
+                "name": "漳州市",
+                "name_en": "Zhangzhou"
+            },
+            {
+                "id": "587",
+                "key": "city",
+                "code": "CHN035007",
+                "name": "南平市",
+                "name_en": "Nanping"
+            },
+            {
+                "id": "588",
+                "key": "city",
+                "code": "CHN035008",
+                "name": "龙岩市",
+                "name_en": "Longyan"
+            },
+            {
+                "id": "589",
+                "key": "city",
+                "code": "CHN035009",
+                "name": "宁德市",
+                "name_en": "Ningde"
+            }
+        ]
+    },
+    {
+        "id": "48",
+        "key": "province",
+        "code": "CHN036",
+        "name": "江西省",
+        "name_en": "Jiangxi",
+        "children": [
+            {
+                "id": "590",
+                "key": "city",
+                "code": "CHN036001",
+                "name": "南昌市",
+                "name_en": "Nanchang"
+            },
+            {
+                "id": "591",
+                "key": "city",
+                "code": "CHN036002",
+                "name": "景德镇市",
+                "name_en": "Jingdezhen"
+            },
+            {
+                "id": "592",
+                "key": "city",
+                "code": "CHN036003",
+                "name": "萍乡市",
+                "name_en": "Pingxiang"
+            },
+            {
+                "id": "593",
+                "key": "city",
+                "code": "CHN036004",
+                "name": "九江市",
+                "name_en": "Jiujiang"
+            },
+            {
+                "id": "594",
+                "key": "city",
+                "code": "CHN036005",
+                "name": "新余市",
+                "name_en": "Xinyu"
+            },
+            {
+                "id": "595",
+                "key": "city",
+                "code": "CHN036006",
+                "name": "鹰潭市",
+                "name_en": "Yingtan"
+            },
+            {
+                "id": "596",
+                "key": "city",
+                "code": "CHN036007",
+                "name": "赣州市",
+                "name_en": "Ganzhou"
+            },
+            {
+                "id": "597",
+                "key": "city",
+                "code": "CHN036008",
+                "name": "吉安市",
+                "name_en": "Ji'an"
+            },
+            {
+                "id": "598",
+                "key": "city",
+                "code": "CHN036009",
+                "name": "宜春市",
+                "name_en": "Yichun"
+            },
+            {
+                "id": "599",
+                "key": "city",
+                "code": "CHN036010",
+                "name": "抚州市",
+                "name_en": "Fuzhou"
+            },
+            {
+                "id": "600",
+                "key": "city",
+                "code": "CHN036011",
+                "name": "上饶市",
+                "name_en": "Shangrao"
+            }
+        ]
+    },
+    {
+        "id": "49",
+        "key": "province",
+        "code": "CHN037",
+        "name": "山东省",
+        "name_en": "Shandong",
+        "children": [
+            {
+                "id": "601",
+                "key": "city",
+                "code": "CHN037001",
+                "name": "济南市",
+                "name_en": "Jinan"
+            },
+            {
+                "id": "602",
+                "key": "city",
+                "code": "CHN037002",
+                "name": "青岛市",
+                "name_en": "Qingdao"
+            },
+            {
+                "id": "603",
+                "key": "city",
+                "code": "CHN037003",
+                "name": "淄博市",
+                "name_en": "Zibo"
+            },
+            {
+                "id": "604",
+                "key": "city",
+                "code": "CHN037004",
+                "name": "枣庄市",
+                "name_en": "Zaozhuang"
+            },
+            {
+                "id": "605",
+                "key": "city",
+                "code": "CHN037005",
+                "name": "东营市",
+                "name_en": "Dongying"
+            },
+            {
+                "id": "606",
+                "key": "city",
+                "code": "CHN037006",
+                "name": "烟台市",
+                "name_en": "Yantai"
+            },
+            {
+                "id": "607",
+                "key": "city",
+                "code": "CHN037007",
+                "name": "潍坊市",
+                "name_en": "Weifang"
+            },
+            {
+                "id": "608",
+                "key": "city",
+                "code": "CHN037008",
+                "name": "济宁市",
+                "name_en": "Jining"
+            },
+            {
+                "id": "609",
+                "key": "city",
+                "code": "CHN037009",
+                "name": "泰安市",
+                "name_en": "Tai'an"
+            },
+            {
+                "id": "610",
+                "key": "city",
+                "code": "CHN037010",
+                "name": "威海市",
+                "name_en": "Weihai"
+            },
+            {
+                "id": "611",
+                "key": "city",
+                "code": "CHN037011",
+                "name": "日照市",
+                "name_en": "Rizhao"
+            },
+            {
+                "id": "612",
+                "key": "city",
+                "code": "CHN037012",
+                "name": "莱芜市",
+                "name_en": "Laiwu"
+            },
+            {
+                "id": "613",
+                "key": "city",
+                "code": "CHN037013",
+                "name": "临沂市",
+                "name_en": "Linyi"
+            },
+            {
+                "id": "614",
+                "key": "city",
+                "code": "CHN037014",
+                "name": "德州市",
+                "name_en": "Dezhou"
+            },
+            {
+                "id": "615",
+                "key": "city",
+                "code": "CHN037015",
+                "name": "聊城市",
+                "name_en": "Liaocheng"
+            },
+            {
+                "id": "616",
+                "key": "city",
+                "code": "CHN037016",
+                "name": "滨州市",
+                "name_en": "Binzhou"
+            },
+            {
+                "id": "617",
+                "key": "city",
+                "code": "CHN037017",
+                "name": "菏泽市",
+                "name_en": "Heze"
+            }
+        ]
+    },
+    {
+        "id": "50",
+        "key": "province",
+        "code": "CHN041",
+        "name": "河南省",
+        "name_en": "Henan",
+        "children": [
+            {
+                "id": "618",
+                "key": "city",
+                "code": "CHN041001",
+                "name": "郑州市",
+                "name_en": "Zhengzhou"
+            },
+            {
+                "id": "619",
+                "key": "city",
+                "code": "CHN041002",
+                "name": "开封市",
+                "name_en": "Kaifeng"
+            },
+            {
+                "id": "620",
+                "key": "city",
+                "code": "CHN041003",
+                "name": "洛阳市",
+                "name_en": "Luoyang"
+            },
+            {
+                "id": "621",
+                "key": "city",
+                "code": "CHN041004",
+                "name": "平顶山市",
+                "name_en": "Pingdingshan"
+            },
+            {
+                "id": "622",
+                "key": "city",
+                "code": "CHN041005",
+                "name": "安阳市",
+                "name_en": "Anyang"
+            },
+            {
+                "id": "623",
+                "key": "city",
+                "code": "CHN041006",
+                "name": "鹤壁市",
+                "name_en": "Hebi"
+            },
+            {
+                "id": "624",
+                "key": "city",
+                "code": "CHN041007",
+                "name": "新乡市",
+                "name_en": "Xinxiang"
+            },
+            {
+                "id": "625",
+                "key": "city",
+                "code": "CHN041008",
+                "name": "焦作市",
+                "name_en": "Jiaozuo"
+            },
+            {
+                "id": "626",
+                "key": "city",
+                "code": "CHN041009",
+                "name": "濮阳市",
+                "name_en": "Puyang"
+            },
+            {
+                "id": "627",
+                "key": "city",
+                "code": "CHN041010",
+                "name": "许昌市",
+                "name_en": "Xuchang"
+            },
+            {
+                "id": "628",
+                "key": "city",
+                "code": "CHN041011",
+                "name": "漯河市",
+                "name_en": "Luohe"
+            },
+            {
+                "id": "629",
+                "key": "city",
+                "code": "CHN041012",
+                "name": "三门峡市",
+                "name_en": "Sanmenxia"
+            },
+            {
+                "id": "630",
+                "key": "city",
+                "code": "CHN041013",
+                "name": "南阳市",
+                "name_en": "Nanyang"
+            },
+            {
+                "id": "631",
+                "key": "city",
+                "code": "CHN041014",
+                "name": "商丘市",
+                "name_en": "Shangqiu"
+            },
+            {
+                "id": "632",
+                "key": "city",
+                "code": "CHN041015",
+                "name": "信阳市",
+                "name_en": "Xinyang"
+            },
+            {
+                "id": "633",
+                "key": "city",
+                "code": "CHN041016",
+                "name": "周口市",
+                "name_en": "Zhoukou"
+            },
+            {
+                "id": "634",
+                "key": "city",
+                "code": "CHN041017",
+                "name": "驻马店市",
+                "name_en": "Zhumadian"
+            },
+            {
+                "id": "635",
+                "key": "city",
+                "code": "CHN041018",
+                "name": "济源市",
+                "name_en": "Jiyuan"
+            }
+        ]
+    },
+    {
+        "id": "51",
+        "key": "province",
+        "code": "CHN042",
+        "name": "湖北省",
+        "name_en": "Hubei",
+        "children": [
+            {
+                "id": "636",
+                "key": "city",
+                "code": "CHN042001",
+                "name": "武汉市",
+                "name_en": "Wuhan"
+            },
+            {
+                "id": "637",
+                "key": "city",
+                "code": "CHN042002",
+                "name": "黄石市",
+                "name_en": "Huangshi"
+            },
+            {
+                "id": "638",
+                "key": "city",
+                "code": "CHN042003",
+                "name": "十堰市",
+                "name_en": "Shiyan"
+            },
+            {
+                "id": "639",
+                "key": "city",
+                "code": "CHN042005",
+                "name": "宜昌市",
+                "name_en": "Yichang"
+            },
+            {
+                "id": "640",
+                "key": "city",
+                "code": "CHN042006",
+                "name": "襄阳市",
+                "name_en": "Xiangyang"
+            },
+            {
+                "id": "641",
+                "key": "city",
+                "code": "CHN042007",
+                "name": "鄂州市",
+                "name_en": "Ezhou"
+            },
+            {
+                "id": "642",
+                "key": "city",
+                "code": "CHN042008",
+                "name": "荆门市",
+                "name_en": "Jingmen"
+            },
+            {
+                "id": "643",
+                "key": "city",
+                "code": "CHN042009",
+                "name": "孝感市",
+                "name_en": "Xiaogan"
+            },
+            {
+                "id": "644",
+                "key": "city",
+                "code": "CHN042010",
+                "name": "荆州市",
+                "name_en": "Jingzhou"
+            },
+            {
+                "id": "645",
+                "key": "city",
+                "code": "CHN042011",
+                "name": "黄冈市",
+                "name_en": "Huanggang"
+            },
+            {
+                "id": "646",
+                "key": "city",
+                "code": "CHN042012",
+                "name": "咸宁市",
+                "name_en": "Xianning"
+            },
+            {
+                "id": "647",
+                "key": "city",
+                "code": "CHN042013",
+                "name": "随州市",
+                "name_en": "Suizhou"
+            },
+            {
+                "id": "648",
+                "key": "city",
+                "code": "CHN042028",
+                "name": "恩施市",
+                "name_en": "Enshi"
+            },
+            {
+                "id": "649",
+                "key": "city",
+                "code": "CHN042094",
+                "name": "仙桃市",
+                "name_en": "Xiantao"
+            },
+            {
+                "id": "650",
+                "key": "city",
+                "code": "CHN042095",
+                "name": "潜江市",
+                "name_en": "Qianjiang"
+            },
+            {
+                "id": "651",
+                "key": "city",
+                "code": "CHN042096",
+                "name": "天门市",
+                "name_en": "Tianmen"
+            },
+            {
+                "id": "652",
+                "key": "city",
+                "code": "CHN042A21",
+                "name": "神农架市",
+                "name_en": "Shennongjia"
+            }
+        ]
+    },
+    {
+        "id": "52",
+        "key": "province",
+        "code": "CHN043",
+        "name": "湖南省",
+        "name_en": "Hunan",
+        "children": [
+            {
+                "id": "653",
+                "key": "city",
+                "code": "CHN043001",
+                "name": "长沙市",
+                "name_en": "Changsha"
+            },
+            {
+                "id": "654",
+                "key": "city",
+                "code": "CHN043002",
+                "name": "株洲市",
+                "name_en": "Zhuzhou"
+            },
+            {
+                "id": "655",
+                "key": "city",
+                "code": "CHN043003",
+                "name": "湘潭市",
+                "name_en": "Xiangtan"
+            },
+            {
+                "id": "656",
+                "key": "city",
+                "code": "CHN043004",
+                "name": "衡阳市",
+                "name_en": "Hengyang"
+            },
+            {
+                "id": "657",
+                "key": "city",
+                "code": "CHN043005",
+                "name": "邵阳市",
+                "name_en": "Shaoyang"
+            },
+            {
+                "id": "658",
+                "key": "city",
+                "code": "CHN043006",
+                "name": "岳阳市",
+                "name_en": "Yueyang"
+            },
+            {
+                "id": "659",
+                "key": "city",
+                "code": "CHN043007",
+                "name": "常德市",
+                "name_en": "Changde"
+            },
+            {
+                "id": "660",
+                "key": "city",
+                "code": "CHN043008",
+                "name": "张家界市",
+                "name_en": "Zhangjiajie"
+            },
+            {
+                "id": "661",
+                "key": "city",
+                "code": "CHN043009",
+                "name": "益阳市",
+                "name_en": "Yiyang"
+            },
+            {
+                "id": "662",
+                "key": "city",
+                "code": "CHN043010",
+                "name": "郴州市",
+                "name_en": "Chenzhou"
+            },
+            {
+                "id": "663",
+                "key": "city",
+                "code": "CHN043011",
+                "name": "永州市",
+                "name_en": "Yongzhou"
+            },
+            {
+                "id": "664",
+                "key": "city",
+                "code": "CHN043012",
+                "name": "怀化市",
+                "name_en": "Huaihua"
+            },
+            {
+                "id": "665",
+                "key": "city",
+                "code": "CHN043013",
+                "name": "娄底市",
+                "name_en": "Loudi"
+            },
+            {
+                "id": "666",
+                "key": "city",
+                "code": "CHN043031",
+                "name": "湘西市",
+                "name_en": "Xiangxi"
+            }
+        ]
+    },
+    {
+        "id": "53",
+        "key": "province",
+        "code": "CHN044",
+        "name": "广东省",
+        "name_en": "Guangdong",
+        "children": [
+            {
+                "id": "667",
+                "key": "city",
+                "code": "CHN044001",
+                "name": "广州市",
+                "name_en": "Guangzhou"
+            },
+            {
+                "id": "668",
+                "key": "city",
+                "code": "CHN044002",
+                "name": "韶关市",
+                "name_en": "Shaoguan"
+            },
+            {
+                "id": "669",
+                "key": "city",
+                "code": "CHN044003",
+                "name": "深圳市",
+                "name_en": "Shenzhen"
+            },
+            {
+                "id": "670",
+                "key": "city",
+                "code": "CHN044004",
+                "name": "珠海市",
+                "name_en": "Zhuhai"
+            },
+            {
+                "id": "671",
+                "key": "city",
+                "code": "CHN044005",
+                "name": "汕头市",
+                "name_en": "Shantou"
+            },
+            {
+                "id": "672",
+                "key": "city",
+                "code": "CHN044006",
+                "name": "佛山市",
+                "name_en": "Foshan"
+            },
+            {
+                "id": "673",
+                "key": "city",
+                "code": "CHN044007",
+                "name": "江门市",
+                "name_en": "Jiangmen"
+            },
+            {
+                "id": "674",
+                "key": "city",
+                "code": "CHN044008",
+                "name": "湛江市",
+                "name_en": "Zhanjiang"
+            },
+            {
+                "id": "675",
+                "key": "city",
+                "code": "CHN044009",
+                "name": "茂名市",
+                "name_en": "Maoming"
+            },
+            {
+                "id": "676",
+                "key": "city",
+                "code": "CHN044012",
+                "name": "肇庆市",
+                "name_en": "Zhaoqing"
+            },
+            {
+                "id": "677",
+                "key": "city",
+                "code": "CHN044013",
+                "name": "惠州市",
+                "name_en": "Huizhou"
+            },
+            {
+                "id": "678",
+                "key": "city",
+                "code": "CHN044014",
+                "name": "梅州市",
+                "name_en": "Meizhou"
+            },
+            {
+                "id": "679",
+                "key": "city",
+                "code": "CHN044015",
+                "name": "汕尾市",
+                "name_en": "Shanwei"
+            },
+            {
+                "id": "680",
+                "key": "city",
+                "code": "CHN044016",
+                "name": "河源市",
+                "name_en": "Heyuan"
+            },
+            {
+                "id": "681",
+                "key": "city",
+                "code": "CHN044017",
+                "name": "阳江市",
+                "name_en": "Yangjiang"
+            },
+            {
+                "id": "682",
+                "key": "city",
+                "code": "CHN044018",
+                "name": "清远市",
+                "name_en": "Qingyuan"
+            },
+            {
+                "id": "683",
+                "key": "city",
+                "code": "CHN044019",
+                "name": "东莞市",
+                "name_en": "Dongguan"
+            },
+            {
+                "id": "684",
+                "key": "city",
+                "code": "CHN044020",
+                "name": "中山市",
+                "name_en": "Zhongshan"
+            },
+            {
+                "id": "685",
+                "key": "city",
+                "code": "CHN044051",
+                "name": "潮州市",
+                "name_en": "Chaozhou"
+            },
+            {
+                "id": "686",
+                "key": "city",
+                "code": "CHN044052",
+                "name": "揭阳市",
+                "name_en": "Jieyang"
+            },
+            {
+                "id": "687",
+                "key": "city",
+                "code": "CHN044053",
+                "name": "云浮市",
+                "name_en": "Yunfu"
+            }
+        ]
+    },
+    {
+        "id": "54",
+        "key": "province",
+        "code": "CHN045",
+        "name": "广西壮族自治区",
+        "name_en": "Guangxi",
+        "children": [
+            {
+                "id": "688",
+                "key": "city",
+                "code": "CHN045001",
+                "name": "南宁市",
+                "name_en": "Nanning"
+            },
+            {
+                "id": "689",
+                "key": "city",
+                "code": "CHN045002",
+                "name": "柳州市",
+                "name_en": "Liuzhou"
+            },
+            {
+                "id": "690",
+                "key": "city",
+                "code": "CHN045003",
+                "name": "桂林市",
+                "name_en": "Guilin"
+            },
+            {
+                "id": "691",
+                "key": "city",
+                "code": "CHN045004",
+                "name": "梧州市",
+                "name_en": "Wuzhou"
+            },
+            {
+                "id": "692",
+                "key": "city",
+                "code": "CHN045005",
+                "name": "北海市",
+                "name_en": "Beihai"
+            },
+            {
+                "id": "693",
+                "key": "city",
+                "code": "CHN045006",
+                "name": "防城港市",
+                "name_en": "Fangchenggang"
+            },
+            {
+                "id": "694",
+                "key": "city",
+                "code": "CHN045007",
+                "name": "钦州市",
+                "name_en": "Qinzhou"
+            },
+            {
+                "id": "695",
+                "key": "city",
+                "code": "CHN045008",
+                "name": "贵港市",
+                "name_en": "Guigang"
+            },
+            {
+                "id": "696",
+                "key": "city",
+                "code": "CHN045009",
+                "name": "玉林市",
+                "name_en": "Yulin"
+            },
+            {
+                "id": "697",
+                "key": "city",
+                "code": "CHN045010",
+                "name": "百色市",
+                "name_en": "Baise"
+            },
+            {
+                "id": "698",
+                "key": "city",
+                "code": "CHN045011",
+                "name": "贺州市",
+                "name_en": "Hezhou"
+            },
+            {
+                "id": "699",
+                "key": "city",
+                "code": "CHN045012",
+                "name": "河池市",
+                "name_en": "Hechi"
+            },
+            {
+                "id": "700",
+                "key": "city",
+                "code": "CHN045013",
+                "name": "来宾市",
+                "name_en": "Laibin"
+            },
+            {
+                "id": "701",
+                "key": "city",
+                "code": "CHN045014",
+                "name": "崇左市",
+                "name_en": "Chongzuo"
+            }
+        ]
+    },
+    {
+        "id": "55",
+        "key": "province",
+        "code": "CHN046",
+        "name": "海南省",
+        "name_en": "Hainan",
+        "children": [
+            {
+                "id": "702",
+                "key": "city",
+                "code": "CHN046001",
+                "name": "海口市",
+                "name_en": "Haikou"
+            },
+            {
+                "id": "703",
+                "key": "city",
+                "code": "CHN046002",
+                "name": "三亚市",
+                "name_en": "Sanya"
+            },
+            {
+                "id": "704",
+                "key": "city",
+                "code": "CHN046003",
+                "name": "三沙市",
+                "name_en": "Shansha"
+            },
+            {
+                "id": "705",
+                "key": "city",
+                "code": "CHN046091",
+                "name": "五指山市",
+                "name_en": "Wuzhishan"
+            },
+            {
+                "id": "706",
+                "key": "city",
+                "code": "CHN046092",
+                "name": "琼海市",
+                "name_en": "Qionghai"
+            },
+            {
+                "id": "707",
+                "key": "city",
+                "code": "CHN046093",
+                "name": "儋州市",
+                "name_en": "Danzhou"
+            },
+            {
+                "id": "708",
+                "key": "city",
+                "code": "CHN046095",
+                "name": "文昌市",
+                "name_en": "Wenchang"
+            },
+            {
+                "id": "709",
+                "key": "city",
+                "code": "CHN046096",
+                "name": "万宁市",
+                "name_en": "Wanning"
+            },
+            {
+                "id": "710",
+                "key": "city",
+                "code": "CHN046097",
+                "name": "东方市",
+                "name_en": "Dornod"
+            },
+            {
+                "id": "711",
+                "key": "city",
+                "code": "CHN046A25",
+                "name": "定安市",
+                "name_en": "Ding'an"
+            },
+            {
+                "id": "712",
+                "key": "city",
+                "code": "CHN046A26",
+                "name": "屯昌市",
+                "name_en": "Tunchang"
+            },
+            {
+                "id": "713",
+                "key": "city",
+                "code": "CHN046A27",
+                "name": "澄迈市",
+                "name_en": "Cengmai"
+            },
+            {
+                "id": "714",
+                "key": "city",
+                "code": "CHN046A28",
+                "name": "临高市",
+                "name_en": "Lingao"
+            },
+            {
+                "id": "715",
+                "key": "city",
+                "code": "CHN046A30",
+                "name": "白沙市",
+                "name_en": "Baisha"
+            },
+            {
+                "id": "716",
+                "key": "city",
+                "code": "CHN046A31",
+                "name": "昌江市",
+                "name_en": "Jiang"
+            },
+            {
+                "id": "717",
+                "key": "city",
+                "code": "CHN046A33",
+                "name": "乐东市",
+                "name_en": "Ledong"
+            },
+            {
+                "id": "718",
+                "key": "city",
+                "code": "CHN046A34",
+                "name": "陵水市",
+                "name_en": "Lingshui"
+            },
+            {
+                "id": "719",
+                "key": "city",
+                "code": "CHN046A35",
+                "name": "保亭市",
+                "name_en": "Baoting"
+            },
+            {
+                "id": "720",
+                "key": "city",
+                "code": "CHN046A36",
+                "name": "琼中市",
+                "name_en": "Qiongzhong"
+            }
+        ]
+    },
+    {
+        "id": "56",
+        "key": "province",
+        "code": "CHN050",
+        "name": "重庆直辖市",
+        "name_en": "Chongqing",
+        "children": [
+            {
+                "id": "56",
+                "key": "province",
+                "code": "CHN050",
+                "name": "重庆",
+                "name_en": "Chongqing"
+            }
+        ]
+    },
+    {
+        "id": "57",
+        "key": "province",
+        "code": "CHN051",
+        "name": "四川省",
+        "name_en": "Sichuan",
+        "children": [
+            {
+                "id": "762",
+                "key": "city",
+                "code": "CHN051001",
+                "name": "成都市",
+                "name_en": "Chengdu"
+            },
+            {
+                "id": "763",
+                "key": "city",
+                "code": "CHN051003",
+                "name": "自贡市",
+                "name_en": "Zigong"
+            },
+            {
+                "id": "764",
+                "key": "city",
+                "code": "CHN051004",
+                "name": "攀枝花市",
+                "name_en": "Panzhihua"
+            },
+            {
+                "id": "765",
+                "key": "city",
+                "code": "CHN051005",
+                "name": "泸州市",
+                "name_en": "Luzhou"
+            },
+            {
+                "id": "766",
+                "key": "city",
+                "code": "CHN051006",
+                "name": "德阳市",
+                "name_en": "Deyang"
+            },
+            {
+                "id": "767",
+                "key": "city",
+                "code": "CHN051007",
+                "name": "绵阳市",
+                "name_en": "Mianyang"
+            },
+            {
+                "id": "768",
+                "key": "city",
+                "code": "CHN051008",
+                "name": "广元市",
+                "name_en": "Guangyuan"
+            },
+            {
+                "id": "769",
+                "key": "city",
+                "code": "CHN051009",
+                "name": "遂宁市",
+                "name_en": "Suining"
+            },
+            {
+                "id": "770",
+                "key": "city",
+                "code": "CHN051010",
+                "name": "内江市",
+                "name_en": "Neijiang"
+            },
+            {
+                "id": "771",
+                "key": "city",
+                "code": "CHN051011",
+                "name": "乐山市",
+                "name_en": "Leshan"
+            },
+            {
+                "id": "772",
+                "key": "city",
+                "code": "CHN051013",
+                "name": "南充市",
+                "name_en": "Nanchong"
+            },
+            {
+                "id": "773",
+                "key": "city",
+                "code": "CHN051014",
+                "name": "眉山市",
+                "name_en": "Meishan"
+            },
+            {
+                "id": "774",
+                "key": "city",
+                "code": "CHN051015",
+                "name": "宜宾市",
+                "name_en": "Yibin"
+            },
+            {
+                "id": "775",
+                "key": "city",
+                "code": "CHN051016",
+                "name": "广安市",
+                "name_en": "Guang'an"
+            },
+            {
+                "id": "776",
+                "key": "city",
+                "code": "CHN051017",
+                "name": "达州市",
+                "name_en": "Dazhou"
+            },
+            {
+                "id": "777",
+                "key": "city",
+                "code": "CHN051018",
+                "name": "雅安市",
+                "name_en": "Ya'an"
+            },
+            {
+                "id": "778",
+                "key": "city",
+                "code": "CHN051019",
+                "name": "巴中市",
+                "name_en": "Bazhong"
+            },
+            {
+                "id": "779",
+                "key": "city",
+                "code": "CHN051020",
+                "name": "资阳市",
+                "name_en": "Ziyang"
+            },
+            {
+                "id": "780",
+                "key": "city",
+                "code": "CHN051032",
+                "name": "阿坝市",
+                "name_en": "Aba"
+            },
+            {
+                "id": "781",
+                "key": "city",
+                "code": "CHN051033",
+                "name": "甘孜市",
+                "name_en": "Garze"
+            },
+            {
+                "id": "782",
+                "key": "city",
+                "code": "CHN051034",
+                "name": "凉山市",
+                "name_en": "Liangshan"
+            }
+        ]
+    },
+    {
+        "id": "58",
+        "key": "province",
+        "code": "CHN052",
+        "name": "贵州省",
+        "name_en": "Guizhou",
+        "children": [
+            {
+                "id": "783",
+                "key": "city",
+                "code": "CHN052001",
+                "name": "贵阳市",
+                "name_en": "Guiyang"
+            },
+            {
+                "id": "784",
+                "key": "city",
+                "code": "CHN052002",
+                "name": "六盘水市",
+                "name_en": "Liupanshui"
+            },
+            {
+                "id": "785",
+                "key": "city",
+                "code": "CHN052003",
+                "name": "遵义市",
+                "name_en": "Zunyi"
+            },
+            {
+                "id": "786",
+                "key": "city",
+                "code": "CHN052004",
+                "name": "安顺市",
+                "name_en": "Anshun"
+            },
+            {
+                "id": "787",
+                "key": "city",
+                "code": "CHN052022",
+                "name": "铜仁市",
+                "name_en": "Tongren"
+            },
+            {
+                "id": "788",
+                "key": "city",
+                "code": "CHN052023",
+                "name": "黔西南市",
+                "name_en": "Qianxinan"
+            },
+            {
+                "id": "789",
+                "key": "city",
+                "code": "CHN052024",
+                "name": "毕节市",
+                "name_en": "Bijie"
+            },
+            {
+                "id": "790",
+                "key": "city",
+                "code": "CHN052026",
+                "name": "黔东南市",
+                "name_en": "Qiandongnan"
+            },
+            {
+                "id": "791",
+                "key": "city",
+                "code": "CHN052027",
+                "name": "黔南市",
+                "name_en": "Qiannan"
+            }
+        ]
+    },
+    {
+        "id": "59",
+        "key": "province",
+        "code": "CHN053",
+        "name": "云南省",
+        "name_en": "Yunnan",
+        "children": [
+            {
+                "id": "792",
+                "key": "city",
+                "code": "CHN053001",
+                "name": "昆明市",
+                "name_en": "Kunming"
+            },
+            {
+                "id": "793",
+                "key": "city",
+                "code": "CHN053003",
+                "name": "曲靖市",
+                "name_en": "Qujing"
+            },
+            {
+                "id": "794",
+                "key": "city",
+                "code": "CHN053004",
+                "name": "玉溪市",
+                "name_en": "Yuxi"
+            },
+            {
+                "id": "795",
+                "key": "city",
+                "code": "CHN053005",
+                "name": "保山市",
+                "name_en": "Baoshan"
+            },
+            {
+                "id": "796",
+                "key": "city",
+                "code": "CHN053006",
+                "name": "昭通市",
+                "name_en": "Zhaotong"
+            },
+            {
+                "id": "797",
+                "key": "city",
+                "code": "CHN053007",
+                "name": "丽江市",
+                "name_en": "Lijiang"
+            },
+            {
+                "id": "798",
+                "key": "city",
+                "code": "CHN053008",
+                "name": "普洱市",
+                "name_en": "Pu'er"
+            },
+            {
+                "id": "799",
+                "key": "city",
+                "code": "CHN053009",
+                "name": "临沧市",
+                "name_en": "Lincang"
+            },
+            {
+                "id": "800",
+                "key": "city",
+                "code": "CHN053023",
+                "name": "楚雄市",
+                "name_en": "Chuxiong"
+            },
+            {
+                "id": "801",
+                "key": "city",
+                "code": "CHN053025",
+                "name": "红河市",
+                "name_en": "Honghe"
+            },
+            {
+                "id": "802",
+                "key": "city",
+                "code": "CHN053026",
+                "name": "文山市",
+                "name_en": "Wenshan"
+            },
+            {
+                "id": "803",
+                "key": "city",
+                "code": "CHN053028",
+                "name": "西双版纳市",
+                "name_en": "Xishuangbanna"
+            },
+            {
+                "id": "804",
+                "key": "city",
+                "code": "CHN053029",
+                "name": "大理市",
+                "name_en": "Dali"
+            },
+            {
+                "id": "805",
+                "key": "city",
+                "code": "CHN053031",
+                "name": "德宏市",
+                "name_en": "Dehong"
+            },
+            {
+                "id": "806",
+                "key": "city",
+                "code": "CHN053033",
+                "name": "怒江市",
+                "name_en": "Nujiang"
+            },
+            {
+                "id": "807",
+                "key": "city",
+                "code": "CHN053034",
+                "name": "迪庆市",
+                "name_en": "Diqing"
+            }
+        ]
+    },
+    {
+        "id": "60",
+        "key": "province",
+        "code": "CHN054",
+        "name": "西藏自治区",
+        "name_en": "Tibet",
+        "children": [
+            {
+                "id": "808",
+                "key": "city",
+                "code": "CHN054001",
+                "name": "拉萨市",
+                "name_en": "Lhasa"
+            },
+            {
+                "id": "809",
+                "key": "city",
+                "code": "CHN054021",
+                "name": "昌都市",
+                "name_en": "Qamdo"
+            },
+            {
+                "id": "810",
+                "key": "city",
+                "code": "CHN054022",
+                "name": "山南市",
+                "name_en": "Shannan"
+            },
+            {
+                "id": "811",
+                "key": "city",
+                "code": "CHN054023",
+                "name": "日喀则市",
+                "name_en": "Xigaze"
+            },
+            {
+                "id": "812",
+                "key": "city",
+                "code": "CHN054024",
+                "name": "那曲市",
+                "name_en": "Nagqu"
+            },
+            {
+                "id": "813",
+                "key": "city",
+                "code": "CHN054025",
+                "name": "阿里市",
+                "name_en": "Ngari"
+            },
+            {
+                "id": "814",
+                "key": "city",
+                "code": "CHN054026",
+                "name": "林芝市",
+                "name_en": "Nyingchi"
+            }
+        ]
+    },
+    {
+        "id": "61",
+        "key": "province",
+        "code": "CHN061",
+        "name": "陕西省",
+        "name_en": "Shaanxi",
+        "children": [
+            {
+                "id": "815",
+                "key": "city",
+                "code": "CHN061001",
+                "name": "西安市",
+                "name_en": "Xi'an"
+            },
+            {
+                "id": "816",
+                "key": "city",
+                "code": "CHN061002",
+                "name": "铜川市",
+                "name_en": "Tongchuan"
+            },
+            {
+                "id": "817",
+                "key": "city",
+                "code": "CHN061003",
+                "name": "宝鸡市",
+                "name_en": "Baoji"
+            },
+            {
+                "id": "818",
+                "key": "city",
+                "code": "CHN061004",
+                "name": "咸阳市",
+                "name_en": "Xianyang"
+            },
+            {
+                "id": "819",
+                "key": "city",
+                "code": "CHN061005",
+                "name": "渭南市",
+                "name_en": "Weinan"
+            },
+            {
+                "id": "820",
+                "key": "city",
+                "code": "CHN061006",
+                "name": "延安市",
+                "name_en": "Yan'an"
+            },
+            {
+                "id": "821",
+                "key": "city",
+                "code": "CHN061007",
+                "name": "汉中",
+                "name_en": "Hanzhong"
+            },
+            {
+                "id": "822",
+                "key": "city",
+                "code": "CHN061008",
+                "name": "榆林市",
+                "name_en": "Yulin"
+            },
+            {
+                "id": "823",
+                "key": "city",
+                "code": "CHN061009",
+                "name": "安康市",
+                "name_en": "Ankang"
+            },
+            {
+                "id": "824",
+                "key": "city",
+                "code": "CHN061010",
+                "name": "商洛市",
+                "name_en": "Shangluo"
+            }
+        ]
+    },
+    {
+        "id": "62",
+        "key": "province",
+        "code": "CHN062",
+        "name": "甘肃省",
+        "name_en": "Gansu",
+        "children": [
+            {
+                "id": "825",
+                "key": "city",
+                "code": "CHN062001",
+                "name": "兰州市",
+                "name_en": "Lanzhou"
+            },
+            {
+                "id": "826",
+                "key": "city",
+                "code": "CHN062002",
+                "name": "嘉峪关市",
+                "name_en": "Jinchang"
+            },
+            {
+                "id": "827",
+                "key": "city",
+                "code": "CHN062003",
+                "name": "金昌市",
+                "name_en": "Baiyin"
+            },
+            {
+                "id": "828",
+                "key": "city",
+                "code": "CHN062004",
+                "name": "白银市",
+                "name_en": "Tianshui"
+            },
+            {
+                "id": "829",
+                "key": "city",
+                "code": "CHN062005",
+                "name": "天水市",
+                "name_en": "Jiayuguan"
+            },
+            {
+                "id": "830",
+                "key": "city",
+                "code": "CHN062006",
+                "name": "武威市",
+                "name_en": "Wuwei"
+            },
+            {
+                "id": "831",
+                "key": "city",
+                "code": "CHN062007",
+                "name": "张掖市",
+                "name_en": "Zhangye"
+            },
+            {
+                "id": "832",
+                "key": "city",
+                "code": "CHN062008",
+                "name": "平凉市",
+                "name_en": "Pingliang"
+            },
+            {
+                "id": "833",
+                "key": "city",
+                "code": "CHN062009",
+                "name": "酒泉市",
+                "name_en": "Jiuquan"
+            },
+            {
+                "id": "834",
+                "key": "city",
+                "code": "CHN062010",
+                "name": "庆阳市",
+                "name_en": "Qingyang"
+            },
+            {
+                "id": "835",
+                "key": "city",
+                "code": "CHN062011",
+                "name": "定西市",
+                "name_en": "Dingxi"
+            },
+            {
+                "id": "836",
+                "key": "city",
+                "code": "CHN062012",
+                "name": "陇南市",
+                "name_en": "Longnan"
+            },
+            {
+                "id": "837",
+                "key": "city",
+                "code": "CHN062029",
+                "name": "临夏市"
+
+            },
+            {
+                "id": "838",
+                "key": "city",
+                "code": "CHN062030",
+                "name": "甘南市",
+                "name_en": "Gannan"
+            }
+        ]
+    },
+    {
+        "id": "63",
+        "key": "province",
+        "code": "CHN063",
+        "name": "青海省",
+        "name_en": "Qinghai",
+        "children": [
+            {
+                "id": "839",
+                "key": "city",
+                "code": "CHN063001",
+                "name": "西宁市",
+                "name_en": "Xining"
+            },
+            {
+                "id": "840",
+                "key": "city",
+                "code": "CHN063021",
+                "name": "海东市",
+                "name_en": "Haidong"
+            },
+            {
+                "id": "841",
+                "key": "city",
+                "code": "CHN063022",
+                "name": "海北市",
+                "name_en": "Haibei"
+            },
+            {
+                "id": "842",
+                "key": "city",
+                "code": "CHN063023",
+                "name": "黄南市",
+                "name_en": "Huangnan"
+            },
+            {
+                "id": "843",
+                "key": "city",
+                "code": "CHN063025",
+                "name": "海南市",
+                "name_en": "Hainan"
+            },
+            {
+                "id": "844",
+                "key": "city",
+                "code": "CHN063026",
+                "name": "果洛市",
+                "name_en": "Guoluo"
+            },
+            {
+                "id": "845",
+                "key": "city",
+                "code": "CHN063027",
+                "name": "玉树市",
+                "name_en": "Yushu"
+            },
+            {
+                "id": "846",
+                "key": "city",
+                "code": "CHN063028",
+                "name": "海西市",
+                "name_en": "Haixi"
+            }
+        ]
+    },
+    {
+        "id": "64",
+        "key": "province",
+        "code": "CHN064",
+        "name": "宁夏回族自治区",
+        "name_en": "Ningxia",
+        "children": [
+            {
+                "id": "847",
+                "key": "city",
+                "code": "CHN064001",
+                "name": "银川市",
+                "name_en": "Yinchuan"
+            },
+            {
+                "id": "848",
+                "key": "city",
+                "code": "CHN064002",
+                "name": "石嘴山市",
+                "name_en": "Shizuishan"
+            },
+            {
+                "id": "849",
+                "key": "city",
+                "code": "CHN064003",
+                "name": "吴忠市",
+                "name_en": "Wuzhong"
+            },
+            {
+                "id": "850",
+                "key": "city",
+                "code": "CHN064004",
+                "name": "固原市",
+                "name_en": "Guyuan"
+            },
+            {
+                "id": "851",
+                "key": "city",
+                "code": "CHN064005",
+                "name": "中卫市",
+                "name_en": "Zhongwei"
+            }
+        ]
+    },
+    {
+        "id": "65",
+        "key": "province",
+        "code": "CHN065",
+        "name": "新疆维吾尔自治区",
+        "name_en": "Xinjiang",
+        "children": [
+            {
+                "id": "852",
+                "key": "city",
+                "code": "CHN065001",
+                "name": "乌鲁木齐市",
+                "name_en": "Urumqi"
+            },
+            {
+                "id": "853",
+                "key": "city",
+                "code": "CHN065002",
+                "name": "克拉玛依市",
+                "name_en": "Karamay"
+            },
+            {
+                "id": "854",
+                "key": "city",
+                "code": "CHN065021",
+                "name": "吐鲁番市",
+                "name_en": "Turpan"
+            },
+            {
+                "id": "855",
+                "key": "city",
+                "code": "CHN065022",
+                "name": "哈密市",
+                "name_en": "Hami"
+            },
+            {
+                "id": "856",
+                "key": "city",
+                "code": "CHN065023",
+                "name": "昌吉回族自治州",
+                "name_en": "Changji"
+            },
+            {
+                "id": "857",
+                "key": "city",
+                "code": "CHN065027",
+                "name": "博尔塔拉蒙古自治州",
+                "name_en": "Bortala"
+            },
+            {
+                "id": "858",
+                "key": "city",
+                "code": "CHN065028",
+                "name": "巴音郭楞蒙古自治州",
+                "name_en": "Bayingolin"
+            },
+            {
+                "id": "859",
+                "key": "city",
+                "code": "CHN065029",
+                "name": "阿克苏地区",
+                "name_en": "Aksu"
+            },
+            {
+                "id": "860",
+                "key": "city",
+                "code": "CHN065030",
+                "name": "克孜勒苏柯尔克孜自治州",
+                "name_en": "Kizilsu"
+            },
+            {
+                "id": "861",
+                "key": "city",
+                "code": "CHN065031",
+                "name": "喀什地区",
+                "name_en": "Kashi"
+            },
+            {
+                "id": "862",
+                "key": "city",
+                "code": "CHN065032",
+                "name": "和田地区",
+                "name_en": "Hotan"
+            },
+            {
+                "id": "863",
+                "key": "city",
+                "code": "CHN065040",
+                "name": "伊犁哈萨克自治州",
+                "name_en": "Ili"
+            },
+            {
+                "id": "864",
+                "key": "city",
+                "code": "CHN065042",
+                "name": "塔城地区",
+                "name_en": "Tacheng"
+            },
+            {
+                "id": "865",
+                "key": "city",
+                "code": "CHN065043",
+                "name": "阿勒泰地区",
+                "name_en": "Altay"
+            },
+            {
+                "id": "866",
+                "key": "county",
+                "code": "CHN065091",
+                "name": "石河子市",
+                "name_en": "Shihezi"
+            },
+            {
+                "id": "867",
+                "key": "county",
+                "code": "CHN065092",
+                "name": "阿拉尔市",
+                "name_en": "Alar"
+            },
+            {
+                "id": "868",
+                "key": "county",
+                "code": "CHN065093",
+                "name": "图木舒克市",
+                "name_en": "Tumsuk"
+            },
+            {
+                "id": "869",
+                "key": "county",
+                "code": "CHN065094",
+                "name": "五家渠市",
+                "name_en": "Wujiaqu"
+            },
+            {
+                "id": "870",
+                "key": "county",
+                "code": "CHN065095",
+                "name": "北屯市",
+                "name_en": "Beitun"
+            }
+        ]
+    },
+    {
+        "id": "66",
+        "key": "province",
+        "code": "CHN071",
+        "name": "台湾省",
+        "name_en": "Taiwan",
+        "children": [
+            {
+                "id": "666",
+                "key": "province",
+                "code": "CHN071",
+                "name": "台湾",
+                "name_en": "Taiwan"
+            }
+        ]
+    },
+    {
+        "id": "67",
+        "key": "province",
+        "code": "CHN081",
+        "name": "香港特别行政区",
+        "name_en": "Hongkong",
+        "children": [
+            {
+                "id": "67",
+                "key": "province",
+                "code": "CHN081",
+                "name": "香港",
+                "name_en": "Hongkong"
+            }
+        ]
+    },
+    {
+        "id": "68",
+        "key": "province",
+        "code": "CHN082",
+        "name": "澳门特别行政区",
+        "name_en": "Macao",
+        "children": [
+            {
+                "id": "68",
+                "key": "province",
+                "code": "CHN082",
+                "name": "澳门",
+                "name_en": "Macao"
+            }
+        ]
+    }
+]

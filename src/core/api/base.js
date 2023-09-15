@@ -7,13 +7,17 @@ class ApiBase {
         this.baseUrl = baseUrl;
     }
 
-    static getMark() {
+    static getMark(moduleName) {
         const LOGIN_TYPE = Const.LOGIN.TYPE
         const loginType = Data.getLoginType();
+        const RETAILModule = ['RETAIL'] // 这个走的是 crm/1/.... 前缀
         let mark = 'admin/1'
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:
                 mark = 'admin/1'
+                if(RETAILModule.includes(moduleName)){
+                    mark = 'crm/1'
+                }
                 break;
             case LOGIN_TYPE.DISTRIBUTOR:
                 mark = 'distributor/1'
@@ -38,8 +42,8 @@ class ApiBase {
         return p.join('&');
     }
 
-    http(config, moduleName, args = {}) {        
-        let mark = ApiBase.getMark()
+    http(config, moduleName, args = {}) {
+        let mark = ApiBase.getMark(moduleName)
         const token = Data.getToken()
 
         const commonModule = ['Common']
