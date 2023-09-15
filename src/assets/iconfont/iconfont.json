@@ -1,10 +1,52 @@
 {
   "id": "3000141",
-  "name": "浩万",
+  "name": "浩万EOS",
   "font_family": "icon",
   "css_prefix_text": "i_",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "36859325",
+      "name": "探索",
+      "font_class": "tansuo",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "8821276",
+      "name": "人员-01",
+      "font_class": "renyuan-",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "9591245",
+      "name": "订单",
+      "font_class": "dingdan",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "975323",
+      "name": "销售门店",
+      "font_class": "stores",
+      "unicode": "e6d4",
+      "unicode_decimal": 59092
+    },
+    {
+      "icon_id": "15816690",
+      "name": "001摩托车",
+      "font_class": "001motuoche",
+      "unicode": "e829",
+      "unicode_decimal": 59433
+    },
+    {
+      "icon_id": "26433198",
+      "name": "下拉",
+      "font_class": "xiala",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
     {
       "icon_id": "22425850",
       "name": "point",

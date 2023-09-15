@@ -6,21 +6,7 @@
             <div class="btns-area">
                 <a-button type="primary" @click="routerChange()" class="menu-item-btn"><i class="icon i_add"/>{{ $t('role.save') }}</a-button>
             </div>
-        </div>
-        <!-- <div class="search-container">
-            <a-row class="search-area">
-                <a-col :xs='24' :sm='24' :xl="8" :xxl='8' class="search-item">
-                    <div class="key">角色名称:</div>
-                    <div class="value">
-                        <a-input placeholder="请输入角色名称" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
-                    </div>
-                </a-col>
-            </a-row>
-            <div class="btn-area">
-                <a-button @click="handleSearch" type="primary">查询</a-button>
-                <a-button @click="handleSearchReset">重置</a-button>
-            </div>
-        </div> -->
+        </div>      
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-key="record => record.id" :pagination='false'>

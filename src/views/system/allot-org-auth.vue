@@ -6,10 +6,7 @@
         </div>
         <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
             <template #expandIcon></template>
-            <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="$t('n.'+ org.name)" class="gray-collapse-panel">
-                <!-- <div v-model:checked="checkAll"
-                    :indeterminate="indeterminate"
-                    @change="onCheckAllChange">  Check all</div>-->
+            <a-collapse-panel v-for="(org,key) of orgType" :key="key" :header="$t('n.'+ org.name)" class="gray-collapse-panel">               
                 <template #extra>
                     <a-button @click.stop="handleEditShow(key)" type="link" v-if="!org.edit && $auth('authority.save')"><i class="icon i_edit"/>{{ $t('def.set') }}</a-button>
                     <template v-else>
@@ -109,7 +106,7 @@ export default {
             Core.Api.Authority.allOptions().then(res => {
                 console.log('getAllAuthItem res:', res)
                 let list = res.list
-                list.map(auth => {
+                list.forEach(auth => {
                     let key = auth.key.split('.')[0];
                     let item = this.authItems.find(i => key === i.key);
                     if (item) {
