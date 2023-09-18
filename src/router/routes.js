@@ -1639,6 +1639,31 @@ const routes = [
 			// 	}
 			// },
 		]
+	},    
+	{ // 工作台
+		path: '/crm-staging',
+		component: Layout,
+		redirect: '/crm-staging/staging',
+		name: 'crm-staging',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '工作台',
+			title_en: 'Staging',
+			icon: 'i_crm_data',
+			auth: ["crm-label.list"],
+		},
+		children: [
+			{
+				path: 'staging',
+				name: 'CrmStaging',
+				component: () => import('@/views/crm-staging/staging.vue'),
+				meta: {
+					title: '工作台',
+					title_en: 'Staging',
+					auth: ["crm-label.list"],
+				}
+			},
+		]
 	},
 	{ // 客户
 		path: '/crm-customer',
