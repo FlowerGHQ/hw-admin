@@ -1,14 +1,34 @@
 <template>
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane :key="pane.key" :tab="pane.title" v-for="pane in panes">
-                <p>页面{{ pane.key }}</p>
+            <a-tab-pane :key="pane.key" :tab="pane.title" v-for="(pane, index) in panes">
+                <template v-if="activeKey === 1">
+                    <GeneralView/>
+                </template>
+                <template v-else-if="activeKey === 2">
+                    <p>页面{{ pane.key }}</p>
+                </template>
+                <template v-else-if="activeKey === 3">
+                    <p>页面{{ pane.key }}</p>
+                </template>
+                <template v-else-if="activeKey === 4">
+                    <Order/>
+                </template>
+                <template v-else-if="activeKey === 5">
+                    <TestDrive/>
+                </template>
+                <template v-else-if="activeKey === 6">
+                    <p>页面{{ pane.key }}</p>
+                </template>
             </a-tab-pane>
         </a-tabs>
     </div>
 </template>
 
 <script setup>
+import Order from './order.vue';
+import TestDrive from './test-drive.vue';
+import GeneralView from './general-view.vue';
 import Core from '@/core';
 import { reactive, ref, toRefs } from 'vue';
 

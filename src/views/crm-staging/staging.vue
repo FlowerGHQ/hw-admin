@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="task-list-body">
-                        <div class="task-list-body-item" :class="taskIndex === index ? 'selected' : ''" v-for="(item, index) in staskList" :key="item.id" @click="changeTask(index)">
+                        <div class="task-list-body-item" :class="taskIndex === index ? 'selected' : ''" v-for="(item, index) in taskList" :key="item.id" @click="changeTask(index)">
                             <div class="avatar">
                                 <img :src="item.avatar" class="avatar-img">
                                 <img :src="item.gender === 1 ? getAssetURL('./images/avatar.png') : getAssetURL('./images/avatar.png')" class="avatar-gender">
@@ -32,7 +32,7 @@
                                 <div class="message-item">
                                     <div class="nameAndAge">
                                         <span class="name">{{ item.name }}</span>
-                                        <span class="age">{{ item.gender }}岁</span>
+                                        <span class="age">{{ item.age }}岁</span>
                                     </div>
                                     <IntentionStairs :status="item.status"/>
                                 </div>
@@ -55,7 +55,7 @@
                         <UserAbout/>
                     </div>
                 </div>
-                <FixedSelect :current="taskCurrent" :amount="taskAmount" @next="nextTask"/>
+                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop"/>
             </div>
         </div>
     </div>
@@ -63,7 +63,7 @@
 
 <script setup>
 import Core from '@/core';
-import IntentionStairs from "./components/IntentionStairs.vue";
+import IntentionStairs from "./components/intention-stairs.vue";
 import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
 import UserAbout from "./components/user-about.vue";
@@ -121,22 +121,23 @@ const searchEnter = (value) => {
 }
 
 //任务列表
+const isTop = ref(false)
 const taskIndex = ref(0)
 const taskCurrent = ref(1)
 const taskAmount = ref(1)
 const staskStatusIndex = ref(0)
 const staskStatusList = [{ name: '待办' }, { name: '已办' }]
-const staskList = [
-    { avatar: menuImage, gender: 1, name: '小红', age: 25, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 2, name: '张三', age: 25, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 1, name: '小红', age: 25, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 2, name: '张三', age: 25, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 1, name: '小红', age: 25, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 2, name: '张三', age: 25, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 1, name: '小红', age: 25, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { avatar: menuImage, gender: 2, name: '张三', age: 25, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-]
-taskAmount.value = staskList.length
+const taskList = ref([
+    { id: 1, avatar: menuImage, gender: 1, name: '小红', age: 1, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 2, avatar: menuImage, gender: 2, name: '张三', age: 2, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 3, avatar: menuImage, gender: 1, name: '小红', age: 3, status: 30, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 4, avatar: menuImage, gender: 2, name: '张三', age: 4, status: 40, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 5, avatar: menuImage, gender: 1, name: '小红', age: 5, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 6, avatar: menuImage, gender: 2, name: '张三', age: 6, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 7, avatar: menuImage, gender: 1, name: '小红', age: 7, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
+    { id: 8, avatar: menuImage, gender: 2, name: '张三', age: 8, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
+])
+taskAmount.value = taskList.value.length
 const staskStatusChange = (index) => {
     staskStatusIndex.value = index
 }
@@ -144,11 +145,17 @@ const changeTask = (index) => {
     taskIndex.value = index
     taskCurrent.value = index + 1
 }
+//置顶
+const toTop = (index) => {
+    console.log(taskList.value[index].id)
+}
 const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
 }
 
+
+// 公共方法
 //动态获取本地图片
 const getAssetURL = (image) => {
   // 参数一: 相对路径

@@ -121,7 +121,7 @@
     
 <script>
 import Core from '../../../core';
-import intentionStairs from './IntentionStairs.vue';
+import intentionStairs from './intention-stairs.vue';
 import AddTag from './AddTag.vue'
 export default {
     name: 'UserDetail',
