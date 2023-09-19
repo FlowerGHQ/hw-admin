@@ -2,55 +2,22 @@
   <div class="container">
     <div class="search-Filter">
       <a-radio-group v-model:value="day" class="time-type" @change="handleTimeTypeChange">
-        <a-radio-button
-          :class="[day === 1 ? 'type-item active' : 'type-item']"
-          :value="1"
-          >{{ $t("db.day") }}</a-radio-button
-        >
-        <a-radio-button
-          :class="[day === 2 ? 'type-item active' : 'type-item']"
-          :value="2"
-          >{{ $t("db.month") }}</a-radio-button
-        >
-        <a-radio-button
-          :class="[day === 3 ? 'type-item active' : 'type-item']"
-          :value="3"
-          >{{ $t("db.year") }}</a-radio-button
-        >
+        <a-radio-button :class="[day === 1 ? 'type-item active' : 'type-item']" :value="1">{{ $t("db.day")
+        }}</a-radio-button>
+        <a-radio-button :class="[day === 2 ? 'type-item active' : 'type-item']" :value="2">{{ $t("db.month")
+        }}</a-radio-button>
+        <a-radio-button :class="[day === 3 ? 'type-item active' : 'type-item']" :value="3">{{ $t("db.year")
+        }}</a-radio-button>
       </a-radio-group>
-      <a-range-picker
-        v-if="day === 1"
-        v-model:value="time"
-        @change="handleChange()"
-        :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
-        ref="TimeSearch"
-      />
-      <a-range-picker
-        v-if="day === 2"
-        v-model:value="time"
-        @change="handleChange()"
-        :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
-        picker="month"
-      />
-      <a-range-picker
-        v-if="day === 3"
-        v-model:value="time"
-        @change="handleChange()"
-        :allowClear="false"
-        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]"
-        picker="year"
-      />
-      <a-tree-select
-        class="CategoryTreeSelect"
-        v-model:value="searchForm.group_id"
-        @change="handleChange()"
-        :placeholder="$t('def.select') + $t('crm_c.group')"
-        :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
-        :tree-data="groupOptions"
-        tree-default-expand-all
-      >
+      <a-range-picker v-if="day === 1" v-model:value="time" @change="handleChange()" :allowClear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" ref="TimeSearch" />
+      <a-range-picker v-if="day === 2" v-model:value="time" @change="handleChange()" :allowClear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" picker="month" />
+      <a-range-picker v-if="day === 3" v-model:value="time" @change="handleChange()" :allowClear="false"
+        :placeholder="[$t('crm_def.start_time'), $t('crm_def.end_time')]" picker="year" />
+      <a-tree-select class="CategoryTreeSelect" v-model:value="searchForm.group_id" @change="handleChange()"
+        :placeholder="$t('def.select') + $t('crm_c.group')" :dropdown-style="{ maxHeight: '412px', overflow: 'auto' }"
+        :tree-data="groupOptions" tree-default-expand-all>
         <!--a-cascader级联选择后缀图标 -->
         <template #suffixIcon><span class="icon i_xialajiantouxiao" /></template>
       </a-tree-select>
@@ -60,35 +27,25 @@
       <div class="title">{{ $t("db.data_overview") }}</div>
       <div class="data-container">
         <!-- 新增客户 -->
-		<div class="data-card" v-for="item in totalList" :key="item.id">
-			<div class="card-item">						
-				<div class="left">
-					<img class="img" :src="getSrcImg(item.title_icon)" alt="" />
-				</div>
-				<div class="right">
-					<div class="right-text">{{ $t(item.title) }}</div>
-					<div class="right-count mr-5">
-						{{ item.count }}
-					</div>			
+        <div class="data-card" v-for="item in totalList" :key="item.id">
+          <div class="card-item">
+            <div class="left">
+              <img class="img" :src="getSrcImg(item.title_icon)" alt="" />
+            </div>
+            <div class="right">
+              <div class="right-text">{{ $t(item.title) }}</div>
+              <div class="right-count mr-5">
+                {{ item.count }}
+              </div>
 
-					<div class="right-percentage-rise mr-5" :class="{'right-percentage-des': item.rise_des_count < 0}">
-						<img
-							v-if="item.rise_des_count >= 0"
-							class="allow"
-							:src="getSrcImg(item.rise_icon)"
-							alt=""
-						/>
-						<img
-							v-if="item.rise_des_count < 0"
-							class="allow"
-							:src="getSrcImg(item.des_icon)"
-							alt=""
-						/>
-						<span>{{Math.abs(item.rise_des_count)}}</span>
-					</div>
-				</div>
-			</div>
-		</div>       
+              <div class="right-percentage-rise mr-5" :class="{ 'right-percentage-des': item.rise_des_count < 0 }">
+                <img v-if="item.rise_des_count >= 0" class="allow" :src="getSrcImg(item.rise_icon)" alt="" />
+                <img v-if="item.rise_des_count < 0" class="allow" :src="getSrcImg(item.des_icon)" alt="" />
+                <span>{{ Math.abs(item.rise_des_count) }}%</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -100,7 +57,7 @@ import dayjs from "dayjs";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import "../../../assets/iconfont/iconfont";
 
-const modules = import.meta.globEager ("../../../assets/images/dashboard/*")
+const modules = import.meta.globEager("../../../assets/images/dashboard/*")
 
 export default {
   name: "Card",
@@ -110,7 +67,7 @@ export default {
   props: {
     searchForm: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
   },
   data() {
@@ -138,98 +95,104 @@ export default {
         day: 1,
       },
       time: [],
-      groupOptions: [],	  
+      groupOptions: [],
     };
   },
   watch: {
     searchForm: {
-      deep: true,      
+      deep: true,
       handler(n) {
         this.salesStatistics();
       },
     },
   },
   computed: {
-	// 头部的统计数据arr
-	totalList(){
-		let data = [
-			// 新增客户
-			{	id:1, 
-				title:'db.new_customer', 
-				count:`${this.form.new_customer_count}`,
-				rise_des_count:`${this.form.new_customer_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.new_customer_percentage}`,   // 百分比
-				title_icon:'customer',
-				rise_icon:'increase', 
-				des_icon:'fall',
-			},		
-			//  新增跟进记录
-			{	id:2, 
-				title:'db.new_follow_up_records', 
-				count:`${this.form.new_contact_count}`,
-				rise_des_count:`${this.form.new_contact_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.new_contact_percentage}`,   // 百分比
-				title_icon:'follow_up-records',
-				rise_icon:'increase',
-				des_icon:'fall',
-			},		
-			//  新增商机
-			{	id:3, 
-				title:'db.new_business', 				
-				count:`${this.form.new_bo_count}`,
-				rise_des_count:`${this.form.new_bo_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.new_bo_percentage}`,
-				title_icon:'business',
-				rise_icon:'increase', 
-				des_icon:'fall',
-			},		
-			//  新增订单
-			{	id:4, 
-				title:'db.new_orders', 
-				count:`${this.form.new_order_count}`,
-				rise_des_count:`${this.form.new_order_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.new_order_percentage}`,   // 百分比
-				title_icon:'order',
-				rise_icon:'increase', 
-				des_icon:'fall',
-			},		
-			//  新增试驾单
-			{	id:5, 
-				title:'db.new_drive_order', 				
-				count:`${this.form.new_test_driver_count}`,
-				rise_des_count:`${this.form.new_test_driver_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.new_test_driver_percentage}`,   // 百分比
-				title_icon:'drive-order',
-				rise_icon:'increase', 
-				des_icon:'fall',
-			},		
-			//  新增回款单
-			{	id:6, 
-				title:'db.new_payment_receipt', 
-				count:`${this.form.win_bo_count}`,
-				rise_des_count:`${this.form.win_bo_seven_day_count}`, // 判断其是升还是降的数字
-				percentage:`${this.form?.win_bo_percentage}`,   // 百分比
-				title_icon:'return-order',
-				rise_icon:'increase', 
-				des_icon:'fall',
-			},			
-		]
-		return data
-	}
+    // 头部的统计数据arr
+    totalList() {
+      let data = [
+        // 新增客户
+        {
+          id: 1,
+          title: 'db.new_customer',
+          count: `${this.form.new_customer_count}`,
+          rise_des_count: `${this.form.new_customer_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.new_customer_seven_day_count}`,   // 百分比
+          title_icon: 'customer',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+        //  新增跟进记录
+        {
+          id: 2,
+          title: 'db.new_follow_up_records',
+          count: `${this.form.new_contact_count}`,
+          rise_des_count: `${this.form.new_contact_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.new_contact_seven_day_count}`,   // 百分比
+          title_icon: 'follow_up-records',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+        //  新增商机
+        {
+          id: 3,
+          title: 'db.new_business',
+          count: `${this.form.new_bo_count}`,
+          rise_des_count: `${this.form.new_bo_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.new_bo_seven_day_count}`,
+          title_icon: 'business',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+        //  新增订单
+        {
+          id: 4,
+          title: 'db.new_orders',
+          count: `${this.form.new_order_count}`,
+          rise_des_count: `${this.form.new_order_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.new_order_seven_day_count}`,   // 百分比
+          title_icon: 'order',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+        //  新增试驾单
+        {
+          id: 5,
+          title: 'db.new_drive_order',
+          count: `${this.form.new_test_driver_count}`,
+          rise_des_count: `${this.form.new_test_driver_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.new_test_driver_seven_day_count}`,   // 百分比
+          title_icon: 'drive-order',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+        //  新增回款单
+        {
+          id: 6,
+          title: 'db.new_payment_receipt',
+          count: `${this.form.win_bo_count}`,
+          rise_des_count: `${this.form.win_bo_seven_day_count}`, // 判断其是升还是降的数字
+          percentage: `${this.form?.win_bo_seven_day_count}`,   // 百分比
+          title_icon: 'return-order',
+          rise_icon: 'increase',
+          des_icon: 'fall',
+        },
+      ]
+      return data
+    }
   },
-  created() {},
+  created() { },
   mounted() {
     this.handleGroupTree();
     this.salesStatistics();
   },
-  beforeUnmount() {},
+  beforeUnmount() { },
   methods: {
-	// 获取照片
-	getSrcImg(name, type ='png'){
-		const path = `../../../assets/images/dashboard/${name}.${type}`;		
-        return modules[path]?.default;
-	},
-    salesStatistics() {		
+    // 获取照片
+    getSrcImg(name, type = 'png') {
+      const path = `../../../assets/images/dashboard/${name}.${type}`;
+      return modules[path]?.default;
+    },
+    salesStatistics() {
       Core.Api.CRMDashboard.salesStatistics({
         ...this.searchForm,
       }).then((res) => {
@@ -243,32 +206,38 @@ export default {
           case 3:
             this.day = 3;
             break;
-        }        
+        }
         this.form.new_customer_count = res.new_customer_count;  // 新增客户(ok)
+        this.form.new_customer_seven_day_count = res.new_customer_seven_day_count;  // 新增客户（百分比）
         this.form.new_contact_count = res.new_contact_count; // 新增跟进记录
+        this.form.new_contact_seven_day_count = res.new_contact_seven_day_count; // 新增跟进记录（百分比）
         this.form.new_bo_count = res.new_bo_count;  // 新增商机（ok）
+        this.form.new_bo_seven_day_count = res.new_bo_seven_day_count;  // 新增商机（百分比）
         this.form.new_order_count = res.new_order_count;  // 新增订单(ok)
+        this.form.new_order_seven_day_count = res.new_order_seven_day_count;  // 新增订单（百分比）
         this.form.new_test_driver_count = res.new_test_driver_count; // 新增试驾单(ok)
+        this.form.new_test_driver_seven_day_count = res.new_test_driver_seven_day_count; // 新增试驾单（百分比）
         this.form.win_bo_count = res.win_bo_count;  // 新增回款单
+        this.form.win_bo_seven_day_count = res.win_bo_seven_day_count;  // 新增回款单（百分比）
 
-		// 判断其是增还是降
-        this.form.new_customer_seven_day_count = res.new_customer_count - res.new_customer_seven_day_count;
-        this.form.new_contact_seven_day_count = res.new_contact_count - res.new_contact_seven_day_count;
-        this.form.new_bo_seven_day_count = res.new_bo_count - res.new_bo_seven_day_count;
-        this.form.new_order_seven_day_count = res.new_order_count - res.new_order_seven_day_count;
-        this.form.new_test_driver_seven_day_count = res.new_test_driver_count - res.new_test_driver_seven_day_count;
-        this.form.win_bo_seven_day_count = res.win_bo_count - res.win_bo_seven_day_count;
+        // 判断其是增还是降
+        // this.form.new_customer_seven_day_count = res.new_customer_count - res.new_customer_seven_day_count;
+        // this.form.new_contact_seven_day_count = res.new_contact_count - res.new_contact_seven_day_count;
+        // this.form.new_bo_seven_day_count = res.new_bo_count - res.new_bo_seven_day_count;
+        // this.form.new_order_seven_day_count = res.new_order_count - res.new_order_seven_day_count;
+        // this.form.new_test_driver_seven_day_count = res.new_test_driver_count - res.new_test_driver_seven_day_count;
+        // this.form.win_bo_seven_day_count = res.win_bo_count - res.win_bo_seven_day_count;
 
-		// console.log("新增de", res.new_order_count, res.new_order_seven_day_count);
-		// 百分比
-		this.form.new_customer_percentage = Core.Util.percentageFilter(res.new_customer_count, res.new_customer_seven_day_count)		
-		this.form.new_contact_percentage =  Core.Util.percentageFilter(res.new_contact_count, res.new_contact_seven_day_count)			
-		this.form.new_bo_percentage =  Core.Util.percentageFilter(res.new_bo_count, res.new_bo_seven_day_count )		  
-		this.form.new_order_percentage =  Core.Util.percentageFilter(res.new_order_count, res.new_order_seven_day_count)		  
-		this.form.new_test_driver_percentage =  Core.Util.percentageFilter(res.new_test_driver_count, res.new_test_driver_seven_day_count)		  
-		this.form.win_bo_percentage =  Core.Util.percentageFilter(res.win_bo_count, res.win_bo_seven_day_count)
+        // console.log("新增de", res.new_order_count, res.new_order_seven_day_count);
+        // 百分比
+        // this.form.new_customer_percentage = Core.Util.percentageFilter(res.new_customer_count, res.new_customer_seven_day_count)		
+        // this.form.new_contact_percentage =  Core.Util.percentageFilter(res.new_contact_count, res.new_contact_seven_day_count)			
+        // this.form.new_bo_percentage =  Core.Util.percentageFilter(res.new_bo_count, res.new_bo_seven_day_count )		  
+        // this.form.new_order_percentage =  Core.Util.percentageFilter(res.new_order_count, res.new_order_seven_day_count)		  
+        // this.form.new_test_driver_percentage =  Core.Util.percentageFilter(res.new_test_driver_count, res.new_test_driver_seven_day_count)		  
+        // this.form.win_bo_percentage =  Core.Util.percentageFilter(res.win_bo_count, res.win_bo_seven_day_count)
 
-		// console.log("百分比", this.form.new_order_percentage);
+        // console.log("百分比", this.form.new_order_percentage);
       });
     },
     // 时间转换
@@ -376,6 +345,7 @@ export default {
       font-size: 14px;
       font-weight: 500;
     }
+
     .time-type {
       .fac();
       margin-right: 24px;
@@ -420,66 +390,74 @@ export default {
       border-bottom: 1px solid #eef1f5;
     }
 
-    .data-container {          
+    .data-container {
       width: 100%;
       display: flex;
-      .data-card {    
-		width: calc(100% / 3);
-        box-sizing: border-box;       				
-		border-right: 1px solid #EEF1F5;
-		.card-item{	
-			width: 100%;
-			padding: 22px 20px;
-			box-sizing: content-box;
-			display: flex;
-			
-			.left{
-				.img{
-					margin-top: 10px;
-					width: 37px;
-					height: 37px;
-				}
-			}
-			.mr-5{
-				margin-top: 5px;
-			}
-			.right{
-				margin-left: 20px;
-				.right-text{
-					font-family: 'PingFang SC';				
-					font-weight: 400;
-					font-size: 14px;
-					color: #8E9AAD;
-				}
-				.right-count{
-					font-family: 'PingFang SC';				
-					font-weight: 600;
-					font-size: 22px;				
-					color: #34383E;
-				}
-				.right-percentage-rise{
-					width: 52px;
-					padding: 2px 4px;
-					background: rgba(0, 110, 249, 0.1);
-					border-radius: 4px;
-					color: #006EF9;					
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					.allow{
-						margin-right: 3px;
-						width: 10px;
-						height: 10px;
-					}
 
-					&.right-percentage-des{
-						background: rgba(245, 34, 45, 0.1);
-						color: #F5222D;
-					}
-				}
-			}
-		} 
-      }     
+      .data-card {
+        width: calc(100% / 3);
+        box-sizing: border-box;
+        border-right: 1px solid #EEF1F5;
+
+        .card-item {
+          width: 100%;
+          padding: 22px 20px;
+          box-sizing: content-box;
+          display: flex;
+
+          .left {
+            .img {
+              margin-top: 10px;
+              width: 37px;
+              height: 37px;
+            }
+          }
+
+          .mr-5 {
+            margin-top: 5px;
+          }
+
+          .right {
+            margin-left: 20px;
+
+            .right-text {
+              font-family: 'PingFang SC';
+              font-weight: 400;
+              font-size: 14px;
+              color: #8E9AAD;
+            }
+
+            .right-count {
+              font-family: 'PingFang SC';
+              font-weight: 600;
+              font-size: 22px;
+              color: #34383E;
+            }
+
+            .right-percentage-rise {
+              // width: 52px;
+              padding: 2px 8px;
+              background: rgba(0, 110, 249, 0.1);
+              border-radius: 4px;
+              color: #006EF9;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+
+              .allow {
+                margin-right: 3px;
+                width: 10px;
+                height: 10px;
+              }
+
+              &.right-percentage-des {
+                background: rgba(245, 34, 45, 0.1);
+                color: #F5222D;
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
