@@ -1649,7 +1649,7 @@ const routes = [
 		meta: {
 			title: '工作台',
 			title_en: 'Staging',
-			icon: 'i_crm_data',
+			icon: 'i_crm_bo',
 			auth: ["crm-label.list"],
 		},
 		children: [
