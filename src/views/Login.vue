@@ -80,6 +80,20 @@ export default {
         this.fsLogin()
     },
     methods: {
+        /* Fetch start*/
+        // 检查是否是超级管理员
+        isAdminFetch(parmas) {
+            let obj = {
+                ...parmas
+            }
+            Core.Api.User.check_admin(obj).then(res => {
+                Core.Logger.log("参数", obj, "是否是超级管理员", res)
+                Core.Data.setManager(res.status)
+            }).catch(err => {
+                Core.Logger.warn("参数", obj, "是否是超级管理员", err)
+            })
+        },
+        /* Fetch end*/
         fsLogin() {
             if (window.h5sdk) {
                 jsapi.apiAuth();                
@@ -111,6 +125,7 @@ export default {
                 Core.Data.setUserType(loginType); // 设置登录方的文字
 
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
+                this.isAdminFetch()
             });
         },
 

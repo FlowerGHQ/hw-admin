@@ -1603,7 +1603,31 @@ const routes = [
                 }
             },
         ]
-    },    
+    },
+    { // COC证书管理
+        path: '/coc',
+        component: Layout,
+        redirect: '/coc/coc-list',
+        name: 'COC',
+        type: [ROUTER_TYPE.SALES],
+        meta: {
+            title: "COC证书管理",
+            title_en: 'COC Certificate Management',
+            icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+        },
+        children: [
+            {
+                path: 'coc-list',
+                name: 'COCList',
+                component: () => import('@/views/coc/coc-list.vue'),
+                meta: {
+                    title: 'COC证书列表',
+                    title_en: 'List of COC certificates',
+                }
+            }
+        ]
+    },
 	{ // 数据
 		path: '/crm-dashboard',
 		component: Layout,

@@ -173,6 +173,17 @@ class StorageHandler {
     getGroupId() {
 		return this.getItem(Const.DATA.GROUP_ID)
 	}
+
+    // 判断这个是否是超级管理员
+    setManager(value) {
+        this.setItem(Const.DATA.SUPER_ADMIN, value);
+    }
+    getManager() {
+        return this.getItem(Const.DATA.SUPER_ADMIN)
+    }
+    clearManager() {
+        this.removeItem(Const.DATA.SUPER_ADMIN)
+    }
 }
 
 export default new StorageHandler();
