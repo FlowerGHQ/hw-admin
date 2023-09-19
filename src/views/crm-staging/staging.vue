@@ -63,7 +63,7 @@
 
 <script setup>
 import Core from '@/core';
-import IntentionStairs from "./components/intention-stairs.vue";
+import IntentionStairs from "./components/IntentionStairs.vue";
 import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
 import UserAbout from "./components/user-about.vue";

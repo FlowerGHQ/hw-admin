@@ -115,7 +115,7 @@
                 </div> 
             </div>
         </div>
-        <AddTag :addTagShow="true" />
+        <AddTag :addTagShow="false" />
     </div>
 </template>
     
