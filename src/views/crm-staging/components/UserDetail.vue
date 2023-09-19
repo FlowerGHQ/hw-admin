@@ -78,7 +78,7 @@
                                 v-if="tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.TAG || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.MODEL || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.CITY">
                                 {{ tag.name || '-' }}
                                 <!-- 删除图标 -->
-                                <img src="http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/9065c4d3d3a46fd8b21e00e62cab3152b8f56135be321a0437e4de6f31ca1b18.png"
+                                <img src="../images/blue-close-icon.png"
                                     alt="">
                             </div>
                         </template>
@@ -101,7 +101,7 @@
                                 v-if="tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.FOCUS">
                                 {{ focus.name || '-' }}
                                 <!-- 删除图标 -->
-                                <img src="http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/a6ecd3603b897901e64f1413c45561ac6b070e29f1948f306440f9779f7186e7.png"
+                                <img src="../images/green-close-icon.png"
                                     alt="">
                             </div>
                         </template>
