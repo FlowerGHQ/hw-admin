@@ -1261,6 +1261,21 @@ const Util = {
         return TAR[id + ''] || ''
     },
     /* =============== 测试报告 ================ */
+    /* =============== 意向程度 ================ */
+    intentionTypeFilter(val, to = 'key') {
+        const MAP = Const.INTENTION.TYPE_MAP
+        switch (to) {
+            case 'key':
+                try {                    
+                    return MAP[val + ''].key || {}
+                } catch (error) {
+                    return ""
+                }
+            case 'status':
+                return MAP[val + ''].status || 'empty'
+        }
+    },
+    /* =============== 意向程度 ================ */
 
     /* ======== 搜索条件筛选null过滤掉去 
     * obj { uid: null, status: null }
