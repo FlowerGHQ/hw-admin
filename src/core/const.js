@@ -2160,6 +2160,19 @@ let Const = {
             '6': { key: '落地页1', value: 6, },
             '7': { key: '落地页2', value: 7, }
         },
+        // 标签
+        TAG_TYPE_MAP: {
+            '3': { key: '标签', value: 3, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+            '4': { key: '关注点', value: 4, color: '#00B42A'/*字体颜色*/, bgColor:'#E1F7E3'/*背景颜色*/, },
+            '5': { key: '摩托车型号', value: 5, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+            '6': { key: '用车城市', value: 6, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+        },
+        TAG_TYPE: {
+            TAG: 3, // 正常标签
+            FOCUS: 4, // 关注点
+            MODEL: 5, // 摩托车型号
+            CITY: 6, // 用车城市
+        },
     },
 
     // 测试

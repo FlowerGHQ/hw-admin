@@ -58,7 +58,7 @@
                         <span v-if="detail.province && detail.city">{{ detail.province }}{{ detail.city }}</span>
                         <span v-else>待补充</span>
                     </div>
-                </div> 
+                </div>
                 <div class="user-info-item">
                     <div class="user-info-key">
                         收件地址：
@@ -66,10 +66,27 @@
                     <div class="user-info-value">
                         {{ detail.address || '-' }}
                     </div>
-                </div> 
-                <div class="user-info-item tag">
+                </div>
+                <div class="user-info-item">
                     <div class="user-info-key">
                         标签：
+                    </div>
+                    <div class="user-tag-value">
+                        <template v-for="tagTypeList in detail.label_group_list">
+                            <div class="user-color-tag blue" v-for="tag in tagTypeList.label_list"
+                                @click="handleDeleteTag(tag.label_bind_id)"
+                                v-if="tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.TAG || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.MODEL || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.CITY">
+                                {{ tag.name || '-' }} 
+                                <!-- 删除图标 -->
+                                <img src="http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/9065c4d3d3a46fd8b21e00e62cab3152b8f56135be321a0437e4de6f31ca1b18.png"
+                                    alt="">
+                            </div>
+                        </template>
+                        <div class="add-tag-btn" @click="handleAddTag">
+                            <!-- 加号 --> 
+                            <img src="http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/93efd07260c8f47fe800d131b2f7c2aea8a9b225d99e82f7192441a84af68ee1.png" alt="">
+                            添加标签
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,6 +105,7 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             detail: {
                 name: '赵女士',
                 intention: 20,
@@ -101,7 +119,115 @@ export default {
                 source_type: 1,
                 province: '吉林省',
                 city: '吉林市',
-                address: '江苏省常州市天宁区福祥街道上河郡小区12栋一单元1602号'
+                address: '江苏省常州市天宁区福祥街道上河郡小区12栋一单元1602号',
+                label_group_list: [
+                    {
+                        label_list: [
+                            {
+                                category: 0,
+                                id: 1,
+                                label_bind_id: 0,
+                                name: "有摩托",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 2,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 3,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 4,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 3,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 4,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 3,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 4,
+                                label_bind_id: 0,
+                                name: "2年骑行经验",
+                                type: 3,
+                                user_id: 0
+                            },
+                        ],
+                        type: 3
+                    },
+                    {
+                        label_list: [
+                            {
+                                category: 0,
+                                id: 1,
+                                label_bind_id: 0,
+                                name: "续航",
+                                type: 4,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 2,
+                                label_bind_id: 0,
+                                name: "质量",
+                                type: 4,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 3,
+                                label_bind_id: 0,
+                                name: "安全",
+                                type: 4,
+                                user_id: 0
+                            },
+                            {
+                                category: 0,
+                                id: 4,
+                                label_bind_id: 0,
+                                name: "安全",
+                                type: 4,
+                                user_id: 0
+                            },
+                        ],
+                        type: 4
+                    }
+                ],
             }
         };
     },
@@ -145,7 +271,8 @@ export default {
             .user-info-item {
                 display: flex;
                 align-items: center;
-                margin-bottom: 12px; 
+                margin-bottom: 12px;
+
                 &.tag {
                     flex-wrap: wrap;
                 }
@@ -203,8 +330,53 @@ export default {
                 .user-info-value {
                     color: #1D2129;
                     font-size: 14px;
+
                     &.w {
                         width: 139px;
+                    }
+                }
+                .user-tag-value {
+                    // width: 100%;
+                    display: flex;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    width: 500px;
+                }
+                .add-tag-btn {
+                    padding: 1px 8px;
+                    box-sizing: border-box;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    color:#4E5969;
+                    font-size: 12px;
+                    border: 0.5px dashed#D9D9D9;
+                    background:#FFF;
+                    cursor: pointer;
+                    >img {
+                        width: 12px;
+                        height: 12px;
+                        margin-right: 2px;
+                    }
+                }
+                .user-color-tag {
+                    cursor: pointer;
+                    padding: 2px 8px;
+                    box-sizing: border-box;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+                    margin-right: 8px;
+                    > img {
+                        width: 10px;
+                        height: 10px;
+                        margin-left: 3px; 
+                    }
+                    &.blue {
+                        background-color: #E6EFFF;
+                        border-radius: 2px;
+                        color: #3381FF;
                     }
                 }
             }
