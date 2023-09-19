@@ -90,8 +90,8 @@ export default {
       day: 1,
       searchForm: {
         group_id: undefined,
-        begin_time: "",
-        end_time: "",
+        begin_time: Number(((Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000).toFixed(0)),
+        end_time: Number((Date.now() / 1000).toFixed(0)),
         day: 1,
       },
       time: [],
