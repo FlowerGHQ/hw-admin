@@ -275,17 +275,17 @@ export default {
     handleTimeTypeChange() {
       switch (this.day) {
         case 1:
-          this.searchForm.begin_time = (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000;
+          this.searchForm.begin_time = Number(((Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000).toFixed(0));
           break;
         case 2:
-          this.searchForm.begin_time = (Date.now() - 7 * 24 * 60 * 60 * 1000) / 1000;
+          this.searchForm.begin_time = Number(((Date.now() - 30 * 24 * 60 * 60 * 1000) / 1000).toFixed(0));
           break;
         case 3:
-          this.searchForm.begin_time = (Date.now() - 365 * 24 * 60 * 60 * 1000) / 1000;
+          this.searchForm.begin_time = Number(((Date.now() - 365 * 24 * 60 * 60 * 1000) / 1000).toFixed(0));
           break;
       }
 
-      this.searchForm.end_time = Date.now() / 1000;
+      this.searchForm.end_time = Number((Date.now() / 1000).toFixed(0));
       this.searchForm.day = this.day;
       this.$emit("select", this.searchForm);
     },

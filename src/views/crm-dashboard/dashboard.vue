@@ -11,7 +11,7 @@
           </a-col>
           <!-- 商机分析 -->
           <a-col :span="24">
-              <NewBoStatistics :searchForm="searchForm" />
+            <NewBoStatistics :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
@@ -21,7 +21,7 @@
           <a-col :span="24">
             <!-- <PerformanceList :searchForm="searchForm" /> -->
             <!-- 跟进统计 -->
-            <FollowUpStatistics :searchForm="searchForm"/>
+            <FollowUpStatistics :searchForm="searchForm" />
           </a-col>
           <!-- 销售业绩排名(TOP10) -->
           <a-col :span="24">
@@ -30,25 +30,21 @@
         </a-row>
       </a-col>
     </a-row>
-    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">    
-	  <!-- 数据趋势 -->
+    <a-row :gutter="[8, 0]" v-if="$auth('ADMIN')">
+      <!-- 数据趋势 -->
       <a-col :xs="24" :sm="24" :xl="15" :xxl="15">
         <a-row :gutter="[8, 0]">
           <!-- 数据趋势 -->
           <a-col :span="24">
-            <DataTrendStatistics 
-				:searchForm="searchForm" 				
-				:isPeople="isPeople" 
-				:list="list" 				
-			/>
+            <DataTrendStatistics :searchForm="searchForm" :isPeople="isPeople" :list="list" />
           </a-col>
           <!-- 客户购买意向 -->
           <a-col :span="24">
           </a-col>
         </a-row>
       </a-col>
-	  <!-- 车辆预订总数 -->
-	  <a-col :xs="24" :sm="24" :xl="9" :xxl="9">
+      <!-- 车辆预订总数 -->
+      <a-col :xs="24" :sm="24" :xl="9" :xxl="9">
         <a-row :gutter="[8, 0]">
           <!-- 车辆预订总数 -->
           <a-col :span="24">
@@ -60,20 +56,20 @@
           </a-col>
         </a-row>
       </a-col>
-	  <!-- 转化分析 -->
+      <!-- 转化分析 -->
       <a-col :xs="24" :sm="24" :xl="12" :xxl="13">
         <a-row :gutter="[8, 0]">
           <!-- 转化分析 -->
           <a-col :span="24">
-            <TransformationStatistics :searchForm="searchForm"  />
+            <TransformationStatistics :searchForm="searchForm" />
           </a-col>
           <!-- 客户来源分布 -->
           <a-col :span="24">
-            <DistributionStatistics :searchForm="searchForm"  />
+            <DistributionStatistics :searchForm="searchForm" />
           </a-col>
         </a-row>
       </a-col>
-	  <!-- 商机分析 -->
+      <!-- 商机分析 -->
       <a-col :xs="24" :sm="24" :xl="12" :xxl="11">
         <a-row :gutter="[8, 0]">
           <!-- 商机分析 -->
@@ -139,68 +135,68 @@ export default {
   props: {},
   data() {
     return {
-		searchForm: {
-			group_id: undefined,
-			begin_time: (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000,
-			end_time: Date.now() / 1000,
-			day: 1,
-		},
-		isCar:true,  // 车辆预定默认显示
-		isPeople:false,
-        carCount: 0,  // 车辆预定总数
-        peopleCount: 0,   // 客户总数
-        list: [],  // 数据趋势list数据        
+      searchForm: {
+        group_id: undefined,
+        begin_time: (Date.now() - 1 * 24 * 60 * 60 * 1000) / 1000,
+        end_time: Date.now() / 1000,
+        day: 1,
+      },
+      isCar: true,  // 车辆预定默认显示
+      isPeople: false,
+      carCount: 0,  // 车辆预定总数
+      peopleCount: 0,   // 客户总数
+      list: [],  // 数据趋势list数据        
     };
   },
   watch: {},
   computed: {},
   created() { },
-  mounted() {    	
-      	this.httpPeople();
-      	this.httpCar();
+  mounted() {
+    this.httpPeople();
+    this.httpCar();
 
   },
   methods: {
-	// 车辆预订总数模块点击事件
-    handleCarClick(){
+    // 车辆预订总数模块点击事件
+    handleCarClick() {
       this.httpCar();
       this.isCar = true
       this.isPeople = false
     },
-	// 客户总数模块点击事件
-    handlePeopleClick(){
+    // 客户总数模块点击事件
+    handlePeopleClick() {
       this.httpPeople()
       this.isCar = false
       this.isPeople = true
     },
-    searchFormOperation(searchForm){
-        this.searchForm = searchForm
-        if(this.isCar === true){
-          this.httpCar();
-        }
-        if(this.isPeople === true){
-          this.httpPeople();
-        }
+    searchFormOperation(searchForm) {
+      this.searchForm = searchForm
+      if (this.isCar === true) {
+        this.httpCar();
+      }
+      if (this.isPeople === true) {
+        this.httpPeople();
+      }
     },
-	// 车辆预订总数接口
-    httpCar(){
-		Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {
-            console.log("车辆的数据", res);
-            this.carCount = res.count                
-            if(this.isCar){
-                this.list = res.list
-            }
-		})
+    // 车辆预订总数接口
+    httpCar() {
+      Core.Api.CRMDashboard.carTotalStatistics(this.searchForm).then(res => {
+        console.log("车辆的数据", res);
+        this.carCount = res.count
+        if (this.isCar) {
+          this.list = res.list
+        }
+      })
     },
-	// 客户总数接口
-    httpPeople(){
-		Core.Api.CRMDashboard.customerTotalStatistics(this.searchForm).then(res => {
-            console.log("客户的数据", res);
-            this.peopleCount = res.count
-            if(this.isPeople){
-                this.list = res.list
-            }
-		})
+    // 客户总数接口
+    httpPeople() {
+      Core.Api.CRMDashboard.customerTotalStatistics(this.searchForm).then(res => {
+        console.log("客户的数据", res);
+        this.peopleCount = res.count
+        if (this.isPeople) {
+          this.list = res.list
+        }
+      })
     }
 
   },
@@ -211,6 +207,7 @@ export default {
 .list-container {
   margin-bottom: 24px;
 }
+
 :deep(.ant-col-24) {
   padding-right: 12px;
 }
