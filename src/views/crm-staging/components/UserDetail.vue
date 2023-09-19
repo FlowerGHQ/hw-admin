@@ -115,7 +115,7 @@
                 </div> 
             </div>
         </div>
-        <AddTag :addTagShow="true" />
+        <AddTag v-model:visible="tagDrawerShow" />
     </div>
 </template>
     
@@ -228,6 +228,7 @@ export default {
                     }
                 ],
             },
+            tagDrawerShow: false
         };
     },
     watch: {},
@@ -255,7 +256,7 @@ export default {
         },
         // 添加标签
         handleAddTag() {
-
+            this.tagDrawerShow = true
         },
         // 添加关注点
         handleAddFocus() {

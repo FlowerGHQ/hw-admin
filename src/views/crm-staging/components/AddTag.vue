@@ -1,12 +1,12 @@
 
 <template>
-    <a-drawer :keyboard="true" :maskClosable="true" :width="470" title="添加标签" :visible="addTagShow" :closable="false">
+    <a-drawer :keyboard="true" :maskClosable="true" :width="470" title="添加标签" :visible="visible" :closable="false">
         <template #extra>
-            <img @click="addTagShow = false" class="add-tag-close-icon" src="../images/close-icon.png" alt="">
+            <img @click="closeDrawer" class="add-tag-close-icon" src="../images/close-icon.png" alt="">
         </template>
         <template #footer>
             <a-button @click="handleReset">重置</a-button>
-            <a-button type="primary" @click="handleTrackRecordSubmit">确定</a-button>
+            <a-button type="primary" @click="handleSubmit">确定</a-button>
         </template>
         <div class="add-tag-tip">
             每项只能只能单选一个标签
@@ -47,7 +47,7 @@ export default {
         China2Address
     },
     props: {
-        addTagShow: {
+        visible: {
             type: Boolean,
             default: false
         },
@@ -59,13 +59,16 @@ export default {
                 province: '',
                 city: '',
             },
-            renderList: Static.renderList
+            renderList: Static.renderList,
         };
     },
     computed: {
 
     },
     methods: {
+        closeDrawer() {
+            this.$emit('update:visible', false);
+        },
         // 选择用车城市
         handleCitySearch(e) {
             this.form.province = e.province
@@ -463,6 +466,7 @@ export default {
     display: flex;
     justify-content: flex-end;
 }
+
 .ant-btn {
     width: 80px;
     height: 32px;
