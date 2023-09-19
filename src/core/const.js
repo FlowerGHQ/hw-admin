@@ -1632,6 +1632,7 @@ let Const = {
             '3': { key: 3, zh: 'Shopify', en: 'Shopify', value: 3 },
             '4': { key: 4, zh: '官网2.0', en: 'Official website 2.0', value: 4 },
             '5': { key: 5, zh: '官网1.0', en: 'Official website 1.0', value: 5 },
+            '6': { key: 5, zh: '投票分享', en: 'Vote Sharing', value: 6 },
         },
         // 落地页
         Landing_Page: {
