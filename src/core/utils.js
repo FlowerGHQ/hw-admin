@@ -1276,6 +1276,21 @@ const Util = {
         }
     },
     /* =============== 意向程度 ================ */
+    /* =============== 意向车辆 ================ */
+    intentionCarTypeFilter(val, to='key') {
+        const MAP = Const.INTENTION.CAR_TYPE_MAP
+        let ITEM = MAP[val + ''] || {key: ''}
+        return ITEM[to] || '未知'
+    },
+    /* =============== 意向车辆 ================ */
+    /* =============== 客户来源 ================ */
+    // 客户来源
+    intentionSourceTypeFilter(val, to='key') {
+        const MAP = Const.INTENTION.SOURCE_TYPE_MAP
+        let ITEM = MAP[val + ''] || {key: ''}
+        return ITEM[to] || '未知'
+    },
+    /* =============== 客户来源 ================ */
 
     /* ======== 搜索条件筛选null过滤掉去 
     * obj { uid: null, status: null }

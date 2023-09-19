@@ -3,20 +3,77 @@
         <div class="user-panel">
             <img class="avatar" src="../images/avatar.png" alt="">
             <div class="user-info-container">
-            <div class="user-info-item">
-                <div class="user-name">
-                    {{ detail.name || '-' }}
+                <div class="user-info-item">
+                    <div class="user-name">
+                        {{ detail.name || '-' }}
+                    </div>
+                    <div class="user-name-key">
+                        用户昵称
+                    </div>
+                    <div class="info-loss-tag">
+                        信息缺失
+                    </div>
+                    <intentionStairs :status="detail.intention" />
                 </div>
-                <div class="user-name-key">
-                    用户昵称
+                <div class="user-info-item">
+                    <img class="user-icon" src="../images/user-icon.png" alt="">
+                    <div class="user-info-text">
+                        {{ detail.gender === 1 ? '男' : '女' }} · {{ detail.age || '-' }}岁 · {{
+                            $Util.timeFilter(detail.birthday, 3) }}
+                    </div>
+                    <img class="user-icon" src="../images/user-email.png" alt="">
+                    <div class="user-info-text">
+                        {{ detail.email || '-' }}
+                    </div>
+                    <img class="user-icon" src="../images/user-phone.png" alt="">
+                    <div class="user-info-text">
+                        {{ detail.phone || '-' }}
+                    </div>
                 </div>
-                <div class="info-loss-tag">
-                    信息缺失
+                <div class="user-info-item">
+                    <div class="user-info-key">
+                        意向车辆：
+                    </div>
+                    <div class="user-info-value w">
+                        {{ $Util.intentionCarTypeFilter(detail.intent_vehicle_model) || '-' }}
+                    </div>
+                    <div class="user-info-key ml200">
+                        注册时间：
+                    </div>
+                    <div class="user-info-value w">
+                        {{ $Util.timeFilter(detail.create_time) || '-' }}
+                    </div>
                 </div>
-                <intentionStairs :status="detail.intention" />
+                <div class="user-info-item">
+                    <div class="user-info-key">
+                        来源：
+                    </div>
+                    <div class="user-info-value w">
+                        {{ $Util.intentionSourceTypeFilter(detail.source_type) || '-' }}
+                    </div>
+                    <div class="user-info-key ml200">
+                        省市：
+                    </div>
+                    <div class="user-info-value w">
+                        <span v-if="detail.province && detail.city">{{ detail.province }}{{ detail.city }}</span>
+                        <span v-else>待补充</span>
+                    </div>
+                </div> 
+                <div class="user-info-item">
+                    <div class="user-info-key">
+                        收件地址：
+                    </div>
+                    <div class="user-info-value">
+                        {{ detail.address || '-' }}
+                    </div>
+                </div> 
+                <div class="user-info-item tag">
+                    <div class="user-info-key">
+                        标签：
+                    </div>
+                </div>
             </div>
         </div>
-        </div> 
     </div>
 </template>
     
@@ -29,11 +86,22 @@ export default {
         intentionStairs
     },
     props: {},
-    data() { 
+    data() {
         return {
             detail: {
-                name: '赵女士',    
+                name: '赵女士',
                 intention: 20,
+                gender: 2,
+                age: 25,
+                birthday: 1695092197,
+                email: '1******4@163.com',
+                phone: '155 4521 5742',
+                intent_vehicle_model: 1,
+                create_time: 1695092197,
+                source_type: 1,
+                province: '吉林省',
+                city: '吉林市',
+                address: '江苏省常州市天宁区福祥街道上河郡小区12栋一单元1602号'
             }
         };
     },
@@ -59,42 +127,85 @@ export default {
     height: 258px;
     padding: 20px;
     box-sizing: border-box;
-    background:#FFF;
+    background: #FFF;
+
     .user-panel {
         width: 100%;
         display: flex;
+
         .avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
         }
+
         .user-info-container {
             margin-left: 12px;
+
             .user-info-item {
                 display: flex;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 12px; 
+                &.tag {
+                    flex-wrap: wrap;
+                }
+
                 .user-name {
-                    color:#1D2129;
+                    color: #1D2129;
                     font-size: 16px;
                     font-weight: 600;
                     margin-right: 12px;
                 }
+
                 .user-name-key {
                     color: #4E5969;
                     font-size: 13px;
                     font-weight: 400;
                     margin-right: 12px;
                 }
+
                 .info-loss-tag {
                     padding: 2px 8px;
                     box-sizing: border-box;
                     border-radius: 3px;
                     border: 1px solid rgba(245, 63, 63, 0.30);
                     background: #FFF;
-                    color:#F53F3F;
+                    color: #F53F3F;
                     font-size: 12px;
                     margin-right: 12px;
+                }
+
+                .user-icon {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 10px;
+                }
+
+                .user-info-text {
+                    color: #1D2129;
+                    font-size: 14px;
+                    font-weight: 400;
+                    margin-right: 14px;
+                }
+
+                .user-info-key {
+                    color: #86909C;
+                    text-align: right;
+                    font-size: 14px;
+                    width: 70px;
+                    margin-right: 10px;
+
+                    &.ml200 {
+                        margin-left: 200px;
+                    }
+                }
+
+                .user-info-value {
+                    color: #1D2129;
+                    font-size: 14px;
+                    &.w {
+                        width: 139px;
+                    }
                 }
             }
         }

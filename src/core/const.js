@@ -2145,6 +2145,21 @@ let Const = {
             INTENT_HIGH: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/c6b26b933225fba3e06b58e2193214d9a59f9527843e10688b91752b7bcacc81.png", // 高意向图标
             INTENT_HOT: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/8a917d79979a636dc22b7c2fed8dd95d45eb7e67e01816dfcddda485b01ff180.png", // HOT意向图标
         },
+        // 车型
+        CAR_TYPE_MAP: {
+            '1': { key: 'SENMENTI 0', value: 1, },
+            '2': { key: 'SENMENTI X', value: 2, },
+        },
+        // 客户来源
+        SOURCE_TYPE_MAP: {
+            '1': { key: '预定小程序', value: 1, },
+            '2': { key: '后台注册', value: 2, },
+            '3': { key: 'Shopify', value: 3, },
+            '4': { key: '官网2.0', value: 4, },
+            '5': { key: '官网1.0', value: 5, },
+            '6': { key: '落地页1', value: 6, },
+            '7': { key: '落地页2', value: 7, }
+        },
     },
 
     // 测试
