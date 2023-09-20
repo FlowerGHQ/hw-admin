@@ -1,12 +1,13 @@
 <template>
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane :key="pane.key" :tab="pane.title" v-for="(pane, index) in panes">
+            <a-tab-pane :key="pane.key" :tab="pane.title" v-for="(pane) in panes">
                 <template v-if="activeKey === 1">
                     <GeneralView/>
                 </template>
                 <template v-else-if="activeKey === 2">
                     <p>页面{{ pane.key }}</p>
+                    <FollowUp />
                 </template>
                 <template v-else-if="activeKey === 3">
                     <p>页面{{ pane.key }}</p>
@@ -31,6 +32,7 @@ import TestDrive from './test-drive.vue';
 import GeneralView from './general-view.vue';
 import Core from '@/core';
 import { reactive, ref, toRefs } from 'vue';
+import FollowUp from "./FollowUp.vue";
 
 const activeKey = ref(1)
 const panes = ref([

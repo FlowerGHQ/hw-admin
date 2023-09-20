@@ -2126,10 +2126,10 @@ let Const = {
     },
     INTENTION: {
         TYPE_MAP: {
-			'10': { key: '无意向', value: 1, status: 'empty', img_url:'INTENT_EMPTY' },
-			'20': { key: '有意向', value: 2, status: 'little', img_url:'INTENT_LITTLE' },
-			'30': { key: '高意向', value: 3, status: 'tall', img_url:'INTENT_HIGH' },
-			'40': { key: 'Hot', value: 4, status: 'hot', img_url:'INTENT_HOT' },
+			'10': { key: '无意向', value: 10, status: 'empty', img_url:'INTENT_EMPTY' },
+			'20': { key: '有意向', value: 20, status: 'little', img_url:'INTENT_LITTLE' },
+			'30': { key: '高意向', value: 30, status: 'tall', img_url:'INTENT_HIGH' },
+			'40': { key: 'Hot', value: 40, status: 'hot', img_url:'INTENT_HOT' },
 		},
         IMG_MAP: {
             INTENT_EMPTY: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/4e6c67d8f5a90c0206b8c307e404771e705060fe923b4a22f56cd1cafc6992de.png", // 无意向图标
@@ -2369,7 +2369,8 @@ let Const = {
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
-    }
+    },
+    
 };
 
 export default Const;
