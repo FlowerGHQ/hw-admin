@@ -6,8 +6,7 @@
                     <GeneralView/>
                 </template>
                 <template v-else-if="activeKey === 2">
-                    <p>页面{{ pane.key }}</p>
-                    <FollowUp />
+                    <FollowRecord />
                 </template>
                 <template v-else-if="activeKey === 3">
                     <attributionRecord/>
@@ -33,7 +32,7 @@ import GeneralView from './general-view.vue';
 import attributionRecord from "../components/attribution-record.vue";
 import Core from '@/core';
 import { reactive, ref, toRefs } from 'vue';
-import FollowUp from "./FollowUp.vue";
+import FollowRecord from "./FollowRecord.vue";
 
 const activeKey = ref(1)
 const panes = ref([
