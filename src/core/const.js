@@ -2336,6 +2336,15 @@ let Const = {
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
+    },
+    // COC证书
+    COC: {
+        TAB_TYPE: {
+            '1': { key: 1, zh: "全部", en: 'ALL' },
+            '2': { key: 2, zh: "已生成", en: 'Generated' },
+            '3': { key: 3, zh: "已部分生成", en: 'Partially Generated' },
+            '4': { key: 4, zh: "未生成", en: 'Not Generate' },
+        }
     }
 };
 
