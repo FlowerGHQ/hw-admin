@@ -3,6 +3,9 @@
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane :key="pane.key" :tab="pane.title" v-for="pane in panes">
                 <p>页面{{ pane.key }}</p>
+                <template v-if="pane.key === 2">
+                    <FollowUp></FollowUp>
+                </template>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -11,6 +14,7 @@
 <script setup>
 import Core from '@/core';
 import { reactive, ref, toRefs } from 'vue';
+import FollowUp from "./FollowUp.vue";
 
 const activeKey = ref(1)
 const panes = ref([
