@@ -34,13 +34,16 @@ const $prop = defineProps({
         required: true,
         type: Number,
     },
+    // 是否置顶
+    isTop: {
+        required: true,
+        type: Boolean,
+    },
 })
-const $emit = defineEmits(['next'])
-
-const isTop = ref(false)
+const $emit = defineEmits(['next', 'toTop'])
 
 const list = [
-    { src: isTop.value ? offTop : toTop, alt: isTop.value ? '取消置顶' : '置顶' },
+    { src: toTop, alt: '置顶' },
     { src: write, alt: '编辑基本信息' },
     { src: follow, alt: '写跟进' },
     { src: order, alt: '快捷下单' },
@@ -50,7 +53,7 @@ const list = [
 const listRender = computed(() => {
     return list.map(item => {
         if (item.alt === '置顶' || item.alt === '取消置顶') {
-            if (isTop.value) {
+            if ($prop.isTop) {
                 return { src: offTop, alt: '取消置顶' }
             } else {
                 return { src: toTop, alt: '置顶' }
@@ -69,10 +72,11 @@ const listRender = computed(() => {
 const handleClick = (alt) => {
     switch (alt) {
         case '取消置顶':
-            isTop.value = false
+            $prop.isTop = false
             break;
         case '置顶':
-            isTop.value = true
+            $prop.isTop = true
+            toTopFn()
             break;
         case '编辑基本信息':
             
@@ -97,6 +101,9 @@ const handleClick = (alt) => {
 }
 const nextFn = () => {
     $emit('next', $prop.current + 1)
+}
+const toTopFn = () => {
+    $emit('toTop', $prop.current - 1)
 }
 
 </script>

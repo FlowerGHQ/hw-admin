@@ -1,5 +1,5 @@
 <template>
-    <span class="my-tag" :style="{ border: border ? '' : 'none', color: color, background: bgColor }">
+    <span class="my-tag" :style="{ border: border ? '' : 'none', color: color, background: bgColor, borderColor: borderColor }">
         <slot></slot>
     </span>
 </template>
@@ -21,7 +21,12 @@ const $prop = defineProps({
         required: false,
         type: String,
         default: '#F2F3F5'
-    }
+    },
+    borderColor: {
+        required: false,
+        type: String,
+        default: '#F2F3F5'
+    },
 })
 const $emit = defineEmits(['enter'])
 
