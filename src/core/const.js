@@ -2340,10 +2340,10 @@ let Const = {
     // COC证书
     COC: {
         TAB_TYPE: {
-            '1': { key: 1, zh: "全部", en: 'ALL' },
-            '2': { key: 2, zh: "已生成", en: 'Generated' },
-            '3': { key: 3, zh: "已部分生成", en: 'Partially Generated' },
-            '4': { key: 4, zh: "未生成", en: 'Not Generate' },
+            '1': { key: 1, zh: "全部", en: 'ALL', color: 'default' },
+            '2': { key: 2, zh: "已生成", en: 'Generated', color: 'green' },
+            '3': { key: 3, zh: "已部分生成", en: 'Partially Generated', color: 'orange' },
+            '4': { key: 4, zh: "未生成", en: 'Not Generate', color: 'default' },
         }
     }
 };

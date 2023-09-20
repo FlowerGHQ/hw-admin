@@ -27,7 +27,7 @@ export default {
     coc_placeholder_apply_vehicle: '请选择适用车型',
     coc_start_date: '有效开始日期',
     coc_end_date: '有效结束日期',
-    coc_placeholder_upload: '上传'
+    coc_placeholder_upload: '上传',
 
   },
   en: {
