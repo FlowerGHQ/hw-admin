@@ -2,6 +2,7 @@
 
 import { ref, computed, onMounted, watch, getCurrentInstance } from "vue"
 export const useTable = (props, emit) => {
+    console.log("useTable", props, emit)
     let tableData = ref([])
     let currPage = ref(1)
     let pageSize = ref(20)
