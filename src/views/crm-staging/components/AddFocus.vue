@@ -1,6 +1,7 @@
 
 <template>
-    <a-drawer :keyboard="true" :maskClosable="true" :width="440" title="添加关注点" :visible="visible" :closable="false">
+    <a-drawer class="add-focus-drawer" :keyboard="true" :maskClosable="true" :width="440" title="添加关注点" :visible="visible"
+        :closable="false">
         <template #extra>
             <img @click="closeDrawer" class="add-tag-close-icon" src="../images/close-icon.png" alt="">
         </template>
@@ -154,103 +155,106 @@ export default {
 }
 </script>
 <style lang="less">
-.ant-drawer-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #1D2129;
-}
+.add-focus-drawer {
 
-.ant-drawer-body {
-    padding: 16px 20px 20px 20px;
-    box-sizing: border-box;
-}
-
-.add-tag-close-icon {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-}
-
-.add-tag-tip {
-    margin-bottom: 16px;
-    color: #F77234;
-    font-size: 14px;
-}
-
-.add-tag-drawer-item {
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-.ant-cascader {
-    width: 290px;
-}
-
-.tag-item-wrap {
-    margin-top: 20px;
-
-    .tag-item-title {
+    .ant-drawer-title {
+        font-size: 18px;
+        font-weight: 600;
         color: #1D2129;
-        font-size: 16px;
-        font-weight: 400;
     }
 
-    .tag-select-wrap {
+    .ant-drawer-body {
+        padding: 16px 20px 20px 20px;
+        box-sizing: border-box;
+    }
+
+    .add-tag-close-icon {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+
+    .add-tag-tip {
+        margin-bottom: 16px;
+        color: #F77234;
+        font-size: 14px;
+    }
+
+    .add-tag-drawer-item {
         width: 100%;
         display: flex;
-        flex-wrap: wrap;
-    }
-
-    input {
-        width: 410px;
-        height: 32px;
-        border-radius: 4px;
-        border: 1px solid #F2F3F5;
-        background: #FFF;
-        font-size: 15px;
-        text-align: center;
-        outline: none;
-        margin-top: 12px;
-    }
-
-    .tag-select-item {
-        margin-right: calc((100% - 130px * 3) / 2);
-        margin-top: 11px;
-        width: 130px;
-        height: 32px;
-        color: #4E5969;
-        font-size: 15px;
-        display: flex;
         align-items: center;
-        justify-content: center;
-        border-radius: 4px;
-        border: 1px solid #F2F3F5;
-        background: #FFF;
-        cursor: pointer;
-
-        &:nth-of-type(3n) {
-            margin-right: 0;
-        }
-
-        &.is-click {
-            border-radius: 8rpx;
-            border: 1px solid #99C0FF;
-            color: #3381FF;
-            background-color: #E6EFFF;
-            font-weight: 600;
-        }
     }
 
-}
+    .ant-cascader {
+        width: 290px;
+    }
 
-.ant-drawer-footer {
-    display: flex;
-    justify-content: flex-end;
-}
+    .tag-item-wrap {
+        margin-top: 20px;
 
-.ant-btn {
-    width: 80px;
-    height: 32px;
+        .tag-item-title {
+            color: #1D2129;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .tag-select-wrap {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        input {
+            width: 410px;
+            height: 32px;
+            border-radius: 4px;
+            border: 1px solid #F2F3F5;
+            background: #FFF;
+            font-size: 15px;
+            text-align: center;
+            outline: none;
+            margin-top: 12px;
+        }
+
+        .tag-select-item {
+            margin-right: calc((100% - 130px * 3) / 2);
+            margin-top: 11px;
+            width: 130px;
+            height: 32px;
+            color: #4E5969;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: 1px solid #F2F3F5;
+            background: #FFF;
+            cursor: pointer;
+
+            &:nth-of-type(3n) {
+                margin-right: 0;
+            }
+
+            &.is-click {
+                border-radius: 8rpx;
+                border: 1px solid #99C0FF;
+                color: #3381FF;
+                background-color: #E6EFFF;
+                font-weight: 600;
+            }
+        }
+
+    }
+
+    .ant-drawer-footer {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .ant-btn {
+        width: 80px;
+        height: 32px;
+    }
 }
 </style>
