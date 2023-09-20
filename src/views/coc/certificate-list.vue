@@ -3,56 +3,56 @@
 		<div class="list-container">
 			<div class="title-container">
 				<div class="title-area">
-					{{ $t("coc_business.coc_certificate_list") }}
+					{{ $t("certificate-list.coc_certificateList") }}
 				</div>
 				<div class="btns-area">
 					<a-button type="primary">{{
-						$t($t("coc_business.coc_batch_download"))
+						$t("certificate-list.coc_batchDownload")
 					}}</a-button>
 				</div>
 			</div>
 			<!-- tabs -->
 			<div class="tabs-container colorful cancel-m-b">
 				<a-tabs v-model:activeKey="activeKey">
-					<a-tab-pane v-for="item of COC.TAB_TYPE" :key="item.key">
-						<template #tab>
-							{{ item[$i18n.locale] }}
-						</template>
+					<a-tab-pane v-for="item of tab_type" :key="item.key">
+						<template #tab> {{ item[$i18n.locale] }}(300) </template>
 					</a-tab-pane>
 				</a-tabs>
 			</div>
 			<!-- search -->
 			<div class="search">
 				<a-row class="row-detail">
-					<!-- 订单号 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-						<div class="key">{{ $t("coc_business.coc_order_number") }}：</div>
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+						<div class="key">{{ $t("certificate-list.coc_vin") }}：</div>
 						<div class="value">
 							<a-input
 								v-model:value="searchForm.sn"
-								:placeholder="$t('coc_business.coc_placeholder_order_number')"
+								:placeholder="$t('certificate-list.coc_inputVin')"
 							></a-input>
 						</div>
 					</a-col>
-					<!-- 下单时间 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-						<div class="key">{{ $t("coc_business.coc_order_time") }}：</div>
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+						<div class="key">{{ $t("certificate-list.coc_motor") }}：</div>
 						<div class="value">
-							<TimeSearch @search="onPlaceOrderTime" />
+							<a-input
+								v-model:value="searchForm.sn"
+								:placeholder="$t('certificate-list.coc_inputMotor')"
+							></a-input>
 						</div>
 					</a-col>
-					<!-- 发货时间 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-						<div class="key">{{ $t("coc_business.coc_delivery_time") }}：</div>
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+						<div class="key">
+							{{ $t("certificate-list.coc_deliveryDate") }}：
+						</div>
 						<div class="value">
 							<TimeSearch @search="onDeliveryTime" />
 						</div>
 					</a-col>
 					<!-- 按钮 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-						<a-button>{{ $t("coc_business.coc_reset") }}</a-button>
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="3" class="row-item btn-area">
+						<a-button>{{ $t("certificate-list.coc_reset") }}</a-button>
 						<a-button type="primary">{{
-							$t("coc_business.coc_search")
+							$t("certificate-list.coc_search")
 						}}</a-button>
 					</a-col>
 				</a-row>
@@ -70,28 +70,20 @@
 						{{ $t(title) }}
 					</template>
 					<template #bodyCell="{ column, text, record }">
-						<template v-if="column.key === 'operation'">
+						<template v-if="column.key === 'coc_operation'">
 							<a-button type="link" @click="onDownLoad">{{
-								$t("coc_business.coc_download")
+								$t("certificate-list.coc_download")
 							}}</a-button>
 							<a-button type="link" @click="onView">{{
-								$t("coc_business.coc_view")
-							}}</a-button>
-							<a-button type="link" @click="onCertificate">{{
-								$t("coc_business.coc_certificate_inventory")
+								$t("certificate-list.coc_view")
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
-						<template v-else-if="column.key === 'status_type'">
+						<template v-else-if="column.key === 'coc_cocStatus'">
 							<!-- tag -->
-							<a-tag :color="COC.TAB_TYPE[record.status_type].color">
-								{{ COC.TAB_TYPE[record.status_type][$i18n.locale] }}
+							<a-tag :color="COC.TAB_TYPE[record.coc_cocStatus].color">
+								{{ COC.TAB_TYPE[record.coc_cocStatus][$i18n.locale] }}
 							</a-tag>
-						</template>
-						<!-- 客户是否可见 -->
-						<template v-else-if="column.key === 'coc_customer_visible'">
-							<!-- switch -->
-							<a-switch v-model:checked="record.coc_customer_visible" />
 						</template>
 					</template>
 				</a-table>
@@ -101,73 +93,83 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from "vue"
+import { ref, reactive, getCurrentInstance, computed } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const $t = proxy.$root.$t
+const { TAB_TYPE } = COC
+
+const tab_type = computed(() => {
+	// 过滤
+	return Object.values(TAB_TYPE).filter((item) => item.key !== 3)
+})
+
 const palrformTableColumns = ref([
 	{
-		title: "coc_business.coc_order_number",
-		dataIndex: "sn",
-		key: "sn",
+		title: "certificate-list.coc_orderNumber",
+		dataIndex: "coc_orderNumber",
+		key: "coc_orderNumber",
 	},
 	{
-		title: "coc_business.coc_certificate_status",
-		dataIndex: "status_type",
-		key: "status_type",
+		title: "certificate-list.coc_vehicleName",
+		dataIndex: "coc_vehicleName",
+		key: "coc_vehicleName",
 	},
 	{
-		title: "coc_business.coc_order_time",
-		dataIndex: "coc_order_time",
-		key: "coc_order_time",
+		title: "certificate-list.coc_vehicleCode",
+		dataIndex: "coc_vehicleCode",
+		key: "coc_vehicleCode",
 	},
 	{
-		title: "coc_business.coc_delivery_time",
-		dataIndex: "coc_delivery_time",
-		key: "coc_delivery_time",
+		title: "certificate-list.coc_vin",
+		dataIndex: "coc_vin",
+		key: "coc_vin",
 	},
 	{
-		title: "coc_business.coc_download_times",
-		dataIndex: "coc_download_times",
-		key: "coc_download_times",
+		title: "certificate-list.coc_motor",
+		dataIndex: "coc_vin",
+		key: "coc_vin",
 	},
 	{
-		title: "coc_business.coc_customer_visible",
-		dataIndex: "coc_customer_visible",
-		key: "coc_customer_visible",
+		title: "certificate-list.coc_cocStatus",
+		dataIndex: "coc_cocStatus",
+		key: "coc_cocStatus",
 	},
 	{
-		title: "coc_business.coc_operation",
-		dataIndex: "operation",
-		key: "operation",
+		title: "certificate-list.coc_orderTime",
+		dataIndex: "coc_orderTime",
+		key: "coc_orderTime",
+	},
+	{
+		title: "certificate-list.coc_deliveryTime",
+		dataIndex: "coc_deliveryTime",
+		key: "coc_deliveryTime",
+	},
+	{
+		title: "certificate-list.coc_downloadTimes",
+		dataIndex: "coc_downloadTimes",
+		key: "coc_downloadTimes",
+	},
+	{
+		title: "certificate-list.coc_operation",
+		dataIndex: "coc_operation",
+		key: "coc_operation",
 	},
 ])
 const palrformTableData = ref([
 	{
-		sn: "1234567890",
-		status_type: "2",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: true,
-		coc_download_times: "100",
-	},
-	{
-		sn: "1234567890",
-		status_type: "3",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: false,
-		coc_download_times: "100",
-	},
-	{
-		sn: "1234567890",
-		status_type: "4",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: true,
-		coc_download_times: "100",
+		id: 1,
+		coc_orderNumber: "202107010001",
+		coc_vehicleName: "2021款 2.0T 两驱 豪华版",
+		coc_vehicleCode: "202107010001",
+		coc_vin: "LJ1F3A1M1M000001",
+		coc_motor: "LJ1F3A1M1M000001",
+		coc_cocStatus: 2,
+		coc_orderTime: "2021-07-01 12:00:00",
+		coc_deliveryTime: "2021-07-01 12:00:00",
+		coc_downloadTimes: 100,
 	},
 ])
 const channelPagination = reactive({
@@ -206,8 +208,6 @@ const fetchs = (params = {}) => {
 const onDownLoad = () => {}
 // 查看
 const onView = () => {}
-// 证书清单
-const onCertificate = () => {}
 // 下单时间
 const onPlaceOrderTime = (params) => {
 	Core.Logger.log("下单时间", params)
@@ -235,6 +235,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .distributor-coc-list {
+	.btn-area {
+		justify-content: flex-end;
+	}
 }
 .cancel-m-b {
 	margin-bottom: 0;

@@ -25,7 +25,7 @@
 			<div class="search">
 				<a-row class="row-detail">
 					<!-- 订单号 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
 						<div class="key">{{ $t("coc_business.coc_order_number") }}：</div>
 						<div class="value">
 							<a-input
@@ -34,22 +34,24 @@
 							></a-input>
 						</div>
 					</a-col>
-					<!-- 下单时间 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-						<div class="key">{{ $t("coc_business.coc_order_time") }}：</div>
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+						<div class="key">{{ $t("certificate-list.coc_vin") }}：</div>
 						<div class="value">
-							<TimeSearch @search="onPlaceOrderTime" />
+							<a-input
+								v-model:value="searchForm.sn"
+								:placeholder="$t('certificate-list.coc_inputVin')"
+							></a-input>
 						</div>
 					</a-col>
 					<!-- 发货时间 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
 						<div class="key">{{ $t("coc_business.coc_delivery_time") }}：</div>
 						<div class="value">
 							<TimeSearch @search="onDeliveryTime" />
 						</div>
 					</a-col>
 					<!-- 按钮 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="3" class="row-item btn-area">
 						<a-button>{{ $t("coc_business.coc_reset") }}</a-button>
 						<a-button type="primary">{{
 							$t("coc_business.coc_search")
@@ -65,6 +67,10 @@
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
 					@change="handleTableChange"
+					:row-selection="{
+						selectedRowKeys: selectedRowKeys,
+						onChange: onSelectChange,
+					}"
 				>
 					<template #headerCell="{ title }">
 						{{ $t(title) }}
@@ -80,18 +86,6 @@
 							<a-button type="link" @click="onCertificate">{{
 								$t("coc_business.coc_certificate_inventory")
 							}}</a-button>
-						</template>
-						<!-- 状态 -->
-						<template v-else-if="column.key === 'status_type'">
-							<!-- tag -->
-							<a-tag :color="COC.TAB_TYPE[record.status_type].color">
-								{{ COC.TAB_TYPE[record.status_type][$i18n.locale] }}
-							</a-tag>
-						</template>
-						<!-- 客户是否可见 -->
-						<template v-else-if="column.key === 'coc_customer_visible'">
-							<!-- switch -->
-							<a-switch v-model:checked="record.coc_customer_visible" />
 						</template>
 					</template>
 				</a-table>
@@ -117,11 +111,6 @@ const palrformTableColumns = ref([
 		key: "sn",
 	},
 	{
-		title: "coc_business.coc_certificate_status",
-		dataIndex: "status_type",
-		key: "status_type",
-	},
-	{
 		title: "coc_business.coc_order_time",
 		dataIndex: "coc_order_time",
 		key: "coc_order_time",
@@ -135,11 +124,6 @@ const palrformTableColumns = ref([
 		title: "coc_business.coc_download_times",
 		dataIndex: "coc_download_times",
 		key: "coc_download_times",
-	},
-	{
-		title: "coc_business.coc_customer_visible",
-		dataIndex: "coc_customer_visible",
-		key: "coc_customer_visible",
 	},
 	{
 		title: "coc_business.coc_operation",
@@ -187,6 +171,13 @@ const activeKey = ref(undefined) // tab切换
 const searchForm = ref({
 	sn: "",
 })
+
+// selectedRowKeys
+const selectedRowKeys = ref([])
+const onSelectChange = (selectedRowKeys) => {
+	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
+	selectedRowKeys = selectedRowKeys
+}
 
 /* fetch start */
 const fetchs = (params = {}) => {
@@ -242,6 +233,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .distributor-coc-list {
+	.btn-area {
+		.fj(flex-end);
+	}
 }
 .cancel-m-b {
 	margin-bottom: 0;
