@@ -1,0 +1,283 @@
+<template>
+    <div class="quick-order">
+        <template v-if="!isConfirm">
+            <div class="body">
+                <img :src="cycList[modelId].src" class="cyc-img">
+                <div class="title">车型</div>
+                <div class="cyc-body">
+                    <div class="cyc-item" :class="cycIndex === index ? 'selected' : ''" v-for="(cyc, key, index) in cycList" :key="index" @click="change(cyc.modelId, index)">
+                        <div class="cyc-item-img">
+                            <img :src="cyc.src">
+                        </div>
+                        <p class="cyc-item-name">{{ cyc.name }}</p>
+                    </div>
+                </div>
+                <div class="title">版本</div>
+                <div class="version">
+                    <div class="version-title">
+                        <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
+                        <p v-if="cycList[modelId].total_price">￥{{ cycList[modelId].total_price }}<span class="old-price">￥{{ cycList[modelId].old_price }}</span></p>
+                    </div>
+                    <div class="version-dis">
+                        <img src="" alt="">
+                        <span>{{ cycList[modelId].accelerate }}</span>
+                    </div>
+                    <div class="version-dis">
+                        <img src="" alt="">
+                        <span>{{ cycList[modelId].mileage }}</span>
+                    </div>
+                    <div class="version-dis">
+                        <img src="" alt="">
+                        <span>{{ cycList[modelId].fastCharging }}</span>
+                    </div>
+                </div>
+                <div class="title">颜色</div>
+                <span class="color-name">{{ cycList[modelId].color }}（已包含）</span>
+                <div class="color">
+                    <div class="color-item" :style="{ background: colorList[cycList[modelId].color] }"></div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="price" v-if="cycList[modelId].total_price">
+                    <p class="amount">总价：<span class="amount-price">￥{{ cycList[modelId].total_price }}</span></p>
+                    <p class="config">车型配置、图片信息仅供参考</p>
+                </div>
+                <a-button type="primary" @click="confirmConfig">确定配置</a-button>
+            </div>
+        </template>
+        <template v-else>
+            <div class="body">
+                <img :src="cycList[modelId].src" class="cyc-img">
+                <div class="title">版本</div>
+                <div class="confirm-version">
+                    <div class="confirm-version-title">
+                        <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
+                        <p v-if="cycList[modelId].total_price">￥{{ cycList[modelId].total_price }}</p>
+                    </div>
+                </div>
+                <div class="title">颜色</div>
+                <span class="color-name">{{ cycList[modelId].color }}（已包含）</span>
+                <div class="color">
+                    <div class="color-item" :style="{ background: colorList[cycList[modelId].color] }"></div>
+                </div>
+                <div class="qrcode">
+                    <img class="qrcode-image" src="">
+                    <p class="the-name">意向金：￥500</p>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="price" v-if="cycList[modelId].total_price">
+                    <p class="amount">总价：<span class="amount-price">￥{{ cycList[modelId].total_price }}</span></p>
+                </div>
+                <div>
+                    <a-button @click="pushApp">推送给用户</a-button>
+                    <a-button type="primary" @click="changeConfig">修改配置</a-button>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>
+
+<script setup>
+import { computed, reactive, ref, toRefs } from 'vue';
+import Static from '../static'
+
+const $prop = defineProps({})
+const $emit = defineEmits([])
+
+const cycIndex = ref(0)
+const modelId = ref(1)
+const isConfirm = ref(false)
+const colorList = {
+	'号外橙': '#DC6E38',
+	'号外紫': '#1010A8',
+}
+const cycList = Static.MODEL
+const change = (id, index) => {
+    modelId.value = id
+    cycIndex.value = index
+}
+const confirmConfig = () => {
+    isConfirm.value = true
+}
+const changeConfig = () => {
+    isConfirm.value = false
+}
+const pushApp = () => {
+    
+}
+
+</script>
+
+<style lang="less" scoped>
+.quick-order {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 100%;
+    height: 100%;
+    .body {
+        flex-grow: 1;
+        padding: 24px 20px;
+        overflow: auto;
+        font-size: 14px;
+        line-height: 1.5715;
+        word-wrap: break-word;
+        .title {
+            color: #1D2129;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .cyc-img {
+            width: 400px;
+            height: 200px;
+            flex-shrink: 0;
+        }
+        .cyc-body {
+            display: flex;
+            margin-bottom: 20px;
+            .cyc-item {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                cursor: pointer;
+                .cyc-item-img {
+                    padding: 9px 6px;
+                    border-radius: 4px;
+                    margin-bottom: 4px;
+                    border: 1px solid #E5E6EB;
+                    > img {
+                        width: 180px;
+                        height: 102px;
+                    }
+                }
+                .cyc-item-name {
+                    text-align: center;
+                    color: #1D2129;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+                &:first-child {
+                    margin-right: 16px;
+                }
+                &.selected {
+                    .cyc-item-img {
+                        border-color: #0061FF;
+                    }
+                }
+            }
+        }
+        .version {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 8px;
+            border: 1px solid #F2F3F5;
+            .version-title {
+                display: flex;
+                justify-content: space-between;
+                color: #1D2129;
+                font-size: 16px;
+                font-weight: 600;
+                position: relative;
+                margin-bottom: 12px;
+                .old-price {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+                    transform: translateY(100%);
+                    overflow: hidden;
+                    color: #86909C;
+                    text-overflow: ellipsis;
+                    font-size: 12px;
+                    text-decoration: line-through;
+                }
+            }
+            .version-dis {
+                display: flex;
+                align-items: center;
+                margin-bottom: 10px;
+                &:last-child {
+                    margin-bottom: 0;
+                }
+                > img {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 4px;
+                }
+                > span {
+                    color: #86909C;
+                    font-size: 14px;
+                }
+            }
+        }
+        .confirm-version {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            .confirm-version-title {
+                display: flex;
+                justify-content: space-between;
+                color: #1D2129;
+                font-size: 14px;
+            }
+        }
+        .color-name {
+            display: inline-block;
+            color: #4E5969;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        .color {
+            display: flex;
+            .color-item {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                overflow: hidden;
+            }
+        }
+        .qrcode {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-top: 1px dashed #E5E6EB;
+            padding: 60px;
+            margin-top: 28px;
+            .qrcode-image {
+                width: 160px;
+                height: 160px;
+            }
+            .the-name {
+                margin-top: 8px;
+                text-align: center;
+                font-size: 14px;
+                color: #1D2129;
+            }
+        }
+    }
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        flex-shrink: 0;
+        padding: 20px;
+        .price {
+            flex: 1;
+            .amount {
+                color: #1D2129;
+                font-size: 16px;
+                font-weight: 600;
+                .amount-price {
+                    color: #0061FF;
+                }
+            }
+            .config {
+                color: #86909C;
+                font-size: 12px;
+            }
+        }
+    }
+}
+</style>

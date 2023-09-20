@@ -46,7 +46,7 @@ const $prop = defineProps({
         type: Boolean,
     },
 })
-const $emit = defineEmits(['next', 'toTop','follow'])
+const $emit = defineEmits(['next', 'toTop','follow', 'order'])
 
 const list = [
     { src: toTop, alt: '置顶' },
@@ -92,7 +92,7 @@ const handleClick = (alt) => {
             followRef.value.clickModelOk();
             break;
         case '快捷下单':
-            
+            toOrder()
             break;
         case '线索转移':
             leadTransRef.value.clickModelOk();
@@ -113,14 +113,7 @@ const toTopFn = () => {
     $emit('toTop', $prop.current - 1)
 }
 
-const followBt = () => {
-    $emit('follow')
-}
 
-// 线索转移
-const leadTransfer = () => {
-    console.log('线索转移');
-}
 </script>
 
 <style lang="less" scoped>

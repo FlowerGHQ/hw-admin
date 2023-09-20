@@ -1,4 +1,6 @@
 import Const from '../../core/const';
+import SENMENTI0 from './images/SENMENTI-0.png';
+import SENMENTIX from './images/SENMENTI-X.png';
 const Static = {
     renderList: [
         {
@@ -385,6 +387,35 @@ const Static = {
                 },
             ]
         },
-    ]
+    ],
+    // 车辆信息
+	MODEL: {
+		"1": {
+			modelId: 1,
+			name: 'SENMENTI 0',
+			src: SENMENTI0,
+			version: '创世版',
+			total_price: 12680000,
+			old_price: 13980000,
+			pay_money: 50000,
+			accelerate: '2.8s 百公里加速',
+			mileage: '300km 续航里程（200km/h)',
+			fastCharging: '30min 超级快充',
+			color: '号外橙'
+		},
+		"2": {
+			modelId: 2,
+			name: 'SENMENTI X',
+			src: SENMENTIX,
+			version: '',
+			total_price: '',
+			old_price: '',
+			pay_money: 50000,
+			accelerate: '<4s 百公里加速',
+			mileage: '>400km 续航里程（200km/h)',
+			fastCharging: '40min 超级快充',
+			color: '号外紫'
+		}
+	},
 }
 export default Static

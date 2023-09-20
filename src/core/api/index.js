@@ -836,6 +836,11 @@ const apiList = {
 
         // 车辆管理接口
         // 订单管理接口
+    },
+    CustomService: {
+        detail: ['PostJson', 'customer-service/customer/detail'],   
+        deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
+        updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
     }
 };
 

@@ -1,7 +1,13 @@
 <template>
     <div id="user-detail">
         <div class="user-panel">
-            <img class="avatar" src="../images/avatar.png" alt="">
+            <div class="avatar-wrap">
+                <img class="avatar" :src="detail.avatar ? detail.avatar : defaultAvatar" alt="">
+                <div class="real-name-wrap" v-if="false">
+                    <img src="../images/real-name-icon.png" alt="">
+                    已实名
+                </div>
+            </div>
             <div class="user-info-container">
                 <div class="user-info-item">
                     <div class="user-name">
@@ -10,7 +16,7 @@
                     <div class="user-name-key">
                         用户昵称
                     </div>
-                    <div class="info-loss-tag">
+                    <div class="info-loss-tag" v-if="!detail.province || !detail.city">
                         信息缺失
                     </div>
                     <intentionStairs :status="detail.intention" />
@@ -18,8 +24,11 @@
                 <div class="user-info-item">
                     <img class="user-icon" src="../images/user-icon.png" alt="">
                     <div class="user-info-text">
-                        {{ detail.gender === 1 ? '男' : '女' }} · {{ detail.age || '-' }}岁 · {{
-                            $Util.timeFilter(detail.birthday, 3) }}
+                        <span v-if="detail.gender === 1">男</span>
+                        <span v-else-if="detail.gender === 2">女</span>
+                        <span v-else>-</span>
+                        · {{ detail.age || '-' }}岁 ·
+                        {{ $Util.timeFilter(detail.birthday, 3) }}
                     </div>
                     <img class="user-icon" src="../images/user-email.png" alt="">
                     <div class="user-info-text">
@@ -78,8 +87,7 @@
                                 v-if="tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.TAG || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.MODEL || tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.CITY">
                                 {{ tag.name || '-' }}
                                 <!-- 删除图标 -->
-                                <img src="../images/blue-close-icon.png"
-                                    alt="">
+                                <img src="../images/blue-close-icon.png" alt="">
                             </div>
                         </template>
                         <div class="add-tag-btn" @click="handleAddTag">
@@ -101,8 +109,7 @@
                                 v-if="tagTypeList.type === Core.Const.INTENTION.TAG_TYPE.FOCUS">
                                 {{ focus.name || '-' }}
                                 <!-- 删除图标 -->
-                                <img src="../images/green-close-icon.png"
-                                    alt="">
+                                <img src="../images/green-close-icon.png" alt="">
                             </div>
                         </template>
                         <div class="add-tag-btn" @click="handleAddFocus">
@@ -112,11 +119,13 @@
                             添加关注点
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
-        <AddTag @submit="getUserDetail" v-model:visible="tagDrawerShow" />
-        <AddFocus @submit="getUserDetail" v-model:visible="focusDrawerShow" />
+        <AddTag v-if="tagDrawerShow" :list="detail.label_group_list" @submit="getUserDetail"
+            v-model:visible="tagDrawerShow" />
+        <AddFocus v-if="focusDrawerShow" :list="detail.label_group_list" @submit="getUserDetail"
+            v-model:visible="focusDrawerShow" />
     </div>
 </template>
     
@@ -142,6 +151,7 @@ export default {
             Core,
             detail: {
                 name: '赵女士',
+                avatar: '',
                 intention: 20,
                 gender: 2,
                 age: 25,
@@ -232,7 +242,8 @@ export default {
                 ],
             },
             tagDrawerShow: false,
-            focusDrawerShow: false
+            focusDrawerShow: false,
+            defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
         };
     },
     watch: {},
@@ -242,19 +253,27 @@ export default {
         }
     },
     created() {
+        this.getUserDetail();
     },
     mounted() {
     },
     methods: {
         // 删除标签或关注点
         handleDeleteTag(id) {
+            let _this = this;
             this.$confirm({
                 title: '确定删除该标签吗',
                 okText: '确定',
                 okType: 'primary',
                 cancelText: '取消',
                 onOk() {
-
+                    Core.Api.CustomService.deleteLabel({
+                        id: id
+                    }).then(res => {
+                        Core.Logger.log('handleDeleteTag res', res)
+                        _this.$message.success('删除成功！')
+                        _this.getUserDetail();
+                    })
                 },
             });
         },
@@ -268,7 +287,15 @@ export default {
         },
         // 获取用户详情
         getUserDetail() {
-            
+            Core.Api.CustomService.detail({
+                // id: this.id
+                id: 3074
+            }).then(res => {
+                Core.Logger.log('getUserDetail res', res)
+                this.detail = res
+            }).catch(err => {
+                Core.Logger.log('getUserDetail err', err)
+            })
         }
     }
 };
@@ -284,7 +311,30 @@ export default {
     .user-panel {
         width: 100%;
         display: flex;
-
+        .avatar-wrap {
+            position: relative;
+            .real-name-wrap {
+                position: absolute;
+                top: 64px;
+                left: 4px;
+                height: 21px;
+                border-radius: 30px;
+                border: 1px solid rgba(0, 180, 42, 0.30);
+                background: #E8FFEA;
+                padding: 2px 8px;
+                box-sizing: border-box;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color:#00B42A;
+                font-size: 12px;
+                >img {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 4px;
+                }
+            }
+        }
         .avatar {
             width: 80px;
             height: 80px;
