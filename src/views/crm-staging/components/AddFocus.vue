@@ -37,6 +37,10 @@ export default {
             type: Boolean,
             default: false
         },
+        list: {
+            type: Array,
+            default: []
+        }
     },
     data() {
         return {
@@ -45,16 +49,23 @@ export default {
                 province: '',
                 city: '',
             },
-            multipleChoiceList: Static.multipleChoiceList,
+            multipleChoiceList: [],
+            detailList: [],
         };
     },
     computed: {
 
     },
+    mounted() {
+        this.multipleChoiceList = Core.Util.deepCopy(Static.multipleChoiceList);
+        this.transformLabelData();
+    },
     methods: {
+        // 关闭drawer
         closeDrawer() {
             this.$emit('update:visible', false);
         },
+        // 更新选中状态
         handleSelectStatus(name) {
             const selectedItems = this.multipleChoiceList.filter(item => item.isClick);
             const selectedItem = this.multipleChoiceList.find(item => item.name === name);
@@ -66,90 +77,47 @@ export default {
         },
         // 提交
         handleSubmit() {
-            // Core.Api.User.labelUpdate({
-            //     target_id: this.id,
-            //     // target_type: 2,
-            //     label_list: this.selectedTagList
-            // }).then(res => {
-
-            // }).catch(err => {
-            //     Core.Logger.error('handleSubmit err', err)
-            // })
-            this.$emit('submit');
+            this.selectedTagList = this.multipleChoiceList
+                .filter((item) => item.isClick)
+                .map((item) => ({
+                    name: item.name,
+                    type: item.type,
+                }));
+            Core.Logger.log('selectedTagList', this.selectedTagList)
+            Core.Api.CustomService.updateLabel({
+                // target_id: this.id,
+                target_id: 3074,
+                label_list: this.selectedTagList
+            }).then(res => {
+                Core.Logger.log('handleSubmit res', res);
+                this.$message.success('修改成功！')
+                this.$emit('submit');
+                this.closeDrawer();
+            }).catch(err => {
+                Core.Logger.log('handleSubmit err', err)
+            })
         },
         // 重置
         handleReset() {
-            this.multipleChoiceList = [
-                {
-                    name: '续航',
-                    isClick: false
-                },
-                {
-                    name: '服务',
-                    isClick: false
-                },
-                {
-                    name: '质量',
-                    isClick: false
-                },
-                {
-                    name: '外观',
-                    isClick: false
-                },
-                {
-                    name: '性能',
-                    isClick: false
-                },
-                {
-                    name: '舒适',
-                    isClick: false
-                },
-                {
-                    name: '安全',
-                    isClick: false
-                },
-                {
-                    name: '储物空间',
-                    isClick: false
-                },
-                {
-                    name: '智能',
-                    isClick: false
-                },
-                {
-                    name: '改装',
-                    isClick: false
-                },
-                {
-                    name: '销售政策',
-                    isClick: false
-                },
-                {
-                    name: '售后政策',
-                    isClick: false
-                },
-                {
-                    name: '价格',
-                    isClick: false
-                },
-                {
-                    name: '品牌顾虑',
-                    isClick: false
-                },
-                {
-                    name: '售后',
-                    isClick: false
-                },
-                {
-                    name: '保值率',
-                    isClick: false
-                },
-                {
-                    name: '提车时间',
-                    isClick: false
-                },
-            ]
+            this.multipleChoiceList = Core.Util.deepCopy(Static.multipleChoiceList)
             this.selectedTagList = []
+        },
+        // 转化回显数据
+        transformLabelData() {
+            if (this.list.length) {
+                this.list.forEach(item => {
+                    if (item.type === Core.Const.INTENTION.TAG_TYPE.FOCUS) {
+                        this.detailList = item.label_list
+                    }
+                })
+            }
+            this.detailList.forEach((label) => {
+                this.multipleChoiceList.forEach((item) => {
+                    if (item.name === label.name && item.type === label.type) {
+                        item.isClick = true;
+                    }
+                });
+            });
         }
     },
 }
