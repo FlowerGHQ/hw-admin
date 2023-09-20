@@ -353,7 +353,7 @@ const getAssetURL = (image) => {
             .content-right {
                 flex: 1;
                 .user-card {
-                    height: 258px;
+                    // height: 258px;
                     border-radius: 6px 0px 6px 6px;
                     background: #FFF;
                     overflow: hidden;

@@ -51,6 +51,10 @@ export default {
             type: Boolean,
             default: false
         },
+        list: {
+            type: Array,
+            default: []
+        }
     },
     data() {
         return {
@@ -59,13 +63,19 @@ export default {
                 province: '',
                 city: '',
             },
-            renderList: Static.renderList,
+            renderList: [],
+            detailList: [],
         };
     },
     computed: {
 
     },
+    mounted() {
+        this.renderList = Core.Util.deepCopy(Static.renderList)
+        this.transformLabelData();
+    },
     methods: {
+        // 关闭drawer
         closeDrawer() {
             this.$emit('update:visible', false);
         },
@@ -74,6 +84,7 @@ export default {
             this.form.province = e.province
             this.form.city = e.city
         },
+        // 更新选中状态
         handleSelectStatus(clickedTitle, clickedOption) {
             for (const item of this.renderList) {
                 if (item.title === clickedTitle) {
@@ -111,10 +122,10 @@ export default {
                     });
                 }
             });
-            if (this.detail.city) {
+            if (this.form.city) {
                 labelList.push({
-                    name: this.detail.city,
-                    type: Core.Const.TAG_TYPE.CITY
+                    name: this.form.city,
+                    type: Core.Const.INTENTION.TAG_TYPE.CITY
                 })
             }
             return labelList;
@@ -122,254 +133,55 @@ export default {
         // 提交
         handleSubmit() {
             this.selectedTagList = this.convertDataStructure(this.renderList)
-            this.$emit('submit');
-            // Core.Api.User.labelUpdate({
-            //     target_id: this.id,
-            //     // target_type: 2,
-            //     label_list: this.selectedTagList
-            // }).then(res => {
-
-            // }).catch(err => {
-            //     Core.Logger.error('handleSubmit err', err)
-            // })
+            Core.Logger.log('selectedTagList', this.selectedTagList)
+            Core.Api.CustomService.updateLabel({
+                // target_id: this.id,
+                target_id: 3074,
+                label_list: this.selectedTagList
+            }).then(res => {
+                Core.Logger.log('handleSubmit res', res);
+                this.$message.success('修改成功！')   
+                this.$emit('submit');
+                this.closeDrawer();
+            }).catch(err => {
+                Core.Logger.log('handleSubmit err', err)
+            })
         },
         // 重置
         handleReset() {
-            this.renderList = [
-                {
-                    title: '行业',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '金融',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '电信',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '教育',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '高科技',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '政府',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '制造业',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '服务',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '能源',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '媒体',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '娱乐',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '资讯',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '非盈利事业',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '公共事业',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '其他',
-                            type: 3,
-                            isClick: false,
-                        },
-                    ]
-                },
-                {
-                    title: '摩托车',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '有摩托车',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '无摩托车',
-                            type: 3,
-                            isClick: false,
-                        },
-                    ]
-                },
-                {
-                    title: '摩托车型号',
-                    isShow: false,
-                    list: [
-                        {
-                            name: '',
-                            type: 5,
-                            isClick: false,
-                        },
-                    ]
-                },
-                {
-                    title: '骑行经验',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '无',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '两年',
-                            type: 3,
-                            isClick: false
-                        },
-                        {
-                            name: '两年以上',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: '家里有几台车',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '1台车',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '多台车',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: '排量',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '300cc以下',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '300~600cc',
-                            type: 3,
-                            isClick: false
-                        },
-                        {
-                            name: '600~800cc',
-                            type: 3,
-                            isClick: false
-                        },
-                        {
-                            name: '800~1000cc',
-                            type: 3,
-                            isClick: false
-                        },
-                        {
-                            name: '1000cc以上',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: '有汽车类型',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '新能源汽车',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '汽油车',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: '家充装',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '有',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: '无',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: 'KOL/KOC',
-                    isShow: true,
-                    list: [
-                        {
-                            name: 'KOL',
-                            type: 3,
-                            isClick: false,
-                        },
-                        {
-                            name: 'KOC',
-                            type: 3,
-                            isClick: false
-                        },
-                    ]
-                },
-                {
-                    title: '寻求合作',
-                    isShow: true,
-                    list: [
-                        {
-                            name: '寻求合作',
-                            type: 3,
-                            isClick: false,
-                        },
-                    ]
-                },
-            ]
-            this.detail.city = ''
+            this.renderList = Core.Util.deepCopy(Static.renderList)
+            this.form.city = ''
             this.selectedTagList = []
-        }
+        },
+        // 转化回显数据
+        transformLabelData() {
+            if (this.list.length) {
+                this.list.forEach(item => {
+                    if (item.type === Core.Const.INTENTION.TAG_TYPE.TAG) {
+                        this.detailList = item.label_list
+                    } else if (item.type === Core.Const.INTENTION.TAG_TYPE.CITY) {
+                        this.form.city = item.label_list[0].name
+                    } else if (item.type === Core.Const.INTENTION.TAG_TYPE.MODEL) {
+                        this.renderList[2].isShow = true
+                        this.renderList[2].list[0].name = item.label_list[0].name
+                        this.renderList[2].list[0].isClick = true
+                    }
+                })
+            }
+            this.detailList.forEach((label) => {
+                this.renderList.forEach((item) => {
+                    item.list.forEach((listItem) => {
+                        if (listItem.name === label.name && listItem.type === label.type) {
+                            listItem.isClick = true;
+                            item.isShow = true;
+                        }
+                        if (label.type === Core.Const.INTENTION.TAG_TYPE.CITY) {
+                            this.form.city = label.name
+                        }
+                    });
+                });
+            });
+        },
     },
 }
 </script>
