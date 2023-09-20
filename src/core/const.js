@@ -2378,7 +2378,24 @@ let Const = {
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
     },
-    
+
+    // 国内销售-（工作台）运营
+    WORK_OPERATION: {
+
+        // 沟通方式
+        COMMUNICATE_TYPE: {
+            "20": { key: 20, value: 20, zh: '电话沟通' },
+            "10": { key: 10, value: 10, zh: '面谈' },
+            "30": { key: 30, value: 30, zh: '未接通' },
+        },
+        // 跟进类型
+        FOLLOW_TYPE: {
+            "10": { key: 10, value: 10, zh: '信息缺失' },
+            "20": { key: 20, value: 20, zh: '预约试驾' },
+            "30": { key: 30, value: 30, zh: '跟进' },
+
+        }
+    }
 };
 
 export default Const;

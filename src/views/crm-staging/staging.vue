@@ -55,7 +55,7 @@
                         <UserAbout/>
                     </div>
                 </div>
-                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop"/>
+                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" />
             </div>
         </div>
     </div>

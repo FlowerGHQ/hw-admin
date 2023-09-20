@@ -1,6 +1,6 @@
 <template>
   <div class="follow-up follow-contenter">
-        <a-button type="primary" @click="clickModelOk">
+        <a-button type="primary" @click="clickModelOk" v-if="isShowButton">
             <template #icon><EditOutlined /></template>
             写跟进
         </a-button>
@@ -8,7 +8,6 @@
             width="560px" height="433px"  v-model:visible="isShowFollow"
             title="写跟进"
             centered
-            @ok="clickModelOk" 
         >
            <!--  <a-select
                 ref="select"
@@ -91,8 +90,14 @@
 
 <script setup>
 import { EditOutlined } from '@ant-design/icons-vue';
-import { reactive, ref } from 'vue';
-import Core from "@/core";
+import { reactive, ref ,onBeforeUnmount  } from 'vue';
+import Core from "@/core";    
+const props = defineProps({
+        isShowButton: {
+            type: Boolean,
+            default: true,
+        },
+    })
 // 意向度-选项列表
 const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 弹窗显示变量
@@ -107,17 +112,16 @@ const clickModelOk = () => {
     isShowFollow.value = true;
 }
 
+defineExpose({clickModelOk});
 const handleOk = () => {
-    console.log('followObj---',followObj.value);
+    console.log('followObj---',followObj);
 }
- 
 </script>
 
 <style lang="less" scoped>
 
-
 .flex-aline {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-start; 
 }
 </style>

@@ -8,11 +8,13 @@
                 <img :src="item.src">
             </a-tooltip>
         </div>
+        <FollowUp :isShowButton="false" ref="followRef" />
+        <LeadTransfer ref="leadTransRef" />
     </div>
 </template>
 
 <script setup>
-import { computed, reactive, ref, toRefs } from 'vue';
+import { computed, reactive, ref, toRefs, getCurrentInstance } from 'vue';
 
 import toTop from '../images/to-top.png';
 import offTop from '../images/off-top.png';
@@ -22,7 +24,11 @@ import order from '../images/order.png';
 import transfer from '../images/transfer.png';
 import next from '../images/next.png';
 import nextNone from '../images/next-none.png';
+import FollowUp from "./FollowUp.vue";
+import LeadTransfer from "./LeadTransfer.vue";
 
+const leadTransRef = ref(null);
+const followRef = ref(null);
 const $prop = defineProps({
     //第几条任务
     current: {
@@ -40,7 +46,7 @@ const $prop = defineProps({
         type: Boolean,
     },
 })
-const $emit = defineEmits(['next', 'toTop'])
+const $emit = defineEmits(['next', 'toTop','follow'])
 
 const list = [
     { src: toTop, alt: '置顶' },
@@ -50,6 +56,7 @@ const list = [
     { src: transfer, alt: '线索转移' },
     { src: next, alt: '下个任务' },
 ]
+const leadShowPop = ref(false);
 const listRender = computed(() => {
     return list.map(item => {
         if (item.alt === '置顶' || item.alt === '取消置顶') {
@@ -82,13 +89,13 @@ const handleClick = (alt) => {
             
             break;
         case '写跟进':
-            
+            followRef.value.clickModelOk();
             break;
         case '快捷下单':
             
             break;
         case '线索转移':
-            
+            leadTransRef.value.clickModelOk();
             break;
         case '下个任务':
             if ($prop.current === $prop.amount) return
@@ -106,6 +113,14 @@ const toTopFn = () => {
     $emit('toTop', $prop.current - 1)
 }
 
+const followBt = () => {
+    $emit('follow')
+}
+
+// 线索转移
+const leadTransfer = () => {
+    console.log('线索转移');
+}
 </script>
 
 <style lang="less" scoped>
