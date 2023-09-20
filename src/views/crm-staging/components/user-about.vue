@@ -10,7 +10,7 @@
                     <FollowUp />
                 </template>
                 <template v-else-if="activeKey === 3">
-                    <p>页面{{ pane.key }}</p>
+                    <attributionRecord/>
                 </template>
                 <template v-else-if="activeKey === 4">
                     <Order/>
@@ -30,6 +30,7 @@
 import Order from './order.vue';
 import TestDrive from './test-drive.vue';
 import GeneralView from './general-view.vue';
+import attributionRecord from "../components/attribution-record.vue";
 import Core from '@/core';
 import { reactive, ref, toRefs } from 'vue';
 import FollowUp from "./FollowUp.vue";

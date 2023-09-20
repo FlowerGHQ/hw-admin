@@ -40,7 +40,7 @@ const $prop = defineProps({
         type: Boolean,
     },
 })
-const $emit = defineEmits(['next', 'toTop'])
+const $emit = defineEmits(['next', 'toTop', 'order'])
 
 const list = [
     { src: toTop, alt: '置顶' },
@@ -85,7 +85,7 @@ const handleClick = (alt) => {
             
             break;
         case '快捷下单':
-            
+            toOrder()
             break;
         case '线索转移':
             
@@ -104,6 +104,9 @@ const nextFn = () => {
 }
 const toTopFn = () => {
     $emit('toTop', $prop.current - 1)
+}
+const toOrder = () => {
+    $emit('order')
 }
 
 </script>

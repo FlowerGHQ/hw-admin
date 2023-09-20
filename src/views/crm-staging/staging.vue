@@ -55,9 +55,21 @@
                         <UserAbout/>
                     </div>
                 </div>
-                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop"/>
+                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>
             </div>
         </div>
+        <a-drawer
+          v-model:visible="openOrder"
+          class="custom-class"
+          title="快捷下单"
+          width="440px"
+          bodyStyle="padding: 0"
+          :footer="false"
+          :closable="false"
+          placement="right"
+        >
+            <QuickOrder/>
+        </a-drawer>
     </div>
 </template>
 
@@ -68,8 +80,8 @@ import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
 import UserAbout from "./components/user-about.vue";
 import FixedSelect from "./components/fixed-select.vue";
+import QuickOrder from "./components/quick-order.vue";
 import myTag from "./components/my-tag.vue";
-import { SearchOutlined, CalendarOutlined } from '@ant-design/icons-vue';
 import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
@@ -146,8 +158,12 @@ const changeTask = (index) => {
     taskCurrent.value = index + 1
 }
 //置顶
+const openOrder = ref(false)
 const toTop = (index) => {
     console.log(taskList.value[index].id)
+}
+const order = () => {
+    openOrder.value = true
 }
 const nextTask = (current) => {
     taskCurrent.value = current
@@ -352,15 +368,16 @@ const getAssetURL = (image) => {
             }
             .content-right {
                 flex: 1;
+                display: flex;
+                flex-direction: column;
                 .user-card {
-                    // height: 258px;
                     border-radius: 6px 0px 6px 6px;
                     background: #FFF;
                     overflow: hidden;
                     margin-bottom: 16px;
                 }
                 .about {
-                    height: calc(100% - 274px);
+                    flex: 1;
                     padding: 20px;
                     border-radius: 6px;
                     background: #FFF;
@@ -368,6 +385,12 @@ const getAssetURL = (image) => {
                 }
             }
         }
+    }
+    .custom-class .footer {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
     ::-webkit-scrollbar {
       width: 8px; /* 滚动条宽度 */
