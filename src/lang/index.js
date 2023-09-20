@@ -3,7 +3,7 @@ const messages = {
   en: {},
   zh: {}
 }
-const models = import.meta.globEager(`@/lang/**/index.js`)
+const models = import.meta.globEager(`@/lang/**/*.js`)
 
 Object.keys(models).forEach(key => {
   // 以文件名作为语言包的命名空间
