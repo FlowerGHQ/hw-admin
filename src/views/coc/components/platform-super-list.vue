@@ -106,44 +106,37 @@ const handleModal = (type, item = {}) => {
 const handleDelete = (item) => {
 	console.log(item)
 }
-const columnsList = [
-	{ title: $t("coc.coc_name"), dataIndex: "coc_name", key: "coc_name" },
+const tableColumns = [
+	{ title: "coc.coc_name", dataIndex: "coc_name", key: "coc_name" },
 	{
-		title: $t("coc.coc_version"),
+		title: "coc.coc_version",
 		dataIndex: "coc_version",
 		key: "coc_version",
 	},
 	{
-		title: $t("coc.coc_apply_vehicle"),
+		title: "coc.coc_apply_vehicle",
 		dataIndex: "coc_apply_vehicle",
 		key: "coc_apply_vehicle",
 	},
 	{
-		title: $t("coc.coc_validity_date"),
+		title: "coc.coc_validity_date",
 		dataIndex: "coc_validity_date",
 		key: "coc_validity_date",
 	},
 	{
-		title: $t("coc.coc_create_date"),
+		title: "coc.coc_create_date",
 		dataIndex: "coc_create_date",
 		key: "coc_create_date",
 	},
 	{
-		title: $t("coc.coc_operation"),
+		title: "coc.coc_operation",
 		dataIndex: "coc_operation",
 		key: "coc_operation",
 	},
 ]
 
-const {
-	tableData,
-	tableColumns,
-	pageChange,
-	pageSizeChange,
-	currPage,
-	pageSize,
-	total,
-} = useTable(columnsList)
+const { tableData, pageChange, pageSizeChange, currPage, pageSize, total } =
+	useTable()
 </script>
 
 <style lang="less" scoped></style>

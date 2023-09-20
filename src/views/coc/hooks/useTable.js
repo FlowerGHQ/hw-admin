@@ -6,12 +6,6 @@ export const useTable = (columnsList) => {
     let currPage = ref(1)
     let pageSize = ref(20)
     let total = ref(0)
-    // 获取全局$t方法
-    const { ctx } = getCurrentInstance()
-    const { $t } = ctx.$root
-    const tableColumns = computed(() => {
-        return columnsList
-    })
     const pageChange = (page) => {
         currPage.value = page
         getTableData()
@@ -38,7 +32,6 @@ export const useTable = (columnsList) => {
     })
     return {
         tableData,
-        tableColumns,
         pageChange,
         pageSizeChange,
         currPage,
