@@ -238,16 +238,17 @@ export default {
                     },
                 ]
                 const resultDataMap = {};
-                data.forEach((item) => {
-                    const code = item.source_list[0].code;
-                    const voteCount = item.source_list[0].vote_count;
-
-                    if (resultDataMap[code]) {
-                        resultDataMap[code].count += voteCount;
-                    } else {
-                        resultDataMap[code] = {
-                            count: voteCount
-                        };
+                res.forEach((item) => {
+                    if (item.source_list.length) {
+                        const code = item.source_list[0].code;
+                        const voteCount = item.source_list[0].vote_count;
+                        if (resultDataMap[code]) {
+                            resultDataMap[code].count += voteCount;
+                        } else {
+                            resultDataMap[code] = {
+                                count: voteCount
+                            };
+                        }
                     }
                 });
                 const totalVoteCount = Object.values(resultDataMap).reduce((sum, item) => sum + item.count, 0);
@@ -334,14 +335,17 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+
     .empty-wrap {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         >img {
             width: 280px;
         }
+
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
@@ -385,5 +389,4 @@ export default {
             }
         }
     }
-}
-</style>
+}</style>

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { Chart, registerTheme } from '@antv/g2'
+import { Chart } from '@antv/g2'
 import Core from "../../../core";
 
 export default {
@@ -42,7 +42,8 @@ export default {
             boStatisticsChart: {},
             chartHeight: 254,
             title: '分享投票率',
-            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP
+            SOURCE_TYPE_MAP: Core.Const.VOTE.SOURCE_TYPE_MAP,
+            isEmpty: false
         };
     },
     watch: {
@@ -166,7 +167,7 @@ export default {
                     }
                 ];
                 const transformedData = [];
-                data.forEach((item) => {
+                res.forEach((item) => {
                     item.source_list.forEach((source) => {
                         const sourceType = source.type;
                         const count = source.count;
@@ -246,15 +247,18 @@ export default {
         }
     }
 }
+
 .table-container {
     .empty-wrap {
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         >img {
             width: 280px;
         }
+
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;
@@ -262,6 +266,7 @@ export default {
         }
     }
 }
+
 .unit {
     width: 100%;
     font-size: 12px;
@@ -273,5 +278,4 @@ export default {
 .chart {
     width: 100%;
     height: auto;
-}
-</style>
+}</style>

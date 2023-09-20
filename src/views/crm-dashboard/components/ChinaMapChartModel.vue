@@ -244,7 +244,7 @@ export default {
     align-items: center;
     &.jus {
         justify-content: center;
-        height: 430px;
+        height: 270px;
     }
 
     .empty-wrap {

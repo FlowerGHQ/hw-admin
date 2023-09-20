@@ -127,7 +127,7 @@ export default {
                     }
                 ];
                 const transformedData = [];
-                data.forEach((item) => {
+                res.forEach((item) => {
                     const date = item.date;
                     const count = item.uv;
                     const voteCount = item.vote_count;
@@ -143,9 +143,14 @@ export default {
                     };
                     transformedData.push(countData, voteCountData);
                 });
+                console.log('transformedData yxy', transformedData);
+                this.isEmpty = transformedData.every(item => {
+                    return item.value === 0
+                })
                 if (!transformedData.length) {
                     this.isEmpty = true
-                } else {
+                }
+                if (!this.isEmpty) {
                     this.drawBoStatisticsChart(transformedData)
                 }
             } catch (error) {
