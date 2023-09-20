@@ -9,19 +9,6 @@
             title="写跟进"
             centered
         >
-           <!--  <a-select
-                ref="select"
-                v-model:value="value1"
-                style="width: 100%"
-                @focus="focus"
-                @change="handleChange"
-            >
-                <a-select-option value="jack">Jack</a-select-option>
-                <a-select-option value="lucy">Lucy</a-select-option>
-                <a-select-option value="disabled" disabled>Disabled</a-select-option>
-                <a-select-option value="Yiminghe">yiminghe</a-select-option>
-            </a-select> -->
-            
           <!-- 沟通方式 -->
           <div class="form-item">
             <div class="key">沟通方式：</div>
@@ -85,12 +72,36 @@
             <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
         </template>
         </a-modal>
+        <a-modal v-model:visible="isShowCreate"
+            title="写跟进是否继续创建跟进任务?"
+            centered
+            :maskClosable = "false"
+            :closable = "false"
+            cancelText = "不创建"
+            okText = "创建"
+            @ok="createNext"
+            @cancel = "cancleNext"
+            >
+            <div class="top-title">系统将根据省市自动选择跟进人</div>
+            <div class="form-item">
+              <div class="key">下次跟进时间:</div>
+              <div class="value">
+                <a-date-picker show-time>
+                  <template #suffixIcon>
+                    <ClockCircleOutlined />
+                  </template>
+                </a-date-picker>
+              </div>
+          </div>
+            
+        </a-modal>
   </div>
 </template>
 
 <script setup>
 import { EditOutlined } from '@ant-design/icons-vue';
 import { reactive, ref ,onBeforeUnmount  } from 'vue';
+import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import Core from "@/core";    
 const props = defineProps({
         isShowButton: {
@@ -102,6 +113,9 @@ const props = defineProps({
 const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 弹窗显示变量
 const isShowFollow = ref(false);
+// 第二个创建弹窗
+const isShowCreate = ref(true);
+// 跟进
 const followObj = reactive({ 
     intentValue: 10,
     communicate_type: 1, 
@@ -115,6 +129,14 @@ const clickModelOk = () => {
 defineExpose({clickModelOk});
 const handleOk = () => {
     console.log('followObj---',followObj);
+    isShowFollow.value = false;
+    isShowCreate.value = true;
+}
+const createNext = () => {
+  console.log('创建更进新的');
+}
+const cancleNext  = () => {
+  console.log('不创建更进新的');
 }
 </script>
 
@@ -123,5 +145,12 @@ const handleOk = () => {
 .flex-aline {
     display: flex;
     align-items: flex-start; 
+}
+
+.top-title {
+  color: #F77234;
+  font-size: 14px;
+  font-weight: 400;
+  margin-bottom: 16px;
 }
 </style>
