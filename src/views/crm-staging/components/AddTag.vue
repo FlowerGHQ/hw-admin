@@ -122,6 +122,7 @@ export default {
         // 提交
         handleSubmit() {
             this.selectedTagList = this.convertDataStructure(this.renderList)
+            this.$emit('submit');
             // Core.Api.User.labelUpdate({
             //     target_id: this.id,
             //     // target_type: 2,

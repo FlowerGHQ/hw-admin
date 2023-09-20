@@ -115,7 +115,8 @@
                 </div> 
             </div>
         </div>
-        <AddTag v-model:visible="tagDrawerShow" />
+        <AddTag @submit="getUserDetail" v-model:visible="tagDrawerShow" />
+        <AddFocus @submit="getUserDetail" v-model:visible="focusDrawerShow" />
     </div>
 </template>
     
@@ -123,11 +124,13 @@
 import Core from '../../../core';
 import intentionStairs from './intention-stairs.vue';
 import AddTag from './AddTag.vue'
+import AddFocus from './AddFocus.vue';
 export default {
     name: 'UserDetail',
     components: {
         intentionStairs,
-        AddTag
+        AddTag,
+        AddFocus,
     },
     props: {
         id: {
@@ -228,7 +231,8 @@ export default {
                     }
                 ],
             },
-            tagDrawerShow: false
+            tagDrawerShow: false,
+            focusDrawerShow: false
         };
     },
     watch: {},
@@ -260,7 +264,7 @@ export default {
         },
         // 添加关注点
         handleAddFocus() {
-
+            this.focusDrawerShow = true
         },
         // 获取用户详情
         getUserDetail() {
