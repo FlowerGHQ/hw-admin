@@ -2601,7 +2601,8 @@ const messages = {
             re_name:'重命名',
             to_top:'置顶',
             cancle_top:'取消置顶',
-        }
+        },
+        
     },
 
     en: {

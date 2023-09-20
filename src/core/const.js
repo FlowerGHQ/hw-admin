@@ -14,14 +14,14 @@ let DISABLELOG = false
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
         URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        DISABLELOG = true        
+        DISABLELOG = true
         break;
-    case 'eos-release.horwincloud.com':        
+    case 'eos-release.horwincloud.com':
         URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
-        break;     
+        break;
     case "10.0.0.213":
         URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
@@ -34,7 +34,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        URL_POINT = 'http://10.10.12.75:8889'  // zy
+        // URL_POINT = 'http://10.10.12.75:8889'  // zy
         break;
 }
 
@@ -62,7 +62,7 @@ let Const = {
         TAB_POSITION: 'tab.position',
         COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
-        SUPER_ADMIN: 'super_admin',        
+        SUPER_ADMIN: 'super_admin',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -1658,33 +1658,33 @@ let Const = {
             DISTRIBUTE: 40,          // 40代理分销
             OTHER: 50,               // 50其他
         },
-		TYPE_MAP: {
-			'10': { key: 10, zh: '产品销售',en: 'Product Sales', value: 10 },
-			'20': { key: 20, zh: '业务合作',en: 'Cooperation', value: 20 },
-			'30': { key: 30, zh: '服务',en: 'Service', value: 30 },
-			'40': { key: 40, zh: '代理分销',en: 'Distribute', value: 40 },
-			'50': { key: 50, zh: '其他',en: 'Others', value: 50 },
-		},
-		STATUS: {
-            // 对应下面 STATUS_MAP
-            WAIT_AUDIT: 20,      
-            REFUSE: 30,          
-            TOBEPAID: 35,        
-            EXECUTING: 40,       
-            REFUND: 44,          
-            REFUND_PROGRESS: 44, 
-            FINISH: 50,          
+        TYPE_MAP: {
+            '10': { key: 10, zh: '产品销售', en: 'Product Sales', value: 10 },
+            '20': { key: 20, zh: '业务合作', en: 'Cooperation', value: 20 },
+            '30': { key: 30, zh: '服务', en: 'Service', value: 30 },
+            '40': { key: 40, zh: '代理分销', en: 'Distribute', value: 40 },
+            '50': { key: 50, zh: '其他', en: 'Others', value: 50 },
         },
-		STATUS_MAP: {
-			'10': { key: 10, zh: '初始化',en: 'Init', value: 10 },
-			'20': { key: 20, zh: '待审核',en: 'Pending Review', value: 20 },
-			'30': { key: 30, zh: '审核拒绝',en: 'Review Rejected', value: 30 },
-			'35': { key: 35, zh: '待支付',en: 'To be paid', value: 35 },
-			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
-			'44': { key: 44, zh: '申请退款',en: 'Apply for a refund', value: 44 },            
-			'46': { key: 46, zh: '退款中',en: 'Refund in progress', value: 46 },
-			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
-		},
+        STATUS: {
+            // 对应下面 STATUS_MAP
+            WAIT_AUDIT: 20,
+            REFUSE: 30,
+            TOBEPAID: 35,
+            EXECUTING: 40,
+            REFUND: 44,
+            REFUND_PROGRESS: 44,
+            FINISH: 50,
+        },
+        STATUS_MAP: {
+            '10': { key: 10, zh: '初始化', en: 'Init', value: 10 },
+            '20': { key: 20, zh: '待审核', en: 'Pending Review', value: 20 },
+            '30': { key: 30, zh: '审核拒绝', en: 'Review Rejected', value: 30 },
+            '35': { key: 35, zh: '待支付', en: 'To be paid', value: 35 },
+            '40': { key: 40, zh: '执行中', en: 'Executing', value: 40 },
+            '44': { key: 44, zh: '申请退款', en: 'Apply for a refund', value: 44 },
+            '46': { key: 46, zh: '退款中', en: 'Refund in progress', value: 46 },
+            '50': { key: 50, zh: '已结束', en: 'Finished', value: 50 },
+        },
         CUSTOMER_MAP: {
             '10': { key: 10, zh: '私人客户', en: 'Private client', value: 10 },
             '40': { key: 40, zh: '公海客户', en: 'High seas customers', value: 40 },
@@ -2249,7 +2249,7 @@ let Const = {
             '103002': { father_type: 2, key: 103002, zh: "大区经理", en: 'Regional manager' },
             '103003': { father_type: 3, key: 103003, zh: "城市经理", en: 'City manager' },
             '103004': { father_type: 6, key: 103004, zh: "运营", en: 'operate' },
-            '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },            
+            '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },
             '3000001': { father_type: 4, key: 3000001, zh: "门店店长", en: 'Store manager' },
             '3000002': { father_type: 5, key: 3000002, zh: "用户体验官", en: 'User experience officer' },
         },
