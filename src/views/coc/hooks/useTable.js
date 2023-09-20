@@ -1,8 +1,7 @@
 // table的hooks
 
 import { ref, computed, onMounted, watch, getCurrentInstance } from "vue"
-export const useTable = (props, emit) => {
-    console.log("useTable", props, emit)
+export const useTable = (columnsList) => {
     let tableData = ref([])
     let currPage = ref(1)
     let pageSize = ref(20)
@@ -11,34 +10,7 @@ export const useTable = (props, emit) => {
     const { ctx } = getCurrentInstance()
     const { $t } = ctx.$root
     const tableColumns = computed(() => {
-        return [
-            { title: $t("coc.coc_name"), dataIndex: "coc_name", key: "coc_name" },
-            {
-                title: $t("coc.coc_version"),
-                dataIndex: "coc_version",
-                key: "coc_version",
-            },
-            {
-                title: $t("coc.coc_apply_vehicle"),
-                dataIndex: "coc_apply_vehicle",
-                key: "coc_apply_vehicle",
-            },
-            {
-                title: $t("coc.coc_validity_date"),
-                dataIndex: "coc_validity_date",
-                key: "coc_validity_date",
-            },
-            {
-                title: $t("coc.coc_create_date"),
-                dataIndex: "coc_create_date",
-                key: "coc_create_date",
-            },
-            {
-                title: $t("coc.coc_operation"),
-                dataIndex: "coc_operation",
-                key: "coc_operation",
-            },
-        ]
+        return columnsList
     })
     const pageChange = (page) => {
         currPage.value = page

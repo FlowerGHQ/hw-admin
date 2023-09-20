@@ -79,6 +79,7 @@
 			:visible="visible"
 			:ModalTitle="ModalTitle"
 			v-model:visible="visible"
+			v-model:form="form"
 		/>
 	</div>
 </template>
@@ -91,7 +92,7 @@ const { ctx } = getCurrentInstance()
 const { $t } = ctx.$root
 const ModalTitle = ref("")
 const visible = ref(false)
-
+const form = ref({})
 const handleModal = (type, item = {}) => {
 	if (type === "add") {
 		ModalTitle.value = $t("coc.coc_modal_add_title")
@@ -105,6 +106,34 @@ const handleModal = (type, item = {}) => {
 const handleDelete = (item) => {
 	console.log(item)
 }
+const columnsList = [
+	{ title: $t("coc.coc_name"), dataIndex: "coc_name", key: "coc_name" },
+	{
+		title: $t("coc.coc_version"),
+		dataIndex: "coc_version",
+		key: "coc_version",
+	},
+	{
+		title: $t("coc.coc_apply_vehicle"),
+		dataIndex: "coc_apply_vehicle",
+		key: "coc_apply_vehicle",
+	},
+	{
+		title: $t("coc.coc_validity_date"),
+		dataIndex: "coc_validity_date",
+		key: "coc_validity_date",
+	},
+	{
+		title: $t("coc.coc_create_date"),
+		dataIndex: "coc_create_date",
+		key: "coc_create_date",
+	},
+	{
+		title: $t("coc.coc_operation"),
+		dataIndex: "coc_operation",
+		key: "coc_operation",
+	},
+]
 
 const {
 	tableData,
@@ -114,7 +143,7 @@ const {
 	currPage,
 	pageSize,
 	total,
-} = useTable()
+} = useTable(columnsList)
 </script>
 
 <style lang="less" scoped></style>
