@@ -17,11 +17,13 @@
                 >
         </a-select>
     </div>
+    <RecordItem />
   </div>
 </template>
 
 <script setup>
 import FollowUp from "./FollowUp.vue";
+import RecordItem from "./RecordItem.vue";
 import { reactive, ref ,onBeforeUnmount  } from 'vue';
 import Core from "@/core";    
 const props = defineProps({

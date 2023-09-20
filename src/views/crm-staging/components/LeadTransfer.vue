@@ -119,7 +119,6 @@
   </template>
   
   <script setup>
-  import { EditOutlined } from '@ant-design/icons-vue';
   import { reactive, ref } from 'vue';
   import Core from "@/core";
 
