@@ -66,7 +66,7 @@
 					:pagination="channelPagination"
 					@change="handleTableChange"
 					:row-selection="{
-						selectedRowKeys: selectedRowKeys,
+						selectedRowKeys: selectedRowKeyArr,
 						onChange: onSelectChange,
 					}"
 				>
@@ -153,6 +153,7 @@ const palrformTableColumns = ref([
 ])
 const palrformTableData = ref([
 	{
+		id: 1,
 		sn: "1234567890",
 		status_type: "2",
 		coc_order_time: "2021-08-09 12:00:00",
@@ -161,6 +162,7 @@ const palrformTableData = ref([
 		coc_download_times: "100",
 	},
 	{
+		id: 2,
 		sn: "1234567890",
 		status_type: "3",
 		coc_order_time: "2021-08-09 12:00:00",
@@ -169,6 +171,7 @@ const palrformTableData = ref([
 		coc_download_times: "100",
 	},
 	{
+		id: 3,
 		sn: "1234567890",
 		status_type: "4",
 		coc_order_time: "2021-08-09 12:00:00",
@@ -192,11 +195,8 @@ const searchForm = ref({
 	sn: "",
 })
 
-const selectedRowKeys = ref([])
-const onSelectChange = (selectedRowKeys) => {
-	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
-	selectedRowKeys = selectedRowKeys
-}
+const selectedRowKeyArr = ref([]) // 选中的哪些项
+
 
 /* fetch start */
 const fetchs = (params = {}) => {
@@ -232,6 +232,12 @@ const onPlaceOrderTime = (params) => {
 // 发货时间
 const onDeliveryTime = (params) => {
 	Core.Logger.log("发货时间", params)
+}
+// 选中项的事件
+const onSelectChange = (selectedRowKeys) => {
+	// 注意selectedRowKeyArr尽量不要跟上面selectedRowKeys名称一样
+	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
+	selectedRowKeyArr.value = selectedRowKeys
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
