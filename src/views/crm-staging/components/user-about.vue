@@ -57,6 +57,9 @@ const getCount = (key, count) => {
     totals[key] = count
 }
 
+onMounted(() => {
+	
+})
 
 // 日志
 const pagination = reactive({
@@ -109,7 +112,8 @@ const list = ref([
 ])
 const getLogList = (params = {}) => {
   const obj = {
-		"page_size": pagination.page_size,
+		page: pagination.page,
+		page_size: pagination.page_size,
 		"target_id": "",
 	    "target_type": "",
         ...params
