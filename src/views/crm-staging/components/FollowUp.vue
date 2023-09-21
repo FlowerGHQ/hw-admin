@@ -114,7 +114,7 @@ const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 弹窗显示变量
 const isShowFollow = ref(false);
 // 第二个创建弹窗
-const isShowCreate = ref(true);
+const isShowCreate = ref(false);
 // 跟进
 const followObj = reactive({ 
     intentValue: 10,
