@@ -293,6 +293,7 @@ export default {
         },
         // 获取用户详情
         getUserDetail() {
+            if (!this.id) return
             Core.Api.CustomService.detail({
                 id: this.id
                 // id: 3074

@@ -79,10 +79,17 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, toRefs } from 'vue';
+import { inject, reactive, ref, toRefs } from 'vue';
+import Core from '@/core';
 import Static from '../static'
 
-const $prop = defineProps({})
+const userId = inject('userId');
+const $prop = defineProps({
+    customer_id: {
+        required: true,
+        type: [String, Number],
+    }
+})
 const $emit = defineEmits([])
 
 const cycIndex = ref(0)
@@ -92,13 +99,41 @@ const colorList = {
 	'号外橙': '#DC6E38',
 	'号外紫': '#1010A8',
 }
+const userMes = ref([])
 const cycList = Static.MODEL
 const change = (id, index) => {
     modelId.value = id
     cycIndex.value = index
 }
+const getUserDetail = () => {
+    console.log(123)
+    Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+        userMes.value = res
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
 const confirmConfig = () => {
-    isConfirm.value = true
+    const params = {
+        "address": userMes.value.address,// 地址
+		"city": userMes.value.city,// 所属城市
+		"customer_id": userMes.value.id,// 用户ID
+		"group_id": userMes.value.group_id,// 所属区域id
+		"pay_money": cycList[modelId.value].pay_money,// 本次支付金额
+		"remark": JSON.stringify({ ...cycList[modelId.value] }), // 车辆信息
+		"store_id": 30, // 所属门店id
+		"total_price": cycList[modelId.value].total_price,// 产品总金额
+		"type": "1",// 本次支付订单类型
+		"user_id": Core.Data.getUser('user').id,// 员工用户ID
+	}
+    Core.Logger.success('params', params)
+    Core.Api.CustomService.createOrder({ ...params }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+        isConfirm.value = true
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const changeConfig = () => {
     isConfirm.value = false
@@ -106,6 +141,8 @@ const changeConfig = () => {
 const pushApp = () => {
     
 }
+
+defineExpose({ getUserDetail })
 
 </script>
 

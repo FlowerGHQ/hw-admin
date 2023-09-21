@@ -844,7 +844,15 @@ const apiList = {
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
         storeList: ['PostJson', 'customer-service/store/list-name'],   
         groupList: ['PostJson', 'customer-service/group/list-name'],    
-        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'], 
+        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'],
+        editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
+        createOrder: ['PostJson', 'customer-service/crm-order/create'],
+        orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
+        orderList: ['PostJson', 'customer-service/crm-order/list'],
+        pushApp: ['PostJson', 'customer-service/crm-order/push-app'],
+        orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
+        logList: ['PostJson', 'customer-service/action-log/list'],
+
     },
 };
 

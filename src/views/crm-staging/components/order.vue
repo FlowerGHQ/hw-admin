@@ -20,8 +20,13 @@
 
 <script setup>
 import Core from '@/core';
-import { reactive, ref, toRefs } from 'vue';
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { reactive, ref, toRefs, nextTick, inject } from 'vue';
+
+const userId = inject('userId');
+
+nextTick(() => {
+  getList({ page: pagination.page })
+})
 
 const columns = [
   {
@@ -66,7 +71,7 @@ const columns = [
   },
 ];
 
-const data = [
+const data = ref([
   {
     key: '1',
     id: 1,
@@ -78,12 +83,30 @@ const data = [
     'create-time': 32,
     'update-time': 'New York No. 1 Lake Park',
   },
-];
-
-const detail = (id) => {
-    console.log(id)
+]);
+const pagination = reactive({
+  page_size: 20,
+  page: 1,
+  total: 0,
+  total_page: 0
+})
+const getList = (params = {}) => {
+  const obj = {
+		"page_size": pagination.page_size,
+		"customer_id": userId.value,
+    ...params
+	}
+  Core.Api.CustomService.orderList({ ...obj }).then(res=>{
+    Core.Logger.success("参数", "数据", res)
+    data.value = res.list
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
 }
 
+const detail = (id) => {
+  console.log(id)
+}
 </script>
 
 <style lang="less" scoped>

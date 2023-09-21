@@ -14,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, toRefs, getCurrentInstance } from 'vue';
+import { computed, reactive, ref, toRefs, inject } from 'vue';
 
 import toTop from '../images/to-top.png';
 import offTop from '../images/off-top.png';
@@ -29,6 +29,7 @@ import LeadTransfer from "./LeadTransfer.vue";
 
 const leadTransRef = ref(null);
 const followRef = ref(null);
+const userId = inject('userId');
 const $prop = defineProps({
     //第几条任务
     current: {
@@ -111,6 +112,9 @@ const nextFn = () => {
 }
 const toTopFn = () => {
     $emit('toTop', $prop.current - 1)
+}
+const toOrder = () => {
+    $emit('order', $prop.current - 1)
 }
 
 
