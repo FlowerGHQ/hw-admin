@@ -417,5 +417,22 @@ const Static = {
 			color: '号外紫'
 		}
 	},
+    // 订单状态
+	ORDER_STATUS_MAP: {
+		'100': { key: '100', text: '待支付', border_color: '#FFE4BA', color: '#FF7D00' },
+		'200': { key: '200', text: '已支付', border_color: '#00B42A33', color: '#00B42A' },
+		'-200': { key: '-200', text: '已取消', border_color: '#E5E6EB', color: '#86909C' },
+		'-300': { key: '-300', text: '已退订', border_color: '#F7BA1E33', color: '#F7BA1E' },
+		'-300': { key: '-300', text: '已退款', border_color: '#F7BA1E33', color: '#F7BA1E' },
+	},
+    // 来源
+    SOURCE_TYPE: [
+        { title:'全部', value: 0,key: 0 },
+        { title:'预定小程序', value: 1,key: 1  },
+        { title:'人工创建', value: 2,key: 2  },
+        { title:'官网', value: 3,key: 3  },
+        { title:'体验官二维码', value: 4,key: 4  },
+        { title:'门店二维码', value: 5,key: 5  },
+    ],
 }
 export default Static

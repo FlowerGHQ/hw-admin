@@ -838,10 +838,14 @@ const apiList = {
         // 订单管理接口
     },
     CustomService: {
+        list: ['PostJson', 'customer-service/customer/list'],  
         detail: ['PostJson', 'customer-service/customer/detail'],   
         deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
-    }
+        storeList: ['PostJson', 'customer-service/store/list-name'],   
+        groupList: ['PostJson', 'customer-service/group/list-name'],    
+        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'], 
+    },
 };
 
 export default new Api(baseUrl, apiList);

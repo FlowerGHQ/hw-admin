@@ -28,9 +28,13 @@
 
 <script setup>
 import Core from '@/core';
-import { computed, reactive, ref, toRefs } from 'vue';
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { computed, reactive, ref, toRefs, nextTick } from 'vue';
 
+nextTick(() => {
+  getBindList()
+})
+
+const $emit = defineEmits(['getCount'])
 const columns = [
 {
   title: '归属大区',
@@ -77,7 +81,7 @@ const data = [
 },
 ];
 
-const res = {}
+const id = ref(1)
 
 const sourceList = [
   { label: '留资城市', value: '上海', labelWidth: 70, prop: 'city' },
@@ -98,6 +102,18 @@ const sourceListRender = computed(() => {
 
 const detail = (id) => {
   console.log(id)
+}
+const getBindList = () => {
+  const params = {
+    customer_id: id.value
+	}
+  Core.Logger.success('params', params)
+  Core.Api.CustomService.bindList({ ...params }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+    $emit('getCount', '3' ,res.count)
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 
 </script>

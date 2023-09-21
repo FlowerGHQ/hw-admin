@@ -26,7 +26,7 @@
                         <div class="task-list-body-item" :class="taskIndex === index ? 'selected' : ''" v-for="(item, index) in taskList" :key="item.id" @click="changeTask(index)">
                             <div class="avatar">
                                 <img :src="item.avatar" class="avatar-img">
-                                <img :src="item.gender === 1 ? getAssetURL('./images/avatar.png') : getAssetURL('./images/avatar.png')" class="avatar-gender">
+                                <img :src="item.gender === 1 ? getAssetURL('./images/gender-male.png') : getAssetURL('./images/gender-female.png')" class="avatar-gender">
                             </div>
                             <div class="message">
                                 <div class="message-item">
@@ -34,11 +34,11 @@
                                         <span class="name">{{ item.name }}</span>
                                         <span class="age">{{ item.age }}岁</span>
                                     </div>
-                                    <IntentionStairs :status="item.status"/>
+                                    <IntentionStairs :status="item.intention"/>
                                 </div>
                                 <div class="message-item">
                                     <span class="phone">{{ item.phone }}</span>
-                                    <span class="time">{{ dayjs.unix(item.time).format('MM-DD HH:mm') }}</span>
+                                    <span class="time">{{ dayjs.unix(item.last_track_time).format('MM-DD HH:mm') }}</span>
                                 </div>
                                 <div>
                                     <my-tag color="#00B42A" bgColor="#E8FFEA" class="message-label" v-for="labelItem in item.label">{{ labelItem }}</my-tag>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="content-right">
                     <div class="user-card">
-                        <UserDetail/>
+                        <UserDetail :id="userId"/>
                     </div>
                     <div class="about">
                         <UserAbout/>
@@ -86,10 +86,7 @@ import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
-import menuImage from './images/avatar.png'
-
 const route = useRoute()
-
 onMounted(() => {    
     getTaskNum()
 })
@@ -113,49 +110,80 @@ const menuLeftRender = computed(() => {
 		return obj
     })
 })
-const getTaskNum = () => {
-    // Core.Api.Staging.getHomeTaskNum({
-	// 	store_id: 30,
-	// }).then(res=>{
-	// 	Core.Logger.success('getTaskNum',res);
-	// 	list = res;
-	// }).catch(err=>{
-    //     Core.Logger.error("参数", "数据", err)
-	// })
-}
 const change = (index) => {
     menuLeftIndex.value = index
+    // 同步切换状态
+    updateStatus(staskStatusIndex.value)
+    getTaskNum()
 }
 
 // 搜索栏
+const searchMes = reactive({})
 const searchEnter = (value) => {
-    console.log(value)
+    Object.assign(searchMes, value)
+    if (searchMes.time && searchMes.time.length > 0) {
+        searchMes.begin_time = dayjs(searchMes.time[0]).valueOf()
+        searchMes.end_time = dayjs(searchMes.time[1]).valueOf()
+    }
+    getTaskNum()
 }
 
 //任务列表
+const userId = ref(null)
 const isTop = ref(false)
 const taskIndex = ref(0)
 const taskCurrent = ref(1)
 const taskAmount = ref(1)
+const staskStatus = ref(0)
 const staskStatusIndex = ref(0)
 const staskStatusList = [{ name: '待办' }, { name: '已办' }]
-const taskList = ref([
-    { id: 1, avatar: menuImage, gender: 1, name: '小红', age: 1, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 2, avatar: menuImage, gender: 2, name: '张三', age: 2, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 3, avatar: menuImage, gender: 1, name: '小红', age: 3, status: 30, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 4, avatar: menuImage, gender: 2, name: '张三', age: 4, status: 40, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 5, avatar: menuImage, gender: 1, name: '小红', age: 5, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 6, avatar: menuImage, gender: 2, name: '张三', age: 6, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 7, avatar: menuImage, gender: 1, name: '小红', age: 7, status: 10, phone: 13456743454, time: new Date(), label: ['续航'] },
-    { id: 8, avatar: menuImage, gender: 2, name: '张三', age: 8, status: 20, phone: 13456743454, time: new Date(), label: ['续航'] },
-])
+const taskList = ref([])
 taskAmount.value = taskList.value.length
 const staskStatusChange = (index) => {
     staskStatusIndex.value = index
+    updateStatus(index)
+    getTaskNum()
+}
+const updateStatus = (index) => {
+    switch (index) {
+        case 0:
+            if (menuLeft[menuLeftIndex.value].status_mapping === 1) {
+                staskStatus.value = 0
+            } else {
+                staskStatus.value = 25
+            }
+            break;
+        case 1:
+            if (menuLeft[menuLeftIndex.value].status_mapping === 1) {
+                staskStatus.value = 1
+            } else {
+                staskStatus.value = 30
+            }
+            break;
+    
+        default:
+            break;
+    }
 }
 const changeTask = (index) => {
     taskIndex.value = index
     taskCurrent.value = index + 1
+    userId.value = taskList.value[index].id
+}
+const getTaskNum = () => {
+    const params = {
+        status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
+        status: staskStatus.value,
+        ...searchMes
+	}
+    Core.Logger.success('params', params)
+    Core.Api.CustomService.list({ ...params }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+		taskList.value = res.list;
+        userId.value = taskList.value[0].id
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 //置顶
 const openOrder = ref(false)
