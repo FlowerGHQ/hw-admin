@@ -106,7 +106,7 @@ const getList = (params = {}) => {
   const obj = {
     page: params.current,
     page_size: pagination.pageSize,
-		// "customer_id": userId.value,
+		"customer_id": userId.value,
 	}
   Core.Api.CustomService.orderList({ ...obj }).then(res=>{
     Core.Logger.success("参数", "数据", res)

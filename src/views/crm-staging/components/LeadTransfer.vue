@@ -92,16 +92,15 @@
                 show-search
                 option-label-prop="label"
               >
-                <a-select-option :value="item.user_id" :label="item.user_name"  v-for="(item,index) in peopleList" :key="item.value">
+                <a-select-option :value="item?.store_user_id" :label="item.user_name"  v-for="(item,index) in peopleList" :key="item.value">
                   <img :src="item.avatar" class ="options-img" alt="">
                   <div class="option-right">
                       <div class="options-top"> <span class="name-option">{{ item.user_name }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.user_phone }}</span>&nbsp;&nbsp;  <span class="work-option">{{ $Util.peoStoreStatus(item.type) }}</span></div>
-                      <div class="area-option">{{ item.group_name
- }}</div>
+                      <div class="area-option">{{ item.group_name }}</div>
                   </div>
                 </a-select-option>
               </a-select>
-            </div>
+            </div> 
           </div> 
           <div class="form-item flex-aline required">
             <div class="key">转移原因：</div>
@@ -240,6 +239,14 @@ const storeChangeClick = (value) => {
 defineExpose({clickModelOk});
 const handleOk = () => {
     console.log('followObj---',followObj);
+  Core.Api.CustomService.upDateTransfer({
+    ...followObj,
+    id: userId.value
+  }).then(res=>{
+		Core.Logger.success('upDateTransfer数据',res);
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
 }
 // 门店人员-获取
 const getPeopleList = () => {

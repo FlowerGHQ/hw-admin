@@ -48,20 +48,19 @@
               :field-names="{ label: 'name', value: 'id' }"
               style="width: 104px;"
               placeholder="所属大区"
-              @change="handleChange"
+              @change="handleChange('group')"
             ></a-select>
         </div>
         <div class="search-item">
-            <!-- <a-select
+            <a-select
               ref="select"
               :options="optionsCity"
               v-model:value="searchForm.city"
-              :field-names="{ label: 'zh', value: 'key' }"
+              :field-names="{ label: 'city', value: 'id' }"
               style="width: 104px;"
               placeholder="所属城市"
-              @change="handleChange"
-            ></a-select> -->
-            <China2Address @search="handleCitySearch" placeholder="所属城市" :defArea="[searchForm.province, searchForm.city]" ref='CountryCascader' />
+              @change="handleChange('city')"
+            ></a-select>
         </div>
         <div class="search-item">
             <a-select
@@ -94,17 +93,14 @@
 
 <script setup>
 import Core from '@/core';
-import China2Address from '../../../components/common/China2Address.vue'
 import { SearchOutlined, CalendarOutlined } from '@ant-design/icons-vue';
 import { reactive, ref, toRefs, onMounted } from 'vue';
 import Static from '../static'
 
 // const $prop = defineProps(['xxx'])
 const $emit = defineEmits(['enter'])
-const CountryCascader = ref(null)
 
 onMounted(() => {    
-    getStoreList()
     getGroupList()
 })
 
@@ -113,9 +109,9 @@ const clear = ref(false)
 const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
 const optionsSource = ref(Static.SOURCE_TYPE);
 const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
-const optionsRegion = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
-// const optionsCity = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
-const optionsStore = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
+const optionsRegion = ref([]);
+const optionsCity = ref([]);
+const optionsStore = ref([]);
 const searchForm = reactive({
     key: undefined,
     intention: undefined,
@@ -127,14 +123,6 @@ const searchForm = reactive({
     store_id: undefined,
     time: undefined,
 })
-const getStoreList = () => {
-    Core.Api.CustomService.storeList().then(res=>{
-		Core.Logger.success('getTaskNum',res);
-		optionsStore.value = res.list;
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
 const getGroupList = () => {
     Core.Api.CustomService.groupList().then(res=>{
 		Core.Logger.success('getTaskNum',res);
@@ -152,9 +140,44 @@ const handleCitySearch = (e) => {
     searchForm.city = e.city
     handleChange()
 }
-const handleChange = () => {
+const handleChange = (type) => {
     clear.value = true
     $emit('enter', searchForm)
+    switch (type) {
+        case 'group':
+            getCityList();
+            break;
+        case 'city':
+            getStoreList();
+            break;
+    
+        default:
+            break;
+    }
+}
+// 获取城市列表
+const getCityList = (value) => {
+    Core.Api.CustomService.getCityList({
+        id: searchForm.group_id
+    }).then(res=>{
+		Core.Logger.success('getCityList',res);
+		optionsCity.value = res;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 获取门店列表
+const getStoreList = () => {
+    Core.Api.CustomService.storeList({
+        group_id: searchForm.group_id,
+        city: searchForm.city,
+        page_size: 500,
+    }).then(res=>{
+		Core.Logger.success('storeList',res);
+		optionsStore.value = res.list;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const handleSearch = () => {
     clear.value = true
@@ -165,7 +188,6 @@ const clearFn = () => {
     for(let key in searchForm) {
         searchForm[key] = undefined
     }
-    CountryCascader.value.handleReset()
     clear.value = false
     $emit('enter', searchForm)
 }

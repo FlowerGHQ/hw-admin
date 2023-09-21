@@ -451,6 +451,14 @@ const Static = {
 		'5': { key: '摩托车型号', value: 5, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
 		'6': { key: '用车城市', value: 6, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
 	},
+    STATUS_MAP: {
+        '10': { key: '待试驾', value: 10, color: '#FF7D00', borderColor: '#FFE4BA' },
+        '15': { key: '待试驾', value: 15, color: '#FF7D00', borderColor: '#FFE4BA' },
+        '20': { key: '试驾中', value: 20, color: '#00B42A', borderColor: '#AFF0B5' },
+        '30': { key: '已试驾', value: 30, color: '#3381FF', borderColor: '#CCDFFF' },
+        '40': { key: '未出席', value: 40, color: '#F53F3F', borderColor: '#F53F3F4D' },
+        '50': { key: '已取消', value: 50, color: '#86909C', borderColor: '#E5E6EB' },
+    },
     defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
 }
 export default Static
