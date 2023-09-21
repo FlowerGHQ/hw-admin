@@ -94,6 +94,7 @@ const $emit = defineEmits([])
 
 const cycIndex = ref(0)
 const modelId = ref(1)
+const orderId = ref(null)
 const isConfirm = ref(false)
 const colorList = {
 	'号外橙': '#DC6E38',
@@ -106,7 +107,6 @@ const change = (id, index) => {
     cycIndex.value = index
 }
 const getUserDetail = () => {
-    console.log(123)
     Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
 		Core.Logger.success('getTaskNum',res);
         userMes.value = res
@@ -129,6 +129,7 @@ const confirmConfig = () => {
     Core.Logger.success('params', params)
     Core.Api.CustomService.createOrder({ ...params }).then(res=>{
 		Core.Logger.success('getTaskNum',res);
+        orderId.value = res.order.id
         isConfirm.value = true
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
@@ -138,7 +139,11 @@ const changeConfig = () => {
     isConfirm.value = false
 }
 const pushApp = () => {
-    
+    Core.Api.CustomService.pushApp({ id: orderId.value }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 
 defineExpose({ getUserDetail })

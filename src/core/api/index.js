@@ -860,7 +860,7 @@ const apiList = {
         createOrder: ['PostJson', 'customer-service/crm-order/create'],
         orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
         orderList: ['PostJson', 'customer-service/crm-order/list'],
-        pushApp: ['PostJson', 'customer-service/crm-order/push-app'],
+        pushApp: ['GetJson', 'customer-service/crm-order/push-app'],
         orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
         logList: ['PostJson', 'customer-service/action-log/list'],
 

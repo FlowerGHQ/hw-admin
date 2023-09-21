@@ -81,6 +81,7 @@ const handleClick = (alt) => {
     switch (alt) {
         case '取消置顶':
             $prop.isTop = false
+            toTopFn()
             break;
         case '置顶':
             $prop.isTop = true
