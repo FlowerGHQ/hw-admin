@@ -125,6 +125,7 @@ const detail = (id) => {
   console.log(id)
 }
 const getUserDetail = () => {
+  if (!userId.value) return
   Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
     Object.assign(userMes, res)
 	  Core.Logger.success('getUserDetail',userMes);

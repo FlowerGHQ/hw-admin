@@ -61,7 +61,7 @@
                     <div class="color-item" :style="{ background: colorList[cycList[modelId].color] }"></div>
                 </div>
                 <div class="qrcode">
-                    <img class="qrcode-image" src="">
+                    <qrcode-vue value="http://event.horwincloud.com/sale/redirect/?type=order" :size="160" level="H" />
                     <p class="the-name">意向金：￥500</p>
                 </div>
             </div>
@@ -79,8 +79,9 @@
 </template>
 
 <script setup>
-import { inject, reactive, ref, toRefs } from 'vue';
+import { inject, nextTick, reactive, ref, toRefs } from 'vue';
 import Core from '@/core';
+import QrcodeVue from 'qrcode.vue'
 import Static from '../static'
 
 const userId = inject('userId');
@@ -92,10 +93,12 @@ const $prop = defineProps({
 })
 const $emit = defineEmits([])
 
+const qrCodeUrl = ref(null)
 const cycIndex = ref(0)
 const modelId = ref(1)
 const orderId = ref(null)
 const isConfirm = ref(false)
+const isUpdate = ref(false)
 const colorList = {
 	'号外橙': '#DC6E38',
 	'号外紫': '#1010A8',
@@ -115,6 +118,10 @@ const getUserDetail = () => {
 	})
 }
 const confirmConfig = () => {
+    if (isUpdate.value) {
+        updateOrder()
+        return
+    }
     const params = {
         "address": userMes.value.address,// 地址
 		"city": userMes.value.city,// 所属城市
@@ -135,7 +142,16 @@ const confirmConfig = () => {
         Core.Logger.error("参数", "数据", err)
 	})
 }
+const updateOrder = () => {
+    Core.Api.CustomService.orderUpdate({ id: orderId.value, remark: JSON.stringify({ ...cycList[modelId.value] }) }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+        isConfirm.value = true
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
 const changeConfig = () => {
+    isUpdate.value = true
     isConfirm.value = false
 }
 const pushApp = () => {

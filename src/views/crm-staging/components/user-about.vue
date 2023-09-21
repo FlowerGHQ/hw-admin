@@ -50,12 +50,12 @@ const OrderRef = ref(null)
 const followRe = ref(null);
 const activeKey = ref('1')
 const totals = reactive({
-    '1': 20,
-    '2': 20,
-    '3': 20,
-    '4': 20,
-    '5': 20,
-    '6': 20,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+    '6': 0,
 })
 
 const getCount = (key, count) => {
@@ -114,7 +114,7 @@ const getLogListFetch = (params = {} , isSearch = false) => {
 	    target_type: Core.Const.LABEl.CATEGORY.CLIENT,  // 目标类型 (1客户、2商机、3合同订单、4回款单)
         ...params
 	}
-	Core.Logger.error("参数", obj)
+	Core.Logger.success("参数", obj)
     Core.Api.CustomService.logList(obj).then(res=>{
 		logPagination.total = res.count
         logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size)
@@ -138,7 +138,7 @@ const handleScroll = (e) => {
 	const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {        
 		Core.Logger.log('滚动触底')
-        if (logPagination.page <= logPagination.total_page) {
+        if (logPagination.page < logPagination.total_page) {
 			logPagination.page ++
             getLogListFetch({ page: logPagination.page })
         }

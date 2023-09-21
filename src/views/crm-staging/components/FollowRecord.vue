@@ -31,7 +31,7 @@
 <script setup>
 import FollowUp from "./FollowUp.vue";
 import Steps from "./steps.vue";
-import { reactive, ref ,getCurrentInstance ,inject ,onMounted } from 'vue';
+import { reactive, ref ,getCurrentInstance ,inject ,watch } from 'vue';
 import Core from "@/core";    
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
@@ -88,9 +88,19 @@ const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 const followObj = reactive({ 
   type: undefined, 
 })
-onMounted(()=>{
-  // 获取跟进记录 
-  getRecordList()
+watch(
+  () => userId.value, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      // 获取跟进记录 
+      getRecordList()
+    }
+  }
+)
+const pagination = reactive({
+  pageSize: 10,
+  current: 1,
+  total: 0,
+  total_page: 0
 })
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
@@ -98,11 +108,15 @@ const getRecordList = (params={}) => {
     target_id: userId.value,
     target_type: 1,
     type:followObj.type===undefined?0:followObj.type,
+    page: params.current,
+    page_size: pagination.pageSize,
     ...params
 
   }
   Core.Api.CustomService.trackRecordList(obj).then(res=>{
 		Core.Logger.success('getRecordList参数',obj,"数据",res);
+    pagination.total = res.count
+    pagination.total_page = Math.ceil(pagination.total / pagination.pageSize)
   }).catch(err=>{
     Core.Logger.error("参数getRecordList参数",obj, "数据", err)
   })
@@ -148,6 +162,17 @@ const typeChangeClick = (value) => {
   getRecordList();
   Core.Logger.success('typeChangeClick',value);
 } 
+// 监听滚轮事件
+const handleScroll = (e) => {
+	const element = e.target;
+  if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+	  Core.Logger.log('滚动触底')
+    if (pagination.current < pagination.total_page) {
+		  pagination.current ++
+      getRecordList({ current: pagination.current })
+    }
+  }
+}
 
 </script>
 
