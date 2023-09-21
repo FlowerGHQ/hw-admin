@@ -108,7 +108,7 @@ const getLogListFetch = (params = {} , isSearch = false) => {
 	    target_type: Core.Const.LABEl.CATEGORY.CLIENT,  // 目标类型 (1客户、2商机、3合同订单、4回款单)
         ...params
 	}
-	Core.Logger.error("参数", obj)
+	Core.Logger.success("参数", obj)
     Core.Api.CustomService.logList(obj).then(res=>{
 		logPagination.total = res.count
         logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size)
@@ -132,7 +132,7 @@ const handleScroll = (e) => {
 	const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {        
 		Core.Logger.log('滚动触底')
-        if (logPagination.page <= logPagination.total_page) {
+        if (logPagination.page < logPagination.total_page) {
 			logPagination.page ++
             getLogListFetch({ page: logPagination.page })
         }

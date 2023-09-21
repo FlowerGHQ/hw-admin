@@ -74,6 +74,7 @@ const userMes = reactive({})
 const dirveData = reactive({})
 const testTotal = ref(0)
 const getUserDetail = () => {
+    if (!userId.value) return
     Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
         Object.assign(userMes, res)
         userMes.order_count = Number(res.pre_order_statistics.wait_pay_count) + Number(res.pre_order_statistics.cancel_count) + Number(res.pre_order_statistics.pay_count) + Number(res.pre_order_statistics.refund_count)
