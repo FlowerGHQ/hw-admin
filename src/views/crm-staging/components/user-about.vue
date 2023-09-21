@@ -49,12 +49,12 @@ const OrderRef = ref(null)
 
 const activeKey = ref('1')
 const totals = reactive({
-    '1': 20,
-    '2': 20,
-    '3': 20,
-    '4': 20,
-    '5': 20,
-    '6': 20,
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+    '6': 0,
 })
 
 const getCount = (key, count) => {

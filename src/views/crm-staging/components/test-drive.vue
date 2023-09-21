@@ -39,7 +39,6 @@
 <script setup>
 import Core from '@/core';
 import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject } from 'vue';
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 
 const { proxy } = getCurrentInstance()
 const userId = inject('userId');

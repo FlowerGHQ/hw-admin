@@ -19,7 +19,7 @@
                             <span class="title">任务列表</span>
                         </div>
                         <div class="task-list-top-right">
-                            <span class="task-list-top-right-item" :class="[staskStatusIndex === index ? 'selected' : '',item.flag_top === index ? 'is-top' : '']" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
+                            <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
                     <div class="task-list-body" @scroll="handleScroll">
@@ -218,6 +218,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
 
         userId.value = taskList.value[taskIndex.value].id
         taskAmount.value = taskList.value.length
+        isTop.value = taskList.value[taskIndex.value].flag_top === 1 ? true : false
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
@@ -254,7 +255,7 @@ const toTop = (index) => {
         id: taskList.value[index].id
     }
     Core.Api.CustomService.editIsTop({ ...params }).then(res=>{
-		getTaskNum()
+		getTaskNum({ page: 1 }, true)
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
