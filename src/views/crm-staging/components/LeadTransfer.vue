@@ -240,6 +240,14 @@ const storeChangeClick = (value) => {
 defineExpose({clickModelOk});
 const handleOk = () => {
     console.log('followObj---',followObj);
+  Core.Api.CustomService.upDateTransfer({
+    ...followObj,
+    id: userId.value
+  }).then(res=>{
+		Core.Logger.success('upDateTransfer数据',res);
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
 }
 // 门店人员-获取
 const getPeopleList = () => {
