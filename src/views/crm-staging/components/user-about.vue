@@ -1,23 +1,35 @@
 <template>
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" :tab="`总览(${totals['1']})`">
-                <GeneralView/>
+            <a-tab-pane key="1" tab="总览">
+                <div class="tab-body">
+                    <GeneralView/>
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`">
-                <FollowRecord />
+            <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
+                <div class="tab-body" @scroll="handleScroll">
+                    <FollowRecord />
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" force-render>
-                <attributionRecord @getCount='getCount' ref="attributionRecordRef"/>
+            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" forceRender>
+                <div class="tab-body">
+                    <attributionRecord ref="attributionRecordRef" @getCount='getCount'/>
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="4" :tab="`订单(${totals['4']})`">
-                <Order/>
+            <a-tab-pane key="4" :tab="`订单(${totals['4']})`" forceRender>
+                <div class="tab-body">
+                    <Order ref="OrderRef" @getCount='getCount'/>
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
-                <TestDrive/>
+            <a-tab-pane key="5" :tab="`试驾(${totals['5']})`" forceRender>
+                <div class="tab-body">
+                    <TestDrive/>
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
-                <Steps :list="list" :type="2"/>
+            <a-tab-pane key="6" :tab="`日志(${totals['6']})`" forceRender>
+                <div class="tab-body" @scroll="handleScroll">
+                    <Steps :list="list" :type="2"/>
+                </div>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -33,6 +45,8 @@ import Core from '@/core';
 import { reactive, ref, toRefs, onMounted, nextTick } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
 
+const OrderRef = ref(null)
+
 const activeKey = ref('1')
 const totals = reactive({
     '1': 20,
@@ -41,6 +55,19 @@ const totals = reactive({
     '4': 20,
     '5': 20,
     '6': 20,
+})
+
+const getCount = (key, count) => {
+    totals[key] = count
+}
+
+
+// 日志
+const pagination = reactive({
+  page_size: 20,
+  page: 1,
+  total: 0,
+  total_page: 0
 })
 const list = ref([
 	{
@@ -84,18 +111,44 @@ const list = ref([
 		status: '123'
 	},
 ])
-const getCount = (key, count) => {
-    totals[key] = count
+const getLogList = (params = {}) => {
+  const obj = {
+		"page_size": pagination.page_size,
+		"target_id": "",
+	    "target_type": "",
+        ...params
+	}
+    Core.Api.CustomService.logList({ ...obj }).then(res=>{
+        Core.Logger.success("参数", "数据", res)
+        // data.value = res.list
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 监听滚轮事件
+const handleScroll = (e) => {
+    const element = e.target;
+    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+        console.log('滚动触底')
+        if (pagination.page <= pagination.total_page) {
+            pagination.page ++
+            getLogList({ page: pagination.page })
+        }
+    }
 }
 </script>
 
 <style lang="less" scoped>
 .user-about {
     height: 100%;
+    .tab-body {
+        height: 100%;
+        overflow-y: auto;
+    }
     .ant-tabs {
         height: 100%;
         :deep(.ant-tabs-content-holder) {
-            overflow-y: auto;
+            display: flex;
         }
     }
 }

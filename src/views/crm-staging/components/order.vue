@@ -1,12 +1,24 @@
 <template>
     <div class="order">
-        <a-table :columns="columns" :data-source="data">
+        <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="handleTableChange">
             <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'price'">
-                    <span>￥{{ record.price }}</span>
+                <template v-if="column.key === 'series'">
+                    <span>{{ record.remark.name }}</span>
                 </template>
-                <template v-if="column.key === 'pay'">
-                    <span>￥{{ record.pay }}</span>
+                <template v-if="column.key === 'status'">
+                    <span>{{ Static.ORDER_STATUS_MAP[record.status]?.text }}</span>
+                </template>
+                <template v-if="column.key === 'total_price'">
+                    <span>￥{{ Core.Util.countFilter(record.total_price) }}</span>
+                </template>
+                <template v-if="column.key === 'amount_paid'">
+                    <span>￥{{ Core.Util.countFilter(record.amount_paid) }}</span>
+                </template>
+                <template v-if="column.key === 'create_time'">
+                    <span>{{ Core.Util.timeFilter(record.create_time, 3) }}</span>
+                </template>
+                <template v-if="column.key === 'update-time'">
+                    <span>{{ record.length > 0 ? Core.Util.timeFilter(record[0].finish_time, 3) : '--' }}</span>
                 </template>
                 <template v-if="column.key === 'operate'">
                     <span>
@@ -20,19 +32,29 @@
 
 <script setup>
 import Core from '@/core';
-import { reactive, ref, toRefs } from 'vue';
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import Static from '../static';
+import { reactive, ref, watch, inject } from 'vue';
 
+const userId = inject('userId');
+
+watch(
+  () => userId.value, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      getList({ page: 1 })
+    }
+  }
+)
+const $emit = defineEmits(['getCount'])
 const columns = [
   {
     title: '车辆系列',
     key: 'series',
-    dataIndex: 'series'
+    dataIndex: 'remark'
   },
   {
     title: '订单状态',
-    key: 'order-status',
-    dataIndex: 'order-status'
+    key: 'status',
+    dataIndex: 'status'
   },
   {
     title: '车辆状态',
@@ -41,23 +63,23 @@ const columns = [
   },
   {
     title: '订单金额',
-    key: 'price',
-    dataIndex: 'price'
+    key: 'total_price',
+    dataIndex: 'total_price'
   },
   {
     title: '已付金额',
-    key: 'pay',
-    dataIndex: 'pay'
+    key: 'amount_paid',
+    dataIndex: 'amount_paid'
   },
   {
     title: '创建日期',
-    key: 'create-time',
-    dataIndex: 'create-time'
+    key: 'create_time',
+    dataIndex: 'create_time'
   },
   {
     title: '更新日期',
     key: 'update-time',
-    dataIndex: 'update-time'
+    dataIndex: 'order_item_list'
   },
   {
     title: '操作',
@@ -66,24 +88,57 @@ const columns = [
   },
 ];
 
-const data = [
-  {
-    key: '1',
-    id: 1,
-    series: 'John Brown',
-    'order-status': 32,
-    'car-order': 'New York No. 1 Lake Park',
-    price: 1,
-    pay: 1,
-    'create-time': 32,
-    'update-time': 'New York No. 1 Lake Park',
-  },
-];
-
-const detail = (id) => {
-    console.log(id)
+const data = ref([]);
+const pagination = reactive({
+  pageSize: 10,
+  current: 1,
+  total: 0,
+  total_page: 0
+})
+const handleTableChange = ( page ) => {
+  Object.assign(pagination, {
+    current: page?.current,
+    pageSize: page?.pageSize,
+  })
+  getList({ current: pagination.current })
+};
+const getList = (params = {}) => {
+  const obj = {
+    page: params.current,
+    page_size: pagination.pageSize,
+		// "customer_id": userId.value,
+	}
+  Core.Api.CustomService.orderList({ ...obj }).then(res=>{
+    Core.Logger.success("参数", "数据", res)
+    pagination.total = res.count
+    pagination.total_page = Math.ceil(pagination.total / pagination.pageSize)
+    data.value = res.list
+    $emit('getCount', '4' ,res.count)
+    filterData(data.value)
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
+}
+const filterData = (data) => {
+  data.forEach(item => {
+    let amount_paid = 0
+    if (item.order_item_list.length > 0) {
+      item.order_item_list.forEach(orderItem => {
+        if (orderItem.status === 200) {
+          amount_paid += orderItem.price
+        }
+      })
+    }
+    item.amount_paid = amount_paid
+    try {
+      item.remark = JSON.parse(item.remark)
+    } catch {}
+  })
 }
 
+const detail = (id) => {
+  console.log(id)
+}
 </script>
 
 <style lang="less" scoped>

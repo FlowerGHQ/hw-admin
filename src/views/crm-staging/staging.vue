@@ -15,23 +15,23 @@
                 <div class="task-list" :style="{ width: '360px'}">
                     <div class="task-list-top">
                         <div class="task-list-top-left">
-                            <img src="./images/menu.png" class="image">
+                            <!-- <img src="./images/menu.png" class="image"> -->
                             <span class="title">任务列表</span>
                         </div>
                         <div class="task-list-top-right">
-                            <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
+                            <span class="task-list-top-right-item" :class="[staskStatusIndex === index ? 'selected' : '',item.flag_top === index ? 'is-top' : '']" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
                     <div class="task-list-body" @scroll="handleScroll">
-                        <div 
-                            v-for="(item, index) in taskList" 
+                        <div
+                            v-for="(item, index) in taskList"
                             :key="item.id"
-                            class="task-list-body-item" 
-                            :class="taskIndex === index ? 'selected' : ''" 
+                            class="task-list-body-item"
+                            :class="[taskIndex === index ? 'selected' : '', item.flag_top === 1 ? 'is-top' : '']"
                             @click="changeTask(index)"
                         >
                             <div class="avatar">
-                                <img :src="item.avatar" class="avatar-img">
+                                <img :src="item.avatar || Static.defaultAvatar" class="avatar-img">
                                 <img :src="item.gender === 1 ? getAssetURL('./images/gender-male.png') : getAssetURL('./images/gender-female.png')" class="avatar-gender">
                             </div>
                             <div class="message">
@@ -46,8 +46,13 @@
                                     <span class="phone">{{ item.phone }}</span>
                                     <span class="time">{{ dayjs.unix(item.last_track_time).format('MM-DD HH:mm') }}</span>
                                 </div>
-                                <div>
-                                    <my-tag color="#00B42A" bgColor="#E8FFEA" class="message-label" v-for="labelItem in item.label">{{ labelItem }}</my-tag>
+                                <div class="labels">
+                                    <my-tag class="message-label" v-if="item.pre_order_status === 1">已支付意向金</my-tag>
+                                    <my-tag class="message-label" v-if="item.pre_order_status === 1">已试驾</my-tag>
+                                    <div v-for="(item_label, index) in item.label_group_list" v-if="item.label_group_list.length > 0">
+                                        <my-tag :color="Static.TAG_TYPE_MAP[item_label.type]?.color" :bgColor="Static.TAG_TYPE_MAP[item_label.type]?.bgColor" class="message-label" v-for="(label, index) in item_label.label_list">{{ label.name }}</my-tag>
+                                    </div>
+                                    <div v-if="item.isSpill"> ... </div>
                                 </div>
                             </div>
                         </div>
@@ -58,7 +63,7 @@
                         <UserDetail :id="userId"/>
                     </div>
                     <div class="about">
-                        <UserAbout/>
+                        <UserAbout :userId="userId"/>
                     </div>
                 </div>
                 <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>
@@ -74,13 +79,14 @@
           :closable="false"
           placement="right"
         >
-            <QuickOrder/>
+            <QuickOrder ref="QuickOrderRef"/>
         </a-drawer>
     </div>
 </template>
 
 <script setup>
 import Core from '@/core';
+import Static from './static';
 import IntentionStairs from "./components/intention-stairs.vue";
 import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
@@ -88,7 +94,7 @@ import UserAbout from "./components/user-about.vue";
 import FixedSelect from "./components/fixed-select.vue";
 import QuickOrder from "./components/quick-order.vue";
 import myTag from "./components/my-tag.vue";
-import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, provide } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
@@ -172,7 +178,7 @@ const updateStatus = (index) => {
             break;
         case 1:
             if (menuLeft[menuLeftIndex.value].status_mapping === 1) {
-                staskStatus.value = 1
+                staskStatus.value = 10
             } else {
                 staskStatus.value = 30
             }
@@ -186,6 +192,7 @@ const changeTask = (index) => {
     taskIndex.value = index
     taskCurrent.value = index + 1
     userId.value = taskList.value[index].id
+    isTop.value = taskList.value[index].flag_top === 1 ? true : false
 }
 const getTaskNum = (params = {}, isSearch = false) => {
     const obj = {
@@ -197,7 +204,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
         ...params
 	}
     Core.Logger.success('params', obj)
-    Core.Api.CustomService.list(obj).then(res=>{        
+    Core.Api.CustomService.list(obj).then(res=>{
         userPagination.total = res.count
         userPagination.total_page = Math.ceil(userPagination.total / userPagination.page_size)
 
@@ -206,24 +213,62 @@ const getTaskNum = (params = {}, isSearch = false) => {
         if (isSearch) {
             taskList.value = []
         }
-        taskList.value = taskList.value.concat(res.list)		
+        taskList.value = taskList.value.concat(res.list)
+        filterData(taskList.value)
 
-        userId.value = taskList.value[0].id
+        userId.value = taskList.value[taskIndex.value].id
+        taskAmount.value = taskList.value.length
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
 }
+const filterData = (data) => {
+    data.forEach(item => {
+        // 目的是取前三个
+        let count = 3
+        if (item.pre_order_status === 1) {
+            // 支付意向金
+            count--
+        }
+        if (item.test_drive_status === 1) {
+            // 已试驾状态
+            count--
+        }
+        // 这里这么写的原因是页面只是展示三个标签(但前面的两个判断是本来就有的标签)
+        item.label_group_list.forEach(label => {
+            if (label.label_list.length && count !== 0) {
+                label.label_list = label.label_list.slice(0, count)
+                count -= label.label_list.length
+            }                    
+        })
+        // Core.Logger.log("每一项的次数", count)
+        // 是否显示后面的 ... 三个点
+        item.isSpill = count === 0
+    }); 
+}
 //置顶
+const QuickOrderRef = ref(null)
 const openOrder = ref(false)
 const toTop = (index) => {
-    console.log(taskList.value[index].id)
+    const params = {
+        id: taskList.value[index].id
+    }
+    Core.Api.CustomService.editIsTop({ ...params }).then(res=>{
+		getTaskNum()
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const order = () => {
     openOrder.value = true
+    nextTick(() => {
+        QuickOrderRef.value.getUserDetail()
+    })
 }
 const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
+    userId.value = taskList.value[taskIndex.value].id
 }
 
 
@@ -235,17 +280,17 @@ const getAssetURL = (image) => {
 }
 
 // 监听滚轮事件
-const handleScroll = (e) => {    
-    const element = e.target;    
+const handleScroll = (e) => {
+    const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
-        Core.Logger.log("滑到底部")  
+        Core.Logger.log("滑到底部")
         if (userPagination.page <= userPagination.total_page) {
             userPagination.page++
             getTaskNum({ page: userPagination.page })
-        }      
+        }
     }
 }
-
+provide('userId', userId); // 提供id
 </script>
 
 <style lang="less" scoped>
@@ -370,12 +415,19 @@ const handleScroll = (e) => {
                         border-radius: 6px;
                         padding: 12px;
                         overflow: hidden;
+                        margin-bottom: 4px;
                         cursor: pointer;
                         &:hover {
                             background-color: #F7F8FA;
                         }
+                        &.is-top {
+                            background: rgba(230, 239, 255, 0.50);
+                        }
                         &.selected {
                             background: #F7F8FA;
+                        }
+                        &:last-child {
+                            margin-bottom: 0;
                         }
                         .avatar {
                             margin-right: 12px;
@@ -426,9 +478,10 @@ const handleScroll = (e) => {
                             }
                             &-label {
                                 margin-right: 6px;
-                                &:last-child {
-                                    margin-right: 0;
-                                }
+                            }
+                            .labels {
+                                display: flex;
+                                align-items: center;
                             }
                         }
                     }

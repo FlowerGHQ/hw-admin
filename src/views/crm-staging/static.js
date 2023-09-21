@@ -434,5 +434,23 @@ const Static = {
         { title:'体验官二维码', value: 4,key: 4  },
         { title:'门店二维码', value: 5,key: 5  },
     ],
+	// 来源
+	SOURCE_TYPE_MAP: {
+		'1': { key: '预定小程序', value: 1, },
+		'2': { key: '后台注册', value: 2, },
+		'3': { key: 'Shopify', value: 3, },
+		'4': { key: '官网2.0', value: 4, },
+		'5': { key: '官网1.0', value: 5, },
+		'6': { key: '落地页1', value: 6, },
+		'7': { key: '落地页2', value: 7, }
+	},
+	// 标签
+	TAG_TYPE_MAP: {
+		'3': { key: '标签', value: 3, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+		'4': { key: '关注点', value: 4, color: '#00B42A'/*字体颜色*/, bgColor:'#E1F7E3'/*背景颜色*/, },
+		'5': { key: '摩托车型号', value: 5, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+		'6': { key: '用车城市', value: 6, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+	},
+    defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
 }
 export default Static

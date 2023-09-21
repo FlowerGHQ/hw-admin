@@ -16,18 +16,18 @@
                 <div class="version">
                     <div class="version-title">
                         <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
-                        <p v-if="cycList[modelId].total_price">￥{{ cycList[modelId].total_price }}<span class="old-price">￥{{ cycList[modelId].old_price }}</span></p>
+                        <p v-if="cycList[modelId].total_price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}<span class="old-price">￥{{ Core.Util.countFilter(cycList[modelId].old_price) }}</span></p>
                     </div>
                     <div class="version-dis">
-                        <img src="" alt="">
+                        <img src="../images/MILEAGE.png" alt="">
                         <span>{{ cycList[modelId].accelerate }}</span>
                     </div>
                     <div class="version-dis">
-                        <img src="" alt="">
+                        <img src="../images/BATTERY.png" alt="">
                         <span>{{ cycList[modelId].mileage }}</span>
                     </div>
                     <div class="version-dis">
-                        <img src="" alt="">
+                        <img src="../images/ACCELERATE.png" alt="">
                         <span>{{ cycList[modelId].fastCharging }}</span>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
             </div>
             <div class="footer">
                 <div class="price" v-if="cycList[modelId].total_price">
-                    <p class="amount">总价：<span class="amount-price">￥{{ cycList[modelId].total_price }}</span></p>
+                    <p class="amount">总价：<span class="amount-price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span></p>
                     <p class="config">车型配置、图片信息仅供参考</p>
                 </div>
                 <a-button type="primary" @click="confirmConfig">确定配置</a-button>
@@ -52,7 +52,7 @@
                 <div class="confirm-version">
                     <div class="confirm-version-title">
                         <p>{{ cycList[modelId].name }}<span v-if="cycList[modelId].version">·{{ cycList[modelId].version }}</span></p>
-                        <p v-if="cycList[modelId].total_price">￥{{ cycList[modelId].total_price }}</p>
+                        <p v-if="cycList[modelId].total_price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</p>
                     </div>
                 </div>
                 <div class="title">颜色</div>
@@ -67,7 +67,7 @@
             </div>
             <div class="footer">
                 <div class="price" v-if="cycList[modelId].total_price">
-                    <p class="amount">总价：<span class="amount-price">￥{{ cycList[modelId].total_price }}</span></p>
+                    <p class="amount">总价：<span class="amount-price">￥{{ Core.Util.countFilter(cycList[modelId].total_price) }}</span></p>
                 </div>
                 <div>
                     <a-button @click="pushApp">推送给用户</a-button>
@@ -79,33 +79,74 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, toRefs } from 'vue';
+import { inject, reactive, ref, toRefs } from 'vue';
+import Core from '@/core';
 import Static from '../static'
 
-const $prop = defineProps({})
+const userId = inject('userId');
+const $prop = defineProps({
+    customer_id: {
+        required: true,
+        type: [String, Number],
+    }
+})
 const $emit = defineEmits([])
 
 const cycIndex = ref(0)
 const modelId = ref(1)
+const orderId = ref(null)
 const isConfirm = ref(false)
 const colorList = {
 	'号外橙': '#DC6E38',
 	'号外紫': '#1010A8',
 }
+const userMes = ref([])
 const cycList = Static.MODEL
 const change = (id, index) => {
     modelId.value = id
     cycIndex.value = index
 }
+const getUserDetail = () => {
+    Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+        userMes.value = res
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
 const confirmConfig = () => {
-    isConfirm.value = true
+    const params = {
+        "address": userMes.value.address,// 地址
+		"city": userMes.value.city,// 所属城市
+		"customer_id": userId.value,// 用户ID
+		"group_id": userMes.value.group_id,// 所属区域id
+		"pay_money": cycList[modelId.value].pay_money,// 本次支付金额
+		"remark": JSON.stringify({ ...cycList[modelId.value] }), // 车辆信息
+		"total_price": cycList[modelId.value].total_price,// 产品总金额
+		"type": "1",// 本次支付订单类型
+		"user_id": Core.Data.getUser('user').id,// 员工用户ID
+	}
+    Core.Logger.success('params', params)
+    Core.Api.CustomService.createOrder({ ...params }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+        orderId.value = res.order.id
+        isConfirm.value = true
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const changeConfig = () => {
     isConfirm.value = false
 }
 const pushApp = () => {
-    
+    Core.Api.CustomService.pushApp({ id: orderId.value }).then(res=>{
+		Core.Logger.success('getTaskNum',res);
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
+
+defineExpose({ getUserDetail })
 
 </script>
 

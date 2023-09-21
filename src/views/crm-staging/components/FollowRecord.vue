@@ -41,7 +41,7 @@ const list = ref([
 		content:'上海大区-上海 上海浦东新区大美都广场体验中心',
 		work:'用户体验官',
 		time: '2023-07-12 12:13:14',
-		status: '123'
+		status: 10
 	},
 	{
 	  	value: '2',
@@ -51,7 +51,7 @@ const list = ref([
 	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
 	  	work:'用户体验官',
 	  	time: '2023-07-12 12:13:14',
-		status: '123'
+		  status: 20
 	},
 	{
 	  	value: '3',
@@ -60,8 +60,8 @@ const list = ref([
 	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
 	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
 	  	work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: '123'
+      time: '2023-07-12 12:13:14',
+      status: 20
 	},
 	{
 	  	value: '4',
@@ -70,8 +70,8 @@ const list = ref([
 	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
 	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
 	  	work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: '123'
+      time: '2023-07-12 12:13:14',
+      status: 30
 	},
 ])
 // 意向度-选项列表
