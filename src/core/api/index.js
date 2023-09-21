@@ -844,7 +844,7 @@ const apiList = {
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
         storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
         groupList: ['PostJson', 'customer-service/group/list-name'],    // 大区列表
-        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'], 
+        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'],
 
        
         trackRecordList: ['PostJson', 'customer-service/track-record/list'], // 跟进记录-列表
@@ -853,6 +853,14 @@ const apiList = {
         storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
         upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
         getCityList: ['PostJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
+
+        editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
+        createOrder: ['PostJson', 'customer-service/crm-order/create'],
+        orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
+        orderList: ['PostJson', 'customer-service/crm-order/list'],
+        pushApp: ['PostJson', 'customer-service/crm-order/push-app'],
+        orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
+        logList: ['PostJson', 'customer-service/action-log/list'],
 
     },
 };
