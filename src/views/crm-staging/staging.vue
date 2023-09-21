@@ -15,7 +15,7 @@
                 <div class="task-list" :style="{ width: '360px'}">
                     <div class="task-list-top">
                         <div class="task-list-top-left">
-                            <img src="./images/menu.png" class="image">
+                            <!-- <img src="./images/menu.png" class="image"> -->
                             <span class="title">任务列表</span>
                         </div>
                         <div class="task-list-top-right">

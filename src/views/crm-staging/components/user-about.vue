@@ -2,19 +2,29 @@
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
             <a-tab-pane key="1" tab="总览">
-                <GeneralView/>
+                <div class="tab-body">
+                    <GeneralView/>
+                </div>
             </a-tab-pane>
             <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`">
-                <FollowRecord />
+                <div class="tab-body" @scroll="handleScroll">
+                    <FollowRecord />
+                </div>
             </a-tab-pane>
-            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" force-render>
-                <attributionRecord ref="attributionRecordRef"/>
+            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`">
+                <div class="tab-body">
+                    <attributionRecord ref="attributionRecordRef"/>
+                </div>
             </a-tab-pane>
             <a-tab-pane key="4" :tab="`订单(${totals['4']})`">
-                <Order ref="OrderRef" @getCount='getCount'/>
+                <div class="tab-body">
+                    <Order ref="OrderRef" @getCount='getCount'/>
+                </div>
             </a-tab-pane>
             <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
-                <TestDrive/>
+                <div class="tab-body">
+                    <TestDrive/>
+                </div>
             </a-tab-pane>
             <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
                 <div class="tab-body" @scroll="handleScroll">
