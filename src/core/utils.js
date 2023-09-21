@@ -1378,7 +1378,13 @@ const Util = {
         const seconds = Math.floor(diffInSeconds % 60);
       
         return { days, hours, minutes, seconds };       
-      }
+    },
+    // 跟进方式标签状态
+    tabStatus(val, to = 'zh') {
+        const MAP = Const.WORK_OPERATION.FOLLOW_TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 }
 
 export default Util

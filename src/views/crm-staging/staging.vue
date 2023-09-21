@@ -19,15 +19,15 @@
                             <span class="title">任务列表</span>
                         </div>
                         <div class="task-list-top-right">
-                            <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
+                            <span class="task-list-top-right-item" :class="[staskStatusIndex === index ? 'selected' : '',item.is_top === index ? 'is-top' : '']" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
                     <div class="task-list-body" @scroll="handleScroll">
-                        <div 
-                            v-for="(item, index) in taskList" 
+                        <div
+                            v-for="(item, index) in taskList"
                             :key="item.id"
-                            class="task-list-body-item" 
-                            :class="taskIndex === index ? 'selected' : ''" 
+                            class="task-list-body-item"
+                            :class="taskIndex === index ? 'selected' : ''"
                             @click="changeTask(index)"
                         >
                             <div class="avatar">
@@ -74,7 +74,7 @@
           :closable="false"
           placement="right"
         >
-            <QuickOrder/>
+            <QuickOrder ref="QuickOrderRef"/>
         </a-drawer>
     </div>
 </template>
@@ -88,7 +88,7 @@ import UserAbout from "./components/user-about.vue";
 import FixedSelect from "./components/fixed-select.vue";
 import QuickOrder from "./components/quick-order.vue";
 import myTag from "./components/my-tag.vue";
-import { computed, getCurrentInstance, onMounted, reactive, ref } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, provide } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
@@ -186,6 +186,7 @@ const changeTask = (index) => {
     taskIndex.value = index
     taskCurrent.value = index + 1
     userId.value = taskList.value[index].id
+    isTop.value = taskList.value[index].is_top === 0 ? false : true
 }
 const getTaskNum = (params = {}, isSearch = false) => {
     const obj = {
@@ -197,7 +198,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
         ...params
 	}
     Core.Logger.success('params', obj)
-    Core.Api.CustomService.list(obj).then(res=>{        
+    Core.Api.CustomService.list(obj).then(res=>{
         userPagination.total = res.count
         userPagination.total_page = Math.ceil(userPagination.total / userPagination.page_size)
 
@@ -206,24 +207,37 @@ const getTaskNum = (params = {}, isSearch = false) => {
         if (isSearch) {
             taskList.value = []
         }
-        taskList.value = taskList.value.concat(res.list)		
+        taskList.value = taskList.value.concat(res.list)
 
         userId.value = taskList.value[0].id
+        taskAmount.value = taskList.value.length
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
 }
 //置顶
+const QuickOrderRef = ref(null)
 const openOrder = ref(false)
 const toTop = (index) => {
-    console.log(taskList.value[index].id)
+    const params = {
+        id: taskList.value[index].id
+    }
+    Core.Api.CustomService.editIsTop({ ...params }).then(res=>{
+		getTaskNum()
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const order = () => {
     openOrder.value = true
+    nextTick(() => {
+        QuickOrderRef.value.getUserDetail()
+    })
 }
 const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
+    getTaskNum()
 }
 
 
@@ -235,17 +249,17 @@ const getAssetURL = (image) => {
 }
 
 // 监听滚轮事件
-const handleScroll = (e) => {    
-    const element = e.target;    
+const handleScroll = (e) => {
+    const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
-        Core.Logger.log("滑到底部")  
+        Core.Logger.log("滑到底部")
         if (userPagination.page <= userPagination.total_page) {
             userPagination.page++
             getTaskNum({ page: userPagination.page })
-        }      
+        }
     }
 }
-
+provide('userId', userId); // 提供id
 </script>
 
 <style lang="less" scoped>
@@ -376,6 +390,9 @@ const handleScroll = (e) => {
                         }
                         &.selected {
                             background: #F7F8FA;
+                        }
+                        &.is-top {
+                            background: rgba(230, 239, 255, 0.50);
                         }
                         .avatar {
                             margin-right: 12px;

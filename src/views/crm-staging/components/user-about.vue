@@ -1,23 +1,25 @@
 <template>
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" :tab="`总览(${totals['1']})`">
+            <a-tab-pane key="1" tab="总览">
                 <GeneralView/>
             </a-tab-pane>
             <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`">
                 <FollowRecord />
             </a-tab-pane>
             <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" force-render>
-                <attributionRecord @getCount='getCount' ref="attributionRecordRef"/>
+                <attributionRecord ref="attributionRecordRef"/>
             </a-tab-pane>
             <a-tab-pane key="4" :tab="`订单(${totals['4']})`">
-                <Order/>
+                <Order ref="OrderRef" @getCount='getCount'/>
             </a-tab-pane>
             <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
                 <TestDrive :userId="userId"/>
             </a-tab-pane>
             <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
-                <Steps :list="list" :type="2"/>
+                <div class="tab-body" @scroll="handleScroll">
+                    <Steps :list="list" :type="2"/>
+                </div>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -39,6 +41,7 @@ const props = defineProps({
 		default: ""
 	}
 })
+const OrderRef = ref(null)
 
 const activeKey = ref('1')
 const totals = reactive({
@@ -48,6 +51,19 @@ const totals = reactive({
     '4': 20,
     '5': 20,
     '6': 20,
+})
+
+const getCount = (key, count) => {
+    totals[key] = count
+}
+
+
+// 日志
+const pagination = reactive({
+  page_size: 20,
+  page: 1,
+  total: 0,
+  total_page: 0
 })
 const list = ref([
 	{
@@ -91,18 +107,44 @@ const list = ref([
 		status: '123'
 	},
 ])
-const getCount = (key, count) => {
-    totals[key] = count
+const getLogList = (params = {}) => {
+  const obj = {
+		"page_size": pagination.page_size,
+		"target_id": "",
+	    "target_type": "",
+        ...params
+	}
+    Core.Api.CustomService.logList({ ...obj }).then(res=>{
+        Core.Logger.success("参数", "数据", res)
+        // data.value = res.list
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 监听滚轮事件
+const handleScroll = (e) => {
+    const element = e.target;
+    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+        console.log('滚动触底')
+        if (pagination.page <= pagination.total_page) {
+            pagination.page ++
+            getLogList({ page: pagination.page })
+        }
+    }
 }
 </script>
 
 <style lang="less" scoped>
 .user-about {
     height: 100%;
+    .tab-body {
+        height: 100%;
+        overflow-y: auto;
+    }
     .ant-tabs {
         height: 100%;
         :deep(.ant-tabs-content-holder) {
-            overflow-y: auto;
+            display: flex;
         }
     }
 }

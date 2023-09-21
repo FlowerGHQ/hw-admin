@@ -2378,15 +2378,14 @@ let Const = {
         COMMUNICATE_TYPE: {
             "20": { key: 20, value: 20, zh: '电话沟通' },
             "10": { key: 10, value: 10, zh: '面谈' },
-            "30": { key: 30, value: 30, zh: '未接通' },
+            "30": { key: 30, value: 30, zh: '其他' },
         },
         // 跟进类型
         FOLLOW_TYPE: {
-            "10": { key: 10, value: 10, zh: '信息缺失' },
-            "20": { key: 20, value: 20, zh: '预约试驾' },
-            "30": { key: 30, value: 30, zh: '跟进' },
-
-        },
+            "10": { key: 10, value: 10, zh: '信息缺失', background: '#FFECE8', color:'#F53F3F', borderC:'#FCB9B6' },
+            "20": { key: 20, value: 20, zh: '预约试驾', background: '#E6EFFF', color:'#3381FF', borderC:'#A1C5FF'  },
+            "30": { key: 30, value: 30, zh: '跟进', background: '#E8FFEA', color:'#00B42A', borderC:'#A3E9B1'  },
+        },           
         // 试驾状态
         TEST_DRIVE_STATUS: {
             // 试驾单状态 10 预约 15 签到 20 试驾中 30 试驾结束 40 过期未试驾 50 取消试驾
