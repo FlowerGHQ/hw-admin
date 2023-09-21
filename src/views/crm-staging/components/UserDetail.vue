@@ -258,9 +258,9 @@ export default {
             return this.$store.state.lang
         }
     },
-    created() {
-        this.getUserDetail();
-    },
+    // created() {
+    //     this.getUserDetail();
+    // },
     mounted() {
     },
     methods: {

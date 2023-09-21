@@ -1,5 +1,5 @@
 <template>
-  <div class="follow-record">
+  <div class="follow-record" @scroll="handleScroll">
     <div class="follow-top">
       <FollowUp />
       <div class="follow-but">
@@ -178,6 +178,8 @@ const handleScroll = (e) => {
 
 <style lang="less" scoped>
 .follow-record {
+  height: 100%;
+  overflow-y: auto;
   .follow-top {
     display: flex;
     align-items: center;

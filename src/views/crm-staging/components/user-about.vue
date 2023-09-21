@@ -7,7 +7,7 @@
                 </div>
             </a-tab-pane>
             <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
-                <div class="tab-body" @scroll="handleScroll">
+                <div class="tab-body" style="overflow: hidden;">
                     <FollowRecord ref="followRe"/>
                 </div>
             </a-tab-pane>
