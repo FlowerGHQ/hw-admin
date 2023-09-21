@@ -38,17 +38,12 @@
 
 <script setup>
 import Core from '@/core';
-import { reactive, ref, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject } from 'vue';
 import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 
 const { proxy } = getCurrentInstance()
-const props = defineProps({
-	userId: {
-		type: [String, Number],
-		default: ""
-	}
-})
+const userId = inject('userId');
 
 const dirveColumns = ref([
     {
@@ -129,7 +124,7 @@ const getDriveListFetch = (params = {}) => {
     let obj = {
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
-        customer_id: props.userId, // 客户id
+        customer_id: userId.value, // 客户id
         ...params
     }
     Core.Api.CustomService.getTestDriveList(obj).then(res => {

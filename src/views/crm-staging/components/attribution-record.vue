@@ -2,24 +2,30 @@
   <div class="attribution-record">
       <div class="title">数据来源</div>
       <div class="descriptions">
-        <div class="descriptions-item" v-for="(item, index) in sourceList" :key="index">
+        <div class="descriptions-item" v-for="(item, index) in sourceListRender" :key="index">
             <span class="descriptions-item-label" :style="{ width: `${item.labelWidth}px` }">{{ item.label }}：</span>
             <span class="descriptions-item-value">{{ item.value }}</span>
         </div>
       </div>
       <div class="title">归属记录</div>
-      <a-table :columns="columns" :data-source="data">
+      <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="handleTableChange">
           <template #bodyCell="{ column, record }">
-              <template v-if="column.key === 'price'">
-                  <span>￥{{ record.price }}</span>
+              <template v-if="column.key === 'store_user_name'">
+                  <div class="person">
+                    <img class="person-img" :src="Static.defaultAvatar">
+                    <span class="person-name">{{ record.store_user_name }}</span>
+                    <span class="person-id">{{ record.store_user_id }}</span>
+                  </div>
               </template>
-              <template v-if="column.key === 'pay'">
-                  <span>￥{{ record.pay }}</span>
+              <template v-if="column.key === 'create_user_name'">
+                  <div class="person">
+                    <img class="person-img" :src="Static.defaultAvatar">
+                    <span class="person-name">{{ record.create_user_name }}</span>
+                    <span class="person-id">{{ record.create_user_id }}</span>
+                  </div>
               </template>
-              <template v-if="column.key === 'operate'">
-                  <span>
-                      <a style="color: #0061FF;" @click="detail(record.id)">详情</a>
-                  </span>
+              <template v-if="column.key === 'create_time'">
+                  <span>{{ Core.Util.timeFilter(record.create_time, 1) }}</span>
               </template>
           </template>
       </a-table>
@@ -28,88 +34,112 @@
 
 <script setup>
 import Core from '@/core';
-import { computed, reactive, ref, toRefs, nextTick } from 'vue';
+import Util from '../common';
+import Static from '../static';
+import { computed, reactive, ref, toRefs, nextTick, inject } from 'vue';
 
+const userId = inject('userId');
 nextTick(() => {
-  getBindList()
+  getBindList({ current: 1 })
+  getUserDetail()
 })
 
 const $emit = defineEmits(['getCount'])
 const columns = [
 {
   title: '归属大区',
-  key: 'series',
-  dataIndex: 'series'
+  key: 'group_name',
+  dataIndex: 'group_name'
 },
 {
   title: '归属城市',
-  key: 'order-status',
-  dataIndex: 'order-status'
+  key: 'city',
+  dataIndex: 'city'
 },
 {
   title: '归属门店',
-  key: 'car-order',
-  dataIndex: 'car-order'
+  key: 'store_name',
+  dataIndex: 'store_name'
 },
 {
   title: '体验官',
-  key: 'price',
-  dataIndex: 'price'
+  key: 'store_user_name',
+  dataIndex: 'store_user_name'
 },
 {
   title: '分配人',
-  key: 'pay',
-  dataIndex: 'pay'
+  key: 'create_user_name',
+  dataIndex: 'create_user_name'
 },
 {
   title: '分配日期',
-  key: 'create-time',
-  dataIndex: 'create-time'
+  key: 'create_time',
+  dataIndex: 'create_time'
 },
 ];
 
-const data = [
-{
-  key: '1',
-  id: 1,
-  series: '东南大区',
-  'order-status': '上海',
-  'car-order': '上海浦东新区体验中心',
-  price: 1,
-  pay: 1,
-  'create-time': '2023-12-12 12:13:14',
-},
-];
+const data = ref([]);
 
-const id = ref(1)
-
+const userMes = reactive({})
 const sourceList = [
-  { label: '留资城市', value: '上海', labelWidth: 70, prop: 'city' },
-  { label: '营业时间', value: '2023-12-14 12:13:14', labelWidth: 84, prop: 'city' },
-  { label: '信息来源', value: '小程序', labelWidth: 70, prop: 'city' },
-  { label: '创建人', value: '系统', labelWidth: 84, prop: 'city' },
-  { label: '所属大区', value: '上海', labelWidth: 70, prop: 'city' },
-  { label: '所属城市', value: '上海', labelWidth: 84, prop: 'city' },
-  { label: '所属门店', value: '上海', labelWidth: 70, prop: 'city' },
-  { label: '绑定体验官', value: '上海', labelWidth: 84, prop: 'city' },
+  { label: '留资城市', value: '--', labelWidth: 70, prop: 'address' },
+  { label: '营业时间', value: '--', labelWidth: 84, prop: '' },
+  { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
+  { label: '创建人', value: '--', labelWidth: 84, prop: 'create_user_name' },
+  { label: '所属大区', value: '--', labelWidth: 70, prop: 'group_name' },
+  { label: '所属城市', value: '--', labelWidth: 84, prop: 'city' },
+  { label: '所属门店', value: '--', labelWidth: 70, prop: 'store_name' },
+  { label: '绑定体验官', value: '--', labelWidth: 84, prop: 'store_user_name' },
 ]
-
+const pagination = reactive({
+  pageSize: 10,
+  current: 1,
+  total: 0,
+  total_page: 0
+})
 const sourceListRender = computed(() => {
+  if (!userMes) return
   return sourceList.map(item => {
-    item.value = res[item.prop]
+    if (item.label === '营业时间') {
+      item.value = '未设置'
+    } else if (item.label === '信息来源') {
+      item.value = userMes[item.prop] ? Util.sourceTypeFilter(userMes[item.prop]) : '--'
+    } else {
+      item.value = userMes[item.prop] ? userMes[item.prop] : '--'
+    }
+    return item
   })
 })
-
+const handleTableChange = ( page ) => {
+  Object.assign(pagination, {
+    current: page?.current,
+    pageSize: page?.pageSize,
+  })
+  getBindList({ current: pagination.current })
+};
 const detail = (id) => {
   console.log(id)
 }
-const getBindList = () => {
-  const params = {
-    customer_id: id.value
+const getUserDetail = () => {
+  Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
+    Object.assign(userMes, res)
+	  Core.Logger.success('getUserDetail',userMes);
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
+}
+const getBindList = (params = {}) => {
+  const obj = {
+    customer_id: userId.value,
+    page: params.current,
+    page_size: pagination.pageSize,
 	}
-  Core.Logger.success('params', params)
-  Core.Api.CustomService.bindList({ ...params }).then(res=>{
+  Core.Logger.success('params', obj)
+  Core.Api.CustomService.bindList({ ...obj }).then(res=>{
 		Core.Logger.success('getTaskNum',res);
+    pagination.total = res.count
+    pagination.total_page = Math.ceil(pagination.total / pagination.pageSize)
+    data.value = res.list
     $emit('getCount', '3' ,res.count)
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
@@ -148,6 +178,25 @@ const getBindList = () => {
         color: #1D2129;
         font-size: 14px;
       }
+    }
+  }
+  .person {
+    display: flex;
+    align-items: center;
+    &-img {
+      margin-right: 8px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+    &-name {
+      margin-right: 8px;
+      color: #1D2129;
+      font-size: 14px;
+      }
+    &-id {
+      color: #1D2129;
+      font-size: 14px;
     }
   }
 }
