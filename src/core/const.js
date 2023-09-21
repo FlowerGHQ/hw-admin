@@ -2352,7 +2352,8 @@ let Const = {
             '1': { key: 1, zh: 'A类', en: 'A kind', value: 1 },
             '2': { key: 2, zh: 'B类', en: 'B kind', value: 2 },
             '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
-        }
+        },
+
 
     },
     // 飞书人员所属类型
@@ -2386,6 +2387,14 @@ let Const = {
             "20": { key: 20, value: 20, zh: '预约试驾' },
             "30": { key: 30, value: 30, zh: '跟进' },
 
+        },
+        INTENTION: {
+            TYPE_LIST: [
+                { key: '无意向', value: 10 },
+                { key: '有意向', value: 20 },
+                { key: '高意向', value: 30 },
+                { key: 'Hot', value: 40 },
+            ]
         }
     }
 };
