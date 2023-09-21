@@ -114,6 +114,7 @@ const props = defineProps({
     default: true,
   },
 })
+const $emit = defineEmits(['getRecordList'])
 // 意向度-选项列表
 const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 沟通方式-选项列表
@@ -165,7 +166,7 @@ const createFollow = () => {
     isShowFollow.value = false;
     isShowCreate.value = true;
     proxy.$message.success('提交成功')
-
+    $emit('getRecordList');
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })
@@ -188,7 +189,7 @@ const createNext = () => {
 
 // 取消创建
 const cancleNext  = () => {
-  console.log('不创建更进新的');
+  
 }
 
 // 创建请求

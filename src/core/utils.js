@@ -1394,6 +1394,12 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    // 跟进方式标签状态
+    tabTypeStatus(val, to = 'zh') {
+        const MAP = Const.WORK_OPERATION.COMMUNICATE_TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 }
 
 export default Util
