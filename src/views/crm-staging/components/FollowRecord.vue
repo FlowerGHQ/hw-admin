@@ -2,18 +2,25 @@
   <div class="follow-record">
     <div class="follow-top">
       <FollowUp />
-      <div class="follow-but"></div>
-      <div class="follow-but"></div>
+      <div class="follow-but">
+        <span>未打通，稍后联系</span>
+        <a-button type="link" @click="clickCreate({type:30,content:'未打通，稍后联系',method:30})">创建跟进</a-button>
+      </div>
+      <div class="follow-but">
+        <span>已补充好省市</span>
+        <a-button type="link" @click="clickCreate({type:30,content:'已补充好省市',method:20})">创建跟进</a-button>
+      </div>
       <a-select
         width="120px"
-        v-model:value="followObj.follow_type"
-        placeholder="请选择沟通方式"
+        v-model:value="followObj.type"
+        placeholder="选择跟进类型"
+        @change = "typeChangeClick"
       >
         <a-select-option
-          v-for="item of intentedList"
+          v-for="item of typeList"
           :key="item.key"
           :value="item.value"   
-          >{{ item.key }}</a-select-option
+          >{{ item.zh }}</a-select-option
         >
       </a-select>
     </div>
@@ -24,8 +31,10 @@
 <script setup>
 import FollowUp from "./FollowUp.vue";
 import Steps from "./steps.vue";
-import { reactive, ref ,onBeforeUnmount  } from 'vue';
+import { reactive, ref ,getCurrentInstance ,inject ,onMounted } from 'vue';
 import Core from "@/core";    
+const { proxy } = getCurrentInstance();
+const userId = inject('userId');
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -74,13 +83,70 @@ const list = ref([
       status: 30
 	},
 ])
-// 意向度-选项列表
-const intentedList = Core.Const.INTENTION.TYPE_MAP;
+// 跟进类型列表
+const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 const followObj = reactive({ 
-  intentValue: 10,
-  communicate_type: 1, 
-  followText: ''
+  type: undefined, 
 })
+onMounted(()=>{
+  // 获取跟进记录 
+  getRecordList()
+})
+// 获取跟进记录列表
+const getRecordList = (params={}) => {
+  const obj = {
+    target_id: userId.value,
+    target_type: 1,
+    type:followObj.type===undefined?0:followObj.type,
+    ...params
+
+  }
+  Core.Api.CustomService.trackRecordList(obj).then(res=>{
+		Core.Logger.success('getRecordList参数',obj,"数据",res);
+  }).catch(err=>{
+    Core.Logger.error("参数",obj, "数据", err)
+  })
+}
+const clickCreate = (params = {}) => {
+
+  proxy.$confirm({
+        title: `确定要创建跟进记录：${params?.content}`,
+        okText: proxy.$t("def.sure"),
+        // okType: "danger",
+        cancelText: proxy.$t("def.cancel"),
+        onOk() {
+         /*  Core.Api.RETAIL.deleteStore({ id })
+            .then(() => {
+              _this.$message.success(_this.$t("pop_up.delete_success")),
+                _this.getTableData();
+            })
+            .catch((err) => {
+              console.log("handleDelete err", err);
+            });*/
+            createFollow(params)
+        }, 
+      });
+}
+// 跟进创建操作
+const createFollow = (params={}) => {
+  const obj = {
+    contact_customer_id: userId.value,
+    target_id: userId.value,
+    target_type: 1,
+    ...params
+  }
+  Core.Api.CustomService.createRecord(obj).then(res=>{
+		Core.Logger.success('createFollow',obj,"数据",res);
+  }).catch(err=>{
+    Core.Logger.error("参数",obj, "数据", err)
+  })
+}
+// 切换typeChangeClick
+const typeChangeClick = (value) => {
+  followObj.type = value;
+  getRecordList();
+  Core.Logger.success('typeChangeClick',value);
+} 
 
 </script>
 
@@ -97,12 +163,11 @@ const followObj = reactive({
     display: flex;
     height: 32px;
     width: 272px;
-    padding: 12px;
-    flex-direction: column;
     justify-content: space-between;
-    align-items: flex-start;
     border-radius: 4px;
-    border: 1px solid var(--Color-border-1, #F2F3F5);
+    align-items: center;
+    padding: 0px 12px;
+    border: 1px solid  #F2F3F5;
     margin-right: 12px;
   }
 }
