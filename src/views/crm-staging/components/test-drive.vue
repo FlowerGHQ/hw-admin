@@ -13,8 +13,8 @@
                     {{ Core.Const.WORK_OPERATION.TEST_DRIVE_STATUS[text].zh || "-" }}
                 </template>
                 <!-- 试驾时长 -->
-                <template v-if="column.key === 'duration'">
-                    <!-- {{ $Util.calculateTimeDifference(record.begin_time, record.end_time) }} -->
+                <template v-if="column.key === 'duration'">                    
+                    {{ getMinutes(record.begin_time, record.end_time) ? getMinutes(record.begin_time, record.end_time) + '分钟': '-' }}          
                 </template>
                 <!-- 试驾开始时间 -->
                 <template v-if="column.key === 'begin_time'">
@@ -25,10 +25,13 @@
                     {{ $Util.timeFilter(text) }}
                 </template>
                 <!-- 名称 -->
-                <template v-if="column.key === 'store_user_name'">                                                        
-                    <img v-if="record.avatar" class="avatar-style" :src="record.store_user_avatar" alt="">
-                    <span class="user-name">{{ text }}</span>
-                    <span>{{ record.employee_no }}</span>
+                <template v-if="column.key === 'store_user_name'">
+                    <div class="user-msg">
+                        <img v-if="!record.store_user_avatar || record.store_user_avatar === ''" class="avatar-style" :src="Static.defaultAvatar" alt="">
+                        <img v-else class="avatar-style" :src="record.store_user_avatar" alt="">
+                        <span class="user-name">{{ text }}</span>
+                        <span>{{ record.store_user_employee_no || '' }}</span>
+                    </div>
                 </template>
           
             </template>
@@ -38,11 +41,13 @@
 
 <script setup>
 import Core from '@/core';
-import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject } from 'vue';
+import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject, watch } from 'vue';
 import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import dayjs from 'dayjs';
+import Static from '../static';
 
 const { proxy } = getCurrentInstance()
-const userId = inject('userId');
+const userId = inject('userId');  // 从staging 从这个来的
 
 const dirveColumns = ref([
     {
@@ -88,17 +93,19 @@ const dirveColumns = ref([
 ]);
 
 const dirveData = ref([
-  {
-    key: '1',
-    id: 1,
-    test_drive_vehicle_name: 'SENMENTI 0', // 试驾车辆
-    status: '10',  // 试驾单状态 10 预约 15 签到 20 试驾中 30 试驾结束 40过期未试驾 50 取消试驾
-    begin_time: "1695106121", // 试驾开始时间
-    end_time: "1695278921", // 试驾结束时间
-    // 驾驶证照
-    // 签署协议
-    store_user_name: "体验官", // 体验官
-  },
+//   {
+//     key: '1',
+//     id: 1,
+//     test_drive_vehicle_name: 'SENMENTI 0', // 试驾车辆
+//     status: '10',  // 试驾单状态 10 预约 15 签到 20 试驾中 30 试驾结束 40过期未试驾 50 取消试驾
+//     begin_time: "1695250080", // 试驾开始时间
+//     end_time: "1695278921", // 试驾结束时间
+//     store_user_avatar: "", // 头像
+//     store_user_name: "体验官", // 体验官
+//     store_user_employee_no: 123, // 工号
+//     签署协议
+//     驾驶证照
+//   },
 ]);
 // 分页
 const channelPagination = ref({
@@ -112,7 +119,12 @@ const channelPagination = ref({
 })
 
 onMounted(() => {
-    // getDriveListFetch()
+    
+})
+// 监听
+watch(userId, (newValue, oldValue) => {
+	Core.Logger.log("监听userId值", newValue, oldValue);
+	getDriveListFetch()
 })
 
 /* Fetch start */
@@ -138,7 +150,14 @@ const getDriveListFetch = (params = {}) => {
 const detail = (id) => {
     console.log(id)
 }
-
+// 获取分钟
+const getMinutes = (startTimestamp, endTimestamp) => {
+    const start = dayjs.unix(startTimestamp);
+    const end = dayjs.unix(endTimestamp);
+    
+    const diffInSeconds = end.diff(start, 'minute');
+    return diffInSeconds
+}
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...channelPagination.value }

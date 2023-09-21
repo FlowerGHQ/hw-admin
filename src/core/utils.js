@@ -1364,20 +1364,23 @@ const Util = {
         const MAP = Const.RETAIL.STORE_STATUS
         let item = MAP[val + ''] || {}
         return item[to] || ''
-    },
-    // 计算时间 返回days，hours, minutes
+    },    
+    /**
+     * 计算时间 返回days，hours, minutes
+     * @param {*} startTimestamp  // 开始时间
+     * @param {*} endTimestamp  // 结束时间
+    */
     calculateTimeDifference(startTimestamp, endTimestamp) {
         const start = dayjs.unix(startTimestamp);
         const end = dayjs.unix(endTimestamp);
-        
-        const diffInSeconds = (end - start) / 1000;
-
+      
+        const diffInSeconds = end.diff(start, 'second');
+      
         const days = Math.floor(diffInSeconds / (24 * 60 * 60));
         const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
         const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
-        const seconds = Math.floor(diffInSeconds % 60);
       
-        return { days, hours, minutes, seconds };       
+        return { days, hours, minutes };      
     },
     // 跟进方式标签状态
     tabStatus(val, to = 'zh') {
