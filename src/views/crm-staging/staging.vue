@@ -31,7 +31,7 @@
                             @click="changeTask(index)"
                         >
                             <div class="avatar">
-                                <img :src="item.avatar" class="avatar-img">
+                                <img :src="item.avatar || Static.defaultAvatar" class="avatar-img">
                                 <img :src="item.gender === 1 ? getAssetURL('./images/gender-male.png') : getAssetURL('./images/gender-female.png')" class="avatar-gender">
                             </div>
                             <div class="message">
@@ -81,6 +81,7 @@
 
 <script setup>
 import Core from '@/core';
+import Static from './static';
 import IntentionStairs from "./components/intention-stairs.vue";
 import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
