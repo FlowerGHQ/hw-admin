@@ -6,27 +6,27 @@
                     <GeneralView/>
                 </div>
             </a-tab-pane>
-            <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`">
+            <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
                 <div class="tab-body" @scroll="handleScroll">
                     <FollowRecord />
                 </div>
             </a-tab-pane>
-            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`">
+            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" forceRender>
                 <div class="tab-body">
-                    <attributionRecord ref="attributionRecordRef"/>
+                    <attributionRecord ref="attributionRecordRef" @getCount='getCount'/>
                 </div>
             </a-tab-pane>
-            <a-tab-pane key="4" :tab="`订单(${totals['4']})`">
+            <a-tab-pane key="4" :tab="`订单(${totals['4']})`" forceRender>
                 <div class="tab-body">
                     <Order ref="OrderRef" @getCount='getCount'/>
                 </div>
             </a-tab-pane>
-            <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
+            <a-tab-pane key="5" :tab="`试驾(${totals['5']})`" forceRender>
                 <div class="tab-body">
                     <TestDrive/>
                 </div>
             </a-tab-pane>
-            <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
+            <a-tab-pane key="6" :tab="`日志(${totals['6']})`" forceRender>
                 <div class="tab-body" @scroll="handleScroll">
                     <LogSteps :list="logList"/>
                 </div>

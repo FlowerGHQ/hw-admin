@@ -2,8 +2,11 @@
     <div class="order">
         <a-table :columns="columns" :data-source="data" :pagination="pagination" @change="handleTableChange">
             <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'series'">
+                    <span>{{ record.remark.name }}</span>
+                </template>
                 <template v-if="column.key === 'status'">
-                    <span>{{ Static.ORDER_STATUS_MAP[record.status] }}</span>
+                    <span>{{ Static.ORDER_STATUS_MAP[record.status]?.text }}</span>
                 </template>
                 <template v-if="column.key === 'total_price'">
                     <span>￥{{ Core.Util.countFilter(record.total_price) }}</span>
@@ -30,14 +33,18 @@
 <script setup>
 import Core from '@/core';
 import Static from '../static';
-import { reactive, ref, toRefs, nextTick, inject } from 'vue';
+import { reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
 
-nextTick(() => {
-  getList({ page: 1 })
-})
-
+watch(
+  () => userId.value, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      getList({ page: 1 })
+    }
+  }
+)
+const $emit = defineEmits(['getCount'])
 const columns = [
   {
     title: '车辆系列',
@@ -106,13 +113,14 @@ const getList = (params = {}) => {
     pagination.total = res.count
     pagination.total_page = Math.ceil(pagination.total / pagination.pageSize)
     data.value = res.list
+    $emit('getCount', '4' ,res.count)
     filterData(data.value)
 	}).catch(err=>{
     Core.Logger.error("参数", "数据", err)
 	})
 }
 const filterData = (data) => {
-  data.value = data.map(item => {
+  data.forEach(item => {
     let amount_paid = 0
     if (item.order_item_list.length > 0) {
       item.order_item_list.forEach(orderItem => {
@@ -122,7 +130,9 @@ const filterData = (data) => {
       })
     }
     item.amount_paid = amount_paid
-    return item
+    try {
+      item.remark = JSON.parse(item.remark)
+    } catch {}
   })
 }
 

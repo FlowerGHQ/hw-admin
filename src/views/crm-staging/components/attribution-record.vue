@@ -36,14 +36,18 @@
 import Core from '@/core';
 import Util from '../common';
 import Static from '../static';
-import { computed, reactive, ref, toRefs, nextTick, inject } from 'vue';
+import { computed, reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
-nextTick(() => {
-  getBindList({ current: 1 })
-  getUserDetail()
-})
 
+watch(
+  () => userId.value, (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      getBindList({ current: 1 })
+      getUserDetail()
+    }
+  }
+)
 const $emit = defineEmits(['getCount'])
 const columns = [
 {

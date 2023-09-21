@@ -854,13 +854,13 @@ const apiList = {
         createTrack: ['PostJson', 'customer-service/track-record/save-task'],   //创建任务记录
         storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
         upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
-        getCityList: ['PostJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
+        getCityList: ['GetJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
 
         editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
         createOrder: ['PostJson', 'customer-service/crm-order/create'],
         orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
         orderList: ['PostJson', 'customer-service/crm-order/list'],
-        pushApp: ['PostJson', 'customer-service/crm-order/push-app'],
+        pushApp: ['GetJson', 'customer-service/crm-order/push-app'],
         orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
         logList: ['PostJson', 'customer-service/action-log/list'],
 
