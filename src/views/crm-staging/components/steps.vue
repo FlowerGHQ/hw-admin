@@ -43,7 +43,6 @@ const $prop = defineProps({
 	}
 })
 
-const type = ref(1);
 
 </script>
 

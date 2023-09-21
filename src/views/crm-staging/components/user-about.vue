@@ -28,7 +28,7 @@
             </a-tab-pane>
             <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
                 <div class="tab-body" @scroll="handleScroll">
-                    <Steps :list="list" :type="2"/>
+                    <LogSteps :list="logList"/>
                 </div>
             </a-tab-pane>
         </a-tabs>
@@ -40,10 +40,11 @@ import Order from './order.vue';
 import TestDrive from './test-drive.vue';
 import GeneralView from './general-view.vue';
 import attributionRecord from "../components/attribution-record.vue";
-import Steps from "./steps.vue";
+import LogSteps from "./log-step.vue";
 import Core from '@/core';
-import { reactive, ref, toRefs, onMounted, nextTick } from 'vue';
+import { reactive, ref, toRefs, onMounted, nextTick, inject } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
+const userId = inject('userId');  // 从staging 从这个来的
 
 const OrderRef = ref(null)
 
@@ -61,85 +62,84 @@ const getCount = (key, count) => {
     totals[key] = count
 }
 
-onMounted(() => {
-	
+onMounted(() => {	
+	getLogListFetch()
 })
 
 // 日志
-const pagination = reactive({
-  page_size: 20,
-  page: 1,
-  total: 0,
-  total_page: 0
+const logPagination = reactive({
+  	page_size: 20,
+  	page: 1,
+  	total: 0,
+  	total_page: 0
 })
-const list = ref([
-	{
-		value: '1',
-		store_user_name: '李鹏',
-		title: '修改用户信息',
-		img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-		content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-		work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: '123'
-	},
-	{
-	  	value: '2',
-	  	store_user_name: '姬发',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-	  	time: '2023-07-12 12:13:14',
-		status: '123'
-	},
-	{
-	  	value: '3',
-	  	store_user_name: '李大钊',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: '123'
-	},
-	{
-	  	value: '4',
-	  	store_user_name: '王倩',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: '123'
-	},
+const logList = ref([	
+	// {
+    //     id: 2691,
+    //     operator_id: 150,  // 操作人id
+    //     operator_type: 0, // 操作人类型
+    //     operator_name: "小郑啊", // 操作人名称
+    //     operator_avatar: "", // 操作人头像
+    //     create_time: 1694572938, // 时间
+	// 	// JSON格式
+    //     content: {
+    //         content: [
+    //             {
+    //                 key: "name",
+    //                 old_value: "zhangyue001",
+    //                 new_value: "yzy测试改动"
+    //             },                
+    //             {
+    //                 key: "phone",
+    //                 old_value: "zhangyue001",
+    //                 new_value: "yzy测试改动"
+    //             },                
+    //         ]
+    //     }
+    // },	
 ])
-const getLogList = (params = {}) => {
+/* Fetch start*/
+// 获取日志list
+const getLogListFetch = (params = {} , isSearch = false) => {
   const obj = {
-		page: pagination.page,
-		page_size: pagination.page_size,
-		"target_id": "",
-	    "target_type": "",
+		page: logPagination.page,
+		page_size: logPagination.page_size,
+		target_id: userId.value, // 用户id
+	    target_type: Core.Const.LABEl.CATEGORY.CLIENT,  // 目标类型 (1客户、2商机、3合同订单、4回款单)
         ...params
 	}
-    Core.Api.CustomService.logList({ ...obj }).then(res=>{
-        Core.Logger.success("参数", "数据", res)
-        // data.value = res.list
+	Core.Logger.error("参数", obj)
+    Core.Api.CustomService.logList(obj).then(res=>{
+		logPagination.total = res.count
+        logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size)
+
+        Core.Logger.success("参数", obj, "获取日志list", res)
+		// 是否是搜索的
+		if (isSearch) {
+            logList.value = []
+        }
+
+        logList.value = logList.value.concat(res.list)
 	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
+        Core.Logger.error("参数", obj, "获取日志list", err)
 	})
 }
+/* Fetch end*/
+
+/* methods start*/
 // 监听滚轮事件
 const handleScroll = (e) => {
-    const element = e.target;
-    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
-        console.log('滚动触底')
-        if (pagination.page <= pagination.total_page) {
-            pagination.page ++
-            getLogList({ page: pagination.page })
+	const element = e.target;
+    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {        
+		Core.Logger.log('滚动触底')
+        if (logPagination.page <= logPagination.total_page) {
+			logPagination.page ++
+            getLogListFetch({ page: logPagination.page })
         }
     }
 }
+/* methods end*/
+
 </script>
 
 <style lang="less" scoped>

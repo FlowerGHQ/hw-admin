@@ -2395,7 +2395,20 @@ let Const = {
             "30": { key: 30, value: 30, zh: '试驾结束' },
             "40": { key: 40, value: 40, zh: '过期未试驾' },
             "50": { key: 50, value: 50, zh: '取消试驾' },            
-        }        
+        },
+        LOG_KEY_MAP: {
+            'name': { key: 'name',text: '客户名称'},
+            'phone': { key: 'phone',text: '手机号'},
+            'email': { key: 'email',text: '邮箱'},
+            'city': { key: 'city',text: '城市'},
+            'address': { key: 'address',text: '地址'},
+            'birthday': { key: 'birthday',text: '出生日期'},
+            'country': { key: 'country',text: '国家' },
+            'province': { key: 'province',text: '省份' },
+            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '意向车型' },
+            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '车型' },
+            'gender': { key: 'gender',text: '性别' },
+        }
     }
 };
 
