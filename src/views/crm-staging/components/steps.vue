@@ -17,9 +17,9 @@
 								<span v-if="type === 1" class="content-title-label">跟进方式：</span>
 								{{ item.title }}
 							</div>
-							<my-tag v-if="type === 1" border color="#00B42A" bgColor="#E8FFEA" borderColor="#00B42A4D" class="message-label">{{ item.status }}</my-tag>
+							<my-tag v-if="type === 1" border :color="$Util.tabStatus(item.status,'color')" :bgColor="$Util.tabStatus(item.status,'background')" :borderColor="$Util.tabStatus(item.status,'borderC')" class="message-label">{{ $Util.tabStatus(item.status) }}</my-tag>
 						</div>
-						<div class="content-text" v-if="item.content">{{ item.content }}</div>
+						<div class="content-text" v-if="item.content">{{ item.content }}</div> 
 					</div>
 				</div>
 			</div>
@@ -29,7 +29,7 @@
 
 <script setup>
 import myTag from "../components/my-tag.vue";
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue'; 
 import Core from "@/core";
 
 const $prop = defineProps({

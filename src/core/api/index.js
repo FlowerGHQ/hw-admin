@@ -842,9 +842,20 @@ const apiList = {
         detail: ['PostJson', 'customer-service/customer/detail'],   
         deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
-        storeList: ['PostJson', 'customer-service/store/list-name'],   
-        groupList: ['PostJson', 'customer-service/group/list-name'],    
+        storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
+        groupList: ['PostJson', 'customer-service/group/list-name'],    // 大区列表
         bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'],
+        getTestDriveList: ['PostJson', 'customer-service/crm-test-drive-order/list'],  // 试驾单list
+        getLogList: ['PostJson', 'customer-service/action-log/list'],  // 日志list
+
+       
+        trackRecordList: ['PostJson', 'customer-service/track-record/list'], // 跟进记录-列表
+        createRecord: ['PostJson', 'customer-service/track-record/save'],   //创建跟进记录
+        createTrack: ['PostJson', 'customer-service/track-record/save-task'],   //创建任务记录
+        storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
+        upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
+        getCityList: ['PostJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
+
         editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
         createOrder: ['PostJson', 'customer-service/crm-order/create'],
         orderDetail: ['PostJson', 'customer-service/crm-order/detail'],

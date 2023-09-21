@@ -14,15 +14,16 @@
         <div class="key">沟通方式：</div>
         <div class="value">
           <a-select
-            v-model:value="followObj.follow_type"
+            v-model:value="followObj.method"
             placeholder="请选择沟通方式"
           >
             <a-select-option
-              v-for="item of intentedList"
+              v-for="item of methodList"
               :key="item.key"
               :value="item.value"   
-              >{{ item.key }}</a-select-option
-            >
+              >
+              {{ item.zh }}
+              </a-select-option>
           </a-select>
         </div>
       </div>
@@ -38,7 +39,9 @@
               v-for="item of intentedList"
               :key="item.key"
               :value="item.value"   
-              >{{ item.key }}</a-select-option
+              >
+                {{ item.key }}
+              </a-select-option
             >
           </a-select>
         </div>
@@ -48,14 +51,14 @@
         <div class="key">跟进类型：</div>
         <div class="value">
           <a-select
-            v-model:value="followObj.follow_type"
+            v-model:value="followObj.type"
             placeholder="选择跟进类型"
           >
             <a-select-option
-              v-for="item of intentedList"
+              v-for="item of typeList"
               :key="item.key"
               :value="item.value"   
-              >{{ item.key }}</a-select-option
+              >{{ item.zh }}</a-select-option
             >
           </a-select>
         </div>
@@ -64,11 +67,11 @@
       <div class="form-item flex-aline">
         <div class="key">跟进内容：</div>
         <div class="value">
-            <a-textarea v-model:value="followObj.followText" placeholder="请输入跟进内容" :rows="4" />
+          <a-textarea v-model:value="followObj.followText" placeholder="请输入跟进内容" :rows="4" />
         </div>
       </div>
     <template #footer>
-        <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
+      <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
     </template>
     </a-modal>
     <a-modal v-model:visible="isShowCreate"
@@ -85,7 +88,7 @@
       <div class="form-item">
         <div class="key">下次跟进时间:</div>
         <div class="value">
-          <a-date-picker show-time>
+          <a-date-picker show-time  :disabled-date="disabledDate">
             <template #suffixIcon>
               <ClockCircleOutlined />
             </template>
@@ -100,7 +103,8 @@
 import { EditOutlined } from '@ant-design/icons-vue';
 import { reactive, ref ,onBeforeUnmount  } from 'vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
-import Core from "@/core";    
+import Core from "@/core";   
+import dayjs from 'dayjs'; 
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -109,24 +113,35 @@ const props = defineProps({
 })
 // 意向度-选项列表
 const intentedList = Core.Const.INTENTION.TYPE_MAP;
+// 沟通方式-选项列表
+const methodList = Core.Const.WORK_OPERATION.COMMUNICATE_TYPE;
+// 跟进类型-选项列表
+const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 // 弹窗显示变量
 const isShowFollow = ref(false);
 // 第二个创建弹窗
 const isShowCreate = ref(false);
 // 跟进
 const followObj = reactive({ 
-  intentValue: 10,
-  communicate_type: 1, 
-  followText: ''
+  // 沟通方式
+  method: undefined,
+  // 意向度
+  intention: undefined,
+  // 跟进类型
+  type: undefined, 
+  // 跟进内容
+  content: '',
 })
 // 点击写跟进按钮
 const clickModelOk = () => {
   isShowFollow.value = true;
 }
 
+const disabledDate = (current) => {
+  return current && current < dayjs().endOf('time');
+};
 defineExpose({clickModelOk});
 const handleOk = () => {
-  console.log('followObj---',followObj);
   isShowFollow.value = false;
   isShowCreate.value = true;
 }
