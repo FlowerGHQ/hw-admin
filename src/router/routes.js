@@ -2097,7 +2097,52 @@ const routes = [
 				}
 			},
         ]
-    },    
+    },
+    { // 用户中心
+        path:'/user-center',
+        component: Layout,
+        redirect: '/user-center/clue-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '用户中心',
+            title_en: 'User Center',
+            icon: 'i_s_customer',
+        },
+        children: [
+            {
+                path: 'clue-list',
+                name: 'clueList',
+                component: () => import('@/views/crm-customer-center/clue-list.vue'),
+                meta: {
+                    title: '线索',
+                    title_en: 'Clue List',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },
+            },
+            {
+                path: 'user-list',
+                name: 'userList',
+                component: () => import('@/views/crm-customer-center/user-list.vue'),
+                meta: {
+                    title: '用户列表',
+                    title_en: 'User List',
+                    icon: 'i_home',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },
+            },
+            {
+                path: 'user-edit',
+                name: 'userEdit',
+                component: () => import('@/views/crm-customer-center/user-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '用户编辑',
+                    parent: '/user-center/clue-list',
+                }
+            },
+        ]
+    },
     { // 人员管理
         path:'/retail-personnel',
         component: Layout, 

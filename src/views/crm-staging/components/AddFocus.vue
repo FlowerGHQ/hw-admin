@@ -40,6 +40,10 @@ export default {
         list: {
             type: Array,
             default: []
+        },
+        isCreate: {
+            type: Boolean,
+            default: false
         }
     },
     data() {
@@ -83,19 +87,23 @@ export default {
                     name: item.name,
                     type: item.type,
                 }));
-            Core.Logger.log('selectedTagList', this.selectedTagList)
-            Core.Api.CustomService.updateLabel({
-                // target_id: this.id,
-                target_id: 3074,
-                label_list: this.selectedTagList
-            }).then(res => {
-                Core.Logger.log('handleSubmit res', res);
-                this.$message.success('修改成功！')
-                this.$emit('submit');
-                this.closeDrawer();
-            }).catch(err => {
-                Core.Logger.log('handleSubmit err', err)
-            })
+                Core.Logger.log('selectedTagList', this.selectedTagList)
+            if(!this.isCreate) {
+                Core.Api.CustomService.updateLabel({
+                    // target_id: this.id,
+                    target_id: 3074,
+                    label_list: this.selectedTagList
+                }).then(res => {
+                    Core.Logger.log('handleSubmit res', res);
+                    this.$message.success('修改成功！')
+                    this.$emit('submit');
+                    this.closeDrawer();
+                }).catch(err => {
+                    Core.Logger.log('handleSubmit err', err)
+                })
+            } else {
+                this.$emit('finish', this.selectedTagList);
+            }
         },
         // 重置
         handleReset() {

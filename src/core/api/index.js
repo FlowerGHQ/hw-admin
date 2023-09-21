@@ -854,7 +854,7 @@ const apiList = {
         createTrack: ['PostJson', 'customer-service/track-record/save-task'],   //创建任务记录
         storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
         upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
-        getCityList: ['PostJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
+        getCityList: ['GetJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
 
         editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
         createOrder: ['PostJson', 'customer-service/crm-order/create'],

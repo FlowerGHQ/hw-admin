@@ -32,7 +32,7 @@
         <div class="key">意向度：</div>
         <div class="value">
           <a-select
-            v-model:value="value1"
+            v-model:value="followObj.intention"
             placeholder="请选择意向度"
           >
             <a-select-option
@@ -67,11 +67,11 @@
       <div class="form-item flex-aline">
         <div class="key">跟进内容：</div>
         <div class="value">
-          <a-textarea v-model:value="followObj.followText" placeholder="请输入跟进内容" :rows="4" />
+          <a-textarea v-model:value="followObj.content" placeholder="请输入跟进内容" :rows="4" />
         </div>
       </div>
     <template #footer>
-      <a-button key="submit" type="primary" @click="handleOk">提交</a-button>
+      <a-button key="submit" type="primary" @click="createFollow">提交</a-button>
     </template>
     </a-modal>
     <a-modal v-model:visible="isShowCreate"
@@ -85,10 +85,10 @@
       @cancel = "cancleNext"
       >
       <div class="top-title">系统将根据省市自动选择跟进人</div>
-      <div class="form-item">
+      <div class="form-item required">
         <div class="key">下次跟进时间:</div>
         <div class="value">
-          <a-date-picker show-time  :disabled-date="disabledDate">
+          <a-date-picker show-time  :disabled-date="disabledDate" v-model:value="taskTimeValue"  >
             <template #suffixIcon>
               <ClockCircleOutlined />
             </template>
@@ -101,10 +101,13 @@
 
 <script setup>
 import { EditOutlined } from '@ant-design/icons-vue';
-import { reactive, ref ,onBeforeUnmount  } from 'vue';
+import { reactive, ref ,getCurrentInstance ,inject } from 'vue';
 import { ClockCircleOutlined } from '@ant-design/icons-vue';
 import Core from "@/core";   
 import dayjs from 'dayjs'; 
+
+const { proxy } = getCurrentInstance();
+const userId = inject('userId');
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -121,8 +124,8 @@ const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 const isShowFollow = ref(false);
 // 第二个创建弹窗
 const isShowCreate = ref(false);
-// 跟进
-const followObj = reactive({ 
+
+const initialObject = { 
   // 沟通方式
   method: undefined,
   // 意向度
@@ -131,25 +134,81 @@ const followObj = reactive({
   type: undefined, 
   // 跟进内容
   content: '',
-})
+}
+// 跟进
+const followObj = reactive(Object.assign({}, initialObject))
+// 下次跟进任务时间
+const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
   isShowFollow.value = true;
+  resetFollow();
 }
-
+// 禁用过去时间
 const disabledDate = (current) => {
   return current && current < dayjs().endOf('time');
 };
 defineExpose({clickModelOk});
-const handleOk = () => {
-  isShowFollow.value = false;
-  isShowCreate.value = true;
+
+// 跟进创建操作
+const createFollow = () => {
+  Core.Logger.success('createFollow参数',followObj,"数据",);
+  // 创建更进
+  const obj = {
+    contact_customer_id: userId.value,
+    target_id: userId.value,
+    target_type: 1,
+    ...followObj
+  }
+  Core.Api.CustomService.createRecord(obj).then(res=>{
+		Core.Logger.success('createFollow',obj,"数据",res);
+    isShowFollow.value = false;
+    isShowCreate.value = true;
+    proxy.$message.success('提交成功')
+
+  }).catch(err=>{
+    Core.Logger.error("参数",obj, "数据", err)
+  })
 }
+// 重置
+const resetFollow = () => {
+  Object.assign(followObj, initialObject);
+  taskTimeValue.value= '';
+}
+// 点击创建任务
 const createNext = () => {
-  console.log('创建更进新的');
+  const time = dayjs(taskTimeValue.value).valueOf();
+  if(!taskTimeValue.value){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }
+  console.log('创建更进新的',taskTimeValue.value,time);
+  createTask(time);
+  isShowCreate.value = false;
 }
+
+// 取消创建
 const cancleNext  = () => {
   console.log('不创建更进新的');
+}
+
+// 创建请求
+const createTask = (time) => {
+  Core.Api.CustomService.createTrack({
+    customer_id:userId.value,
+    next_track_time:time
+  }).then(res=>{
+		Core.Logger.success('createTrack',{
+      customer_id:userId.value,
+      next_track_time:time
+    },"数据",res);
+     proxy.$message.success('创建成功')
+     
+  }).catch(err=>{
+    Core.Logger.error("参数",{
+    customer_id:userId.value,
+    next_track_time:time
+  }, "数据", err)
+  })
 }
 </script>
 

@@ -79,7 +79,7 @@
           :closable="false"
           placement="right"
         >
-            <QuickOrder ref="QuickOrderRef"/>
+          <QuickOrder ref="QuickOrderRef"/>
         </a-drawer>
     </div>
 </template>
