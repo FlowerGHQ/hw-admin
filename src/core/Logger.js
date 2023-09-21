@@ -34,7 +34,8 @@ class Logger  {
         const logStyle = `color: white; background-color: ${ this.bgColors[fn] }; padding: 2px 10px; display: inline-block;`
         // 判断先是否是浏览器是 打印的不是log的话会有颜色
         if (this.isWindows() && fn !== "log") {
-            console[fn](result, logStyle);
+            // console[fn](result, logStyle);
+            console[fn](`${fn}`, ...args);
         } else {
             console[fn](`${fn}`, ...args);
         }

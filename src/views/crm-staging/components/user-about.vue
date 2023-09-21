@@ -42,7 +42,7 @@ import GeneralView from './general-view.vue';
 import attributionRecord from "../components/attribution-record.vue";
 import LogSteps from "./log-step.vue";
 import Core from '@/core';
-import { reactive, ref, toRefs, onMounted, nextTick, inject } from 'vue';
+import { reactive, ref, toRefs, onMounted, nextTick, inject, watch } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
 const userId = inject('userId');  // 从staging 从这个来的
 
@@ -62,7 +62,13 @@ const getCount = (key, count) => {
     totals[key] = count
 }
 
-onMounted(() => {	
+
+onMounted(() => {		
+})
+
+// 监听
+watch(userId, (newValue, oldValue) => {
+	Core.Logger.log("监听userId值", newValue, oldValue);
 	getLogListFetch()
 })
 
