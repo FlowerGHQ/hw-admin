@@ -70,6 +70,7 @@
                 v-model:value="followObj.store_id"
                 placeholder="选择转移目标门店"
                 :disabled="!followObj.city"
+                @change="storeChangeClick"
               >
                 <a-select-option
                   v-for="item of optionsStore"
@@ -85,19 +86,20 @@
             <div class="key">转移目标体验官：</div>
             <div class="value">
               <a-select
-                v-model:value="followObj.offecter"
+                v-model:value="followObj.store_user_id"
                 placeholder="选择转移目标体验官"
                 allowClear
                 show-search
                 option-label-prop="label"
               >
-                  <a-select-option :value="item.label" :label="item.label"  v-for="(item,index) in options" :key="item.value">
-                    <img :src="item.img" class="options-img" alt="">
-                    <div class="option-right">
-                        <div class="options-top"> <span class="name-option">{{ item.label }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.icon }}</span>&nbsp;&nbsp;  <span class="work-option">{{ item.work }}</span></div>
-                        <div class="area-option">{{ item.area }}</div>
-                    </div>
-                  </a-select-option>
+                <a-select-option :value="item.user_id" :label="item.user_name"  v-for="(item,index) in peopleList" :key="item.value">
+                  <img :src="item.avatar" class ="options-img" alt="">
+                  <div class="option-right">
+                      <div class="options-top"> <span class="name-option">{{ item.user_name }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.user_phone }}</span>&nbsp;&nbsp;  <span class="work-option">{{ $Util.peoStoreStatus(item.type) }}</span></div>
+                      <div class="area-option">{{ item.group_name
+ }}</div>
+                  </div>
+                </a-select-option>
               </a-select>
             </div>
           </div> 
@@ -119,8 +121,6 @@ import Core from "@/core";
 import { reactive, ref ,onMounted ,inject } from 'vue';
 
 const userId = inject('userId');
-// 意向度-选项列表
-const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 弹窗显示变量
 const isShowFollow = ref(false);
 const followObj = reactive({ 
@@ -137,6 +137,8 @@ const optionsRegion = ref([]);
 const optionsCity = ref([]);
 // 门店列表
 const optionsStore = ref([]);
+// 获取人员列表
+const peopleList = ref([]);
 
 const options = ref([
     {
@@ -173,7 +175,7 @@ const options = ref([
     },
   ]);
 onMounted(() => {    
-  getRegionsList()                                                                                                                                                                                                             
+  getRegionsList()    
 })
 // 点击写跟进按钮
 const clickModelOk = () => {
@@ -208,7 +210,7 @@ const getStoreList = () => {
     page_size: 500,
   }).then(res=>{
 		Core.Logger.success('storeList',res);
-		optionsStore.value = res;
+		optionsStore.value = res.list;
 	}).catch(err=>{
     Core.Logger.error("参数", "数据", err)
 	})
@@ -218,20 +220,40 @@ const getStoreList = () => {
 const groupChangeClick = (value) => {
   Core.Logger.success('groupChangeClick',value);
   followObj.city = '';
+  followObj.store_user_id = '';
   followObj.store_id = '';
   getCityList(value);
 }
 // 城市更改事件
 const cityChangeClick = (value) => {
   Core.Logger.success('cityChangeClick',value);
+  followObj.store_user_id = '';
   followObj.store_id = '';
   getStoreList();
+}
+// 门店更改事件
+const storeChangeClick = (value) => {
+  Core.Logger.success('storeChangeClick',value);
+  followObj.store_user_id = '';
+  getPeopleList();
 }
 defineExpose({clickModelOk});
 const handleOk = () => {
     console.log('followObj---',followObj);
 }
- 
+// 门店人员-获取
+const getPeopleList = () => {
+  Core.Api.CustomService.storeUserList({
+    store_id: followObj.store_id,
+    page_size:500
+  }).then(res=>{
+		Core.Logger.success('getPeopleList',res);
+		peopleList.value = res.list;
+	}).catch(err=>{
+    Core.Logger.error("参数", "数据", err)
+	})
+}
+
 </script>
 
 <style lang="less" scoped>

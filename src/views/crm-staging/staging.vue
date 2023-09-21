@@ -63,7 +63,7 @@
                         <UserDetail :id="userId"/>
                     </div>
                     <div class="about">
-                        <UserAbout :userId="userId"/>
+                        <UserAbout/>
                     </div>
                 </div>
                 <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>

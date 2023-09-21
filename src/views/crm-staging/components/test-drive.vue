@@ -41,7 +41,7 @@
 
 <script setup>
 import Core from '@/core';
-import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject } from 'vue';
+import { reactive, ref, toRefs, onMounted, getCurrentInstance, inject, watch } from 'vue';
 import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import Static from '../static';
@@ -119,7 +119,12 @@ const channelPagination = ref({
 })
 
 onMounted(() => {
-    getDriveListFetch()
+    
+})
+// 监听
+watch(userId, (newValue, oldValue) => {
+	Core.Logger.log("监听userId值", newValue, oldValue);
+	getDriveListFetch()
 })
 
 /* Fetch start */
