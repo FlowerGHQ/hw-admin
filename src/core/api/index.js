@@ -845,6 +845,8 @@ const apiList = {
         storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
         groupList: ['PostJson', 'customer-service/group/list-name'],    // 大区列表
         bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'],
+        getTestDriveList: ['PostJson', 'customer-service/crm-test-drive-order/list'],  // 试驾单list
+        getLogList: ['PostJson', 'customer-service/action-log/list'],  // 日志list
 
        
         trackRecordList: ['PostJson', 'customer-service/track-record/list'], // 跟进记录-列表
@@ -858,7 +860,7 @@ const apiList = {
         createOrder: ['PostJson', 'customer-service/crm-order/create'],
         orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
         orderList: ['PostJson', 'customer-service/crm-order/list'],
-        pushApp: ['PostJson', 'customer-service/crm-order/push-app'],
+        pushApp: ['GetJson', 'customer-service/crm-order/push-app'],
         orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
         logList: ['PostJson', 'customer-service/action-log/list'],
 
