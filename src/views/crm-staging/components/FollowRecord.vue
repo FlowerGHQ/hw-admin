@@ -115,8 +115,8 @@ const getRecordList = (params={}) => {
   }
   Core.Api.CustomService.trackRecordList(obj).then(res=>{
 		Core.Logger.success('getRecordList参数',obj,"数据",res);
-    pagination.total = res.count
-    pagination.total_page = Math.ceil(pagination.total / pagination.pageSize)
+    pagination.total = res.count;
+    pagination.total_page = Math.ceil(pagination.total / pagination.pageSize);
   }).catch(err=>{
     Core.Logger.error("参数getRecordList参数",obj, "数据", err)
   })
