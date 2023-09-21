@@ -845,6 +845,8 @@ const apiList = {
         storeList: ['PostJson', 'customer-service/store/list-name'],   
         groupList: ['PostJson', 'customer-service/group/list-name'],    
         bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'], 
+        getTestDriveList: ['PostJson', 'customer-service/crm-test-drive-order/list'],  // 试驾单list
+        getLogList: ['PostJson', 'customer-service/action-log/list'],  // 日志list
     },
 };
 

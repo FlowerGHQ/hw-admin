@@ -14,7 +14,7 @@
                 <Order/>
             </a-tab-pane>
             <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
-                <TestDrive/>
+                <TestDrive :userId="userId"/>
             </a-tab-pane>
             <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
                 <Steps :list="list" :type="2"/>
@@ -32,6 +32,13 @@ import Steps from "./steps.vue";
 import Core from '@/core';
 import { reactive, ref, toRefs, onMounted, nextTick } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
+
+const props = defineProps({
+	userId: {
+		type: [String, Number],
+		default: ""
+	}
+})
 
 const activeKey = ref('1')
 const totals = reactive({

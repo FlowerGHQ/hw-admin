@@ -1365,6 +1365,20 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    // 计算时间 返回days，hours, minutes
+    calculateTimeDifference(startTimestamp, endTimestamp) {
+        const start = dayjs.unix(startTimestamp);
+        const end = dayjs.unix(endTimestamp);
+        
+        const diffInSeconds = (end - start) / 1000;
+
+        const days = Math.floor(diffInSeconds / (24 * 60 * 60));
+        const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
+        const seconds = Math.floor(diffInSeconds % 60);
+      
+        return { days, hours, minutes, seconds };       
+      }
 }
 
 export default Util
