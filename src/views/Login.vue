@@ -99,7 +99,7 @@ export default {
             }
             Core.Api.Common.login(form).then(res => {
                 console.log('handleLogin apiName res', res)                
-                Core.Data.setToken(res.token);
+                Core.Data.setToken(res.token);                
                 Core.Data.setUser(res.user.account);
                 Core.Data.setOrgId(res.user.org_id);
                 Core.Data.setOrgType(res.user.org_type);

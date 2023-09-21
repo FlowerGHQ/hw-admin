@@ -1,25 +1,23 @@
 <template>
     <div class="user-about">
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane :key="pane.key" :tab="pane.title" v-for="(pane) in panes">
-                <template v-if="activeKey === 1">
-                    <GeneralView/>
-                </template>
-                <template v-else-if="activeKey === 2">
-                    <FollowRecord />
-                </template>
-                <template v-else-if="activeKey === 3">
-                    <attributionRecord/>
-                </template>
-                <template v-else-if="activeKey === 4">
-                    <Order/>
-                </template>
-                <template v-else-if="activeKey === 5">
-                    <TestDrive/>
-                </template>
-                <template v-else-if="activeKey === 6">
-                    <p>页面{{ pane.key }}</p>
-                </template>
+            <a-tab-pane key="1" :tab="`总览(${totals['1']})`">
+                <GeneralView/>
+            </a-tab-pane>
+            <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`">
+                <FollowRecord />
+            </a-tab-pane>
+            <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" force-render>
+                <attributionRecord @getCount='getCount' ref="attributionRecordRef"/>
+            </a-tab-pane>
+            <a-tab-pane key="4" :tab="`订单(${totals['4']})`">
+                <Order/>
+            </a-tab-pane>
+            <a-tab-pane key="5" :tab="`试驾(${totals['5']})`">
+                <TestDrive/>
+            </a-tab-pane>
+            <a-tab-pane key="6" :tab="`日志(${totals['6']})`">
+                <Steps :list="list" :type="2"/>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -30,20 +28,65 @@ import Order from './order.vue';
 import TestDrive from './test-drive.vue';
 import GeneralView from './general-view.vue';
 import attributionRecord from "../components/attribution-record.vue";
+import Steps from "./steps.vue";
 import Core from '@/core';
-import { reactive, ref, toRefs } from 'vue';
+import { reactive, ref, toRefs, onMounted, nextTick } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
 
-const activeKey = ref(1)
-const panes = ref([
-    { key: 1, title: `总览(${20})` },
-    { key: 2, title: `跟进记录(${20})` },
-    { key: 3, title: `归属记录(${20})` },
-    { key: 4, title: `订单(${20})` },
-    { key: 5, title: `试驾(${20})` },
-    { key: 6, title: `日志(${20})` },
+const activeKey = ref('1')
+const totals = reactive({
+    '1': 20,
+    '2': 20,
+    '3': 20,
+    '4': 20,
+    '5': 20,
+    '6': 20,
+})
+const list = ref([
+	{
+		value: '1',
+		store_user_name: '李鹏',
+		title: '修改用户信息',
+		img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
+		content:'上海大区-上海 上海浦东新区大美都广场体验中心',
+		work:'用户体验官',
+		time: '2023-07-12 12:13:14',
+		status: '123'
+	},
+	{
+	  	value: '2',
+	  	store_user_name: '姬发',
+	  	title: '修改用户信息',
+	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
+	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
+	  	work:'用户体验官',
+	  	time: '2023-07-12 12:13:14',
+		status: '123'
+	},
+	{
+	  	value: '3',
+	  	store_user_name: '李大钊',
+	  	title: '修改用户信息',
+	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
+	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
+	  	work:'用户体验官',
+		time: '2023-07-12 12:13:14',
+		status: '123'
+	},
+	{
+	  	value: '4',
+	  	store_user_name: '王倩',
+	  	title: '修改用户信息',
+	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
+	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
+	  	work:'用户体验官',
+		time: '2023-07-12 12:13:14',
+		status: '123'
+	},
 ])
-
+const getCount = (key, count) => {
+    totals[key] = count
+}
 </script>
 
 <style lang="less" scoped>

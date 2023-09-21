@@ -7,8 +7,8 @@ import defult_file from '@images/defult_file.png'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
-let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
-// let URL_POINT = 'http://10.0.0.100'  // zy
+// let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
+let URL_POINT = 'http://10.0.0.100'  // zy
 let DISABLELOG = false
 
 switch (window.location.hostname) {
@@ -26,7 +26,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        URL_POINT = 'http://10.10.12.85:8889'
+        URL_POINT = 'http://10.10.12.78:8889'
         break;
 }
 

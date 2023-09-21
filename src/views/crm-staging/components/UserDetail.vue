@@ -246,7 +246,13 @@ export default {
             defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
         };
     },
-    watch: {},
+    watch: {
+        id(newV, oldV) {
+            if (newV !== oldV) {
+                this.getUserDetail()
+            }
+        }
+    },
     computed: {
         lang() {
             return this.$store.state.lang
@@ -288,8 +294,8 @@ export default {
         // 获取用户详情
         getUserDetail() {
             Core.Api.CustomService.detail({
-                // id: this.id
-                id: 3074
+                id: this.id
+                // id: 3074
             }).then(res => {
                 Core.Logger.log('getUserDetail res', res)
                 this.detail = res
