@@ -1385,6 +1385,12 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+    // 门店人员-职务
+    peoStoreStatus(val, to = 'zh') {
+        const MAP = Const.FEISHUTYPE.TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
 }
 
 export default Util

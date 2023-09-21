@@ -1,6 +1,6 @@
 <template>
     <div class="user-about">
-        <a-tabs v-model:activeKey="activeKey">
+        <a-tabs v-model:activeKey="activeKey" @change="changeActivety">
             <a-tab-pane key="1" tab="总览">
                 <div class="tab-body">
                     <GeneralView/>
@@ -8,7 +8,7 @@
             </a-tab-pane>
             <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
                 <div class="tab-body" @scroll="handleScroll">
-                    <FollowRecord />
+                    <FollowRecord ref="followRe"/>
                 </div>
             </a-tab-pane>
             <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" forceRender>
@@ -46,7 +46,7 @@ import { reactive, ref, toRefs, onMounted, nextTick } from 'vue';
 import FollowRecord from "./FollowRecord.vue";
 
 const OrderRef = ref(null)
-
+const followRe = ref(null);
 const activeKey = ref('1')
 const totals = reactive({
     '1': 20,
@@ -136,6 +136,15 @@ const handleScroll = (e) => {
         }
     }
 }
+
+const changeActivety = (value) => {
+    console.log('changeActivety',value);
+    if(value==2){
+        followRe.value.getRecordList();
+    }
+}   
+
+
 </script>
 
 <style lang="less" scoped>

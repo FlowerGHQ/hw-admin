@@ -104,9 +104,10 @@ const getRecordList = (params={}) => {
   Core.Api.CustomService.trackRecordList(obj).then(res=>{
 		Core.Logger.success('getRecordList参数',obj,"数据",res);
   }).catch(err=>{
-    Core.Logger.error("参数",obj, "数据", err)
+    Core.Logger.error("参数getRecordList参数",obj, "数据", err)
   })
 }
+defineExpose({getRecordList});
 const clickCreate = (params = {}) => {
 
   proxy.$confirm({
