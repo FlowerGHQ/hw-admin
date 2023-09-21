@@ -22,8 +22,14 @@
                             <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
-                    <div class="task-list-body">
-                        <div class="task-list-body-item" :class="taskIndex === index ? 'selected' : ''" v-for="(item, index) in taskList" :key="item.id" @click="changeTask(index)">
+                    <div class="task-list-body" @scroll="handleScroll">
+                        <div 
+                            v-for="(item, index) in taskList" 
+                            :key="item.id"
+                            class="task-list-body-item" 
+                            :class="taskIndex === index ? 'selected' : ''" 
+                            @click="changeTask(index)"
+                        >
                             <div class="avatar">
                                 <img :src="item.avatar" class="avatar-img">
                                 <img :src="item.gender === 1 ? getAssetURL('./images/gender-male.png') : getAssetURL('./images/gender-female.png')" class="avatar-gender">
@@ -63,7 +69,7 @@
           class="custom-class"
           title="快捷下单"
           width="440px"
-          bodyStyle="padding: 0"
+          :body-style="bodyStyle"
           :footer="false"
           :closable="false"
           placement="right"
@@ -90,6 +96,10 @@ const route = useRoute()
 onMounted(() => {    
     getTaskNum()
 })
+
+// a-drawer bodyStyle样式
+const bodyStyle = ref({ padding: 0 })
+
 // 左边切换栏
 const menuLeftIndex = ref(0);
 const menuLeft = [
@@ -114,7 +124,7 @@ const change = (index) => {
     menuLeftIndex.value = index
     // 同步切换状态
     updateStatus(staskStatusIndex.value)
-    getTaskNum()
+    getTaskNum({ page: 1 }, true)
 }
 
 // 搜索栏
@@ -125,7 +135,7 @@ const searchEnter = (value) => {
         searchMes.begin_time = dayjs(searchMes.time[0]).valueOf()
         searchMes.end_time = dayjs(searchMes.time[1]).valueOf()
     }
-    getTaskNum()
+    getTaskNum({ page: 1 }, true)
 }
 
 //任务列表
@@ -138,11 +148,18 @@ const staskStatus = ref(0)
 const staskStatusIndex = ref(0)
 const staskStatusList = [{ name: '待办' }, { name: '已办' }]
 const taskList = ref([])
+const userPagination = reactive({
+    page_size: 20,
+    page: 1,
+    total: 0,
+    total_page: 0
+})
+
 taskAmount.value = taskList.value.length
 const staskStatusChange = (index) => {
     staskStatusIndex.value = index
     updateStatus(index)
-    getTaskNum()
+    getTaskNum({ page: 1 }, true)
 }
 const updateStatus = (index) => {
     switch (index) {
@@ -170,16 +187,27 @@ const changeTask = (index) => {
     taskCurrent.value = index + 1
     userId.value = taskList.value[index].id
 }
-const getTaskNum = () => {
-    const params = {
+const getTaskNum = (params = {}, isSearch = false) => {
+    const obj = {
         status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
         status: staskStatus.value,
-        ...searchMes
+        page_size: userPagination.page_size,
+        page: userPagination.page,
+        ...searchMes,
+        ...params
 	}
-    Core.Logger.success('params', params)
-    Core.Api.CustomService.list({ ...params }).then(res=>{
+    Core.Logger.success('params', obj)
+    Core.Api.CustomService.list(obj).then(res=>{        
+        userPagination.total = res.count
+        userPagination.total_page = Math.ceil(userPagination.total / userPagination.page_size)
+
 		Core.Logger.success('getTaskNum',res);
-		taskList.value = res.list;
+        // 是否是搜索的
+        if (isSearch) {
+            taskList.value = []
+        }
+        taskList.value = taskList.value.concat(res.list)		
+
         userId.value = taskList.value[0].id
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
@@ -204,6 +232,18 @@ const nextTask = (current) => {
 const getAssetURL = (image) => {
   // 参数一: 相对路径
   return new URL(`../crm-staging/${image}`, import.meta.url).href
+}
+
+// 监听滚轮事件
+const handleScroll = (e) => {    
+    const element = e.target;    
+    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+        Core.Logger.log("滑到底部")  
+        if (userPagination.page <= userPagination.total_page) {
+            userPagination.page++
+            getTaskNum({ page: userPagination.page })
+        }      
+    }
 }
 
 </script>
