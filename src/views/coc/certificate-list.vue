@@ -172,7 +172,7 @@ const palrformTableData = ref([
 		coc_downloadTimes: 100,
 	},
 ])
-const channelPagination = reactive({
+let channelPagination = reactive({
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
 	pageSize: 20,

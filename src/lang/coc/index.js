@@ -28,6 +28,9 @@ export default {
     coc_start_date: '有效开始日期',
     coc_end_date: '有效结束日期',
     coc_placeholder_upload: '上传',
+    coc_delete_success: '删除成功',
+    coc_add_success: '添加成功',
+    coc_edit_success: '编辑成功',
 
   },
   en: {
@@ -58,6 +61,9 @@ export default {
     coc_placeholder_apply_vehicle: 'Please select the applicable vehicle',
     coc_start_date: 'Start Date',
     coc_end_date: 'End Date',
-    coc_placeholder_upload: 'Upload'
+    coc_placeholder_upload: 'Upload',
+    coc_delete_success: 'Delete Success',
+    coc_add_success: 'Add Success',
+    coc_edit_success: 'Edit Success',
   }
 }

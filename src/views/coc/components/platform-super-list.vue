@@ -16,6 +16,7 @@
 					:scroll="{ x: true }"
 					:row-key="(record) => record.id"
 					:pagination="false"
+					:loading="loading"
 				>
 					<template #headerCell="{ title }">
 						{{ $t(title) }}
@@ -23,11 +24,15 @@
 					<template #bodyCell="{ column, text, record }">
 						<template v-if="column.key === 'coc_validity_date'">
 							<span>
-								{{ record.coc_validity_date[0] }} ~
-								{{ record.coc_validity_date[1] }}
+								{{ Util.timeFormat(record.effective_start_time) }} ~
+								{{ Util.timeFormat(record.effective_end_time) }}
 							</span>
 						</template>
-						<template v-if="column.key === 'coc_operation'">
+						<!-- 创建日期 -->
+						<template v-else-if="column.key === 'create_time'">
+							<span>{{ Util.timeFormat(record.create_time) }}</span>
+						</template>
+						<template v-else-if="column.key === 'coc_operation'">
 							<!-- 查看 -->
 							<a-button
 								type="link"
@@ -59,14 +64,15 @@
 			</div>
 			<div class="paging-container">
 				<a-pagination
-					v-model:current="currPage"
-					:page-size="pageSize"
-					:total="total"
+					v-model:current="pagination.page"
+					:page-size="pagination.pageSize"
+					:total="pagination.total"
 					show-quick-jumper
 					show-size-changer
 					show-less-items
 					:show-total="
-						(total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
+						(total) =>
+							$t('n.all_total') + ` ${pagination.total} ` + $t('in.total')
 					"
 					:hide-on-single-page="false"
 					:pageSizeOptions="['10', '20', '30', '40']"
@@ -78,45 +84,69 @@
 		<EditModal
 			:visible="visible"
 			:ModalTitle="ModalTitle"
+			:openType="openType"
 			v-model:visible="visible"
 			v-model:form="form"
+			:row-id="rowId"
+			@getTableData="getTableData"
 		/>
 	</div>
 </template>
 
 <script setup>
-import { useTable } from "../hooks/useTable"
+import Core from "@/core"
+const { Api, Util } = Core
+const { deleteCocTemplate, getCocTemplateList } = Api.COC
+import { useTable } from "@/hooks/useTable"
 import EditModal from "./template-modal.vue"
-import { ref, getCurrentInstance } from "vue"
+import { ref, getCurrentInstance ,} from "vue"
 const { ctx } = getCurrentInstance()
-const { $t } = ctx.$root
+const { $t, $message } = ctx.$root
+
+// 传递的props
 const ModalTitle = ref("")
 const visible = ref(false)
+const openType = ref("")
+const rowId = ref("")
+// form表单
 const form = ref({})
-const handleModal = (type, item = {}) => {
-	if (type === "add") {
+
+const { tableData, pageChange, pageSizeChange, getTableData, pagination ,loading} =
+	useTable({ request: getCocTemplateList, searchForm: form })
+
+
+
+// 将请求promise传给useTable
+const handleModal = (open_type, item = {}) => {
+	if (open_type === "add") {
 		ModalTitle.value = $t("coc.coc_modal_add_title")
-	} else if (type === "detail") {
+	} else if (open_type === "detail") {
 		ModalTitle.value = $t("coc.coc_modal_view_title")
-	} else if (type === "edit") {
+	} else if (open_type === "edit") {
 		ModalTitle.value = $t("coc.coc_modal_edit_title")
 	}
+	openType.value = open_type
+	rowId.value = item.id || null
 	visible.value = true
 }
 const handleDelete = (item) => {
-	console.log(item)
+	deleteCocTemplate({ id: item.id }).then(() => {
+		$message.success($t("coc.coc_delete_success"))
+		// 刷新列表
+		getTableData()
+	})
 }
 const tableColumns = [
-	{ title: "coc.coc_name", dataIndex: "coc_name", key: "coc_name" },
+	{ title: "coc.coc_name", dataIndex: "name", key: "name" },
 	{
 		title: "coc.coc_version",
-		dataIndex: "coc_version",
-		key: "coc_version",
+		dataIndex: "version_number",
+		key: "version_number",
 	},
 	{
 		title: "coc.coc_apply_vehicle",
-		dataIndex: "coc_apply_vehicle",
-		key: "coc_apply_vehicle",
+		dataIndex: "model",
+		key: "model",
 	},
 	{
 		title: "coc.coc_validity_date",
@@ -125,8 +155,8 @@ const tableColumns = [
 	},
 	{
 		title: "coc.coc_create_date",
-		dataIndex: "coc_create_date",
-		key: "coc_create_date",
+		dataIndex: "create_time",
+		key: "create_time",
 	},
 	{
 		title: "coc.coc_operation",
@@ -134,9 +164,6 @@ const tableColumns = [
 		key: "coc_operation",
 	},
 ]
-
-const { tableData, pageChange, pageSizeChange, currPage, pageSize, total } =
-	useTable()
 </script>
 
 <style lang="less" scoped></style>
