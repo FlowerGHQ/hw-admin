@@ -83,10 +83,12 @@ export default {
         /* Fetch start*/
         // 检查是否是超级管理员
         isAdminFetch(parmas) {
+            // 分销商不调用
+            if (Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR) return
             let obj = {
                 ...parmas
             }
-            Core.Api.User.check_admin(obj).then(res => {
+            Core.Api.User.checkAdmin(obj).then(res => {
                 Core.Logger.log("参数", obj, "是否是超级管理员", res)
                 Core.Data.setManager(res.status)
             }).catch(err => {
