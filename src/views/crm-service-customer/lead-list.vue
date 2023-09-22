@@ -1,6 +1,6 @@
 <template>
     <div class="service-customer">
-        <div class="list-container">
+        <div class="list-container service-customer-container">
             <div class="title-container">
                 <div class="title-area">客服线索比例分配</div>
                 <div class="btns-area">
@@ -199,6 +199,10 @@
 
 <style lang="less" scoped>
 .service-customer {
+    height: 100%;
+    .service-customer-container {
+        height: 100%;
+    }
     .lead {
         .fcc(initial, initial);
         flex-wrap: wrap;        
