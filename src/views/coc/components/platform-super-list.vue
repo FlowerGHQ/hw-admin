@@ -120,7 +120,10 @@
 						:placeholder="[$t('coc.coc_start_date'), $t('coc.coc_start_date')]"
 					/>
 				</a-form-item>
-				<a-form-item :label="$t('coc.coc_lable_apply_vehicle')" :label-col="labelCol">
+				<a-form-item
+					:label="$t('coc.coc_lable_apply_vehicle')"
+					:label-col="labelCol"
+				>
 					<!-- select -->
 					<a-select
 						v-model:value="form.model"
@@ -138,7 +141,10 @@
 						</a-select-option>
 					</a-select>
 				</a-form-item>
-				<a-form-item :label="$t('coc.coc_lable_template')" :label-col="labelCol">
+				<a-form-item
+					:label="$t('coc.coc_lable_template')"
+					:label-col="labelCol"
+				>
 					<!-- 上传组件 正方形带+ -->
 					<a-upload
 						:multiple="true"
@@ -178,7 +184,7 @@ const {
 import { useTable } from "@/hooks/useTable"
 import EditModal from "./template-modal.vue"
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue"
-import { ref, getCurrentInstance,onMounted  } from "vue"
+import { ref, getCurrentInstance, onMounted } from "vue"
 const { ctx } = getCurrentInstance()
 const { $t, $message } = ctx.$root
 
@@ -204,7 +210,7 @@ const btnLoading = ref(false)
 const coc_validity_date = ref([])
 const option = ref([])
 let formdisabled = ref(false)
-const imageUrl  = ref('')
+const imageUrl = ref("")
 
 const {
 	tableData,
@@ -214,7 +220,6 @@ const {
 	pagination,
 	loading,
 } = useTable({ request: getCocTemplateList, searchForm: form })
-
 
 // 获取下拉框数据
 const getCateGory = async () => {
@@ -249,7 +254,7 @@ const resetData = () => {
 const getDetail = async (id) => {
 	const res = await viewCocTemplate({ id })
 	form.value = res
-	form.value.model =res.model? res.model.split(","):[]
+	form.value.model = res.model ? res.model.split(",") : []
 	// antdesign的日期组件需要传入moment对象
 	// 时间戳转moment对象 案例：1655366541 => 2022-02-15 10:42:21
 	// moment对象转时间戳 案例：moment("2022-02-15 10:42:21").valueOf() => 1655366541000
@@ -291,20 +296,23 @@ const handleModal = (open_type, item = {}) => {
 }
 // handleModalOk 点击确定按钮
 const handleModalOk = (value) => {
-	if (value === 'edit') {
+	if (value === "edit") {
 		// 处理时间
 		if (coc_validity_date.value.length > 0) {
 			form.value.effective_start_time = coc_validity_date.value[0].unix()
 			form.value.effective_end_time = coc_validity_date.value[1].unix()
 		}
-		if (form.update_time) { 
-			delete form.update_time
-		}
+
 		// 深拷贝
 		let params = Util.deepCopy(form.value)
-		params.model =params.model.length>0? params.model.join(","):''
+		params.model = params.model.length > 0 ? params.model.join(",") : ""
+		if (params.update_time) {
+			delete params.update_time
+		}
+		console.log("params", params)
 		addCocTemplate(params).then(() => {
 			$message.success($t("coc.coc_add_success"))
+			Core.Logger.success("参数", params, "结果", res)
 			// 关闭弹窗
 			// 刷新列表
 			getTableData()
@@ -314,8 +322,9 @@ const handleModalOk = (value) => {
 }
 // 删除按钮
 const handleDelete = (item) => {
-	deleteCocTemplate({ id: item.id }).then(() => {
+	deleteCocTemplate({ id: item.id }).then((res) => {
 		$message.success($t("coc.coc_delete_success"))
+		Core.Logger.success("参数", { id: item.id }, "结果", res)
 		// 刷新列表
 		getTableData()
 	})
@@ -360,4 +369,5 @@ const tableColumns = [
 		// 与右侧内容对齐
 		align-items: center;
 	}
-}</style>
+}
+</style>

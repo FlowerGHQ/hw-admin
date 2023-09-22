@@ -5,11 +5,6 @@
 				<div class="title-area">
 					{{ $t("coc_business.coc_certificate_list") }}
 				</div>
-				<div class="btns-area">
-					<a-button type="primary">{{
-						$t($t("coc_business.coc_batch_download"))
-					}}</a-button>
-				</div>
 			</div>
 			<!-- tabs -->
 			<div class="tabs-container colorful cancel-m-b">
@@ -29,7 +24,7 @@
 						<div class="key">{{ $t("coc_business.coc_order_number") }}：</div>
 						<div class="value">
 							<a-input
-								v-model:value="searchForm.sn"
+								v-model:value="searchForm.order_number"
 								:placeholder="$t('coc_business.coc_placeholder_order_number')"
 							></a-input>
 						</div>
@@ -38,7 +33,7 @@
 						<div class="key">{{ $t("certificate-list.coc_vin") }}：</div>
 						<div class="value">
 							<a-input
-								v-model:value="searchForm.sn"
+								v-model:value="searchForm.order_time"
 								:placeholder="$t('certificate-list.coc_inputVin')"
 							></a-input>
 						</div>
@@ -58,6 +53,11 @@
 						}}</a-button>
 					</a-col>
 				</a-row>
+			</div>
+			<div class="title-container">
+				<a-button type="primary">{{
+					$t($t("coc_business.coc_batch_download"))
+				}}</a-button>
 			</div>
 			<!-- table -->
 			<div class="table-container">
@@ -95,35 +95,41 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from "vue"
+import { ref, reactive, getCurrentInstance, onMounted } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
+const { $message } = proxy
 import { useRouter } from "vue-router"
 const router = useRouter()
-
 const COC = Core.Const.COC
-const $t = proxy.$root.$t
+const {
+	getCertificateList,
+	getCertificateDetailList,
+	downLoadCertificateDetailLis,
+	setCertificateVisible,
+} = Core.Api.COC
+
 const palrformTableColumns = ref([
 	{
 		title: "coc_business.coc_order_number",
-		dataIndex: "sn",
-		key: "sn",
+		dataIndex: "order_number",
+		key: "order_number",
 	},
 	{
 		title: "coc_business.coc_order_time",
-		dataIndex: "coc_order_time",
-		key: "coc_order_time",
+		dataIndex: "order_time",
+		key: "order_time",
 	},
 	{
 		title: "coc_business.coc_delivery_time",
-		dataIndex: "coc_delivery_time",
-		key: "coc_delivery_time",
+		dataIndex: "delivery_time",
+		key: "delivery_time",
 	},
 	{
 		title: "coc_business.coc_download_times",
-		dataIndex: "coc_download_times",
-		key: "coc_download_times",
+		dataIndex: "download_number",
+		key: "download_number",
 	},
 	{
 		title: "coc_business.coc_operation",
@@ -168,16 +174,36 @@ let channelPagination = reactive({
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
 const activeKey = ref(undefined) // tab切换
-const searchForm = ref({
-	sn: "",
-})
-
+const searchForm = ref({})
 // selectedRowKeys
 const selectedRowKeys = ref([])
 const onSelectChange = (selectedRowKeys) => {
 	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
 	selectedRowKeys = selectedRowKeys
 }
+
+const certificateList = (params) => {
+	let pagination = {
+		page: channelPagination.page,
+		page_size: channelPagination.pageSize,
+	}
+	params = {
+		...pagination,
+		...params,
+	}
+	getCertificateList(params)
+		.then((res) => {
+			Core.Logger.success("参数", params, "结果", res)
+		})
+		.catch((err) => {
+			Core.Logger.error("参数", params, "结果", err)
+			$message.error(err.message)
+		})
+}
+
+onMounted(() => {
+	certificateList()
+})
 
 /* fetch start */
 const fetchs = (params = {}) => {
@@ -213,6 +239,8 @@ const onPlaceOrderTime = (params) => {
 // 发货时间
 const onDeliveryTime = (params) => {
 	Core.Logger.log("发货时间", params)
+	searchForm.value.delivery_start_time = params.begin_time
+	searchForm.value.delivery_end_time = params.end_time
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {

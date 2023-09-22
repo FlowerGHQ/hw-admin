@@ -14,7 +14,10 @@
 			<!-- tabs -->
 			<div class="tabs-container colorful cancel-m-b">
 				<a-tabs v-model:activeKey="activeKey">
-					<a-tab-pane v-for="item of COC.TAB_TYPE" :key="item.key">
+					<a-tab-pane
+						v-for="item of COC.TAB_TYPE"
+						:key="item.key - 1 ? item.key - 1 : 0"
+					>
 						<template #tab>
 							{{ item[$i18n.locale] }}
 						</template>
@@ -29,7 +32,7 @@
 						<div class="key">{{ $t("coc_business.coc_order_number") }}：</div>
 						<div class="value">
 							<a-input
-								v-model:value="searchForm.sn"
+								v-model:value="searchForm.order_number"
 								:placeholder="$t('coc_business.coc_placeholder_order_number')"
 							></a-input>
 						</div>
@@ -50,8 +53,10 @@
 					</a-col>
 					<!-- 按钮 -->
 					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item btn-area">
-						<a-button>{{ $t("coc_business.coc_reset") }}</a-button>
-						<a-button type="primary">{{
+						<a-button @click="handleReset">{{
+							$t("coc_business.coc_reset")
+						}}</a-button>
+						<a-button type="primary" @click="handleSearch">{{
 							$t("coc_business.coc_search")
 						}}</a-button>
 					</a-col>
@@ -86,16 +91,19 @@
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
-						<template v-else-if="column.key === 'status_type'">
+						<template v-else-if="column.key === 'certificate_status'">
 							<!-- tag -->
-							<a-tag :color="COC.TAB_TYPE[record.status_type].color">
-								{{ COC.TAB_TYPE[record.status_type][$i18n.locale] }}
+							<a-tag :color="COC.TAB_TYPE[record.certificate_status + 1].color">
+								{{ COC.TAB_TYPE[record.certificate_status + 1][$i18n.locale] }}
 							</a-tag>
 						</template>
 						<!-- 客户是否可见 -->
-						<template v-else-if="column.key === 'coc_customer_visible'">
+						<template v-else-if="column.key === 'visible_flag'">
 							<!-- switch -->
-							<a-switch v-model:checked="record.coc_customer_visible" />
+							<a-switch
+								v-model:checked="record.visible_flag"
+								@change="handleSwitch"
+							/>
 						</template>
 					</template>
 				</a-table>
@@ -105,45 +113,52 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from "vue"
+import { ref, reactive, getCurrentInstance, onMounted } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
 import { useRouter } from "vue-router"
 const router = useRouter()
-
 const COC = Core.Const.COC
-const $t = proxy.$root.$t
+const { $message, $t } = proxy
+const {
+	getCertificateList,
+	getCertificateDetailList,
+	downLoadCertificateDetailLis,
+	setCertificateVisible,
+} = Core.Api.COC
+
+// 定义变量
 const palrformTableColumns = ref([
 	{
 		title: "coc_business.coc_order_number",
-		dataIndex: "sn",
-		key: "sn",
+		dataIndex: "order_number",
+		key: "order_number",
 	},
 	{
 		title: "coc_business.coc_certificate_status",
-		dataIndex: "status_type",
-		key: "status_type",
+		dataIndex: "certificate_status",
+		key: "certificate_status",
 	},
 	{
 		title: "coc_business.coc_order_time",
-		dataIndex: "coc_order_time",
-		key: "coc_order_time",
+		dataIndex: "order_time",
+		key: "order_time",
 	},
 	{
 		title: "coc_business.coc_delivery_time",
-		dataIndex: "coc_delivery_time",
-		key: "coc_delivery_time",
+		dataIndex: "delivery_time",
+		key: "delivery_time",
 	},
 	{
 		title: "coc_business.coc_download_times",
-		dataIndex: "coc_download_times",
-		key: "coc_download_times",
+		dataIndex: "download_number",
+		key: "download_number",
 	},
 	{
 		title: "coc_business.coc_customer_visible",
-		dataIndex: "coc_customer_visible",
-		key: "coc_customer_visible",
+		dataIndex: "visible_flag",
+		key: "visible_flag",
 	},
 	{
 		title: "coc_business.coc_operation",
@@ -151,35 +166,7 @@ const palrformTableColumns = ref([
 		key: "operation",
 	},
 ])
-const palrformTableData = ref([
-	{
-		id: 1,
-		sn: "1234567890",
-		status_type: "2",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: true,
-		coc_download_times: "100",
-	},
-	{
-		id: 2,
-		sn: "1234567890",
-		status_type: "3",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: false,
-		coc_download_times: "100",
-	},
-	{
-		id: 3,
-		sn: "1234567890",
-		status_type: "4",
-		coc_order_time: "2021-08-09 12:00:00",
-		coc_delivery_time: "2021-08-09 12:00:00",
-		coc_customer_visible: true,
-		coc_download_times: "100",
-	},
-])
+const palrformTableData = ref([])
 let channelPagination = reactive({
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
@@ -191,26 +178,60 @@ let channelPagination = reactive({
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
 const activeKey = ref(undefined) // tab切换
-const searchForm = ref({
-	sn: "",
-})
-
+const searchForm = ref({})
 const selectedRowKeyArr = ref([]) // 选中的哪些项
-
-
 /* fetch start */
-const fetchs = (params = {}) => {
-	let obj = {
-		...params,
+
+// 请求证书列表
+const certificateList = (searchForm) => {
+	let pagination = {
+		page: channelPagination.page,
+		page_size: channelPagination.pageSize,
 	}
-	Core.Api.XXX(obj)
+	let params = {
+		...pagination,
+		...searchForm,
+	}
+	getCertificateList(params)
 		.then((res) => {
-			Core.Logger.success("参数", obj, "结果", res)
+			console.log("res", res)
+			channelPagination.total = res.total
+			palrformTableData.value = res.list
+			Core.Logger.success("参数", searchForm, "结果", res)
 		})
 		.catch((err) => {
-			Core.Logger.error("参数", obj, "结果", err)
+			Core.Logger.error("参数", searchForm, "结果", err)
+			$message.error(err.message)
 		})
 }
+const handleSearch = () => {
+	let params = {
+		...searchForm.value,
+		certificate_status: activeKey.value,
+	}
+	certificateList(params)
+}
+const handleReset = () => {
+	searchForm.value = {}
+	activeKey.value = 0
+	certificateList()
+}
+// table chang 分页事件
+const handleTableChange = (pagination, filters, sorter) => {
+	const pager = { ...channelPagination }
+	pager.current = pagination.current
+	if (pagination.pageSize !== channelPagination.pageSize) {
+		pager.current = 1
+		pager.pageSize = pagination.pageSize
+	}
+	channelPagination = pager
+	certificateList()
+}
+const handleSwitch = (checked, record) => {}
+
+onMounted(() => {
+	certificateList()
+})
 
 /* fetch end */
 
@@ -228,10 +249,14 @@ const onCertificate = () => {}
 // 下单时间
 const onPlaceOrderTime = (params) => {
 	Core.Logger.log("下单时间", params)
+	searchForm.value.order_start_time = params.begin_time
+	searchForm.value.order_end_time = params.end_time
 }
 // 发货时间
 const onDeliveryTime = (params) => {
 	Core.Logger.log("发货时间", params)
+	searchForm.value.delivery_start_time = params.begin_time
+	searchForm.value.delivery_end_time = params.end_time
 }
 // 选中项的事件
 const onSelectChange = (selectedRowKeys) => {
@@ -239,26 +264,12 @@ const onSelectChange = (selectedRowKeys) => {
 	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
 	selectedRowKeyArr.value = selectedRowKeys
 }
-// table chang 分页事件
-const handleTableChange = (pagination, filters, sorter) => {
-	const pager = { ...channelPagination }
-	pager.current = pagination.current
-	if (pagination.pageSize !== channelPagination.pageSize) {
-		pager.current = 1
-		pager.pageSize = pagination.pageSize
-	}
-	channelPagination = pager
-	fetchs({
-		page_size: channelPagination.pageSize,
-		page: channelPagination.page,
-	})
-}
+
 /* methods end */
 </script>
 
 <style lang="less" scoped>
 // 获取minxin
-@import "@/assets/styles/mixin.less";
 .distributor-coc-list {
 	.btn-area {
 		.fj(flex-end);

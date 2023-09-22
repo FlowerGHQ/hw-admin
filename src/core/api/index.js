@@ -844,6 +844,10 @@ const apiList = {
         viewCocTemplate: ['PostJson', 'crm-coc-template/detail'], // 查看模板
         deleteCocTemplate: ['PostJson', 'crm-coc-template/delete'], // 删除模板
         getCateGoryList: ['PostJson', 'crm-coc-template/item-category-name'], // 车型名称
+        getCertificateList: ['PostJson', 'crm-coc-certificate/list'], // 证书列表
+        getCertificateDetailList: ['PostJson', 'crm-coc-certificate/detail/list'], // 证书清单列表
+        downLoadCertificateDetailLis: ['PostJson', 'crm-coc-certificate/download'], // 证书清单列表下载
+        setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
     }
 };
 

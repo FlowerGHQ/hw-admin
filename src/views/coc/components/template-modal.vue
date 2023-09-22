@@ -2,7 +2,7 @@
  * @Author: douzhiyuan
  * @Date: 2023-09-20 09:10:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-09-22 10:25:54
+ * @LastEditTime: 2023-09-22 10:26:55
  * @Description: 请填写简介
 -->
 <template>
@@ -25,9 +25,7 @@
 	</div>
 </template>
 <script setup>
-import {  getCurrentInstance ,useAttrs,defineEmits } from "vue"
-const { ctx } = getCurrentInstance()
-const { $t } = ctx.$root
+import {  defineEmits } from "vue"
 const props = defineProps({
 	visible: {
 		type: Boolean,
@@ -45,7 +43,6 @@ const props = defineProps({
 const $emit = defineEmits(["update:visible", "handleOk"])
 // modal
 const handleOk = () => {
-	console.log("handleOk",props.formdisabled)
 	if (!props.formdisabled) {
 		$emit('handleOk','edit') //编辑
 	} else { 
