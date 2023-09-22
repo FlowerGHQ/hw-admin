@@ -218,6 +218,8 @@ const handleReset = () => {
 	searchForm.motor_uid = ""
 	searchForm.order_number = route.query.order_number
 	searchForm.vehicle_uid = ""
+	channelPagination.page = 1
+	channelPagination.pageSize = 20
 	getCerList()
 }
 const handleSearch = () => {

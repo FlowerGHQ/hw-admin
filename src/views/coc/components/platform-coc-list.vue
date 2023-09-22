@@ -221,17 +221,17 @@ const handleSearch = () => {
 const handleReset = () => {
 	searchForm.value = {}
 	activeKey.value = 0
+	channelPagination.page = 1
+	channelPagination.pageSize = 20
 	certificateList()
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
-	const pager = { ...channelPagination }
-	pager.current = pagination.current
+	channelPagination.page = pagination.current
 	if (pagination.pageSize !== channelPagination.pageSize) {
-		pager.current = 1
-		pager.pageSize = pagination.pageSize
+		channelPagination.page = 1
+		channelPagination.pageSize = pagination.pageSize
 	}
-	channelPagination = pager
 	certificateList()
 }
 const handleSwitch = (record) => {
