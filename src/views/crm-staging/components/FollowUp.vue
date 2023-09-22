@@ -143,7 +143,6 @@ const followObj = reactive(Object.assign({}, initialObject))
 const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
-  console.log('0000099999999999');
   isShowFollow.value = true;
   resetFollow();
 }

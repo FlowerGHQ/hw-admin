@@ -63,7 +63,6 @@ const getData = () => {
 }
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
-  console.log('000/////////////////////////////');
   if (!userId.value) return;
   if(JSON.stringify(params)=='{}'){
     Object.assign(pagination, {
