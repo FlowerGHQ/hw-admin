@@ -782,7 +782,6 @@ const apiList = {
         carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
         customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
         transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
-
         employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
     },
 
@@ -846,8 +845,9 @@ const apiList = {
         getCateGoryList: ['PostJson', 'crm-coc-template/item-category-name'], // 车型名称
         getCertificateList: ['PostJson', 'crm-coc-certificate/list'], // 证书列表
         getCertificateDetailList: ['PostJson', 'crm-coc-certificate/detail/list'], // 证书清单列表
-        downLoadCertificateDetailLis: ['PostJson', 'crm-coc-certificate/download'], // 证书清单列表下载
+        downLoadCertificateDetailLis: ['BlobPost', 'crm-coc-certificate/download'], // 证书清单列表下载
         setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
+        getCertificatNumber: ['PostJson', 'crm-coc-certificate/detail/statistics'], // 获取证书编号
     }
 };
 

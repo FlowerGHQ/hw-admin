@@ -98,6 +98,12 @@
 								{{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
 							</a-tag>
 						</template>
+						<template v-else-if="column.key === 'order_time'">
+							<span>{{ Util.timeFormat(record.order_time) }}</span>
+						</template>
+						<template v-else-if="column.key === 'delivery_time'">
+							<span>{{ Util.timeFormat(record.delivery_time) }}</span>
+						</template>
 						<!-- 客户是否可见 -->
 						<template v-else-if="column.key === 'visible_flag'">
 							<!-- switch -->
@@ -118,13 +124,14 @@ import { ref, reactive, getCurrentInstance, onMounted } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
+import fileSave from "@/core/fileSave"
 import { useRouter } from "vue-router"
 const router = useRouter()
 const COC = Core.Const.COC
+const Util = Core.Util
 const { $message, $t } = proxy
 const {
 	getCertificateList,
-	getCertificateDetailList,
 	downLoadCertificateDetailLis,
 	setCertificateVisible,
 } = Core.Api.COC
@@ -254,6 +261,12 @@ const handleTabs = () => {
 	searchForm.value.certificate_status = activeKey.value
 	certificateList()
 }
+// 选中项的事件
+const onSelectChange = (selectedRowKeys) => {
+	// 注意selectedRowKeyArr尽量不要跟上面selectedRowKeys名称一样
+	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
+	selectedRowKeyArr.value = selectedRowKeys
+}
 
 onMounted(() => {
 	certificateList()
@@ -264,9 +277,23 @@ onMounted(() => {
 /* methods start */
 // 下载
 const onDownLoad = (record) => {
-	console.log("handleDownload record:", record)
-	let url = Core.Const.NET.FILE_URL_PREFIX + record.path
-	window.open(url, "_self")
+	downLoadCertificateDetailLis({
+		download_list: [814],
+		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
+		source_type: 2,
+	})
+		.then((res) => {
+			// /zip，doc，docx
+
+			const name = res.headers["file-name"]
+				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
+				: "未命名"
+			fileSave.getZip(res.data, name)
+		})
+		.catch((err) => {
+			console.log("err", err)
+			Core.Logger.error("参数", {}, "结果", JSON.stringify(err))
+		})
 }
 // 查看
 const onView = (record) => {
@@ -291,12 +318,6 @@ const onDeliveryTime = (params) => {
 	Core.Logger.log("发货时间", params)
 	searchForm.value.delivery_start_time = params.begin_time
 	searchForm.value.delivery_end_time = params.end_time
-}
-// 选中项的事件
-const onSelectChange = (selectedRowKeys) => {
-	// 注意selectedRowKeyArr尽量不要跟上面selectedRowKeys名称一样
-	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
-	selectedRowKeyArr.value = selectedRowKeys
 }
 
 /* methods end */

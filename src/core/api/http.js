@@ -75,7 +75,10 @@ instance.interceptors.response.use(
             if (res.data.code === 0) {
                 return res.data.data;
                 // return Promise.resolve(res.data.data);
-            } else {
+            } else if (res.data instanceof Blob) {
+                return res;
+            }
+            else {
                 errorHandle(res.data.code, res.data.message);
                 return Promise.reject(res);
             }

@@ -2344,6 +2344,10 @@ let Const = {
             '1': { key: 1, zh: "已生成", en: 'Generated', color: 'green' },
             '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: 'orange' },
             '3': { key: 3, zh: "未生成", en: 'Not Generate', color: 'default' },
+        },
+        DOWN_LOAD_TYPE: {
+            "1": { key: 1, type: '证书列表' },
+            "2": { key: 2, type: '证书详情' },
         }
     }
 };

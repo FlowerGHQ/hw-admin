@@ -158,7 +158,13 @@
 						:headers="upload.headers"
 						:data="upload.data"
 						:max-count="1"
+						:show-upload-list="{
+							showPreviewIcon: false,
+							showRemoveIcon: true,
+							showDownloadIcon: true,
+						}"
 						:before-upload="handleFileCheck"
+						@download="handleFileDownload"
 						@change="handleFileChange"
 					>
 						<div>
@@ -188,12 +194,10 @@ const {
 import { useTable } from "@/hooks/useTable"
 import EditModal from "./template-modal.vue"
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue"
-import { Upload } from 'ant-design-vue';
 import { ref, getCurrentInstance, onMounted, reactive, toRefs } from "vue"
 const { ctx } = getCurrentInstance()
 const { $t, $message, $confirm } = ctx.$root
 
-const uploader = ref(null)
 // 定义常量
 const rowId = ref(null)
 // 传递的props
@@ -216,7 +220,7 @@ const modelForm = reactive({
 	create_time: "",
 })
 const upload = reactive({
-	action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+	action: Core.Const.NET.FILE_URL_PREFIX,
 	fileList: [],
 	headers: {
 		ContentType: false,
@@ -264,7 +268,7 @@ const handleFileCheck = (file) => {
 		// 阻止上传并阻止进入列表
 		console.log("阻止上传并阻止进入列表")
 		btnLoading.value = false
-		return false || Upload.LIST_IGNORE
+		return false
 	}
 	return true
 }
@@ -280,6 +284,7 @@ const handleFileChange = ({ file, fileList }) => {
 		modelForm.type = upload.data.type
 		modelForm.user_name = Core.Data.getUser().name
 		modelForm.create_time = new Date().getTime() / 1000
+		console.log("modelForm", modelForm)
 	}
 	btnLoading.value = false
 	upload.fileList = fileList
@@ -318,6 +323,15 @@ const getDetail = async (id) => {
 	} else {
 		coc_validity_date.value = []
 	}
+	// 传递回显文件
+	upload.fileList = [
+		{
+			uid: "-1",
+			name: res.name,
+			status: "done",
+			url: res.file_url,
+		},
+	]
 }
 const saveCocTemplate = (params, type = "") => {
 	addCocTemplate(params).then((res) => {
@@ -329,7 +343,11 @@ const saveCocTemplate = (params, type = "") => {
 		getTableData()
 	})
 }
-
+const handleFileDownload = (file) => {
+	let url = Core.Const.NET.FILE_URL_PREFIX + file.url
+	console.log("url", url)
+	window.open(url, "_self")
+}
 // 点击不同的按钮
 const handleModal = (open_type, item = {}) => {
 	if (open_type === "add") {
@@ -360,7 +378,7 @@ const handleModalOk = (value) => {
 	// 深拷贝
 	let params = Util.deepCopy(form.value)
 	params.model = params.model.length > 0 ? params.model.join(",") : ""
-	params.file_url = modelForm.path
+	params.file_url = upload.action + "/" + modelForm.path
 	if (params.update_time) {
 		delete params.update_time
 	}

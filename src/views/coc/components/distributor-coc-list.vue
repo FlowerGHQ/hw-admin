@@ -5,21 +5,6 @@
 				<div class="title-area">
 					{{ $t("coc_business.coc_certificate_list") }}
 				</div>
-				<div class="btns-area">
-					<a-button type="primary">{{
-						$t($t("coc_business.coc_batch_download"))
-					}}</a-button>
-				</div>
-			</div>
-			<!-- tabs -->
-			<div class="tabs-container colorful cancel-m-b">
-				<a-tabs v-model:activeKey="activeKey">
-					<a-tab-pane v-for="item of COC.TAB_TYPE" :key="item.key">
-						<template #tab>
-							{{ item[$i18n.locale] }}
-						</template>
-					</a-tab-pane>
-				</a-tabs>
 			</div>
 			<!-- search -->
 			<div class="search">
@@ -59,6 +44,11 @@
 					</a-col>
 				</a-row>
 			</div>
+			<div class="title-container btns-area">
+				<a-button type="primary">{{
+					$t($t("coc_business.coc_batch_download"))
+				}}</a-button>
+			</div>
 			<!-- table -->
 			<div class="table-container">
 				<a-table
@@ -83,12 +73,15 @@
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("coc_business.coc_download") }}</a-button
 							>
-							<a-button type="link" @click="onView">{{
-								$t("coc_business.coc_view")
-							}}</a-button>
-							<a-button type="link" @click="onCertificate">{{
+							<a-button type="link" @click="onCertificate(record)">{{
 								$t("coc_business.coc_certificate_inventory")
 							}}</a-button>
+						</template>
+						<template v-else-if="column.key === 'order_time'">
+							<span>{{ Util.timeFormat(record.order_time) }}</span>
+						</template>
+						<template v-else-if="column.key === 'delivery_time'">
+							<span>{{ Util.timeFormat(record.delivery_time) }}</span>
 						</template>
 						<!-- 状态 -->
 						<template v-else-if="column.key === 'certificate_status'">
@@ -124,6 +117,7 @@ const { proxy } = getCurrentInstance()
 import { useRouter } from "vue-router"
 const router = useRouter()
 const COC = Core.Const.COC
+const Util = Core.Util
 const { $message, $t } = proxy
 const {
 	getCertificateList,
@@ -181,7 +175,6 @@ let channelPagination = reactive({
 	showTotal: (total) =>
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
-const activeKey = ref(undefined) // tab切换
 const searchForm = ref({})
 const selectedRowKeyArr = ref([]) // 选中的哪些项
 /* fetch start */
@@ -214,13 +207,11 @@ const certificateList = (searchForm) => {
 const handleSearch = () => {
 	let params = {
 		...searchForm.value,
-		certificate_status: activeKey.value,
 	}
 	certificateList(params)
 }
 const handleReset = () => {
 	searchForm.value = {}
-	activeKey.value = 0
 	channelPagination.page = 1
 	channelPagination.pageSize = 20
 	certificateList()
@@ -265,13 +256,18 @@ const onDownLoad = (record) => {
 	window.open(url, "_self")
 }
 // 查看
-const onView = () => {
+// 证书清单
+const onCertificate = (record) => {
+	let isDistributor =
+		Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR
 	router.push({
-		path: "/coc/certificate-list",
+		path: `/coc/certificate-list`,
+		query: {
+			isDistributor: isDistributor,
+			order_number: record.order_number,
+		},
 	})
 }
-// 证书清单
-const onCertificate = () => {}
 // 下单时间
 const onPlaceOrderTime = (params) => {
 	Core.Logger.log("下单时间", params)

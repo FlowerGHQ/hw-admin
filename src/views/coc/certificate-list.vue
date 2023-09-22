@@ -5,17 +5,14 @@
 				<div class="title-area">
 					{{ $t("certificate-list.coc_certificateList") }}
 				</div>
-				<div class="btns-area">
-					<a-button type="primary">{{
-						$t("certificate-list.coc_batchDownload")
-					}}</a-button>
-				</div>
 			</div>
 			<!-- tabs -->
-			<div class="tabs-container colorful cancel-m-b">
+			<div class="tabs-container colorful cancel-m-b" v-if="!distributor">
 				<a-tabs v-model:activeKey="activeKey" @change="handleTabs">
 					<a-tab-pane v-for="item of tab_type" :key="item.key">
-						<template #tab> {{ item[$i18n.locale] }}(300) </template>
+						<template #tab>
+							{{ item[$i18n.locale] }}({{ numberForm[item.key].number }})
+						</template>
 					</a-tab-pane>
 				</a-tabs>
 			</div>
@@ -59,6 +56,11 @@
 					</a-col>
 				</a-row>
 			</div>
+			<div class="btns-area title-container">
+				<a-button type="primary">{{
+					$t("certificate-list.coc_batchDownload")
+				}}</a-button>
+			</div>
 			<!-- table -->
 			<div class="table-container">
 				<a-table
@@ -66,6 +68,10 @@
 					:columns="palrformTableColumns"
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
+					:row-selection="{
+						selectedRowKeys: selectedRowKeyArr,
+						onChange: onSelectChange,
+					}"
 					@change="handleTableChange"
 				>
 					<template #headerCell="{ title }">
@@ -82,6 +88,12 @@
 							<a-button type="link" @click="onView">{{
 								$t("certificate-list.coc_view")
 							}}</a-button>
+						</template>
+						<template v-else-if="column.key === 'order_time'">
+							<span>{{ Util.timeFormat(record.order_time) }}</span>
+						</template>
+						<template v-else-if="column.key === 'delivery_time'">
+							<span>{{ Util.timeFormat(record.delivery_time) }}</span>
 						</template>
 						<!-- 状态 -->
 						<template
@@ -100,12 +112,20 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, computed, onMounted } from "vue"
+import {
+	ref,
+	reactive,
+	getCurrentInstance,
+	computed,
+	onMounted,
+	toRefs,
+} from "vue"
 import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
+const Util = Core.Util
 const { $t } = proxy
 const { TAB_TYPE } = COC
 // 获取路由参数
@@ -113,8 +133,10 @@ const route = useRoute()
 const { query } = route
 const { isDistributor, order_number } = query
 const distributor = ref(isDistributor === "true") // 是否是经销商
-const { getCertificateDetailList } = Core.Api.COC
+const { getCertificateDetailList, getCertificatNumber } = Core.Api.COC
 const activeKey = ref(undefined) // tab切换
+const selectedRowKeyArr = ref([]) // 选中的哪些项
+
 const searchForm = reactive({
 	certificate_status: 0,
 	delivery_end_time: "",
@@ -124,6 +146,11 @@ const searchForm = reactive({
 	vehicle_uid: "",
 })
 const palrformTableData = ref([])
+const numberForm = reactive({
+	0: { number: 0 },
+	1: { number: 0 },
+	3: { number: 0 },
+})
 let channelPagination = reactive({
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
@@ -134,7 +161,6 @@ let channelPagination = reactive({
 	showTotal: (total) =>
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
-
 const palrformTableColumns = ref([
 	{
 		title: "certificate-list.coc_orderNumber",
@@ -187,10 +213,8 @@ const palrformTableColumns = ref([
 		key: "coc_operation",
 	},
 ])
-
 // 获取列表
 const getCerList = (from = {}) => {
-	console.log("channelPagination", channelPagination)
 	let params = {
 		...from,
 		...searchForm,
@@ -207,19 +231,36 @@ const getCerList = (from = {}) => {
 			Core.Logger.error("参数", from, "结果", err)
 		})
 }
+// 筛选type
 const tab_type = computed(() => {
 	// 过滤
 	return Object.values(TAB_TYPE).filter((item) => item.key !== 2)
 })
+// 获取数量信息
+const getAllNumer = () => {
+	getCertificatNumber()
+		.then((res) => {
+			numberForm[0].number = res?.total_num || 0
+			numberForm[1].number = res?.generated_num || 0
+			numberForm[3].number = res?.ungenerated_num || 0
+		})
+		.catch((err) => {
+			Core.Logger.error("参数", {}, "结果", err)
+		})
+}
 const handleReset = () => {
+	console.log("handleReset")
 	searchForm.certificate_status = 0
 	searchForm.delivery_end_time = ""
 	searchForm.delivery_start_time = ""
 	searchForm.motor_uid = ""
 	searchForm.order_number = route.query.order_number
 	searchForm.vehicle_uid = ""
-	channelPagination.page = 1
-	channelPagination.pageSize = 20
+	// 重置分页，数据更新但视图不更新，原因是因为reactive的原因，所以需要重新赋值，可以用toRefs解决
+
+	const { page, pageSize } = toRefs(channelPagination)
+	page.value = 1
+	pageSize.value = 20
 	getCerList()
 }
 const handleSearch = () => {
@@ -260,11 +301,21 @@ const onDeliveryTime = (params) => {
 	searchForm.delivery_start_time = params.begin_time
 	searchForm.delivery_end_time = params.end_time
 }
+// 选中项的事件
+// 选中项的事件
+const onSelectChange = (selectedRowKeys) => {
+	// 注意selectedRowKeyArr尽量不要跟上面selectedRowKeys名称一样
+	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
+	selectedRowKeyArr.value = selectedRowKeys
+}
 
 onMounted(() => {
 	searchForm.order_number = order_number
 	let params = Core.Util.deepCopy(searchForm)
 	getCerList(params)
+	if (!distributor) {
+		getAllNumer()
+	}
 })
 </script>
 
