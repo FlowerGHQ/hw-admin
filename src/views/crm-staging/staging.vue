@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="message-item">
                                     <span class="phone">{{ item.phone }}</span>
-                                    <span class="time">{{ dayjs.unix(item.last_track_time).format('MM-DD HH:mm') }}</span>
+                                    <span class="time">{{ $Util.timeFilter(item.create_time, 2) || '-' }}</span>
                                 </div>
                                 <div class="labels">
                                     <my-tag class="message-label" v-if="item.pre_order_status === 1">已支付意向金</my-tag>
@@ -179,8 +179,8 @@ const searchMes = reactive({})
 const searchEnter = (value) => {
     Object.assign(searchMes, value)
     if (searchMes.time && searchMes.time.length > 0) {
-        searchMes.begin_time = dayjs(searchMes.time[0]).valueOf()
-        searchMes.end_time = dayjs(searchMes.time[1]).valueOf()
+        searchMes.begin_time = parseInt(dayjs(searchMes.time[0]).valueOf() / 1000)
+        searchMes.end_time = parseInt(dayjs(searchMes.time[1]).valueOf() / 1000)
     }
     getTaskNum({ page: 1 }, true)
 }
