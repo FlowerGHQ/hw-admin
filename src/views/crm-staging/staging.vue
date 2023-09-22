@@ -3,7 +3,7 @@
         <!-- 左边切换栏 -->
         <div class="menu-left">
             <div class="menu-left-item" :class="[menuLeftIndex === index ? 'selected' : '']" v-for="(item, index) in menuLeft" :key="index" @click="change(index)">
-                <div class="menu-left-item-name">{{ item.name }}</div>
+                <div class="menu-left-item-name" v-html="item.name"></div>
                 <div class="menu-left-item-num">{{ `${item.complete}/${item.total}` }}</div>
             </div>
         </div>
@@ -49,8 +49,8 @@
                                 <div class="labels">
                                     <my-tag class="message-label" v-if="item.pre_order_status === 1">已支付意向金</my-tag>
                                     <my-tag class="message-label" v-if="item.pre_order_status === 1">已试驾</my-tag>
-                                    <div v-for="(item_label, index) in item.label_group_list" v-if="item.label_group_list.length > 0">
-                                        <my-tag :color="Static.TAG_TYPE_MAP[item_label.type]?.color" :bgColor="Static.TAG_TYPE_MAP[item_label.type]?.bgColor" class="message-label" v-for="(label, index) in item_label.label_list">{{ label.name }}</my-tag>
+                                    <div v-for="(item_label, index) in item.label_group_list" v-if="item.label_group_list.length > 0" class="label-item">
+                                        <my-tag :color="Static.TAG_TYPE_MAP[item_label.type]?.color" :bgColor="Static.TAG_TYPE_MAP[item_label.type]?.bgColor" class="message-label">{{ item_label.name }}</my-tag>
                                     </div>
                                     <div v-if="item.isSpill"> ... </div>
                                 </div>
@@ -91,7 +91,7 @@
                                     </div>
                                 </a-tab-pane>
                                 <a-tab-pane key="6" :tab="`日志(${totals['6']})`" forceRender>
-                                    <div class="tab-body" @scroll="handleScroll">
+                                    <div class="tab-body" @scroll="(e) => handleScroll(e, 'log')">
                                         <LogSteps ref="tabPane6" :list="logList"/>
                                     </div>
                                 </a-tab-pane>
@@ -140,6 +140,7 @@ import dayjs from "dayjs";
 
 const route = useRoute()
 onMounted(() => {    
+    getAmountList()
     getTaskNum()
     getAllChildData()
 })
@@ -150,7 +151,7 @@ const bodyStyle = ref({ padding: 0 })
 // 左边切换栏
 const menuLeftIndex = ref(0);
 const menuLeft = [
-    { name: '信息缺失', complete: 1, total: 2, status_mapping: 1 },
+    { name: '信息<br>缺失', complete: 1, total: 2, status_mapping: 1 },
     { name: '跟进', complete: 1, total: 2, status_mapping: 3 },
 ];
 const menuLeftRender = computed(() => {
@@ -181,6 +182,9 @@ const searchEnter = (value) => {
     if (searchMes.time && searchMes.time.length > 0) {
         searchMes.begin_time = parseInt(dayjs(searchMes.time[0]).valueOf() / 1000)
         searchMes.end_time = parseInt(dayjs(searchMes.time[1]).valueOf() / 1000)
+    } else {
+        searchMes.begin_time = undefined
+        searchMes.end_time = undefined
     }
     getTaskNum({ page: 1 }, true)
 }
@@ -236,6 +240,21 @@ const changeTask = (index) => {
     isTop.value = taskList.value[index].flag_top === 1 ? true : false
     getAllChildData()
 }
+const getAmountList = () => {
+    Core.Api.CustomService.amountList().then(res=>{
+		Core.Logger.success('getAmountList',res);
+        res.forEach(item => {
+            menuLeft.forEach(menuItem => {
+                if (menuItem.status_mapping === item.status_mapping) {
+                    menuItem.complete = item.deal_amount
+                    menuItem.total = item.total
+                }
+            }) 
+        })
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
 const getTaskNum = (params = {}, isSearch = false) => {
     const obj = {
         status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
@@ -254,6 +273,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
         // 是否是搜索的
         if (isSearch) {
             taskList.value = []
+            userPagination.page = 1
         }
         taskList.value = taskList.value.concat(res.list)
         filterData(taskList.value)
@@ -278,13 +298,18 @@ const filterData = (data) => {
             // 已试驾状态
             count--
         }
+        let list = []
         // 这里这么写的原因是页面只是展示三个标签(但前面的两个判断是本来就有的标签)
-        item.label_group_list.forEach(label => {
-            if (label.label_list.length && count !== 0) {
-                label.label_list = label.label_list.slice(0, count)
-                count -= label.label_list.length
-            }                    
-        })
+        for (let label of item.label_group_list) {
+            if (!label.label_list) return
+            for (let labelItem of label.label_list) {
+                if (count !== 0) {
+                    count--
+                    list.push(labelItem)
+                }
+            }
+        }
+        item.label_group_list = list
         // Core.Logger.log("每一项的次数", count)
         // 是否显示后面的 ... 三个点
         item.isSpill = count === 0
@@ -313,6 +338,7 @@ const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
     userId.value = taskList.value[taskIndex.value].id
+    isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
     getAllChildData()
     // 下一步 同步滚动条
     const taskEl = document.querySelector('#taskBody')
@@ -347,6 +373,7 @@ const getLogListFetch = (params = {} , isSearch = false) => {
 		// 是否是搜索的
 		if (isSearch) {
             logList.value = []
+            logPagination.page = 1
         }
 
         logList.value = logList.value.concat(res.list)
@@ -424,7 +451,8 @@ const getAssetURL = (image) => {
 // 监听滚轮事件
 const handleScroll = (e, type) => {
     const element = e.target;
-    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+    console.log(Math.ceil(element.scrollTop + element.clientHeight), element.scrollHeight)
+    if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
         Core.Logger.log("滑到底部")
         switch (type) {
             case 'task':
@@ -436,7 +464,7 @@ const handleScroll = (e, type) => {
             case 'log':
                 if (logPagination.page < logPagination.total_page) {
                     logPagination.page++
-                    getTaskNum({ page: logPagination.page })
+                    getLogListFetch({ page: logPagination.page })
                 }
                 break;
         
@@ -463,7 +491,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
         background: #FFF;
         &-item {
             text-align: center;
-            width: 56px;
+            width: 100%;
             border-radius: 5px;
             background: #F2F3F5;
             padding: 11px 8px;
@@ -506,11 +534,10 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 position: relative;
                 background-color: #fff;
                 border-radius: 6px;
-                padding: 20px;
                 margin-right: 16px;
                 overflow: hidden;
                 &-top {
-                    margin-bottom: 15px;
+                    padding: 20px 20px 15px 20px;
                     width: 100%;
                     display: flex;
                     justify-content: space-between;
@@ -563,7 +590,8 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 }
                 &-body {
                     overflow-y: auto;
-                    padding-right: 6px;
+                    padding: 0 6px 20px 20px;
+                    margin-right: 6px;
                     /* 自定义滚动条样式 */
                     
                     &-item {
@@ -638,6 +666,9 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                             .labels {
                                 display: flex;
                                 align-items: center;
+                                .label-item {
+                                    display: flex;
+                                }
                             }
                         }
                     }

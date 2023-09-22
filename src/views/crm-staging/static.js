@@ -419,6 +419,7 @@ const Static = {
 	},
     // 订单状态
 	ORDER_STATUS_MAP: {
+		'0': { key: '', text: '未下单', border_color: '#FFE4BA', color: '#FF7D00' },
 		'100': { key: '100', text: '待支付', border_color: '#FFE4BA', color: '#FF7D00' },
 		'200': { key: '200', text: '已支付', border_color: '#00B42A33', color: '#00B42A' },
 		'-200': { key: '-200', text: '已取消', border_color: '#E5E6EB', color: '#86909C' },
@@ -459,6 +460,7 @@ const Static = {
         '40': { key: '未出席', value: 40, color: '#F53F3F', borderColor: '#F53F3F4D' },
         '50': { key: '已取消', value: 50, color: '#86909C', borderColor: '#E5E6EB' },
     },
+    hitBottomHeight: 10,
     defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
 }
 export default Static
