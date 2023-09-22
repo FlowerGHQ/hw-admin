@@ -102,7 +102,6 @@ export default {
             this.boStatisticsChart = chart
         },
         async getDailyVotingChartData() {
-            console.log(111)
             try {
                 let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
                 const data = [
@@ -144,7 +143,6 @@ export default {
                     };
                     transformedData.push(countData, voteCountData);
                 });
-                console.log('transformedData yxy', transformedData)
                 this.isEmpty = transformedData.every(item => {
                     return item.value === 0
                 })

@@ -16,7 +16,7 @@
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
                         <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ (item.percent) * 100 + '%' }}</div>
+                    <div class="legend-value">{{ ((item.percent) * 100).toFixed(0) + '%' }}</div>
                 </div>
             </div>
             <div v-if="isEmpty" class="empty-wrap">
@@ -238,38 +238,39 @@ export default {
 
                 // 遍历后端返回的数据
                 res.forEach((entry) => {
-                      const { source_list } = entry;
+                    const { source_list } = entry;
 
-                      source_list.forEach((source) => {
+                    source_list.forEach((source) => {
                         const { code, vote_count } = source;
 
                         // 如果颜色已存在于 transformedData 中，则累加投票数量
                         if (transformedData[code]) {
-                          transformedData[code].count += vote_count;
+                            transformedData[code].count += vote_count;
                         } else {
-                          // 如果颜色不存在于 transformedData 中，则创建新的对象
-                          transformedData[code] = {
-                            count: vote_count,
-                            item: Core.Util.voteResultFilter(code),
-                            percent: 0, // 初始百分比值为 0
-                          };
+                            // 如果颜色不存在于 transformedData 中，则创建新的对象
+                            transformedData[code] = {
+                                count: vote_count,
+                                item: Core.Util.voteResultFilter(code),
+                                percent: 0, // 初始百分比值为 0
+                            };
                         }
-                      });
+                    });
                 });
 
                 // 计算总投票数量的和
                 const totalCount = Object.values(transformedData).reduce(
-                  (sum, { count }) => sum + count,
-                  0
+                    (sum, { count }) => sum + count,
+                    0
                 );
 
                 // 计算每个颜色的百分比并更新 transformedData
                 Object.values(transformedData).forEach((entry) => {
-                  entry.percent = Number((entry.count / totalCount).toFixed(2));
+                    entry.percent = Number((entry.count / totalCount).toFixed(2));
                 });
 
                 // 转换后的数据存储在 transformedData 中
                 const finalData = Object.values(transformedData);
+                console.log('finalData', finalData);
                 this.legendList = Core.Util.deepCopy(finalData).sort((a, b) => b.count - a.count)
                 const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {

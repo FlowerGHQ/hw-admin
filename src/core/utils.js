@@ -1313,7 +1313,7 @@ const Util = {
         if (!Number(denominator)) return 0 + type
         let result = Number(numerator) / Number(denominator) * 100 + type
         return result
-    }
+    },
     /* ======== 百分比 ========== */
     /* ======== 投票结果 ========== */
     voteResultFilter(val, to='text') {
