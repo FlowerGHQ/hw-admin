@@ -306,4 +306,9 @@ const getPeopleList = () => {
       font-size: 12px;
       font-weight: 400;
   }
+  .form-item {
+    .key {
+      width: 110px;
+    }
+  }
 </style>

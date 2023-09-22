@@ -2387,11 +2387,11 @@ let Const = {
         COMMUNICATE_TYPE: {
             "20": { key: 20, value: 20, zh: '电话沟通' },
             "10": { key: 10, value: 10, zh: '面谈' },
-            "30": { key: 30, value: 30, zh: '未沟通' },
+            "30": { key: 30, value: 30, zh: '未打通' },
         },
         // 跟进类型
         FOLLOW_TYPE: {
-            "10": { key: 10, value: 10, zh: '信息缺失', background: '#FFECE8', color:'#F53F3F', borderC:'#FCB9B6' },
+            "10": { key: 10, value: 10, zh: '补充信息缺失', background: '#FFECE8', color:'#F53F3F', borderC:'#FCB9B6' },
             "20": { key: 20, value: 20, zh: '预约试驾', background: '#E6EFFF', color:'#3381FF', borderC:'#A1C5FF'  },
             "30": { key: 30, value: 30, zh: '跟进', background: '#E8FFEA', color:'#00B42A', borderC:'#A3E9B1'  },
         },           
@@ -2417,6 +2417,7 @@ let Const = {
             'intent_vehidle_model': { key: 'intent_vehidle_model',text: '意向车型' },
             'intent_vehidle_model': { key: 'intent_vehidle_model',text: '车型' },
             'gender': { key: 'gender',text: '性别' },
+            'intention': { key: 'intention',text: '意向度' },
         },
         INTENTION: {
             TYPE_LIST: [
@@ -2424,7 +2425,13 @@ let Const = {
                 { key: '有意向', value: 20 },
                 { key: '高意向', value: 30 },
                 { key: 'Hot', value: 40 },
-            ]
+            ],
+            TYPE_MAP: {
+                "10": { text: '无意向', key: 10 },
+                "20": { text: '有意向', key: 20 },
+                "30": { text: '高意向', key: 30 },
+                "40": { text: 'Hot', key: 40 },
+            }
         }        
     }
 };

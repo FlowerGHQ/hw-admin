@@ -147,6 +147,7 @@ const routerChange = (type, item = {}) => {
     transform: translateX(100%);
     background: #FFF;
     border-left: 0.5px solid #E5E6EB;
+    border-radius: 0px 6px 6px 0px;
     &-item {
         padding: 4px;
         border-radius: 4px;

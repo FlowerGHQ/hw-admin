@@ -525,7 +525,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
     .container {
         flex: 1;
         height: 100%;
-        padding: 0 56px 0 16px;
+        padding: 0 36px 0 16px;
         .content {
             position: relative;
             display: flex;

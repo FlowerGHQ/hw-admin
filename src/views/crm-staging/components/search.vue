@@ -81,7 +81,7 @@
               @change="handleChange()"
               :allowClear="false"
               :placeholder="['开始日期', '结束日期']"
-              style="width: 220px;"
+              style="width: 230px;"
               ref="TimeSearch"
             >
                 <template #suffixIcon>
