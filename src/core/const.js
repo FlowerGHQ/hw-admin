@@ -2214,7 +2214,8 @@ let Const = {
 		    '2': { value: 2,  text: '官网'},
 		    '3': { value: 3,  text: '公众号二维码'},
 		    '4': { value: 4,  text: '微博链接'},
-        },   
+		    '5': { value: 5,  text: '直接进入'},
+        },
         TYPE: {
             DAILYVOTE: 1,
             SOURCE: 2,
@@ -2223,6 +2224,64 @@ let Const = {
             AREA: 5,
             SHARE: 6,
         },
+        VOTE_RESULT: {
+            '1': { key: 1, text: '白日梦影', value: 1  },
+            '2': { key: 2, text: '月影华彩', value: 2  },
+            '3': { key: 2, text: '星际漫游', value: 3  },
+            '4': { key: 2, text: '朝日炫影', value: 4  },
+            '5': { key: 2, text: '黑曜星尘', value: 5  },
+            '6': { key: 2, text: '紫光幻境', value: 6  },
+            '7': { key: 2, text: '浩万橙光', value: 7  },
+            '8': { key: 2, text: '深空炽橙', value: 8  },
+        }
+    },
+
+    // 好物订单
+    GOODITEMORDER: {
+        Order_Status_Map: {
+
+            '1': { key: 1, zh: '全部', en: 'All', value: 0 },
+            '2': { key: 2, zh: '待发货', en: 'To Be Paid', value: 300 },
+            '3': { key: 3, zh: '已发货', en: 'Shipped', value: 400 },
+            '4': { key: 4, zh: '已完成', en: 'Completed', value: 500 },
+        },
+        // 奖品订单来源
+        Source_Channel: {
+
+            // '1': { key: 1, zh: '新春贺礼订单', en: 'New Year Gift Order',value:1 },
+            '1': { key: 1, zh: '投票分享', en: 'Voting Sharing', value: 1 },
+            '2': { key: 2, zh: '抽奖', en: 'Lottery', value: 2 },
+        },
+        // 修改好物订单记录
+        Update_Record: {
+
+            '1': { key: 1, zh: '快递单号', en: 'Modify Tracking Number', value: 1 }
+        },
+        // 活动入口--来源类型1好友分享 2官网 3公众号 4 微博 5 直接进入
+        Source_Type: {
+
+            '1': { key: 1, zh: '好友分享', en: 'Friends Share', value: 1 },
+            '2': { key: 1, zh: '官网', en: 'Official Website', value: 2 },
+            '3': { key: 1, zh: '公众号', en: 'Official Account', value: 3 },
+            '4': { key: 1, zh: '微博', en: 'Weibo', value: 4 },
+            '5': { key: 1, zh: '直接进入', en: 'Direct Entry', value: 5 },
+        }
+
+    },
+    // 飞书人员所属类型
+    FEISHUTYPE: {
+        // 人员归属
+        TYPE: {
+            // 对应上面的Job
+            '1': { key: 1, zh: "国内市场管理员", en: 'Home market manager' },
+            '2': { key: 2, zh: "大区经理", en: 'Regional manager' },
+            '3': { key: 3, zh: "城市经理", en: 'City manager' },
+            '4': { key: 4, zh: "门店店长", en: 'Store manager' },
+            '5': { key: 5, zh: "用户体验官", en: 'User experience officer' },
+            // 这两个字段前端自己玩自己的不传给后端
+            '6': { key: 6, zh: "运营", en: 'operate' },
+            '7': { key: 7, zh: "客服", en: 'Customer Service' },
+        }
     }
 };
 

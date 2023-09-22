@@ -8,7 +8,7 @@
             </div>
         </div>
         <!-- echarts -->
-        <div class="table-container" v-show="!isEmpty">
+        <div class="table-container" v-if="!isEmpty">
             <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
             <div class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-container jus" v-show="isEmpty">
+        <div class="table-container jus" v-if="isEmpty">
             <div class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
@@ -44,10 +44,6 @@ export default {
             type: Object,
             default: () => { }
         },
-        title: {
-            type: String,
-            default: '来源'
-        }
     },
     data() {
         return {
@@ -81,7 +77,7 @@ export default {
     },
     mounted() {
         if (this.searchForm.activity_id) {
-            this.getChinaMapChartData();
+           this.getChinaMapChartData();
         }
     },
     beforeUnmount() {
@@ -89,8 +85,8 @@ export default {
     },
     methods: {
         async drawMap(data) {
+            console.log(document.getElementById('ChinaMapChartId'))
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             /* mock */
@@ -117,7 +113,7 @@ export default {
             chart.data(data);
             chart.scale({
                 value: {
-                    max: 1400,
+                    max: data[0].value,
                     min: 0,
                     alias: '人数（个）',
                 },
@@ -157,7 +153,7 @@ export default {
         },
         async getChinaMapChartData() {
             try {
-                const res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
+                const res = await Core.Api.VoteData.cityStatistics({ ...this.searchForm });
                 const formattedData = [];
                 const cityMap = {};
                 res.forEach(item => {
@@ -172,19 +168,22 @@ export default {
                     });
                 });
                 for (const city in cityMap) {
-                    formattedData.push({ type: city, value: cityMap[city] });
+                    formattedData.push({ type: city === '0' ? '未知ip' : city, value: cityMap[city] });
                 }
                 const color = ['#001A66', '#00288C', '#0039B3', '#004CD9', '#0061FF', '#3381FF', '#66A0FF', '#99C0FF', '#CCDFFF', '#E6EFFF', '#F3F8FF'] // 配置项的颜色
                 this.legendList = formattedData
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
+                    if(item.type === '0') {
+                        item.type = '未知ip'
+                    }
                 })
+                this.legendList = this.legendList.sort((a, b) => b.value - a.value).slice(0, 10)
                 if (!formattedData.length) {
                     this.isEmpty = true
                 } else {
-                    setTimeout(() => {
-                        this.drawMap(formattedData);
-                    }, 100)
+                    this.isEmpty = false
+                    this.drawMap(formattedData.sort((a, b) => b.value - a.value).slice(0, 10));
                 }
             } catch (error) {
                 console.log('Error in getChinaMapChartData err', error);
@@ -199,7 +198,7 @@ export default {
                         path: "/crm-dashboard/vote-detail",
                         query: {
                             title: this.title,
-                            api_name: 'sourceStatistics',
+                            api_name: 'cityStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
                             column_type: Core.Const.VOTE.TYPE.AREA

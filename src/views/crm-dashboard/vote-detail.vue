@@ -15,6 +15,9 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'color'">
+                            {{ $Util.voteResultFilter(text) || '-' }}
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
                         </template>
@@ -80,15 +83,15 @@ export default {
                 [Core.Const.VOTE.TYPE.COLOR]: [
                     { title: '日期', dataIndex: 'date', key: 'time' },
                     { title: '总投票数', dataIndex: 'total', key: 'item' },
-                    { title: '颜色', dataIndex: 'color', key: 'item' },
+                    { title: '颜色', dataIndex: 'color', key: 'color' },
                 ],
                 [Core.Const.VOTE.TYPE.AREA]: [
                     { title: '日期', dataIndex: 'date', key: 'time' },
                     { title: '总投票数', dataIndex: 'total', key: 'item' },
                     { title: '城市', dataIndex: 'city', key: 'item' },
                 ],
-                [Core.Const.VOTE.TYPE.FRIEND]: [
-                    { title: '日期', dataIndex: 'date', key: 'item' },
+                [Core.Const.VOTE.TYPE.SHARE]: [
+                    { title: '日期', dataIndex: 'date', key: 'time' },
                     { title: '好友访问人数', dataIndex: 'visitors', key: 'item' },
                     { title: '好友投票人数', dataIndex: 'vote_count', key: 'item' },
                     { title: '好友投票率', dataIndex: 'turnout_rate', key: 'item' },
@@ -123,6 +126,7 @@ export default {
             searchForm.begin_time = begin_time.startOf("day").unix();
             searchForm.end_time = end_time.endOf("day").unix();
             this.searchForm = searchForm;
+            this.getTableData();
         },
         // 获取父组件传入时间
         getQueryTime() {
@@ -133,7 +137,7 @@ export default {
         // 获取表格数据
         async getTableData() {
             try {
-                let res = await Core.Api.VoteData[this.api_name]({ ...this.searchForm });
+                let res = await Core.Api.VoteData[this.api_name]({ ...this.searchForm, activity_id: 1 });
                 console.log('getTableData res', res);
                 if (this.column_type === Core.Const.VOTE.TYPE.DAILYVOTE) {
                     const targetData = res
@@ -143,8 +147,8 @@ export default {
                             visitors: item.uv,
                             vote_count: item.vote_count,
                             turnout_rate: item.uv ? ((item.vote_count / item.uv) * 100).toFixed(1) + '%' : '0.00%',
-                            paid_user: item.pay_count,
-                            unpaid_user: item.uv - item.pay_count
+                            paid_user: item.pay_num,
+                            unpaid_user: item.uv - item.pay_num
                         };
                     })
                 } else if (this.column_type === Core.Const.VOTE.TYPE.SOURCE) {
@@ -193,8 +197,8 @@ export default {
                             visitors: item.uv,
                             vote_count: item.vote_count,
                             turnout_rate: item.uv ? ((item.vote_count / item.uv) * 100).toFixed(1) + '%' : '0.00%',
-                            paid_user: item.pay_count,
-                            unpaid_user: item.uv - item.pay_count
+                            paid_user: item.pay_num,
+                            unpaid_user: item.uv - item.pay_num
                         };
                     })
                 } else if (this.column_type === Core.Const.VOTE.TYPE.COLOR) {
@@ -222,7 +226,7 @@ export default {
                         });
                         return targetItems;
                     });
-                } else if (this.column_type === Core.Const.VOTE.TYPE.FRIEND) {
+                } else if (this.column_type === Core.Const.VOTE.TYPE.SHARE) {
                     const targetData = res
                     this.tableData = targetData.map(item => {
                         const targetItem = {
