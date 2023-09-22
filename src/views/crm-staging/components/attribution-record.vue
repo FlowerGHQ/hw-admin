@@ -19,9 +19,9 @@
               </template>
               <template v-if="column.key === 'create_user_name'">
                   <div class="person">
-                    <img class="person-img" :src="Static.defaultAvatar">
-                    <span class="person-name">{{ record.create_user_name }}</span>
-                    <span class="person-id">{{ record.create_user_id }}</span>
+                    <img class="person-img" :src="Static.defaultAvatar" v-if="record.create_user_name">
+                    <span class="person-name">{{ record.create_user_name || '-' }}</span>
+                    <span class="person-id">{{ record.create_user_id || '-'  }}</span>
                   </div>
               </template>
               <template v-if="column.key === 'create_time'">

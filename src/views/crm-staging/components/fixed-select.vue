@@ -1,5 +1,7 @@
 <template>
     <div class="fixed-select">
+        <FollowUp :isShowButton="false" ref="followRef" @getRecordList="getChildData('2')" />
+        <LeadTransfer ref="leadTransRef" />
         <div class="fixed-select-item" v-for="item in listRender" @click="handleClick(item.alt)">
             <a-tooltip placement="left">
                 <template #title>
@@ -8,8 +10,6 @@
                 <img :src="item.src">
             </a-tooltip>
         </div>
-        <FollowUp :isShowButton="false" ref="followRef" @getRecordList="getChildData('2')" />
-        <LeadTransfer ref="leadTransRef" />
     </div>
 </template>
 
@@ -150,6 +150,10 @@ const routerChange = (type, item = {}) => {
     &-item {
         padding: 4px;
         border-radius: 4px;
+        margin-bottom: 16px;
+        &:last-child {
+            margin-bottom: 0;
+        }
         cursor: pointer;
         img {
             height: 20px;

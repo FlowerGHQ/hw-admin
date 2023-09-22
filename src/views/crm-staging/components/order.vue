@@ -8,8 +8,11 @@
                 <template v-if="column.key === 'status'">
                     <span>{{ Static.ORDER_STATUS_MAP[record.status]?.text }}</span>
                 </template>
+                <template v-if="column.key === 'car-order'">
+                    <span>{{ record['car-order'] || '--' }}</span>
+                </template>
                 <template v-if="column.key === 'total_price'">
-                    <span>￥{{ Core.Util.countFilter(record.total_price) }}</span>
+                    <span>￥{{ Core.Util.countFilter(record.remark.total_price) }}</span>
                 </template>
                 <template v-if="column.key === 'amount_paid'">
                     <span>￥{{ Core.Util.countFilter(record.amount_paid) }}</span>

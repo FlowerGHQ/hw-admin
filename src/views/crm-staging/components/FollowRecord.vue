@@ -2,14 +2,14 @@
   <div class="follow-record" @scroll="handleScroll">
     <div class="follow-top">
       <FollowUp @getRecordList="getRecordList" />
-      <div class="follow-but">
+      <!-- <div class="follow-but">
         <span>未打通，稍后联系</span>
         <a-button type="link" @click="clickCreate({type:30,content:'未打通，稍后联系',method:30})">创建跟进</a-button>
       </div>
       <div class="follow-but">
         <span>已补充好省市</span>
         <a-button type="link" @click="clickCreate({type:30,content:'已补充好省市',method:20})">创建跟进</a-button>
-      </div>
+      </div> -->
       <a-select
         class="follow-type"
         width="120px"

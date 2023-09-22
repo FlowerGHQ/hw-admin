@@ -181,6 +181,7 @@ const createFollow = () => {
     isShowCreate.value = true;
     proxy.$message.success('提交成功')
     getChildData('userDetailRef')
+    getChildData('6')
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })
