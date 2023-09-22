@@ -839,7 +839,7 @@ const apiList = {
     },
     CustomService: {
         list: ['PostJson', 'customer-service/customer/list'],  
-        detail: ['PostJson', 'customer-service/customer/detail'],   
+        detail: ['PostJson', 'customer-service/customer/detail'],       // 用户线索详情
         deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
         storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
@@ -863,6 +863,9 @@ const apiList = {
         pushApp: ['GetJson', 'customer-service/crm-order/push-app'],
         orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
         logList: ['PostJson', 'customer-service/action-log/list'],
+
+        editUser: ['PostJson','customer-service/customer/save'],    // 编辑用户线索
+        verifyPhoneAndEmail: ['PostJson','customer-service/customer/verifyPhoneAndEmail'],    // 验证手机号 / 邮箱号
 
     },
 };

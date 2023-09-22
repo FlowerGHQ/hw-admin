@@ -15,6 +15,7 @@
 
 <script setup>
 import { computed, reactive, ref, toRefs, inject } from 'vue';
+import { useRoute, useRouter } from "vue-router";
 
 import toTop from '../images/to-top.png';
 import offTop from '../images/off-top.png';
@@ -27,6 +28,7 @@ import nextNone from '../images/next-none.png';
 import FollowUp from "./FollowUp.vue";
 import LeadTransfer from "./LeadTransfer.vue";
 
+const router = useRouter()
 const getChildData = inject('getChildData');
 const leadTransRef = ref(null);
 const followRef = ref(null);
@@ -89,9 +91,11 @@ const handleClick = (alt) => {
             toTopFn()
             break;
         case '编辑基本信息':
-            
+            console.log('55555');
+            routerChange('edit')
             break;
         case '写跟进':
+            console.log('5566666666666666666666666');
             followRef.value.clickModelOk();
             break;
         case '快捷下单':
@@ -118,7 +122,19 @@ const toTopFn = () => {
 const toOrder = () => {
     $emit('order', $prop.current - 1)
 }
-
+const routerChange = (type, item = {}) => {
+    let routeUrl = "";
+    switch (type) {
+        case "edit": // 详情
+            routeUrl = router.resolve({
+                path: "/user-center/user-edit",
+                query: { id: userId.value },
+            });
+            // window.open(routeUrl.href, "_blank");
+			window.open(routeUrl.href, '_self');
+            break;
+    }
+}
 
 </script>
 

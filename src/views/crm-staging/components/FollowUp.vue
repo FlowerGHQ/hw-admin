@@ -10,7 +10,7 @@
       centered
     >
       <!-- 沟通方式 -->
-      <div class="form-item">
+      <div class="form-item required">
         <div class="key">沟通方式：</div>
         <div class="value">
           <a-select
@@ -28,7 +28,7 @@
         </div>
       </div>
       <!-- 意向度 -->
-      <div class="form-item">
+      <div class="form-item required">
         <div class="key">意向度：</div>
         <div class="value">
           <a-select
@@ -47,7 +47,7 @@
         </div>
       </div>
       <!-- 跟进类型 -->
-      <div class="form-item">
+      <div class="form-item required">
         <div class="key">跟进类型：</div>
         <div class="value">
           <a-select
@@ -64,7 +64,7 @@
         </div>
       </div>
       <!-- 跟进内容 -->
-      <div class="form-item flex-aline">
+      <div class="form-item flex-aline  required">
         <div class="key">跟进内容：</div>
         <div class="value">
           <a-textarea v-model:value="followObj.content" placeholder="请输入跟进内容" :rows="4" />
@@ -143,6 +143,7 @@ const followObj = reactive(Object.assign({}, initialObject))
 const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
+  console.log(66666666666666666666666666666666688999);
   isShowFollow.value = true;
   resetFollow();
 }
@@ -154,6 +155,17 @@ defineExpose({clickModelOk});
 
 // 跟进创建操作
 const createFollow = () => {
+
+  if(!followObj.method || followObj.method===undefined ) {
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.intention ||  followObj.intention===undefined ){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.type || followObj.type===undefined ){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.content || followObj.content===undefined ){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }
+
   Core.Logger.success('createFollow参数',followObj,"数据",);
   // 创建更进
   const obj = {
