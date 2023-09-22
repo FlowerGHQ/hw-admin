@@ -139,7 +139,7 @@ export default {
                 .interval()
                 .position('type*value')
                 .size(26)
-                .color('value', ['#F3F8FF', '#E6EFFF', '#CCDFFF', '#99C0FF', '#66A0FF', '#3381FF', '#0061FF', '#004CD9', '#0039B3', '#00288C', '#001A66'])
+                .color('type', ['#001A66', '#00288C', '#0039B3', '#004CD9', '#0061FF', '#3381FF', '#66A0FF', '#99C0FF', '#CCDFFF', '#E6EFFF', '#F3F8FF'])
                 .label('value', {
                     style: {
                         fill: '#8d8d8d',
