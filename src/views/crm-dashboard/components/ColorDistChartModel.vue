@@ -9,26 +9,22 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="!isEmpty">
-                <div id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
-                <div class="legend-container">
-                    <div class="legend-wrap" v-for="item in legendList">
-                        <div class="legend-block">
-                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                            <div class="legend-key">{{ item.item }}</div>
-                        </div>
-                        <div class="legend-value">{{ item.percent + '%' }}</div>
+            <div v-show="!isEmpty" id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
+            <div v-show="!isEmpty" class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item.item }}</div>
                     </div>
+                    <div class="legend-value">{{ item.percent + '%' }}</div>
                 </div>
-            </template>
-            <template v-else>
-                <div class="empty-wrap">
-                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                    <div class="empty-desc">
-                        暂无数据
-                    </div>
+            </div>
+            <div v-show="isEmpty" class="empty-wrap">
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                <div class="empty-desc">
+                    暂无数据
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -68,7 +64,9 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.getResultChartData();
+                if (this.searchForm.activity_id) {
+                    this.getResultChartData();
+                }
             }
         },
 
@@ -76,7 +74,9 @@ export default {
     computed: {},
     created() { },
     mounted() {
-        this.getResultChartData();
+        if (this.searchForm.activity_id) {
+            this.getResultChartData();
+        }
     },
     beforeUnmount() {
         this.$refs.ColorDistChartId.innerHTML = ''
@@ -88,11 +88,12 @@ export default {
             console.log('切换tab >>', key);
         },
 
-        drawBoStatisticsChart(data) {
+        async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
+            await this.$nextTick();
             const chart = new Chart({
                 container: 'ColorDistChartId',
                 autoFit: true,
@@ -198,7 +199,6 @@ export default {
         async getResultChartData() {
             try {
                 let res = await Core.Api.VoteData.resultStatistics({ ...this.searchForm });
-                console.log('getResultChartData res', res);
                 const data = [
                     {
                         date: 1692242388,
@@ -268,7 +268,9 @@ export default {
                 if (!transformedData.length) {
                     this.isEmpty = true
                 } else {
-                    this.drawBoStatisticsChart(transformedData);
+                    setTimeout(() => {
+                        this.drawBoStatisticsChart(transformedData);
+                    }, 100)
                 }
             } catch (error) {
                 console.log('Error in getResultChartData', error);
@@ -389,4 +391,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

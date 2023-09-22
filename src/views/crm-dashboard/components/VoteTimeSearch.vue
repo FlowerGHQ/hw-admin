@@ -26,12 +26,15 @@ export default {
             type: Object,
             default: () => { },
         },
+        activity_id: {
+            type: Number,
+            default: 0   
+        }
     },
     data() {
         return {
             day: 1,
             searchForm: {
-                group_id: undefined,
                 begin_time: "",
                 end_time: "",
             },
@@ -41,7 +44,8 @@ export default {
     watch: {},
     computed: {},
     created() {},
-    mounted() {},
+    mounted() {
+    },
     beforeUnmount() {},
     methods: {
         // 时间转换
@@ -65,6 +69,7 @@ export default {
             this.searchForm.end_time = this.time[1].unix(); // 获取结束时间的时间戳
             console.log('this.searchForm.begin_time', this.searchForm.begin_time);
             console.log('this.searchForm.end_time', this.searchForm.end_time);
+            this.searchForm.activity_id = this.activity_id
             this.$emit("select", this.searchForm);
         },
         handleChange() {
@@ -74,7 +79,7 @@ export default {
             searchForm.begin_time = begin_time.startOf("day").unix();
             searchForm.end_time = end_time.endOf("day").unix();
             this.searchForm = searchForm;
-            console.log('this.searchForm', this.searchForm);
+            searchForm.activity_id = this.activity_id
             this.$emit("select", searchForm);
         },
     },

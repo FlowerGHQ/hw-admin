@@ -8,7 +8,7 @@
             </div>
         </div>
         <!-- echarts -->
-        <div class="table-container" v-if="!isEmpty">
+        <div class="table-container" v-show="!isEmpty">
             <div id="ChinaMapChartId" class="chart" ref='ChinaMapChartId'></div>
             <div class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="table-container jus" v-else>
+        <div class="table-container jus" v-show="isEmpty">
             <div class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
@@ -64,7 +64,9 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.getChinaMapChartData()
+                if (this.searchForm.activity_id) {
+                    this.getChinaMapChartData();
+                }
             }
         },
 
@@ -78,13 +80,15 @@ export default {
 
     },
     mounted() {
-        this.getChinaMapChartData()
+        if (this.searchForm.activity_id) {
+            this.getChinaMapChartData();
+        }
     },
     beforeUnmount() {
         this.$refs.ChinaMapChartId.innerHTML = ''
     },
     methods: {
-        drawMap(data) {
+        async drawMap(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
@@ -103,6 +107,7 @@ export default {
             //     { type: '西安市', value: 1234 },
             //     { type: '其他', value: 1334 },
             // ];
+            await this.$nextTick();
             const chart = new Chart({
                 container: 'ChinaMapChartId',
                 autoFit: true,
@@ -153,7 +158,6 @@ export default {
         async getChinaMapChartData() {
             try {
                 const res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
-                console.log('ChinaMapChartData res', res);
                 const formattedData = [];
                 const cityMap = {};
                 res.forEach(item => {
@@ -178,7 +182,9 @@ export default {
                 if (!formattedData.length) {
                     this.isEmpty = true
                 } else {
-                    this.drawMap(formattedData)                    
+                    setTimeout(() => {
+                        this.drawMap(formattedData);
+                    }, 100)
                 }
             } catch (error) {
                 console.log('Error in getChinaMapChartData err', error);
@@ -242,6 +248,7 @@ export default {
 .table-container {
     display: flex;
     align-items: center;
+
     &.jus {
         justify-content: center;
         height: 270px;

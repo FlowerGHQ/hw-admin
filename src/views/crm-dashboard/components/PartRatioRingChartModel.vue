@@ -9,26 +9,22 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="!isEmpty">
-                <div id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
-                <div class="legend-container">
-                    <div class="legend-wrap" v-for="item in legendList">
-                        <div class="legend-block">
-                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                            <div class="legend-key">{{ item.name }}</div>
-                        </div>
-                        <div class="legend-value">{{ item.percent }}</div>
+            <div v-show="!isEmpty" id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
+            <div v-show="!isEmpty" class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item.name }}</div>
                     </div>
+                    <div class="legend-value">{{ item.percent }}</div>
                 </div>
-            </template>
-            <template v-else>
-                <div class="empty-wrap">
-                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                    <div class="empty-desc">
-                        暂无数据
-                    </div>
+            </div>
+            <div v-show="isEmpty" class="empty-wrap">
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                <div class="empty-desc">
+                    暂无数据
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -66,24 +62,29 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.getPartRatioRingChartData()
+                if (this.searchForm.activity_id) {
+                    this.getPartRatioRingChartData();
+                }
             }
         },
     },
     computed: {},
     created() { },
     mounted() {
-        this.getPartRatioRingChartData()
+        if (this.searchForm.activity_id) {
+            this.getPartRatioRingChartData();
+        }
     },
     beforeUnmount() {
         this.$refs.PartRatioRingChartId.innerHTML = ''
     },
     methods: {
-        drawBoStatisticsChart(data) {
+        async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
+            await this.$nextTick();
             const chart = new Chart({
                 container: 'PartRatioRingChartId',
                 autoFit: true,
@@ -189,7 +190,6 @@ export default {
         async getPartRatioRingChartData() {
             try {
                 let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
-                console.log('getPartRatioRingChartData res', res);
                 // 计算已支付人数总和
                 const totalPaidCount = res.reduce((sum, item) => sum + item.pay_count, 0);
                 // 计算未支付人数总和
@@ -203,7 +203,6 @@ export default {
                     { item: '未支付', count: totalUnpaidCount, percent: totalUnpaidPercent + '%' }
                 ];
                 this.legendList = formattedData
-                console.log('formattedData part', formattedData);
                 const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {
                     item.color = color[index + 1]
@@ -330,4 +329,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

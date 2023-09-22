@@ -1,7 +1,7 @@
 <template>
   <div id="VoteDashboard">
     <!-- 时间筛选组件 -->
-    <VoteTimeSearch :searchForm="searchForm" @select="searchFormOperation" />
+    <VoteTimeSearch :activity_id="searchForm.activity_id" :searchForm="searchForm" @select="searchFormOperation" />
     <a-row :gutter="[8, 0]">
       <a-col :xs="24" :sm="24" :xl="15" :xxl="12">
         <a-row :gutter="[8, 0]">
@@ -62,7 +62,7 @@ import ColorDistChartModel from "./components/ColorDistChartModel.vue"
 import PartRatioRingChartModel from "./components/PartRatioRingChartModel.vue";
 import ChinaMapChartModel from "./components/ChinaMapChartModel.vue"
 import votingChannelChartModel from "./components/votingChannelChartModel.vue"
-import DailyVotingNumbersChartModel from "./components/DailyVotingNumbersChartModel.vue"
+import DailyVotingNumbersChartModel from "./components/dailyvotingnumberschartmodel.vue"
 import Core from "../../core";
 import dayjs from "dayjs";
 
@@ -84,7 +84,6 @@ export default {
         begin_time: undefined,
         end_time: undefined,
         activity_id: 0,
-        defaultTime: [],
       },
     };
   },

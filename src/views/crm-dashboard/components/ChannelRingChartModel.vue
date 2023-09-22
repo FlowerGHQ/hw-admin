@@ -9,26 +9,22 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="!isEmpty">
-                <div id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
-                <div class="legend-container">
-                    <div class="legend-wrap" v-for="item in legendList">
-                        <div class="legend-block">
-                            <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                            <div class="legend-key">{{ item?.item }}</div>
-                        </div>
-                        <div class="legend-value">{{ item?.percent }}</div>
+            <div v-show="!isEmpty" id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
+            <div v-show="!isEmpty" class="legend-container">
+                <div class="legend-wrap" v-for="item in legendList">
+                    <div class="legend-block">
+                        <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
+                        <div class="legend-key">{{ item?.item }}</div>
                     </div>
+                    <div class="legend-value">{{ item?.percent }}</div>
                 </div>
-            </template>
-            <template v-else>
-                <div class="empty-wrap">
-                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                    <div class="empty-desc">
-                        暂无数据
-                    </div>
+            </div>
+            <div v-show="isEmpty" class="empty-wrap">
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                <div class="empty-desc">
+                    暂无数据
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -69,7 +65,9 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.getChannelChartData()
+                if (this.searchForm.activity_id) {
+                    this.getChannelChartData();
+                }
             }
         },
 
@@ -83,17 +81,20 @@ export default {
 
     },
     mounted() {
-        this.getChannelChartData();
+        if (this.searchForm.activity_id) {
+            this.getChannelChartData();
+        }
     },
     beforeUnmount() {
         this.$refs.ChannelRingChartId.innerHTML = ''
     },
     methods: {
-        drawBoStatisticsChart(data) {
+        async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
+            await this.$nextTick();
             const chart = new Chart({
                 container: 'ChannelRingChartId',
                 autoFit: true,
@@ -283,7 +284,9 @@ export default {
                 if (!formattedData.length) {
                     this.isEmpty = true
                 } else {
-                    this.drawBoStatisticsChart(formattedData)                    
+                    setTimeout(() => {
+                        this.drawBoStatisticsChart(formattedData)
+                    }, 100)
                 }
             } catch (error) {
                 console.log('Error in getChannelChartData err', error);
@@ -356,9 +359,11 @@ export default {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
         >img {
             width: 280px;
         }
+
         .empty-desc {
             margin-top: 10px;
             font-size: 14px;

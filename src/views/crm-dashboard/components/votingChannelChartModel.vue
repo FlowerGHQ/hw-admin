@@ -8,17 +8,13 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <template v-if="!isEmpty">
-                <div id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
-            </template>
-            <template v-else>
-                <div class="empty-wrap">
-                    <img src="../../../assets/images/dashboard/emptyData.png" alt="">
-                    <div class="empty-desc">
-                        暂无数据
-                    </div>
+            <div v-show="!isEmpty" id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
+            <div v-show="isEmpty" class="empty-wrap">
+                <img src="../../../assets/images/dashboard/emptyData.png" alt="">
+                <div id="empty" class="empty-desc">
+                    暂无数据
                 </div>
-            </template>
+            </div>
         </div>
     </div>
 </template>
@@ -51,7 +47,9 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
-                this.getDailyVoteChartData();
+                if (this.searchForm.activity_id) {
+                    this.getDailyVoteChartData();
+                }
             }
         },
 
@@ -65,13 +63,15 @@ export default {
 
     },
     mounted() {
-        this.getDailyVoteChartData();
+        if (this.searchForm.activity_id) {
+            this.getDailyVoteChartData();
+        }
     },
     beforeUnmount() {
         this.$refs.votingChannelChartId.innerHTML = ''
     },
     methods: {
-        drawBoStatisticsChart(data) {
+        async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
                 console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
@@ -87,6 +87,9 @@ export default {
             //     { name: '投票人数', type: '微博跳转', value: 34 },
             //     { name: '投票人数', type: '来源', value: 99 },
             // ];
+            await this.$nextTick();
+            console.log('document.getElementById', document.getElementById('votingChannelChartId'));
+            // return
             const chart = new Chart({
                 container: 'votingChannelChartId',
                 autoFit: true,
@@ -123,7 +126,6 @@ export default {
         async getDailyVoteChartData() {
             try {
                 let res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
-                console.log('getDailyVoteChartData res', res);
                 const data = [
                     {
                         date: 1692242388,
@@ -173,7 +175,7 @@ export default {
                         const count = source.count;
                         const voteCount = source.vote_count;
 
-                        const sourceTypeText = this.SOURCE_TYPE_MAP[sourceType].text;
+                        const sourceTypeText = this.SOURCE_TYPE_MAP[sourceType] ? this.SOURCE_TYPE_MAP[sourceType].text : '未知';
 
                         const countData = {
                             name: '访客人数',
@@ -190,7 +192,6 @@ export default {
                         transformedData.push(countData, voteCountData);
                     });
                 });
-                console.log('transformedData', transformedData);
                 if (!transformedData.length) {
                     this.isEmpty = true
                 } else {
@@ -278,4 +279,5 @@ export default {
 .chart {
     width: 100%;
     height: auto;
-}</style>
+}
+</style>
