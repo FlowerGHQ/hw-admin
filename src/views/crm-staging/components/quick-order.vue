@@ -79,7 +79,7 @@
 </template>
 
 <script setup>
-import { inject, nextTick, reactive, ref, toRefs } from 'vue';
+import { inject, getCurrentInstance, reactive, ref, toRefs } from 'vue';
 import Core from '@/core';
 import QrcodeVue from 'qrcode.vue'
 import Static from '../static'
@@ -92,8 +92,8 @@ const $prop = defineProps({
         type: [String, Number],
     }
 })
+const { proxy } = getCurrentInstance();
 const $emit = defineEmits([])
-
 const qrCodeUrl = ref(null)
 const cycIndex = ref(0)
 const modelId = ref(1)
@@ -161,6 +161,7 @@ const changeConfig = () => {
 const pushApp = () => {
     Core.Api.CustomService.pushApp({ id: orderId.value }).then(res=>{
 		Core.Logger.success('getTaskNum',res);
+        proxy.$message.success('推送成功');
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})

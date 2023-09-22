@@ -22,7 +22,7 @@
             <a-select
               ref="select"
               :options="optionsSource"
-              v-model:value="searchForm.source_type"
+              v-model:value="searchForm.source_type_mapping"
               :field-names="{ label: 'title', value: 'value' }"
               style="width: 110px;"
               placeholder="来源"
@@ -117,7 +117,7 @@ const optionsStore = ref([]);
 const searchForm = reactive({
     key: undefined,
     intention: undefined,
-    source_type: undefined,
+    source_type_mapping: undefined,
     order_status: undefined,
     group_id: undefined,
     province: undefined,

@@ -839,6 +839,7 @@ const apiList = {
     },
     CustomService: {
         list: ['PostJson', 'customer-service/customer/list'],  
+        amountList: ['PostJson', 'customer-service/home/my-task/amount-list'],  // 我的任务- 已处理/全部 数量
         detail: ['PostJson', 'customer-service/customer/detail'],       // 用户线索详情
         deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],

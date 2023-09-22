@@ -35,6 +35,7 @@ import FollowUp from "./FollowUp.vue";
 import Steps from "./steps.vue";
 import { reactive, ref ,getCurrentInstance ,inject ,watch } from 'vue';
 import Core from "@/core";    
+import Static from "../static";    
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
 const $emit = defineEmits(['getCount'])
@@ -138,7 +139,7 @@ const typeChangeClick = (value) => {
 // 监听滚轮事件
 const handleScroll = (e) => {
 	const element = e.target;
-  if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
+  if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
 	  Core.Logger.log('滚动触底')
     if (pagination.current < pagination.total_page) {
 		  pagination.current ++

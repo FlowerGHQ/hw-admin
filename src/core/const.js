@@ -23,7 +23,7 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
         break;
     default:
-        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         URL_POINT = 'http://10.10.12.78:8889'
