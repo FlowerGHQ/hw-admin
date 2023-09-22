@@ -62,7 +62,7 @@ import ColorDistChartModel from "./components/ColorDistChartModel.vue"
 import PartRatioRingChartModel from "./components/PartRatioRingChartModel.vue";
 import ChinaMapChartModel from "./components/ChinaMapChartModel.vue"
 import votingChannelChartModel from "./components/votingChannelChartModel.vue"
-import DailyVotingNumbersChartModel from "./components/dailyvotingnumberschartmodel.vue"
+import DailyVotingNumbersChartModel from "./components/DailyVotingNumbersChartModel.vue"
 import Core from "../../core";
 import dayjs from "dayjs";
 
