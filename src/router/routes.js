@@ -2142,6 +2142,29 @@ const routes = [
                 }
             },
         ]
+    },    
+    { // 客服线索分配
+        path:'/service',
+        component: Layout, 
+        redirect: '/service/lead-list',
+        type: [ROUTER_TYPE.CRM], 
+        meta: {
+            title: '客服线索分配',
+            title_en: 'Customer service lead distribution',
+            icon: 'i_renyuan-',
+            roles: [LOGIN_TYPE.ADMIN],
+        }, 
+        children: [
+            {
+                path: 'lead-list',
+                name: 'leadList',
+                component: () => import('@/views/crm-service-customer/lead-list.vue'),
+                meta: {
+                    title: '客服线索分配',
+                    title_en: 'Customer service lead distribution',
+                },
+            }            
+        ]
     },
     { // 人员管理
         path:'/retail-personnel',
