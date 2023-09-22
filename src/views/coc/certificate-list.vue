@@ -57,7 +57,7 @@
 				</a-row>
 			</div>
 			<div class="btns-area title-container">
-				<a-button type="primary">{{
+				<a-button type="primary" @click="batchDownload">{{
 					$t("certificate-list.coc_batchDownload")
 				}}</a-button>
 			</div>
@@ -68,11 +68,14 @@
 					:columns="palrformTableColumns"
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
+					@change="handleTableChange"
 					:row-selection="{
 						selectedRowKeys: selectedRowKeyArr,
 						onChange: onSelectChange,
+						getCheckboxProps: (record) => ({
+							disabled: record.certificate_status !== 1,
+						}),
 					}"
-					@change="handleTableChange"
 				>
 					<template #headerCell="{ title }">
 						{{ $t(title) }}
@@ -81,7 +84,7 @@
 						<template v-if="column.key === 'coc_operation'">
 							<a-button
 								type="link"
-								@click="onDownLoad"
+								@click="onDownLoad(record)"
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("certificate-list.coc_download") }}</a-button
 							>
@@ -133,7 +136,11 @@ const route = useRoute()
 const { query } = route
 const { isDistributor, order_number } = query
 const distributor = ref(isDistributor === "true") // 是否是经销商
-const { getCertificateDetailList, getCertificatNumber } = Core.Api.COC
+const {
+	getCertificateDetailList,
+	getCertificatNumber,
+	downLoadCertificateDetailLis,
+} = Core.Api.COC
 const activeKey = ref(undefined) // tab切换
 const selectedRowKeyArr = ref([]) // 选中的哪些项
 
@@ -282,25 +289,6 @@ const handleTabs = () => {
 	searchForm.certificate_status = activeKey.value
 	getCerList()
 }
-
-// const fetchs = (params = {}) => {
-// 	let obj = {
-// 		...params,
-// 	}
-// 	Core.Api.XXX(obj)
-// 		.then((res) => {
-// 			Core.Logger.success("参数", obj, "结果", res)
-// 		})
-// 		.catch((err) => {
-// 			Core.Logger.error("参数", obj, "结果", err)
-// 		})
-// }
-const onDownLoad = () => {}
-const onView = () => {}
-const onDeliveryTime = (params) => {
-	searchForm.delivery_start_time = params.begin_time
-	searchForm.delivery_end_time = params.end_time
-}
 // 选中项的事件
 // 选中项的事件
 const onSelectChange = (selectedRowKeys) => {
@@ -308,7 +296,34 @@ const onSelectChange = (selectedRowKeys) => {
 	Core.Logger.log("selectedRowKeys changed: ", selectedRowKeys)
 	selectedRowKeyArr.value = selectedRowKeys
 }
-
+// 批量下载
+const batchDownload = () => {
+	console.log("selectedRowKeyArr", selectedRowKeyArr)
+	onDownLoad({}, selectedRowKeyArr.value)
+}
+// 下载
+const onDownLoad = (record, array) => {
+	let list = record?.id ? [record.id] : selectedRowKeyArr.value
+	downLoadCertificateDetailLis({
+		download_list: list,
+		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
+		source_type: 2,
+	})
+		.then((res) => {
+			const name = res.headers["file-name"]
+				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
+				: "未命名"
+			fileSave.getZip(res.data, name)
+		})
+		.catch((err) => {
+			console.log("err", err)
+			Core.Logger.error("参数", {}, "结果", JSON.stringify(err))
+		})
+}
+const onDeliveryTime = (params) => {
+	searchForm.delivery_start_time = params.begin_time
+	searchForm.delivery_end_time = params.end_time
+}
 onMounted(() => {
 	searchForm.order_number = order_number
 	let params = Core.Util.deepCopy(searchForm)

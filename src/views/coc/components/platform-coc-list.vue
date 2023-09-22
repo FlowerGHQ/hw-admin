@@ -6,7 +6,7 @@
 					{{ $t("coc_business.coc_certificate_list") }}
 				</div>
 				<div class="btns-area">
-					<a-button type="primary">{{
+					<a-button type="primary" @click="batchDownload">{{
 						$t($t("coc_business.coc_batch_download"))
 					}}</a-button>
 				</div>
@@ -70,6 +70,9 @@
 					:row-selection="{
 						selectedRowKeys: selectedRowKeyArr,
 						onChange: onSelectChange,
+						getCheckboxProps: (record) => ({
+							disabled: record.certificate_status !== 1,
+						}),
 					}"
 				>
 					<template #headerCell="{ title }">
@@ -268,23 +271,19 @@ const onSelectChange = (selectedRowKeys) => {
 	selectedRowKeyArr.value = selectedRowKeys
 }
 
-onMounted(() => {
-	certificateList()
-})
-
-/* fetch end */
-
-/* methods start */
+const batchDownload = () => {
+	console.log("selectedRowKeyArr", selectedRowKeyArr)
+	onDownLoad({}, selectedRowKeyArr.value)
+}
 // 下载
-const onDownLoad = (record) => {
+const onDownLoad = (record, array) => {
+	let list = record?.id ? [record.id] : selectedRowKeyArr.value
 	downLoadCertificateDetailLis({
-		download_list: [814],
+		download_list: list,
 		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
-		source_type: 2,
+		source_type: 1,
 	})
 		.then((res) => {
-			// /zip，doc，docx
-
 			const name = res.headers["file-name"]
 				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
 				: "未命名"
@@ -295,6 +294,11 @@ const onDownLoad = (record) => {
 			Core.Logger.error("参数", {}, "结果", JSON.stringify(err))
 		})
 }
+
+onMounted(() => {
+	certificateList()
+})
+
 // 查看
 const onView = (record) => {
 	let isDistributor =
