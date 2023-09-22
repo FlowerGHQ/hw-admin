@@ -2286,6 +2286,15 @@ let Const = {
             '3000001': { father_type: 4, key: 3000001, zh: "门店店长", en: 'Store manager' },
             '3000002': { father_type: 5, key: 3000002, zh: "用户体验官", en: 'User experience officer' },
         },
+        Job_Map: {
+            MARKET_MANAGER: 103001,
+            REGIONAL_MANAGER: 103002,
+            CITY_MANAGER: 103003,
+            OPERATE: 103004,
+            CUSTOMER_SERVICE: 103005,
+            STORE_MANAGER: 3000001,
+            OFFICER: 3000002,
+        },
         // 车辆用途
         Vehicle_Usage: {
             '1': { key: 1, zh: "试驾车", en: 'Test Drive' },
@@ -2371,7 +2380,6 @@ let Const = {
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
     },
-
     // 国内销售-（工作台）运营
     WORK_OPERATION: {
 

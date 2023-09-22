@@ -13,7 +13,12 @@
                         <div class="lead-item m-r-16 m-t-16">
                             <div class="lead-item-left">
                                 <div class="left-avatar">
-                                    <img class="avatar-img" :src="Static.defaultAvatar" alt="">                                
+                                    <img 
+                                        v-if="!item.avatar || item.avatar === ''" 
+                                        class="avatar-img" 
+                                        :src="Static.defaultAvatar" alt=""
+                                    >
+                                    <img v-else class="avatar-img" :src="item.avatar" alt="">                            
                                 </div>
                             </div>
                             <div class="lead-item-right m-l-12">
@@ -28,10 +33,10 @@
                                 </div>
                                 <div class="lead-item-r-b">
                                     <div class="lead-percent">
-                                        <div class="lead-percent-text">线索分配比例{{ item.isChecked }}</div>
-                                        <div class="lead-percent-p">{{ item.isChecked ? item.percent : 0 }}%</div>
+                                        <div class="lead-percent-text">线索分配比例</div>
+                                        <div class="lead-percent-p">{{ item.new_customer_assign_rate || 0 }}%</div>
                                     </div>
-                                    <a-progress :percent="item.isChecked ? item.percent : 0" strokeColor="#0161FF" :showInfo="false"/>
+                                    <a-progress :percent="item.new_customer_assign_rate || 0" strokeColor="#0161FF" :showInfo="false"/>
                                 </div>
                             </div>
                         </div>
@@ -54,8 +59,13 @@
                 <!-- m-r-16 -->
                 <div class="lead-model-item m-t-16">
                     <div class="lead-model-item-left">
-                        <div class="left-avatar">
-                            <img class="avatar-img" :src="Static.defaultAvatar" alt="">                                
+                        <div class="left-avatar">                            
+                            <img 
+                                v-if="!item.avatar || item.avatar === ''" 
+                                class="avatar-img" 
+                                :src="Static.defaultAvatar" alt=""
+                            >
+                            <img v-else class="avatar-img" :src="item.avatar" alt="">                               
                         </div>
                     </div>
                     <div class="lead-model-item-right m-l-12">
@@ -67,7 +77,7 @@
                         <div class="lead-item-r-b m-t-10">                            
                             <div class="icon-wrapper">
                                 <a-input-number 
-                                    v-model:value="item.percent"
+                                    v-model:value="item.new_customer_assign_rate"
                                     :min="1"
                                     :max="100"
                                 />
@@ -89,45 +99,63 @@
     const { proxy } = getCurrentInstance()
 
     const leadList = ref([
-        {
-            id: 1,
-            name: "客服1",
-            percent: 20,
-            isChecked: false,
-        },
-        {
-            id: 2,
-            name: "客服2",
-            percent: 20,
-            isChecked: true,
-        },       
-        {
-            id: 3,
-            name: "客服3",
-            percent: 10,
-            isChecked: true,
-        },       
-        {
-            id: 4,
-            name: "客服4",
-            percent: 80,            
-            isChecked: true,
-        },       
+        // {
+        //     id: 1,
+        //     name: "客服1",
+        //     new_customer_assign_rate: 20,
+        //     avatar: "",            
+        // },
+        // {
+        //     id: 2,
+        //     name: "客服2",
+        //     new_customer_assign_rate: 20,
+        //     avatar: "",            
+        // },       
+        // {
+        //     id: 3,
+        //     name: "客服3",
+        //     new_customer_assign_rate: 10,
+        //     avatar: "",            
+        // },       
+        // {
+        //     id: 4,
+        //     name: "客服4",
+        //     new_customer_assign_rate: 80,
+        //     avatar: "",            
+        // },       
     ])  // 线索比例分配list
     const allocationList = ref([])  // 点击分配按钮list
     const leadVisible = ref(false)
 
-    onMounted(() => {})
+    onMounted(() => {
+        getAllocationListFetch()
+    })
     /* fetch start */
     // 客服线索分配list
-    const fetch = (params = {}) => {
+    const getAllocationListFetch = (params = {}) => {
+        let obj = {
+            type: Core.Const.RETAIL.Job_Map.CUSTOMER_SERVICE,
+            ...params
+        }
+        Core.Api.CustomService.getAllocationList(obj).then(res => {
+            Core.Logger.success("参数", obj, "客服线索分配list", res)
+            // leadList.value = res?.list || []
+            leadList.value.forEach(el => {
+                el.isChecked = true
+            })
+        }).catch(err => {
+            Core.Logger.error("参数", obj, "客服线索分配list", err)
+        })
+    }
+    // 设置系统分配    
+    const setAllocationFetch = (params = {}) => {
         let obj = {
             ...params
         }
-        Core.Api.XXX(obj).then(res => {
-            Core.Logger.success("参数", obj, "客服线索分配list", res)
+        Core.Api.CustomService.setAllocation(obj).then(res => {
+            Core.Logger.success("参数", obj, "设置系统分配", res)
         }).catch(err => {
-            Core.Logger.error("参数", obj, "客服线索分配list", err)
+            Core.Logger.error("参数", obj, "设置系统分配", err)
         })
     }
     /* fetch end */
@@ -141,13 +169,23 @@
     // model确认按钮
     const onLeadModelOk = () => {
         let sum = 0
+        let user_set_system_assign_list = []
         allocationList.value.forEach(el => {
-            sum += el.percent
+            sum += el.new_customer_assign_rate
+            user_set_system_assign_list.push({
+                id: el.id,
+                new_customer_assign_rate: el.new_customer_assign_rate,
+            })
         })
 
         if (sum > 100) {            
            return proxy.$message .warning('参与分配的客服的比例相加要等于100%,请修改后再进行确认');
         }
+        Core.Logger.log("分配的客服的数据", user_set_system_assign_list)
+
+        setAllocationFetch({
+            user_set_system_assign_list
+        })     
     }
     // model取消按钮
     const onCancel = () => {

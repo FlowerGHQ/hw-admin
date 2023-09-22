@@ -865,6 +865,8 @@ const apiList = {
         orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
         logList: ['PostJson', 'customer-service/action-log/list'],
 
+        getAllocationList: ['PostJson', 'customer-service/user/list'], // 客服-线索-分配list
+        setAllocation: ['PostJson', 'customer-service/user/set-system-assign-rate'], // 客服-线索-设置系统分配比例
     },
 };
 
