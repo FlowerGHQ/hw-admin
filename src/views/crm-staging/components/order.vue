@@ -37,13 +37,6 @@ import { reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
 
-watch(
-  () => userId.value, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      getList({ page: 1 })
-    }
-  }
-)
 const getData = () => {
   getList({ current: pagination.current })
 }

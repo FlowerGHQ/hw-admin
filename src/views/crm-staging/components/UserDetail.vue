@@ -122,9 +122,9 @@
                 </div>
             </div>
         </div>
-        <AddTag v-if="tagDrawerShow" :list="detail.label_group_list" @submit="getUserDetail"
+        <AddTag v-if="tagDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail"
             v-model:visible="tagDrawerShow" />
-        <AddFocus v-if="focusDrawerShow" :list="detail.label_group_list" @submit="getUserDetail"
+        <AddFocus v-if="focusDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail"
             v-model:visible="focusDrawerShow" />
     </div>
 </template>
@@ -246,24 +246,17 @@ export default {
             defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
         };
     },
-    watch: {
-        id(newV, oldV) {
-            if (newV !== oldV) {
-                this.getUserDetail()
-            }
-        }
-    },
     computed: {
         lang() {
             return this.$store.state.lang
         }
     },
-    // created() {
-    //     this.getUserDetail();
-    // },
     mounted() {
     },
     methods: {
+        getData() {
+            this.getUserDetail()
+        },
         // 删除标签或关注点
         handleDeleteTag(id) {
             let _this = this;

@@ -61,15 +61,10 @@ import { reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
 
-watch(
-    () => userId.value, (newValue, oldValue) => {
-        if (newValue !== oldValue) {
-            getUserDetail()
-            getDriveListFetch()
-        }
-    }
-)
-
+const getData = () => {
+    getUserDetail()
+    getDriveListFetch()
+}
 const userMes = reactive({})
 const dirveData = reactive({})
 const testTotal = ref(0)
@@ -99,6 +94,7 @@ const getDriveListFetch = () => {
         Core.Logger.error("参数", obj, "获取试驾单列表", err)
     })
 }
+defineExpose({ getData })
 </script>
 
 <style lang="less" scoped>

@@ -119,15 +119,9 @@ const channelPagination = ref({
     showTotal: (total) => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`
 })
 
-onMounted(() => {
-    
-})
-// 监听
-watch(userId, (newValue, oldValue) => {
-	Core.Logger.log("监听userId值", newValue, oldValue);
-	getDriveListFetch()
-})
-
+const getData = () => {
+    getDriveListFetch()
+}
 /* Fetch start */
 // 获取试驾单列表
 const getDriveListFetch = (params = {}) => {
@@ -176,7 +170,7 @@ const handleTableChange = (pagination, filters, sorter) => {
     })
 }
 /* methods end */
-
+defineExpose({ getData })
 
 </script>
 
