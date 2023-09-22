@@ -133,7 +133,6 @@ export default {
         };
     },
     mounted() {
-        console.log(this.detail,'yxy');
         this.getCustomerDetail();
     },
     methods: {
