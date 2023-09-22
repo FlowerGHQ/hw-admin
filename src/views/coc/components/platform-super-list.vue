@@ -83,6 +83,7 @@
 		</div>
 		<EditModal
 			:ModalTitle="ModalTitle"
+			:type="openType"
 			v-model:visible="visible"
 			:formdisabled="formdisabled"
 			@handleOk="handleModalOk"
@@ -317,6 +318,16 @@ const getDetail = async (id) => {
 		coc_validity_date.value = []
 	}
 }
+const saveCocTemplate = (params, type = "") => {
+	addCocTemplate(params).then((res) => {
+		$message.success(
+			type === "add" ? $t("coc.coc_add_success") : $t("coc.coc_edit_success")
+		)
+		Core.Logger.success("参数", params, "结果", res)
+		// 刷新列表
+		getTableData()
+	})
+}
 
 // 点击不同的按钮
 const handleModal = (open_type, item = {}) => {
@@ -340,25 +351,25 @@ const handleModal = (open_type, item = {}) => {
 }
 // handleModalOk 点击确定按钮
 const handleModalOk = (value) => {
-	if (value === "edit") {
-		// 处理时间
-		if (coc_validity_date.value.length > 0) {
-			form.value.effective_start_time = coc_validity_date.value[0].unix()
-			form.value.effective_end_time = coc_validity_date.value[1].unix()
-		}
-
-		// 深拷贝
-		let params = Util.deepCopy(form.value)
-		params.model = params.model.length > 0 ? params.model.join(",") : ""
-		if (params.update_time) {
-			delete params.update_time
-		}
-		addCocTemplate(params).then((res) => {
-			$message.success($t("coc.coc_add_success"))
-			Core.Logger.success("参数", params, "结果", res)
-			// 刷新列表
-			getTableData()
-		})
+	// 处理时间
+	if (coc_validity_date.value.length > 0) {
+		form.value.effective_start_time = coc_validity_date.value[0].unix()
+		form.value.effective_end_time = coc_validity_date.value[1].unix()
+	}
+	// 深拷贝
+	let params = Util.deepCopy(form.value)
+	params.model = params.model.length > 0 ? params.model.join(",") : ""
+	params.file_url = modelForm.path
+	if (params.update_time) {
+		delete params.update_time
+	}
+	switch (value) {
+		case "add":
+			saveCocTemplate(params, "add")
+			break
+		case "edit":
+			saveCocTemplate(params, "edit")
+			break
 	}
 	visible.value = false
 }

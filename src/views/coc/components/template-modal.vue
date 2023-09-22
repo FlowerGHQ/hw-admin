@@ -25,7 +25,7 @@
 	</div>
 </template>
 <script setup>
-import {  defineEmits } from "vue"
+import { defineEmits } from "vue"
 const props = defineProps({
 	visible: {
 		type: Boolean,
@@ -39,23 +39,19 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
+	type: {
+		type: String,
+		default: "",
+	},
 })
 const $emit = defineEmits(["update:visible", "handleOk"])
 // modal
 const handleOk = () => {
-	if (!props.formdisabled) {
-		$emit('handleOk','edit') //编辑
-	} else { 
-		// 传递修改的字段标识
-		$emit('handleOk','view') //查看
-	}
-
+	$emit("handleOk", props.type) //编辑
 }
 const handleCancel = () => {
 	$emit("update:visible", false)
 }
 </script>
 
-<style lang="less" scoped>
-
-</style>
+<style lang="less" scoped></style>
