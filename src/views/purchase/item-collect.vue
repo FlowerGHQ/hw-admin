@@ -217,7 +217,6 @@ export default {
         },
         settle(){
             for (const it of this.shopCartList) {
-                // console.log(it.item[this.priceKey + this.unitMap[this.currency].key])
                 if (it.item[this.priceKey + this.unitMap[this.currency].key] === 0){
                     this.$message.error(this.$t('p.item_error'))
                     return ;

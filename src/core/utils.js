@@ -1315,6 +1315,67 @@ const Util = {
         return result
     },
     /* ======== 百分比 ========== */
+    /* ======== 投票结果 ========== */
+    voteResultFilter(val, to='text') {
+        const MAP = Const.VOTE.VOTE_RESULT
+        let ITEM = MAP[val + ''] || {text: ''}
+        return ITEM[to] || ''
+    },
+    /* ======== 投票结果 ========== */
+    /* ======== 门店等级 ========== */
+    storeLevel(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_LEVEL
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 门店类型
+    storeType(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 门店状态
+    storeSTATUS(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_STATUS
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+
+    /* ======== 好物订单修改记录 ========== */
+    goodItemOrderUpdateRecordFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Update_Record
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* ======== 好物订单来源 ========== */
+    goodSourceChannelFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Source_Channel
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* ======== 好物订单activity_Source_Type来源 ========== */
+    goodSourceTypeFilter(val, to = 'zh') {
+        const MAP = Const.GOODITEMORDER.Source_Type
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /**
+     * @description:字符串拼接 将后端传来的数组转换成字符串拼接
+     * @param {Array} list     数组
+     * @param {String} keyName 项的属性名称
+     * @return {String}        逗号拼接的字符串
+     */
+    goodItemListFilter( list, keyName, to = 'zh') {
+        if(!list?.length){
+            return ''
+        }
+        let str = '', dotext ='';
+        list.forEach((item,index) => {
+            if(index<list.length-1) {dotext = ','}else {dotext = ''};
+            if(item[keyName]) {str += item[keyName] || '' + dotext};
+        })
+        return str || ''
+    },
 
 
     /* ======== 门店等级 ========== */
@@ -1335,6 +1396,7 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
+
 }
 
 export default Util
