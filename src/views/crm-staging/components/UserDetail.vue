@@ -30,11 +30,11 @@
                         · {{ detail.age || '-' }}岁 ·
                         {{ $Util.timeFilter(detail.birthday, 3) }}
                     </div>
-                    <img class="user-icon" src="../images/user-email.png" alt="">
+                    <img class="user-icon" src="../images/email.png" alt="">
                     <div class="user-info-text">
                         {{ detail.email || '-' }}
                     </div>
-                    <img class="user-icon" src="../images/user-phone.png" alt="">
+                    <img class="user-icon" src="../images/phone.png" alt="">
                     <div class="user-info-text">
                         {{ detail.phone || '-' }}
                     </div>
@@ -303,8 +303,8 @@ export default {
     
 <style scoped lang="less">
 #user-detail {
-    width: 838px;
-    padding: 20px;
+    // width: 838px;
+    padding: 20px 20px 8px 20px;
     box-sizing: border-box;
     background: #FFF;
 
@@ -418,7 +418,7 @@ export default {
                     display: flex;
                     align-items: center;
                     flex-wrap: wrap;
-                    width: 500px;
+                    // width: 500px;
                 }
 
                 .add-tag-btn {
@@ -429,7 +429,7 @@ export default {
                     align-items: center;
                     color: #4E5969;
                     font-size: 12px;
-                    border: 0.5px dashed#D9D9D9;
+                    border: 0.5px dashed #D9D9D9;
                     background: #FFF;
                     cursor: pointer;
                     margin-bottom: 12px;
