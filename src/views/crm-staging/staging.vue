@@ -22,7 +22,7 @@
                             <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
-                    <div class="task-list-body" @scroll="handleScroll">
+                    <div class="task-list-body" id="taskBody" @scroll="handleScroll">
                         <div
                             v-for="(item, index) in taskList"
                             :key="item.id"
@@ -270,6 +270,9 @@ const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
     userId.value = taskList.value[taskIndex.value].id
+    // 下一步 同步滚动条
+    const taskEl = document.querySelector('#taskBody')
+    taskEl.children[taskIndex.value].scrollIntoView({ behavior: 'smooth' })
 }
 
 
