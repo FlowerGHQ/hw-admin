@@ -188,6 +188,7 @@ const {
 import { useTable } from "@/hooks/useTable"
 import EditModal from "./template-modal.vue"
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue"
+import { Upload } from 'ant-design-vue';
 import { ref, getCurrentInstance, onMounted, reactive, toRefs } from "vue"
 const { ctx } = getCurrentInstance()
 const { $t, $message, $confirm } = ctx.$root
@@ -263,7 +264,7 @@ const handleFileCheck = (file) => {
 		// 阻止上传并阻止进入列表
 		console.log("阻止上传并阻止进入列表")
 		btnLoading.value = false
-		return false
+		return false || Upload.LIST_IGNORE
 	}
 	return true
 }
