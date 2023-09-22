@@ -31,6 +31,7 @@ export default {
     coc_delete_success: '删除成功',
     coc_add_success: '添加成功',
     coc_edit_success: '编辑成功',
+    coc_upload_file_type_error: '上传文件类型错误',
 
   },
   en: {
@@ -65,5 +66,6 @@ export default {
     coc_delete_success: 'Delete Success',
     coc_add_success: 'Add Success',
     coc_edit_success: 'Edit Success',
+    coc_upload_file_type_error: 'Upload file type error',
   }
 }

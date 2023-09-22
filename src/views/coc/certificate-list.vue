@@ -79,7 +79,9 @@
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
-						<template v-else-if="column.key === 'coc_cocStatus'">
+						<template
+							v-else-if="column.key === 'coc_cocStatus' && !distributor"
+						>
 							<!-- tag -->
 							<a-tag :color="COC.TAB_TYPE[record.coc_cocStatus].color">
 								{{ COC.TAB_TYPE[record.coc_cocStatus][$i18n.locale] }}
@@ -94,18 +96,25 @@
 
 <script setup>
 import { ref, reactive, getCurrentInstance, computed } from "vue"
+import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const $t = proxy.$root.$t
 const { TAB_TYPE } = COC
+// 获取路由参数
+const route = useRoute()
+const { query } = route
+
+const { isDistributor } = query
+
+const distributor = ref(isDistributor === "true") // 是否是经销商
 
 const tab_type = computed(() => {
 	// 过滤
 	return Object.values(TAB_TYPE).filter((item) => item.key !== 3)
 })
-
 const palrformTableColumns = ref([
 	{
 		title: "certificate-list.coc_orderNumber",

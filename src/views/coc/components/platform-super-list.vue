@@ -147,17 +147,20 @@
 				>
 					<!-- 上传组件 正方形带+ -->
 					<a-upload
-						:multiple="true"
-						v-model:file-list="fileList"
+						name="file"
+						ref="uploader"
 						list-type="picture-card"
 						:disabled="formdisabled"
-						action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-						:show-upload-list="false"
-						:before-upload="beforeUpload"
-						@change="handleChange"
+						:file-list="upload.fileList"
+						:action="upload.action"
+						:multiple="false"
+						:headers="upload.headers"
+						:data="upload.data"
+						:max-count="1"
+						:before-upload="handleFileCheck"
+						@change="handleFileChange"
 					>
-						<img v-if="imageUrl" :src="imageUrl" alt="avatar" />
-						<div v-else>
+						<div>
 							<loading-outlined v-if="btnLoading"></loading-outlined>
 							<plus-outlined v-else></plus-outlined>
 							<div class="ant-upload-text">
@@ -184,13 +187,13 @@ const {
 import { useTable } from "@/hooks/useTable"
 import EditModal from "./template-modal.vue"
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue"
-import { ref, getCurrentInstance, onMounted } from "vue"
+import { ref, getCurrentInstance, onMounted, reactive, toRefs } from "vue"
 const { ctx } = getCurrentInstance()
-const { $t, $message } = ctx.$root
+const { $t, $message, $confirm } = ctx.$root
 
+const uploader = ref(null)
 // 定义常量
 const rowId = ref(null)
-
 // 传递的props
 const ModalTitle = ref("")
 const visible = ref(false)
@@ -201,7 +204,26 @@ const form = ref({
 	version_number: "",
 	model: [],
 })
-const fileList = ref([])
+// 上传字段
+const modelForm = reactive({
+	// 本次附件填写存值
+	name: "",
+	path: "",
+	type: "",
+	user_name: "",
+	create_time: "",
+})
+const upload = reactive({
+	action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+	fileList: [],
+	headers: {
+		ContentType: false,
+	},
+	data: {
+		token: Core.Data.getToken(),
+		type: "file",
+	},
+})
 // form布局
 const formLayout = ref("horizontal")
 const labelCol = ref({ style: { width: "100px" } })
@@ -210,7 +232,6 @@ const btnLoading = ref(false)
 const coc_validity_date = ref([])
 const option = ref([])
 let formdisabled = ref(false)
-const imageUrl = ref("")
 
 const {
 	tableData,
@@ -226,13 +247,40 @@ const getCateGory = async () => {
 	const res = await getCateGoryList()
 	option.value = res
 }
-// 上传组件
-const beforeUpload = (file) => {
-	console.log("beforeUpload: ", file)
+// 上传前检查文件
+const handleFileCheck = (file) => {
+	btnLoading.value = true
+	// 检测文件类型，doc、docx
+	const isDoc = file.type === "application/msword"
+	const isDocx =
+		file.type ===
+		"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+	if (!isDoc && !isDocx) {
+		// 将显示的文件列表清空
+		upload.fileList = []
+		$message.error($t("coc.coc_upload_file_type_error"))
+		// 阻止上传并阻止进入列表
+		console.log("阻止上传并阻止进入列表")
+		btnLoading.value = false
+		return false
+	}
+	return true
 }
 
-const handleChange = (info) => {
-	console.log("handleChange: ", info)
+// 上传文件
+const handleFileChange = ({ file, fileList }) => {
+	if (file.status == "done") {
+		if (file.response && file.response.code > 0) {
+			return $message.error(file.response.message)
+		}
+		modelForm.name = file.response.data.name
+		modelForm.path = file.response.data.filename
+		modelForm.type = upload.data.type
+		modelForm.user_name = Core.Data.getUser().name
+		modelForm.create_time = new Date().getTime() / 1000
+	}
+	btnLoading.value = false
+	upload.fileList = fileList
 }
 
 onMounted(() => {
@@ -247,7 +295,7 @@ const resetData = () => {
 		version_number: "",
 		model: [],
 	}
-	fileList.value = []
+	upload.fileList = []
 	coc_validity_date.value = []
 }
 // 获取详情
@@ -268,10 +316,6 @@ const getDetail = async (id) => {
 	} else {
 		coc_validity_date.value = []
 	}
-}
-// 添加模板
-const addTemplate = async (form) => {
-	addCocTemplate(form)
 }
 
 // 点击不同的按钮
@@ -309,11 +353,9 @@ const handleModalOk = (value) => {
 		if (params.update_time) {
 			delete params.update_time
 		}
-		console.log("params", params)
-		addCocTemplate(params).then(() => {
+		addCocTemplate(params).then((res) => {
 			$message.success($t("coc.coc_add_success"))
 			Core.Logger.success("参数", params, "结果", res)
-			// 关闭弹窗
 			// 刷新列表
 			getTableData()
 		})
@@ -322,11 +364,20 @@ const handleModalOk = (value) => {
 }
 // 删除按钮
 const handleDelete = (item) => {
-	deleteCocTemplate({ id: item.id }).then((res) => {
-		$message.success($t("coc.coc_delete_success"))
-		Core.Logger.success("参数", { id: item.id }, "结果", res)
-		// 刷新列表
-		getTableData()
+	// 询问是否删除
+	$confirm({
+		title: $t("pop_up.sure_delete"),
+		okText: $t("def.sure"),
+		okType: "danger",
+		cancelText: $t("def.cancel"),
+		onOk() {
+			deleteCocTemplate({ id: item.id }).then((res) => {
+				$message.success($t("coc.coc_delete_success"))
+				Core.Logger.success("参数", { id: item.id }, "结果", res)
+				// 刷新列表
+				getTableData()
+			})
+		},
 	})
 }
 const tableColumns = [

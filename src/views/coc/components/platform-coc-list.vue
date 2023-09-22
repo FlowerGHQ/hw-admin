@@ -13,11 +13,8 @@
 			</div>
 			<!-- tabs -->
 			<div class="tabs-container colorful cancel-m-b">
-				<a-tabs v-model:activeKey="activeKey">
-					<a-tab-pane
-						v-for="item of COC.TAB_TYPE"
-						:key="item.key - 1 ? item.key - 1 : 0"
-					>
+				<a-tabs v-model:activeKey="activeKey" @change="handleTabs">
+					<a-tab-pane v-for="item of COC.TAB_TYPE" :key="item.key">
 						<template #tab>
 							{{ item[$i18n.locale] }}
 						</template>
@@ -80,21 +77,25 @@
 					</template>
 					<template #bodyCell="{ column, text, record }">
 						<template v-if="column.key === 'operation'">
-							<a-button type="link" @click="onDownLoad">{{
-								$t("coc_business.coc_download")
-							}}</a-button>
-							<a-button type="link" @click="onView">{{
-								$t("coc_business.coc_view")
-							}}</a-button>
-							<a-button type="link" @click="onCertificate">{{
+							<a-button
+								type="link"
+								@click="onDownLoad(record)"
+								:disabled="record.certificate_status !== 1"
+								>{{ $t("coc_business.coc_download") }}</a-button
+							>
+							<a-button type="link" @click="onView(record)">{{
 								$t("coc_business.coc_certificate_inventory")
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
 						<template v-else-if="column.key === 'certificate_status'">
 							<!-- tag -->
-							<a-tag :color="COC.TAB_TYPE[record.certificate_status + 1].color">
-								{{ COC.TAB_TYPE[record.certificate_status + 1][$i18n.locale] }}
+							<a-tag
+								:color="
+									COC.TAB_TYPE[record.certificate_status]?.color || 'default'
+								"
+							>
+								{{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
 							</a-tag>
 						</template>
 						<!-- 客户是否可见 -->
@@ -102,7 +103,7 @@
 							<!-- switch -->
 							<a-switch
 								v-model:checked="record.visible_flag"
-								@change="handleSwitch"
+								@change="handleSwitch(record)"
 							/>
 						</template>
 					</template>
@@ -128,6 +129,12 @@ const {
 	setCertificateVisible,
 } = Core.Api.COC
 
+console.log(
+	"是不是分销商:",
+	Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR,
+	"是不是管理员：",
+	Core.Data.getManager()
+)
 // 定义变量
 const palrformTableColumns = ref([
 	{
@@ -183,21 +190,21 @@ const selectedRowKeyArr = ref([]) // 选中的哪些项
 /* fetch start */
 
 // 请求证书列表
-const certificateList = (searchForm) => {
+const certificateList = () => {
 	let pagination = {
 		page: channelPagination.page,
 		page_size: channelPagination.pageSize,
 	}
-	let params = {
-		...pagination,
-		...searchForm,
-	}
+	let params = Object.assign({}, pagination, searchForm.value)
 	getCertificateList(params)
 		.then((res) => {
-			console.log("res", res)
-			channelPagination.total = res.total
+			channelPagination.total = res.count
 			palrformTableData.value = res.list
-			Core.Logger.success("参数", searchForm, "结果", res)
+			palrformTableData.value.forEach((item) => {
+				return (item.visible_flag = item.visible_flag === 1 ? true : false)
+			})
+			console.log("palrformTableData", palrformTableData)
+			// Core.Logger.success("参数", searchForm, "结果", res)
 		})
 		.catch((err) => {
 			Core.Logger.error("参数", searchForm, "结果", err)
@@ -227,7 +234,26 @@ const handleTableChange = (pagination, filters, sorter) => {
 	channelPagination = pager
 	certificateList()
 }
-const handleSwitch = (checked, record) => {}
+const handleSwitch = (record) => {
+	let isOpen = record.visible_flag
+	let params = {
+		order_number: record.order_number,
+		visible_flag: isOpen ? 1 : 0,
+	}
+	setCertificateVisible(params)
+		.then((res) => {
+			Core.Logger.success("参数", params, "结果", res)
+			// 重新请求列表
+			certificateList()
+		})
+		.catch((err) => {
+			Core.Logger.error("参数", params, "结果", err)
+		})
+}
+const handleTabs = () => {
+	searchForm.value.certificate_status = activeKey.value
+	certificateList()
+}
 
 onMounted(() => {
 	certificateList()
@@ -237,15 +263,23 @@ onMounted(() => {
 
 /* methods start */
 // 下载
-const onDownLoad = () => {}
+const onDownLoad = (record) => {
+	console.log("handleDownload record:", record)
+	let url = Core.Const.NET.FILE_URL_PREFIX + record.path
+	window.open(url, "_self")
+}
 // 查看
-const onView = () => {
+const onView = (record) => {
+	let isDistributor =
+		Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR
 	router.push({
-		path: "/coc/certificate-list",
+		path: `/coc/certificate-list`,
+		query: {
+			id: record.id,
+			isDistributor: isDistributor,
+		},
 	})
 }
-// 证书清单
-const onCertificate = () => {}
 // 下单时间
 const onPlaceOrderTime = (params) => {
 	Core.Logger.log("下单时间", params)
