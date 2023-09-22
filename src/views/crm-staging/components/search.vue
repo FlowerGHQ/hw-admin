@@ -59,6 +59,7 @@
               :field-names="{ label: 'city', value: 'id' }"
               style="width: 104px;"
               placeholder="所属城市"
+              :disabled="!searchForm.group_id"
               @change="handleChange('city')"
             ></a-select>
         </div>
@@ -70,6 +71,7 @@
               :field-names="{ label: 'name', value: 'id' }"
               style="width: 104px;"
               placeholder="所属门店"
+              :disabled="!searchForm.city"
               @change="handleChange"
             ></a-select>
         </div>

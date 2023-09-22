@@ -11,6 +11,7 @@
         <a-button type="link" @click="clickCreate({type:30,content:'已补充好省市',method:20})">创建跟进</a-button>
       </div>
       <a-select
+        class="follow-type"
         width="120px"
         v-model:value="followObj.type"
         placeholder="选择跟进类型"
@@ -56,15 +57,6 @@ const pagination = reactive({
   total: 0,
   total_page: 0
 })
-watch(
-  () => userId.value, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      // 获取跟进记录 
-      getRecordList();
-
-    }
-  }
-)
 const getData = () => {
   getRecordList()
 }
@@ -160,6 +152,7 @@ const handleScroll = (e) => {
 .follow-record {
   height: 100%;
   overflow-y: auto;
+  position: relative;
   .follow-top {
     display: flex;
     align-items: center;
@@ -177,6 +170,10 @@ const handleScroll = (e) => {
     padding: 0px 12px;
     border: 1px solid  #F2F3F5;
     margin-right: 12px;
+  }
+  .follow-type {
+    position: absolute;
+    right: 0;
   }
 }
 </style>

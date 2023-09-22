@@ -108,6 +108,7 @@ import dayjs from 'dayjs';
 
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
+const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -167,6 +168,7 @@ const createFollow = () => {
     isShowCreate.value = true;
     proxy.$message.success('提交成功')
     $emit('getRecordList');
+    getChildData('userDetailRef')
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })

@@ -60,7 +60,7 @@
                 </div>
                 <div class="content-right">
                     <div class="user-card">
-                        <UserDetail :id="userId"/>
+                        <UserDetail ref="userDetailRef" :id="userId"/>
                     </div>
                     <div class="about">
                         <div class="user-about">
@@ -141,7 +141,7 @@ import dayjs from "dayjs";
 const route = useRoute()
 onMounted(() => {    
     getTaskNum()
-    getLogListFetch()
+    getAllChildData()
 })
 
 // a-drawer bodyStyle样式
@@ -234,6 +234,7 @@ const changeTask = (index) => {
     taskCurrent.value = index + 1
     userId.value = taskList.value[index].id
     isTop.value = taskList.value[index].flag_top === 1 ? true : false
+    getAllChildData()
 }
 const getTaskNum = (params = {}, isSearch = false) => {
     const obj = {
@@ -260,6 +261,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
         taskAmount.value = taskList.value.length
         userId.value = taskList.value[taskIndex.value]?.id
         isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
+        getAllChildData()
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
@@ -311,6 +313,7 @@ const nextTask = (current) => {
     taskCurrent.value = current
     taskIndex.value = current - 1
     userId.value = taskList.value[taskIndex.value].id
+    getAllChildData()
     // 下一步 同步滚动条
     const taskEl = document.querySelector('#taskBody')
     taskEl.children[taskIndex.value].scrollIntoView({ behavior: 'smooth' })
@@ -360,6 +363,7 @@ const tabPane3 = ref(null);
 const tabPane4 = ref(null);
 const tabPane5 = ref(null);
 const tabPane6 = ref(null);
+const userDetailRef = ref(null);
 const activeKey = ref('1')
 const totals = reactive({
     '1': 0,
@@ -373,34 +377,40 @@ const totals = reactive({
 const getCount = (key, count) => {
     totals[key] = count
 }
-
-// const changeActivety = (value) => {
-//     getChildData(value)
-// }
+const getAllChildData = () => {
+    if (!userId.value) return
+    const arr = ['1', '2', '3', '4', '5', '6', 'userDetailRef']
+    arr.forEach(item => getChildData(item))
+}
 const getChildData = (key) => {
-    switch (key) {
-        case '1':
-            // tabPane1.value.getData()
-            break;
-        case '2':
-            tabPane2.value.getData()
-            break;
-        case '3':
-            // tabPane3.value.getData()
-            break;
-        case '4':
-            tabPane4.value.getData()
-            break;
-        case '5':
-            // tabPane5.value.getData()
-            break;
-        case '6':
-            // tabPane6.value.getData()
-            break;
-    
-        default:
-            break;
-    }
+    nextTick(() => {
+        switch (key) {
+            case '1':
+                tabPane1.value.getData()
+                break;
+            case '2':
+                tabPane2.value.getData()
+                break;
+            case '3':
+                tabPane3.value.getData()
+                break;
+            case '4':
+                tabPane4.value.getData()
+                break;
+            case '5':
+                tabPane5.value.getData()
+                break;
+            case '6':
+                getLogListFetch()
+                break;
+            case 'userDetailRef':
+                userDetailRef.value.getData()
+                break;
+            
+            default:
+                break;
+        }
+    })
 }
 
 
