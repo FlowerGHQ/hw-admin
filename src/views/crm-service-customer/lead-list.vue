@@ -19,19 +19,19 @@
                             <div class="lead-item-right m-l-12">
                                 <div class="lead-item-r-t">
                                     <div class="lead-name">
-                                        客服1
+                                        {{ item.name || '-' }}
                                     </div>
                                     <div class="lead-switch">
                                         <span class="m-r-6">是否参与分配</span>
-                                        <a-switch v-model:checked="checked" size="small"/>
+                                        <a-switch v-model:checked="item.isChecked" size="small"/>
                                     </div>
                                 </div>
                                 <div class="lead-item-r-b">
                                     <div class="lead-percent">
-                                        <div class="lead-percent-text">线索分配比例</div>
-                                        <div class="lead-percent-p">20%</div>
+                                        <div class="lead-percent-text">线索分配比例{{ item.isChecked }}</div>
+                                        <div class="lead-percent-p">{{ item.isChecked ? item.percent : 0 }}%</div>
                                     </div>
-                                    <a-progress :percent="30" strokeColor="#0161FF" :showInfo="false"/>
+                                    <a-progress :percent="item.isChecked ? item.percent : 0" strokeColor="#0161FF" :showInfo="false"/>
                                 </div>
                             </div>
                         </div>
@@ -45,35 +45,38 @@
     <a-modal 
         v-model:visible="leadVisible" 
         title="分配线索比例"
+        width="700px"
         @ok="onLeadModelOk"
         @cancel="onCancel"
     >
-        <div class="lead-model">            
-            <div class="lead-model-item m-r-16 m-t-16">
-                <div class="lead-model-item-left">
-                    <div class="left-avatar">
-                        <img class="avatar-img" :src="Static.defaultAvatar" alt="">                                
-                    </div>
-                </div>
-                <div class="lead-model-item-right m-l-12">
-                    <div class="lead-item-r-t">
-                        <div class="lead-name">
-                            客服1
-                        </div>                      
-                    </div>
-                    <div class="lead-item-r-b m-t-10">
-                        <div class="lead-percent">
-                            <div class="lead-percent-text">20%</div>
-                            <div class="lead-percent-p">/100%</div>
-                        </div>
-                        <div class="icon-wrapper">
-                            <img class="minus-icon" src="../../assets/images/crm-service-customer/minus-circle.png" alt="" @click="onMinus"> 
-                            <a-slider class="slider" v-model:value="sliderValue" :min="0" :max="100" />
-                            <img class="add-icon" src="../../assets/images/crm-service-customer/add-circle.png" alt="" @click="onAdd">
+        <div class="lead-model">
+            <template v-for="(item,index) in allocationList" :key="index">
+                <!-- m-r-16 -->
+                <div class="lead-model-item m-t-16">
+                    <div class="lead-model-item-left">
+                        <div class="left-avatar">
+                            <img class="avatar-img" :src="Static.defaultAvatar" alt="">                                
                         </div>
                     </div>
+                    <div class="lead-model-item-right m-l-12">
+                        <div class="lead-item-r-t">
+                            <div class="lead-name">
+                                {{ item.name || '-' }}
+                            </div>                      
+                        </div>
+                        <div class="lead-item-r-b m-t-10">                            
+                            <div class="icon-wrapper">
+                                <a-input-number 
+                                    v-model:value="item.percent"
+                                    :min="1"
+                                    :max="100"
+                                />
+                                <span class="percent-symbol m-l-8">%</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </template>
         </div>
     </a-modal>
 
@@ -81,28 +84,50 @@
 
 <script setup>
     import Static from '../crm-staging/static';
-    import { ref, onMounted }  from 'vue'
+    import { ref, onMounted, getCurrentInstance }  from 'vue'
+    import Core from '@/core'
+    const { proxy } = getCurrentInstance()
 
     const leadList = ref([
         {
             id: 1,
-            
+            name: "客服1",
+            percent: 20,
+            isChecked: false,
         },
-        {},       
-    ])
+        {
+            id: 2,
+            name: "客服2",
+            percent: 20,
+            isChecked: true,
+        },       
+        {
+            id: 3,
+            name: "客服3",
+            percent: 10,
+            isChecked: true,
+        },       
+        {
+            id: 4,
+            name: "客服4",
+            percent: 80,            
+            isChecked: true,
+        },       
+    ])  // 线索比例分配list
+    const allocationList = ref([])  // 点击分配按钮list
     const leadVisible = ref(false)
-    const sliderValue = ref(30)
 
     onMounted(() => {})
     /* fetch start */
+    // 客服线索分配list
     const fetch = (params = {}) => {
         let obj = {
             ...params
         }
         Core.Api.XXX(obj).then(res => {
-            Core.Logger.success("参数", obj, "结果", res)
+            Core.Logger.success("参数", obj, "客服线索分配list", res)
         }).catch(err => {
-            Core.Logger.error("参数", obj, "结果", err)
+            Core.Logger.error("参数", obj, "客服线索分配list", err)
         })
     }
     /* fetch end */
@@ -111,31 +136,24 @@
     // 分配点击按钮
     const onAllocation = () => {
         leadVisible.value = true
+        allocationList.value = Core.Util.deepCopy(leadList.value.filter(el => el.isChecked))
     }
     // model确认按钮
     const onLeadModelOk = () => {
+        let sum = 0
+        allocationList.value.forEach(el => {
+            sum += el.percent
+        })
 
+        if (sum > 100) {            
+           return proxy.$message .warning('参与分配的客服的比例相加要等于100%,请修改后再进行确认');
+        }
     }
     // model取消按钮
-    const onCancel = () => {}
-
-    // model slider 减少按钮
-    const onMinus = () => {
-        if (sliderValue.value === 0) {
-            sliderValue.value = 0
-            return
-        }
-        sliderValue.value--
-    }
-
-    // slider 添加按钮
-    const onAdd = () => {
-        if (sliderValue.value === 100) {
-            sliderValue.value = 100
-            return
-        }
-        sliderValue.value++
-    }
+    const onCancel = () => {
+        leadVisible.value = false
+    }    
+  
     /* methods end */
 </script>
 
@@ -200,6 +218,8 @@
 }
 
 .lead-model {
+    .fcc(space-between, initial);
+    flex-wrap: wrap;
     .lead-model-item {
         width: 315px;
         padding: 16px;
@@ -229,36 +249,13 @@
                         font-weight: 600;
                     }                   
             }
-            .lead-item-r-b {
-                .lead-percent {
-                    .fcc(initial);
-                    &-text {
-                        color: #0061FF;
-                        font-size: 14px;
-                        font-weight: 600;
-                    }
-                    &-p {
-                        color: #1D2129;
-                        font-size: 14px;
-                        font-weight: 600;
-                    }
-                }
+            .lead-item-r-b {                
                 .icon-wrapper {
-                    .fcc(initial);
-                    .slider {
-                        width: 100%;
-                        :deep(.ant-slider-track) {
-                            background-color: #0161FF;
-                        }
-                    }
-                    .minus-icon {
-                        width: 16px;
-                        height: 16px;
-                    }
-                    .add-icon {
-                        width: 16px;
-                        height: 16px;
-                    }
+                    .percent-symbol {
+                        color: #1D2129;
+                        font-size: 16px;
+                        font-weight: 600;
+                    }                    
                 }
             }
         }
@@ -278,5 +275,8 @@
 }
 .m-r-6 {
     margin-right: 6px;
+}
+.m-l-8 {
+    margin-left: 8px;
 }
 </style>
