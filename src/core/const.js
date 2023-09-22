@@ -7,8 +7,8 @@ import defult_file from '@images/defult_file.png'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
-// let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
-let URL_POINT = 'http://10.0.0.100'  // zy
+let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
+// let URL_POINT = 'http://10.0.0.100'  // zy
 let DISABLELOG = false
 
 switch (window.location.hostname) {
@@ -2387,7 +2387,7 @@ let Const = {
         COMMUNICATE_TYPE: {
             "20": { key: 20, value: 20, zh: '电话沟通' },
             "10": { key: 10, value: 10, zh: '面谈' },
-            "30": { key: 30, value: 30, zh: '其他' },
+            "30": { key: 30, value: 30, zh: '未沟通' },
         },
         // 跟进类型
         FOLLOW_TYPE: {

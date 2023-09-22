@@ -23,7 +23,6 @@
                     <div class="value">
                         <a-input v-model:value="form.name" :placeholder="$t('def.input')"/>
                     </div>
-
                 </div>
 
                 <div class="form-item required" >

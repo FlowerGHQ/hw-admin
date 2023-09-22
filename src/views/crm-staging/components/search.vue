@@ -14,7 +14,7 @@
               v-model:value="searchForm.intention"
               :field-names="{ label: 'zh', value: 'key' }"
               style="width: 90px;"
-              placeholder="意向"
+              placeholder="意向度"
               @change="handleChange"
             ></a-select>
         </div>
@@ -89,7 +89,7 @@
                 </template>
             </a-range-picker>
         </div>
-        <span class="clear" :style="{ color:clear ? '#0061FF' : '#86909C' }" @click="clearFn">清空筛选条件</span>
+        <span class="clear" v-if="clear" @click="clearFn">清空筛选条件</span>
     </div>
 </template>
 
@@ -222,7 +222,11 @@ const clearFn = () => {
     .clear {
         position: absolute;
         right: 0;
+        color: #86909C;
         cursor: pointer;
+        &:hover {
+            color: #0061FF;
+        }
     }
 }
 </style>

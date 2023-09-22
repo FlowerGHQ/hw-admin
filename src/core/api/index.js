@@ -840,7 +840,7 @@ const apiList = {
     CustomService: {
         list: ['PostJson', 'customer-service/customer/list'],  
         amountList: ['PostJson', 'customer-service/home/my-task/amount-list'],  // 我的任务- 已处理/全部 数量
-        detail: ['PostJson', 'customer-service/customer/detail'],   
+        detail: ['PostJson', 'customer-service/customer/detail'],       // 用户线索详情
         deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
         updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
         storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
@@ -867,6 +867,9 @@ const apiList = {
 
         getAllocationList: ['PostJson', 'customer-service/user/list'], // 客服-线索-分配list
         setAllocation: ['PostJson', 'customer-service/user/set-system-assign-rate'], // 客服-线索-设置系统分配比例
+        editUser: ['PostJson','customer-service/customer/save'],    // 编辑用户线索
+        verifyPhoneAndEmail: ['PostJson','customer-service/customer/verifyPhoneAndEmail'],    // 验证手机号 / 邮箱号
+
     },
 };
 

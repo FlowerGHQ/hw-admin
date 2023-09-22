@@ -3,7 +3,7 @@
         <div class="white-container">
             <div class="title">
                 <div>
-                    创建用户
+                    {{ form.id ? '编辑用户':'创建用户' }}
                 </div>
                 <div class="btn-group">
                     <a-button @click="routerChange('back')">取消</a-button>
@@ -78,7 +78,7 @@
                         邮箱：
                     </div>
                     <div class="value">
-                        <a-input v-model:value="form.email" placeholder="请输入邮箱" />
+                        <a-input @blur="emailBlurCheck" v-model:value="form.email" placeholder="请输入邮箱" />
                     </div>
                 </div>
                 <div class="form-item" v-if="emailExistErrorFlag">
@@ -87,9 +87,21 @@
                         {{ emailExistTip }}
                     </div>
                 </div>
+                <div class="form-item" v-if="form.id">
+                    <div class="key">
+                        意向车辆：
+                    </div>
+                    <div class="value">
+                        <a-select v-model:value="form.intent_vehicle_model" placeholder="请选择意向车辆">
+                            <a-select-option v-for="(item, key) in vehicleList" :key="key" :value="item.value">
+                                {{ item.name }}
+                            </a-select-option>
+                        </a-select>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="white-container">
+        <div class="white-container"  v-if="!form.id">
             <div class="head-title">
                 其他信息
             </div>
@@ -327,7 +339,12 @@ export default {
 
     },
     mounted() {
-
+        
+        this.form.id = Number(this.$route.query.id) || 0;
+        if (this.form.id) {
+            console.log('this.form.id',this.form.id);
+            this.getUserDetail();
+        }
     },
     methods: {
         /*methods*/
@@ -346,20 +363,70 @@ export default {
             }
         },
         // 手机号格式校验
-        phoneBlurCheck() {
+        async phoneBlurCheck() {
             if(!this.form.phone) {
                 return this.phoneFormatErrorFlag = false
+            }else if(this.form.phone.length !== 11) {
+                return this.phoneFormatErrorFlag = true
+            }else {
+                this.phoneFormatErrorFlag = false
             }
-            if(this.form.phone.length !== 11) {
-                this.phoneFormatErrorFlag = true
+            this.phoneExistErrorFlag = await this.verifyPhoneAndEmail('phone');
+        },
+        // 邮箱验证
+        async emailBlurCheck() {
+            if(!this.form.phone) {
+                return this.phoneFormatErrorFlag = false
+            }else if(this.form.phone.length !== 11) {
+                return this.phoneFormatErrorFlag = true
+            }else {
+                this.phoneFormatErrorFlag = false
             }
+            this.emailExistErrorFlag =  await this.verifyPhoneAndEmail('email');
+        },
+        // 验证手机号邮箱
+        async verifyPhoneAndEmail(type) {
+            let obj = {},boo=true;
+            if(type === 'email'){
+                obj[type] = this.form.email;
+            }else if(type === 'phone'){
+                obj[type] = this.form.phone;
+            }
+            await Core.Api.CustomService.verifyPhoneAndEmail({
+                ...obj
+            }).then(res => {
+                Core.Logger.log('verifyPhoneAndEmail res',obj, res);
+                 boo = false;
+            }).catch(err => {
+                Core.Logger.log('verifyPhoneAndEmail err', err)
+                 boo = true;
+            })
+            return boo;
         },
         // 选择用车城市
         handleCitySearch(e) {
             this.form.province = e.province
             this.form.city = e.city
         },
+        // 点击确定
         handleSubmit() {
+            
+            let obj = this.$Util.deepCopy(this.form);
+            if(!obj.name){
+                return this.$message.warning(this.$t('def.enter'));
+            }else if(!obj.gender){
+                return this.$message.warning(this.$t('def.enter'));
+            }else if(!obj.phone){
+                return this.$message.warning(this.$t('def.enter'));
+            }else if(!obj.country){
+                return this.$message.warning(this.$t('def.enter'));
+            }else if(!obj.province || !obj.city){
+                return this.$message.warning(this.$t('def.enter'));
+            }else if(this.phoneExistErrorFlag || this.phoneFormatErrorFlag){
+                return this.$message.warning('请检查手机号码');
+            }else if(this.emailExistErrorFlag){
+                return this.$message.warning('请检查邮箱号码');
+            }
             let _this = this;
             this.$confirm({
                 title: '确认提交吗？',
@@ -367,7 +434,8 @@ export default {
                 okType: 'primary',
                 cancelText: '取消',
                 onOk() {
-
+                    // 保存请求
+                    _this.saveUserDetail();
                 },
             });
         },
@@ -386,6 +454,37 @@ export default {
         updateFocusList(list) {
             console.log('list', list);
         },
+        // 获取用户详情
+        getUserDetail() {
+            
+            if (!this.form.id) return
+            Core.Api.CustomService.detail({
+                id: this.form.id
+            }).then(res => {
+                Core.Logger.log('getUserDetail res', res)
+                this.form = res;
+                if(this.form.intent_vehicle_model===0) this.form.intent_vehicle_model=undefined;
+            }).catch(err => {
+                Core.Logger.log('getUserDetail err', err)
+            })
+        },
+
+        // 保存用户详情
+        saveUserDetail() {
+            let obj = this.$Util.deepCopy(this.form);
+            Core.Api.CustomService.editUser({
+                ...obj
+            }).then(res => {
+                Core.Logger.log('saveUserDetail res', res)
+                this.$message.success('保存成功');
+                this.routerChange('back');
+
+            }).catch(err => {
+                Core.Logger.log('saveUserDetail err', err)
+            })
+        }
+
+
     }
 };
 </script>

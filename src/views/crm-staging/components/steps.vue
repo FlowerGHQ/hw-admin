@@ -45,7 +45,6 @@ const $prop = defineProps({
 	}
 })
 
-
 </script>
 
 <style scoped lang="less">

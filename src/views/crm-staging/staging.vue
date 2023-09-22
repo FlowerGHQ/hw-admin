@@ -138,6 +138,7 @@ import { computed, nextTick, onMounted, reactive, ref, provide } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
+
 const route = useRoute()
 onMounted(() => {    
     getAmountList()
@@ -516,6 +517,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 .menu-left-item-name, .menu-left-item-num {
                     color: #fff;
                 }
+                font-weight: 600;
                 background: #0061FF;
             }
         }
@@ -570,8 +572,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                             border-radius: 4px;
                             color: #1D2129;
                             font-size: 14px;
-                            font-weight: 600;
-                            background-color: #fff;
+                            font-weight: 400;
                             margin-right: 4px;
                             display: flex;
                             align-items: center;
@@ -585,6 +586,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                         .selected {
                             background: #0061FF;
                             color: #fff;
+                            font-weight: 600;
                         }
                     }
                 }
