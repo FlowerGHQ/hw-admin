@@ -8,8 +8,8 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-show="!isEmpty" id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
-            <div v-show="isEmpty" class="empty-wrap">
+            <div v-if="!isEmpty" id="votingChannelChartId" class="chart" ref='votingChannelChartId'></div>
+            <div v-if="isEmpty" class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div id="empty" class="empty-desc">
                     暂无数据
@@ -73,7 +73,6 @@ export default {
     methods: {
         async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             /* mock */
@@ -88,7 +87,6 @@ export default {
             //     { name: '投票人数', type: '来源', value: 99 },
             // ];
             await this.$nextTick();
-            console.log('document.getElementById', document.getElementById('votingChannelChartId'));
             // return
             const chart = new Chart({
                 container: 'votingChannelChartId',
@@ -195,6 +193,7 @@ export default {
                 if (!transformedData.length) {
                     this.isEmpty = true
                 } else {
+                    this.isEmpty = false
                     this.drawBoStatisticsChart(transformedData);
                 }
             } catch (error) {

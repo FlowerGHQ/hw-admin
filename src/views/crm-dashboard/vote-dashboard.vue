@@ -3,7 +3,7 @@
     <!-- 时间筛选组件 -->
     <VoteTimeSearch :activity_id="searchForm.activity_id" :searchForm="searchForm" @select="searchFormOperation" />
     <a-row :gutter="[8, 0]">
-      <a-col :xs="24" :sm="24" :xl="15" :xxl="12">
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="12">
         <a-row :gutter="[8, 0]">
           <a-col :span="24">
             <!-- 每日访问参与投票人数 按日期 柱状图 -->
@@ -11,7 +11,7 @@
           </a-col>
         </a-row>
       </a-col>
-      <a-col :xs="24" :sm="24" :xl="15" :xxl="12">
+      <a-col :xs="24" :sm="24" :xl="12" :xxl="12">
         <a-row :gutter="[8, 0]">
           <a-col :span="24">
             <!-- 来源 环图 -->

@@ -9,17 +9,17 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-show="!isEmpty" id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
-            <div v-show="!isEmpty" class="legend-container">
+            <div v-if="!isEmpty" id="ChannelRingChartId" class="chart" ref='ChannelRingChartId'></div>
+            <div v-if="!isEmpty" class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item?.item }}</div>
+                        <div class="legend-key">{{ item?.item || '未知' }}</div>
                     </div>
-                    <div class="legend-value">{{ item?.percent }}</div>
+                    <div class="legend-value">{{ (item?.percent) * 100 + '%' }}</div>
                 </div>
             </div>
-            <div v-show="isEmpty" class="empty-wrap">
+            <div v-if="isEmpty" class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
                     暂无数据
@@ -43,10 +43,6 @@ export default {
             type: Object,
             default: () => { }
         },
-        title: {
-            type: String,
-            default: '来源'
-        }
     },
     data() {
         return {
@@ -91,14 +87,13 @@ export default {
     methods: {
         async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             await this.$nextTick();
             const chart = new Chart({
                 container: 'ChannelRingChartId',
                 autoFit: true,
-                height: 274,
+                height: 250,
             });
             // 新建一个 view 用来单独渲染Annotation
             const innerView = chart.createView();
@@ -199,8 +194,7 @@ export default {
         },
         async getChannelChartData() {
             try {
-                const res = await Core.Api.VoteData.cityStatistics({ ...this.searchForm });
-                console.log('getChannelChartData res', res);
+                const res = await Core.Api.VoteData.sourceStatistics({ ...this.searchForm });
                 const formattedData = [];
                 const typeCounts = {};
                 /* mock */
@@ -272,21 +266,27 @@ export default {
                 const totalVotes = Object.values(typeCounts).reduce((sum, count) => sum + count, 0);
                 Object.entries(typeCounts).forEach(([type, count]) => {
                     const text = this.SOURCE_TYPE_MAP[type]?.text;
-                    const percent = ((count / (totalVotes + 1)) * 100).toFixed(2);
-                    formattedData.push({ item: text, count, percent: parseFloat(percent) });
+                    const percent = (count / totalVotes).toFixed(2);
+                    formattedData.push({ item: text, count, percent: Number(percent) });
                 });
                 const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
-                this.legendList = formattedData
+                this.legendList = Core.Util.deepCopy(formattedData);
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index + 1]
-                    item.percent = item.percent + '%'
+                    item.color = color[index]
+                    item.percent = item.percent
                 })
                 if (!formattedData.length) {
                     this.isEmpty = true
                 } else {
-                    setTimeout(() => {
-                        this.drawBoStatisticsChart(formattedData)
-                    }, 100)
+                    this.isEmpty = false
+                    let _formattedData = []
+                    _formattedData = formattedData.map(val => {
+                        if(val.item === undefined) {
+                            val.item = '未知'
+                        }
+                        return val
+                    })
+                    this.drawBoStatisticsChart(_formattedData)
                 }
             } catch (error) {
                 console.log('Error in getChannelChartData err', error);
@@ -301,7 +301,7 @@ export default {
                         path: "/crm-dashboard/vote-detail",
                         query: {
                             title: this.title,
-                            api_name: 'cityStatistics',
+                            api_name: 'sourceStatistics',
                             begin_time: this.searchForm.begin_time,
                             end_time: this.searchForm.end_time,
                             column_type: Core.Const.VOTE.TYPE.SOURCE

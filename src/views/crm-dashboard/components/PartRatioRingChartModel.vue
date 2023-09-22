@@ -9,17 +9,17 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-show="!isEmpty" id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
-            <div v-show="!isEmpty" class="legend-container">
+            <div v-if="!isEmpty" id="PartRatioRingChartId" class="chart" ref='PartRatioRingChartId'></div>
+            <div v-if="!isEmpty" class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
-                        <div class="legend-key">{{ item.name }}</div>
+                        <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent }}</div>
+                    <div class="legend-value">{{ (item.percent) * 100 + '%' }}</div>
                 </div>
             </div>
-            <div v-show="isEmpty" class="empty-wrap">
+            <div v-if="isEmpty" class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
                     暂无数据
@@ -41,10 +41,6 @@ export default {
             type: Object,
             default: () => { }
         },
-        title: {
-            type: String,
-            default: '来源'
-        }
     },
     data() {
         return {
@@ -80,15 +76,15 @@ export default {
     },
     methods: {
         async drawBoStatisticsChart(data) {
+            console.log('环图', data)
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             await this.$nextTick();
             const chart = new Chart({
                 container: 'PartRatioRingChartId',
                 autoFit: true,
-                height: 254,
+                height: 304,
             });
             // 新建一个 view 用来单独渲染Annotation
             const innerView = chart.createView();
@@ -132,7 +128,7 @@ export default {
                         .annotation()
                         .text({
                             position: ['50%', '46%'],
-                            content: data.count,
+                            content: data.count + '人',
                             style: {
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -191,25 +187,26 @@ export default {
             try {
                 let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
                 // 计算已支付人数总和
-                const totalPaidCount = res.reduce((sum, item) => sum + item.pay_count, 0);
+                const totalPaidCount = res.reduce((sum, item) => sum + item.pay_num, 0);
                 // 计算未支付人数总和
-                const totalUnpaidCount = res.reduce((sum, item) => sum + (item.uv - item.pay_count), 0);
+                const totalUnpaidCount = res.reduce((sum, item) => sum + (item.uv - item.pay_num), 0);
                 // 已支付人数百分比
-                const totalPaidPercent = ((totalPaidCount / (totalPaidCount + totalUnpaidCount)) * 100).toFixed(2)
+                const totalPaidPercent = (totalPaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2)
                 // 未支付人数百分比
-                const totalUnpaidPercent = ((totalUnpaidCount / (totalPaidCount + totalUnpaidCount)) * 100).toFixed(2)
+                const totalUnpaidPercent = (totalUnpaidCount / (totalPaidCount + totalUnpaidCount)).toFixed(2)
                 const formattedData = [
-                    { item: '已支付', count: totalPaidCount, percent: totalPaidPercent + '%' },
-                    { item: '未支付', count: totalUnpaidCount, percent: totalUnpaidPercent + '%' }
+                    { item: '已支付', count: totalPaidCount, percent: Number(totalPaidPercent) },
+                    { item: '未支付', count: totalUnpaidCount, percent: Number(totalUnpaidPercent) }
                 ];
-                this.legendList = formattedData
+                this.legendList = Core.Util.deepCopy(formattedData)
                 const color = ['#056DFF', '#FFBC48'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index + 1]
+                    item.color = color[index]
                 })
                 if (!formattedData[0].count) {
                     this.isEmpty = true
                 } else {
+                    this.isEmpty = false
                     this.drawBoStatisticsChart(formattedData)
                 }
             } catch (error) {

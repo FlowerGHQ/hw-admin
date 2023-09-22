@@ -8,8 +8,8 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-show="!isEmpty" id="DailyVotingNumbersChartId" class="chart" ref='DailyVotingNumbersChartId'></div>
-            <div v-show="isEmpty" class="empty-wrap">
+            <div v-if="!isEmpty" id="DailyVotingNumbersChartId" class="chart" ref='DailyVotingNumbersChartId'></div>
+            <div v-else class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
                     暂无数据
@@ -46,7 +46,7 @@ export default {
             immediate: true,
             handler() {
                 if (this.searchForm.activity_id) {
-                    this.getDailyVotingChartData()
+                    this.getDailyVotingChartData();
                 }
             }
         },
@@ -55,7 +55,7 @@ export default {
     created() { },
     mounted() {
         if (this.searchForm.activity_id) {
-            this.getDailyVotingChartData()
+            this.getDailyVotingChartData();
         }
     },
     beforeUnmount() {
@@ -64,7 +64,6 @@ export default {
     methods: {
         async drawBoStatisticsChart(data) {
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             await this.$nextTick();
@@ -103,6 +102,7 @@ export default {
             this.boStatisticsChart = chart
         },
         async getDailyVotingChartData() {
+            console.log(111)
             try {
                 let res = await Core.Api.VoteData.numberStatistics({ ...this.searchForm });
                 const data = [
@@ -144,16 +144,15 @@ export default {
                     };
                     transformedData.push(countData, voteCountData);
                 });
+                console.log('transformedData yxy', transformedData)
                 this.isEmpty = transformedData.every(item => {
                     return item.value === 0
                 })
                 if (!transformedData.length) {
                     this.isEmpty = true
                 } else {
+                    this.isEmpty = false
                     this.drawBoStatisticsChart(transformedData);
-                }
-                if (!this.isEmpty) {
-
                 }
             } catch (error) {
                 console.log('Error in getPartRatioRingChartData', error);

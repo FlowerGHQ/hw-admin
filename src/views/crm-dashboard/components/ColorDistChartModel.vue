@@ -9,17 +9,17 @@
         </div>
         <!-- echarts -->
         <div class="table-container">
-            <div v-show="!isEmpty" id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
-            <div v-show="!isEmpty" class="legend-container">
+            <div v-if="!isEmpty" id="ColorDistChartId" class="chart" ref='ColorDistChartId'></div>
+            <div class="legend-container">
                 <div class="legend-wrap" v-for="item in legendList">
                     <div class="legend-block">
                         <div class="legend-circle" :style="{ backgroundColor: item.color }"></div>
                         <div class="legend-key">{{ item.item }}</div>
                     </div>
-                    <div class="legend-value">{{ item.percent + '%' }}</div>
+                    <div class="legend-value">{{ (item.percent) * 100 + '%' }}</div>
                 </div>
             </div>
-            <div v-show="isEmpty" class="empty-wrap">
+            <div v-if="isEmpty" class="empty-wrap">
                 <img src="../../../assets/images/dashboard/emptyData.png" alt="">
                 <div class="empty-desc">
                     暂无数据
@@ -43,10 +43,6 @@ export default {
             type: Object,
             default: () => { }
         },
-        title: {
-            type: String,
-            default: '来源'
-        }
     },
     data() {
         return {
@@ -89,8 +85,8 @@ export default {
         },
 
         async drawBoStatisticsChart(data) {
+            console.log('颜色', data)
             if (this.boStatisticsChart.destroy) {
-                console.log('drawPurchaseChart destroy:')
                 this.boStatisticsChart.destroy()
             }
             await this.$nextTick();
@@ -104,7 +100,7 @@ export default {
             chart.data(data);
             chart.scale('percent', {
                 formatter: val => {
-                    val = val * 100 + '%';
+                    val = val + '%';
                     return val;
                 },
             });
@@ -141,7 +137,7 @@ export default {
                         .annotation()
                         .text({
                             position: ['50%', '46%'],
-                            content: data.percent + '%',
+                            content: data.count + '票',
                             style: {
                                 fontSize: 14,
                                 fontWeight: 600,
@@ -174,7 +170,7 @@ export default {
                 .interval()
                 .adjust('stack')
                 .position('percent')
-                .color('item', ['#056DFF', '#FFBC48', '#15BFEF', '#FB6381', '#26D0A1'])
+                .color('item', ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'])
                 .style({
                     fillOpacity: 1,
                 })
@@ -237,40 +233,55 @@ export default {
                         ],
                     },
                 ]
-                const resultDataMap = {};
-                res.forEach((item) => {
-                    if (item.source_list.length) {
-                        const code = item.source_list[0].code;
-                        const voteCount = item.source_list[0].vote_count;
-                        if (resultDataMap[code]) {
-                            resultDataMap[code].count += voteCount;
+                // 创建一个空对象用于存储转换后的数据
+                const transformedData = {};
+
+                // 遍历后端返回的数据
+                res.forEach((entry) => {
+                      const { source_list } = entry;
+
+                      source_list.forEach((source) => {
+                        const { code, vote_count } = source;
+
+                        // 如果颜色已存在于 transformedData 中，则累加投票数量
+                        if (transformedData[code]) {
+                          transformedData[code].count += vote_count;
                         } else {
-                            resultDataMap[code] = {
-                                count: voteCount
-                            };
+                          // 如果颜色不存在于 transformedData 中，则创建新的对象
+                          transformedData[code] = {
+                            count: vote_count,
+                            item: Core.Util.voteResultFilter(code),
+                            percent: 0, // 初始百分比值为 0
+                          };
                         }
-                    }
+                      });
                 });
-                const totalVoteCount = Object.values(resultDataMap).reduce((sum, item) => sum + item.count, 0);
-                const transformedData = Object.entries(resultDataMap).map(([code, item]) => {
-                    const percent = (item.count / totalVoteCount * 100).toFixed(2);
-                    return {
-                        item: code,
-                        count: item.count,
-                        percent: parseFloat(percent)
-                    };
+
+                // 计算总投票数量的和
+                const totalCount = Object.values(transformedData).reduce(
+                  (sum, { count }) => sum + count,
+                  0
+                );
+
+                // 计算每个颜色的百分比并更新 transformedData
+                Object.values(transformedData).forEach((entry) => {
+                  entry.percent = Number((entry.count / totalCount).toFixed(2));
                 });
-                this.legendList = transformedData
+
+                // 转换后的数据存储在 transformedData 中
+                const finalData = Object.values(transformedData);
+                this.legendList = Core.Util.deepCopy(finalData).sort((a, b) => b.count - a.count)
                 const color = ['#056DFF', '#FFBC48', '#FB6381', '#15BFEF', '#26D0A1', '#A880FF', '#FF9834', '#5282FF'] // 配置项的颜色
                 this.legendList.forEach((item, index) => {
-                    item.color = color[index + 1]
+                    item.color = color[index]
                 })
-                if (!transformedData.length) {
+                if (!finalData.length) {
                     this.isEmpty = true
                 } else {
-                    setTimeout(() => {
-                        this.drawBoStatisticsChart(transformedData);
-                    }, 100)
+                    this.isEmpty = false
+                    let data = []
+                    data = finalData.sort((a, b) => b.count - a.count);
+                    this.drawBoStatisticsChart(data);
                 }
             } catch (error) {
                 console.log('Error in getResultChartData', error);
