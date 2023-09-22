@@ -284,6 +284,17 @@ const onDownLoad = (record, array) => {
 		source_type: 1,
 	})
 		.then((res) => {
+			// const str = 'xxxxfile-name=example.txt';
+			// const regex = /file-name=([\w.-]+)(\.[\w.-]+)?/;
+			// const match = str.match(regex);
+			// if (match) {
+			// const fileName = match[1]; // 提取文件名
+			// const extension = match[2]; // 提取扩展名
+			//   console.log('文件名:', fileName);
+			//   console.log('扩展名:', extension);
+			// } else {
+			//   console.log('未找到匹配项');
+			// }后期优化
 			const name = res.headers["file-name"]
 				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
 				: "未命名"
