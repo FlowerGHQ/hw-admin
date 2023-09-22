@@ -139,7 +139,7 @@
         }
         Core.Api.CustomService.getAllocationList(obj).then(res => {
             Core.Logger.success("参数", obj, "客服线索分配list", res)
-            // leadList.value = res?.list || []
+            leadList.value = res
             leadList.value.forEach(el => {
                 el.isChecked = true
             })
@@ -154,6 +154,8 @@
         }
         Core.Api.CustomService.setAllocation(obj).then(res => {
             Core.Logger.success("参数", obj, "设置系统分配", res)
+            onCancel()
+            getAllocationListFetch()
         }).catch(err => {
             Core.Logger.error("参数", obj, "设置系统分配", err)
         })
