@@ -142,6 +142,7 @@ const followObj = reactive(Object.assign({}, initialObject))
 const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
+  console.log('0000099999999999');
   isShowFollow.value = true;
   resetFollow();
 }
@@ -163,10 +164,10 @@ const createFollow = () => {
   }
   Core.Api.CustomService.createRecord(obj).then(res=>{
 		Core.Logger.success('createFollow',obj,"数据",res);
+    $emit('getRecordList');
     isShowFollow.value = false;
     isShowCreate.value = true;
     proxy.$message.success('提交成功')
-    $emit('getRecordList');
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })

@@ -96,7 +96,7 @@
                   <img :src="item.avatar" class ="options-img" alt="">
                   <div class="option-right">
                       <div class="options-top"> <span class="name-option">{{ item.user_name }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.user_phone }}</span>&nbsp;&nbsp;  <span class="work-option">{{ $Util.peoStoreStatus(item.type) }}</span></div>
-                      <div class="area-option">{{ item.group_name }}</div>
+                      <div class="area-option">{{ item.group_name }}-{{ item.city }}&nbsp;&nbsp;{{ item.store_name }}</div>
                   </div>
                 </a-select-option>
               </a-select>

@@ -37,7 +37,7 @@ import Core from "@/core";
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
 const $emit = defineEmits(['getCount'])
-const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
+// const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key （更多子组件可用更新）
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -65,12 +65,14 @@ watch(
     }
   }
 )
+// 父组件控制更新（可用）
 const getData = () => {
   getRecordList()
 }
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
-  if (!userId.value) return
+  console.log('000/////////////////////////////');
+  if (!userId.value) return;
   if(JSON.stringify(params)=='{}'){
     Object.assign(pagination, {
       pageSize: 10,
