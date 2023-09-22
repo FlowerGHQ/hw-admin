@@ -48,6 +48,9 @@ export default {
         China2Address
     },
     props: {
+        id: {
+            type: Number
+        },
         visible: {
             type: Boolean,
             default: false
@@ -141,8 +144,7 @@ export default {
                 this.selectedTagList = this.convertDataStructure(this.renderList)
                 Core.Logger.log('selectedTagList', this.selectedTagList)
                 Core.Api.CustomService.updateLabel({
-                    // target_id: this.id,
-                    target_id: 3074,
+                    target_id: this.id,
                     label_list: this.selectedTagList
                 }).then(res => {
                     Core.Logger.log('handleSubmit res', res);

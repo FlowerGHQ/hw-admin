@@ -85,6 +85,7 @@ import QrcodeVue from 'qrcode.vue'
 import Static from '../static'
 
 const userId = inject('userId');
+const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
 const $prop = defineProps({
     customer_id: {
         required: true,
@@ -118,6 +119,7 @@ const getUserDetail = () => {
 	})
 }
 const confirmConfig = () => {
+    if (!userId.value) return
     if (isUpdate.value) {
         updateOrder()
         return
@@ -138,6 +140,7 @@ const confirmConfig = () => {
 		Core.Logger.success('getTaskNum',res);
         orderId.value = res.order.id
         isConfirm.value = true
+        getChildData('4')
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})
@@ -146,6 +149,7 @@ const updateOrder = () => {
     Core.Api.CustomService.orderUpdate({ id: orderId.value, remark: JSON.stringify({ ...cycList[modelId.value] }) }).then(res=>{
 		Core.Logger.success('getTaskNum',res);
         isConfirm.value = true
+        getChildData('4')
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	})

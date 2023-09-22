@@ -37,13 +37,9 @@ import { reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
 
-watch(
-  () => userId.value, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      getList({ page: 1 })
-    }
-  }
-)
+const getData = () => {
+  getList({ current: pagination.current })
+}
 const $emit = defineEmits(['getCount'])
 const columns = [
   {
@@ -103,6 +99,7 @@ const handleTableChange = ( page ) => {
   getList({ current: pagination.current })
 };
 const getList = (params = {}) => {
+  if (!userId.value) return
   const obj = {
     page: params.current,
     page_size: pagination.pageSize,
@@ -139,6 +136,7 @@ const filterData = (data) => {
 const detail = (id) => {
   console.log(id)
 }
+defineExpose({ getData });
 </script>
 
 <style lang="less" scoped>

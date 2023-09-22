@@ -40,14 +40,10 @@ import { computed, reactive, ref, watch, inject } from 'vue';
 
 const userId = inject('userId');
 
-watch(
-  () => userId.value, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      getBindList({ current: 1 })
-      getUserDetail()
-    }
-  }
-)
+const getData = () => {
+  getBindList({ current: 1 })
+  getUserDetail()
+}
 const $emit = defineEmits(['getCount'])
 const columns = [
 {
@@ -134,6 +130,7 @@ const getUserDetail = () => {
 	})
 }
 const getBindList = (params = {}) => {
+  if (!userId.value) return
   const obj = {
     customer_id: userId.value,
     page: params.current,
@@ -150,7 +147,7 @@ const getBindList = (params = {}) => {
         Core.Logger.error("参数", "数据", err)
 	})
 }
-
+defineExpose({ getData })
 </script>
 
 <style lang="less" scoped>

@@ -92,11 +92,11 @@
                 show-search
                 option-label-prop="label"
               >
-                <a-select-option :value="item?.store_user_id" :label="item.user_name"  v-for="(item,index) in peopleList" :key="item.value">
+                <a-select-option :value="item?.id" :label="item.user_name"  v-for="(item,index) in peopleList" :key="item.value">
                   <img :src="item.avatar" class ="options-img" alt="">
                   <div class="option-right">
                       <div class="options-top"> <span class="name-option">{{ item.user_name }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.user_phone }}</span>&nbsp;&nbsp;  <span class="work-option">{{ $Util.peoStoreStatus(item.type) }}</span></div>
-                      <div class="area-option">{{ item.group_name }}</div>
+                      <div class="area-option">{{ item.group_name }}-{{ item.city }}&nbsp;&nbsp;{{ item.store_name }}</div>
                   </div>
                 </a-select-option>
               </a-select>
@@ -117,9 +117,11 @@
 
 <script setup>
 import Core from "@/core";
-import { reactive, ref ,onMounted ,inject } from 'vue';
+import { reactive,ref ,getCurrentInstance ,onMounted ,inject } from 'vue';
 
 const userId = inject('userId');
+
+const { proxy } = getCurrentInstance();
 // 弹窗显示变量
 const isShowFollow = ref(false);
 const followObj = reactive({ 
@@ -139,46 +141,22 @@ const optionsStore = ref([]);
 // 获取人员列表
 const peopleList = ref([]);
 
-const options = ref([
-    {
-      value: '1',
-      label: '李鹏',
-      icon: '155****4561',
-      img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-      area:'上海大区-上海 上海浦东新区大美都广场体验中心',
-      work:'用户体验官'
-    },
-    {
-      value: '2',
-      label: '姬发',
-      icon: '155****4561',
-      img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-      area:'上海大区-上海 上海浦东新区大美都广场体验中心',
-      work:'用户体验官'
-    },
-    {
-      value: '3',
-      label: '李大钊',
-      icon: '155****4561',
-      img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-      area:'上海大区-上海 上海浦东新区大美都广场体验中心',
-      work:'用户体验官'
-    },
-    {
-      value: '4',
-      label: '王倩',
-      icon: '155****4561',
-      img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-      area:'上海大区-上海 上海浦东新区大美都广场体验中心',
-      work:'用户体验官'
-    },
-  ]);
 onMounted(() => {    
   getRegionsList()    
 })
-// 点击写跟进按钮
+// 点击转移按钮
 const clickModelOk = () => {
     isShowFollow.value = true;
+    optionsCity.value = [];
+    optionsStore.value = [];
+    peopleList.value = [];
+  Object.assign(followObj, { 
+      group_id: '',
+      city: '', 
+      store_id: '',
+      store_user_id: '',
+      remark: '',
+  });
 }
 // 获取区域列表
 const getRegionsList = () => {
@@ -238,12 +216,24 @@ const storeChangeClick = (value) => {
 }
 defineExpose({clickModelOk});
 const handleOk = () => {
-    console.log('followObj---',followObj);
+  console.log('followObj---',followObj);
+  if(!followObj.group_id){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.city){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.store_id){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.remark){
+    return proxy.$message.warning(proxy.$t("def.enter"));
+  }
+
   Core.Api.CustomService.upDateTransfer({
     ...followObj,
     id: userId.value
   }).then(res=>{
 		Core.Logger.success('upDateTransfer数据',res);
+    proxy.$message.success('转移成功')
+    isShowFollow.value = false;
 	}).catch(err=>{
     Core.Logger.error("参数", "数据", err)
 	})

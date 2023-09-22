@@ -8,7 +8,7 @@
                 <img :src="item.src">
             </a-tooltip>
         </div>
-        <FollowUp :isShowButton="false" ref="followRef" />
+        <FollowUp :isShowButton="false" ref="followRef" @getRecordList="getChildData('2')" />
         <LeadTransfer ref="leadTransRef" />
     </div>
 </template>
@@ -27,6 +27,7 @@ import nextNone from '../images/next-none.png';
 import FollowUp from "./FollowUp.vue";
 import LeadTransfer from "./LeadTransfer.vue";
 
+const getChildData = inject('getChildData');
 const leadTransRef = ref(null);
 const followRef = ref(null);
 const userId = inject('userId');

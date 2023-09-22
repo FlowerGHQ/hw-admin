@@ -3,21 +3,23 @@
 		<div class="record-box" v-for="(item, index) in list" :key="index">
 			<div class="head-record">
 				<div class="step-left">
-					<img class="step-img" :src="item.img">
+					<img class="step-img" :src="item.avatar || Static.defaultAvatar">
 					<div class="line" v-if="index !== list.length - 1"></div>
 				</div>
 				<div class="step-content">
 					<div class="nameAndTime">
-						<div class="name">{{ item.store_user_name || '-' }}（{{ item.work || '-' }}）<span v-if="item.user_type"><span v-if="item.user_type">(</span>123<span v-if="item.user_type">)</span></span></div>
-						<div class="time">{{ item.time }}</div>
+						<div class="name">{{ item.store_user_name || '-' }}（{{ $Util.peoStoreStatus(item.user_type)||'-'}}）
+						<!-- <span v-if="item.user_type"><span v-if="item.user_type">(</span>123<span v-if="item.user_type">)</span></span> -->
+						</div>
+						<div class="time">{{$Util.timeFilter(item.create_time) }}</div>
 					</div>
 					<div class="content">
 						<div class="content-head">
 							<div class="content-title">
 								<span v-if="type === 1" class="content-title-label">跟进方式：</span>
-								{{ item.title }}
+								{{ $Util.tabTypeStatus(item.method) }}
 							</div>
-							<my-tag v-if="type === 1" border :color="$Util.tabStatus(item.status,'color')" :bgColor="$Util.tabStatus(item.status,'background')" :borderColor="$Util.tabStatus(item.status,'borderC')" class="message-label">{{ $Util.tabStatus(item.status) }}</my-tag>
+							<my-tag v-if="type === 1 && item.type"  border :color="$Util.tabStatus(item.type,'color')" :bgColor="$Util.tabStatus(item.type,'background')" :borderColor="$Util.tabStatus(item.type,'borderC')" class="message-label">{{ $Util.tabStatus(item.type) }}</my-tag>
 						</div>
 						<div class="content-text" v-if="item.content">{{ item.content }}</div> 
 					</div>
@@ -31,7 +33,7 @@
 import myTag from "../components/my-tag.vue";
 import { reactive, ref } from 'vue'; 
 import Core from "@/core";
-
+import Static from '../static';
 const $prop = defineProps({
 	list: {
 		type: Array,

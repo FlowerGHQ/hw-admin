@@ -108,12 +108,14 @@ import dayjs from 'dayjs';
 
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
+const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
 const props = defineProps({
   isShowButton: {
     type: Boolean,
     default: true,
   },
 })
+const $emit = defineEmits(['getRecordList'])
 // 意向度-选项列表
 const intentedList = Core.Const.INTENTION.TYPE_MAP;
 // 沟通方式-选项列表
@@ -141,6 +143,7 @@ const followObj = reactive(Object.assign({}, initialObject))
 const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
+  console.log('0000099999999999');
   isShowFollow.value = true;
   resetFollow();
 }
@@ -162,10 +165,11 @@ const createFollow = () => {
   }
   Core.Api.CustomService.createRecord(obj).then(res=>{
 		Core.Logger.success('createFollow',obj,"数据",res);
+    $emit('getRecordList');
     isShowFollow.value = false;
     isShowCreate.value = true;
     proxy.$message.success('提交成功')
-
+    getChildData('userDetailRef')
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })
@@ -188,7 +192,7 @@ const createNext = () => {
 
 // 取消创建
 const cancleNext  = () => {
-  console.log('不创建更进新的');
+  
 }
 
 // 创建请求

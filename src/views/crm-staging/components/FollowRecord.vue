@@ -1,7 +1,7 @@
 <template>
   <div class="follow-record" @scroll="handleScroll">
     <div class="follow-top">
-      <FollowUp />
+      <FollowUp @getRecordList="getRecordList" />
       <div class="follow-but">
         <span>未打通，稍后联系</span>
         <a-button type="link" @click="clickCreate({type:30,content:'未打通，稍后联系',method:30})">创建跟进</a-button>
@@ -11,10 +11,12 @@
         <a-button type="link" @click="clickCreate({type:30,content:'已补充好省市',method:20})">创建跟进</a-button>
       </div>
       <a-select
+        class="follow-type"
         width="120px"
         v-model:value="followObj.type"
         placeholder="选择跟进类型"
         @change = "typeChangeClick"
+        allowClear
       >
         <a-select-option
           v-for="item of typeList"
@@ -35,75 +37,43 @@ import { reactive, ref ,getCurrentInstance ,inject ,watch } from 'vue';
 import Core from "@/core";    
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
+const $emit = defineEmits(['getCount'])
+// const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key （更多子组件可用更新）
 const props = defineProps({
   isShowButton: {
     type: Boolean,
     default: true,
   },
 })
-const list = ref([
-	{
-		value: '1',
-		store_user_name: '李鹏',
-		title: '修改用户信息',
-		img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-		content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-		work:'用户体验官',
-		time: '2023-07-12 12:13:14',
-		status: 10
-	},
-	{
-	  	value: '2',
-	  	store_user_name: '姬发',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-	  	time: '2023-07-12 12:13:14',
-		  status: 20
-	},
-	{
-	  	value: '3',
-	  	store_user_name: '李大钊',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-      time: '2023-07-12 12:13:14',
-      status: 20
-	},
-	{
-	  	value: '4',
-	  	store_user_name: '王倩',
-	  	title: '修改用户信息',
-	  	img:'https://tse4-mm.cn.bing.net/th/id/OIP-C.Cdq25dINGG8gky7W0x8XaQHaE7?pid=ImgDet&rs=1',
-	  	content:'上海大区-上海 上海浦东新区大美都广场体验中心',
-	  	work:'用户体验官',
-      time: '2023-07-12 12:13:14',
-      status: 30
-	},
-])
+const list = ref([])
 // 跟进类型列表
 const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 const followObj = reactive({ 
   type: undefined, 
 })
-watch(
-  () => userId.value, (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-      // 获取跟进记录 
-      getRecordList()
-    }
-  }
-)
 const pagination = reactive({
   pageSize: 10,
   current: 1,
   total: 0,
   total_page: 0
 })
+// 父组件控制更新（可用）
+const getData = () => {
+  getRecordList()
+}
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
+  console.log('000/////////////////////////////');
+  if (!userId.value) return;
+  if(JSON.stringify(params)=='{}'){
+    Object.assign(pagination, {
+      pageSize: 10,
+      current: 1,
+      total: 0,
+      total_page: 0
+    });
+    list.value = [];
+  }
   const obj = {
     target_id: userId.value,
     target_type: 1,
@@ -115,13 +85,15 @@ const getRecordList = (params={}) => {
   }
   Core.Api.CustomService.trackRecordList(obj).then(res=>{
 		Core.Logger.success('getRecordList参数',obj,"数据",res);
+    list.value = [...list.value,...res.list];
     pagination.total = res.count;
     pagination.total_page = Math.ceil(pagination.total / pagination.pageSize);
+    $emit('getCount', '2' ,res.count)
   }).catch(err=>{
     Core.Logger.error("参数getRecordList参数",obj, "数据", err)
   })
 }
-defineExpose({getRecordList});
+defineExpose({getData});
 const clickCreate = (params = {}) => {
 
   proxy.$confirm({
@@ -144,6 +116,7 @@ const clickCreate = (params = {}) => {
 }
 // 跟进创建操作
 const createFollow = (params={}) => {
+  if (!userId.value) return
   const obj = {
     contact_customer_id: userId.value,
     target_id: userId.value,
@@ -152,6 +125,7 @@ const createFollow = (params={}) => {
   }
   Core.Api.CustomService.createRecord(obj).then(res=>{
 		Core.Logger.success('createFollow',obj,"数据",res);
+    getRecordList();
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })
@@ -180,6 +154,7 @@ const handleScroll = (e) => {
 .follow-record {
   height: 100%;
   overflow-y: auto;
+  position: relative;
   .follow-top {
     display: flex;
     align-items: center;
@@ -197,6 +172,10 @@ const handleScroll = (e) => {
     padding: 0px 12px;
     border: 1px solid  #F2F3F5;
     margin-right: 12px;
+  }
+  .follow-type {
+    position: absolute;
+    right: 0;
   }
 }
 </style>
