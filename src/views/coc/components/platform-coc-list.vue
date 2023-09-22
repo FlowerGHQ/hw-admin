@@ -275,8 +275,8 @@ const onView = (record) => {
 	router.push({
 		path: `/coc/certificate-list`,
 		query: {
-			id: record.id,
 			isDistributor: isDistributor,
+			order_number: record.order_number,
 		},
 	})
 }

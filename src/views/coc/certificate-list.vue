@@ -13,7 +13,7 @@
 			</div>
 			<!-- tabs -->
 			<div class="tabs-container colorful cancel-m-b">
-				<a-tabs v-model:activeKey="activeKey">
+				<a-tabs v-model:activeKey="activeKey" @change="handleTabs">
 					<a-tab-pane v-for="item of tab_type" :key="item.key">
 						<template #tab> {{ item[$i18n.locale] }}(300) </template>
 					</a-tab-pane>
@@ -26,7 +26,7 @@
 						<div class="key">{{ $t("certificate-list.coc_vin") }}：</div>
 						<div class="value">
 							<a-input
-								v-model:value="searchForm.sn"
+								v-model:value="searchForm.vehicle_uid"
 								:placeholder="$t('certificate-list.coc_inputVin')"
 							></a-input>
 						</div>
@@ -35,7 +35,7 @@
 						<div class="key">{{ $t("certificate-list.coc_motor") }}：</div>
 						<div class="value">
 							<a-input
-								v-model:value="searchForm.sn"
+								v-model:value="searchForm.motor_uid"
 								:placeholder="$t('certificate-list.coc_inputMotor')"
 							></a-input>
 						</div>
@@ -50,8 +50,10 @@
 					</a-col>
 					<!-- 按钮 -->
 					<a-col :xs="24" :sm="24" :xl="8" :xxl="3" class="row-item btn-area">
-						<a-button>{{ $t("certificate-list.coc_reset") }}</a-button>
-						<a-button type="primary">{{
+						<a-button @click="handleReset">{{
+							$t("certificate-list.coc_reset")
+						}}</a-button>
+						<a-button type="primary" @click="handleSearch">{{
 							$t("certificate-list.coc_search")
 						}}</a-button>
 					</a-col>
@@ -71,20 +73,23 @@
 					</template>
 					<template #bodyCell="{ column, text, record }">
 						<template v-if="column.key === 'coc_operation'">
-							<a-button type="link" @click="onDownLoad">{{
-								$t("certificate-list.coc_download")
-							}}</a-button>
+							<a-button
+								type="link"
+								@click="onDownLoad"
+								:disabled="record.certificate_status !== 1"
+								>{{ $t("certificate-list.coc_download") }}</a-button
+							>
 							<a-button type="link" @click="onView">{{
 								$t("certificate-list.coc_view")
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
 						<template
-							v-else-if="column.key === 'coc_cocStatus' && !distributor"
+							v-else-if="column.key === 'certificate_status' && !distributor"
 						>
 							<!-- tag -->
-							<a-tag :color="COC.TAB_TYPE[record.coc_cocStatus].color">
-								{{ COC.TAB_TYPE[record.coc_cocStatus][$i18n.locale] }}
+							<a-tag :color="COC.TAB_TYPE[record.certificate_status].color">
+								{{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
 							</a-tag>
 						</template>
 					</template>
@@ -95,92 +100,30 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, computed } from "vue"
+import { ref, reactive, getCurrentInstance, computed, onMounted } from "vue"
 import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
-const $t = proxy.$root.$t
+const { $t } = proxy
 const { TAB_TYPE } = COC
 // 获取路由参数
 const route = useRoute()
 const { query } = route
-
-const { isDistributor } = query
-
+const { isDistributor, order_number } = query
 const distributor = ref(isDistributor === "true") // 是否是经销商
-
-const tab_type = computed(() => {
-	// 过滤
-	return Object.values(TAB_TYPE).filter((item) => item.key !== 3)
+const { getCertificateDetailList } = Core.Api.COC
+const activeKey = ref(undefined) // tab切换
+const searchForm = reactive({
+	certificate_status: 0,
+	delivery_end_time: "",
+	delivery_start_time: "",
+	motor_uid: "",
+	order_number: "",
+	vehicle_uid: "",
 })
-const palrformTableColumns = ref([
-	{
-		title: "certificate-list.coc_orderNumber",
-		dataIndex: "coc_orderNumber",
-		key: "coc_orderNumber",
-	},
-	{
-		title: "certificate-list.coc_vehicleName",
-		dataIndex: "coc_vehicleName",
-		key: "coc_vehicleName",
-	},
-	{
-		title: "certificate-list.coc_vehicleCode",
-		dataIndex: "coc_vehicleCode",
-		key: "coc_vehicleCode",
-	},
-	{
-		title: "certificate-list.coc_vin",
-		dataIndex: "coc_vin",
-		key: "coc_vin",
-	},
-	{
-		title: "certificate-list.coc_motor",
-		dataIndex: "coc_vin",
-		key: "coc_vin",
-	},
-	{
-		title: "certificate-list.coc_cocStatus",
-		dataIndex: "coc_cocStatus",
-		key: "coc_cocStatus",
-	},
-	{
-		title: "certificate-list.coc_orderTime",
-		dataIndex: "coc_orderTime",
-		key: "coc_orderTime",
-	},
-	{
-		title: "certificate-list.coc_deliveryTime",
-		dataIndex: "coc_deliveryTime",
-		key: "coc_deliveryTime",
-	},
-	{
-		title: "certificate-list.coc_downloadTimes",
-		dataIndex: "coc_downloadTimes",
-		key: "coc_downloadTimes",
-	},
-	{
-		title: "certificate-list.coc_operation",
-		dataIndex: "coc_operation",
-		key: "coc_operation",
-	},
-])
-const palrformTableData = ref([
-	{
-		id: 1,
-		coc_orderNumber: "202107010001",
-		coc_vehicleName: "2021款 2.0T 两驱 豪华版",
-		coc_vehicleCode: "202107010001",
-		coc_vin: "LJ1F3A1M1M000001",
-		coc_motor: "LJ1F3A1M1M000001",
-		coc_cocStatus: 2,
-		coc_orderTime: "2021-07-01 12:00:00",
-		coc_deliveryTime: "2021-07-01 12:00:00",
-		coc_downloadTimes: 100,
-	},
-])
+const palrformTableData = ref([])
 let channelPagination = reactive({
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
@@ -191,55 +134,136 @@ let channelPagination = reactive({
 	showTotal: (total) =>
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
-const activeKey = ref(undefined) // tab切换
-const searchForm = ref({
-	sn: "",
-})
 
-/* fetch start */
-const fetchs = (params = {}) => {
-	let obj = {
-		...params,
-	}
-	Core.Api.XXX(obj)
-		.then((res) => {
-			Core.Logger.success("参数", obj, "结果", res)
-		})
-		.catch((err) => {
-			Core.Logger.error("参数", obj, "结果", err)
-		})
-}
+const palrformTableColumns = ref([
+	{
+		title: "certificate-list.coc_orderNumber",
+		dataIndex: "order_number",
+		key: "order_number",
+	},
+	{
+		title: "certificate-list.coc_vehicleName",
+		dataIndex: "model_name",
+		key: "model_name",
+	},
+	{
+		title: "certificate-list.coc_vehicleCode",
+		dataIndex: "model_number",
+		key: "model_number",
+	},
+	{
+		title: "certificate-list.coc_vin",
+		dataIndex: "vehicle_uid",
+		key: "vehicle_uid",
+	},
+	{
+		title: "certificate-list.coc_motor",
+		dataIndex: "motor_uid",
+		key: "motor_uid",
+	},
+	{
+		title: "certificate-list.coc_cocStatus",
+		dataIndex: "certificate_status",
+		key: "certificate_status",
+	},
+	{
+		title: "certificate-list.coc_orderTime",
+		dataIndex: "order_time",
+		key: "order_time",
+	},
+	{
+		title: "certificate-list.coc_deliveryTime",
+		dataIndex: "delivery_time",
+		key: "delivery_time",
+	},
+	{
+		title: "certificate-list.coc_downloadTimes",
+		dataIndex: "download_number",
+		key: "download_number",
+	},
+	{
+		title: "certificate-list.coc_operation",
+		dataIndex: "coc_operation",
+		key: "coc_operation",
+	},
+])
 
-/* fetch end */
-
-/* methods start */
-// 下载
-const onDownLoad = () => {}
-// 查看
-const onView = () => {}
-// 下单时间
-const onPlaceOrderTime = (params) => {
-	Core.Logger.log("下单时间", params)
-}
-// 发货时间
-const onDeliveryTime = (params) => {
-	Core.Logger.log("发货时间", params)
-}
-// table chang 分页事件
-const handleTableChange = (pagination, filters, sorter) => {
-	const pager = { ...channelPagination }
-	pager.current = pagination.current
-	if (pagination.pageSize !== channelPagination.pageSize) {
-		pager.current = 1
-		pager.pageSize = pagination.pageSize
-	}
-	channelPagination = pager
-	fetchs({
+// 获取列表
+const getCerList = (from = {}) => {
+	console.log("channelPagination", channelPagination)
+	let params = {
+		...from,
+		...searchForm,
 		page_size: channelPagination.pageSize,
 		page: channelPagination.page,
-	})
+	}
+	getCertificateDetailList(params)
+		.then((res) => {
+			Core.Logger.success("参数", from, "结果", res)
+			channelPagination.total = res.count
+			palrformTableData.value = res.list
+		})
+		.catch((err) => {
+			Core.Logger.error("参数", from, "结果", err)
+		})
 }
-/* methods end */
+const tab_type = computed(() => {
+	// 过滤
+	return Object.values(TAB_TYPE).filter((item) => item.key !== 2)
+})
+const handleReset = () => {
+	searchForm.certificate_status = 0
+	searchForm.delivery_end_time = ""
+	searchForm.delivery_start_time = ""
+	searchForm.motor_uid = ""
+	searchForm.order_number = route.query.order_number
+	searchForm.vehicle_uid = ""
+	getCerList()
+}
+const handleSearch = () => {
+	let params = {
+		...searchForm,
+		certificate_status: activeKey.value,
+	}
+	getCerList(params)
+}
+const handleTableChange = (pagination, filters, sorter) => {
+	channelPagination.page = pagination.current
+	if (pagination.pageSize !== channelPagination.pageSize) {
+		channelPagination.page = 1
+		channelPagination.pageSize = pagination.pageSize
+	}
+	getCerList()
+}
+const handleTabs = () => {
+	searchForm.certificate_status = activeKey.value
+	getCerList()
+}
+
+// const fetchs = (params = {}) => {
+// 	let obj = {
+// 		...params,
+// 	}
+// 	Core.Api.XXX(obj)
+// 		.then((res) => {
+// 			Core.Logger.success("参数", obj, "结果", res)
+// 		})
+// 		.catch((err) => {
+// 			Core.Logger.error("参数", obj, "结果", err)
+// 		})
+// }
+const onDownLoad = () => {}
+const onView = () => {}
+const onDeliveryTime = (params) => {
+	searchForm.delivery_start_time = params.begin_time
+	searchForm.delivery_end_time = params.end_time
+}
+
+onMounted(() => {
+	searchForm.order_number = order_number
+	let params = Core.Util.deepCopy(searchForm)
+	getCerList(params)
+})
 </script>
 
 <style lang="less" scoped>
