@@ -48,6 +48,7 @@ import Static from '../static';
 
 const { proxy } = getCurrentInstance()
 const userId = inject('userId');  // 从staging 从这个来的
+const $emit = defineEmits(['getCount'])
 
 const dirveColumns = ref([
     {
@@ -130,6 +131,7 @@ watch(userId, (newValue, oldValue) => {
 /* Fetch start */
 // 获取试驾单列表
 const getDriveListFetch = (params = {}) => {
+    if (!userId.value) return
     let obj = {
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
@@ -140,6 +142,7 @@ const getDriveListFetch = (params = {}) => {
         Core.Logger.success("参数", obj, "获取试驾单列表", res)
         channelPagination.value.total = res.count
         dirveData.value = res.list
+        $emit('getCount', '5' ,res.count)
     }).catch(err => {
         Core.Logger.error("参数", obj, "获取试驾单列表", err)
     })

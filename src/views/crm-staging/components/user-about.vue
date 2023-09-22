@@ -40,10 +40,10 @@ import Order from './order.vue';
 import TestDrive from './test-drive.vue';
 import GeneralView from './general-view.vue';
 import attributionRecord from "../components/attribution-record.vue";
+import FollowRecord from "./FollowRecord.vue";
 import LogSteps from "./log-step.vue";
 import Core from '@/core';
 import { reactive, ref, toRefs, onMounted, nextTick, inject, watch } from 'vue';
-import FollowRecord from "./FollowRecord.vue";
 const userId = inject('userId');  // 从staging 从这个来的
 
 const OrderRef = ref(null)

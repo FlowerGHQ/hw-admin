@@ -36,6 +36,8 @@ import { reactive, ref ,getCurrentInstance ,inject ,watch } from 'vue';
 import Core from "@/core";    
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
+const $emit = defineEmits(['getCount'])
+const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key 
 const props = defineProps({
   isShowButton: {
     type: Boolean,
@@ -63,9 +65,12 @@ watch(
     }
   }
 )
-
+const getData = () => {
+  getRecordList()
+}
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
+  if (!userId.value) return
   if(JSON.stringify(params)=='{}'){
     Object.assign(pagination, {
       pageSize: 10,
@@ -89,11 +94,12 @@ const getRecordList = (params={}) => {
     list.value = [...list.value,...res.list];
     pagination.total = res.count;
     pagination.total_page = Math.ceil(pagination.total / pagination.pageSize);
+    $emit('getCount', '2' ,res.count)
   }).catch(err=>{
     Core.Logger.error("参数getRecordList参数",obj, "数据", err)
   })
 }
-defineExpose({getRecordList});
+defineExpose({getData});
 const clickCreate = (params = {}) => {
 
   proxy.$confirm({
@@ -116,6 +122,7 @@ const clickCreate = (params = {}) => {
 }
 // 跟进创建操作
 const createFollow = (params={}) => {
+  if (!userId.value) return
   const obj = {
     contact_customer_id: userId.value,
     target_id: userId.value,

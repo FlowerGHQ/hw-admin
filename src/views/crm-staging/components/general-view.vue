@@ -85,6 +85,7 @@ const getUserDetail = () => {
 }
 // 获取试驾单列表
 const getDriveListFetch = () => {
+    if (!userId.value) return
     let obj = {
         customer_id: userId.value, // 客户id
     }

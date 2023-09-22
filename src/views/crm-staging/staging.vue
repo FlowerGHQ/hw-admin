@@ -22,7 +22,7 @@
                             <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
                         </div>
                     </div>
-                    <div class="task-list-body" id="taskBody" @scroll="handleScroll">
+                    <div class="task-list-body" id="taskBody" @scroll="(e) => handleScroll(e, 'task')">
                         <div
                             v-for="(item, index) in taskList"
                             :key="item.id"
@@ -63,7 +63,40 @@
                         <UserDetail :id="userId"/>
                     </div>
                     <div class="about">
-                        <UserAbout/>
+                        <div class="user-about">
+                            <a-tabs v-model:activeKey="activeKey">
+                                <a-tab-pane key="1" tab="总览">
+                                    <div class="tab-body">
+                                        <GeneralView ref="tabPane1"/>
+                                    </div>
+                                </a-tab-pane>
+                                <a-tab-pane key="2" :tab="`跟进记录(${totals['2']})`" forceRender>
+                                    <div class="tab-body" style="overflow: hidden;">
+                                        <FollowRecord ref="tabPane2" @getCount='getCount'/>
+                                    </div>
+                                </a-tab-pane>
+                                <a-tab-pane key="3" :tab="`归属记录(${totals['3']})`" forceRender>
+                                    <div class="tab-body">
+                                        <attributionRecord ref="tabPane3" @getCount='getCount'/>
+                                    </div>
+                                </a-tab-pane>
+                                <a-tab-pane key="4" :tab="`订单(${totals['4']})`" forceRender>
+                                    <div class="tab-body">
+                                        <Order ref="tabPane4" @getCount='getCount'/>
+                                    </div>
+                                </a-tab-pane>
+                                <a-tab-pane key="5" :tab="`试驾(${totals['5']})`" forceRender>
+                                    <div class="tab-body">
+                                        <TestDrive ref="tabPane5" @getCount='getCount'/>
+                                    </div>
+                                </a-tab-pane>
+                                <a-tab-pane key="6" :tab="`日志(${totals['6']})`" forceRender>
+                                    <div class="tab-body" @scroll="handleScroll">
+                                        <LogSteps ref="tabPane6" :list="logList"/>
+                                    </div>
+                                </a-tab-pane>
+                            </a-tabs>
+                        </div>
                     </div>
                 </div>
                 <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>
@@ -77,6 +110,7 @@
           :body-style="bodyStyle"
           :footer="false"
           :closable="false"
+          destroyOnClose
           placement="right"
         >
           <QuickOrder ref="QuickOrderRef"/>
@@ -87,10 +121,16 @@
 <script setup>
 import Core from '@/core';
 import Static from './static';
+import Order from './components/order.vue';
+import TestDrive from './components/test-drive.vue';
+import GeneralView from './components/general-view.vue';
+import attributionRecord from "./components/attribution-record.vue";
+import FollowRecord from "./components/FollowRecord.vue";
+import LogSteps from "./components/log-step.vue";
 import IntentionStairs from "./components/intention-stairs.vue";
 import UserDetail from "./components/UserDetail.vue";
 import Search from "./components/search.vue";
-import UserAbout from "./components/user-about.vue";
+// import UserAbout from "./components/user-about.vue";
 import FixedSelect from "./components/fixed-select.vue";
 import QuickOrder from "./components/quick-order.vue";
 import myTag from "./components/my-tag.vue";
@@ -101,6 +141,7 @@ import dayjs from "dayjs";
 const route = useRoute()
 onMounted(() => {    
     getTaskNum()
+    getLogListFetch()
 })
 
 // a-drawer bodyStyle样式
@@ -275,6 +316,93 @@ const nextTask = (current) => {
     taskEl.children[taskIndex.value].scrollIntoView({ behavior: 'smooth' })
 }
 
+// 日志
+const logPagination = reactive({
+  	page_size: 20,
+  	page: 1,
+  	total: 0,
+  	total_page: 0
+})
+const logList = ref([])
+/* Fetch start*/
+// 获取日志list
+const getLogListFetch = (params = {} , isSearch = false) => {
+    if (!userId.value) return
+    const obj = {
+		page: logPagination.page,
+		page_size: logPagination.page_size,
+		target_id: userId.value, // 用户id
+	    target_type: Core.Const.LABEl.CATEGORY.CLIENT,  // 目标类型 (1客户、2商机、3合同订单、4回款单)
+        ...params
+	}
+	Core.Logger.success("参数", obj)
+    Core.Api.CustomService.logList(obj).then(res=>{
+		logPagination.total = res.count
+        logPagination.total_page = Math.ceil(logPagination.total / logPagination.page_size)
+
+        Core.Logger.success("参数", obj, "获取日志list", res)
+		// 是否是搜索的
+		if (isSearch) {
+            logList.value = []
+        }
+
+        logList.value = logList.value.concat(res.list)
+        getCount('6', res.count)
+	}).catch(err=>{
+        Core.Logger.error("参数", obj, "获取日志list", err)
+	})
+}
+
+//tab栏
+const tabPane1 = ref(null);
+const tabPane2 = ref(null);
+const tabPane3 = ref(null);
+const tabPane4 = ref(null);
+const tabPane5 = ref(null);
+const tabPane6 = ref(null);
+const activeKey = ref('1')
+const totals = reactive({
+    '1': 0,
+    '2': 0,
+    '3': 0,
+    '4': 0,
+    '5': 0,
+    '6': 0,
+})
+
+const getCount = (key, count) => {
+    totals[key] = count
+}
+
+// const changeActivety = (value) => {
+//     getChildData(value)
+// }
+const getChildData = (key) => {
+    switch (key) {
+        case '1':
+            // tabPane1.value.getData()
+            break;
+        case '2':
+            tabPane2.value.getData()
+            break;
+        case '3':
+            // tabPane3.value.getData()
+            break;
+        case '4':
+            tabPane4.value.getData()
+            break;
+        case '5':
+            // tabPane5.value.getData()
+            break;
+        case '6':
+            // tabPane6.value.getData()
+            break;
+    
+        default:
+            break;
+    }
+}
+
 
 // 公共方法
 //动态获取本地图片
@@ -284,17 +412,31 @@ const getAssetURL = (image) => {
 }
 
 // 监听滚轮事件
-const handleScroll = (e) => {
+const handleScroll = (e, type) => {
     const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight) {
         Core.Logger.log("滑到底部")
-        if (userPagination.page < userPagination.total_page) {
-            userPagination.page++
-            getTaskNum({ page: userPagination.page })
+        switch (type) {
+            case 'task':
+                if (userPagination.page < userPagination.total_page) {
+                    userPagination.page++
+                    getTaskNum({ page: userPagination.page })
+                }
+                break;
+            case 'log':
+                if (logPagination.page < logPagination.total_page) {
+                    logPagination.page++
+                    getTaskNum({ page: logPagination.page })
+                }
+                break;
+        
+            default:
+                break;
         }
     }
 }
 provide('userId', userId); // 提供id
+provide('getChildData', getChildData); // 提供获取子组件数据方法
 </script>
 
 <style lang="less" scoped>
@@ -507,6 +649,19 @@ provide('userId', userId); // 提供id
                     border-radius: 6px;
                     background: #FFF;
                     overflow: hidden;
+                    .user-about {
+                        height: 100%;
+                        .tab-body {
+                            height: 100%;
+                            overflow-y: auto;
+                        }
+                        .ant-tabs {
+                            height: 100%;
+                            :deep(.ant-tabs-content-holder) {
+                                display: flex;
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -134,6 +134,7 @@ const getUserDetail = () => {
 	})
 }
 const getBindList = (params = {}) => {
+  if (!userId.value) return
   const obj = {
     customer_id: userId.value,
     page: params.current,
