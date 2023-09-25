@@ -285,7 +285,7 @@ const onDownLoad = (record, array) => {
 	})
 		.then((res) => {
 			// const str = 'xxxxfile-name=example.txt';
-			// const regex = /file-name=([\w.-]+)(\.[\w.-]+)?/;
+			// const regex = /file-name=([\w.-]+)(\.[\w.-]+)?/; //意思是匹配文件名，文件名可以是字母、数字、下划线、中划线、
 			// const match = str.match(regex);
 			// if (match) {
 			// const fileName = match[1]; // 提取文件名
