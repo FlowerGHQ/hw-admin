@@ -3,7 +3,7 @@ import defult_img from '@images/defult_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
-
+import { constModules } from './modules/const/index'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
@@ -2434,7 +2434,8 @@ let Const = {
                 "40": { text: 'Hot', key: 40 },
             }
         }        
-    }
+    },
+    ...constModules
 };
 
 export default Const;
