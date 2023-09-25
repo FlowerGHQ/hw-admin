@@ -26,7 +26,7 @@
                 </a-col>
                 <!-- 线索来源 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">线索来源：</span>
+                    <span class="key">来源：</span>
                     <span class="value">
                         <a-select v-model:value="searchForm.source_type_mapping" class="select-w">
                             <a-select-option v-for="item in optionsSource" :value="item.key">
@@ -36,31 +36,15 @@
                     </span>
                 </a-col>
                 <template v-if="show">
-                    <!-- 用户体验官 -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                        <span class="key">用户体验官：</span>
-                        <span class="value">
-                            <a-select v-model:value="searchForm.order_status" class="select-w">
-                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
-                                    {{ $t(item.value )}}
-                                </a-select-option>
-                            </a-select>
-                        </span>
-                    </a-col>
                     <!-- 订单状态 -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                    <a-col
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="row-item"
+                    >
                         <span class="key">订单状态：</span>
-                        <span class="value">
-                            <a-select v-model:value="searchForm.order_status" class="select-w">
-                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
-                                    {{ $t(item.value )}}
-                                </a-select-option>
-                            </a-select>
-                        </span>
-                    </a-col>
-                    <!-- 所属大区 -->
-                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                        <span class="key">所属大区：</span>
                         <span class="value">
                             <a-select v-model:value="searchForm.order_status" class="select-w">
                                 <a-select-option v-for="item in optionsStatus" :value="item.key">
@@ -113,6 +97,17 @@
                     >
                         <span class="key">所属门店：</span>
                         <span class="value">
+                            <a-select v-model:value="searchForm.store_id" :disabled="!searchForm.city" class="select-w" @change="handleChange('store')">
+                                <a-select-option v-for="item in optionsStore" :value="item.id">
+                                    {{ item.name}}
+                                </a-select-option>
+                            </a-select>
+                        </span>
+                    </a-col>
+                    <!-- 用户体验官 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                        <span class="key">用户体验官：</span>
+                        <span class="value">
                             <a-select v-model:value="searchForm.store_user_id" :disabled="!searchForm.store_id" option-label-prop="label" class="select-w">
                                 <a-select-option v-for="item in officerList" :value="item?.id" :label="item.user_name">
                                     <img :src="item.avatar" class ="options-img" alt="">
@@ -125,15 +120,29 @@
                         </span>
                     </a-col>
                 </template>
+                <a-col
+                    :xs="24"
+                    :sm="24"
+                    :xl="8"
+                    :xxl="6"
+                    class="row-item"
+                    @click="moreSearch"
+                >       
+                    <span class="key option-text">
+                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                        <i v-if="!show" class="icon i_xialajiantouxiao"></i>
+                        <i v-else class="icon i_shouqijiantouxiao"></i>
+                    </span>
+                </a-col>
             </a-row>
         </div>
         <div> 
             <div class="btns m-b-20">
                 <div class="btn-left"></div>
-                <div class="btn-right">                  
+                <div class="btn-right row-detail">                                 
                     <a-button @click="handleSearchReset">
                         {{ $t("def.reset") }}
-                    </a-button>
+                    </a-button>                   
                     <a-button @click="handleSearch" type="primary">
                         {{ $t("def.search") }}
                     </a-button>
@@ -201,8 +210,8 @@ const CRM_CUSTOMER_CENTER = Core.Const.CRM_CUSTOMER_CENTER
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
-const optionsSource = ref(Static.SOURCE_TYPE);
-const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
+const optionsSource = ref(CRM_CUSTOMER_CENTER.SOURCE_TYPE);
+const optionsStatus = ref(Object.values(CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP));
 const optionsRegion = ref([]);
 const optionsCity = ref([]);
 const optionsStore = ref([]);
