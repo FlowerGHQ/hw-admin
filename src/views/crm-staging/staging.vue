@@ -60,7 +60,7 @@
                 </div>
                 <div class="content-right">
                     <div class="user-card">
-                        <UserDetail ref="userDetailRef" :id="userId"/>
+                        <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateLabel"/>
                     </div>
                     <div class="about">
                         <div class="user-about">
@@ -311,10 +311,14 @@ const filterData = (data) => {
             }
         }
         item.label_group_list = list
+        console.log(item.label_group_list)
         // Core.Logger.log("每一项的次数", count)
         // 是否显示后面的 ... 三个点
         item.isSpill = count === 0
     }); 
+}
+const updateLabel = () => {
+    getTaskNum({ page: 1 }, true)
 }
 //置顶
 const QuickOrderRef = ref(null)
@@ -445,8 +449,6 @@ const getChildData = (key) => {
 // 公共方法
 //动态获取本地图片
 const getAssetURL = (image) => {
-    console.log(import.meta.url)
-    console.log(new URL(`../crm-staging/${image}`, import.meta.url))
   // 参数一: 相对路径
   return new URL(`../crm-staging/${image}`, import.meta.url).href
 }
