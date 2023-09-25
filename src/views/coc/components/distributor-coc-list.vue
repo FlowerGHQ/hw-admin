@@ -166,6 +166,7 @@ const palrformTableColumns = ref([
 ])
 const palrformTableData = ref([])
 let channelPagination = reactive({
+	current: 1,
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
 	pageSize: 20,
@@ -212,14 +213,18 @@ const handleSearch = () => {
 const handleReset = () => {
 	searchForm.value = {}
 	channelPagination.page = 1
+	channelPagination.current = 1
 	channelPagination.pageSize = 20
 	certificateList()
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
 	channelPagination.page = pagination.current
+	channelPagination.pageSize = pagination.pageSize
+	channelPagination.current = pagination.current
 	if (pagination.pageSize !== channelPagination.pageSize) {
 		channelPagination.page = 1
+		channelPagination.current = 1
 		channelPagination.pageSize = pagination.pageSize
 	}
 	certificateList()

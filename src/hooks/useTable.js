@@ -2,7 +2,7 @@
  * @Author: douzhiyuan
  * @Date: 2023-09-21 19:03:15
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-09-25 10:24:29
+ * @LastEditTime: 2023-09-25 11:12:22
  * @Description: 请填写简介
  */
 
@@ -22,7 +22,7 @@ export const useTable = ({ request, searchForm }) => {
     let pagination = reactive({
         page: 1,
         current: 1,
-        page_size: 20,
+        pageSize: 20,
         total: 0
     })
 
@@ -36,8 +36,8 @@ export const useTable = ({ request, searchForm }) => {
     }
     const pageSizeChange = (current, size) => {
         pagination.page = current
-        pagination.page_size = size
         pagination.current = current
+        pagination.pageSize = size
         getTableData()
     }
     const getTableData = () => {

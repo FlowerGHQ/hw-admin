@@ -304,6 +304,9 @@ const resetData = () => {
 	}
 	upload.fileList = []
 	coc_validity_date.value = []
+	pagination.page = 1
+	pagination.current = 1
+	pagination.pageSize = 20
 }
 // 获取详情
 const getDetail = async (id) => {
