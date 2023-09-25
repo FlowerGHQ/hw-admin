@@ -1,5 +1,4 @@
-import Const from '../../core/const';
-const Static = {
+const CRM_CUSTOMER_CENTER = {
     INTENTION_MAP: {
         '10': { key: '无意向', color: '#86909C', borderColor: '#E5E6EB' },
         '20': { key: '有意向', color: '#F7BA1E', borderColor: '#F7BA1E4D' },
@@ -49,4 +48,5 @@ const Static = {
 	},
     defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
 }
-export default Static
+
+export default CRM_CUSTOMER_CENTER

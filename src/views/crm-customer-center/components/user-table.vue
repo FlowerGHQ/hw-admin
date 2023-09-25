@@ -24,7 +24,7 @@
                         </a-select>
                     </span>
                 </a-col>
-                <!-- 来源 -->
+                <!-- 线索来源 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">来源：</span>
                     <span class="value">
@@ -120,22 +120,31 @@
                         </span>
                     </a-col>
                 </template>
+                <a-col
+                    :xs="24"
+                    :sm="24"
+                    :xl="8"
+                    :xxl="6"
+                    class="row-item"
+                    @click="moreSearch"
+                >       
+                    <span class="key option-text">
+                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                        <i v-if="!show" class="icon i_xialajiantouxiao"></i>
+                        <i v-else class="icon i_shouqijiantouxiao"></i>
+                    </span>
+                </a-col>
             </a-row>
         </div>
         <div> 
             <div class="btns m-b-20">
                 <div class="btn-left"></div>
-                <div class="btn-right row-detail">   
-                    <span class="key option-text" style="margin-right: 20px;" @click="moreSearch">
-                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
-                        <i v-if="!show" class="icon i_xialajiantouxiao"></i>
-                        <i v-else class="icon i_shouqijiantouxiao"></i>
-                    </span>            
-                    <a-button @click="handleSearch" type="primary">
-                        {{ $t("def.search") }}
-                    </a-button>
+                <div class="btn-right row-detail">                                 
                     <a-button @click="handleSearchReset">
                         {{ $t("def.reset") }}
+                    </a-button>                   
+                    <a-button @click="handleSearch" type="primary">
+                        {{ $t("def.search") }}
                     </a-button>
                 </div>
             </div>
@@ -158,7 +167,7 @@
                         <span class="blue-text">{{ text ? Core.Util.phoneEncryption(String(text)) : '-' }}</span>
                     </template>
                     <template v-if="column.key === 'intention'">
-                        <my-tag border :color="Static.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="Static.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
+                        <my-tag border :color="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
                     </template>
                     <template v-if="column.key === 'label'">
                         <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-for="(item, index) in text.slice(0, 2)" :key="index">{{ item || '-' }}</my-tag>
@@ -170,15 +179,15 @@
                         </a-popover>
                     </template>
                     <template v-if="column.key === 'officer'">
-                        <img v-if="text" class="avatar-style" :src="record.avatar || Static.defaultAvatar">
+                        <img v-if="text" class="avatar-style" :src="record.avatar || CRM_CUSTOMER_CENTER.defaultAvatar">
                         <span class="user-name">{{ text }}</span>
                         <!-- <span>{{ record.employee_no }}</span> -->
                     </template>
                     <template v-if="column.key === 'order_status'">
-                        <my-tag border :color="Static.Order_Status[text]?.color" :bgColor="Static.Order_Status[text]?.bgColor" :borderColor="Static.Order_Status[text]?.borderColor">{{ text ? $t(Static.Order_Status[text].value) : '-' }}</my-tag>
+                        <my-tag border :color="CRM_CUSTOMER_CENTER.Order_Status[text]?.color" :bgColor="CRM_CUSTOMER_CENTER.Order_Status[text]?.bgColor" :borderColor="CRM_CUSTOMER_CENTER.Order_Status[text]?.borderColor">{{ text ? $t(CRM_CUSTOMER_CENTER.Order_Status[text].value) : '-' }}</my-tag>
                     </template>
                     <template v-if="column.key === 'source_type_mapping'">
-                        <span>{{ text ? Static.SOURCE_TYPE_MAP[text].key : '-' }}</span>
+                        <span>{{ text ? CRM_CUSTOMER_CENTER.SOURCE_TYPE_MAP[text].key : '-' }}</span>
                     </template>
 
                     <template v-if="column.key === 'operation'">
@@ -192,17 +201,17 @@
 
 <script setup>
 import Core from "@/core";
-import Static from "../static";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import myTag from "../../crm-staging/components/my-tag.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+const CRM_CUSTOMER_CENTER = Core.Const.CRM_CUSTOMER_CENTER
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
 const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
-const optionsSource = ref(Static.SOURCE_TYPE);
-const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
+const optionsSource = ref(CRM_CUSTOMER_CENTER.SOURCE_TYPE);
+const optionsStatus = ref(Object.values(CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP));
 const optionsRegion = ref([]);
 const optionsCity = ref([]);
 const optionsStore = ref([]);

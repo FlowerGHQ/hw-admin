@@ -122,9 +122,9 @@
                 </div>
             </div>
         </div>
-        <AddTag v-if="tagDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail"
+        <AddTag v-if="tagDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail" @updateLabel="updateLabel"
             v-model:visible="tagDrawerShow" />
-        <AddFocus v-if="focusDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail"
+        <AddFocus v-if="focusDrawerShow" :id="id" :list="detail.label_group_list" @submit="getUserDetail" @updateLabel="updateLabel"
             v-model:visible="focusDrawerShow" />
     </div>
 </template>
@@ -197,6 +197,7 @@ export default {
                         Core.Logger.log('handleDeleteTag res', res)
                         _this.$message.success('删除成功！')
                         _this.getUserDetail();
+                        _this.$emit('updateLabel');
                     })
                 },
             });
@@ -221,6 +222,9 @@ export default {
             }).catch(err => {
                 Core.Logger.log('getUserDetail err', err)
             })
+        },
+        updateLabel() {
+            this.$emit('updateLabel');
         }
     }
 };

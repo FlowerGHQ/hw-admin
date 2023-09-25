@@ -8,9 +8,15 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="item.key" :tab="`${item.title}(${item.total})`" v-for="item in tabList"></a-tab-pane>
+                <a-tabs v-model:activeKey="activeKey">                      
+                    <a-tab-pane
+                        v-for="(item, index) in tabPhoneData"
+                        :key="item.key"
+                        :tab="item.title"
+                    >
+                    </a-tab-pane>
                 </a-tabs>
+
                 <allTable :activeKey="activeKey"/>
             </div>
         </div>
@@ -27,13 +33,18 @@ const activeKey = ref(1)
 
 const {proxy} = getCurrentInstance()
 const router = useRouter()
-const tabList = ref([
-    { key: 1, title: '全部', total: 0 },
-    { key: 2, title: '未下订', total: 0 },
-    { key: 3, title: '已下订', total: 0 },
-    { key: 4, title: '已成交', total: 0 },
-    { key: 5, title: '已交付', total: 0 },
-])
+
+const tabPhoneData = computed(() => {
+    let result = [
+        { key: 1, title: `全部(${ 10 })`, },
+        { key: 2, title: `未下定(${ 10 })`, },
+        { key: 3, title: `已下订(${ 10 })`, },
+        { key: 4, title: `已成交(${ 10 })`, },
+        { key: 5, title: `已交付(${ 10 })`, },
+    ]
+    return result
+})
+
 
 /* Fetch start */
 

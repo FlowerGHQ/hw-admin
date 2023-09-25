@@ -155,6 +155,7 @@ export default {
                     Core.Logger.log('handleSubmit res', res);
                     this.$message.success('修改成功！')
                     this.$emit('submit');
+                    this.$emit('updateLabel');
                     this.closeDrawer();
                 }).catch(err => {
                     Core.Logger.log('handleSubmit err', err)
