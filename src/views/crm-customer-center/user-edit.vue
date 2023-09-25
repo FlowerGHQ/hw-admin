@@ -38,7 +38,7 @@
                         手机号：
                     </div>
                     <div class="value">
-                        <a-input @blur="phoneBlurCheck" v-model:value="form.phone" placeholder="请输入手机号码" />
+                        <a-input :disabled="form.id" @blur="phoneBlurCheck" v-model:value="form.phone" placeholder="请输入手机号码" />
                     </div>
                 </div>
                 <div class="form-item" v-if="phoneExistErrorFlag || phoneFormatErrorFlag">
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="white-container"  v-if="!form.id">
+        <div class="white-container" v-if="!form.id">
             <div class="head-title">
                 其他信息
             </div>
@@ -135,10 +135,10 @@
                         标签：
                     </div>
                     <div class="value">
-                        <template v-for="tagTypeList in form.label_group_list">
-                            <div class="user-color-tag blue" v-for="tag in tagTypeList.label_list"
-                                @click="handleDeleteTag(tag.label_bind_id)"
-                                v-if="tagTypeList.type === tagMap.TAG || tagTypeList.type === tagMap.MODEL || tagTypeList.type === tagMap.CITY">
+                        <template v-for="(tag, index) in form.label_list">
+                            <div class="user-color-tag blue" :key="index"
+                                @click="handleDeleteTag(tag.name)"
+                                v-if="tag.type === tagMap.TAG || tag.type === tagMap.MODEL || tag.type === tagMap.CITY">
                                 {{ tag.name || '-' }}
                                 <!-- 删除图标 -->
                                 <img src="../crm-staging/images/close-icon.png" alt="">
@@ -157,10 +157,10 @@
                         关注点：
                     </div>
                     <div class="value">
-                        <template v-for="tagTypeList in form.label_group_list">
-                            <div class="user-color-tag green" v-for="focus in tagTypeList.label_list"
-                                @click="handleDeleteTag(focus.label_bind_id)"
-                                v-if="tagTypeList.type === tagMap.FOCUS">
+                        <template v-for="(focus, index) in form.label_list">
+                            <div class="user-color-tag green" :key="index"
+                                @click="handleDeleteTag(focus.name)"
+                                v-if="focus.type === tagMap.FOCUS">
                                 {{ focus.name || '-' }}
                                 <!-- 删除图标 -->
                                 <img src="../crm-staging/images/close-icon.png" alt="">
@@ -176,9 +176,9 @@
                 </div>
             </div>
         </div>
-        <AddTag :isCreate="true" v-if="tagDrawerShow" :list="form.label_group_list" @finish="updateTagList"
+        <AddTag :isCreate="true" v-if="tagDrawerShow" :list="form.label_list" @finish="updateTagList"
             v-model:visible="tagDrawerShow" />
-        <AddFocus :isCreate="true" v-if="focusDrawerShow" :list="form.label_group_list" @finish="updateFocusList"
+        <AddFocus :isCreate="true" v-if="focusDrawerShow" :list="form.label_list" @finish="updateFocusList"
             v-model:visible="focusDrawerShow" />
     </div>
 </template>
@@ -188,6 +188,7 @@ import Core from '../../core';
 import China2Address from "@/components/common/China2Address.vue";
 import AddTag from "@/views/crm-staging/components/AddTag.vue";
 import AddFocus from "@/views/crm-staging/components/AddFocus.vue";
+import {Translation as item} from "vue-i18n";
 export default {
     name: 'UserEdit',
     components: {
@@ -208,103 +209,7 @@ export default {
                 email: undefined,
                 intention: undefined, // 意向度
                 intent_vehicle_model: undefined, // 意向车辆 1 SENMENTI0 2 SENMENTIX
-                label_group_list: [
-                    {
-                        label_list: [
-                            {
-                                category: 0,
-                                id: 1,
-                                label_bind_id: 0,
-                                name: "有摩托",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 2,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 3,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                        ],
-                        type: 3
-                    },
-                    {
-                        label_list: [
-                            {
-                                category: 0,
-                                id: 1,
-                                label_bind_id: 0,
-                                name: "续航",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 2,
-                                label_bind_id: 0,
-                                name: "质量",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 3,
-                                label_bind_id: 0,
-                                name: "安全",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "安全",
-                                type: 4,
-                                user_id: 0
-                            },
-                        ],
-                        type: 4
-                    }
-                ]
+                label_list: []
             },
             successIcon: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/66c031f28636bd85709313794f7e84eb47b5b49e6bbabd0b18df50ba6b44af88.png',
             phoneExistErrorFlag: false,
@@ -336,13 +241,14 @@ export default {
         };
     },
     computed: {
+        item() {
+            return item
+        }
 
     },
     mounted() {
-        
-        this.form.id = Number(this.$route.query.id) || 0;
-        if (this.form.id) {
-            console.log('this.form.id',this.form.id);
+        if(this.$route.query.id) {
+            this.form.id = Number(this.$route.query.id)
             this.getUserDetail();
         }
     },
@@ -366,9 +272,9 @@ export default {
         async phoneBlurCheck() {
             if(!this.form.phone) {
                 return this.phoneFormatErrorFlag = false
-            }else if(this.form.phone.length !== 11) {
+            } else if(this.form.phone.length !== 11) {
                 return this.phoneFormatErrorFlag = true
-            }else {
+            } else {
                 this.phoneFormatErrorFlag = false
             }
             this.phoneExistErrorFlag = await this.verifyPhoneAndEmail('phone');
@@ -410,21 +316,20 @@ export default {
         },
         // 点击确定
         handleSubmit() {
-            
             let obj = this.$Util.deepCopy(this.form);
             if(!obj.name){
                 return this.$message.warning(this.$t('def.enter'));
-            }else if(!obj.gender){
+            } else if(!obj.gender){
                 return this.$message.warning(this.$t('def.enter'));
-            }else if(!obj.phone){
+            } else if(!obj.phone){
                 return this.$message.warning(this.$t('def.enter'));
-            }else if(!obj.country){
+            } else if(!obj.country){
                 return this.$message.warning(this.$t('def.enter'));
-            }else if(!obj.province || !obj.city){
+            } else if(!obj.province || !obj.city){
                 return this.$message.warning(this.$t('def.enter'));
-            }else if(this.phoneExistErrorFlag || this.phoneFormatErrorFlag){
+            } else if(this.phoneExistErrorFlag || this.phoneFormatErrorFlag){
                 return this.$message.warning('请检查手机号码');
-            }else if(this.emailExistErrorFlag){
+            } else if(this.emailExistErrorFlag){
                 return this.$message.warning('请检查邮箱号码');
             }
             let _this = this;
@@ -449,14 +354,33 @@ export default {
         },
         // 更新标签
         updateTagList(list) {
-            console.log('list', list);
+            this.form.label_list = this.form.label_list.filter(label => label.type === this.tagMap.FOCUS)
+            this.form.label_list.push(...list);
+            this.tagDrawerShow = false;
+            this.$message.success('保存成功！')
         },
         updateFocusList(list) {
-            console.log('list', list);
+            this.form.label_list = this.form.label_list.filter(label => label.type !== this.tagMap.FOCUS)
+            this.form.label_list.push(...list);
+            this.focusDrawerShow = false;
+            this.$message.success('保存成功！')
+        },
+        // 删除标签
+        handleDeleteTag(labelName) {
+            let _this = this;
+            this.$confirm({
+                title: '确认删除该标签/关注点吗？',
+                okText: '确定',
+                okType: 'primary',
+                cancelText: '取消',
+                onOk() {
+                    _this.form.label_list = _this.form.label_list.filter(label => label.name !== labelName)
+                    _this.$message.success('删除成功！')
+                },
+            });
         },
         // 获取用户详情
         getUserDetail() {
-            
             if (!this.form.id) return
             Core.Api.CustomService.detail({
                 id: this.form.id
@@ -468,7 +392,6 @@ export default {
                 Core.Logger.log('getUserDetail err', err)
             })
         },
-
         // 保存用户详情
         saveUserDetail() {
             let obj = this.$Util.deepCopy(this.form);
@@ -478,7 +401,6 @@ export default {
                 Core.Logger.log('saveUserDetail res', res)
                 this.$message.success('保存成功');
                 this.routerChange('back');
-
             }).catch(err => {
                 Core.Logger.log('saveUserDetail err', err)
             })

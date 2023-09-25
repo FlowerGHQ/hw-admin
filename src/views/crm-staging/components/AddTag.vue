@@ -80,7 +80,12 @@ export default {
     },
     mounted() {
         this.renderList = Core.Util.deepCopy(Static.renderList)
-        this.transformLabelData();
+        // 判断是否是从创建用户界面过来 结构有区分
+        if(!this.isCreate) {
+            this.transformLabelData();
+        } else {
+            this.transformIsCreateData();
+        }
     },
     methods: {
         // 关闭drawer
@@ -193,6 +198,35 @@ export default {
                 });
             });
         },
+        // 转化创建用户回显数据
+        transformIsCreateData() {
+            if(this.list.length) {
+                this.list.forEach(item => {
+                    if (item.type === Core.Const.INTENTION.TAG_TYPE.TAG) {
+                        this.detailList.push(item)
+                    } else if (item.type === Core.Const.INTENTION.TAG_TYPE.CITY) {
+                        this.form.city = item.name
+                    } else if (item.type === Core.Const.INTENTION.TAG_TYPE.MODEL) {
+                        this.renderList[2].isShow = true
+                        this.renderList[2].list[0].name = item.name
+                        this.renderList[2].list[0].isClick = true
+                    }
+                })
+            }
+            this.detailList.forEach((label) => {
+                this.renderList.forEach((item) => {
+                    item.list.forEach((listItem) => {
+                        if (listItem.name === label.name && listItem.type === label.type) {
+                            listItem.isClick = true;
+                            item.isShow = true;
+                        }
+                        if (label.type === Core.Const.INTENTION.TAG_TYPE.CITY) {
+                            this.form.city = label.name
+                        }
+                    });
+                });
+            });
+        }
     },
 }
 </script>
