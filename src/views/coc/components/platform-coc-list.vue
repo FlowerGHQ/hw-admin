@@ -285,20 +285,11 @@ const onDownLoad = (record, array) => {
 	})
 		.then((res) => {
 			// const str = 'xxxxfile-name=example.txt';
-			// const regex = /file-name=([\w.-]+)(\.[\w.-]+)?/; //意思是匹配文件名，文件名可以是字母、数字、下划线、中划线、
-			// const match = str.match(regex);
-			// if (match) {
-			// const fileName = match[1]; // 提取文件名
-			// const extension = match[2]; // 提取扩展名
-			//   console.log('文件名:', fileName);
-			//   console.log('扩展名:', extension);
-			// } else {
-			//   console.log('未找到匹配项');
-			// }后期优化
-			const name = res.headers["file-name"]
-				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
-				: "未命名"
-			fileSave.getZip(res.data, name)
+			let str = decodeURIComponent(res.headers["file-name"])
+			// 正则匹配attachment;filename=证书导出.zip 取出文件名和拓展名
+			let fileName = str.match(/filename=(.*)/)[1].split(".")[0] || "未命名"
+			let extension = str.match(/filename=(.*)/)[1].split(".")[1] || "docx"
+			fileSave.getFile(res.data, `${fileName}.${extension}`)
 		})
 		.catch((err) => {
 			console.log("err", err)

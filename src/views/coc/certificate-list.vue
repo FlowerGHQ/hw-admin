@@ -88,7 +88,7 @@
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("certificate-list.coc_download") }}</a-button
 							>
-							<a-button type="link" @click="onView">{{
+							<a-button type="link" @click="onView(record)">{{
 								$t("certificate-list.coc_view")
 							}}</a-button>
 						</template>
@@ -111,6 +111,11 @@
 				</a-table>
 			</div>
 		</div>
+		<!-- 文档预览'doc-common', 'doc-wrap' -->
+		<div class="'doc-wrap'">
+			<!-- 预览文件的地方（用于渲染） -->
+			<div ref="refFile"></div>
+		</div>
 	</div>
 </template>
 
@@ -126,6 +131,9 @@ import {
 import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
+import { renderAsync } from "docx-preview"
+import fileSave from "@/core/fileSave"
+
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const Util = Core.Util
@@ -159,6 +167,7 @@ const numberForm = reactive({
 	3: { number: 0 },
 })
 let channelPagination = reactive({
+	current: 1,
 	page: 1,
 	pageSizeOptions: ["20", "40", "60", "80", "100"],
 	pageSize: 20,
@@ -250,6 +259,7 @@ const getAllNumer = () => {
 			numberForm[0].number = res?.total_num || 0
 			numberForm[1].number = res?.generated_num || 0
 			numberForm[3].number = res?.ungenerated_num || 0
+			console.log("numberForm", numberForm)
 		})
 		.catch((err) => {
 			Core.Logger.error("参数", {}, "结果", err)
@@ -265,8 +275,9 @@ const handleReset = () => {
 	searchForm.vehicle_uid = ""
 	// 重置分页，数据更新但视图不更新，原因是因为reactive的原因，所以需要重新赋值，可以用toRefs解决
 
-	const { page, pageSize } = toRefs(channelPagination)
+	const { page, pageSize, current } = toRefs(channelPagination)
 	page.value = 1
+	current.value = 1
 	pageSize.value = 20
 	getCerList()
 }
@@ -279,6 +290,8 @@ const handleSearch = () => {
 }
 const handleTableChange = (pagination, filters, sorter) => {
 	channelPagination.page = pagination.current
+	channelPagination.pageSize = pagination.pageSize
+	channelPagination.current = pagination.current
 	if (pagination.pageSize !== channelPagination.pageSize) {
 		channelPagination.page = 1
 		channelPagination.pageSize = pagination.pageSize
@@ -310,15 +323,31 @@ const onDownLoad = (record, array) => {
 		source_type: 2,
 	})
 		.then((res) => {
-			const name = res.headers["file-name"]
-				? decodeURIComponent(res.headers["file-name"].split("filename=")[1])
-				: "未命名"
-			fileSave.getZip(res.data, name)
+			// const str = 'xxxxfile-name=example.txt';
+			let str = decodeURIComponent(res.headers["file-name"])
+			// 正则匹配attachment;filename=证书导出.zip 取出文件名和拓展名
+			let fileName = str.match(/filename=(.*)/)[1].split(".")[0] || "未命名"
+			let extension = str.match(/filename=(.*)/)[1].split(".")[1] || "docx"
+			fileSave.getFile(res.data, `${fileName}.${extension}`)
 		})
 		.catch((err) => {
 			console.log("err", err)
 			Core.Logger.error("参数", {}, "结果", JSON.stringify(err))
 		})
+}
+const refFile = ref(null)
+const hidden = ref(false)
+// 查看文档
+const onView = (record) => {
+	let list = record?.id ? [record.id] : selectedRowKeyArr.value
+	downLoadCertificateDetailLis({
+		download_list: list,
+		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
+		source_type: 2,
+	}).then((res) => {
+		const { data } = res
+		renderAsync(data, refFile.value) // 渲染到页面
+	})
 }
 const onDeliveryTime = (params) => {
 	searchForm.delivery_start_time = params.begin_time
@@ -336,8 +365,27 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .distributor-coc-list {
+	position: relative;
 	.btn-area {
 		justify-content: flex-end;
+	}
+	.doc-wrap {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		z-index: 99;
+		// 预览文件的地方（用于渲染）
+		.ref-file {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 100%;
+			z-index: 999;
+		}
 	}
 }
 .cancel-m-b {

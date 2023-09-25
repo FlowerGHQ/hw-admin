@@ -1,3 +1,10 @@
+/*
+ * @Author: douzhiyuan
+ * @Date: 2023-09-22 21:21:07
+ * @LastEditors: 
+ * @LastEditTime: 2023-09-25 09:55:49
+ * @Description: 请填写简介
+ */
 import FileSaver from 'file-saver'
 export default class fileSave {
   /**
@@ -5,7 +12,7 @@ export default class fileSave {
      * @param {*} res   文件流
      * @param {*} name  文件名
      */
-  static getZip(res, name) {
+  static getFile(res, name) {
     const blob = new Blob([res], {
       type: 'application/zip;charset=utf-8'
     })

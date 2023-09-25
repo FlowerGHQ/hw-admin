@@ -1,8 +1,8 @@
 /*
  * @Author: douzhiyuan
  * @Date: 2023-09-21 19:03:15
- * @LastEditors: 
- * @LastEditTime: 2023-09-21 19:03:15
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-09-25 10:24:29
  * @Description: 请填写简介
  */
 
@@ -16,11 +16,12 @@ import { ref, toRefs, onMounted, watch, getCurrentInstance, toRaw, reactive } fr
  * @param {*} searchForm 搜索表单的数据
  * @return {*} 返回的是table的公共逻辑
  */
-export const useTable = ({request,searchForm}) => {
+export const useTable = ({ request, searchForm }) => {
     let tableData = ref([])
 
     let pagination = reactive({
         page: 1,
+        current: 1,
         page_size: 20,
         total: 0
     })
@@ -30,11 +31,13 @@ export const useTable = ({request,searchForm}) => {
     let searchFormRef = searchForm
     const pageChange = (page) => {
         pagination.page = page
+        pagination.current = page
         getTableData()
     }
     const pageSizeChange = (current, size) => {
         pagination.page = current
         pagination.page_size = size
+        pagination.current = current
         getTableData()
     }
     const getTableData = () => {
