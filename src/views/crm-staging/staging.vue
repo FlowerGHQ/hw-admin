@@ -32,7 +32,7 @@
                         >
                             <div class="avatar">
                                 <img :src="item.avatar || Static.defaultAvatar" class="avatar-img">
-                                <img :src="item.gender === 1 ? getAssetURL('./images/gender-male.png') : getAssetURL('./images/gender-female.png')" class="avatar-gender">
+                                <img :src="item.gender === 1 ? getAssetURL('images/gender-male.png') : getAssetURL('images/gender-female.png')" class="avatar-gender">
                             </div>
                             <div class="message">
                                 <div class="message-item">
@@ -445,6 +445,8 @@ const getChildData = (key) => {
 // 公共方法
 //动态获取本地图片
 const getAssetURL = (image) => {
+    console.log(import.meta.url)
+    console.log(new URL(`../crm-staging/${image}`, import.meta.url))
   // 参数一: 相对路径
   return new URL(`../crm-staging/${image}`, import.meta.url).href
 }
@@ -452,7 +454,6 @@ const getAssetURL = (image) => {
 // 监听滚轮事件
 const handleScroll = (e, type) => {
     const element = e.target;
-    console.log(Math.ceil(element.scrollTop + element.clientHeight), element.scrollHeight)
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
         Core.Logger.log("滑到底部")
         switch (type) {

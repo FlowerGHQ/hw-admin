@@ -110,12 +110,12 @@ class StorageHandler {
     getOrgType() {
         return this.getItem(Const.DATA.KEY_ORG_TYPE)
     }
-	setCurrency(value) {
-		this.setItem(Const.DATA.KEY_CURRENCY, value);
-	}
-	getCurrency() {
-		return this.getItem(Const.DATA.KEY_CURRENCY)
-	}
+    setCurrency(value) {
+        this.setItem(Const.DATA.KEY_CURRENCY, value);
+    }
+    getCurrency() {
+        return this.getItem(Const.DATA.KEY_CURRENCY)
+    }
 
     setUserType(value) {
         this.setItem(Const.DATA.KEY_USER_TYPE, value);
@@ -155,24 +155,35 @@ class StorageHandler {
         let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {}
         return key ? (field[key] || []) : {}
     }
-	setTabPosition(value) {
-		this.setItem(Const.DATA.TAB_POSITION, value);
-	}
-	getTabPosition() {
-		return this.getItem(Const.DATA.TAB_POSITION)
-	}
-	setCountryCode(value) {
+    setTabPosition(value) {
+        this.setItem(Const.DATA.TAB_POSITION, value);
+    }
+    getTabPosition() {
+        return this.getItem(Const.DATA.TAB_POSITION)
+    }
+    setCountryCode(value) {
         this.setItem(Const.DATA.COUNTRY_CODE, value);
     }
-	getCountryCode() {
-		return this.getItem(Const.DATA.COUNTRY_CODE)
-	}
+    getCountryCode() {
+        return this.getItem(Const.DATA.COUNTRY_CODE)
+    }
     setGroupId(value) {
         this.setItem(Const.DATA.GROUP_ID, value);
     }
     getGroupId() {
-		return this.getItem(Const.DATA.GROUP_ID)
-	}
+        return this.getItem(Const.DATA.GROUP_ID)
+    }
+
+    // 判断这个是否是超级管理员
+    setManager(value) {
+        this.setItem(Const.DATA.SUPER_ADMIN, value);
+    }
+    getManager() {
+        return this.getItem(Const.DATA.SUPER_ADMIN) || false
+    }
+    clearManager() {
+        this.removeItem(Const.DATA.SUPER_ADMIN)
+    }
 }
 
 export default new StorageHandler();
