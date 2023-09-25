@@ -143,7 +143,6 @@ const followObj = reactive(Object.assign({}, initialObject))
 const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
-  console.log(66666666666666666666666666666666688999);
   isShowFollow.value = true;
   resetFollow();
 }
@@ -197,7 +196,6 @@ const createNext = () => {
   if(!taskTimeValue.value){
     return proxy.$message.warning(proxy.$t("def.enter"));
   }
-  console.log('创建更进新的',taskTimeValue.value,time);
   createTask(time);
   isShowCreate.value = false;
 }

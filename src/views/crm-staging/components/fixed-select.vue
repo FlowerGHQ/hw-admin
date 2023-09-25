@@ -91,11 +91,9 @@ const handleClick = (alt) => {
             toTopFn()
             break;
         case '编辑基本信息':
-            console.log('55555');
             routerChange('edit')
             break;
         case '写跟进':
-            console.log('5566666666666666666666666');
             followRef.value.clickModelOk();
             break;
         case '快捷下单':

@@ -139,19 +139,33 @@
                     {{ $t(title) }}
                 </template>
                 <template #bodyCell="{ column, text, record }">
+                    <template v-if="column.key === 'name'">
+                        <span class="blue-text">{{ text || '-' }}</span>
+                    </template>
+                    <template v-if="column.key === 'phone'">
+                        <span class="blue-text">{{ text ? Core.Util.phoneEncryption(String(text)) : '-' }}</span>
+                    </template>
+                    <template v-if="column.key === 'intention'">
+                        <my-tag border :color="Static.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="Static.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
+                    </template>
+                    <template v-if="column.key === 'label'">
+                        <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-for="(item, index) in text.slice(0, 2)" :key="index">{{ item || '-' }}</my-tag>
+                        <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-if="text.length > 2">+{{ text.length - 2 }}</my-tag>
+                    </template>
+                    <template v-if="column.key === 'officer'">
+                        <img v-if="text" class="avatar-style" :src="record.avatar || Static.defaultAvatar">
+                        <span class="user-name">{{ text }}</span>
+                        <!-- <span>{{ record.employee_no }}</span> -->
+                    </template>
+                    <template v-if="column.key === 'order_status'">
+                        <my-tag border :color="Static.Order_Status[text]?.color" :bgColor="Static.Order_Status[text]?.bgColor" :borderColor="Static.Order_Status[text]?.borderColor">{{ text ? $t(Static.Order_Status[text].value) : '-' }}</my-tag>
+                    </template>
+                    <template v-if="column.key === 'source_type_mapping'">
+                        <span>{{ text ? Static.SOURCE_TYPE_MAP[text].key : '-' }}</span>
+                    </template>
+
                     <template v-if="column.key === 'operation'">
-                        <!-- 详情 -->
-                        <a-button type="link" @click="routerChange('detail', record)">
-                            {{ $t("retail.detail")}}
-                        </a-button>                      
-                        <!-- 退订审核 (只有在申请退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.apply_refund" type="link">
-                            {{ $t("retail.unsubscribe_review")}}
-                        </a-button>    
-                        <!-- 查看原因 (只有已退订/退款)-->
-                        <a-button v-if="Number(activeKey) === Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" type="link">
-                            {{ $t("retail.view_reason")}}
-                        </a-button>                      
+                        <a-button type="link" @click="routerChange('detail',record)">{{ $t('def.see') }}</a-button>
                     </template>
                 </template>
             </a-table>
@@ -161,7 +175,9 @@
 
 <script setup>
 import Core from "@/core";
+import Static from "../static";
 import TimeSearch from "@/components/common/TimeSearch.vue";
+import myTag from "../../crm-staging/components/my-tag.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
@@ -199,86 +215,77 @@ const props = defineProps({
 /* 计算属性 */
 const tableColumns = computed(() => {
     let columns = [
-        {
-            title: "车辆系列",
-            dataIndex: "uid",
-            key: "uid",
-        },
-        {
-            title: "订单号",
-            dataIndex: ["order", "uid"],
-            key: "order_uid",
-        },
-        {
-            title: "用户",
-            dataIndex: "status",
-            key: "util",
-            util: "CRMOrderIncomeStatusFilter",
-        },
-        {
-            title: "订单状态",
-            dataIndex: "money",
-            key: "money",
-        },
-        {
-            title: "订单金额",
-            dataIndex: "refunded",
-            key: "refunded",
-        },
-        {
-            title: "已付金额",
-            dataIndex: "date",
-            key: "time",
-        },
-        {
-            title: "购车方案",
-            dataIndex: "type",
-            key: "util",            
-        },
-        {
-            title: "区域 ",
-            dataIndex: "payment_type",
-            key: "util",            
-        },
-        {
-            title: "门店 ",
-            dataIndex: "payment_type",
-            key: "util",            
-        },
-        {
-            title: "体验官 ",
-            dataIndex: "payment_type",
-            key: "util",            
-        },
-        {
-            title: "申请时间 ",
-            dataIndex: "payment_type",
-            key: "util",            
-        },
-        { title: "retail.operate", key: "operation", fixed: "right" },
+        { title: '名称', dataIndex: 'name', key:'name' },
+        { title: '手机号', dataIndex: 'phone', key:'phone' },
+        { title: '意向度', dataIndex: 'intention', key:'intention' },
+        { title: '标签', dataIndex: 'label', key:'label' },
+        { title: '所属大区', dataIndex: 'group_name', key: 'group_name' },
+        { title: '所属城市', dataIndex: 'city', key: 'city' },
+        { title: '所属门店', dataIndex: 'store', key: 'store' },
+        { title: '用户体验官', dataIndex: 'officer', key:'officer' },
+        { title: '订单状态', dataIndex: 'order_status', key: 'order_status' },
+        { title: '付款方式', dataIndex: 'pay_type', key: 'pay_type' },
+        { title: '线索来源', dataIndex: 'source_type_mapping', key: 'source_type_mapping' },
+        { title: 'def.operate', key: 'operation', fixed: 'right' },
     ];
     return columns;
 });
+const lang = computed(() => {
+    return proxy.$store.state.lang
+});
+
 
 /* 接口 start*/
 // table接口
 const getTableDataFetch = (params = {}) => {
-    loading.value = true;
-    Core.Api.CRMOrderIncome.list({
-        search_type: 10,
-        ...params,
-    })
-        .then((res) => {
-            channelPagination.value.total = res.count;
-            console.log("getTableData res:", res);
-            tableData.value = res.list;
-        })
-        .catch((err) => {
-            console.log("getTableData err:", err);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
+    tableData.value = [
+        {
+            id: '1',
+            name: '赵先生',
+            phone: '',
+            intention: '10',
+            label: ['有摩托','新能源汽车','新能源汽车'],
+            group_name: '华北大区',
+            city: '北京门店',
+            store: '上海浦东新区一号门店',
+            avatar: '',
+            officer: '李鹏程',
+            order_status: '1',
+            pay_type: '全款支付',
+            source_type_mapping: '1',
+        },
+        {
+            id: '2',
+            name: '胡彦斌',
+            phone: 13423425542,
+            intention: '20',
+            label: ['有摩托','新能源汽车','新能源汽车','新能源汽车','新能源汽车'],
+            group_name: '华北大区',
+            city: '北京门店',
+            store: '上海浦东新区一号门店',
+            avatar: '',
+            officer: '李鹏程',
+            order_status: '2',
+            pay_type: '全款支付',
+            source_type_mapping: '2',
+        },
+    ];
+    // loading.value = true;
+    // Core.Api.CRMOrderIncome.list({
+    //     search_type: 10,
+    //     ...params,
+    // })
+    //     .then((res) => {
+    //         channelPagination.value.total = res.count;
+    //         console.log("getTableData res:", res);
+    //         tableData.value = res.list;
+    //     })
+    //     .catch((err) => {
+    //         console.log("getTableData err:", err);
+    //     })
+    //     .finally(() => {
+    //         loading.value = false;
+    //     });
 };
 /* 接口 end*/
 /* methods */
@@ -337,5 +344,31 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 .m-b-20 {
     margin-bottom: 20px;
+}
+
+.blue-text {
+    // font-size: 14px;
+    color: #0061FF;
+}
+.title-style{
+    color: #1D2129;
+    font-family: PingFang SC;
+    font-size: 14px;    
+    font-weight: 500;
+}
+.avatar-style{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.user-name{
+    margin-right: 8px;
+}
+.message-label {
+    margin-right: 6px;
+    &:last-child {
+        margin-right: 0px;
+    }
 }
 </style>
