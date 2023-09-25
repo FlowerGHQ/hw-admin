@@ -88,9 +88,12 @@
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("certificate-list.coc_download") }}</a-button
 							>
-							<a-button type="link" @click="onView(record)">{{
-								$t("certificate-list.coc_view")
-							}}</a-button>
+							<a-button
+								type="link"
+								@click="onView(record)"
+								:disabled="record.certificate_status !== 1"
+								>{{ $t("certificate-list.coc_view") }}</a-button
+							>
 						</template>
 						<template v-else-if="column.key === 'order_time'">
 							<span>{{ Util.timeFormat(record.order_time) }}</span>
@@ -112,7 +115,15 @@
 			</div>
 		</div>
 		<!-- 文档预览'doc-common', 'doc-wrap' -->
-		<div class="'doc-wrap'">
+		<div :class="{ 'doc-common': !docHidden, 'doc-wrap': docHidden }">
+			<close-outlined
+				class="close-btn"
+				@click="
+					() => {
+						docHidden = false
+					}
+				"
+			/>
 			<!-- 预览文件的地方（用于渲染） -->
 			<div ref="refFile"></div>
 		</div>
@@ -131,9 +142,9 @@ import {
 import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
+import { CloseOutlined } from "@ant-design/icons-vue"
 import { renderAsync } from "docx-preview"
 import fileSave from "@/core/fileSave"
-
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const Util = Core.Util
@@ -336,17 +347,17 @@ const onDownLoad = (record, array) => {
 		})
 }
 const refFile = ref(null)
-const hidden = ref(false)
+const docHidden = ref(false)
 // 查看文档
 const onView = (record) => {
 	let list = record?.id ? [record.id] : selectedRowKeyArr.value
 	downLoadCertificateDetailLis({
 		download_list: list,
-		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
 		source_type: 2,
 	}).then((res) => {
 		const { data } = res
 		renderAsync(data, refFile.value) // 渲染到页面
+		docHidden.value = true
 	})
 }
 const onDeliveryTime = (params) => {
@@ -357,7 +368,8 @@ onMounted(() => {
 	searchForm.order_number = order_number
 	let params = Core.Util.deepCopy(searchForm)
 	getCerList(params)
-	if (!distributor) {
+	console.log("distributor", distributor.value)
+	if (!distributor.value) {
 		getAllNumer()
 	}
 })
@@ -370,22 +382,22 @@ onMounted(() => {
 		justify-content: flex-end;
 	}
 	.doc-wrap {
-		position: absolute;
 		width: 100%;
-		height: 100%;
+		height: 100vh;
+		position: absolute;
 		top: 0;
-		left: 0;
-		z-index: 99;
-		// 预览文件的地方（用于渲染）
-		.ref-file {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 100%;
-			height: 100%;
-			z-index: 999;
-		}
+		right: 0;
+		z-index: 999;
+	}
+	.doc-common {
+		display: none;
+	}
+	.close-btn {
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		font-size: 20px;
+		cursor: pointer;
 	}
 }
 .cancel-m-b {

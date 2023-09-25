@@ -178,7 +178,6 @@ let channelPagination = reactive({
 const searchForm = ref({})
 const selectedRowKeyArr = ref([]) // 选中的哪些项
 /* fetch start */
-
 // 请求证书列表
 const certificateList = (searchForm) => {
 	let pagination = {
@@ -241,13 +240,10 @@ const handleSwitch = (record) => {
 			Core.Logger.error("参数", params, "结果", err)
 		})
 }
-
 onMounted(() => {
 	certificateList()
 })
-
 /* fetch end */
-
 /* methods start */
 // 下载
 const onDownLoad = (record) => {
