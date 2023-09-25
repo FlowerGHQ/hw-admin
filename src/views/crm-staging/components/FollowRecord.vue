@@ -28,6 +28,7 @@
       </a-select>
     </div>
     <Steps :list="list"/>
+    <createTaskPop :isShowCreate="isShowCreate" @finalyCreate="finalyC"></createTaskPop>
   </div>
 </template>
 
@@ -37,6 +38,7 @@ import Steps from "./steps.vue";
 import { reactive, ref ,getCurrentInstance ,inject ,watch } from 'vue';
 import Core from "@/core";    
 import Static from "../static";    
+import createTaskPop from './createTaskPop.vue'
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
 const $emit = defineEmits(['getCount'])
@@ -47,12 +49,17 @@ const props = defineProps({
     default: true,
   },
 })
+// 第二个创建弹窗
+const isShowCreate = ref(false);
 const list = ref([])
 // 跟进类型列表
 const typeList = Core.Const.WORK_OPERATION.FOLLOW_TYPE;
 const followObj = reactive({ 
   type: undefined, 
 })
+const finalyC = () => {
+  isShowCreate.value = false;
+}
 const pagination = reactive({
   pageSize: 10,
   current: 1,
@@ -100,17 +107,8 @@ const clickCreate = (params = {}) => {
   proxy.$confirm({
         title: `确定要创建跟进记录：${params?.content}`,
         okText: proxy.$t("def.sure"),
-        // okType: "danger",
         cancelText: proxy.$t("def.cancel"),
         onOk() {
-         /*  Core.Api.RETAIL.deleteStore({ id })
-            .then(() => {
-              _this.$message.success(_this.$t("pop_up.delete_success")),
-                _this.getTableData();
-            })
-            .catch((err) => {
-              console.log("handleDelete err", err);
-            });*/
             createFollow(params)
         }, 
       });
@@ -127,6 +125,7 @@ const createFollow = (params={}) => {
   Core.Api.CustomService.createRecord(obj).then(res=>{
 		Core.Logger.success('createFollow',obj,"数据",res);
     getRecordList();
+    isShowCreate.value = true;
   }).catch(err=>{
     Core.Logger.error("参数",obj, "数据", err)
   })

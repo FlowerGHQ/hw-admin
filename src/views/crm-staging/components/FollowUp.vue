@@ -5,10 +5,7 @@
       写跟进
     </a-button>
     <a-modal 
-      width="560px" height="433px"  v-model:visible="isShowFollow"
-      title="写跟进"
-      centered
-    >
+      width="560px" height="433px"  v-model:visible="isShowFollow" title="写跟进" centered >
       <!-- 沟通方式 -->
       <div class="form-item required">
         <div class="key">沟通方式：</div>
@@ -74,35 +71,14 @@
       <a-button key="submit" type="primary" @click="createFollow">提交</a-button>
     </template>
     </a-modal>
-    <a-modal v-model:visible="isShowCreate"
-      title="写跟进是否继续创建跟进任务?"
-      centered
-      :maskClosable = "false"
-      :closable = "false"
-      cancelText = "不创建"
-      okText = "创建"
-      @ok="createNext"
-      @cancel = "cancleNext"
-      >
-      <div class="top-title">系统将根据省市自动选择跟进人</div>
-      <div class="form-item required">
-        <div class="key">下次跟进时间:</div>
-        <div class="value">
-          <a-date-picker show-time  :disabled-date="disabledDate" v-model:value="taskTimeValue"  >
-            <template #suffixIcon>
-              <ClockCircleOutlined />
-            </template>
-          </a-date-picker>
-        </div>
-      </div>
-    </a-modal>
+    <createTaskPop :isShowCreate="isShowCreate" @finalyCreate="finalyC"></createTaskPop>
   </div>
 </template>
 
 <script setup>
 import { EditOutlined } from '@ant-design/icons-vue';
 import { reactive, ref ,getCurrentInstance ,inject } from 'vue';
-import { ClockCircleOutlined } from '@ant-design/icons-vue';
+import createTaskPop from './createTaskPop.vue'
 import Core from "@/core";   
 import dayjs from 'dayjs'; 
 
@@ -139,8 +115,6 @@ const initialObject = {
 }
 // 跟进
 const followObj = reactive(Object.assign({}, initialObject))
-// 下次跟进任务时间
-const taskTimeValue = ref('');
 // 点击写跟进按钮
 const clickModelOk = () => {
   isShowFollow.value = true;
@@ -188,41 +162,10 @@ const createFollow = () => {
 // 重置
 const resetFollow = () => {
   Object.assign(followObj, initialObject);
-  taskTimeValue.value= '';
+  // taskTimeValue.value= '';
 }
-// 点击创建任务
-const createNext = () => {
-  const time = dayjs(taskTimeValue.value).valueOf();
-  if(!taskTimeValue.value){
-    return proxy.$message.warning(proxy.$t("def.enter"));
-  }
-  createTask(time);
+const finalyC = () => {
   isShowCreate.value = false;
-}
-
-// 取消创建
-const cancleNext  = () => {
-  
-}
-
-// 创建请求
-const createTask = (time) => {
-  Core.Api.CustomService.createTrack({
-    customer_id:userId.value,
-    next_track_time:time
-  }).then(res=>{
-		Core.Logger.success('createTrack',{
-      customer_id:userId.value,
-      next_track_time:time
-    },"数据",res);
-     proxy.$message.success('创建成功')
-     
-  }).catch(err=>{
-    Core.Logger.error("参数",{
-    customer_id:userId.value,
-    next_track_time:time
-  }, "数据", err)
-  })
 }
 </script>
 
