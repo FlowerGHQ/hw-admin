@@ -150,7 +150,12 @@
                     </template>
                     <template v-if="column.key === 'label'">
                         <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-for="(item, index) in text.slice(0, 2)" :key="index">{{ item || '-' }}</my-tag>
-                        <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-if="text.length > 2">+{{ text.length - 2 }}</my-tag>
+                        <a-popover placement="top" :title="none">
+                            <template #content>
+                                <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-for="(item, index) in text.slice(2, text.length)" :key="index">{{ item || '-' }}</my-tag>
+                            </template>
+                            <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label pointer" v-if="text.length > 2">+{{ text.length - 2 }}</my-tag>
+                        </a-popover>
                     </template>
                     <template v-if="column.key === 'officer'">
                         <img v-if="text" class="avatar-style" :src="record.avatar || Static.defaultAvatar">
@@ -370,5 +375,8 @@ const handleTableChange = (pagination, filters, sorter) => {
     &:last-child {
         margin-right: 0px;
     }
+}
+.pointer {
+    cursor: pointer;
 }
 </style>

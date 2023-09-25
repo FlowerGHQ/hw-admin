@@ -2442,20 +2442,36 @@ let Const = {
                 "40": { text: 'Hot', key: 40 },
             }
         },
-        // COC证书
-        COC: {
-            TAB_TYPE: {
-                '0': { key: 0, zh: "全部", en: 'ALL', color: 'default' },
-                '1': { key: 1, zh: "已生成", en: 'Generated', color: 'green' },
-                '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: 'orange' },
-                '3': { key: 3, zh: "未生成", en: 'Not Generate', color: 'default' },
-            },
-            DOWN_LOAD_TYPE: {
-                "1": { key: 1, type: '证书列表' },
-                "2": { key: 2, type: '证书详情' },
-            }
+        Clue_Status_Map: {
+            all: 1,  // 全部
+            loss: 2, // 信息缺失
+            undistributed: 3, // 未分配
+            notFollow: 4, // 未跟进
+            followed: 5, // 已跟进
+            dormancy: 6, // 休眠
+        },
+        User_Status_Map: {
+            all: 1,  // 全部
+            loss: 2, // 信息缺失
+            undistributed: 3, // 未分配
+            notFollow: 4, // 未跟进
+            followed: 5, // 已跟进
+            dormancy: 6, // 休眠
+        },
+    },
+    // COC证书
+    COC: {
+        TAB_TYPE: {
+            '0': { key: 0, zh: "全部", en: 'ALL', color: 'default' },
+            '1': { key: 1, zh: "已生成", en: 'Generated', color: 'green' },
+            '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: 'orange' },
+            '3': { key: 3, zh: "未生成", en: 'Not Generate', color: 'default' },
+        },
+        DOWN_LOAD_TYPE: {
+            "1": { key: 1, type: '证书列表' },
+            "2": { key: 2, type: '证书详情' },
         }
-    }
+    },
 };
 
 export default Const;
