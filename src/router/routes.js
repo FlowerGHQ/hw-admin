@@ -1603,18 +1603,52 @@ const routes = [
                 }
             },
         ]
-    },    
-	{ // 数据
-		path: '/crm-dashboard',
-		component: Layout,
-		redirect: '/crm-dashboard/dashboard',
-		name: 'crm-dashboard',
+    },
+    { // COC证书管理
+        path: '/coc',
+        component: Layout,
+        redirect: '/coc/coc-list',
+        name: 'COC',
+        type: [ROUTER_TYPE.SALES],
+        meta: {
+            title: "COC证书管理",
+            title_en: 'COC Certificate Management',
+            icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+        },
+        children: [
+            {
+                path: 'coc-list',
+                name: 'COCList',
+                component: () => import('@/views/coc/coc-list.vue'),
+                meta: {
+                    title: 'COC证书列表',
+                    title_en: 'List of COC certificates',
+                }
+            },
+            {
+                path: 'certificate-list',
+                name: 'CertificateList',
+                component: () => import('@/views/coc/certificate-list.vue'),
+                meta: {
+                    title: '证书列表',
+                    title_en: 'Certificate list',
+                    hidden: true,
+                }
+            }
+        ]
+    },
+    { // 数据
+        path: '/crm-dashboard',
+        component: Layout,
+        redirect: '/crm-dashboard/dashboard',
+        name: 'crm-dashboard',
         type: [ROUTER_TYPE.CRM],
-		meta: {
-			title: '数据',
-			title_en: 'Dashboard',
-			icon: 'i_crm_data',
-			auth: ["crm-label.list"],
+        meta: {
+            title: '数据',
+            title_en: 'Dashboard',
+            icon: 'i_crm_data',
+            auth: ["crm-label.list"],
 
 		},
 		children: [

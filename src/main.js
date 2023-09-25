@@ -6,8 +6,7 @@ import Util from './core/utils'
 import i18n from './core/i18n'
 import Antd from 'ant-design-vue'
 // import './core/vconsole'
-console.log('i18n', i18n)
-import {message,notification} from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import MyDirective from './core/myDirective/index.js'
 
 // import address from './assets/js/address/cascader-address-options.js'
