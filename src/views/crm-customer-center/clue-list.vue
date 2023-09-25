@@ -9,12 +9,7 @@
             </div>
             <div class="table-container">
                 <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.all" :tab="$t(`${langApi}.tab_all`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.loss" :tab="$t(`${langApi}.tab_loss`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.undistributed" :tab="$t(`${langApi}.tab_undistributed`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.notFollow" :tab="$t(`${langApi}.tab_notFollow`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.followed" :tab="$t(`${langApi}.tab_followed`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.dormancy" :tab="$t(`${langApi}.tab_dormancy`)"></a-tab-pane>
+                    <a-tab-pane :key="item.key" :tab="`${item.title}(${item.total})`" v-for="item in tabList"></a-tab-pane>
                 </a-tabs>
                 <allTable :activeKey="activeKey"/>
             </div>
@@ -27,13 +22,19 @@ import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import allTable from './components/clue-table.vue'
-const langApi = 'crm-customer-center'
 const activeKey = ref(1)
 
 
 const {proxy} = getCurrentInstance()
 const router = useRouter()
-
+const tabList = ref([
+    { key: 1, title: '全部', total: 0 },
+    { key: 2, title: '信息缺失', total: 0 },
+    { key: 3, title: '未分配', total: 0 },
+    { key: 4, title: '未跟进', total: 0 },
+    { key: 5, title: '已跟进', total: 0 },
+    { key: 6, title: '休眠', total: 0 },
+])
 
 /* Fetch start */
 

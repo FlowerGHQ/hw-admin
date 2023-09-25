@@ -120,9 +120,8 @@ const searchForm = reactive({
     source_type_mapping: undefined,
     order_status: undefined,
     // group_id: undefined,
-    // province: undefined,
     // city: undefined,
-    store_id: undefined,
+    // store_id: undefined,
     time: undefined,
 })
 // const getGroupList = () => {
@@ -136,6 +135,17 @@ const searchForm = reactive({
 const handleChange = (type) => {
     clear.value = true
     $emit('enter', searchForm)
+    // switch (type) {
+    //     case 'group':
+    //         getCityList();
+    //         break;
+    //     case 'city':
+    //         getStoreList();
+    //         break;
+    
+    //     default:
+    //         break;
+    // }
 }
 // // 获取城市列表
 // const getCityList = (value) => {

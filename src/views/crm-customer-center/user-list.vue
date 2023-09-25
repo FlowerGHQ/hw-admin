@@ -2,17 +2,14 @@
     <div id="clue-list">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">用户列表</div>
+                <div class="title-area">线索</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('add')"><i class="icon i_add"/>创建用户</a-button>
                 </div>
             </div>
             <div class="table-container">
                 <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.paid" :tab="$t('retail.paid')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.to_be_paid" :tab="$t('retail.to_be_paid')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.apply_refund" :tab="$t('retail.apply_refund')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" :tab="$t('retail.unsubscribed_refunded')"></a-tab-pane>
+                    <a-tab-pane :key="item.key" :tab="`${item.title}(${item.total})`" v-for="item in tabList"></a-tab-pane>
                 </a-tabs>
                 <allTable :activeKey="activeKey"/>
             </div>
@@ -24,13 +21,19 @@
 import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import allTable from './components/user-table.vue';
+import allTable from './components/user-table.vue'
 const activeKey = ref(1)
 
 
 const {proxy} = getCurrentInstance()
 const router = useRouter()
-
+const tabList = ref([
+    { key: 1, title: '全部', total: 0 },
+    { key: 2, title: '未下订', total: 0 },
+    { key: 3, title: '已下订', total: 0 },
+    { key: 4, title: '已成交', total: 0 },
+    { key: 5, title: '已交付', total: 0 },
+])
 
 /* Fetch start */
 
