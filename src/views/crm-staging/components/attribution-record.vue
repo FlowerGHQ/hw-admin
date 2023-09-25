@@ -82,7 +82,7 @@ const data = ref([]);
 
 const userMes = reactive({})
 const sourceList = [
-  { label: '留资城市', value: '--', labelWidth: 70, prop: 'address' },
+  { label: '留资城市', value: '--', labelWidth: 70, prop: 'source_city' },
   { label: '营业时间', value: '--', labelWidth: 84, prop: '' },
   { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
   { label: '创建人', value: '--', labelWidth: 84, prop: 'create_user_name' },

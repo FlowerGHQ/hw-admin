@@ -7,8 +7,8 @@
                     <span class="key">搜索用户：</span>
                     <span class="value">
                         <a-input
-                            :placeholder="$t('def.input')"
-                            v-model:value="searchForm.uid"
+                            placeholder="名称 / 手机号 / 用户ID"
+                            v-model:value="searchForm.key"
                             @keydown.enter="handleSearch"
                         />
                     </span>
@@ -17,9 +17,9 @@
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">意向度：</span>
                     <span class="value">
-                        <a-select v-model:value="searchForm.Series" class="select-w">
-                            <a-select-option v-for="item in Core.Const.RETAIL.Vehicle_Series" :value="item.key">
-                                {{ item.value}}
+                        <a-select v-model:value="searchForm.intention" class="select-w">
+                            <a-select-option v-for="item in optionsIntention" :value="item.key">
+                                {{ item.zh }}
                             </a-select-option>
                         </a-select>
                     </span>
@@ -28,9 +28,9 @@
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                     <span class="key">线索来源：</span>
                     <span class="value">
-                        <a-select v-model:value="searchForm.order_status" class="select-w">
-                            <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
-                                {{ $t(item.value )}}
+                        <a-select v-model:value="searchForm.source_type_mapping" class="select-w">
+                            <a-select-option v-for="item in optionsSource" :value="item.key">
+                                {{ item.title }}
                             </a-select-option>
                         </a-select>
                     </span>
@@ -62,13 +62,30 @@
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
                         <span class="key">所属大区：</span>
                         <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
+                            <a-select v-model:value="searchForm.order_status" class="select-w">
+                                <a-select-option v-for="item in optionsStatus" :value="item.key">
+                                    {{ item.text }}
+                                </a-select-option>
+                            </a-select>
                         </span>
                     </a-col>
+                    <!-- 所属大区 -->
+                    <a-col
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="row-item"
+                    >
+                        <span class="key">所属大区：</span>
+                        <span class="value">
+                            <a-select v-model:value="searchForm.group_id" class="select-w" @change="handleChange('group')">
+                                <a-select-option v-for="item in optionsRegion" :value="item.id">
+                                    {{ item.name }}
+                                </a-select-option>
+                            </a-select>
+                        </span>
+                    </a-col>                  
                     <!-- 所属城市 -->
                     <a-col
                         :xs="24"
@@ -79,13 +96,13 @@
                     >
                         <span class="key">所属城市：</span>
                         <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
+                            <a-select v-model:value="searchForm.city" :disabled="!searchForm.group_id" class="select-w" @change="handleChange('city')">
+                                <a-select-option v-for="item in optionsCity" :value="item.city">
+                                    {{ item.city }}
+                                </a-select-option>
+                            </a-select>
                         </span>
-                    </a-col>
+                    </a-col>                  
                     <!-- 所属门店 -->
                     <a-col
                         :xs="24"
@@ -96,28 +113,18 @@
                     >
                         <span class="key">所属门店：</span>
                         <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
+                            <a-select v-model:value="searchForm.store_user_id" :disabled="!searchForm.store_id" option-label-prop="label" class="select-w">
+                                <a-select-option v-for="item in officerList" :value="item?.id" :label="item.user_name">
+                                    <img :src="item.avatar" class ="options-img" alt="">
+                                    <div class="option-right">
+                                        <div class="options-top"> <span class="name-option">{{ item.user_name }}</span>&nbsp;&nbsp; <span class="phone-option">{{ item.user_phone }}</span>&nbsp;&nbsp;  <span class="work-option">{{ $Util.peoStoreStatus(item.type) }}</span></div>
+                                        <div class="area-option">{{ item.group_name }}-{{ item.city }}&nbsp;&nbsp;{{ item.store_name }}</div>
+                                    </div>
+                                </a-select-option>
+                            </a-select>
                         </span>
                     </a-col>
                 </template>
-                <a-col
-                    :xs="24"
-                    :sm="24"
-                    :xl="8"
-                    :xxl="6"
-                    class="row-item"
-                    @click="moreSearch"
-                >       
-                    <span class="key option-text">
-                        <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
-                        <i v-if="!show" class="icon i_xialajiantouxiao"></i>
-                        <i v-else class="icon i_shouqijiantouxiao"></i>
-                    </span>
-                </a-col>
             </a-row>
         </div>
         <div> 
@@ -193,9 +200,22 @@ const CRM_CUSTOMER_CENTER = Core.Const.CRM_CUSTOMER_CENTER
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
-const searchForm = ref({
-    Series: undefined, // 车辆系列
-    Order_Status: undefined, // 订单状态
+const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
+const optionsSource = ref(Static.SOURCE_TYPE);
+const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
+const optionsRegion = ref([]);
+const optionsCity = ref([]);
+const optionsStore = ref([]);
+const officerList = ref([]);
+const searchForm = reactive({
+    key: undefined, // key
+    intention: undefined,
+    source_type_mapping: undefined,
+    store_user_id: undefined,
+    order_status: undefined,
+    group_id: undefined,
+    city: undefined,
+    store_id: undefined,
 });
 const tableData = ref([]);
 const channelPagination = ref({
@@ -213,6 +233,7 @@ onMounted(() => {
     getTableDataFetch({
         page: 1,
     });
+    getGroupList();
 });
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -310,14 +331,88 @@ const routerChange = (type, item = {}) => {
             break;
     }
 };
+const handleChange = (type) => {
+    switch (type) {
+        case 'group':
+            getCityList();
+            break;
+        case 'city':
+            getStoreList();
+            break;
+        case 'store':
+            getPeopleList();
+            break;
+    
+        default:
+            break;
+    }
+}
+// 获取大区列表
+const getGroupList = () => {
+    Core.Api.CustomService.groupList().then(res=>{
+		Core.Logger.success('getTaskNum',res);
+		optionsRegion.value = res.list;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 获取城市列表
+const getCityList = (value) => {
+    Core.Api.CustomService.getCityList({
+        id: searchForm.group_id
+    }).then(res=>{
+		Core.Logger.success('getCityList',res);
+		optionsCity.value = res;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 获取门店列表
+const getStoreList = () => {
+    Core.Api.CustomService.storeList({
+        group_id: searchForm.group_id,
+        city: searchForm.city,
+        page_size: 500,
+    }).then(res=>{
+		Core.Logger.success('storeList',res);
+		optionsStore.value = res.list;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
+// 门店人员-获取
+const getPeopleList = () => {
+    Core.Api.CustomService.storeUserList({
+        store_id: searchForm.store_id,
+        page_size:500
+    }).then(res=>{
+		Core.Logger.success('getPeopleList',res);
+		officerList.value = res.list;
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
+}
 // 收起更多按钮
 const moreSearch = () => {
     show.value = !show.value;
 };
 // 查询按钮
-const handleSearch = () => {};
+const handleSearch = () => {
+    console.log(searchForm)
+};
 // 重置按钮
-const handleSearchReset = () => {};
+const handleSearchReset = () => {
+    Object.assign(searchForm, {
+        key: undefined, // key
+        intention: undefined,
+        source_type_mapping: undefined,
+        store_user_id: undefined,
+        order_status: undefined,
+        group_id: undefined,
+        city: undefined,
+        store_id: undefined,
+    })
+};
 const handleOtherSearch = (params) => {};
 // 申请车辆
 const addVehicle = () => {};
@@ -382,5 +477,30 @@ const handleTableChange = (pagination, filters, sorter) => {
 }
 .pointer {
     cursor: pointer;
+}
+.search {
+    margin-bottom: 20px;
+}
+
+.options-img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    margin: 10px 0px;
+}
+.option-right {
+    display: inline-flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
+    vertical-align: top;
+    margin-left: 12px;
+    padding: 10px 0px;
+}
+.area-option {
+    color:  #86909C;
+    font-size: 12px;
+    font-weight: 400;
 }
 </style>

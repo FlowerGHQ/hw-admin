@@ -40,7 +40,7 @@
               @change="handleChange"
             ></a-select>
         </div>
-        <div class="search-item">
+        <!-- <div class="search-item">
             <a-select
               ref="select"
               :options="optionsRegion"
@@ -74,7 +74,7 @@
               :disabled="!searchForm.city"
               @change="handleChange"
             ></a-select>
-        </div>
+        </div> -->
         <div class="search-item">
             <a-range-picker
               v-model:value="searchForm.time"
@@ -102,85 +102,75 @@ import Static from '../static'
 // const $prop = defineProps(['xxx'])
 const $emit = defineEmits(['enter'])
 
-onMounted(() => {    
-    getGroupList()
-})
+// onMounted(() => {    
+//     getGroupList()
+// })
 
 // 搜索栏
 const clear = ref(false)
 const optionsIntention = ref(Object.values(Core.Const.CRM_ORDER.INTENTION_STATUS));
 const optionsSource = ref(Static.SOURCE_TYPE);
 const optionsStatus = ref(Object.values(Static.ORDER_STATUS_MAP));
-const optionsRegion = ref([]);
-const optionsCity = ref([]);
-const optionsStore = ref([]);
+// const optionsRegion = ref([]);
+// const optionsCity = ref([]);
+// const optionsStore = ref([]);
 const searchForm = reactive({
     key: undefined,
     intention: undefined,
     source_type_mapping: undefined,
     order_status: undefined,
-    group_id: undefined,
-    province: undefined,
-    city: undefined,
-    store_id: undefined,
+    // group_id: undefined,
+    // city: undefined,
+    // store_id: undefined,
     time: undefined,
 })
-const getGroupList = () => {
-    Core.Api.CustomService.groupList().then(res=>{
-		Core.Logger.success('getTaskNum',res);
-		optionsRegion.value = res.list;
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
-// 选择用车城市
-const handleCitySearch = (e) => {
-    if (e.province && !clear.value) {
-        clear.value = true
-    }
-    searchForm.province = e.province
-    searchForm.city = e.city
-    handleChange()
-}
+// const getGroupList = () => {
+//     Core.Api.CustomService.groupList().then(res=>{
+// 		Core.Logger.success('getTaskNum',res);
+// 		optionsRegion.value = res.list;
+// 	}).catch(err=>{
+//         Core.Logger.error("参数", "数据", err)
+// 	})
+// }
 const handleChange = (type) => {
     clear.value = true
     $emit('enter', searchForm)
-    switch (type) {
-        case 'group':
-            getCityList();
-            break;
-        case 'city':
-            getStoreList();
-            break;
+    // switch (type) {
+    //     case 'group':
+    //         getCityList();
+    //         break;
+    //     case 'city':
+    //         getStoreList();
+    //         break;
     
-        default:
-            break;
-    }
+    //     default:
+    //         break;
+    // }
 }
-// 获取城市列表
-const getCityList = (value) => {
-    Core.Api.CustomService.getCityList({
-        id: searchForm.group_id
-    }).then(res=>{
-		Core.Logger.success('getCityList',res);
-		optionsCity.value = res;
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
-// 获取门店列表
-const getStoreList = () => {
-    Core.Api.CustomService.storeList({
-        group_id: searchForm.group_id,
-        city: searchForm.city,
-        page_size: 500,
-    }).then(res=>{
-		Core.Logger.success('storeList',res);
-		optionsStore.value = res.list;
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
+// // 获取城市列表
+// const getCityList = (value) => {
+//     Core.Api.CustomService.getCityList({
+//         id: searchForm.group_id
+//     }).then(res=>{
+// 		Core.Logger.success('getCityList',res);
+// 		optionsCity.value = res;
+// 	}).catch(err=>{
+//         Core.Logger.error("参数", "数据", err)
+// 	})
+// }
+// // 获取门店列表
+// const getStoreList = () => {
+//     Core.Api.CustomService.storeList({
+//         group_id: searchForm.group_id,
+//         city: searchForm.city,
+//         page_size: 500,
+//     }).then(res=>{
+// 		Core.Logger.success('storeList',res);
+// 		optionsStore.value = res.list;
+// 	}).catch(err=>{
+//         Core.Logger.error("参数", "数据", err)
+// 	})
+// }
 const handleSearch = () => {
     clear.value = true
     $emit('enter', searchForm)

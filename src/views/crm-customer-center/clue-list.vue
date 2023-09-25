@@ -27,7 +27,6 @@ import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import allTable from './components/clue-table.vue'
-const langApi = 'crm-customer-center'
 const activeKey = ref(1)
 
 

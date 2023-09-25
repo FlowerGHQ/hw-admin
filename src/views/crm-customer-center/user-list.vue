@@ -2,7 +2,7 @@
     <div id="clue-list">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">用户列表</div>
+                <div class="title-area">线索</div>
                 <div class="btns-area">
                     <a-button type="primary" @click="routerChange('add')"><i class="icon i_add"/>创建用户</a-button>
                 </div>
@@ -27,7 +27,7 @@
 import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import allTable from './components/user-table.vue';
+import allTable from './components/user-table.vue'
 const activeKey = ref(1)
 
 
