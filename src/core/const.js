@@ -39,6 +39,7 @@ switch (window.location.hostname) {
 }
 
 let Const = {
+    ...constModules,
     NET: {
         URL_POINT: URL_POINT,
         OSS_POINT: OSS_POINT,
