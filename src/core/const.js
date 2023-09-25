@@ -2378,6 +2378,7 @@ let Const = {
             // 这两个字段前端自己玩自己的不传给后端
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
+            '10': { key: 10, zh: "管理员", en: 'Admin' },
         }
     },
     // 国内销售-（工作台）运营
