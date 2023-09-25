@@ -8,13 +8,13 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.all" :tab="$t(`${langApi}.tab_all`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.loss" :tab="$t(`${langApi}.tab_loss`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.undistributed" :tab="$t(`${langApi}.tab_undistributed`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.notFollow" :tab="$t(`${langApi}.tab_notFollow`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.followed" :tab="$t(`${langApi}.tab_followed`)"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.dormancy" :tab="$t(`${langApi}.tab_dormancy`)"></a-tab-pane>
+                <a-tabs v-model:activeKey="activeKey">                      
+                    <a-tab-pane
+                        v-for="(item, index) in tabPhoneData"
+                        :key="item.key"
+                        :tab="item.title"
+                    >
+                    </a-tab-pane>
                 </a-tabs>
                 <allTable :activeKey="activeKey"/>
             </div>
@@ -31,9 +31,20 @@ const langApi = 'crm-customer-center'
 const activeKey = ref(1)
 
 
-const {proxy} = getCurrentInstance()
+const { proxy } = getCurrentInstance()
 const router = useRouter()
 
+const tabPhoneData = computed(() => {
+    let result = [
+        { key: 1, title: `全部(${ 10 })`, },
+        { key: 2, title: `信息缺失(${ 10 })`, },
+        { key: 3, title: `未分配(${ 10 })`, },
+        { key: 4, title: `未跟进(${ 10 })`, },
+        { key: 5, title: `已跟进(${ 10 })`, },
+        { key: 6, title: `休眠(${ 10 })`, },
+    ]
+    return result
+})
 
 /* Fetch start */
 

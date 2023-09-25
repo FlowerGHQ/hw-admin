@@ -2,9 +2,9 @@
     <div class="have-paid">
         <div class="search">
             <a-row class="row-detail">
-                <!-- 订单搜索 -->
+                <!-- 搜索用户 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">{{ $t("retail.order_search") }}：</span>
+                    <span class="key">搜索用户：</span>
                     <span class="value">
                         <a-input
                             :placeholder="$t('def.input')"
@@ -13,9 +13,9 @@
                         />
                     </span>
                 </a-col>
-                <!-- 车辆系列 -->
+                <!-- 意向度 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">{{ $t("retail.vehicle_series") }}：</span>
+                    <span class="key">意向度：</span>
                     <span class="value">
                         <a-select v-model:value="searchForm.Series" class="select-w">
                             <a-select-option v-for="item in Core.Const.RETAIL.Vehicle_Series" :value="item.key">
@@ -24,9 +24,9 @@
                         </a-select>
                     </span>
                 </a-col>
-                <!-- 订单状态： -->
+                <!-- 线索来源 -->
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                    <span class="key">{{ $t("retail.order_status") }}：</span>
+                    <span class="key">线索来源：</span>
                     <span class="value">
                         <a-select v-model:value="searchForm.order_status" class="select-w">
                             <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
@@ -36,9 +36,31 @@
                     </span>
                 </a-col>
                 <template v-if="show">
+                    <!-- 用户体验官 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                        <span class="key">用户体验官：</span>
+                        <span class="value">
+                            <a-select v-model:value="searchForm.order_status" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
+                                    {{ $t(item.value )}}
+                                </a-select-option>
+                            </a-select>
+                        </span>
+                    </a-col>
+                    <!-- 订单状态 -->
+                    <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+                        <span class="key">订单状态：</span>
+                        <span class="value">
+                            <a-select v-model:value="searchForm.order_status" class="select-w">
+                                <a-select-option v-for="item in Core.Const.RETAIL.Order_Status" :value="item.key">
+                                    {{ $t(item.value )}}
+                                </a-select-option>
+                            </a-select>
+                        </span>
+                    </a-col>
                     <!-- 所属大区 -->
                     <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-                        <span class="key">{{ $t("retail.subregion") }}：</span>
+                        <span class="key">所属大区：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -55,7 +77,7 @@
                         :xxl="6"
                         class="row-item"
                     >
-                        <span class="key">{{ $t("retail.home_city") }}：</span>
+                        <span class="key">所属城市：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -72,24 +94,7 @@
                         :xxl="6"
                         class="row-item"
                     >
-                        <span class="key">{{ $t("retail.affiliated_store") }}：</span>
-                        <span class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.uid"
-                                @keydown.enter="handleSearch"
-                            />
-                        </span>
-                    </a-col>                  
-                    <!-- 创建时间 -->
-                    <a-col
-                        :xs="24"
-                        :sm="24"
-                        :xl="8"
-                        :xxl="6"
-                        class="row-item"
-                    >
-                        <span class="key">{{ $t("retail.creat_time") }}：</span>
+                        <span class="key">所属门店：</span>
                         <span class="value">
                             <a-input
                                 :placeholder="$t('def.input')"
@@ -119,11 +124,11 @@
             <div class="btns m-b-20">
                 <div class="btn-left"></div>
                 <div class="btn-right">                  
-                    <a-button @click="handleSearch" type="primary">
-                        {{ $t("def.search") }}
-                    </a-button>
                     <a-button @click="handleSearchReset">
                         {{ $t("def.reset") }}
+                    </a-button>
+                    <a-button @click="handleSearch" type="primary">
+                        {{ $t("def.search") }}
                     </a-button>
                 </div>
             </div>
@@ -146,7 +151,7 @@
                         <span class="blue-text">{{ text ? Core.Util.phoneEncryption(String(text)) : '-' }}</span>
                     </template>
                     <template v-if="column.key === 'intention'">
-                        <my-tag border :color="Static.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="Static.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
+                        <my-tag border :color="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
                     </template>
                     <template v-if="column.key === 'label'">
                         <my-tag color="#3381FF" bgColor="#E6EFFF" class="message-label" v-for="(item, index) in text.slice(0, 2)" :key="index">{{ item || '-' }}</my-tag>
@@ -158,15 +163,15 @@
                         </a-popover>
                     </template>
                     <template v-if="column.key === 'officer'">
-                        <img v-if="text" class="avatar-style" :src="record.avatar || Static.defaultAvatar">
+                        <img v-if="text" class="avatar-style" :src="record.avatar || CRM_CUSTOMER_CENTER.defaultAvatar">
                         <span class="user-name">{{ text }}</span>
                         <!-- <span>{{ record.employee_no }}</span> -->
                     </template>
                     <template v-if="column.key === 'order_status'">
-                        <my-tag border :color="Static.Order_Status[text]?.color" :bgColor="Static.Order_Status[text]?.bgColor" :borderColor="Static.Order_Status[text]?.borderColor">{{ text ? $t(Static.Order_Status[text].value) : '-' }}</my-tag>
+                        <my-tag border :color="CRM_CUSTOMER_CENTER.Order_Status[text]?.color" :bgColor="CRM_CUSTOMER_CENTER.Order_Status[text]?.bgColor" :borderColor="CRM_CUSTOMER_CENTER.Order_Status[text]?.borderColor">{{ text ? $t(CRM_CUSTOMER_CENTER.Order_Status[text].value) : '-' }}</my-tag>
                     </template>
                     <template v-if="column.key === 'source_type_mapping'">
-                        <span>{{ text ? Static.SOURCE_TYPE_MAP[text].key : '-' }}</span>
+                        <span>{{ text ? CRM_CUSTOMER_CENTER.SOURCE_TYPE_MAP[text].key : '-' }}</span>
                     </template>
 
                     <template v-if="column.key === 'operation'">
@@ -180,11 +185,11 @@
 
 <script setup>
 import Core from "@/core";
-import Static from "../static";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import myTag from "../../crm-staging/components/my-tag.vue";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
+const CRM_CUSTOMER_CENTER = Core.Const.CRM_CUSTOMER_CENTER
 
 const show = ref(false); // 更多收起
 const loading = ref(false); // 加载
