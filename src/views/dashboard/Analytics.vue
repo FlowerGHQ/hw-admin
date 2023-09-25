@@ -288,7 +288,6 @@ export default {
             Core.Api.Notice.list({
                 category: CATEGORY.ORG
             }).then(res => {
-                console.log('getUnreadCount res: ORG', res)
                 this.unread.org = res.un_count;
                 this.unread.list.push(...res.list);
             }).catch(err => {
@@ -297,7 +296,6 @@ export default {
             Core.Api.Notice.list({
                 category: CATEGORY.MASTER
             }).then(res => {
-                console.log('getUnreadCount res: MASTER', res)
                 this.unread.master = res.un_count;
                 this.unread.list.push(...res.list);
             }).catch(err => {

@@ -3,6 +3,7 @@ import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
+import moment from "moment";
 
 const Util = {
     /* =============== 通用方法 ================ */
@@ -122,9 +123,25 @@ const Util = {
         });
         return treeData != '' ? treeData : data;
     },
+    fileSaveAs(blob, filename) {
+
+    },
+
     /* =============== 通用方法 ================ */
 
     /* =============== 时间 ================ */
+
+
+
+    /**
+     * 将秒时间戳或毫秒时间戳转换成moment对象
+     * @param {*} timestamp 秒时间戳或毫秒时间戳
+     */
+    momentFilter(value) {
+        if (value == null || value == '') return '-';
+        if (value.toString() === '0') return '-';
+        return moment.unix(value)
+    },
     /**
      * 将秒时间戳或毫秒时间戳转换成对应格式
      * @param {*} timestamp 秒时间戳或毫秒时间戳

@@ -150,96 +150,21 @@ export default {
         return {
             Core,
             detail: {
-                name: '赵女士',
+                name: '',
                 avatar: '',
-                intention: 20,
-                gender: 2,
-                age: 25,
-                birthday: 1695092197,
-                email: '1******4@163.com',
-                phone: '155 4521 5742',
+                intention: 10,
+                gender: 1,
+                age: 0,
+                birthday: 0,
+                email: '',
+                phone: '',
                 intent_vehicle_model: 1,
-                create_time: 1695092197,
-                source_type: 1,
-                province: '吉林省',
-                city: '吉林市',
-                address: '江苏省常州市天宁区福祥街道上河郡小区12栋一单元1602号',
-                label_group_list: [
-                    {
-                        label_list: [
-                            {
-                                category: 0,
-                                id: 1,
-                                label_bind_id: 0,
-                                name: "有摩托",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 2,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 3,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "2年骑行经验",
-                                type: 3,
-                                user_id: 0
-                            },
-                        ],
-                        type: 3
-                    },
-                    {
-                        label_list: [
-                            {
-                                category: 0,
-                                id: 1,
-                                label_bind_id: 0,
-                                name: "续航",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 2,
-                                label_bind_id: 0,
-                                name: "质量",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 3,
-                                label_bind_id: 0,
-                                name: "安全",
-                                type: 4,
-                                user_id: 0
-                            },
-                            {
-                                category: 0,
-                                id: 4,
-                                label_bind_id: 0,
-                                name: "安全",
-                                type: 4,
-                                user_id: 0
-                            },
-                        ],
-                        type: 4
-                    }
-                ],
+                create_time: 0,
+                source_type: 0,
+                province: '',
+                city: '',
+                address: '',
+                label_group_list: [],
             },
             tagDrawerShow: false,
             focusDrawerShow: false,

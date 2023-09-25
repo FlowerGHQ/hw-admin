@@ -205,7 +205,6 @@ export default {
                 })
                 showList = newShowList;
             }
-            console.log('Router Filter', showList)
             return showList
         },
         lang() {
@@ -234,21 +233,18 @@ export default {
                 this.openKeys = [`/${path[0]}`
 ]
 
-                console.log('this.selectedKeys:', this.selectedKeys)
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
                     this.breadcrumbList = [{ text: meta.title, path: n.path, key: path[0] }]
                 } else {
                     this.breadcrumbList.push({ text: meta.title, path: n.path, key: path[0] })
                 }
-                console.log('this.breadcrumbList:', this.breadcrumbList)
             }
         },
         $lang: {
             deep: true,
             immediate: true,
             handler(n) {
-                console.log('watch $lang:', n)
                 switch (n) {
                     case 'zh': this.locale = zhCN; break;
                     case 'en': this.locale = enUS; break;
@@ -300,7 +296,6 @@ export default {
             Core.Api.Notice.list({
                 category: CATEGORY.ORG
             }).then(res => {
-                console.log('getUnreadCount res: ORG', res)
                 this.unread.org = res.un_count;
             }).catch(err => {
                 console.log('getUnreadCount err', err)
@@ -308,7 +303,6 @@ export default {
             Core.Api.Notice.list({
                 category: CATEGORY.MASTER
             }).then(res => {
-                console.log('getUnreadCount res: MASTER', res)
                 this.unread.master = res.un_count;
             }).catch(err => {
                 console.log('getUnreadCount err', err)

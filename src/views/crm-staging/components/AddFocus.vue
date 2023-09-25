@@ -65,7 +65,11 @@ export default {
     },
     mounted() {
         this.multipleChoiceList = Core.Util.deepCopy(Static.multipleChoiceList);
-        this.transformLabelData();
+        if(!this.isCreate) {
+            this.transformLabelData();
+        } else {
+            this.transformIsCreateData();
+        }
     },
     methods: {
         // 关闭drawer
@@ -118,6 +122,23 @@ export default {
                 this.list.forEach(item => {
                     if (item.type === Core.Const.INTENTION.TAG_TYPE.FOCUS) {
                         this.detailList = item.label_list
+                    }
+                })
+            }
+            this.detailList.forEach((label) => {
+                this.multipleChoiceList.forEach((item) => {
+                    if (item.name === label.name && item.type === label.type) {
+                        item.isClick = true;
+                    }
+                });
+            });
+        },
+        // 转化创建用户回显数据
+        transformIsCreateData() {
+            if(this.list.length) {
+                this.list.forEach(item => {
+                    if (item.type === Core.Const.INTENTION.TAG_TYPE.FOCUS) {
+                        this.detailList.push(item);
                     }
                 })
             }

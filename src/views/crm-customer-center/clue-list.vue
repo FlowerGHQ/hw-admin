@@ -9,10 +9,12 @@
             </div>
             <div class="table-container">
                 <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.paid" :tab="$t('retail.paid')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.to_be_paid" :tab="$t('retail.to_be_paid')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.apply_refund" :tab="$t('retail.apply_refund')"></a-tab-pane>
-                    <a-tab-pane :key="Core.Const.RETAIL.Order_Status_Map.unsubscribed_refunded" :tab="$t('retail.unsubscribed_refunded')"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.all" :tab="$t(`${langApi}.tab_all`)"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.loss" :tab="$t(`${langApi}.tab_loss`)"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.undistributed" :tab="$t(`${langApi}.tab_undistributed`)"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.notFollow" :tab="$t(`${langApi}.tab_notFollow`)"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.followed" :tab="$t(`${langApi}.tab_followed`)"></a-tab-pane>
+                    <a-tab-pane :key="Core.Const.WORK_OPERATION.Clue_Status_Map.dormancy" :tab="$t(`${langApi}.tab_dormancy`)"></a-tab-pane>
                 </a-tabs>
                 <allTable :activeKey="activeKey"/>
             </div>
@@ -25,6 +27,7 @@ import Core from "@/core";
 import { computed, getCurrentInstance, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import allTable from './components/clue-table.vue'
+const langApi = 'crm-customer-center'
 const activeKey = ref(1)
 
 
