@@ -1636,6 +1636,16 @@ const routes = [
                     title: 'COC证书',
                     title_en: 'COC Certificate',
                 }
+            }, 
+            {
+                // 证书清单
+                path: 'certificate-list',
+                name: 'CertificateList',
+                component: () => import('@/views/coc/certificate-list.vue'),
+                meta: {
+                    title: '证书清单',
+                    title_en: 'Certificate List',
+                }
             }
         ]
     },
