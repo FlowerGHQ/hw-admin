@@ -1615,26 +1615,26 @@ const routes = [
             title: "COC证书管理",
             title_en: 'COC Certificate Management',
             icon: 'i_s_customer',
-            roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
                 path: 'coc-list',
                 name: 'COCList',
-                component: () => import('@/views/coc/coc-list.vue'),
+                component: () => import('@/views/coc/platform-super-list.vue'),
                 meta: {
-                    title: 'COC证书列表',
-                    title_en: 'List of COC certificates',
+                    title: 'COC模板',
+                    title_en: 'COC Template',
                 }
             },
             {
-                path: 'certificate-list',
-                name: 'CertificateList',
-                component: () => import('@/views/coc/certificate-list.vue'),
+                // coc证书
+                path: 'coc-certificate',
+                name: 'COCCertificate',
+                component: () => import('@/views/coc/coc-certificate.vue'),
                 meta: {
-                    title: '证书列表',
-                    title_en: 'Certificate list',
-                    hidden: true,
+                    title: 'COC证书',
+                    title_en: 'COC Certificate',
                 }
             }
         ]

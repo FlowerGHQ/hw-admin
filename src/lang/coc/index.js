@@ -1,3 +1,10 @@
+/*
+ * @Author: douzhiyuan
+ * @Date: 2023-09-25 15:47:20
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-09-26 09:41:14
+ * @Description: 请填写简介
+ */
 export default {
   zh: {
     coc_title: 'COC模板列表',
@@ -11,6 +18,7 @@ export default {
     coc_btn_view: '查看',
     coc_btn_edit: '编辑',
     coc_btn_delete: '删除',
+    coc_modal_status: '模板状态',
     coc_modal_add_title: '添加模板',
     coc_modal_view_title: '查看详情',
     coc_modal_edit_title: '编辑模板',
@@ -32,6 +40,11 @@ export default {
     coc_add_success: '添加成功',
     coc_edit_success: '编辑成功',
     coc_upload_file_type_error: '上传文件类型错误',
+    coc_name_required: 'COC名称不能为空',
+    coc_version_required: '版本号不能为空',
+    coc_validity_date_required: '有效日期不能为空',
+    coc_apply_vehicle_required: '适用车型不能为空',
+    coc_template_required: '证书模板不能为空',
 
   },
   en: {
@@ -46,6 +59,7 @@ export default {
     coc_btn_view: 'View',
     coc_btn_edit: 'Edit',
     coc_btn_delete: 'Delete',
+    coc_modal_status: 'Template Status',
     coc_modal_add_title: 'Add Template',
     coc_modal_view_title: 'View Details',
     coc_modal_edit_title: 'Edit Template',
@@ -67,5 +81,10 @@ export default {
     coc_add_success: 'Add Success',
     coc_edit_success: 'Edit Success',
     coc_upload_file_type_error: 'Upload file type error',
+    coc_name_required: 'COC name is required',
+    coc_version_required: 'Version number is required',
+    coc_validity_date: 'Validity date is required',
+    coc_apply_vehicle_required: 'Applicable vehicle is required',
+    coc_template_required: 'Certificate template is required',
   }
 }

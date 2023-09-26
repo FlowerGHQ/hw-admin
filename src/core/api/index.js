@@ -838,16 +838,16 @@ const apiList = {
     },
     // COC模块
     COC: {
-        getCocTemplateList: ['PostJson', 'crm-coc-template/list'], // 获取模板列表
-        addCocTemplate: ['PostJson', 'crm-coc-template/save'], // 添加模板
-        viewCocTemplate: ['PostJson', 'crm-coc-template/detail'], // 查看模板
-        deleteCocTemplate: ['PostJson', 'crm-coc-template/delete'], // 删除模板
-        getCateGoryList: ['PostJson', 'crm-coc-template/item-category-name'], // 车型名称
-        getCertificateList: ['PostJson', 'crm-coc-certificate/list'], // 证书列表
-        getCertificateDetailList: ['PostJson', 'crm-coc-certificate/detail/list'], // 证书清单列表
-        downLoadCertificateDetailLis: ['BlobPost', 'crm-coc-certificate/download'], // 证书清单列表下载
-        setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
-        getCertificatNumber: ['PostJson', 'crm-coc-certificate/detail/statistics'], // 获取证书编号
+        getCocTemplateList: ['PostJson', 'coc-template/list'], // 获取模板列表
+        addCocTemplate: ['PostJson', 'coc-template/save'], // 添加模板
+        viewCocTemplate: ['PostJson', 'coc-template/detail'], // 查看模板
+        deleteCocTemplate: ['PostJson', 'coc-template/delete'], // 删除模板
+        getCateGoryList: ['PostJson', 'coc-template/item-category-name'], // 车型名称
+        getCertificateList: ['PostJson', 'coc-certificate/list'], // 证书列表
+        getCertificateDetailList: ['PostJson', 'coc-certificate/detail/list'], // 证书清单列表
+        downLoadCertificateDetailLis: ['BlobPost', 'coc-certificate/download'], // 证书清单列表下载
+        setCertificateVisible: ['PostJson', 'coc-certificate/set-visibility'], // 设置证书可见
+        getCertificatNumber: ['PostJson', 'coc-certificate/detail/statistics'], // 获取证书编号
     }
 };
 
