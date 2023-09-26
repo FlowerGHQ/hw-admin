@@ -1,102 +1,38 @@
 <template>
-    <div>
-        <!-- <div id="container" class="chart"></div> -->
-
-        <!-- <a-input v-model:value="testValue" v-focus placeholder="Basic usage" /> -->
-
-        <!-- <a-button @click="btns">点击</a-button> -->
-        <a-textarea v-model:value="frame_uid" placeholder="Basic usage" :rows="10" />
-        <a-button @click="submit">提交</a-button>
-    </div>       
+  <div>
+    <a-range-picker
+      v-model:value="form.dataRange"
+      :show-time="{ format: 'HH:mm' }"
+      format="YYYY-MM-DD HH:mm:ss"
+      :placeholder="['Start Time', 'End Time']"
+      valueFormat="X"
+    />
+    <a-button @click="review">点我回显</a-button>
+    <a-button @click="submit">点我上传数据</a-button>
+  </div>
 </template>
 
 <script setup>
-import { onMounted, ref, defineComponent, reactive, toRefs, watch } from "vue";
-import { Chart } from "@antv/g2";
+import Core from "@/core"
+const Util = Core.Util
+import { ref, reactive, toRaw } from "vue"
+const { dayjsReview, timeFilter, dayjsToTimestamp } = Util
 
-const chart = ref(null);
-const testValue = ref("")
-const frame_uid = ref(undefined)
-onMounted(() => {
-    // charts()
-});
+// 模拟数据，时间戳
+const dataRange = ref([1622505600, 1622592000])
+const form = reactive({})
 
-const submit = () => {
-    const uidList = frame_uid.value.trim().split('\n').map(str => str.trim());;
-    console.log('uidList', uidList);
+const review = () => {
+  form.dataRange = [
+    dayjsReview(dataRange.value[0]),
+    dayjsReview(dataRange.value[1]),
+  ]
 }
-
-// 试验charts
-const charts = () => {
-    chart.value = new Chart({
-        container: "container",
-        autoFit: true,
-        height: 500,
-    });
-
-    const data = [
-        { country: "Asia", year: "1750", value: 502 },
-        { country: "Asia", year: "1800", value: 635 },
-        { country: "Asia", year: "1850", value: 809 },
-        { country: "Asia", year: "1900", value: 5268 },
-        { country: "Asia", year: "1950", value: 4400 },
-        { country: "Asia", year: "1999", value: 3634 },
-        { country: "Asia", year: "2050", value: 947 },
-
-        { country: "Africa", year: "1750", value: 106 },
-        { country: "Africa", year: "1800", value: 107 },
-        { country: "Africa", year: "1850", value: 111 },
-        { country: "Africa", year: "1900", value: 1766 },
-        { country: "Africa", year: "1950", value: 221 },
-        { country: "Africa", year: "1999", value: 767 },
-        { country: "Africa", year: "2050", value: 133 },
-
-        { country: "Europe", year: "1750", value: 163 },
-        { country: "Europe", year: "1800", value: 203 },
-        { country: "Europe", year: "1850", value: 276 },
-        { country: "Europe", year: "1900", value: 628 },
-        { country: "Europe", year: "1950", value: 547 },
-        { country: "Europe", year: "1999", value: 729 },
-        { country: "Europe", year: "2050", value: 408 },
-
-        { country: "Oceania", year: "1750", value: 200 },
-        { country: "Oceania", year: "1800", value: 200 },
-        { country: "Oceania", year: "1850", value: 200 },
-        { country: "Oceania", year: "1900", value: 460 },
-        { country: "Oceania", year: "1950", value: 230 },
-        { country: "Oceania", year: "1999", value: 300 },
-        { country: "Oceania", year: "2050", value: 300 },
-    ];
-
-    chart.value.data(data);
-
-    chart.value.scale({
-        year: {
-            type: "cat",
-            range: [0.03, 0.92],
-        },
-        value: {
-            nice: true,
-        },
-    });
-
-    chart.value.area().shape("smooth").position("year*value").color("country");
-    chart.value.line().shape("smooth").position("year*value").color("country");
-
-    chart.value.interaction("element-highlight");
-
-    chart.value.render();
-};
-
-const btns = () => {
-    console.log("输出的", testValue.value);
+const submit = () => {
+  console.log(form.dataRange)
+  console.log(dayjsToTimestamp(form.dataRange[0]))
+  console.log(dayjsToTimestamp(form.dataRange[1]))
 }
 </script>
 
-<style lang="less" scoped>
-.chart {
-    width: 800px;
-    margin-top: 100px;
-    margin-left: 40px;
-}
-</style>
+<style lang="less" scoped></style>
