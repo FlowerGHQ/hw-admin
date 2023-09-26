@@ -163,6 +163,7 @@ const handleModal = (type = "add", record = {}) => {
 	switch (type) {
 		case "add":
 			modalType.value = "add"
+			isDisable.value = false
 			break
 		case "edit":
 			modalType.value = "edit"

@@ -1,7 +1,14 @@
+/*
+ * @Author: douzhiyuan
+ * @Date: 2023-09-25 15:47:20
+ * @LastEditors: 
+ * @LastEditTime: 2023-09-26 10:08:50
+ * @Description: 请填写简介
+ */
 export default {
 
   zh: {
-    coc_certificate_list: 'COC证书列表',
+    coc_certificate_list: 'COC证书',
     // 批量下载
     coc_batch_download: '批量下载',
     // 全部
@@ -49,7 +56,7 @@ export default {
 
   },
   en: {
-    coc_certificate_list: 'COC Certificate List',
+    coc_certificate_list: 'COC Certificate',
     // 批量下载
     coc_batch_download: 'Batch Download',
     // 全部

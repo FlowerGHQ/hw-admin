@@ -1641,6 +1641,17 @@ const routes = [
                     title_en: 'COC Certificate',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                 }
+            },
+            {
+                // 证书清单
+                path: 'certificate-list',
+                name: 'CertificateList',
+                component: () => import('@/views/coc/certificate-list.vue'),
+                meta: {
+                    title: '证书清单',
+                    title_en: 'Certificate List',
+                    hidden: true,
+                }
             }
         ]
     },
