@@ -2545,31 +2545,12 @@ ADMIN = Util.deepCopy(target).filter(first => {
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
 })
 
-// 是否只在超级管理员显示，普通平台方不展示
-if (!Data.getManager()) {
-    // console.log("我是普通平台方");
-    ADMIN = ADMIN.filter(el => {
-        let meta = el.meta
-        return !meta.super_admin_show
-    })
-}
-
 ADMIN.forEach(first => {
     if (first.children) { 
         let children = first.children.filter(second => {
             let meta = second.meta
             return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
         })
-
-        // 是否只在超级管理员显示，普通平台方不展示
-        if (!Data.getManager()) {
-            // console.log("我是普通平台方");
-            children = first.children.filter(el => {
-                let meta = el.meta
-                return !meta.super_admin_show
-            })
-        }
-
         first.children = children
     }
 })

@@ -183,7 +183,7 @@ export default {
         };
     },
     computed: {
-        showList() {
+        showList() {            
             let showList
             let LOGIN_TYPE = Core.Const.USER.TYPE
             switch (this.loginType) {
@@ -202,6 +202,7 @@ export default {
                     })
                 }
             })
+
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
                 let newShowList = []                
@@ -209,8 +210,26 @@ export default {
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
-                })
+                })                
                 showList = newShowList;
+                
+                // 是否只在超级管理员显示，普通平台方不展示
+                if (!Core.Data.getManager()) {                    
+                    let superList = Core.Util.deepCopy(showList)  // 为了防止影响之前的数据
+                    let result = superList.filter(first => {
+                        let firstMeta = first.meta
+                        if (first.children) {
+                            let children = first.children.filter(second => {
+                                let secondMeta = second.meta
+                                return !secondMeta.super_admin_show
+                            })
+                            first.children = children
+                        }
+                        return !firstMeta.super_admin_show
+                    })
+
+                    showList = result
+                }
             }
             return showList
         },
