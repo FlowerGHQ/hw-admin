@@ -36,6 +36,12 @@
 						<template v-else-if="column.key === 'create_time'">
 							{{ timeFormat(record.create_time) }}
 						</template>
+						<template v-else-if="column.key === 'state'">
+								<!-- tag -->
+							<a-tag :color="Core.Const.COC.CER_STATUS[record.state].color">
+								{{ Core.Const.COC.CER_STATUS[record.state][$i18n.locale] }}
+							</a-tag>
+						</template>
 						<template v-else-if="column.key === 'operation'">
 							<!-- 查看 -->
 							<a-button
@@ -68,6 +74,7 @@
 			</div>
 		</div>
 		<TemplateMoudal
+			ref="modalRef"
 			v-model:visible="visible"
 			:modalType="modalType"
 			:recordItem="recordItem"
@@ -83,10 +90,16 @@ const { Api, Util } = Core
 const { timeFormat } = Util
 // 引用api
 const getCocTemplateList = Api.COC.getCocTemplateList
+const viewCocTemplate = Api.COC.viewCocTemplate
+const deleteCocTemplate = Api.COC.deleteCocTemplate
 import TemplateMoudal from "./components/template-modal.vue"
 // 引用i18n
 import { useI18n } from "vue-i18n"
-import { ref, reactive, onMounted, computed } from "vue"
+import { ref, reactive, onMounted, computed, getCurrentInstance } from "vue"
+const {proxy } = getCurrentInstance()
+const $t = useI18n().t
+const $message = proxy.$message
+
 
 let loading = ref(false)
 // 定义tablele数据
@@ -120,8 +133,8 @@ const tableColumns = ref([
 	},
 	{
 		title: 'coc.coc_modal_status',
-		dataIndex: 'status',
-		key: 'status',
+		dataIndex: 'state',
+		key: 'state',
 	},
 	{
 		title: "coc.coc_operation",
@@ -129,7 +142,6 @@ const tableColumns = ref([
 		key: "operation",
 	},
 ])
-const $t = useI18n().t
 const channelPagination = reactive({
 	current: 1,
 	page: 1,
@@ -142,13 +154,17 @@ const channelPagination = reactive({
 })
 const visible = ref(false)
 const modalType = ref("")
-const recordItem = reactive({})
+const recordItem = ref({})
 // 是否禁用 true:禁用 false:不禁用
 const isDisable = ref(false)
+const modalRef = ref(null)
+
+
 
 // 获取列表数据
 const getTableData = () => {
 	loading.value = true
+	console.log(channelPagination.page, channelPagination.pageSize)
 	getCocTemplateList({
 		page: channelPagination.page,
 		pageSize: channelPagination.pageSize,
@@ -159,36 +175,67 @@ const getTableData = () => {
 		channelPagination.total = res.count
 	})
 }
-const handleModal = (type = "add", record = {}) => {
-	switch (type) {
-		case "add":
-			modalType.value = "add"
-			isDisable.value = false
-			break
-		case "edit":
-			modalType.value = "edit"
-			isDisable.value = false
-			break
-		case "detail":
-			modalType.value = "detail"
-			isDisable.value = true
-			break
+const getRowDetails = (type, record) => {
+	if (type === 'add') {
+		recordItem.value = {}
+		isDisable
+	} else { 
+		viewCocTemplate({
+			id: record.id,
+		}).then((res) => {
+			recordItem.value = res
+			if (type === 'detail') {
+				isDisable.value = true
+			} else if (type === 'edit') {
+				isDisable.value = false
+			}
+		})
 	}
-	recordItem.value = record
-	visible.value = true
 }
-
+const handleModal = (type = "add", record = {}) => {
+	// if (type === 'detail') {
+	// 	getRowDetails(record)
+	// 	isDisable.value = true
+	// } else if (type === 'edit') {
+	// 	getRowDetails(record)
+	// 	isDisable.value = false
+	// } else if (type === 'add') {
+	// 	recordItem.value = {}
+	// 	isDisable.value = false
+	// }
+	getRowDetails(type,record)
+	visible.value = true
+	modalType.value = type
+}
 // table改变的时候触发
 const handleTableChange = (pagination) => {
 	channelPagination.current = pagination.current
 	channelPagination.page = pagination.current
 	channelPagination.pageSize = pagination.pageSize
-	getCocTemplateList()
+	getTableData()
+}
+const handleDelete = (record) => { 
+	Core.Util.confirm({
+		title: $t("coc.coc_delete_confirm"),
+		content: $t("coc.coc_delete_confirm_content"),
+		okText: $t("coc.coc_btn_comfirm"),
+		cancelText: $t("coc.coc_btn_cancel"),
+		onOk: () => {
+			deleteCocTemplate({
+				id: record.id,
+			}).then((res) => {
+				$message.success($t("coc.coc_delete_success"))
+				getTableData()
+			})
+		},
+	})
 }
 
 onMounted(() => {
 	getTableData()
 })
+
+
 </script>
 
 <style lang="less" scoped>

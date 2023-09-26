@@ -45,6 +45,12 @@ export default {
     coc_validity_date_required: '有效日期不能为空',
     coc_apply_vehicle_required: '适用车型不能为空',
     coc_template_required: '证书模板不能为空',
+    // 重新上传
+    coc_reupload: '重新上传',
+    // 删除
+    coc_delete: '删除',
+    coc_delete_confirm: '确定删除该模板吗？',
+    coc_delete_confirm_content: '删除后将无法恢复，请谨慎操作',
 
   },
   en: {
@@ -86,5 +92,10 @@ export default {
     coc_validity_date: 'Validity date is required',
     coc_apply_vehicle_required: 'Applicable vehicle is required',
     coc_template_required: 'Certificate template is required',
+    coc_reupload: 'ReUpload',
+    // 删除
+    coc_delete: 'Delete',
+    coc_delete_confirm: 'Are you sure you want to delete this template?',
+    coc_delete_confirm_content: 'Once deleted, it cannot be recovered. Please operate with caution.',
   }
 }
