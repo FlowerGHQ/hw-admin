@@ -41,7 +41,7 @@ import Static from "../static";
 import createTaskPop from './createTaskPop.vue'
 const { proxy } = getCurrentInstance();
 const userId = inject('userId');
-const $emit = defineEmits(['getCount'])
+const $emit = defineEmits(['getCount', 'updateFollowTime'])
 // const getChildData = inject('getChildData'); // 更新子组件数据方法 传对应 key （更多子组件可用更新）
 const props = defineProps({
   isShowButton: {
@@ -73,6 +73,7 @@ const getData = () => {
 // 获取跟进记录列表
 const getRecordList = (params={}) => {
   if (!userId.value) return;
+  scrollLoading.value = true
   if(JSON.stringify(params)=='{}'){
     Object.assign(pagination, {
       pageSize: 10,
@@ -99,6 +100,8 @@ const getRecordList = (params={}) => {
     $emit('getCount', '2' ,res.count)
   }).catch(err=>{
     Core.Logger.error("参数getRecordList参数",obj, "数据", err)
+  }).finally(() => {
+    scrollLoading.value = false
   })
 }
 defineExpose({getData});
@@ -137,11 +140,12 @@ const typeChangeClick = (value) => {
   Core.Logger.success('typeChangeClick',value);
 } 
 // 监听滚轮事件
+const scrollLoading = ref(false)
 const handleScroll = (e) => {
 	const element = e.target;
   if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
 	  Core.Logger.log('滚动触底')
-    if (pagination.current < pagination.total_page) {
+    if ((pagination.current < pagination.total_page) && !scrollLoading.value) {
 		  pagination.current ++
       getRecordList({ current: pagination.current })
     }

@@ -60,7 +60,7 @@
                 </div>
                 <div class="content-right">
                     <div class="user-card">
-                        <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateLabel"/>
+                        <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateTask"/>
                     </div>
                     <div class="about">
                         <div class="user-about">
@@ -134,12 +134,13 @@ import Search from "./components/search.vue";
 import FixedSelect from "./components/fixed-select.vue";
 import QuickOrder from "./components/quick-order.vue";
 import myTag from "./components/my-tag.vue";
-import { computed, nextTick, onMounted, reactive, ref, provide } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, provide, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
 
 const route = useRoute()
+const { proxy } = getCurrentInstance();
 onMounted(() => {    
     getAmountList()
     getTaskNum()
@@ -257,6 +258,7 @@ const getAmountList = () => {
 	})
 }
 const getTaskNum = (params = {}, isSearch = false) => {
+    scrollLoading.value = true
     const obj = {
         status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
         status: staskStatus.value,
@@ -282,10 +284,12 @@ const getTaskNum = (params = {}, isSearch = false) => {
         taskAmount.value = taskList.value.length
         userId.value = taskList.value[taskIndex.value]?.id
         isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
-        getAllChildData()
+        // getAllChildData()
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
-	})
+	}).finally(() => {
+        scrollLoading.value = false
+    })
 }
 const filterData = (data) => {
     data.forEach(item => {
@@ -311,13 +315,12 @@ const filterData = (data) => {
             }
         }
         item.label_group_list = list
-        console.log(item.label_group_list)
         // Core.Logger.log("每一项的次数", count)
         // 是否显示后面的 ... 三个点
         item.isSpill = count === 0
     }); 
 }
-const updateLabel = () => {
+const updateTask = () => {
     getTaskNum({ page: 1 }, true)
 }
 //置顶
@@ -362,6 +365,7 @@ const logList = ref([])
 // 获取日志list
 const getLogListFetch = (params = {} , isSearch = false) => {
     if (!userId.value) return
+    scrollLoading.value = true
     const obj = {
 		page: logPagination.page,
 		page_size: logPagination.page_size,
@@ -385,7 +389,9 @@ const getLogListFetch = (params = {} , isSearch = false) => {
         getCount('6', res.count)
 	}).catch(err=>{
         Core.Logger.error("参数", obj, "获取日志list", err)
-	})
+	}).finally(() => {
+        scrollLoading.value = false
+    })
 }
 
 //tab栏
@@ -433,7 +439,7 @@ const getChildData = (key) => {
                 tabPane5.value.getData()
                 break;
             case '6':
-                getLogListFetch()
+                getLogListFetch({ page: 1 }, true)
                 break;
             case 'userDetailRef':
                 userDetailRef.value.getData()
@@ -454,19 +460,20 @@ const getAssetURL = (image) => {
 }
 
 // 监听滚轮事件
+const scrollLoading = ref(false)
 const handleScroll = (e, type) => {
     const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
         Core.Logger.log("滑到底部")
         switch (type) {
             case 'task':
-                if (userPagination.page < userPagination.total_page) {
+                if ((userPagination.page < userPagination.total_page) && !scrollLoading.value) {
                     userPagination.page++
                     getTaskNum({ page: userPagination.page })
                 }
                 break;
             case 'log':
-                if (logPagination.page < logPagination.total_page) {
+                if ((logPagination.page < logPagination.total_page) && !scrollLoading.value) {
                     logPagination.page++
                     getLogListFetch({ page: logPagination.page })
                 }
@@ -478,6 +485,7 @@ const handleScroll = (e, type) => {
     }
 }
 provide('userId', userId); // 提供id
+provide('getTaskNum', getTaskNum); // 提供更新任务数据方法
 provide('getChildData', getChildData); // 提供获取子组件数据方法
 </script>
 

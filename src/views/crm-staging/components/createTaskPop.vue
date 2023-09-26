@@ -32,6 +32,7 @@
   const { proxy } = getCurrentInstance();
   const $emit = defineEmits(['finalyCreate'])
   const userId = inject('userId');
+  const getTaskNum = inject('getTaskNum');
   const props = defineProps({
     isShowCreate: {
       type: Boolean,
@@ -51,7 +52,7 @@
   }
   // 点击创建任务
   const createNext = () => {
-    const time = dayjs(taskTimeValue.value).valueOf();
+    const time = dayjs(taskTimeValue.value).valueOf() / 1000;
     if(!taskTimeValue.value){
       return proxy.$message.warning(proxy.$t("def.enter"));
     }
@@ -76,6 +77,7 @@
       },"数据",res);
        proxy.$message.success('创建成功');
         $emit('finalyCreate')
+        getTaskNum({ page: 1 }, true)
     }).catch(err=>{
       Core.Logger.error("参数",{
       customer_id:userId.value,
