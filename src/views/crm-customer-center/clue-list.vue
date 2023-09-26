@@ -8,8 +8,13 @@
                 </div>
             </div>
             <div class="table-container">
-                <a-tabs v-model:activeKey="activeKey">
-                    <a-tab-pane :key="item.key" :tab="`${item.title}(${item.total})`" v-for="item in tabList"></a-tab-pane>
+                <a-tabs v-model:activeKey="activeKey">                      
+                    <a-tab-pane
+                        v-for="(item, index) in tabPhoneData"
+                        :key="item.key"
+                        :tab="item.title"
+                    >
+                    </a-tab-pane>
                 </a-tabs>
                 <allTable :activeKey="activeKey"/>
             </div>
@@ -25,16 +30,20 @@ import allTable from './components/clue-table.vue'
 const activeKey = ref(1)
 
 
-const {proxy} = getCurrentInstance()
+const { proxy } = getCurrentInstance()
 const router = useRouter()
-const tabList = ref([
-    { key: 1, title: '全部', total: 0 },
-    { key: 2, title: '信息缺失', total: 0 },
-    { key: 3, title: '未分配', total: 0 },
-    { key: 4, title: '未跟进', total: 0 },
-    { key: 5, title: '已跟进', total: 0 },
-    { key: 6, title: '休眠', total: 0 },
-])
+
+const tabPhoneData = computed(() => {
+    let result = [
+        { key: 1, title: `全部(${ 10 })`, },
+        { key: 2, title: `信息缺失(${ 10 })`, },
+        { key: 3, title: `未分配(${ 10 })`, },
+        { key: 4, title: `未跟进(${ 10 })`, },
+        { key: 5, title: `已跟进(${ 10 })`, },
+        { key: 6, title: `休眠(${ 10 })`, },
+    ]
+    return result
+})
 
 /* Fetch start */
 
