@@ -168,9 +168,7 @@
         leadVisible.value = true
         allocationList.value = Core.Util.deepCopy(leadList.value)
         allocationList.value.forEach(el => {
-            if (!el.isChecked) {
-                el.new_customer_assign_rate = 0
-            }
+            el.new_customer_assign_rate = 0
         })
     }
     // model确认按钮
