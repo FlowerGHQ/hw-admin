@@ -2,12 +2,12 @@
  * @Author: douzhiyuan
  * @Date: 2023-09-20 09:10:42
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-09-26 09:47:48
+ * @LastEditTime: 2023-09-26 09:56:16
  * @Description: 请填写简介
 -->
 <template>
 	<div class="tamplate-modal">
-		<a-modal v-model:visible="visible" @ok="handleOk" @cancel="handleCancel">
+		<a-modal v-model:visible="visible" destroyOnClose @ok="handleOk" @cancel="handleCancel">
 			<template #title>
 				<span v-if="modalType === 'add'">{{
 					$t("coc.coc_modal_add_title")

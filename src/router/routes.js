@@ -1636,7 +1636,7 @@ const routes = [
                     title: 'COC证书',
                     title_en: 'COC Certificate',
                 }
-            }, 
+            },
             {
                 // 证书清单
                 path: 'certificate-list',
@@ -1645,6 +1645,7 @@ const routes = [
                 meta: {
                     title: '证书清单',
                     title_en: 'Certificate List',
+                    hidden: true,
                 }
             }
         ]
