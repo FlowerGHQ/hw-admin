@@ -3,7 +3,10 @@ import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
-import moment from "moment";
+import weekday from "dayjs/plugin/weekday";
+import localeData from "dayjs/plugin/localeData";
+dayjs.extend(weekday);
+dayjs.extend(localeData);
 
 const Util = {
     /* =============== 通用方法 ================ */
@@ -137,11 +140,23 @@ const Util = {
      * 将秒时间戳或毫秒时间戳转换成moment对象
      * @param {*} timestamp 秒时间戳或毫秒时间戳
      */
-    momentFilter(value) {
-        if (value == null || value == '') return '-';
-        if (value.toString() === '0') return '-';
-        return moment.unix(value)
+    dayjsReview(value) {
+        //    antd3.x 用法 将秒时间戳或毫秒时间戳转换成Dayjs对象
+        return dayjs.unix(value)
     },
+    // dayjs 将一个Dayjs对象转换成秒时间戳或毫秒时间戳
+
+    dayjsToTimestamp(value) {
+        //   判断是否为Dayjs对象，console
+        if (dayjs.isDayjs(value)) {
+            console.log('我是Dayjs对象')
+            // 将Dayjs对象转换成秒时间戳
+            return value.valueOf() / 1000; 
+            
+        } else {
+            return value
+        }
+     },
     /**
      * 将秒时间戳或毫秒时间戳转换成对应格式
      * @param {*} timestamp 秒时间戳或毫秒时间戳

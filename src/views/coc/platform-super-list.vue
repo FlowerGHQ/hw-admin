@@ -79,6 +79,7 @@
 			:modalType="modalType"
 			:recordItem="recordItem"
 			:isDisable="isDisable"
+			@search="getTableData"
 		/>
 	</div>
 </template>
@@ -178,7 +179,7 @@ const getTableData = () => {
 const getRowDetails = (type, record) => {
 	if (type === 'add') {
 		recordItem.value = {}
-		isDisable
+		isDisable.value = false
 	} else { 
 		viewCocTemplate({
 			id: record.id,

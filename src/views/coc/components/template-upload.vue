@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref, reactive,onMounted,toRefs } from "vue"
+import { ref, reactive,watch } from "vue"
 import Core from "@/core"
 import { PlusOutlined, FileWordOutlined } from "@ant-design/icons-vue"
 const { FILE_URL_PREFIX } = Core.Const.NET
@@ -85,8 +85,6 @@ const props = defineProps({
 		default: () => [],
 	},
 })
-
-
 const upload = reactive({
 	action: FILE_URL_PREFIX,
 	fileList: [],
@@ -98,9 +96,28 @@ const upload = reactive({
 		type: "file",
 	}
 })
-onMounted(async () => {
-	console.log(props)
-})
+const $emit = defineEmits(["update:upload"])
+
+
+watch(
+	() => props.fileUrl,
+	(newVal) => {
+		upload.fileList = newVal.map((item) => {
+			return {
+				uid: item.id,
+				name: item.name,
+				url: item.url,
+			}
+		})
+		$emit("update:upload", upload)
+	},
+	{
+		immediate: true,
+		deep: true,
+	}
+)
+
+
 
 // 上传前检查文件
 const handleFileCheck = (file) => {
@@ -118,7 +135,6 @@ const handleFileReupload = (item) => {
 }
 const handleFileDelete = (item) => {
 	upload.fileList = []
-	console.log(upload)
 }
 const handleFileview = () => {
 	// console.log(item)

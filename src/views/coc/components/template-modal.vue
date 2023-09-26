@@ -102,6 +102,7 @@
 						:isDisable="isDisable"
 						:type="['doc', 'docx']"
 						:fileUrl="searchForm.fileList"
+						v-model:upload="upload"
 					/>
 				</a-form-item>
 			</a-form>
@@ -111,13 +112,15 @@
 <script setup>
 import Core from "@/core"
 import { useI18n } from "vue-i18n"
-import { defineEmits, reactive, ref, onMounted, watch, computed } from "vue"
+import { defineEmits, reactive, ref, onMounted, watch, computed ,getCurrentInstance} from "vue"
 import TemplateUpload from "./template-upload.vue"
-import Util from "../../../core/utils"
+import dayjs from "dayjs"
+const Util = Core.Util
 const FILE_URL_PREFIX = Core.Const.NET.FILE_URL_PREFIX
-const { getCateGoryList, viewCocTemplate } = Core.Api.COC
-const { momentFilter } = Core.Util
+const { getCateGoryList, viewCocTemplate, addCocTemplate } = Core.Api.COC
+const { dayjsReview,timeFilter,dayjsToTimestamp} = Util
 const $t = useI18n().t
+const $message = getCurrentInstance().proxy.$message
 
 const props = defineProps({
 	visible: {
@@ -137,13 +140,14 @@ const props = defineProps({
 		default: () => {},
 	},
 })
-const $emit = defineEmits(["update:visible"])
+const $emit = defineEmits(["update:visible",'search'])
 
 const formLayout = ref("horizontal")
 const labelCol = ref({ style: { width: "100px" } })
 const wrapperCol = ref({ span: 18 })
 const option = ref([])
 const refForm = ref(null)
+const upload = ref({})
 // validate
 const validateDate = async (rule, value) => {
 	console.log("value", value)
@@ -160,13 +164,13 @@ const validateModel = async (rule, value) => {
 	return Promise.reject($t("coc.coc_apply_vehicle_required"))
 }
 const validateUpload = async (rule, value) => {
-	console.log("value", value)
-	console.log("upload.fileList", upload.fileList)
-	// upload.fileList若为空数组，说明没有上传文件
-	if (upload.fileList.length === 0) {
-		return Promise.reject($t("coc.coc_template_required"))
+	console.log("value", upload.value)
+	// console.log("upload.fileList", upload)
+	// // upload.fileList若为空数组，说明没有上传文件
+	if (upload.value.fileList.length > 0 && upload.value.fileList) {
+		return Promise.resolve()
 	}
-	return Promise.resolve()
+	return Promise.reject($t("coc.coc_template_required"))
 }
 const rules = reactive({
 	name: [
@@ -197,62 +201,107 @@ const rules = reactive({
 			validator: validateModel,
 		},
 	],
-	upload: [
-		{
-			required: true,
-			trigger: ["change", "blur"],
-			validator: validateUpload,
-		},
-	],
+	// upload: [
+	// 	{
+	// 		required: false,
+	// 		trigger: ["change", "blur"],
+	// 		validator: validateUpload,
+	// 	},
+	// ],
 })
-const searchForm = computed(() => {
-	let arr = Util.deepCopy(props.recordItem)
-	if (arr.model) {
-		arr.model = arr.model.split(",")
-	}
-	if (arr.effective_start_time && arr.effective_end_time) {
-		arr.coc_validity_date = [
-			momentFilter(arr.effective_start_time),
-			momentFilter(arr.effective_end_time),
-		]
-	}
-	if (arr.file_url) {
-		console.log("arr.file_url", arr.file_url)
-		arr.fileList = [
-			{
-				uid: "-1",
-				name: arr.name,
-				status: "done",
-				url: FILE_URL_PREFIX + arr.file_url,
-				response: {
-					code: 0,
-					data: {
-						name: arr.name,
-						filename: arr.file_url,
+const searchForm = reactive({
+	name: "",
+	version_number: "",
+	coc_validity_date: [],
+	model: [],
+	fileList: [],
+})
+
+watch(
+	() => props.recordItem,
+	(newVal) => {
+		let arr = Util.deepCopy(newVal)
+		console.log("arr", dayjsReview(arr.effective_start_time))
+		console.log("arr", dayjsReview(arr.effective_end_time))
+		if (arr.model) {
+			arr.model = arr.model.split(",")
+		}
+
+		if (arr.file_url) {
+			console.log("arr.file_url", arr.file_url)
+			arr.fileList = [
+				{
+					uid: "-1",
+					name: arr.name,
+					status: "done",
+					url: FILE_URL_PREFIX + arr.file_url,
+					response: {
+						code: 0,
+						data: {
+							name: arr.name,
+							filename: arr.file_url,
+						},
 					},
 				},
-			},
+			]
+		}
+		searchForm.name = arr.name
+		searchForm.version_number = arr.version_number
+		searchForm.coc_validity_date = [
+			dayjsReview(arr.effective_start_time),
+			dayjsReview(arr.effective_end_time)
 		]
+		searchForm.model = arr.model
+		searchForm.fileList = arr?.fileList || []
+		console.log("searchForm", searchForm.coc_validity_date)
+	},
+	{
+		immediate: true,
+		deep: true,
 	}
-	return arr
-})
+)
+
 // 获取下拉框数据
 const getCateGory = async () => {
 	const res = await getCateGoryList()
 	option.value = res
 }
 
+const hanleeEdit =  (form) => {
+	addCocTemplate(form).then(res => { 
+		if (props.modalType === "edit") {
+			$message.success($t("coc.coc_edit_success"))
+		} else if(props.modalType === "add"){ 
+			$message.success($t("coc.coc_add_success"))
+		}
+		$emit("update:visible", false)
+		$emit("search")
+	})
+}
 // modal
 const handleOk = () => {
 	refForm.value
 		.validate()
 		.then((res) => {
-			console.log("校验成功")
+			// 整合数据
+			let data = Util.deepCopy(searchForm)
+			data.model =data.model.length>1? data.model.join(","):data.model[0]
+			data.file_url = data.fileList.length > 0 ? data.fileList[0].response.data.filename : ""
+			console.log(data.coc_validity_date[0])
+			data.effective_start_time =dayjsToTimestamp(data.coc_validity_date[0])
+			data.effective_end_time = dayjsToTimestamp(data.coc_validity_date[1])
+			delete data.fileList 
+			delete data.coc_validity_date
+			console.log("data", data)
+			hanleeEdit(data)
 		})
 		.catch((err) => {
+			console.log(err)
 			console.log("校验失败")
 		})
 }
+
+
 const handleCancel = () => {
 	$emit("update:visible", false)
 }
