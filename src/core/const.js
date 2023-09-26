@@ -2348,7 +2348,12 @@ let Const = {
         DOWN_LOAD_TYPE: {
             "1": { key: 1, type: '证书列表' },
             "2": { key: 2, type: '证书详情' },
-        }
+        },
+        // 证书状态
+        CER_STATUS: {
+            '0': { key: 0, zh: "已过期", en: "Expired", color: 'red' },
+            '1': { key: 1, zh: "生效中", en: 'In effect', color: 'green' },
+        },
     }
 };
 

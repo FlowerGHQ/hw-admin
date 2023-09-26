@@ -1,13 +1,11 @@
-<!--
- * @Author: douzhiyuan
- * @Date: 2023-09-20 09:10:42
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-09-26 09:56:16
- * @Description: 请填写简介
--->
 <template>
 	<div class="tamplate-modal">
-		<a-modal v-model:visible="visible" destroyOnClose @ok="handleOk" @cancel="handleCancel">
+		<a-modal
+			v-model:visible="visible"
+			destroyOnClose
+			@ok="handleOk"
+			@cancel="handleCancel"
+		>
 			<template #title>
 				<span v-if="modalType === 'add'">{{
 					$t("coc.coc_modal_add_title")
@@ -20,10 +18,10 @@
 				</span>
 			</template>
 			<template #footer>
-				<a-button @click="handleCancel" v-if="!formdisabled">
+				<a-button @click="handleCancel" v-if="!isDisable">
 					{{ $t("coc.coc_btn_cancel") }}
 				</a-button>
-				<a-button type="primary" @click="handleOk" v-if="!formdisabled">
+				<a-button type="primary" @click="handleOk" v-if="!isDisable">
 					{{ $t("coc.coc_btn_comfirm") }}
 				</a-button>
 			</template>
@@ -44,7 +42,7 @@
 				>
 					<a-input
 						v-model:value="searchForm.name"
-						:disabled="formdisabled"
+						:disabled="isDisable"
 						:placeholder="$t('coc.coc_placeholder_name')"
 					/>
 				</a-form-item>
@@ -55,7 +53,7 @@
 				>
 					<a-input
 						v-model:value="searchForm.version_number"
-						:disabled="formdisabled"
+						:disabled="isDisable"
 						:placeholder="$t('coc.coc_placeholder_version')"
 					/>
 				</a-form-item>
@@ -67,7 +65,7 @@
 					<a-range-picker
 						:show-time="{ format: 'HH:mm:ss' }"
 						v-model:value="searchForm.coc_validity_date"
-						:disabled="formdisabled"
+						:disabled="isDisable"
 						format="YYYY-MM-DD HH:mm:ss"
 						:placeholder="[$t('coc.coc_start_date'), $t('coc.coc_start_date')]"
 					/>
@@ -82,7 +80,7 @@
 						v-model:value="searchForm.model"
 						mode="multiple"
 						showArrow
-						:disabled="formdisabled"
+						:disabled="isDisable"
 						:placeholder="$t('coc.coc_placeholder_apply_vehicle')"
 					>
 						<a-select-option
@@ -98,44 +96,29 @@
 					:label="$t('coc.coc_lable_template')"
 					:label-col="labelCol"
 					name="upload"
+					class="upload-item"
 				>
-					<!-- 上传组件 正方形带+ -->
-					<a-upload
-						name="file"
-						ref="uploader"
-						list-type="picture-card"
-						:disabled="formdisabled"
-						:file-list="upload.fileList"
-						:action="upload.action"
-						:multiple="false"
-						:headers="upload.headers"
-						:data="upload.data"
-						:max-count="1"
-						:before-upload="handleFileCheck"
-						:showUploadList="false"
-						@change="handleFileChange"
-					>
-						<div>
-							<plus-outlined></plus-outlined>
-							<div class="ant-upload-text">
-								{{ $t("coc.coc_placeholder_upload") }}
-							</div>
-						</div>
-					</a-upload>
+					<TemplateUpload
+						:isDisable="isDisable"
+						:type="['doc', 'docx']"
+						:fileUrl="searchForm.fileList"
+					/>
 				</a-form-item>
 			</a-form>
 		</a-modal>
 	</div>
 </template>
 <script setup>
-import { defineEmits, reactive, ref, onMounted, watch, computed } from "vue"
 import Core from "@/core"
-const { FILE_URL_PREFIX } = Core.Const.NET
+import { useI18n } from "vue-i18n"
+import { defineEmits, reactive, ref, onMounted, watch, computed } from "vue"
+import TemplateUpload from "./template-upload.vue"
+import Util from "../../../core/utils"
+const FILE_URL_PREFIX = Core.Const.NET.FILE_URL_PREFIX
 const { getCateGoryList, viewCocTemplate } = Core.Api.COC
 const { momentFilter } = Core.Util
-import { useI18n } from "vue-i18n"
 const $t = useI18n().t
-import { PlusOutlined, LoadingOutlined } from "@ant-design/icons-vue"
+
 const props = defineProps({
 	visible: {
 		type: Boolean,
@@ -155,31 +138,12 @@ const props = defineProps({
 	},
 })
 const $emit = defineEmits(["update:visible"])
-const searchForm = reactive({
-	name: "",
-	version_number: "",
-	coc_validity_date: [],
-	model: [],
-})
+
 const formLayout = ref("horizontal")
 const labelCol = ref({ style: { width: "100px" } })
 const wrapperCol = ref({ span: 18 })
-const formdisabled = computed(() => {
-	return props.isDisable
-})
 const option = ref([])
 const refForm = ref(null)
-const upload = reactive({
-	action: FILE_URL_PREFIX,
-	fileList: [],
-	headers: {
-		ContentType: false,
-	},
-	data: {
-		token: Core.Data.getToken(),
-		type: "file",
-	},
-})
 // validate
 const validateDate = async (rule, value) => {
 	console.log("value", value)
@@ -241,77 +205,43 @@ const rules = reactive({
 		},
 	],
 })
-
-watch(
-	() => props.modalType,
-	(val) => {
-		if (val == "detail" || val == "edit") {
-			getDetail(props.recordItem.value.id)
-		} else {
-			searchForm.name = ""
-			searchForm.version_number = ""
-			searchForm.model = []
-			searchForm.coc_validity_date = []
-			upload.fileList = []
-		}
+const searchForm = computed(() => {
+	let arr = Util.deepCopy(props.recordItem)
+	if (arr.model) {
+		arr.model = arr.model.split(",")
 	}
-)
-
-// 获取详情
-const getDetail = async (id) => {
-	const res = await viewCocTemplate({ id })
-	searchForm.name = res.name
-	searchForm.version_number = res.version_number
-	searchForm.model = res.model.split(",")
-	searchForm.coc_validity_date = [
-		momentFilter(res.effective_start_time),
-		momentFilter(res.effective_end_time),
-	]
-	upload.fileList = [
-		{
-			uid: "-1",
-			name: res.name,
-			status: "done",
-			url: FILE_URL_PREFIX + res.path,
-			response: {
-				code: 0,
-				data: {
-					name: res.name,
-					filename: res.path,
+	if (arr.effective_start_time && arr.effective_end_time) {
+		arr.coc_validity_date = [
+			momentFilter(arr.effective_start_time),
+			momentFilter(arr.effective_end_time),
+		]
+	}
+	if (arr.file_url) {
+		console.log("arr.file_url", arr.file_url)
+		arr.fileList = [
+			{
+				uid: "-1",
+				name: arr.name,
+				status: "done",
+				url: FILE_URL_PREFIX + arr.file_url,
+				response: {
+					code: 0,
+					data: {
+						name: arr.name,
+						filename: arr.file_url,
+					},
 				},
 			},
-		},
-	]
-}
+		]
+	}
+	return arr
+})
 // 获取下拉框数据
 const getCateGory = async () => {
 	const res = await getCateGoryList()
 	option.value = res
 }
-// 上传前检查文件
-const handleFileCheck = (file) => {
-	// 检测文件类型，doc、docx
-	const isDoc = file.type === "application/msword"
-	const isDocx =
-		file.type ===
-		"application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-	if (!isDoc && !isDocx) {
-		// 将显示的文件列表清空
-		upload.fileList = []
-		$message.error($t("coc.coc_upload_file_type_error"))
-		return false
-	}
-	return true
-}
-// 上传文件
-const handleFileChange = ({ file, fileList }) => {
-	if (file.status == "done") {
-		if (file.response && file.response.code > 0) {
-			return $message.error(file.response.message)
-		}
-	}
-	upload.fileList = fileList
-}
+
 // modal
 const handleOk = () => {
 	refForm.value
@@ -343,5 +273,8 @@ onMounted(() => {
 		align-items: center;
 		align-items: flex-start;
 	}
+}
+:deep(.ant-upload) {
+	width: 100%;
 }
 </style>
