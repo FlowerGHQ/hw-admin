@@ -100,24 +100,29 @@
                     <a-menu theme="light" v-model:openKeys="openKeys" v-model:selectedKeys="selectedKeys" mode="inline"
                         :inlineCollapsed='collapsed' :inlineIndent='8'>
                         <template v-for="item of showList">
+                            <!-- 这个是只有当个导航栏 -->
                             <a-menu-item 
                                 v-if="$auth(...item.auth) && item.not_sub_menu" 
                                 :key="item.path"
-                                @click="handleLink(item.path)">
-                                <i class='icon' :class="item.meta.icon" 
-                            />
+                                @click="handleLink(item.path)"
+                            >
+                                <i class='icon' :class="item.meta.icon"/>
                                 <span :class="{ 'collapsed-title': collapsed }">{{ item.meta.title }}</span>
                             </a-menu-item>
+                            <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
                                 <template #title>
                                     <i class='icon' :class="item.meta.icon" />
-                                    <span v-show="!collapsed">{{ lang == 'zh' ? item.meta.title : item.meta.title_en
-                                    }}</span>
+                                    <span v-show="!collapsed">
+                                        {{ lang == 'zh' ? item.meta.title : item.meta.title_en }}
+                                    </span>
                                 </template>
                                 <template v-for="i of item.children">
                                     <template v-if="$auth(...i.auth)">
-                                        <a-menu-item :key="item.path + '/' + i.path"
-                                            @click="handleLink(item.path + '/' + i.path)">
+                                        <a-menu-item 
+                                            :key="item.path + '/' + i.path" 
+                                            @click="handleLink(item.path + '/' + i.path)"
+                                        >
                                             <span>{{ lang == 'zh' ? i.meta.title : i.meta.title_en }}</span>
                                         </a-menu-item>
                                     </template>
@@ -174,7 +179,7 @@ export default {
                 master: '',
                 org: '',
             },
-            tabPosition: 1
+            tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
         };
     },
     computed: {
@@ -190,15 +195,17 @@ export default {
             showList.forEach(item => {
                 item.auth = item.meta ? (item.meta.auth || []) : [];
                 item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
-                item.children = item.children.map(i => {
-                    i.auth = i.meta ? (i.meta.auth || []) : [];
-                    return i
-                })
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? (i.meta.auth || []) : [];
+                        return i
+                    })
+                }
             })
-            // 选择模块进行路由过滤
+            // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
-                let newShowList = []
-                SIDER.ADMIN.forEach(item => {
+                let newShowList = []                
+                SIDER.ADMIN.forEach(item => {             
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
@@ -216,22 +223,21 @@ export default {
             deep: true,
             immediate: true,
             handler(n) {
+                // console.log("输出的路由", n);
                 let meta = n.meta || {}                
-                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu
-                let is_sp = n.matched.length > 1 ? n.matched[0].meta.sp : n.meta.sp
+                let not_sub_menu = n.matched.length > 1 ? n.matched[0].meta.not_sub_menu : n.meta.not_sub_menu                
 
                 let path = n.path.split('/').slice(1)
-
+                
                 if (n.meta.parent) {
                     this.selectedKeys = [n.meta.parent]
-                } else if (not_sub_menu && !is_sp) {
+                } else if (not_sub_menu) {
                     this.selectedKeys = ['/' + path[0]]
                 } else {
-                    this.selectedKeys = [n.fullPath]
+                    this.selectedKeys = [n.fullPath]  // 例如 '/distributor/purchase-order-list'
                 }
 
-                this.openKeys = [`/${path[0]}`
-]
+                this.openKeys = [`/${path[0]}`]
 
 
                 if (!meta.hidden || (this.breadcrumbList[0] && this.breadcrumbList[0].key !== path[0])) {
@@ -267,6 +273,7 @@ export default {
         this.tabPosition = Core.Data.getTabPosition() || 1
         this.handleRouterSwitch();
 
+        // 监听页面窗口
         window.onresize = this.handleWindowResize
         if (window.innerWidth <= 830) {
             this.collapsed = true
@@ -363,7 +370,7 @@ export default {
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale', this.$i18n.locale)
         },
-
+        // 切换顶部的 销售 售后 生产 CRM权限操作
         handleRouterSwitch() {
             if (Core.Data.getTabPosition() === this.tabPosition) {
                 return

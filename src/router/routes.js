@@ -1,4 +1,5 @@
 import Const from "../core/const"
+import Data from "../core/data"
 import Util from "../core/utils"
 
 import Layout from '../views/layout/index.vue';
@@ -14,6 +15,8 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 * @params meta.auth 这个权限是在系统那边配置每一个用户或者角色的权限显示与否
 * @params meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
 * @params meta hideen判断是否显示到侧边栏上 true为不显示
+* @params meta not_sub_menu: true判断当前路由是否是一级标签
+* @params meta super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中
 */
 const routes = [
     {
@@ -1615,7 +1618,6 @@ const routes = [
             title: "COC证书管理",
             title_en: 'COC Certificate Management',
             icon: 'i_s_customer',
-            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -1625,6 +1627,8 @@ const routes = [
                 meta: {
                     title: 'COC模板',
                     title_en: 'COC Template',
+                    roles: [LOGIN_TYPE.ADMIN],
+                    super_admin_show: true, 
                 }
             },
             {
@@ -1635,6 +1639,7 @@ const routes = [
                 meta: {
                     title: 'COC证书',
                     title_en: 'COC Certificate',
+                    roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
                 }
             }
         ]
@@ -2034,6 +2039,7 @@ const routes = [
             title: '门店管理',
             title_en: 'Stores Management',
             icon: 'i_stores',
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -2043,8 +2049,7 @@ const routes = [
                 meta: {
                     title: '门店列表',
                     title_en: 'Stores List',
-                    icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    icon: 'i_home',                    
                 },
             },
             {
@@ -2054,8 +2059,7 @@ const routes = [
                 meta: {
                     title: '区域管理',
                     title_en: 'Regional Mangage',
-                    icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    icon: 'i_home',                    
                 },
             },
             {
@@ -2066,7 +2070,6 @@ const routes = [
                     title: '班次管理',
                     title_en: 'Shift Mangage',
                     icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
                     hidden: true,
 
                 },
@@ -2078,8 +2081,7 @@ const routes = [
                 meta: {
                     title: '目标管理',
                     title_en: 'Target Mangage',
-                    icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    icon: 'i_home',                    
                     hidden: true,
                 },
             },
@@ -2091,7 +2093,6 @@ const routes = [
                     hidden: true,
                     title: '',
                     parent: '/stores-vehicle/stores-list',
-                    auth: [],
                 }
             },
             {
@@ -2102,8 +2103,7 @@ const routes = [
                     hidden: true,
                     title: '门店详情',
                     title_en: 'Payment Receipt Phase',
-                    parent: '/stores-vehicle/stores-list',
-                    auth: [],
+                    parent: '/stores-vehicle/stores-list',                    
                 }
             },
         ]
@@ -2118,6 +2118,7 @@ const routes = [
             title_en: 'Personnel Management',
             icon: 'i_renyuan-',
             // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -2128,7 +2129,6 @@ const routes = [
                     title: '人员列表',
                     title_en: 'Personnel List',
                     icon: 'i_s_user',
-                    roles: [LOGIN_TYPE.ADMIN],
                 },
             },
             {
@@ -2503,8 +2503,12 @@ const routes = [
         path: '/test',
         name: 'test',
         component: () => import('../views/z-test/test.vue'),
-        children: []
-    },
+        meta: {
+            title: '测试1',
+            not_sub_menu: true,
+            hidden: true,
+        },          
+    }
 ];
 
 export default routes;
@@ -2516,10 +2520,12 @@ let target = Util.deepCopy(routes).filter(first => {
     return first.meta && !first.meta.hidden
 })
 target.forEach(first => {
-    let children = first.children.filter(second => {
-        return second.meta && !second.meta.hidden
-    })
-    first.children = children
+    if (first.children) {
+        let children = first.children.filter(second => {
+            return second.meta && !second.meta.hidden
+        })
+        first.children = children
+    }
 })
 
 // 平台方
@@ -2527,12 +2533,34 @@ ADMIN = Util.deepCopy(target).filter(first => {
     let meta = first.meta
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
 })
-ADMIN.forEach(first => {
-    let children = first.children.filter(second => {
-        let meta = second.meta
-        return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
+
+// 是否只在超级管理员显示，普通平台方不展示
+if (!Data.getManager()) {
+    // console.log("我是普通平台方");
+    ADMIN = ADMIN.filter(el => {
+        let meta = el.meta
+        return !meta.super_admin_show
     })
-    first.children = children
+}
+
+ADMIN.forEach(first => {
+    if (first.children) { 
+        let children = first.children.filter(second => {
+            let meta = second.meta
+            return !meta.roles || meta.roles.includes(LOGIN_TYPE.ADMIN)
+        })
+
+        // 是否只在超级管理员显示，普通平台方不展示
+        if (!Data.getManager()) {
+            // console.log("我是普通平台方");
+            children = first.children.filter(el => {
+                let meta = el.meta
+                return !meta.super_admin_show
+            })
+        }
+
+        first.children = children
+    }
 })
 
 // 分销商
@@ -2541,11 +2569,13 @@ DISTRIBUTOR = Util.deepCopy(target).filter(first => {
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
 })
 DISTRIBUTOR.forEach(first => {
-    let children = first.children.filter(second => {
-        let meta = second.meta
-        return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
-    })
-    first.children = children
+    if (first.children) { 
+        let children = first.children.filter(second => {
+            let meta = second.meta
+            return !meta.roles || meta.roles.includes(LOGIN_TYPE.DISTRIBUTOR)
+        })
+        first.children = children
+    }
 })
 
 // 零售商
@@ -2554,11 +2584,13 @@ AGENT = Util.deepCopy(target).filter(first => {
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
 })
 AGENT.forEach(first => {
-    let children = first.children.filter(second => {
-        let meta = second.meta
-        return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
-    })
-    first.children = children
+    if (first.children) { 
+        let children = first.children.filter(second => {
+            let meta = second.meta
+            return !meta.roles || meta.roles.includes(LOGIN_TYPE.AGENT)
+        })
+        first.children = children
+    }
 })
 
 // 门店
@@ -2567,11 +2599,13 @@ STORE = Util.deepCopy(target).filter(first => {
     return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
 })
 STORE.forEach(first => {
-    let children = first.children.filter(second => {
-        let meta = second.meta
-        return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
-    })
-    first.children = children
+    if (first.children) { 
+        let children = first.children.filter(second => {
+            let meta = second.meta
+            return !meta.roles || meta.roles.includes(LOGIN_TYPE.STORE)
+        })
+        first.children = children
+    }
 })
 
 export const SIDER = {
