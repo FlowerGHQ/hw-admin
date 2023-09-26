@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="message-item">
                                     <span class="phone">{{ item.phone }}</span>
-                                    <span class="time">{{ $Util.timeFilter(item.create_time, 2) || '-' }}</span>
+                                    <span class="time">{{ $Util.timeFilter(item.next_track_time, 2) || '-' }}</span>
                                 </div>
                                 <div class="labels">
                                     <my-tag class="message-label" v-if="item.pre_order_status === 1">已支付意向金</my-tag>
@@ -691,7 +691,7 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                 }
                 .about {
                     flex: 1;
-                    padding: 20px;
+                    padding: 8px 20px 20px 20px;
                     border-radius: 6px;
                     background: #FFF;
                     overflow: hidden;
