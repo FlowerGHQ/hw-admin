@@ -57,7 +57,7 @@
         <div class="lead-model">
             <template v-for="(item,index) in allocationList" :key="index">
                 <!-- m-r-16 -->
-                <div class="lead-model-item m-t-16">
+                <div v-if="item.isChecked" class="lead-model-item m-t-16">
                     <div class="lead-model-item-left">
                         <div class="left-avatar">                            
                             <img 
@@ -78,7 +78,7 @@
                             <div class="icon-wrapper">
                                 <a-input-number 
                                     v-model:value="item.new_customer_assign_rate"
-                                    :min="1"
+                                    :min="0"
                                     :max="100"
                                 />
                                 <span class="percent-symbol m-l-8">%</span>
@@ -142,7 +142,7 @@
             leadList.value = res
             leadList.value.forEach(el => {
                 el.isChecked = true
-            })
+            })            
         }).catch(err => {
             Core.Logger.error("参数", obj, "客服线索分配list", err)
         })
@@ -166,7 +166,10 @@
     // 分配点击按钮
     const onAllocation = () => {
         leadVisible.value = true
-        allocationList.value = Core.Util.deepCopy(leadList.value.filter(el => el.isChecked))
+        allocationList.value = Core.Util.deepCopy(leadList.value)
+        allocationList.value.forEach(el => {
+            el.new_customer_assign_rate = 0
+        })
     }
     // model确认按钮
     const onLeadModelOk = () => {
