@@ -883,6 +883,10 @@ const apiList = {
         downLoadCertificateDetailLis: ['BlobPost', 'crm-coc-certificate/download'], // 证书清单列表下载
         setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
         getCertificatNumber: ['PostJson', 'crm-coc-certificate/detail/statistics'], // 获取证书编号
+    },
+    // 用户中心
+    USER_CENTER: {
+        getClueList: ['PostJson', 'user-center/clue/list'], // 线索ist
     }
 };
 
