@@ -484,7 +484,7 @@ const onDownLoad = (record, array) => {
 	downLoadCertificateDetailLis({
 		download_list: list,
 		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
-		source_type: !isChangeTable ? 1 : 2,
+		source_type: !isChangeTable.value ? 1 : 2,
 	})
 		.then((res) => {
 			// const str = 'xxxxfile-name=example.txt';
