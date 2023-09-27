@@ -51,6 +51,9 @@ export default {
     coc_delete: '删除',
     coc_delete_confirm: '确定删除该模板吗？',
     coc_delete_confirm_content: '删除后将无法恢复，请谨慎操作',
+    // 生成成功
+    coc_generate_success: '生成成功',
+    // 生成失败
 
   },
   en: {
@@ -97,5 +100,8 @@ export default {
     coc_delete: 'Delete',
     coc_delete_confirm: 'Are you sure you want to delete this template?',
     coc_delete_confirm_content: 'Once deleted, it cannot be recovered. Please operate with caution.',
+    // 生成成功
+    coc_generate_success: 'Generate Success',
+    // 生成失败
   }
 }

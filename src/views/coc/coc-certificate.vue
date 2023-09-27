@@ -9,11 +9,6 @@
 							: $t("coc_business.coc_certificate_list")
 					}}
 				</div>
-				<div class="btns-area">
-					<a-button type="primary" @click="batchDownload">{{
-						$t($t("coc_business.coc_batch_download"))
-					}}</a-button>
-				</div>
 			</div>
 			<!-- tabs -->
 			<div
@@ -28,6 +23,7 @@
 					</a-tab-pane>
 				</a-tabs>
 			</div>
+
 			<!-- search -->
 			<div class="search">
 				<a-row class="row-detail">
@@ -75,6 +71,14 @@
 						}}</a-button>
 					</a-col>
 				</a-row>
+			</div>
+			<div class="btns-area title-container">
+					<a-button type="primary" @click="batchDownload">{{
+						$t("certificate-list.coc_batchDownload")
+					}}</a-button>
+					<a-button type="primary" @click="allGenerated" v-if="!isChangeTable">{{
+						$t("certificate-list.coc_allGenerated")
+					}}</a-button>
 			</div>
 			<!-- table -->
 			<div class="table-container">
@@ -171,17 +175,20 @@
 import { ref, reactive, getCurrentInstance, onMounted, computed } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
-const { proxy } = getCurrentInstance()
+import {  useI18n  } from "vue-i18n"
 import fileSave from "@/core/fileSave"
 import { useRouter } from "vue-router"
+const { proxy } = getCurrentInstance()
 const router = useRouter()
 const COC = Core.Const.COC
 const Util = Core.Util
-const { $message, $t } = proxy
+const { $message } = proxy
+const $t = useI18n().t
 const {
 	getCertificateList,
 	downLoadCertificateDetailLis,
 	setCertificateVisible,
+	regenerateFile,
 } = Core.Api.COC
 const { FILE_URL_PREFIX } = Core.Const.NET
 
@@ -269,56 +276,48 @@ const palrformTableColumns_certificate = ref([
 		dataIndex: "model_number",
 		key: "model_number",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_vin",
 		dataIndex: "vehicle_uid",
 		key: "vehicle_uid",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_motor",
 		dataIndex: "motor_uid",
 		key: "motor_uid",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_cocStatus",
 		dataIndex: "certificate_status",
 		key: "certificate_status",
 		roles: ["SUPER_ADMIN", "SALESMAN"],
-
 	},
 	{
 		title: "certificate-list.coc_orderTime",
 		dataIndex: "order_time",
 		key: "order_time",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_deliveryTime",
 		dataIndex: "delivery_time",
 		key: "delivery_time",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_downloadTimes",
 		dataIndex: "download_number",
 		key: "download_number",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 	{
 		title: "certificate-list.coc_operation",
 		dataIndex: " ",
 		key: "coc_operation",
 		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
-
 	},
 ])
 const palrformTableData = ref([])
@@ -413,7 +412,28 @@ const handleReset = () => {
 	certificateList()
 }
 const reRenerate = (record) => {
-	Core.Logger.log("重新生成")
+	console.log(record)
+	console.log("isChangeTable", isChangeTable)
+	let params = {
+		all_generated_flag: 0,
+		source_type: !isChangeTable.value? 1 : 2,
+		target_id: record.id,
+	}
+	regenerateFile(params).then(() => {
+		certificateList()
+		$message.success($t("coc.coc_generate_success"))
+	})
+}
+const allGenerated = () => { 
+	let params = {
+		all_generated_flag: 1,
+		source_type:  1 ,
+		target_id:'',
+	}
+	regenerateFile(params).then((res) => {
+		certificateList()
+		$message.success($t("coc.coc_generate_success"))
+	})
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
@@ -464,7 +484,7 @@ const onDownLoad = (record, array) => {
 	downLoadCertificateDetailLis({
 		download_list: list,
 		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
-		source_type: !isChangeTable?1:2,
+		source_type: !isChangeTable ? 1 : 2,
 	})
 		.then((res) => {
 			// const str = 'xxxxfile-name=example.txt';
@@ -480,7 +500,6 @@ const onDownLoad = (record, array) => {
 		})
 }
 
-
 // 查看
 const onView = (record) => {
 	let isDistributor =
@@ -490,13 +509,17 @@ const onView = (record) => {
 		query: {
 			isDistributor: isDistributor,
 			order_number: record.order_number,
+			id: record.id,
 		},
 	})
 }
 // 清单列表数据的查看
 const onCoCView = (record) => {
-	    let url = 'http://view.officeapps.live.com/op/view.aspx?src=' +FILE_URL_PREFIX +record.file_url
-      window.open(url, '_blank')
+	let url =
+		"http://view.officeapps.live.com/op/view.aspx?src=" +
+		FILE_URL_PREFIX +
+		record.file_url
+	window.open(url, "_blank")
 }
 // 下单时间
 const onPlaceOrderTime = (params) => {
@@ -508,7 +531,6 @@ const onPlaceOrderTime = (params) => {
 onMounted(() => {
 	certificateList()
 })
-
 </script>
 
 <style lang="less" scoped>

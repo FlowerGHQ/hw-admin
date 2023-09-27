@@ -848,6 +848,7 @@ const apiList = {
         downLoadCertificateDetailLis: ['BlobPost', 'coc-certificate/download'], // 证书清单列表下载
         setCertificateVisible: ['PostJson', 'coc-certificate/set-visibility'], // 设置证书可见
         getCertificatNumber: ['PostJson', 'coc-certificate/detail/statistics'], // 获取证书编号
+        regenerateFile: ['PostJson','/coc-certificate/regenerate-file'] // 重新生成文件
     }
 };
 

@@ -824,7 +824,8 @@ export default {
                 this.cocProps = {
                     id: Number(this.$route.query.id) || 0,
                     isDistributor: distributor,
-                    order_number: this.detail.sn
+                    order_number: this.detail.sn,
+                    isOther:true
                 }
                 
             }

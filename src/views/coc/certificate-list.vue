@@ -62,7 +62,7 @@
 				<a-button type="primary" @click="batchDownload">{{
 					$t("certificate-list.coc_batchDownload")
 				}}</a-button>
-        	<a-button type="primary" >{{
+        	<a-button type="primary" @click="allGenerated">{{
 					$t("certificate-list.coc_allGenerated")
 				}}</a-button>
 			</div>
@@ -100,8 +100,8 @@
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("certificate-list.coc_view") }}</a-button
 							>
-														<!-- 重新生成 -->
-							<a-button type="link" @click="reRenerate(record)" danger>{{
+							<!-- 重新生成 -->
+							<a-button type="link" @click="reRenerate(record)" danger v-if="record.regenerate_flag === '1'">{{
 								$t("coc_business.coc_re_generate")
 							}}</a-button>
 						</template>
@@ -141,23 +141,25 @@ import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 import fileSave from "@/core/fileSave"
+import {  useI18n  } from "vue-i18n"
+
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const Util = Core.Util
-const { $t } = proxy
+const { $message } =proxy
+const  $t = useI18n().t
 const { TAB_TYPE } = COC
 const {
 	getCertificateDetailList,
 	getCertificatNumber,
 	downLoadCertificateDetailLis,
+	regenerateFile
 } = Core.Api.COC
 // 获取路由参数
 const route = useRoute()
 const { query } = route
 const { isDistributor, order_number } = query
-
 const distributor = ref(isDistributor === "true") // 是否是经销商
-
 const activeKey = ref(undefined) // tab切换
 const selectedRowKeyArr = ref([]) // 选中的哪些项
 const oderNumer = ref(order_number) // 订单号
@@ -317,8 +319,27 @@ const tab_type = computed(() => {
 	return Object.values(TAB_TYPE).filter((item) => item.key !== 2)
 })
 // 重新生成
-const reRenerate = () => { 
-	console.log('重新生成')
+const reRenerate = (record) => { 
+	let param = {
+			all_generated_flag: 0,
+			source_type: 2,
+			target_id:record.id
+	}
+	regenerateFile(param).then(res => { 
+		getCerList()
+		$message.success($t("coc.coc_generate_success"))
+	})
+}
+const allGenerated = () => { 
+		let param = {
+			all_generated_flag: 1,
+			source_type: 2,
+			target_id:route.query.id
+	}
+	regenerateFile(param).then(res => { 
+			getCerList()
+			$message.success($t("coc.coc_generate_success"))
+	})
 }
 // 获取数量信息
 const getAllNumer = () => {
@@ -414,7 +435,7 @@ const onDeliveryTime = (params) => {
 }
 onMounted(() => {
 	searchForm.order_number = order_number
-	if (props.cocProps&&Object.keys(props.cocProps).length > 0&&props.cocProps.id) { 
+	if (props.cocProps&&Object.keys(props.cocProps).length > 0&&props.cocProps.isOther) { 
 		searchForm.order_number = props.cocProps.order_number
 		distributor.value = props.cocProps.isDistributor
 		oderNumer.value = props.cocProps.order_number
