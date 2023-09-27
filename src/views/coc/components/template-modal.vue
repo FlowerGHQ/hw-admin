@@ -207,13 +207,13 @@ const rules = reactive({
       validator: validateModel,
     },
   ],
-  // upload: [
-  // 	{
-  // 		required: false,
-  // 		trigger: ["change", "blur"],
-  // 		validator: validateUpload,
-  // 	},
-  // ],
+  upload: [
+  	{
+  		required: false,
+  		trigger: ["change", "blur"],
+  		validator: validateUpload,
+  	},
+  ],
 })
 const searchForm = reactive({
   name: "",
