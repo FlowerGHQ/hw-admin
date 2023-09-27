@@ -132,7 +132,7 @@
 								>{{ $t("certificate-list.coc_view") }}</a-button
 							>
 							<!-- 重新生成 -->
-							<a-button type="link" @click="reRenerate(record)" danger>{{
+							<a-button type="link" @click="reRenerate(record)" danger v-if="record.regenerate_flag == '1'">{{
 								$t("coc_business.coc_re_generate")
 							}}</a-button>
 						</template>
