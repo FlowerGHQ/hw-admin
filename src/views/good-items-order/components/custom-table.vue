@@ -255,9 +255,6 @@ const handleSearchReset = () => {
     Object.assign(channelPagination.value, {...Pag})
     handleSearch();
 };
-const handleOtherSearch = (params) => {};
-// 申请车辆
-const addVehicle = () => {};
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...channelPagination.value };
@@ -296,5 +293,6 @@ defineExpose({ handleSearchReset })
 
 .m-b-20 {
     margin-bottom: 20px;
+    margin-top: 20px;
 }
 </style>

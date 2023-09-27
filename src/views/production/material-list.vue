@@ -53,8 +53,8 @@
                     :row-key="record => record.id" :pagination='false' :loading="loading">
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'detail' && $auth('material.detail')">
-<!--                            <a-tooltip placement="top" :title='text'>
-                                <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
+                            <!--<a-tooltip placement="top" :title='text'>
+                                    <a-button type="link" @click="routerChange('detail', record)">{{ text || '-' }}
                                 </a-button>
                             </a-tooltip>-->
                             <div class="table-img">

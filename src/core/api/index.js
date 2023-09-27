@@ -42,6 +42,10 @@ const apiList = {
 	    exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
 	    exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
         materialExport: ['PostJson', 'material/export-material'], // 物料导出
+        goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
+        downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
+
+
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
