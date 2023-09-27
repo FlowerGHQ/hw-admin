@@ -32,7 +32,7 @@
                         >
                             <div class="avatar">
                                 <img :src="item.avatar || Static.defaultAvatar" class="avatar-img">
-                                <img :src="item.gender === 1 ? getAssetURL('images/gender-male.png') : getAssetURL('images/gender-female.png')" class="avatar-gender">
+                                <img v-if="item.gender === 1 || item.gender === 2" :src="item.gender === 1 ? getAssetURL('images/gender-male.png') : getAssetURL('images/gender-female.png')" class="avatar-gender">
                             </div>
                             <div class="message">
                                 <div class="message-item">
@@ -284,7 +284,7 @@ const getTaskNum = (params = {}, isSearch = false) => {
         taskAmount.value = taskList.value.length
         userId.value = taskList.value[taskIndex.value]?.id
         isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
-        // getAllChildData()
+        getAllChildData()
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	}).finally(() => {

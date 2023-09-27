@@ -61,8 +61,16 @@
   
   // 取消创建
   const cancleNext  = () => {
-    $emit('finalyCreate')
-    resetFollow()
+    Core.Api.CustomService.cancelTrack({
+      customer_id:userId.value,
+    }).then(res=>{
+      proxy.$message.success('取消成功');
+      $emit('finalyCreate')
+      getTaskNum({ page: 1 }, true)
+    }).catch(err=>{
+    }).finally(()=>{
+      resetFollow()
+    })
   }
   
   // 创建请求

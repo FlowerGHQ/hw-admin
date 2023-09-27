@@ -425,6 +425,7 @@ const Static = {
 		'-200': { key: '-200', text: '已取消', border_color: '#E5E6EB', color: '#86909C' },
 		'-300': { key: '-300', text: '已退订', border_color: '#F7BA1E33', color: '#F7BA1E' },
 		'-300': { key: '-300', text: '已退款', border_color: '#F7BA1E33', color: '#F7BA1E' },
+		'-400': { key: '-400', text: '申请退款', border_color: '#F7BA1E33', color: '#F7BA1E' },
 	},
     // 来源
     SOURCE_TYPE: [

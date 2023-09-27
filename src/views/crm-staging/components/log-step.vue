@@ -24,9 +24,9 @@
                             <div class="content-text" :class="{ 'm-b-15': index !== item.content.content.length - 1 }">
                                 <span>{{ Core.Const.WORK_OPERATION.LOG_KEY_MAP[logItem.key]?.text || '-'  }}</span>
                                 <template v-if="Core.Const.WORK_OPERATION.LOG_KEY_MAP[logItem.key]?.text === '性别'">
-                                    <span>【{{ logItem.old_value ? Core.Const.CRM_CUSTOMER.GENDER_MAP[logItem.old_value]?.zh : '-' }}】</span>
+                                    <span>【{{ logItem.old_value ? Core.Const.CRM_ORDER.SEX[logItem.old_value]?.zh : '-' }}】</span>
                                     <span>变更为</span>
-                                    <span>【{{ logItem.new_value ? Core.Const.CRM_CUSTOMER.GENDER_MAP[logItem.new_value]?.zh :  '-' }}】</span>   
+                                    <span>【{{ logItem.new_value ? Core.Const.CRM_ORDER.SEX[logItem.new_value]?.zh :  '-' }}】</span>   
                                 </template>
                                 <template v-else-if="Core.Const.WORK_OPERATION.LOG_KEY_MAP[logItem.key]?.text === '意向度'">
                                     <span>【{{ logItem.old_value ? Core.Const.WORK_OPERATION.INTENTION.TYPE_MAP[logItem.old_value]?.text : '-' }}】</span>
