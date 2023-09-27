@@ -70,7 +70,7 @@
 			<div class="table-container">
 				<a-table
 					:row-key="(record) => record.id"
-					:columns="palrformTableColumns"
+					:columns="fiflterPalrformTableColumns"
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
 					:loading="loading"
@@ -100,6 +100,10 @@
 								:disabled="record.certificate_status !== 1"
 								>{{ $t("certificate-list.coc_view") }}</a-button
 							>
+														<!-- 重新生成 -->
+							<a-button type="link" @click="reRenerate(record)" danger>{{
+								$t("coc_business.coc_re_generate")
+							}}</a-button>
 						</template>
 						<template v-else-if="column.key === 'order_time'">
 							<span>{{ Util.timeFormat(record.order_time) }}</span>
@@ -183,55 +187,78 @@ let channelPagination = reactive({
 		`${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 })
 const palrformTableColumns = ref([
-	{
+		{
 		title: "certificate-list.coc_orderNumber",
 		dataIndex: "order_number",
 		key: "order_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
 	},
 	{
 		title: "certificate-list.coc_vehicleName",
 		dataIndex: "model_name",
 		key: "model_name",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
 	},
 	{
 		title: "certificate-list.coc_vehicleCode",
 		dataIndex: "model_number",
 		key: "model_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 	{
 		title: "certificate-list.coc_vin",
 		dataIndex: "vehicle_uid",
 		key: "vehicle_uid",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 	{
 		title: "certificate-list.coc_motor",
 		dataIndex: "motor_uid",
 		key: "motor_uid",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 	{
 		title: "certificate-list.coc_cocStatus",
 		dataIndex: "certificate_status",
 		key: "certificate_status",
+		roles: ["SUPER_ADMIN", "SALESMAN"],
+
 	},
 	{
 		title: "certificate-list.coc_orderTime",
 		dataIndex: "order_time",
 		key: "order_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 	{
 		title: "certificate-list.coc_deliveryTime",
 		dataIndex: "delivery_time",
 		key: "delivery_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 	{
 		title: "certificate-list.coc_downloadTimes",
 		dataIndex: "download_number",
 		key: "download_number",
+		roles: ["SUPER_ADMIN", "SALESMAN"],
+	},
+	{
+		title: "coc_business.coc_client_download_times",
+		dataIndex: "download_number",
+		key: "download_number",
+		roles: [ "DISTRIBUTOR"],
 	},
 	{
 		title: "certificate-list.coc_operation",
-		dataIndex: "coc_operation",
+		dataIndex: " ",
 		key: "coc_operation",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 ])
 const loading = ref(false)
@@ -243,8 +270,25 @@ const props = defineProps({
 		default: () => {},
 	},
 })
-console.log("cocProps", props.cocProps)
+const roles = reactive({
+	DISTRIBUTOR: Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR,
+	SUPER_ADMIN: Core.Data.getManager(),
+	// 业务员
+	SALESMAN:
+		!Core.Data.getManager() &&
+		Core.Data.getLoginType() !== Core.Const.USER.TYPE.DISTRIBUTOR,
+})
 
+const fiflterPalrformTableColumns = computed(() => {
+	// 查看roles谁为真，就返回谁
+	let role = Object.keys(roles).filter((item) => roles[item])[0]
+	console.log("role", role)
+	let arr = []
+	arr = palrformTableColumns.value.filter((item) => {
+		return item.roles.includes(role)
+	})
+	return arr
+})
 // 获取列表
 const getCerList = (from = {}) => {
 	loading.value = true
@@ -272,6 +316,10 @@ const tab_type = computed(() => {
 	// 过滤
 	return Object.values(TAB_TYPE).filter((item) => item.key !== 2)
 })
+// 重新生成
+const reRenerate = () => { 
+	console.log('重新生成')
+}
 // 获取数量信息
 const getAllNumer = () => {
 	getCertificatNumber({
@@ -366,7 +414,7 @@ const onDeliveryTime = (params) => {
 }
 onMounted(() => {
 	searchForm.order_number = order_number
-	if (props.cocProps&&Object.keys(props.cocProps).length > 0) { 
+	if (props.cocProps&&Object.keys(props.cocProps).length > 0&&props.cocProps.id) { 
 		searchForm.order_number = props.cocProps.order_number
 		distributor.value = props.cocProps.isDistributor
 		oderNumer.value = props.cocProps.order_number
