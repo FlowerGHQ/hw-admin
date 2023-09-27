@@ -223,16 +223,17 @@
                         <span>{{ record.store_user_employee_no }}</span>
                     </template>
                     <!-- 订单状态 -->
-                    <template v-if="column.key === 'order_status'">
+                    <template v-if="column.key === 'order_status'">                        
                         <span v-if="!CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text]?.text">-</span>
-                        <my-tag 
+                        <span v-else>{{ CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text].text }}</span>
+                        <!-- <my-tag 
                             v-else
                             border 
                             :color="CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text]?.color" 
                             :bgColor="CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text]?.bgColor" 
                             :borderColor="CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text]?.borderColor">
                             {{ CRM_CUSTOMER_CENTER.ORDER_STATUS_MAP[text].text }}
-                        </my-tag>
+                        </my-tag> -->
                     </template>             
                     <!-- 付款方式 -->
                     <template v-if="column.key === 'pay_type'">
