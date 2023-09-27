@@ -34,9 +34,9 @@
                                     <span>【{{ logItem.new_value ? Core.Const.WORK_OPERATION.INTENTION.TYPE_MAP[logItem.new_value]?.text :  '-' }}】</span>   
                                 </template>   
                                 <template v-else>
-                                    <span>【{{ text || '-' }}】</span>
+                                    <span>【{{ logItem.old_value || '-' }}】</span>
                                     <span>变更为</span>
-                                    <span>【{{ text || '-' }}】</span>   
+                                    <span>【{{ logItem.new_value || '-' }}】</span>   
                                 </template>                           
                             </div>
                         </template>
