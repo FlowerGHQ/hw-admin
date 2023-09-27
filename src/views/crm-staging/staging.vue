@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <!-- 顶部筛选 -->
-            <Search @enter="searchEnter"/>
+            <Search @enter="searchEnter" @clearId="clearId" ref="search"/>
             <!-- 内容区域 -->
             <div class="content">
                 <div class="task-list" :style="{ width: '360px'}">
@@ -138,13 +138,17 @@ import { computed, nextTick, onMounted, reactive, ref, provide, getCurrentInstan
 import { useRoute, useRouter } from "vue-router";
 import dayjs from "dayjs";
 
-
+const router = useRouter()
 const route = useRoute()
+const id = ref(route.query?.id)
 const { proxy } = getCurrentInstance();
 onMounted(() => {    
     getAmountList()
     getTaskNum()
     getAllChildData()
+    if (id.value) {
+        search.value.openClear()
+    }
 })
 
 // a-drawer bodyStyle样式
@@ -179,6 +183,7 @@ const change = (index) => {
 
 // 搜索栏
 const searchMes = reactive({})
+const search = ref(null)
 const searchEnter = (value) => {
     Object.assign(searchMes, value)
     if (searchMes.time && searchMes.time.length > 0) {
@@ -259,14 +264,24 @@ const getAmountList = () => {
 }
 const getTaskNum = (params = {}, isSearch = false) => {
     scrollLoading.value = true
-    const obj = {
-        status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
-        status: staskStatus.value,
-        page_size: userPagination.page_size,
-        page: userPagination.page,
-        ...searchMes,
-        ...params
-	}
+    let obj = {}
+    if (id.value) {
+        obj = {
+            id: id.value ? id.value : undefined,
+            page_size: userPagination.page_size,
+            page: userPagination.page,
+	    }
+    } else {
+        obj = {
+            id: id.value ? id.value : undefined,
+            status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
+            status: staskStatus.value,
+            page_size: userPagination.page_size,
+            page: userPagination.page,
+            ...searchMes,
+            ...params
+	    }
+    }
     Core.Logger.success('params', obj)
     Core.Api.CustomService.list(obj).then(res=>{
         userPagination.total = res.count
@@ -285,6 +300,15 @@ const getTaskNum = (params = {}, isSearch = false) => {
         userId.value = taskList.value[taskIndex.value]?.id
         isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
         getAllChildData()
+        // id筛选用户状态回显
+        // switch (taskList.value[0]) {
+        //     case value:
+                
+        //         break;
+        
+        //     default:
+        //         break;
+        // }
 	}).catch(err=>{
         Core.Logger.error("参数", "数据", err)
 	}).finally(() => {
@@ -483,6 +507,10 @@ const handleScroll = (e, type) => {
                 break;
         }
     }
+}
+const clearId = () => {
+    router.replace({ query: {} })
+    id.value = undefined
 }
 provide('userId', userId); // 提供id
 provide('getTaskNum', getTaskNum); // 提供更新任务数据方法

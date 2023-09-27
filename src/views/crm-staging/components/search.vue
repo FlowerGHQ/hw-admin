@@ -133,7 +133,7 @@ const searchForm = reactive({
 // 	})
 // }
 const handleChange = (type) => {
-    clear.value = true
+    openClear()
     $emit('enter', searchForm)
     // switch (type) {
     //     case 'group':
@@ -172,7 +172,7 @@ const handleChange = (type) => {
 // 	})
 // }
 const handleSearch = () => {
-    clear.value = true
+    openClear()
     $emit('enter', searchForm)
 }
 const clearFn = () => {
@@ -181,9 +181,13 @@ const clearFn = () => {
         searchForm[key] = undefined
     }
     clear.value = false
+    $emit('clearId')
     $emit('enter', searchForm)
 }
-
+const openClear = () => {
+    clear.value = true
+}
+defineExpose({openClear})
 </script>
 
 <style lang="less" scoped>
