@@ -1,8 +1,11 @@
+
 export default {
 
   zh: {
     // 证书清单
     coc_certificateList: '证书清单',
+    // 证书列表
+    coc_certificate_list: '证书列表',
     // 批量下载
     coc_batchDownload: '批量下载',
     // 车架号
@@ -45,6 +48,7 @@ export default {
   en: {
     // 证书清单
     coc_certificateList: 'Certificate List',
+    coc_certificate_list: 'Certificate List',
     // 批量下载
     coc_batchDownload: 'Batch Download',
     // 车架号

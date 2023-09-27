@@ -1,8 +1,8 @@
 /*
  * @Author: douzhiyuan
  * @Date: 2023-09-25 15:47:20
- * @LastEditors: 
- * @LastEditTime: 2023-09-26 10:08:50
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-09-27 13:55:36
  * @Description: 请填写简介
  */
 export default {
@@ -53,6 +53,15 @@ export default {
     coc_view: '查看',
     // 证书清单
     coc_certificate_inventory: '证书清单',
+    // 最新生成时间
+    coc_newest_generated_time: '最新生成时间',
+    // 下载次数
+    coc_client_download_times: '下载次数',
+    // 重新生成
+    coc_re_generate: '重新生成',
+    // 车架号
+    coc_vin: '车架号',
+    coc_placeholder_vin: '请输入车架号',
 
   },
   en: {
@@ -101,6 +110,10 @@ export default {
     coc_view: 'View',
     // 证书清单
     coc_certificate_inventory: 'Certificate Inventory',
-
+    coc_newest_generated_time: 'Newest Generated Time',
+    coc_client_download_times: 'Download Times',
+    coc_re_generate: 'Re-Generate',
+    coc_vin: 'VIN',
+    coc_placeholder_vin: 'Please enter the VIN',
   }
 }

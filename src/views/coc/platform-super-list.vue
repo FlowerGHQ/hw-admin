@@ -165,7 +165,6 @@ const modalRef = ref(null)
 // 获取列表数据
 const getTableData = () => {
 	loading.value = true
-	console.log(channelPagination.page, channelPagination.pageSize)
 	getCocTemplateList({
 		page: channelPagination.page,
 		pageSize: channelPagination.pageSize,
@@ -194,16 +193,6 @@ const getRowDetails = (type, record) => {
 	}
 }
 const handleModal = (type = "add", record = {}) => {
-	// if (type === 'detail') {
-	// 	getRowDetails(record)
-	// 	isDisable.value = true
-	// } else if (type === 'edit') {
-	// 	getRowDetails(record)
-	// 	isDisable.value = false
-	// } else if (type === 'add') {
-	// 	recordItem.value = {}
-	// 	isDisable.value = false
-	// }
 	getRowDetails(type,record)
 	visible.value = true
 	modalType.value = type

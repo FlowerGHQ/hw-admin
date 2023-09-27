@@ -10,6 +10,7 @@ dayjs.extend(advancedFormat)
 dayjs.extend(localeData)
 dayjs.extend(weekday)
 
+
 const Util = {
   /* =============== 通用方法 ================ */
   /**
@@ -39,7 +40,6 @@ const Util = {
    */
   deepCopy(target) {
     let copyed_objs = []
-
     function _deepCopy(target) {
       if (typeof target === "string") {
         return target.trim()
@@ -147,12 +147,9 @@ const Util = {
   // dayjs 将一个Dayjs对象转换成秒时间戳或毫秒时间戳
 
   dayjsToTimestamp(value) {
-    //   判断是否为Dayjs对象，console
-    if (dayjs.isDayjs(value)) {
-      return dayjs(value).format("X")
-    } else {
-      return value
-    }
+    //   判断是否为Dayjs对象
+    return   dayjs(value).format("X")
+
   },
   /**
    * 将秒时间戳或毫秒时间戳转换成对应格式

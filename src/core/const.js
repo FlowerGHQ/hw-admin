@@ -29,11 +29,11 @@ switch (window.location.hostname) {
   default:
     // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
     // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-    URL_POINT = "http://eos-dev-api.horwincloud.com" //测试服
+    // URL_POINT = "http://eos-dev-api.horwincloud.com" //测试服
     // URL_POINT = 'http://10.0.0.170:8889' // my
     // URL_POINT = 'http://10.0.0.170:8889' // my
     // URL_POINT = 'http://10.0.0.213:8889' // zwq
-    // URL_POINT = 'http://10.10.12.75:8889'  // zy
+    URL_POINT = 'http://10.10.12.75:8889'  // zy
     break
 }
 
@@ -56,7 +56,6 @@ let Const = {
     KEY_USER_TYPE: "user.type",
     KEY_AUTHORITY_LIST: "authority.list",
     KEY_CURRENCY: "org.currency",
-
     KEY_FIELD_DISPLAY: "field.display",
     KEY_LANGUAGE: "language",
     TAB_POSITION: "tab.position",

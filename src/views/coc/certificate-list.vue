@@ -3,6 +3,8 @@
 		<div class="list-container">
 			<div class="title-container">
 				<div class="title-area">
+					{{$t('coc_business.coc_order_number')}}
+						<a class="order-link">{{oderNumer}}</a>
 					{{ $t("certificate-list.coc_certificateList") }}
 				</div>
 			</div>
@@ -71,6 +73,7 @@
 					:columns="palrformTableColumns"
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
+					:loading="loading"
 					@change="handleTableChange"
 					:row-selection="{
 						selectedRowKeys: selectedRowKeyArr,
@@ -83,7 +86,7 @@
 					<template #headerCell="{ title }">
 						{{ $t(title) }}
 					</template>
-					<template #bodyCell="{ column, text, record }">
+					<template #bodyCell="{ column, text, record }"> 
 						<template v-if="column.key === 'coc_operation'">
 							<a-button
 								type="link"
@@ -117,19 +120,6 @@
 				</a-table>
 			</div>
 		</div>
-		<!-- 文档预览'doc-common', 'doc-wrap' -->
-		<div :class="{ 'doc-common': !docHidden, 'doc-wrap': docHidden }">
-			<close-outlined
-				class="close-btn"
-				@click="
-					() => {
-						docHidden = false
-					}
-				"
-			/>
-			<!-- 预览文件的地方（用于渲染） -->
-			<div ref="refFile"></div>
-		</div>
 	</div>
 </template>
 
@@ -141,31 +131,32 @@ import {
 	computed,
 	onMounted,
 	toRefs,
+	watch
 } from "vue"
 import { useRoute } from "vue-router"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
-import { CloseOutlined } from "@ant-design/icons-vue"
-import { renderAsync } from "docx-preview"
 import fileSave from "@/core/fileSave"
 const { proxy } = getCurrentInstance()
 const COC = Core.Const.COC
 const Util = Core.Util
 const { $t } = proxy
 const { TAB_TYPE } = COC
-// 获取路由参数
-const route = useRoute()
-const { query } = route
-const { isDistributor, order_number } = query
-const distributor = ref(isDistributor === "true") // 是否是经销商
 const {
 	getCertificateDetailList,
 	getCertificatNumber,
 	downLoadCertificateDetailLis,
 } = Core.Api.COC
+// 获取路由参数
+const route = useRoute()
+const { query } = route
+const { isDistributor, order_number } = query
+
+const distributor = ref(isDistributor === "true") // 是否是经销商
+
 const activeKey = ref(undefined) // tab切换
 const selectedRowKeyArr = ref([]) // 选中的哪些项
-
+const oderNumer = ref(order_number) // 订单号
 const searchForm = reactive({
 	certificate_status: 0,
 	delivery_end_time: "",
@@ -243,8 +234,20 @@ const palrformTableColumns = ref([
 		key: "coc_operation",
 	},
 ])
+const loading = ref(false)
+const { FILE_URL_PREFIX } = Core.Const.NET
+
+const props = defineProps({
+	cocProps: {
+		type: Object,
+		default: () => {},
+	},
+})
+console.log("cocProps", props.cocProps)
+
 // 获取列表
 const getCerList = (from = {}) => {
+	loading.value = true
 	let params = {
 		...from,
 		...searchForm,
@@ -256,9 +259,12 @@ const getCerList = (from = {}) => {
 			Core.Logger.success("参数", from, "结果", res)
 			channelPagination.total = res.count
 			palrformTableData.value = res.list
+			loading.value = false
 		})
 		.catch((err) => {
 			Core.Logger.error("参数", from, "结果", err)
+		}).finally(() => {
+			loading.value = false
 		})
 }
 // 筛选type
@@ -268,7 +274,9 @@ const tab_type = computed(() => {
 })
 // 获取数量信息
 const getAllNumer = () => {
-	getCertificatNumber()
+	getCertificatNumber({
+		order_number: query.order_number,
+	})
 		.then((res) => {
 			numberForm[0].number = res?.total_num || 0
 			numberForm[1].number = res?.generated_num || 0
@@ -287,8 +295,6 @@ const handleReset = () => {
 	searchForm.motor_uid = ""
 	searchForm.order_number = route.query.order_number
 	searchForm.vehicle_uid = ""
-	// 重置分页，数据更新但视图不更新，原因是因为reactive的原因，所以需要重新赋值，可以用toRefs解决
-
 	const { page, pageSize, current } = toRefs(channelPagination)
 	page.value = 1
 	current.value = 1
@@ -349,19 +355,10 @@ const onDownLoad = (record, array) => {
 			Core.Logger.error("参数", {}, "结果", JSON.stringify(err))
 		})
 }
-const refFile = ref(null)
-const docHidden = ref(false)
 // 查看文档
 const onView = (record) => {
-	let list = record?.id ? [record.id] : selectedRowKeyArr.value
-	downLoadCertificateDetailLis({
-		download_list: list,
-		source_type: 2,
-	}).then((res) => {
-		const { data } = res
-		renderAsync(data, refFile.value) // 渲染到页面
-		docHidden.value = true
-	})
+	let url = 'http://view.officeapps.live.com/op/view.aspx?src=' +FILE_URL_PREFIX +record.file_url
+  window.open(url, '_blank')	
 }
 const onDeliveryTime = (params) => {
 	searchForm.delivery_start_time = params.begin_time
@@ -369,9 +366,13 @@ const onDeliveryTime = (params) => {
 }
 onMounted(() => {
 	searchForm.order_number = order_number
+	if (props.cocProps&&Object.keys(props.cocProps).length > 0) { 
+		searchForm.order_number = props.cocProps.order_number
+		distributor.value = props.cocProps.isDistributor
+		oderNumer.value = props.cocProps.order_number
+	}
 	let params = Core.Util.deepCopy(searchForm)
 	getCerList(params)
-	console.log("distributor", distributor.value)
 	if (!distributor.value) {
 		getAllNumer()
 	}
@@ -381,27 +382,26 @@ onMounted(() => {
 <style lang="less" scoped>
 .distributor-coc-list {
 	position: relative;
-	.btn-area {
-		justify-content: flex-end;
+	.list-container{
+		.title-container{
+			.title-area{
+				.order-link{
+					text-decoration: underline;
+					
+				}
+			}
+
+		}
+		.search{
+				.row-detail{
+					.btn-area{
+						justify-content: flex-end !important;
+					}
+				}
+
+			}
 	}
-	.doc-wrap {
-		width: 100%;
-		height: 100vh;
-		position: absolute;
-		top: 0;
-		right: 0;
-		z-index: 999;
-	}
-	.doc-common {
-		display: none;
-	}
-	.close-btn {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		font-size: 20px;
-		cursor: pointer;
-	}
+
 }
 .cancel-m-b {
 	margin-bottom: 0;

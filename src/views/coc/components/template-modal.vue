@@ -63,11 +63,10 @@
           name="coc_validity_date"
         >
           <a-range-picker
-            :show-time="{ format: 'HH:mm:ss' }"
+            :show-time="{ format: 'HH:mm' }"
             v-model:value="searchForm.coc_validity_date"
             :disabled="isDisable"
             valueFormat="X"
-            format="X"
             :placeholder="[$t('coc.coc_start_date'), $t('coc.coc_start_date')]"
           />
         </a-form-item>
@@ -119,11 +118,10 @@ import {
   ref,
   onMounted,
   watch,
-  computed,
+  toRef,
   getCurrentInstance,
 } from "vue"
 import TemplateUpload from "./template-upload.vue"
-import dayjs from "dayjs"
 const Util = Core.Util
 const FILE_URL_PREFIX = Core.Const.NET.FILE_URL_PREFIX
 const { getCateGoryList, viewCocTemplate, addCocTemplate } = Core.Api.COC
@@ -159,7 +157,6 @@ const refForm = ref(null)
 const upload = ref({})
 // validate
 const validateDate = async (rule, value) => {
-  console.log("value", value)
   if (value && value.length > 0) {
     return Promise.resolve()
   }
@@ -224,48 +221,53 @@ const searchForm = reactive({
   coc_validity_date: [],
   model: [],
   fileList: [],
+  id:''
 })
 
 watch(
   () => props.recordItem,
   (newVal) => {
+    console.log("newVal", newVal)
     let arr = Util.deepCopy(newVal)
-    console.log("arr", dayjsReview(arr.effective_start_time))
-    console.log("arr", dayjsReview(arr.effective_end_time))
-    if (arr.model) {
-      arr.model = arr.model.split(",")
-    }
+    if (Object.keys(arr).length === 0) {
+      searchForm.name = ""
+      searchForm.version_number = ""
+      searchForm.coc_validity_date = []
+      searchForm.model = []
+      searchForm.fileList = []
+    } else { 
+        if (arr.model) {
+              arr.model = arr.model.split(",")
+            }
 
-    if (arr.file_url) {
-      console.log("arr.file_url", arr.file_url)
-      arr.fileList = [
-        {
-          uid: "-1",
-          name: arr.name,
-          status: "done",
-          url: FILE_URL_PREFIX + arr.file_url,
-          response: {
-            code: 0,
-            data: {
+        if (arr.file_url) {
+          arr.fileList = [
+            {
+              uid: "-1",
               name: arr.name,
-              filename: arr.file_url,
+              status: "done",
+              url: FILE_URL_PREFIX + arr.file_url,
+              response: {
+                code: 0,
+                data: {
+                  name: arr.name,
+                  filename: arr.file_url,
+                },
+              },
             },
-          },
-        },
-      ]
+          ]
+        }
+        arr.coc_validity_date = [
+          dayjsReview(arr.effective_start_time),
+          dayjsReview(arr.effective_end_time),
+        ]
+      // 将arr中所有的key转成searchForm中的key
+      for (let key in arr) {
+        searchForm[key] = arr[key]
+      }
     }
-    searchForm.name = arr.name
-    searchForm.version_number = arr.version_number
-    searchForm.coc_validity_date = [
-      dayjsReview(arr.effective_start_time),
-      dayjsReview(arr.effective_end_time),
-    ]
-    searchForm.model = arr.model
-    searchForm.fileList = arr?.fileList || []
-    console.log("searchForm", searchForm.coc_validity_date)
   },
   {
-    immediate: true,
     deep: true,
   }
 )
@@ -293,16 +295,15 @@ const handleOk = () => {
     .validate()
     .then((res) => {
       // 整合数据
-      let data = Util.deepCopy(searchForm)
+      let data = JSON.parse(JSON.stringify(searchForm))
+      // Dayjs深拷贝会报错，所以用JSON，但是JSON会把时间戳转成字符串，所以要转回来
+      data.effective_start_time =Number( dayjsToTimestamp(data.coc_validity_date[0]))
+      data.effective_end_time = Number(dayjsToTimestamp(data.coc_validity_date[1]))
       data.model = data.model.length > 1 ? data.model.join(",") : data.model[0]
       data.file_url =
         data.fileList.length > 0 ? data.fileList[0].response.data.filename : ""
-      console.log(data.coc_validity_date[0])
-      data.effective_start_time = dayjsToTimestamp(data.coc_validity_date[0])
-      data.effective_end_time = dayjsToTimestamp(data.coc_validity_date[1])
       delete data.fileList
       delete data.coc_validity_date
-      console.log("data", data)
       hanleeEdit(data)
     })
     .catch((err) => {

@@ -136,14 +136,14 @@ const handleFileReupload = (item) => {
 const handleFileDelete = (item) => {
 	upload.fileList = []
 }
-const handleFileview = () => {
-	// console.log(item)
-  //     let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + item.url
-  //     // window.open()居中打开
-  //     const width = 1000; const height = 800
-  //     const top = (window.screen.availHeight - height) / 2
-  //     const left = (window.screen.availWidth - width) / 2
-  //     window.open(url, '', 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left)
+const handleFileview = (item) => {
+	console.log(item)
+      let url = 'http://view.officeapps.live.com/op/view.aspx?src=' + item.url
+      window.open(url, '_blank')
+      // const width = 1000; const height = 800
+      // const top = (window.screen.availHeight - height) / 2
+      // const left = (window.screen.availWidth - width) / 2
+      // window.open(url, '', 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left)
 }
 </script>
 

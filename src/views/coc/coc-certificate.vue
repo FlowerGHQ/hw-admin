@@ -3,7 +3,11 @@
 		<div class="list-container">
 			<div class="title-container">
 				<div class="title-area">
-					{{ $t("coc_business.coc_certificate_list") }}
+					{{
+						isChangeTable
+							? $t("certificate-list.coc_certificateList")
+							: $t("coc_business.coc_certificate_list")
+					}}
 				</div>
 				<div class="btns-area">
 					<a-button type="primary" @click="batchDownload">{{
@@ -12,7 +16,10 @@
 				</div>
 			</div>
 			<!-- tabs -->
-			<div class="tabs-container colorful cancel-m-b">
+			<div
+				class="tabs-container colorful cancel-m-b"
+				v-if="roles['SALESMAN'] || roles['SUPER_ADMIN ']"
+			>
 				<a-tabs v-model:activeKey="activeKey" @change="handleTabs">
 					<a-tab-pane v-for="item of COC.TAB_TYPE" :key="item.key">
 						<template #tab>
@@ -34,20 +41,30 @@
 							></a-input>
 						</div>
 					</a-col>
+					<!-- 车架号 -->
+					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+						<div class="key">{{ $t("coc_business.coc_vin") }}：</div>
+						<div class="value">
+							<a-input
+								v-model:value="searchForm.vehicle_uid"
+								:placeholder="$t('coc_business.coc_placeholder_vin')"
+							></a-input>
+						</div>
+					</a-col>
 					<!-- 下单时间 -->
 					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
 						<div class="key">{{ $t("coc_business.coc_order_time") }}：</div>
 						<div class="value">
-							<TimeSearch @search="onPlaceOrderTime" />
+							<TimeSearch @search="onPlaceOrderTime" ref="oderTimeRef" />
 						</div>
 					</a-col>
 					<!-- 发货时间 -->
-					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+					<!-- <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
 						<div class="key">{{ $t("coc_business.coc_delivery_time") }}：</div>
 						<div class="value">
 							<TimeSearch @search="onDeliveryTime" />
 						</div>
-					</a-col>
+					</a-col> -->
 					<!-- 按钮 -->
 					<a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item btn-area">
 						<a-button @click="handleReset">{{
@@ -63,9 +80,12 @@
 			<div class="table-container">
 				<a-table
 					:row-key="(record) => record.id"
-					:columns="palrformTableColumns"
+					:columns="
+						!isChangeTable ? fiflterColumns : fiflterColumns_certificate
+					"
 					:data-source="palrformTableData"
 					:pagination="channelPagination"
+					:loading="loading"
 					@change="handleTableChange"
 					:row-selection="{
 						selectedRowKeys: selectedRowKeyArr,
@@ -88,6 +108,28 @@
 							>
 							<a-button type="link" @click="onView(record)">{{
 								$t("coc_business.coc_certificate_inventory")
+							}}</a-button>
+							<!-- 重新生成 -->
+							<a-button type="link" @click="reRenerate(record)" danger>{{
+								$t("coc_business.coc_re_generate")
+							}}</a-button>
+						</template>
+						<template v-else-if="column.key === 'coc_operation'">
+							<a-button
+								type="link"
+								@click="onDownLoad(record)"
+								:disabled="record.certificate_status !== 1"
+								>{{ $t("certificate-list.coc_download") }}</a-button
+							>
+							<a-button
+								type="link"
+								@click="onCoCView(record)"
+								:disabled="record.certificate_status !== 1"
+								>{{ $t("certificate-list.coc_view") }}</a-button
+							>
+							<!-- 重新生成 -->
+							<a-button type="link" @click="reRenerate(record)" danger>{{
+								$t("coc_business.coc_re_generate")
 							}}</a-button>
 						</template>
 						<!-- 状态 -->
@@ -115,6 +157,9 @@
 								@change="handleSwitch(record)"
 							/>
 						</template>
+						<template v-else-if="column.key === 'last_generation_time'">
+							<span>{{ Util.timeFormat(record.last_generation_time) }}</span>
+						</template>
 					</template>
 				</a-table>
 			</div>
@@ -123,7 +168,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance, onMounted } from "vue"
+import { ref, reactive, getCurrentInstance, onMounted, computed } from "vue"
 import Core from "@/core"
 import TimeSearch from "@/components/common/TimeSearch.vue"
 const { proxy } = getCurrentInstance()
@@ -138,49 +183,142 @@ const {
 	downLoadCertificateDetailLis,
 	setCertificateVisible,
 } = Core.Api.COC
+const { FILE_URL_PREFIX } = Core.Const.NET
 
-console.log(
-	"是不是分销商:",
-	Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR,
-	"是不是管理员：",
-	Core.Data.getManager()
-)
+const roles = reactive({
+	DISTRIBUTOR: Core.Data.getLoginType() === Core.Const.USER.TYPE.DISTRIBUTOR,
+	SUPER_ADMIN: Core.Data.getManager(),
+	// 业务员
+	SALESMAN:
+		!Core.Data.getManager() &&
+		Core.Data.getLoginType() !== Core.Const.USER.TYPE.DISTRIBUTOR,
+})
+
 // 定义变量
 const palrformTableColumns = ref([
 	{
 		title: "coc_business.coc_order_number",
 		dataIndex: "order_number",
 		key: "order_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
 	},
 	{
 		title: "coc_business.coc_certificate_status",
 		dataIndex: "certificate_status",
 		key: "certificate_status",
+		roles: ["SUPER_ADMIN", "SALESMAN"],
 	},
 	{
 		title: "coc_business.coc_order_time",
 		dataIndex: "order_time",
 		key: "order_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
 	},
 	{
 		title: "coc_business.coc_delivery_time",
 		dataIndex: "delivery_time",
 		key: "delivery_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
 	},
 	{
 		title: "coc_business.coc_download_times",
 		dataIndex: "download_number",
 		key: "download_number",
+		roles: ["SUPER_ADMIN", "SALESMAN"],
+	},
+	{
+		title: "coc_business.coc_client_download_times",
+		dataIndex: "download_number",
+		key: "download_number",
+		roles: ["DISTRIBUTOR"],
 	},
 	{
 		title: "coc_business.coc_customer_visible",
 		dataIndex: "visible_flag",
 		key: "visible_flag",
+		roles: ["SALESMAN"],
+	},
+	{
+		title: "coc_business.coc_newest_generated_time",
+		dataIndex: "last_generation_time",
+		key: "last_generation_time",
+		roles: ["SUPER_ADMIN", "DISTRIBUTOR"],
 	},
 	{
 		title: "coc_business.coc_operation",
 		dataIndex: "operation",
 		key: "operation",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+	},
+])
+const palrformTableColumns_certificate = ref([
+	{
+		title: "certificate-list.coc_orderNumber",
+		dataIndex: "order_number",
+		key: "order_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+	},
+	{
+		title: "certificate-list.coc_vehicleName",
+		dataIndex: "model_name",
+		key: "model_name",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+	},
+	{
+		title: "certificate-list.coc_vehicleCode",
+		dataIndex: "model_number",
+		key: "model_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_vin",
+		dataIndex: "vehicle_uid",
+		key: "vehicle_uid",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_motor",
+		dataIndex: "motor_uid",
+		key: "motor_uid",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_cocStatus",
+		dataIndex: "certificate_status",
+		key: "certificate_status",
+		roles: ["SUPER_ADMIN", "SALESMAN"],
+
+	},
+	{
+		title: "certificate-list.coc_orderTime",
+		dataIndex: "order_time",
+		key: "order_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_deliveryTime",
+		dataIndex: "delivery_time",
+		key: "delivery_time",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_downloadTimes",
+		dataIndex: "download_number",
+		key: "download_number",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
+	},
+	{
+		title: "certificate-list.coc_operation",
+		dataIndex: " ",
+		key: "coc_operation",
+		roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+
 	},
 ])
 const palrformTableData = ref([])
@@ -198,10 +336,35 @@ let channelPagination = reactive({
 const activeKey = ref(undefined) // tab切换
 const searchForm = ref({})
 const selectedRowKeyArr = ref([]) // 选中的哪些项
-/* fetch start */
+const loading = ref(false)
+const oderTimeRef = ref(null)
+// 是否切换table
+const isChangeTable = ref(false)
+/* computed */
+const fiflterColumns = computed(() => {
+	// 查看roles谁为真，就返回谁
+	let role = Object.keys(roles).filter((item) => roles[item])[0]
+	console.log("role", role)
+	let arr = []
+	arr = palrformTableColumns.value.filter((item) => {
+		return item.roles.includes(role)
+	})
+	return arr
+})
+const fiflterColumns_certificate = computed(() => {
+	// 查看roles谁为真，就返回谁
+	let role = Object.keys(roles).filter((item) => roles[item])[0]
+	console.log("role", role)
+	let arr = []
+	arr = palrformTableColumns_certificate.value.filter((item) => {
+		return item.roles.includes(role)
+	})
+	return arr
+})
 
 // 请求证书列表
 const certificateList = () => {
+	loading.value = true
 	let pagination = {
 		page: channelPagination.page,
 		page_size: channelPagination.pageSize,
@@ -214,28 +377,43 @@ const certificateList = () => {
 			palrformTableData.value.forEach((item) => {
 				return (item.visible_flag = item.visible_flag === 1 ? true : false)
 			})
-			console.log("palrformTableData", palrformTableData)
-			// Core.Logger.success("参数", searchForm, "结果", res)
+			loading.value = false
 		})
 		.catch((err) => {
 			Core.Logger.error("参数", searchForm, "结果", err)
 			$message.error(err.message)
 		})
+		.finally(() => {
+			loading.value = false
+		})
 }
 const handleSearch = () => {
 	let params = {
 		...searchForm.value,
-		certificate_status: activeKey.value,
+	}
+	// 判断是否存在状态判断，如果存在就赋值
+	if (activeKey.value) {
+		params.certificate_status = activeKey.value
+	}
+	console.log("params", params)
+	// 查看是否存在
+	if (params.vehicle_uid) {
+		isChangeTable.value = true
 	}
 	certificateList(params)
 }
 const handleReset = () => {
 	searchForm.value = {}
 	activeKey.value = 0
+	oderTimeRef.value.handleReset()
 	channelPagination.page = 1
 	channelPagination.current = 1
 	channelPagination.pageSize = 20
+	isChangeTable.value = false
 	certificateList()
+}
+const reRenerate = (record) => {
+	Core.Logger.log("重新生成")
 }
 // table chang 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
@@ -286,7 +464,7 @@ const onDownLoad = (record, array) => {
 	downLoadCertificateDetailLis({
 		download_list: list,
 		// source_type: Core.Const.COC.DOWN_LOAD_TYPE[1].key,
-		source_type: 1,
+		source_type: !isChangeTable?1:2,
 	})
 		.then((res) => {
 			// const str = 'xxxxfile-name=example.txt';
@@ -302,9 +480,6 @@ const onDownLoad = (record, array) => {
 		})
 }
 
-onMounted(() => {
-	certificateList()
-})
 
 // 查看
 const onView = (record) => {
@@ -318,25 +493,27 @@ const onView = (record) => {
 		},
 	})
 }
+// 清单列表数据的查看
+const onCoCView = (record) => {
+	    let url = 'http://view.officeapps.live.com/op/view.aspx?src=' +FILE_URL_PREFIX +record.file_url
+      window.open(url, '_blank')
+}
 // 下单时间
 const onPlaceOrderTime = (params) => {
 	Core.Logger.log("下单时间", params)
 	searchForm.value.order_start_time = params.begin_time
 	searchForm.value.order_end_time = params.end_time
 }
-// 发货时间
-const onDeliveryTime = (params) => {
-	Core.Logger.log("发货时间", params)
-	searchForm.value.delivery_start_time = params.begin_time
-	searchForm.value.delivery_end_time = params.end_time
-}
 
-/* methods end */
+onMounted(() => {
+	certificateList()
+})
+
 </script>
 
 <style lang="less" scoped>
 // 获取minxin
-.coc-certificate{
+.coc-certificate {
 	.btn-area {
 		.fj(flex-end);
 	}
