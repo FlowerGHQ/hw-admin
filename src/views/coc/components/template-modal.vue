@@ -209,7 +209,7 @@ const rules = reactive({
   ],
   upload: [
   	{
-  		required: false,
+  		required: true,
   		trigger: ["change", "blur"],
   		validator: validateUpload,
   	},
