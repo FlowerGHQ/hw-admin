@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{vue,js,ts,json,html,css,less,md}\""
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",
@@ -28,6 +29,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "2.3.1",
     "vite": "2.9.5",
-    "vite-plugin-components": "0.13.3"
+    "vite-plugin-components": "0.13.3",
+    "prettier": "^3.0.3"
   }
 }
