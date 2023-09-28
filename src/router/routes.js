@@ -1664,7 +1664,7 @@ const routes = [
 			// },
 		]
 	},
-	{ // 客户
+	{ // 好物订单
 		path: '/good-items-order',
 		component: Layout,
 		redirect: '/good-items-order/order-list',
