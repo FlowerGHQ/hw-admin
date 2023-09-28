@@ -1665,10 +1665,10 @@ const routes = [
 		]
 	},
 	{ // 客户
-		path: '/crm-customer',
+		path: '/good-items-order',
 		component: Layout,
-		redirect: '/crm-customer/customer-list',
-		name: 'CRMCustomerManagement',
+		redirect: '/good-items-order/order-list',
+		name: 'good-items-order',
         type: [ROUTER_TYPE.CRM],
         meta: {
             title: '好物订单',
