@@ -27,11 +27,24 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
+    case 'eos.hw.innotick.com':
+        URL_POINT = 'http://eos-api.horwincloud.com' // 老正式服
+        break;
+    case 'eos-dev.hw.innotick.com':
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
+        break;
+    case 'eos-release.horwincloud.com':
+        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
+        break;
     default:
         URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.10.12.75:8889'
+        // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.213:8889' // zwq
+        // URL_POINT = 'http://10.0.0.190:8889' // zy
+        // URL_POINT = 'http://10.10.12.204:8888' // zny
         break;
 }
 
@@ -1195,9 +1208,9 @@ let Const = {
             REPAIR_ORDER_DEDUCTIONS: 50,
         },
         SUBJECT_MAP: {
-            '101': { key: 101, zh: '管理员操作', en: 'Admin action' },
-            '201': { key: 201, zh: '采购单', en: 'Purchase order' },
-            '501': { key: 501, zh: '维修单', en: 'Repair order' },
+            '10': { key: 10, zh: '管理员操作', en: 'Admin action' },
+            '20': { key: 20, zh: '采购单', en: 'Purchase order' },
+            '50': { key: 50, zh: '维修单', en: 'Repair order' },
         }
     },
     FAULT_ENTITY: { //故障件
@@ -1656,33 +1669,33 @@ let Const = {
             DISTRIBUTE: 40,          // 40代理分销
             OTHER: 50,               // 50其他
         },
-		TYPE_MAP: {
-			'10': { key: 10, zh: '产品销售',en: 'Product Sales', value: 10 },
-			'20': { key: 20, zh: '业务合作',en: 'Cooperation', value: 20 },
-			'30': { key: 30, zh: '服务',en: 'Service', value: 30 },
-			'40': { key: 40, zh: '代理分销',en: 'Distribute', value: 40 },
-			'50': { key: 50, zh: '其他',en: 'Others', value: 50 },
-		},
-		STATUS: {
-            // 对应下面 STATUS_MAP
-            WAIT_AUDIT: 20,      
-            REFUSE: 30,          
-            TOBEPAID: 35,        
-            EXECUTING: 40,       
-            REFUND: 44,          
-            REFUND_PROGRESS: 44, 
-            FINISH: 50,          
+        TYPE_MAP: {
+            '10': { key: 10, zh: '产品销售', en: 'Product Sales', value: 10 },
+            '20': { key: 20, zh: '业务合作', en: 'Cooperation', value: 20 },
+            '30': { key: 30, zh: '服务', en: 'Service', value: 30 },
+            '40': { key: 40, zh: '代理分销', en: 'Distribute', value: 40 },
+            '50': { key: 50, zh: '其他', en: 'Others', value: 50 },
         },
-		STATUS_MAP: {
-			'10': { key: 10, zh: '初始化',en: 'Init', value: 10 },
-			'20': { key: 20, zh: '待审核',en: 'Pending Review', value: 20 },
-			'30': { key: 30, zh: '审核拒绝',en: 'Review Rejected', value: 30 },
-			'35': { key: 35, zh: '待支付',en: 'To be paid', value: 35 },
-			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
-			'44': { key: 44, zh: '申请退款',en: 'Apply for a refund', value: 44 },            
-			'46': { key: 46, zh: '退款中',en: 'Refund in progress', value: 46 },
-			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
-		},
+        STATUS: {
+            // 对应下面 STATUS_MAP
+            WAIT_AUDIT: 20,
+            REFUSE: 30,
+            TOBEPAID: 35,
+            EXECUTING: 40,
+            REFUND: 44,
+            REFUND_PROGRESS: 44,
+            FINISH: 50,
+        },
+        STATUS_MAP: {
+            '10': { key: 10, zh: '初始化', en: 'Init', value: 10 },
+            '20': { key: 20, zh: '待审核', en: 'Pending Review', value: 20 },
+            '30': { key: 30, zh: '审核拒绝', en: 'Review Rejected', value: 30 },
+            '35': { key: 35, zh: '待支付', en: 'To be paid', value: 35 },
+            '40': { key: 40, zh: '执行中', en: 'Executing', value: 40 },
+            '44': { key: 44, zh: '申请退款', en: 'Apply for a refund', value: 44 },
+            '46': { key: 46, zh: '退款中', en: 'Refund in progress', value: 46 },
+            '50': { key: 50, zh: '已结束', en: 'Finished', value: 50 },
+        },
         CUSTOMER_MAP: {
             '10': { key: 10, zh: '私人客户', en: 'Private client', value: 10 },
             '40': { key: 40, zh: '公海客户', en: 'High seas customers', value: 40 },
