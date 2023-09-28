@@ -144,10 +144,21 @@ const id = ref(route.query?.id)
 const { proxy } = getCurrentInstance();
 onMounted(() => {    
     getAmountList()
-    getTaskNum()
     getAllChildData()
     if (id.value) {
         search.value.openClear()
+        Core.Api.CustomService.detail({ id: id.value }).then(res=>{
+            // id筛选用户状态回显
+            if (res.province || res.city) {
+                staskStatusChange(1)
+            } else {
+                staskStatusChange(0)
+            }
+	    }).catch(err=>{
+            Core.Logger.error("参数", "数据", err)
+	    })
+    } else {
+        getTaskNum()
     }
 })
 
@@ -264,24 +275,14 @@ const getAmountList = () => {
 }
 const getTaskNum = (params = {}, isSearch = false) => {
     scrollLoading.value = true
-    let obj = {}
-    if (id.value) {
-        obj = {
-            id: id.value ? id.value : undefined,
-            page_size: userPagination.page_size,
-            page: userPagination.page,
-	    }
-    } else {
-        obj = {
-            id: id.value ? id.value : undefined,
-            status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
-            status: staskStatus.value,
-            page_size: userPagination.page_size,
-            page: userPagination.page,
-            ...searchMes,
-            ...params
-	    }
-    }
+    let obj = {
+        status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
+        status: staskStatus.value,
+        page_size: userPagination.page_size,
+        page: userPagination.page,
+        ...searchMes,
+        ...params
+	}
     Core.Logger.success('params', obj)
     Core.Api.CustomService.list(obj).then(res=>{
         userPagination.total = res.count
