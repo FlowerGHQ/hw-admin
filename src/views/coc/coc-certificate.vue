@@ -154,10 +154,10 @@
 							<span>{{ Util.timeFormat(record.delivery_time) }}</span>
 						</template>
 						<!-- 客户是否可见 -->
-						<template v-else-if="column.key === 'visible_flag'">
+						<template v-else-if="column.key === 'flag_show'">
 							<!-- switch -->
 							<a-switch
-								v-model:checked="record.visible_flag"
+								v-model:checked="record.flag_show"
 								@change="handleSwitch(record)"
 							/>
 						</template>
@@ -241,8 +241,8 @@ const palrformTableColumns = ref([
 	},
 	{
 		title: "coc_business.coc_customer_visible",
-		dataIndex: "visible_flag",
-		key: "visible_flag",
+		dataIndex: "flag_show",
+		key: "flag_show",
 		roles: ["SALESMAN"],
 	},
 	{
@@ -374,7 +374,7 @@ const certificateList = () => {
 			channelPagination.total = res.count
 			palrformTableData.value = res.list
 			palrformTableData.value.forEach((item) => {
-				return (item.visible_flag = item.visible_flag === 1 ? true : false)
+				return (item.flag_show = item.flag_show === 1 ? true : false)
 			})
 			loading.value = false
 		})
@@ -448,10 +448,10 @@ const handleTableChange = (pagination, filters, sorter) => {
 	certificateList()
 }
 const handleSwitch = (record) => {
-	let isOpen = record.visible_flag
+	let isOpen = record.flag_show
 	let params = {
 		order_number: record.order_number,
-		visible_flag: isOpen ? 1 : 0,
+		flag_show: isOpen ? 1 : 0,
 	}
 	setCertificateVisible(params)
 		.then((res) => {
