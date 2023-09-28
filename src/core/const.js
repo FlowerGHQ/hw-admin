@@ -2376,7 +2376,7 @@ let Const = {
             // '1': { key: 1, zh: '新春贺礼订单', en: 'New Year Gift Order',value:1 },
             // '1': { key: 1, zh: '投票分享', en: 'Voting Sharing', value: 1 },
             '2': { key: 2, zh: '分享好友', en: 'Share friends', value: 2 },
-            '3': { key: 3, zh: '投票抽奖', en: 'Voting lottery', value: 2 },
+            '3': { key: 3, zh: '投票抽奖', en: 'Voting lottery', value: 3 },
         },
         // 修改好物订单记录
         Update_Record: {
