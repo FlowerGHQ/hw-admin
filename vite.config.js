@@ -26,8 +26,6 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, 'src'),
         '@images': path.resolve(__dirname, 'src/assets/images'),
-        // vue-i18n在开发环境下使用runtime-only模式, 生产环境使用runtime-compiler模式,避免打包体积过大，在本地出现warrning
-        'vue-i18n': mode === 'development' ? 'vue-i18n/dist/vue-i18n.cjs.js' : 'vue-i18n/dist/vue-i18n.runtime.esm-bundler.js'
       }
     },
     css: {
