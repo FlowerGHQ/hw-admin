@@ -2395,6 +2395,5 @@ let Const = {
         }
     }
 };
-console.log("输出的东西是什么", Const);
 
 export default Const;
