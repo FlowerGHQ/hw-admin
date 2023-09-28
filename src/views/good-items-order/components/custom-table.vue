@@ -245,13 +245,17 @@ const handleSearch = () => {
     getTableDataFetch({
         page_size: channelPagination.value.pageSize,
         page: channelPagination.value.current,
-        status:props.activeKey,sn, user_phone,to_name,waybill_uid
+        status:props.activeKey,
+        sn,
+        user_phone,
+        to_name,
+        waybill_uid
     });
 };
 // 重置按钮
 const handleSearchReset = () => {
     let Pag = toRaw({...channelPagination.value});
-    Object.assign(searchForm.value, {sn: '',user_phone: '',to_name: '',courier_number: ''})
+    Object.assign(searchForm.value, {sn: '',user_phone: '',to_name: '',waybill_uid: ''})
     Object.assign(channelPagination.value, {...Pag})
     handleSearch();
 };
@@ -286,7 +290,7 @@ defineExpose({ handleSearchReset })
         }
     }
     .btn-right {
-
+        
     }
 }
 

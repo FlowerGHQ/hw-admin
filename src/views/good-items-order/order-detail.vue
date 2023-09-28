@@ -60,7 +60,7 @@
     </div>
     <div class="d-bottom">
       <!-- 订单进度 -->
-      <div class="order-schedule">
+      <div class="order-schedule"  v-if="false">
         <div class="title">
           {{ $t("retail.order_progress") }}
           <div class="order-number-box">
@@ -575,7 +575,7 @@ const getWayillDetail = () => {
       }
     }
     .payment-msg {
-      margin-top: 20px;
+      // margin-top: 20px;
     }
     .refund-msg {
       margin-top: 20px;
