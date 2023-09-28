@@ -1174,7 +1174,17 @@ const routes = [
                     auth: ['material-category.list'],
                 }
             },
-
+            {
+                path: 'incoming-inspection',
+                name: 'incomingInspection',
+                component: () =>
+                    import ('@/views/production/incoming-inspection.vue'),
+                meta: {
+                    title: '来料检验',
+	                title_en: 'Incoming Inspection',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
         ]
     },
 	{ // 生产管理
