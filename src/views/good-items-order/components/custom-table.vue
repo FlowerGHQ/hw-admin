@@ -36,7 +36,7 @@
             <div class="btns m-b-20" >
                 <div class="btn-left" ></div>
                 <div class="btn-right">                  
-                    <a-button @click="handleSearch" type="primary" >
+                    <a-button @click="handleSearch(1)" type="primary" >
                         {{ $t("def.search") }}
                     </a-button>
                     <a-button @click="handleSearchReset" >
@@ -240,8 +240,11 @@ const routerChange = (type, item = {}) => {
 };
 
 // 查询按钮
-const handleSearch = () => {
+const handleSearch = (num) => {
     let {  sn, user_phone,to_name,waybill_uid } = searchForm.value;
+    if(num===1){
+        channelPagination.value.current = 1;
+    }
     getTableDataFetch({
         page_size: channelPagination.value.pageSize,
         page: channelPagination.value.current,
