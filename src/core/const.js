@@ -3,7 +3,7 @@ import defult_img from '@images/defult_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
-
+import constModules from './modules/const/index'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
@@ -28,14 +28,15 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     default:
-        // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-        URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
+        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.10.12.75:8889'
         break;
 }
 
 let Const = {
+    ...constModules,
     NET: {
         URL_POINT: URL_POINT,
         OSS_POINT: OSS_POINT,
