@@ -1295,6 +1295,17 @@ const routes = [
                     // auth: ['calculate-production.amount'],
 				}
 			},
+            {
+				path: 'vehicle-inspection',
+				name: 'vehicleInspection',
+				component: () =>
+					import ('@/views/manufacture/vehicle-inspection.vue'),
+				meta: {
+					title: '整车完检',
+					title_en: 'Complete vehicle inspection',
+					roles: [LOGIN_TYPE.ADMIN],
+				}
+			},
 		]
 	},
 

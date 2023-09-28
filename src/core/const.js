@@ -2392,6 +2392,17 @@ let Const = {
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
+    },
+    // 质检
+    INSPECTION: {
+        STATUS_MAP: {
+            '1': '合格',
+            '2': '不合格',
+        },
+        STATUS_COLOR_MAP: {
+            '1': 'green',
+            '2': 'red',
+        }
     }
 };
 
