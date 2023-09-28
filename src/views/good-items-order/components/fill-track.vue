@@ -9,13 +9,13 @@
         <div class="key">{{ $t(item.title) }}:</div>
         <div class="value">{{detail[item.value]}}</div>
       </div>
-      <div class="form-item">
+      <div class="form-item required">
         <div class="key track">{{ $t('af.courier_number') }}:</div>
         <div class="value">
             <a-input  v-model:value="updateObj.uid" :placeholder="$t('item_order.fill_tracking_number')"  />
         </div>
       </div>
-      <div class="form-item">
+      <div class="form-item required" >
         <div class="key track">{{ $t('af.courier') }}:</div>
         <div class="value">
             <a-input  v-model:value="updateObj.company" :placeholder="$t('item_order.fill_name_courier_company')"  />
@@ -45,6 +45,7 @@ const list = ref([
     { title:'ad.specific_address',value:'to_address',key:'to_address' },
 
 ])
+const { proxy } = getCurrentInstance();
 const props = defineProps({
     detail:{
         type:Object
@@ -61,12 +62,17 @@ watchEffect(() => {
   updateObj.value.id = props.detail?.waybill_id;
   updateObj.value.uid = props.detail?.waybill_uid;
   updateObj.value.target_id = props.detail?.id;
-  updateObj.value.company = props.detail?.id;
+  updateObj.value.company = props.detail?.waybill_company;
 });
 // 定义要发送的emit事件
 const emit = defineEmits(['changeType'])
 
 const refundHandleOk = () => {
+  if(!updateObj.value.uid){
+      return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!updateObj.value.company){
+      return proxy.$message.warning(proxy.$t("def.enter"));
+  }
   refundVisible.value = false;
   Core.Api.GoodItemsOrder.updateTrackingNumber({...updateObj.value}).then((res) => {
     proxy.$message.success(proxy.$t('p.shipped'));

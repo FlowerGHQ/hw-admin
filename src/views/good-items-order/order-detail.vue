@@ -386,7 +386,7 @@ const getDetailFetch = (params = {}) => {
         detail.value[item] = res[item];
       };
       getLogisticsRecords();
-      getWayillDetail();
+      // getWayillDetail();
       console.log('detail',detail.value);
   }).catch((err) => {
     console.log("getTableData err:", err);

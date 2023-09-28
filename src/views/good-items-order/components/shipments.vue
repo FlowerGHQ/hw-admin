@@ -3,7 +3,7 @@
         {{ $t(/* 发货 */"p.ship")}}
     </a-button>  
      <!-- 发货 -->
-     <a-modal v-model:visible="isShow" :title="$t(/* 发货 */'p.ship')" @cancel="refundHandleCancel" @ok="refundHandleOk" >
+     <a-modal v-model:visible="isShow" :title="$t(/* 发货 */'p.ship')" >
 
        <div class="content">
             <div class="text-warn">
@@ -12,13 +12,13 @@
                 </svg>
                 {{ $t('item_order.tracking_courier_company_warn_text') }}
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('af.courier_number') }}:</div>
                 <div class="value">
                     <a-input v-model:value="shipObj.uid" :placeholder="$t('item_order.fill_tracking_number')"  />
                 </div>
             </div>
-            <div class="form-item">
+            <div class="form-item required">
                 <div class="key">{{ $t('af.courier') }}:</div>
                 <div class="value">
                     <a-input v-model:value="shipObj.company" :placeholder="$t('item_order.fill_name_courier_company')"  />
@@ -71,12 +71,15 @@ const isShowShip = (type) => {
 const shipHandleOk = () => {
     let obj = {};
     obj = {...shipObj.value,target_id:props.id};
+    if(!obj.uid){
+        return proxy.$message.warning(proxy.$t("def.enter"));
+    }else if(!obj.company){
+        return proxy.$message.warning(proxy.$t("def.enter"));
+    }
     Core.Api.GoodItemsOrder.updateTrackingNumber(obj).then((res) => {
-       
         proxy.$message.success(proxy.$t('p.shipped'));
     }).catch((err) => {
         console.log("getTableData err:", err);
-
     }).finally(() => {
         emit('refesh');
         /* 暂时不用 */
