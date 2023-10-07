@@ -119,6 +119,9 @@
             <template v-else-if="column.key === 'delivery_time'">
               <span>{{ Util.timeFormat(record.delivery_time) }}</span>
             </template>
+            <template v-else-if="column.key === 'last_generation_time'">
+              <span>{{ Util.timeFormat(record.last_generation_time) }}</span>
+            </template>
             <!-- 状态 -->
             <template
               v-else-if="column.key === 'certificate_status' && !distributor">
@@ -257,8 +260,14 @@ const palrformTableColumns = ref([
     roles: ["DISTRIBUTOR"],
   },
   {
+    title: "coc_business.coc_newest_generated_time",
+    dataIndex: "last_generation_time",
+    key: "last_generation_time",
+    roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
+  },
+  {
     title: "certificate-list.coc_operation",
-    dataIndex: " ",
+    dataIndex: "coc_operation",
     key: "coc_operation",
     roles: ["SUPER_ADMIN", "SALESMAN", "DISTRIBUTOR"],
   },
@@ -366,7 +375,17 @@ const handleReset = () => {
   page.value = 1;
   current.value = 1;
   pageSize.value = 20;
-  getCerList();
+  if (
+    props.cocProps &&
+    Object.keys(props.cocProps).length > 0 &&
+    props.cocProps.isOther
+  ) {
+    searchForm.order_number = props.cocProps.order_number;
+    distributor.value = props.cocProps.isDistributor;
+    oderNumer.value = props.cocProps.order_number;
+  }
+  let params = Core.Util.deepCopy(searchForm);
+  getCerList(params);
 };
 const handleSearch = () => {
   let params = {

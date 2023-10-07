@@ -139,17 +139,19 @@ const Util = {
    * @param {*} timestamp 秒时间戳或毫秒时间戳
    */
   dayjsReview(value) {
+    console.log("dayjsReview", value)
+    console.log("dayjsReview", dayjs.unix(value))
     //    antd3.x 用法 将秒时间戳或毫秒时间戳转换成Dayjs对象
     return dayjs.unix(value)
   },
   // dayjs 将一个Dayjs对象转换成秒时间戳或毫秒时间戳
 
   dayjsToTimestamp(value) {
-    //   判断是否为Dayjs对象，console
     if (dayjs.isDayjs(value)) {
       return dayjs(value).format("X")
     } else {
-      return value
+      // 将Dayjs对象转换成秒时间戳或毫秒时间戳
+      return dayjs(value).unix()
     }
   },
   /**
