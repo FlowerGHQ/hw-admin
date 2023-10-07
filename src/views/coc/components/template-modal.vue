@@ -333,7 +333,7 @@ const handleFileDelete = (item) => {
 const handleFileview = (item) => {
   let url = "http://view.officeapps.live.com/op/view.aspx?src=" + item.url;
   console.log("url", url);
-  // window.open(url, "_blank");
+  window.open(url, "_blank");
 };
 
 
