@@ -7,7 +7,13 @@
           <a class="order-link">{{ oderNumer }}</a>
           {{ $t("certificate-list.coc_certificateList") }}
         </div>
+        <div class="all_download title-container">
+          <a-button type="primary" @click="onAllDownLoad({})">{{
+            $t("certificate-list.coc_allDownloaded")
+          }}</a-button>
+        </div>
       </div>
+
       <!-- tabs -->
       <div class="tabs-container colorful cancel-m-b" v-if="!distributor">
         <a-tabs v-model:activeKey="activeKey" @change="handleTabs">
@@ -21,7 +27,7 @@
       <!-- search -->
       <div class="search">
         <a-row class="row-detail">
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
             <div class="key">{{ $t("certificate-list.coc_vin") }}：</div>
             <div class="value">
               <a-input
@@ -29,7 +35,7 @@
                 :placeholder="$t('certificate-list.coc_inputVin')"></a-input>
             </div>
           </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
             <div class="key">{{ $t("certificate-list.coc_motor") }}：</div>
             <div class="value">
               <a-input
@@ -37,7 +43,7 @@
                 :placeholder="$t('certificate-list.coc_inputMotor')"></a-input>
             </div>
           </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="7" class="row-item">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
             <div class="key">
               {{ $t("certificate-list.coc_deliveryDate") }}：
             </div>
@@ -46,7 +52,7 @@
             </div>
           </a-col>
           <!-- 按钮 -->
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="3" class="row-item btn-area">
+          <a-col :xs="24" :sm="24" :xl="24" :xxl="6" class="row-item btn-area">
             <a-button @click="handleReset">{{
               $t("certificate-list.coc_reset")
             }}</a-button>
@@ -73,6 +79,7 @@
           :pagination="channelPagination"
           :loading="loading"
           @change="handleTableChange"
+          :scroll="{ x: true }"
           :row-selection="{
             selectedRowKeys: selectedRowKeyArr,
             onChange: onSelectChange,
@@ -413,6 +420,22 @@ const onDownLoad = (record, array) => {
       Core.Logger.error("参数", {}, "结果", JSON.stringify(err));
     });
 };
+const onAllDownLoad = (record, array) => {
+  downLoadCertificateDetailLis({
+    source_type: 1,
+  })
+    .then((res) => {
+      // const str = 'xxxxfile-name=example.txt';
+      let str = decodeURIComponent(res.headers["file-name"]);
+      // 正则匹配attachment;filename=证书导出.zip 取出文件名和拓展名
+      let fileName = str.match(/filename=(.*)/)[1].split(".")[0] || "未命名";
+      let extension = str.match(/filename=(.*)/)[1].split(".")[1] || "docx";
+      fileSave.getFile(res.data, `${fileName}.${extension}`);
+    })
+    .catch((err) => {
+      Core.Logger.error("参数", {}, "结果", JSON.stringify(err));
+    });
+};
 // 查看文档
 const onView = (record) => {
   let url =
@@ -455,11 +478,19 @@ onMounted(() => {
           text-decoration: underline;
         }
       }
+      .all_download{
+        display: flex;
+        justify-content: flex-end;
+        padding: 0 !important;
+      }
     }
+
     .search {
       .row-detail {
         .btn-area {
-          justify-content: flex-end !important;
+          width: 170px;
+          display: flex;
+          justify-content: flex-end;
         }
       }
     }

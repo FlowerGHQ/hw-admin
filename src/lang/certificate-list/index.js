@@ -44,6 +44,7 @@ export default {
     coc_view: '查看',
     // 全部重新生成
     coc_allGenerated: '全部重新生成',
+    coc_allDownloaded: '全部下载',
   },
   en: {
     // 证书清单
@@ -86,5 +87,6 @@ export default {
     // 查看
     coc_view: 'View',
     coc_allGenerated: 'All Generated',
+    coc_allDownloaded: 'All Downloaded',
   }
 }
