@@ -89,10 +89,63 @@
           :label-col="labelCol"
           name="upload"
           class="upload-item">
-          <TemplateUpload
-            :isDisable="isDisable"
-            :searchForm="searchForm"
-            v-model:upload="upload" />
+            <!-- 上传组件 正方形带+ -->
+            <a-upload
+              name="file"
+              ref="uploader"
+              :multiple="false"
+              :disabled="isDisable"
+              :file-list="searchForm.fileList"
+              :action="upload.action"
+              :headers="upload.headers"
+              :data="upload.data"
+              :max-count="1"
+              :showUploadList="false"
+              @change="handleFileChange"
+              :before-upload="handleFileCheck">
+              <div
+                v-if="searchForm.fileList && searchForm.fileList.length == 0"
+                class="upload-area">
+                <plus-outlined></plus-outlined>
+                <div class="ant-upload-text">
+                  {{ $t("coc.coc_placeholder_upload") }}
+                </div>
+              </div>
+              <div v-else class="upload-file-list">
+                <div
+                  v-for="(item, index) in searchForm.fileList"
+                  :key="index"
+                  class="file-list-item">
+                  <div class="file-item">
+                    <file-word-outlined></file-word-outlined>
+                    <div class="file-name">{{ item.name }}</div>
+                  </div>
+                  <div class="file-reupload-delete">
+                    <a-button
+                      type="link"
+                      @click="handleFileReupload(item)"
+                      v-if="!isDisable">
+                      {{ $t("coc.coc_reupload") }}
+                    </a-button>
+                    <a-button
+                      type="link"
+                      @click.stop.prevent="handleFileDelete(item)"
+                      danger
+                      v-if="!isDisable">
+                      {{ $t("coc.coc_btn_delete") }}
+                    </a-button>
+                    <!-- 查看按钮 -->
+                    <a-button
+                      type="link"
+                      @click.stop.prevent="handleFileview(item)"
+                      danger
+                      v-if="isDisable">
+                      {{ $t("coc.coc_btn_view") }}
+                    </a-button>
+                  </div>
+                </div>
+              </div>
+            </a-upload>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -109,12 +162,14 @@ import {
   watch,
   toRef,
   getCurrentInstance,
+  computed
 } from "vue";
-import TemplateUpload from "./template-upload.vue";
+// import TemplateUpload from "./template-upload.vue";
 const Util = Core.Util;
 const { FILE_UPLOAD_END_POINT, OSS_POINT } = Core.Const.NET;
 const { getCateGoryList, viewCocTemplate, addCocTemplate } = Core.Api.COC;
 const { dayjsReview, timeFilter, dayjsToTimestamp } = Util;
+import { PlusOutlined, FileWordOutlined } from "@ant-design/icons-vue";
 const $t = useI18n().t;
 const $message = getCurrentInstance().proxy.$message;
 
@@ -142,7 +197,16 @@ const labelCol = ref({ style: { width: "100px" } });
 const wrapperCol = ref({ span: 18 });
 const option = ref([]);
 const refForm = ref(null);
-const upload = ref({});
+const upload = reactive({
+  action: FILE_UPLOAD_END_POINT,
+  headers: {
+    ContentType: false,
+  },
+  data: {
+    token: Core.Data.getToken(),
+    type: "file",
+  },
+});
 // validate
 const validateDate = async (rule, value) => {
   if (value && value.length > 0) {
@@ -211,54 +275,72 @@ const searchForm = reactive({
 
 watch(
   () => props.recordItem,
-  (newVal) => {
-    let arr = Util.deepCopy(newVal);
-    if (Object.keys(arr).length === 0) {
-      searchForm.name = "";
-      searchForm.version_number = "";
-      searchForm.coc_validity_date = [];
-      searchForm.model = [];
-      searchForm.fileList = [];
-    } else {
-      if (arr.model) {
-        arr.model = arr.model.split(",");
-      }
-      if (arr.file_url) {
-        arr.file_url = OSS_POINT + "/" + arr.file_url;
-      }
-      if (arr.file_name) {
-        arr.fileList = [
-          {
-            name: arr.file_name,
-            url: arr.file_url,
+  (val) => {
+    console.log("props.recordItem", val);
+    if (val) {
+      searchForm.name = val.name;
+      searchForm.version_number = val.version_number;
+      searchForm.coc_validity_date = val.effective_start_time&&val.effective_start_time?[
+        dayjsReview(val.effective_start_time),
+        dayjsReview(val.effective_end_time),
+      ]:[];
+      searchForm.model = val.model&&val.model.length>0?val.model.split(","):[];
+      searchForm.fileList = val.file_name&&val.file_url?[
+        {
+          response:{
+            data:{
+              filename: val.file_url,
+              name: val.file_name,
+            },
           },
-        ];
-      }
-      arr.coc_validity_date = [
-      dayjsReview(arr.effective_start_time),
-      dayjsReview(arr.effective_end_time),
-      ];
-      // 将arr中所有的key转成searchForm中的key
-      for (let key in arr) {
-        searchForm[key] = arr[key];
-      }
-      console.log("点击编辑或查看searchForm", searchForm);
+          name: val.file_name,
+          url: OSS_POINT + val.file_url,
+        },
+      ]:[];
+      searchForm.id = val.id;
     }
   },
   {
     deep: true,
   }
 );
-watch(
-  () => upload.value,
-  (newVal) => {
-    console.log("newVal", newVal);
-    searchForm.fileList = newVal.fileList;
-  },
-  {
-    deep: true,
+
+
+// 上传前检查文件
+const handleFileCheck = (file) => {
+  if (
+    file.type !== "application/msword" &&
+    file.type !==
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  ) {
+    $message.error($t("coc.coc_error_file_type"));
+    return false;
   }
-);
+  return true;
+};
+// 上传文件
+const handleFileChange = (info) => {
+   searchForm.fileList = info.fileList;
+};
+const handleFileReupload = (item) => {
+  // 因为是computed，所以需要重新赋值，
+  // 不能直接修改upload.fileList
+  searchForm.fileList = [];
+};
+const handleFileDelete = (item) => {
+  searchForm.fileList = [];
+};
+const handleFileview = (item) => {
+  let url = "http://view.officeapps.live.com/op/view.aspx?src=" + item.url;
+  console.log("url", url);
+  // window.open(url, "_blank");
+};
+
+
+
+
+
+// methods
 // 获取下拉框数据
 const getCateGory = async () => {
   const res = await getCateGoryList();
@@ -283,20 +365,20 @@ const handleOk = () => {
   refForm.value
     .validate()
     .then((res) => {
-      console.log(searchForm.coc_validity_date);
-      // 整合数据
-      let data = JSON.parse(JSON.stringify(searchForm));
-      console.log("data", data);
-      // Dayjs深拷贝会报错，所以用JSON，但是JSON会把时间戳转成字符串，所以要转回来
-      data.effective_start_time =dayjsToTimestamp(data.coc_validity_date[0])
-      data.effective_end_time  = dayjsToTimestamp(data.coc_validity_date[1])
-      data.model = data.model.length > 1 ? data.model.join(",") : data.model[0];
-      data.file_name = data.fileList.length > 0 ? data.fileList[0].name : "";
-      data.file_url = data.fileList.length > 0 ? data.fileList[0].url : "";
-      delete data.fileList;
-      delete data.coc_validity_date;
-      if (props.modalType === "add") data.id = "";
-      hanleeEdit(data);
+      console.log(searchForm);
+      let params = {
+        ...searchForm,
+        file_url: searchForm.fileList[0].response.data.filename,
+        file_name: searchForm.fileList[0].name,
+        effective_start_time: dayjsToTimestamp(searchForm.coc_validity_date[0]),
+        effective_end_time: dayjsToTimestamp(searchForm.coc_validity_date[1]),
+        model: searchForm.model.length > 1 ? searchForm.model.join(",") : searchForm.model[0],
+      }
+      if (props.modalType === "add") params.id = "";
+      delete params.fileList;
+      delete params.coc_validity_date;
+      console.log("params", params);
+      hanleeEdit(params);
     })
     .catch((err) => {
       console.log(err);
@@ -324,6 +406,41 @@ onMounted(() => {
   }
 }
 :deep(.ant-upload) {
+  width: 100%;
+}
+.upload-file-list {
+  width: 100%;
+  .file-list-item {
+    padding: 0 10px;
+    border: 1px dashed var(--Color-border-2, #e5e6eb);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .file-item {
+      display: flex;
+      align-items: center;
+      .anticon-file-word {
+        margin-right: 8px;
+        font-size: 18px;
+      }
+    }
+  }
+}
+.upload-area {
+  display: flex;
+  width: 80px;
+  height: 80px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 2px;
+  border: 1px dashed var(--Color-border-2, #e5e6eb);
+  background: var(--Color-fill-1, #f7f8fa);
+}
+.ant-form-item-control-input-content > span {
+  display: block;
   width: 100%;
 }
 </style>

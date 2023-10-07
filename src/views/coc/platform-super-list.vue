@@ -160,8 +160,6 @@ const recordItem = ref({})
 const isDisable = ref(false)
 const modalRef = ref(null)
 
-
-
 // 获取列表数据
 const getTableData = () => {
 	loading.value = true
@@ -193,9 +191,9 @@ const getRowDetails = (type, record) => {
 	}
 }
 const handleModal = (type = "add", record = {}) => {
-	getRowDetails(type,record)
 	visible.value = true
 	modalType.value = type
+	getRowDetails(type, record)
 }
 // table改变的时候触发
 const handleTableChange = (pagination) => {
