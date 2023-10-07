@@ -479,7 +479,8 @@ const apiList = {
         detailByUid: ['PostJson', 'production-order/detail-by-uid'],
         cancel: ['PostJson', 'production-order/cancel'],
         calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
-        vehicleAdd: ['PostJson', 'production-order/vehicle-add']
+        vehicleAdd: ['PostJson', 'production-order/vehicle-add'],
+        inspectionList: ['PostJson', 'mes-quality-inspect/list-finish'], // 整车完检列表
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],

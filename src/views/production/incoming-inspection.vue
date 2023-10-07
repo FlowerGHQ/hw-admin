@@ -202,10 +202,10 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.Entity.list({
+            Core.Api.ProductionOrder.inspectionList({
                 ...this.searchForm,
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
