@@ -256,9 +256,6 @@ const palrformTableColumns = ref([
     roles: ["SUPER_ADMIN", "DISTRIBUTOR"],
   },
   {
-    
-  },
-  {
     title: "coc_business.coc_operation",
     dataIndex: "operation",
     key: "operation",
