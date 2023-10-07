@@ -7,7 +7,9 @@
           <a class="order-link">{{ oderNumer }}</a>
           {{ $t("certificate-list.coc_certificateList") }}
         </div>
-        <div class="all_download title-container">
+        <div class="all_download title-container" v-if=" props.cocProps &&
+    Object.keys(props.cocProps).length > 0 &&
+    props.cocProps.isOther">
           <a-button type="primary" @click="onAllDownLoad({})">{{
             $t("certificate-list.coc_allDownloaded")
           }}</a-button>

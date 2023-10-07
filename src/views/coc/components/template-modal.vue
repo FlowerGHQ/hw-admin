@@ -59,7 +59,7 @@
             :show-time="{ format: 'HH:mm' }"
             v-model:value="searchForm.coc_validity_date"
             :disabled="isDisable"
-            valueFormat="X"
+            valueFormat="YYYY-MM-DD HH:mm:ss"
             :placeholder="[
               $t('coc.coc_start_date'),
               $t('coc.coc_start_date'),
@@ -235,8 +235,8 @@ watch(
         ];
       }
       arr.coc_validity_date = [
-        dayjsReview(arr.effective_start_time),
-        dayjsReview(arr.effective_end_time),
+      dayjsReview(arr.effective_start_time),
+      dayjsReview(arr.effective_end_time),
       ];
       // 将arr中所有的key转成searchForm中的key
       for (let key in arr) {
@@ -286,13 +286,10 @@ const handleOk = () => {
       console.log(searchForm.coc_validity_date);
       // 整合数据
       let data = JSON.parse(JSON.stringify(searchForm));
+      console.log("data", data);
       // Dayjs深拷贝会报错，所以用JSON，但是JSON会把时间戳转成字符串，所以要转回来
-      data.effective_start_time = Number(
-        dayjsToTimestamp(data.coc_validity_date[0])
-      );
-      data.effective_end_time = Number(
-        dayjsToTimestamp(data.coc_validity_date[1])
-      );
+      data.effective_start_time =dayjsToTimestamp(data.coc_validity_date[0])
+      data.effective_end_time  = dayjsToTimestamp(data.coc_validity_date[1])
       data.model = data.model.length > 1 ? data.model.join(",") : data.model[0];
       data.file_name = data.fileList.length > 0 ? data.fileList[0].name : "";
       data.file_url = data.fileList.length > 0 ? data.fileList[0].url : "";
