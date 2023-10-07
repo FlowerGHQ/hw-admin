@@ -112,7 +112,7 @@ import {
 } from "vue";
 import TemplateUpload from "./template-upload.vue";
 const Util = Core.Util;
-const FILE_URL_PREFIX = Core.Const.NET.FILE_URL_PREFIX;
+const { FILE_URL_PREFIX, URL_POINT } = Core.Const.NET;
 const { getCateGoryList, viewCocTemplate, addCocTemplate } = Core.Api.COC;
 const { dayjsReview, timeFilter, dayjsToTimestamp } = Util;
 const $t = useI18n().t;
@@ -235,7 +235,7 @@ watch(
             uid: "-1",
             name: arr.name,
             status: "done",
-            url: FILE_URL_PREFIX + arr.file_url,
+            url: URL_POINT + arr.file_url,
             response: {
               code: 0,
               data: {

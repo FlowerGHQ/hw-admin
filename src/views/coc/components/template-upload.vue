@@ -68,7 +68,7 @@ import { useI18n } from "vue-i18n";
 import { message } from "ant-design-vue";
 const $t = useI18n().t;
 const $message = message;
-const { FILE_URL_PREFIX } = Core.Const.NET;
+const { FILE_URL_PREFIX, URL_POINT } = Core.Const.NET;
 const props = defineProps({
   isDisable: {
     type: Boolean,
@@ -80,10 +80,7 @@ const props = defineProps({
   },
 });
 const upload = reactive({
-  action:
-    import.meta.env.MODE === "development"
-      ? "http://eos-dev-api.horwincloud.com/core/1/file/file-upload"
-      : FILE_URL_PREFIX,
+  action: URL_POINT,
   fileList: [],
   headers: {
     ContentType: false,
