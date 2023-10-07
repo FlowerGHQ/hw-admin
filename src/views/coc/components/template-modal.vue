@@ -91,7 +91,7 @@
           class="upload-item">
           <TemplateUpload
             :isDisable="isDisable"
-            :fileUrl="searchForm.fileList"
+            :searchForm="searchForm"
             v-model:upload="upload" />
         </a-form-item>
       </a-form>
@@ -112,7 +112,7 @@ import {
 } from "vue";
 import TemplateUpload from "./template-upload.vue";
 const Util = Core.Util;
-const { FILE_URL_PREFIX, URL_POINT } = Core.Const.NET;
+const { FILE_UPLOAD_END_POINT, OSS_POINT } = Core.Const.NET;
 const { getCateGoryList, viewCocTemplate, addCocTemplate } = Core.Api.COC;
 const { dayjsReview, timeFilter, dayjsToTimestamp } = Util;
 const $t = useI18n().t;
@@ -137,7 +137,6 @@ const props = defineProps({
   },
 });
 const $emit = defineEmits(["update:visible", "search"]);
-
 const formLayout = ref("horizontal");
 const labelCol = ref({ style: { width: "100px" } });
 const wrapperCol = ref({ span: 18 });
@@ -152,17 +151,14 @@ const validateDate = async (rule, value) => {
   return Promise.reject($t("coc.coc_validity_date_required"));
 };
 const validateModel = async (rule, value) => {
-  console.log("value", value);
   if (value && value.length > 0) {
     return Promise.resolve();
   }
   return Promise.reject($t("coc.coc_apply_vehicle_required"));
 };
 const validateUpload = async (rule, value) => {
-  console.log("value", upload.value);
-  // console.log("upload.fileList", upload)
-  // // upload.fileList若为空数组，说明没有上传文件
-  if (upload.value.fileList.length > 0 && upload.value.fileList) {
+  console.log("校验的值", searchForm);
+  if (searchForm.fileList.length > 0 && searchForm.fileList) {
     return Promise.resolve();
   }
   return Promise.reject($t("coc.coc_template_required"));
@@ -216,7 +212,6 @@ const searchForm = reactive({
 watch(
   () => props.recordItem,
   (newVal) => {
-    console.log("newVal", newVal);
     let arr = Util.deepCopy(newVal);
     if (Object.keys(arr).length === 0) {
       searchForm.name = "";
@@ -228,21 +223,14 @@ watch(
       if (arr.model) {
         arr.model = arr.model.split(",");
       }
-
       if (arr.file_url) {
+        arr.file_url = OSS_POINT + "/" + arr.file_url;
+      }
+      if (arr.file_name) {
         arr.fileList = [
           {
-            uid: "-1",
-            name: arr.name,
-            status: "done",
-            url: URL_POINT + arr.file_url,
-            response: {
-              code: 0,
-              data: {
-                name: arr.name,
-                filename: arr.file_url,
-              },
-            },
+            name: arr.file_name,
+            url: arr.file_url,
           },
         ];
       }
@@ -254,7 +242,7 @@ watch(
       for (let key in arr) {
         searchForm[key] = arr[key];
       }
-      console.log("searchForm", searchForm);
+      console.log("点击编辑或查看searchForm", searchForm);
     }
   },
   {
@@ -279,12 +267,13 @@ const getCateGory = async () => {
 
 const hanleeEdit = (form) => {
   addCocTemplate(form).then((res) => {
+    console.log("props.modalType", props.modalType);
     if (props.modalType === "edit") {
       $message.success($t("coc.coc_edit_success"));
     } else if (props.modalType === "add") {
       $message.success($t("coc.coc_add_success"));
-      searchForm.id = "";
     }
+    console.log("res", searchForm);
     $emit("update:visible", false);
     $emit("search");
   });
@@ -294,6 +283,7 @@ const handleOk = () => {
   refForm.value
     .validate()
     .then((res) => {
+      console.log(searchForm.coc_validity_date);
       // 整合数据
       let data = JSON.parse(JSON.stringify(searchForm));
       // Dayjs深拷贝会报错，所以用JSON，但是JSON会把时间戳转成字符串，所以要转回来
@@ -304,10 +294,11 @@ const handleOk = () => {
         dayjsToTimestamp(data.coc_validity_date[1])
       );
       data.model = data.model.length > 1 ? data.model.join(",") : data.model[0];
-      data.file_url =
-        data.fileList.length > 0 ? data.fileList[0].response.data.filename : "";
+      data.file_name = data.fileList.length > 0 ? data.fileList[0].name : "";
+      data.file_url = data.fileList.length > 0 ? data.fileList[0].url : "";
       delete data.fileList;
       delete data.coc_validity_date;
+      if (props.modalType === "add") data.id = "";
       hanleeEdit(data);
     })
     .catch((err) => {

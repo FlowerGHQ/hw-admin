@@ -68,19 +68,19 @@ import { useI18n } from "vue-i18n";
 import { message } from "ant-design-vue";
 const $t = useI18n().t;
 const $message = message;
-const { FILE_URL_PREFIX, URL_POINT } = Core.Const.NET;
+const { FILE_UPLOAD_END_POINT, OSS_POINT } = Core.Const.NET;
 const props = defineProps({
   isDisable: {
     type: Boolean,
     default: false,
   },
-  fileUrl: {
+  searchForm: {
     type: Array,
     default: () => [],
   },
 });
 const upload = reactive({
-  action: URL_POINT + "/core/1/file/file-upload",
+  action: FILE_UPLOAD_END_POINT,
   fileList: [],
   headers: {
     ContentType: false,
@@ -90,14 +90,10 @@ const upload = reactive({
     type: "file",
   },
 });
-watch(
-  () => props.fileUrl,
-  (val) => {
-    if (val && val.length > 0) {
-      upload.fileList = val;
-    }
-  }
-);
+watch(props.searchForm, (val) => {
+  console.log("上传组件收到", val);
+  upload.fileList = val.fileList;
+});
 const $emit = defineEmits(["update:upload"]);
 // 上传前检查文件
 const handleFileCheck = (file) => {
@@ -125,7 +121,6 @@ const handleFileDelete = (item) => {
   upload.fileList = [];
 };
 const handleFileview = (item) => {
-  console.log(item);
   let url = "http://view.officeapps.live.com/op/view.aspx?src=" + item.url;
   window.open(url, "_blank");
 };
