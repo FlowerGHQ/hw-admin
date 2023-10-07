@@ -294,7 +294,7 @@ watch(
             },
           },
           name: val.file_name,
-          url: OSS_POINT + val.file_url,
+          url: OSS_POINT + '/'+val.file_url,
         },
       ]:[];
       searchForm.id = val.id;
