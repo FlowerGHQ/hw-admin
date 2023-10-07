@@ -9,37 +9,37 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">整车码:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.vehicle_uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">车架码:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.vehicle_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">生产订单号:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.production_uid" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">物料编码:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.materiel_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">物料名称:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.materiel_name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">质检员:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.inspector" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -99,8 +99,8 @@
 
 <script>
 import Core from '../../core';
-import dayjs from "dayjs";
 import TimeSearch from '@/components/common/TimeSearch.vue'
+import VEHICLE_INSPECTION from "@/core/modules/const/vehicle-inspection";
 
 
 export default {
@@ -119,14 +119,14 @@ export default {
             pageSize: 20,
             total: 0,
             searchForm: {
-                name: '',
-                uid: '',
-                category_id: undefined,
-                begin_time: '',
-                end_time: '',
-                distributor_id: undefined,
-                agent_id: undefined,
-                store_id: undefined,
+                inspector: undefined, // 质检员名称
+                materiel_code: undefined, // 物料编码
+                materiel_name: undefined, // 物料名称
+                production_uid: undefined, // 生产订单号
+                vehicle_code: undefined, // 车架号
+                vehicle_uid: undefined, // 整车码
+                begin_time: '', // 开始时间
+                end_time: '', // 结束时间
             },
             // 表格
             tableData: [{
@@ -140,17 +140,16 @@ export default {
     },
     computed: {
         tableColumns() {
-            let columns = [
-                {title: '整车码', dataIndex: 'name', key: 'item'},
-                {title: '车架号', dataIndex: 'name', key: 'item'},
-                {title: '生产订单号', dataIndex: 'name', key: 'item'},
-                {title: '物料编码', dataIndex: 'name', key: 'item'},
-                {title: '物料名称', dataIndex: 'name', key: 'item'},
-                {title: '质检员', dataIndex: 'name', key: 'item'},
+            return [
+                {title: '整车码', dataIndex: 'vehicle_uid', key: 'item'},
+                {title: '车架号', dataIndex: 'vehicle_code', key: 'item'},
+                {title: '生产订单号', dataIndex: 'production_uid', key: 'item'},
+                {title: '物料编码', dataIndex: 'materiel_code', key: 'item'},
+                {title: '物料名称', dataIndex: 'materiel_name', key: 'item'},
+                {title: '质检员', dataIndex: 'inspector', key: 'item'},
                 {title: '质检时间', dataIndex: 'create_time', key: 'time'},
-                {title: '质检结果', dataIndex: 'name', key: 'status'},
+                {title: '质检结果', dataIndex: 'status', key: 'status'},
             ]
-            return columns
         },
         rowSelection() {
             return {
@@ -167,7 +166,7 @@ export default {
         }
     },
     mounted() {
-        // this.getTableData();
+        this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -208,10 +207,11 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.Entity.list({
+            Core.Api.ProductionOrder.inspectionList({
                 ...this.searchForm,
                 page: this.currPage,
-                page_size: this.pageSize
+                page_size: this.pageSize,
+                scene: VEHICLE_INSPECTION.SCENE_TYPE.INSPECTION,
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;

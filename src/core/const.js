@@ -38,9 +38,9 @@ switch (window.location.hostname) {
         break;
     default:
         // URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-        URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
+        // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.170:8889' // my
+        URL_POINT = 'http://10.10.12.136:8889'
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.0.0.190:8889' // zy
@@ -2411,12 +2411,14 @@ let Const = {
     // 质检
     INSPECTION: {
         STATUS_MAP: {
-            '1': '合格',
-            '2': '不合格',
+            '0': '质检中',
+            '100': '不合格',
+            '200': '合格',
         },
         STATUS_COLOR_MAP: {
-            '1': 'green',
-            '2': 'red',
+            '0': 'blue',
+            '100': 'red',
+            '200': 'green',
         }
     }
 };
