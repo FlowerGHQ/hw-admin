@@ -42,6 +42,10 @@ const apiList = {
         exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
         exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
         materialExport: ['PostJson', 'material/export-material'], // 物料导出
+        goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
+        downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
+
+
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -845,7 +849,19 @@ const apiList = {
 
         // 车辆管理接口
         // 订单管理接口
+    },
+    // crm 好物订单接口
+    GoodItemsOrder: {
+
+        orderList: ['PostJson', 'app-order/list'],                      // 订单列表
+        orderDetail: ['PostJson', 'app-order/detail'],                  // 订单详情
+        updateTrackingNumber: ['PostJson', 'app-waybill/save'],         // 更新快递单号
+        logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
+        statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
+        seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
+        wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
+
     }
-};
+}; 
 
 export default new Api(baseUrl, apiList);

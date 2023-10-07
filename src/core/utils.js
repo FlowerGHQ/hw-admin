@@ -3,6 +3,7 @@ import { createVNode } from 'vue';
 import Data from './data';
 import Const from './const';
 import dayjs from "dayjs";
+import { forEach } from 'lodash';
 
 const Util = {
     /* =============== 通用方法 ================ */
@@ -1315,31 +1316,6 @@ const Util = {
         return result
     },
     /* ======== 百分比 ========== */
-    /* ======== 投票结果 ========== */
-    voteResultFilter(val, to='text') {
-        const MAP = Const.VOTE.VOTE_RESULT
-        let ITEM = MAP[val + ''] || {text: ''}
-        return ITEM[to] || ''
-    },
-    /* ======== 投票结果 ========== */
-    /* ======== 门店等级 ========== */
-    storeLevel(val, to = 'zh') {
-        const MAP = Const.RETAIL.STORE_LEVEL
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
-    },
-    // 门店类型
-    storeType(val, to = 'zh') {
-        const MAP = Const.RETAIL.STORE_TYPE
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
-    },
-    // 门店状态
-    storeSTATUS(val, to = 'zh') {
-        const MAP = Const.RETAIL.STORE_STATUS
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
-    },
 
     /* ======== 好物订单修改记录 ========== */
     goodItemOrderUpdateRecordFilter(val, to = 'zh') {
