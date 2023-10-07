@@ -65,6 +65,7 @@ let Const = {
         COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
         SUPER_ADMIN: 'super_admin',
+        CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -2443,22 +2444,6 @@ let Const = {
                 "30": { text: '高意向', key: 30 },
                 "40": { text: 'Hot', key: 40 },
             }
-        },
-        Clue_Status_Map: {
-            all: 1,  // 全部
-            loss: 2, // 信息缺失
-            undistributed: 3, // 未分配
-            notFollow: 4, // 未跟进
-            followed: 5, // 已跟进
-            dormancy: 6, // 休眠
-        },
-        User_Status_Map: {
-            all: 1,  // 全部
-            loss: 2, // 信息缺失
-            undistributed: 3, // 未分配
-            notFollow: 4, // 未跟进
-            followed: 5, // 已跟进
-            dormancy: 6, // 休眠
         },
     },
     // COC证书

@@ -50,6 +50,9 @@ const CRM_CUSTOMER_CENTER = {
         { title:'落地页1', value: 30, key: 30  },
         { title:'落地页2', value: 31, key: 31  },
         { title:'投票分享', value: 101, key: 101  },
+        { title:'体验官二维码', value: 32, key: 32  },
+        { title:'门店二维码', value: 33, key: 33  },
+        { title:'人工录入', value: 34, key: 34  },
     ],
 	// 来源
 	SOURCE_TYPE_MAP: {
@@ -67,7 +70,7 @@ const CRM_CUSTOMER_CENTER = {
         CLUE: 1,
         USER: 2
     },
-    // 查询类型 0-全部(默认) 1-信息缺失 2-未绑定 3-未跟进 4-已跟进 5-休眠 6-未下订 7-已下订 8-已成交 9-已交付
+    // 查询类型 0-全部(默认) 1-信息缺失 2-未绑定(未分配) 3-未跟进 4-已跟进 5-休眠 6-未下订 7-已下订 8-已成交 9-已交付
     SEARCH_TYPE: {
         All: 0,
         Information_loss: 1,
@@ -87,7 +90,7 @@ const CRM_CUSTOMER_CENTER = {
         Custom_model: 5,
         City: 6,
     },
-    defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png'
+    defaultAvatar: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/57e4ee29250de0dc640a764068f55d697327d7b29ccd4bfe8c460dd838e20a75.png',
 }
 
 export default CRM_CUSTOMER_CENTER

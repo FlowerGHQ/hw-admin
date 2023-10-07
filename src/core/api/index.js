@@ -887,6 +887,7 @@ const apiList = {
     // 用户中心
     USER_CENTER: {
         getClueList: ['PostJson', 'user-center/clue/list'], // 线索ist
+        distributionStore: ['PostJson', 'user-center/update-store-transfer'], // 分配门店
     }
 };
 

@@ -138,7 +138,15 @@
         </div>
         <div> 
             <div class="btns m-b-20">
-                <div class="btn-left"></div>
+                <div class="btn-left">                
+                    <a-button 
+                        v-if="activeKey === CRM_CUSTOMER_CENTER.SEARCH_TYPE.Information_loss || activeKey === CRM_CUSTOMER_CENTER.SEARCH_TYPE.Not_Yet_Bound /*信息缺失, 未分配*/" 
+                        type="primary" 
+                        @click="onDistribution"
+                    >
+                        分配门店
+                    </a-button>  
+                </div>
                 <div class="btn-right row-detail">                                 
                     <a-button @click="handleSearchReset">
                         {{ $t("def.reset") }}
@@ -149,6 +157,7 @@
                 </div>
             </div>
             <a-table
+                :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
                 :columns="tableColumns"
                 :data-source="tableData"
                 :scroll="{ x: true }"
@@ -251,6 +260,57 @@
             </a-table>
         </div>
     </div>
+
+    <!-- 分配门店 -->
+    <a-modal v-model:visible="distributionVisible" okText="提交" @cancel="onCancel"  @ok="onHandleOk">
+        <template #title>
+            <div class="distribution—title">分配门店</div>
+        </template>
+        <!-- 所属大区 -->
+        <div class="row-detail">
+            <div class="row-item">
+                <span class="key">选择大区：</span>
+                <span class="value">
+                    <a-select 
+                        v-model:value="selectRowForm.group_id" 
+                        class="select-w" 
+                        @change="handleChange('model_group')"
+                    >
+                        <a-select-option v-for="item in optionsRegion" :value="item.id">
+                            {{ item.name }}
+                        </a-select-option>
+                    </a-select>
+                </span>
+            </div>                  
+            <!-- 所属城市 -->
+            <div class="row-item">
+                <span class="key">选择城市：</span>
+                <span class="value">
+                    <a-select 
+                        v-model:value="selectRowForm.city" 
+                        :disabled="!selectRowForm.group_id"
+                        class="select-w" 
+                        @change="handleChange('model_city')"
+                    >
+                        <a-select-option v-for="item in optionsCity" :value="item.city">
+                            {{ item.city }}
+                        </a-select-option>
+                    </a-select>
+                </span>
+            </div>                 
+            <!-- 所属门店 -->
+            <div class="row-item">
+                <span class="key">选择门店：</span>
+                <span class="value">
+                    <a-select v-model:value="selectRowForm.store_id" :disabled="!selectRowForm.city" class="select-w">
+                        <a-select-option v-for="item in optionsStore" :value="item.id">
+                            {{ item.name}}
+                        </a-select-option>
+                    </a-select>
+                </span>
+            </div>
+        </div>
+    </a-modal>
 </template>
 
 <script setup>
@@ -280,6 +340,7 @@ const searchForm = reactive({
     city: undefined,
     store_id: undefined,
 });
+const distributionVisible = ref(false)
 const tableData = ref([]);
 const channelPagination = ref({
     current: 1,
@@ -289,9 +350,14 @@ const channelPagination = ref({
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
     showTotal: (total) =>
-        `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
+    `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 }); // 分页配置
-
+const selectedRowKeys = ref([]) // 选中的框框
+const selectRowForm = reactive({
+    group_id: undefined,
+    city: undefined,
+    store_id: undefined,
+}) // model 弹出选择
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -303,6 +369,17 @@ const props = defineProps({
 watch(
     () => props.activeKey,
     (newValue, oldValue) => {
+        channelPagination.value.current = 1
+        Object.assign(searchForm, {
+            key: undefined, // key
+            intention: undefined,
+            source_type: undefined,
+            store_user_id: undefined,
+            order_status: undefined,
+            group_id: undefined,
+            city: undefined,
+            store_id: undefined,
+        })
         getTableDataFetch({
             page: 1,
             search_type: newValue
@@ -344,6 +421,7 @@ const lang = computed(() => {
 const getTableDataFetch = (params = {}) => {
     let obj = {
         choose_type: CRM_CUSTOMER_CENTER.CHOOSE_TYPE.CLUE, // 1-线索列表 2-用户列表
+        search_type: props.activeKey,
         ...params
     }
     Core.Api.USER_CENTER.getClueList(obj).then(res => {
@@ -355,6 +433,24 @@ const getTableDataFetch = (params = {}) => {
         tableData.value.forEach((el) => {            
            el.label_list = labelGroupListFliter(el.label_group_list)           
         })
+    }).catch(err => {
+        Core.Logger.error("参数", obj, "获取线索list", err)
+    })
+};
+// 分配门店
+const distributionStoreFetch = (params = {}) => {
+    let obj = {
+        ids: selectedRowKeys.value,
+        group_id: selectRowForm.group_id,
+        city: selectRowForm.city,
+        store_id: selectRowForm.store_id,
+        ...params,
+    }
+    Core.Api.USER_CENTER.distributionStore(obj).then(res => {        
+        Core.Logger.success("参数", obj, "获取线索list", res)
+        proxy.$message.warning('分配成功');
+        onCancel()
+        getTableDataFetch({ page: 1 })
     }).catch(err => {
         Core.Logger.error("参数", obj, "获取线索list", err)
     })
@@ -384,7 +480,17 @@ const handleChange = (type) => {
         case 'store':
             getPeopleList();
             break;
-    
+        case 'model_group':            
+            getCityList({
+                id: selectRowForm.group_id 
+            });
+            break;
+        case 'model_city':
+            getStoreList({
+                group_id: selectRowForm.group_id,
+                city: selectRowForm.city,
+            });
+            break;
         default:
             break;
     }
@@ -399,9 +505,10 @@ const getGroupList = () => {
 	})
 }
 // 获取城市列表
-const getCityList = (value) => {
+const getCityList = (params) => {
     Core.Api.CustomService.getCityList({
-        id: searchForm.group_id
+        id: searchForm.group_id,
+        ...params
     }).then(res=>{
 		Core.Logger.success('getCityList',res);
 		optionsCity.value = res;
@@ -410,11 +517,12 @@ const getCityList = (value) => {
 	})
 }
 // 获取门店列表
-const getStoreList = () => {
+const getStoreList = (params) => {
     Core.Api.CustomService.storeList({
         group_id: searchForm.group_id,
         city: searchForm.city,
         page_size: 500,
+        ...params
     }).then(res=>{
 		Core.Logger.success('storeList',res);
 		optionsStore.value = res.list;
@@ -423,10 +531,11 @@ const getStoreList = () => {
 	})
 }
 // 门店人员-获取
-const getPeopleList = () => {
+const getPeopleList = (params) => {
     Core.Api.CustomService.storeUserList({
         store_id: searchForm.store_id,
-        page_size:500
+        page_size:500,
+        ...params
     }).then(res=>{
 		Core.Logger.success('getPeopleList',res);
 		officerList.value = res.list;
@@ -479,6 +588,29 @@ const  labelGroupListFliter = (list) => {
         label_lists = label_lists.concat(el.label_list)        
     });
     return label_lists || []
+}
+// 分配门店
+const onDistribution = () => {
+    distributionVisible.value = true
+}
+// 分配门店model
+const onCancel = () => {
+    distributionVisible.value = false
+
+    selectRowForm.group_id = undefined
+    selectRowForm.city = undefined
+    selectRowForm.store_id = undefined
+}
+const onHandleOk = () => {
+    if (selectedRowKeys.value.length === 0) {
+        proxy.$message.warning('请选择用户');
+    } else {
+        distributionStoreFetch()
+    }
+}
+// 选择框变换事件
+const onSelectChange = (key) => {
+    selectedRowKeys.value = key
 }
 </script>
 
@@ -552,5 +684,11 @@ const  labelGroupListFliter = (list) => {
     color:  #86909C;
     font-size: 12px;
     font-weight: 400;
+}
+
+.distribution—title {
+    color: #1D2129;        
+    font-size: 18px;    
+    font-weight: 600;
 }
 </style>

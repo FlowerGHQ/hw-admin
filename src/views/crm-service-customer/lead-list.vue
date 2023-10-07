@@ -28,7 +28,11 @@
                                     </div>
                                     <div class="lead-switch">
                                         <span class="m-r-6">是否参与分配</span>
-                                        <a-switch v-model:checked="item.isChecked" size="small"/>
+                                        <a-switch 
+                                            v-model:checked="item.isChecked" 
+                                            size="small"
+                                            @change="(event) => onSwitch(event, item)"
+                                        />
                                     </div>
                                 </div>
                                 <div class="lead-item-r-b">
@@ -94,7 +98,7 @@
 
 <script setup>
     import Static from '../crm-staging/static';
-    import { ref, onMounted, getCurrentInstance }  from 'vue'
+    import { ref, onMounted, getCurrentInstance, onUnmounted }  from 'vue'
     import Core from '@/core'
     const { proxy } = getCurrentInstance()
 
@@ -130,6 +134,9 @@
     onMounted(() => {
         getAllocationListFetch()
     })
+    onUnmounted(() => {        
+        Core.Data.clearCustomerServiceClue()
+    })
     /* fetch start */
     // 客服线索分配list
     const getAllocationListFetch = (params = {}) => {
@@ -140,7 +147,11 @@
         Core.Api.CustomService.getAllocationList(obj).then(res => {
             Core.Logger.success("参数", obj, "客服线索分配list", res)
             leadList.value = res
-            leadList.value.forEach(el => {
+            leadList.value.forEach(el => {                
+                if (Core.Data.getCustomerServiceClue().includes(el.id)) {
+                    el.isChecked = false
+                    return
+                }
                 el.isChecked = true
             })            
         }).catch(err => {
@@ -184,7 +195,7 @@
         })
 
         if (sum > 100) {            
-           return proxy.$message .warning('参与分配的客服的比例相加要等于100%,请修改后再进行确认');
+           return proxy.$message.warning('参与分配的客服的比例相加要等于100%,请修改后再进行确认');
         }
         Core.Logger.log("分配的客服的数据", user_set_system_assign_list)
 
@@ -195,7 +206,19 @@
     // model取消按钮
     const onCancel = () => {
         leadVisible.value = false
-    }    
+    }
+    // radioswitch选择
+    const onSwitch = (e, item) => {
+        const result = Core.Data.getCustomerServiceClue() || []
+        if (e) {
+            if (result.indexOf(item.id) !== -1) {
+                result.splice(result.indexOf(item.id), 1)
+            }
+        } else {
+            result.push(item.id)
+        }        
+        Core.Data.setCustomerServiceClue(result)
+    }
   
     /* methods end */
 </script>

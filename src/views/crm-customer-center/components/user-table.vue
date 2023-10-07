@@ -172,6 +172,38 @@
                     <template v-if="column.key === 'intention'">
                         <my-tag border :color="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
                     </template>
+                    <!-- 标签 -->
+                    <template v-if="column.key === 'label_list'">
+                        <text v-if="text.length === 0">-</text>
+                        <my-tag 
+                            v-for="(item, index) in text.slice(0, 2)" :key="index"
+                            color="#3381FF" 
+                            bgColor="#E6EFFF" 
+                            class="message-label" 
+                            >
+                            {{ item.name || '-' }}
+                        </my-tag>
+                        <a-popover placement="top">
+                            <template #content>
+                                <my-tag 
+                                    color="#3381FF" 
+                                    bgColor="#E6EFFF" 
+                                    class="message-label" 
+                                    v-for="(item, index) in text.slice(2, text.length)" 
+                                    :key="index">
+                                    {{ item.name || '-' }}
+                                </my-tag>
+                            </template>
+                            <my-tag
+                                v-if="text.length > 2"
+                                color="#3381FF" 
+                                bgColor="#E6EFFF" 
+                                class="message-label pointer" 
+                                >
+                                +{{ text.length - 2 }}
+                            </my-tag>
+                        </a-popover>
+                    </template>
                     <!-- 所属大区 -->
                     <template v-if="column.key === 'group_name'">
                         {{ text || '-' }}
@@ -271,6 +303,17 @@ const props = defineProps({
 watch(
     () => props.activeKey,
     (newValue, oldValue) => {
+        channelPagination.value.current = 1
+        Object.assign(searchForm, {
+            key: undefined, // key
+            intention: undefined,
+            source_type: undefined,
+            store_user_id: undefined,
+            order_status: undefined,
+            group_id: undefined,
+            city: undefined,
+            store_id: undefined,
+        })
         getTableDataFetch({
             page: 1,
             search_type: newValue
@@ -291,6 +334,7 @@ const tableColumns = computed(() => {
         { title: '名称', dataIndex: 'name', key:'name' },
         { title: '手机号', dataIndex: 'phone', key:'phone' },
         { title: '意向度', dataIndex: 'intention', key:'intention' },        
+        { title: '标签', dataIndex: 'label_list', key:'label_list' },
         { title: '所属大区', dataIndex: 'group_name', key: 'group_name' },
         { title: '所属城市', dataIndex: 'city', key: 'city' },
         { title: '所属门店', dataIndex: 'store_name', key: 'store_name' },
@@ -311,12 +355,18 @@ const lang = computed(() => {
 const getTableDataFetch = (params = {}) => {
     let obj = {
         choose_type: CRM_CUSTOMER_CENTER.CHOOSE_TYPE.USER, // 1-线索列表 2-用户列表
+        search_type: props.activeKey,
         ...params
     }
     Core.Api.USER_CENTER.getClueList(obj).then(res => {
         channelPagination.value.total = res.count
         Core.Logger.success("参数", obj, "获取线索list", res)      
         tableData.value = res.list || []
+
+        // 只显示标签
+        tableData.value.forEach((el) => {            
+           el.label_list = labelGroupListFliter(el.label_group_list)           
+        })
     }).catch(err => {
         Core.Logger.error("参数", obj, "获取线索list", err)
     })
@@ -433,6 +483,15 @@ const handleTableChange = (pagination, filters, sorter) => {
         page: channelPagination.value.current,
     });
 };
+// 过滤 label_group_list 数据
+const  labelGroupListFliter = (list) => {    
+    const result = list.filter(el => el.type === CRM_CUSTOMER_CENTER.LABEL_TYPE.Label);    
+    let label_lists = [];
+    result.forEach(el => {        
+        label_lists = label_lists.concat(el.label_list)        
+    });
+    return label_lists || []
+}
 </script>
 
 <style lang="less" scoped>
