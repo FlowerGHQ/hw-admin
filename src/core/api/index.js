@@ -225,13 +225,11 @@ const apiList = {
 	    remark: ['PostJson', 'repair-order/remark'], //入库
         settleDetail: ['PostJson', 'clearing-order/detail-by-source'], //结算单
         saveVehicleList: ['PostJson', 'repair-order/vehicle/list'],
-        statusList: ['PostJson', 'repair-order/status-count'], // 不同状态下工单类型数量
         getItemCategory: ['Post', 'item-category/list/type'], // 获取故障分类
         getItemStatus:['PostJson', 'warranty-config/list/item/status'], // 根据商品信息查询商品状态7
         balance: ['PostJson', 'repair-order/get/balance'], // 获取账户余额
         cancel: ['PostJson', 'repair-order/cancel'], // 取消工单
         void: ['PostJson', 'repair-order/voided'], // 作废工单
-        audit: ['PostJson', 'repair-order/audit'], // 审核工单
         getBalance: ['PostJson', 'repair-order/get/balance']
     },
     RepairItem: { // 维修单
