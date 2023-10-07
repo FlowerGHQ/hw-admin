@@ -2,14 +2,11 @@ import { Modal } from "ant-design-vue"
 import { createVNode } from "vue"
 import Data from "./data"
 import Const from "./const"
-import advancedFormat from "dayjs/plugin/advancedFormat"
-import localeData from "dayjs/plugin/localeData"
-import weekday from "dayjs/plugin/weekday"
 import dayjs from "dayjs"
-dayjs.extend(advancedFormat)
-dayjs.extend(localeData)
+import weekday from "dayjs/plugin/weekday"
+import localeData from "dayjs/plugin/localeData"
 dayjs.extend(weekday)
-
+dayjs.extend(localeData)
 
 const Util = {
   /* =============== 通用方法 ================ */
@@ -40,6 +37,7 @@ const Util = {
    */
   deepCopy(target) {
     let copyed_objs = []
+
     function _deepCopy(target) {
       if (typeof target === "string") {
         return target.trim()
@@ -147,9 +145,12 @@ const Util = {
   // dayjs 将一个Dayjs对象转换成秒时间戳或毫秒时间戳
 
   dayjsToTimestamp(value) {
-    //   判断是否为Dayjs对象
-    return   dayjs(value).format("X")
-
+    //   判断是否为Dayjs对象，console
+    if (dayjs.isDayjs(value)) {
+      return dayjs(value).format("X")
+    } else {
+      return value
+    }
   },
   /**
    * 将秒时间戳或毫秒时间戳转换成对应格式
