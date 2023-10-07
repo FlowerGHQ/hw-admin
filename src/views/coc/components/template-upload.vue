@@ -80,7 +80,7 @@ const props = defineProps({
   },
 });
 const upload = reactive({
-  action: URL_POINT,
+  action: URL_POINT + "/core/1/file/file-upload",
   fileList: [],
   headers: {
     ContentType: false,
@@ -90,7 +90,6 @@ const upload = reactive({
     type: "file",
   },
 });
-
 watch(
   () => props.fileUrl,
   (val) => {
@@ -99,9 +98,7 @@ watch(
     }
   }
 );
-
 const $emit = defineEmits(["update:upload"]);
-
 // 上传前检查文件
 const handleFileCheck = (file) => {
   if (
@@ -128,6 +125,7 @@ const handleFileDelete = (item) => {
   upload.fileList = [];
 };
 const handleFileview = (item) => {
+  console.log(item);
   let url = "http://view.officeapps.live.com/op/view.aspx?src=" + item.url;
   window.open(url, "_blank");
 };

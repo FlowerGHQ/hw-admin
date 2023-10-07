@@ -271,7 +271,6 @@ watch(
     deep: true,
   }
 );
-
 // 获取下拉框数据
 const getCateGory = async () => {
   const res = await getCateGoryList();
@@ -316,11 +315,9 @@ const handleOk = () => {
       console.log("校验失败");
     });
 };
-
 const handleCancel = () => {
   $emit("update:visible", false);
 };
-
 onMounted(() => {
   getCateGory();
 });
