@@ -7,6 +7,7 @@
  */
 export default {
   zh: {
+    coc_error_file_type: '上传文件类型错误',
     coc_title: 'COC模板列表',
     coc_add_template: '添加模板',
     coc_name: 'COC证书名称',
@@ -57,6 +58,7 @@ export default {
 
   },
   en: {
+    coc_error_file_type: 'Upload file type error',
     coc_title: 'COC Template List',
     coc_add_template: 'Add Template',
     coc_name: 'COC Certificate Name',
