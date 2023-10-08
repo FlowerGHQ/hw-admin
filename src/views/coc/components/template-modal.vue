@@ -77,8 +77,7 @@
             :disabled="isDisable"
             :placeholder="$t('coc.coc_placeholder_apply_vehicle')"
             @select="handleSelectChange"
-            :options="filteredOptions.map(item => ({ value: item }))"
-            >
+            :options="filteredOptions.map((item) => ({ value: item }))">
             <!-- <a-select-option
               v-for="(item, index) in option"
               :key="index"
@@ -92,63 +91,63 @@
           :label-col="labelCol"
           name="upload"
           class="upload-item">
-            <!-- 上传组件 正方形带+ -->
-            <a-upload
-              name="file"
-              ref="uploader"
-              :multiple="false"
-              :disabled="isDisable"
-              :file-list="searchForm.fileList"
-              :action="upload.action"
-              :headers="upload.headers"
-              :data="upload.data"
-              :max-count="1"
-              :showUploadList="false"
-              @change="handleFileChange"
-              :before-upload="handleFileCheck">
+          <!-- 上传组件 正方形带+ -->
+          <a-upload
+            name="file"
+            ref="uploader"
+            :multiple="false"
+            :disabled="isDisable"
+            :file-list="searchForm.fileList"
+            :action="upload.action"
+            :headers="upload.headers"
+            :data="upload.data"
+            :max-count="1"
+            :showUploadList="false"
+            @change="handleFileChange"
+            :before-upload="handleFileCheck">
+            <div
+              v-if="searchForm.fileList && searchForm.fileList.length == 0"
+              class="upload-area">
+              <plus-outlined></plus-outlined>
+              <div class="ant-upload-text">
+                {{ $t("coc.coc_placeholder_upload") }}
+              </div>
+            </div>
+            <div v-else class="upload-file-list">
               <div
-                v-if="searchForm.fileList && searchForm.fileList.length == 0"
-                class="upload-area">
-                <plus-outlined></plus-outlined>
-                <div class="ant-upload-text">
-                  {{ $t("coc.coc_placeholder_upload") }}
+                v-for="(item, index) in searchForm.fileList"
+                :key="index"
+                class="file-list-item">
+                <div class="file-item">
+                  <file-word-outlined></file-word-outlined>
+                  <div class="file-name">{{ item.name }}</div>
+                </div>
+                <div class="file-reupload-delete">
+                  <a-button
+                    type="link"
+                    @click="handleFileReupload(item)"
+                    v-if="!isDisable">
+                    {{ $t("coc.coc_reupload") }}
+                  </a-button>
+                  <a-button
+                    type="link"
+                    @click.stop.prevent="handleFileDelete(item)"
+                    danger
+                    v-if="!isDisable">
+                    {{ $t("coc.coc_btn_delete") }}
+                  </a-button>
+                  <!-- 查看按钮 -->
+                  <a-button
+                    type="link"
+                    @click.stop.prevent="handleFileview(item)"
+                    danger
+                    v-if="isDisable">
+                    {{ $t("coc.coc_btn_view") }}
+                  </a-button>
                 </div>
               </div>
-              <div v-else class="upload-file-list">
-                <div
-                  v-for="(item, index) in searchForm.fileList"
-                  :key="index"
-                  class="file-list-item">
-                  <div class="file-item">
-                    <file-word-outlined></file-word-outlined>
-                    <div class="file-name">{{ item.name }}</div>
-                  </div>
-                  <div class="file-reupload-delete">
-                    <a-button
-                      type="link"
-                      @click="handleFileReupload(item)"
-                      v-if="!isDisable">
-                      {{ $t("coc.coc_reupload") }}
-                    </a-button>
-                    <a-button
-                      type="link"
-                      @click.stop.prevent="handleFileDelete(item)"
-                      danger
-                      v-if="!isDisable">
-                      {{ $t("coc.coc_btn_delete") }}
-                    </a-button>
-                    <!-- 查看按钮 -->
-                    <a-button
-                      type="link"
-                      @click.stop.prevent="handleFileview(item)"
-                      danger
-                      v-if="isDisable">
-                      {{ $t("coc.coc_btn_view") }}
-                    </a-button>
-                  </div>
-                </div>
-              </div>
-            </a-upload>
+            </div>
+          </a-upload>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -164,7 +163,7 @@ import {
   onMounted,
   watch,
   getCurrentInstance,
-  computed
+  computed,
 } from "vue";
 // import TemplateUpload from "./template-upload.vue";
 const Util = Core.Util;
@@ -274,8 +273,8 @@ const searchForm = reactive({
   fileList: [],
   id: "",
 });
-const filteredOptions = computed(()=>{
-  return option.value.filter(o => !searchForm.model.includes(o));
+const filteredOptions = computed(() => {
+  return option.value.filter((o) => !searchForm.model.includes(o));
 });
 
 watch(
@@ -285,23 +284,30 @@ watch(
     if (val) {
       searchForm.name = val.name;
       searchForm.version_number = val.version_number;
-      searchForm.coc_validity_date = val.effective_start_time&&val.effective_start_time?[
-        dayjsReview(val.effective_start_time),
-        dayjsReview(val.effective_end_time),
-      ]:[];
-      searchForm.model = val.model&&val.model.length>0?val.model.split(","):[];
-      searchForm.fileList = val.file_name&&val.file_url?[
-        {
-          response:{
-            data:{
-              filename: val.file_url,
-              name: val.file_name,
-            },
-          },
-          name: val.file_name,
-          url: OSS_POINT + '/'+val.file_url,
-        },
-      ]:[];
+      searchForm.coc_validity_date =
+        val.effective_start_time && val.effective_start_time
+          ? [
+              dayjsReview(val.effective_start_time),
+              dayjsReview(val.effective_end_time),
+            ]
+          : [];
+      searchForm.model =
+        val.model && val.model.length > 0 ? val.model.split(",") : [];
+      searchForm.fileList =
+        val.file_name && val.file_url
+          ? [
+              {
+                response: {
+                  data: {
+                    filename: val.file_url,
+                    name: val.file_name,
+                  },
+                },
+                name: val.file_name,
+                url: OSS_POINT + "/" + val.file_url,
+              },
+            ]
+          : [];
       searchForm.id = val.id;
     }
   },
@@ -323,7 +329,7 @@ const handleFileCheck = (file) => {
 };
 // 上传文件
 const handleFileChange = (info) => {
-   searchForm.fileList = info.fileList;
+  searchForm.fileList = info.fileList;
 };
 const handleFileReupload = (item) => {
   // 因为是computed，所以需要重新赋值，
@@ -343,8 +349,6 @@ const handleFileview = (item) => {
 const handleSelectChange = (value) => {
   console.log("value", value);
 };
-
-
 
 // methods
 // 获取下拉框数据
@@ -378,8 +382,11 @@ const handleOk = () => {
         file_name: searchForm.fileList[0].name,
         effective_start_time: dayjsToTimestamp(searchForm.coc_validity_date[0]),
         effective_end_time: dayjsToTimestamp(searchForm.coc_validity_date[1]),
-        model: searchForm.model.length > 1 ? searchForm.model.join(",") : searchForm.model[0],
-      }
+        model:
+          searchForm.model.length > 1
+            ? searchForm.model.join(",")
+            : searchForm.model[0],
+      };
       if (props.modalType === "add") params.id = "";
       delete params.fileList;
       delete params.coc_validity_date;
@@ -426,6 +433,13 @@ onMounted(() => {
     .file-item {
       display: flex;
       align-items: center;
+      .file-name {
+        // 超出部分省略号
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 200px;
+      }
       .anticon-file-word {
         margin-right: 8px;
         font-size: 18px;
