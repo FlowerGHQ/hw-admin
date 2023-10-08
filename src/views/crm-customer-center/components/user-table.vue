@@ -204,12 +204,12 @@
                             </my-tag>
                         </a-popover>
                     </template>
-                    <!-- 所属大区 -->
-                    <template v-if="column.key === 'group_name'">
+                    <!-- 门店所属大区 -->
+                    <template v-if="column.key === 'store_group_name'">
                         {{ text || '-' }}
                     </template>
-                    <!-- 所属城市 -->
-                    <template v-if="column.key === 'city'">
+                    <!-- 门店所属城市 -->
+                    <template v-if="column.key === 'store_city'">
                         {{ text || '-' }}
                     </template>
                     <!-- 所属门店 -->
@@ -337,8 +337,8 @@ const tableColumns = computed(() => {
         { title: '手机号', dataIndex: 'phone', key:'phone' },
         { title: '意向度', dataIndex: 'intention', key:'intention' },        
         { title: '标签', dataIndex: 'label_list', key:'label_list' },
-        { title: '所属大区', dataIndex: 'group_name', key: 'group_name' },
-        { title: '所属城市', dataIndex: 'city', key: 'city' },
+        { title: '门店所属大区', dataIndex: 'store_group_name', key: 'store_group_name' },
+        { title: '门店所属城市', dataIndex: 'store_city', key: 'store_city' },
         { title: '所属门店', dataIndex: 'store_name', key: 'store_name' },
         { title: '用户体验官', dataIndex: 'store_user_name', key:'store_user_name' },
         { title: '订单状态', dataIndex: 'order_status', key: 'order_status' },
