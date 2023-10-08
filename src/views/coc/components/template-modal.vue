@@ -75,13 +75,16 @@
             mode="multiple"
             showArrow
             :disabled="isDisable"
-            :placeholder="$t('coc.coc_placeholder_apply_vehicle')">
-            <a-select-option
+            :placeholder="$t('coc.coc_placeholder_apply_vehicle')"
+            @select="handleSelectChange"
+            :options="filteredOptions.map(item => ({ value: item }))"
+            >
+            <!-- <a-select-option
               v-for="(item, index) in option"
               :key="index"
               :value="item">
               {{ item }}
-            </a-select-option>
+            </a-select-option> -->
           </a-select>
         </a-form-item>
         <a-form-item
@@ -160,7 +163,6 @@ import {
   ref,
   onMounted,
   watch,
-  toRef,
   getCurrentInstance,
   computed
 } from "vue";
@@ -272,6 +274,9 @@ const searchForm = reactive({
   fileList: [],
   id: "",
 });
+const filteredOptions = computed(()=>{
+  return option.value.filter(o => !searchForm.model.includes(o));
+});
 
 watch(
   () => props.recordItem,
@@ -304,8 +309,6 @@ watch(
     deep: true,
   }
 );
-
-
 // 上传前检查文件
 const handleFileCheck = (file) => {
   if (
@@ -336,7 +339,10 @@ const handleFileview = (item) => {
   window.open(url, "_blank");
 };
 
-
+// 选择
+const handleSelectChange = (value) => {
+  console.log("value", value);
+};
 
 
 
