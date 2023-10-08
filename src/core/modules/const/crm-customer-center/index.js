@@ -73,6 +73,9 @@ const CRM_CUSTOMER_CENTER = {
 		'30': { key: '落地页1', value: 30, },
 		'31': { key: '落地页2', value: 31, },
 		'101': { key: '投票分享', value: 101, },
+        '32': { key:'体验官二维码', value: 32, },
+        '33': { key:'门店二维码', value: 33, },
+        '34': { key:'人工录入', value: 34, },
 	},   
     // 判断接口事线索list还是用户list
     CHOOSE_TYPE: {
