@@ -545,9 +545,9 @@ const payMethodsFilter = (key) => {
     margin-right: 8px;
 }
 .message-label {
-    margin-right: 6px;
+    margin-right: 6px !important;
     &:last-child {
-        margin-right: 0px;
+        margin-right: 0px !important;
     }
 }
 .pointer {
