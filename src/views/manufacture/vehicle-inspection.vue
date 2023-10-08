@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="operate-container flex">
-                <a-button type="primary">批量导出</a-button>
-                <a-button type="primary">全部导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('choose')">批量导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('all')">全部导出</a-button>
             </div>
             <div class="table-container">
                 <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -136,6 +136,7 @@ export default {
             expandIconColumnIndex: 0,
             selectedRowKeys: [],
             selectedRowItems: [],
+            exportDisabled: false,
         };
     },
     computed: {
@@ -223,6 +224,26 @@ export default {
                 this.expandedRowKeys = []
             });
         },
+        // 导出
+        handleExport(type) {
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+              form[key] = form[key] || '';
+            }
+            let params = {
+              ...form
+            };
+            if (type === 'choose') {
+              params.id_list = this.selectedRowKeys;
+            }
+            let exportUrl = Core.Api.Export.vehicleInspection({
+                ...params
+            });
+            console.log("handleExport exportUrl", exportUrl);
+            window.open(exportUrl, '_blank');
+            this.exportDisabled = false;
+        }
     }
 };
 </script>

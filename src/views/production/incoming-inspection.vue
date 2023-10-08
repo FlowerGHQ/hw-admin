@@ -9,37 +9,37 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">物料名称:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">物料编码:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.material_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">收货单号:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.material_purchase_arrival_order_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">采购订单号:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.material_purchase_arrival_order_item_source_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">供应商名称:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.supplier_name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">质检员:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.uid" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.audit_user" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="16" :xxl='12' class="search-item">
@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="operate-container flex">
-                <a-button type="primary">批量导出</a-button>
-                <a-button type="primary">全部导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('choose')">批量导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('all')">全部导出</a-button>
             </div>
             <div class="table-container">
                 <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -94,7 +94,6 @@
 
 <script>
 import Core from '../../core';
-import dayjs from "dayjs";
 import TimeSearch from '@/components/common/TimeSearch.vue'
 
 
@@ -114,14 +113,14 @@ export default {
             pageSize: 20,
             total: 0,
             searchForm: {
-                name: '',
-                uid: '',
-                category_id: undefined,
+                name: undefined, // 物料名称
+                audit_user: undefined, // 质检员
+                material_code: undefined, // 物料编码
                 begin_time: '',
                 end_time: '',
-                distributor_id: undefined,
-                agent_id: undefined,
-                store_id: undefined,
+                material_purchase_arrival_order_code: undefined, // 收货单号
+                material_purchase_arrival_order_item_source_code: undefined, // 采购订单号
+                supplier_name: undefined, // 供应商名称
             },
             // 表格
             tableData: [],
@@ -129,22 +128,22 @@ export default {
             expandIconColumnIndex: 0,
             selectedRowKeys: [],
             selectedRowItems: [],
+            exportDisabled: false,
         };
     },
     computed: {
         tableColumns() {
-            let columns = [
-                {title: '物料编码', dataIndex: 'name', key: 'detail'},
-                {title: '物料名称', dataIndex: 'name', key: 'code'},
-                {title: '收货单号', dataIndex: 'name', key: 'vehicle_uid'},
-                {title: '采购订单号', dataIndex: 'name', key: 'item'},
-                {title: '供应商名称', dataIndex: 'name', key: 'motor_uid'},
-                {title: '收货仓库', dataIndex: 'name', key: 'vcu_uid'},
-                {title: '收货数量', dataIndex: 'name', key: 'battery_uid'},
-                {title: '质检员', dataIndex: 'name', key: 'attr'},
-                {title: '质检时间', dataIndex: 'create_time', key: 'time'},
+            return [
+                {title: '物料编码', dataIndex: 'material_code', key: 'item'},
+                {title: '物料名称', dataIndex: 'name', key: 'item'},
+                {title: '收货单号', dataIndex: 'material_purchase_arrival_order_code', key: 'item'},
+                {title: '采购订单号', dataIndex: 'material_purchase_arrival_order_item_source_code', key: 'item'},
+                {title: '供应商名称', dataIndex: 'supplier_name', key: 'item'},
+                {title: '收货仓库', dataIndex: 'warehouse_name', key: 'item'},
+                {title: '收货数量', dataIndex: 'arrival_amount', key: 'item'},
+                {title: '质检员', dataIndex: 'audit_user', key: 'item'},
+                {title: '质检时间', dataIndex: 'time', key: 'time'},
             ]
-            return columns
         },
         rowSelection() {
             return {
@@ -202,7 +201,7 @@ export default {
         },
         getTableData() {  // 获取 表格 数据
             this.loading = true;
-            Core.Api.ProductionOrder.inspectionList({
+            Core.Api.ProductionOrder.incomingInspectionList({
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize,
@@ -217,6 +216,26 @@ export default {
                 this.expandedRowKeys = []
             });
         },
+        // 导出
+        handleExport(type) {
+            this.exportDisabled = true;
+            let form = Core.Util.deepCopy(this.searchForm);
+            for (const key in form) {
+                form[key] = form[key] || '';
+            }
+            let params = {
+                ...form
+            };
+            if (type === 'choose') {
+                params.ids = this.selectedRowKeys;
+            }
+            let exportUrl = Core.Api.Export.incomingInspection({
+                ...params
+            });
+            console.log("handleExport exportUrl", exportUrl);
+            window.open(exportUrl, '_blank');
+            this.exportDisabled = false;
+        }
     }
 };
 </script>

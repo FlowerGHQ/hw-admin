@@ -44,8 +44,8 @@ const apiList = {
         materialExport: ['PostJson', 'material/export-material'], // 物料导出
         goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
         downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
-
-
+        vehicleInspection: ['GetJson', 'mes-quality-inspect/finished-export'], // 整车完检列表导出
+        incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -484,7 +484,8 @@ const apiList = {
         cancel: ['PostJson', 'production-order/cancel'],
         calculateAmount: ['PostJson', 'production-order/calculate-production-amount'], //根据bom和仓库计算生产数量
         vehicleAdd: ['PostJson', 'production-order/vehicle-add'],
-        inspectionList: ['PostJson', 'mes-quality-inspect/list-finish'], // 整车完检列表
+        inspectionList: ['PostJson', 'mes-quality-inspect/finished-list'], // 整车完检列表
+        incomingInspectionList: ['PostJson', 'material-arrival-quality-inspection-order/list'], // 来料检验列表
     },
     Material: { // 物料
         save: ['PostJson', 'material/save'],
@@ -581,8 +582,6 @@ const apiList = {
         receive: ['PostJson', 'warehouse-transfer-order/receive'],
         stock: ['PostJson', 'warehouse-transfer-order/save-to-invoice'],//入库
         detailByUid: ['PostJson', 'warehouse-transfer-order/detail-by-sn'],//入库
-
-
     },
     Feedback: {//质量反馈单
         list: ['PostJson', 'feedback/list'],//
