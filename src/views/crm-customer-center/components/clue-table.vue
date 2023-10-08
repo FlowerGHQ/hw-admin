@@ -246,7 +246,9 @@
                     </template>             
                     <!-- 付款方式 -->
                     <template v-if="column.key === 'pay_type'">
-                        <span>分期付款</span>
+                        <span>                            
+                            {{ payMethodsFilter(record.order_status) ? '分期付款' : '-' }}
+                        </span>
                     </template>
                     <!-- 线索来源 -->
                     <template v-if="column.key === 'source_type'">                    
@@ -611,6 +613,17 @@ const onHandleOk = () => {
 // 选择框变换事件
 const onSelectChange = (key) => {
     selectedRowKeys.value = key
+}
+// 付款方式过滤
+const payMethodsFilter = (key) => {
+    let arr = [
+        CRM_CUSTOMER_CENTER.ORDER_STATUS_TEXT_MAPS.Have_paid,
+        CRM_CUSTOMER_CENTER.ORDER_STATUS_TEXT_MAPS.Refunded,
+        CRM_CUSTOMER_CENTER.ORDER_STATUS_TEXT_MAPS.Apply_for_refund,
+    ]
+    console.log("数组数据", arr);
+    let result = arr.includes(key)
+    return result
 }
 </script>
 

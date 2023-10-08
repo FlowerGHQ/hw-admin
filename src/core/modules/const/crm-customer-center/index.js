@@ -39,6 +39,15 @@ const CRM_CUSTOMER_CENTER = {
 		'-300': { key: '-300', text: '已退款', bgColor:'', border_color: '#F7BA1E33', color: '#722ED1' },
 		'-400': { key: '-400', text: '申请退款', bgColor:'', border_color: '#F5E8FF', color: '#722ED1' },
 	},
+    ORDER_STATUS_TEXT_MAPS: {
+        Do_not_place_an_order: 0,
+        Do_not_place_an_order50: 50,        
+        To_be_paid: 100,
+        Have_paid: 200,
+        Cancelled: -200,
+        Refunded: -300,
+        Apply_for_refund: -400,
+    },
     // 来源（1.预定小程序 2.后台注册 3.Shopify 4.官网2.0 5.官网1.0 30.落地页1 31.落地页2 101-投票分享）
     SOURCE_TYPE: [
         { title:'全部', value: 0, key: 0 },
