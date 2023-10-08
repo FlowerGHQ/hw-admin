@@ -53,7 +53,7 @@
                             </a-select>
                         </span>
                     </a-col>
-                    <!-- 所属大区 -->
+                    <!-- 门店所属大区 -->
                     <a-col
                         :xs="24"
                         :sm="24"
@@ -70,7 +70,7 @@
                             </a-select>
                         </span>
                     </a-col>                  
-                    <!-- 所属城市 -->
+                    <!-- 门店所属城市 -->
                     <a-col
                         :xs="24"
                         :sm="24"
@@ -181,12 +181,12 @@
                     <template v-if="column.key === 'intention'">
                         <my-tag border :color="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.color" bgColor="#FFF" :borderColor="CRM_CUSTOMER_CENTER.INTENTION_MAP[text]?.borderColor">{{ text ? Core.Const.CRM_ORDER.INTENTION_STATUS[text][lang] : '-' }}</my-tag>
                     </template>
-                    <!-- 所属大区 -->
-                    <template v-if="column.key === 'group_name'">
+                    <!-- 门店所属大区 -->
+                    <template v-if="column.key === 'store_group_name'">
                         {{ text || '-' }}
                     </template>
-                    <!-- 所属城市 -->
-                    <template v-if="column.key === 'city'">
+                    <!-- 门店所属城市 -->
+                    <template v-if="column.key === 'store_city'">
                         {{ text || '-' }}
                     </template>
                     <!-- 所属门店 -->
@@ -268,7 +268,7 @@
         <template #title>
             <div class="distribution—title">分配门店</div>
         </template>
-        <!-- 所属大区 -->
+        <!-- 门店所属大区 -->
         <div class="row-detail">
             <div class="row-item">
                 <span class="key">选择大区：</span>
@@ -284,7 +284,7 @@
                     </a-select>
                 </span>
             </div>                  
-            <!-- 所属城市 -->
+            <!-- 门店所属城市 -->
             <div class="row-item">
                 <span class="key">选择城市：</span>
                 <span class="value">
@@ -403,8 +403,8 @@ const tableColumns = computed(() => {
         { title: '手机号', dataIndex: 'phone', key:'phone' },
         { title: '意向度', dataIndex: 'intention', key:'intention' },
         { title: '标签', dataIndex: 'label_list', key:'label_list' },
-        { title: '所属大区', dataIndex: 'group_name', key: 'group_name' },
-        { title: '所属城市', dataIndex: 'city', key: 'city' },
+        { title: '门店所属大区', dataIndex: 'store_group_name', key: 'store_group_name' },
+        { title: '门店所属城市', dataIndex: 'store_city', key: 'store_city' },
         { title: '所属门店', dataIndex: 'store_name', key: 'store_name' },
         { title: '用户体验官', dataIndex: 'store_user_name', key:'store_user_name' },
         { title: '订单状态', dataIndex: 'order_status', key: 'order_status' },
