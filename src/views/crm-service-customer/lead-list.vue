@@ -178,9 +178,6 @@
     const onAllocation = () => {
         leadVisible.value = true
         allocationList.value = Core.Util.deepCopy(leadList.value)
-        allocationList.value.forEach(el => {
-            el.new_customer_assign_rate = 0
-        })
     }
     // model确认按钮
     const onLeadModelOk = () => {
