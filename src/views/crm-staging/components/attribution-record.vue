@@ -12,16 +12,16 @@
           <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'store_user_name'">
                   <div class="person">
-                    <img class="person-img" :src="Static.defaultAvatar">
-                    <span class="person-name">{{ record.store_user_name }}</span>
-                    <span class="person-id">{{ record.store_user_id }}</span>
+                    <img class="person-img" :src="record.store_user_avatar || Static.defaultAvatar">
+                    <span class="person-name">{{ record.store_user_name || '-' }}</span>
+                    <span class="person-id">{{ record.store_user_employee_no || '-' }}</span>
                   </div>
               </template>
-              <template v-if="column.key === 'create_user_name'">
+              <template v-if="column.key === 'operator_name'">
                   <div class="person">
-                    <img class="person-img" :src="Static.defaultAvatar" v-if="record.create_user_name">
-                    <span class="person-name">{{ record.create_user_name || '-' }}</span>
-                    <span class="person-id">{{ record.create_user_id || '-'  }}</span>
+                    <img class="person-img" :src="record.operator_avatar || Static.defaultAvatar">
+                    <span class="person-name">{{ record.operator_name || '-' }}</span>
+                    <span class="person-id">{{ record.operator_employee_no || '-'  }}</span>
                   </div>
               </template>
               <template v-if="column.key === 'create_time'">
@@ -68,8 +68,8 @@ const columns = [
 },
 {
   title: '分配人',
-  key: 'create_user_name',
-  dataIndex: 'create_user_name'
+  key: 'operator_name',
+  dataIndex: 'operator_name'
 },
 {
   title: '分配日期',

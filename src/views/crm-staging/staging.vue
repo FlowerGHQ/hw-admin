@@ -140,11 +140,26 @@ import dayjs from "dayjs";
 
 const router = useRouter()
 const route = useRoute()
+const id = ref(route.query?.id)
 const { proxy } = getCurrentInstance();
 onMounted(() => {    
     getAmountList()
     getAllChildData()
-    getTaskNum()
+    if (id.value) {
+        search.value.openClear()
+        Core.Api.CustomService.detail({ id: id.value }).then(res=>{
+            // id筛选用户状态回显
+            if (res.province || res.city) {
+                staskStatusChange(1)
+            } else {
+                staskStatusChange(0)
+            }
+	    }).catch(err=>{
+            Core.Logger.error("参数", "数据", err)
+	    })
+    } else {
+        getTaskNum()
+    }
 })
 
 // a-drawer bodyStyle样式
@@ -489,8 +504,14 @@ const clearId = () => {
     router.replace({ query: {} })
     id.value = undefined
 }
+
+const getTaskList = () => {
+    getAmountList()
+    getTaskNum({ page: 1 }, true)
+}
+
 provide('userId', userId); // 提供id
-provide('getTaskNum', getTaskNum); // 提供更新任务数据方法
+provide('getTaskList', getTaskList); // 提供更新任务数据方法
 provide('getChildData', getChildData); // 提供获取子组件数据方法
 </script>
 
