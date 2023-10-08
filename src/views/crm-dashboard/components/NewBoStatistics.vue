@@ -244,7 +244,6 @@ export default {
                 //         dv.push({ type: this.$Util.CRMCustomerTestDriveIntentChartFilter(res.type, this.lang), value: res.value })
                 //     }
                 // })
-                console.log('yxy:', dv);
                 this.drawBoStatisticsChart(dv)
 
             }).catch(err => {

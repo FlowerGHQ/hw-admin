@@ -147,9 +147,9 @@ export default {
             })
         },
         handleLangSwitch() {
-            console.log('handleLangSwitch')
-            this.$store.commit('switchLang')
-            this.$i18n.locale = this.$store.state.lang
+            
+            this.$store.commit('switchLang');
+            this.$i18n.locale = this.$store.state.lang;
             console.log('this.$i18n.locale',this.$i18n.locale)
         },
     }

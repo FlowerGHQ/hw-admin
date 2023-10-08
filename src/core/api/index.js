@@ -42,6 +42,10 @@ const apiList = {
         exportSalesQuantityStatistics: ['GetJson', 'purchase-order/export-sales-quantity-statistics'], // 导出数据
         exportAccessoriesOrder: ['GetJson', 'purchase-order/export-accessories-order'], // 导出数据
         materialExport: ['PostJson', 'material/export-material'], // 物料导出
+        goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
+        downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
+
+
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -811,6 +815,14 @@ const apiList = {
         repairOrder: ['PostJson', 'data-board/repair-order'],
         repairRank: ['PostJson', 'data-board/fault_rank'],
     },
+    // 投票统计
+    VoteData: { 
+        getActivityId: ['PostJson', 'vote/activity/current'], // get 活动Id
+        cityStatistics: ['PostJson', 'vote/activity/statistics/city'], // 投票城市统计
+        sourceStatistics: ['PostJson', 'vote/activity/statistics/source'], // 投票来源统计
+        numberStatistics: ['PostJson', 'vote/activity/statistics/number'], // 投票数量统计
+        resultStatistics: ['PostJson', 'vote/activity/statistics/result'], // 投票结果统计
+    },
     // 国内零售模块 【零售相关的接口都得放这里面, 调用的接口前缀是 crm/1/.........】
     RETAIL: {
         // 门店管理接口
@@ -836,7 +848,19 @@ const apiList = {
 
         // 车辆管理接口
         // 订单管理接口
+    },
+    // crm 好物订单接口
+    GoodItemsOrder: {
+
+        orderList: ['PostJson', 'app-order/list'],                      // 订单列表
+        orderDetail: ['PostJson', 'app-order/detail'],                  // 订单详情
+        updateTrackingNumber: ['PostJson', 'app-waybill/save'],         // 更新快递单号
+        logisticsRecords: ['PostJson', 'app-waybill-log/list'],         // 物流信息修改记录
+        statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
+        seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
+        wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
+
     }
-};
+}; 
 
 export default new Api(baseUrl, apiList);

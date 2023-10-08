@@ -3,7 +3,7 @@ import defult_img from '@images/defult_img.png'
 import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
-
+import constModules from './modules/const/index'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
@@ -27,6 +27,15 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
+    case 'eos.hw.innotick.com':
+        URL_POINT = 'http://eos-api.horwincloud.com' // 老正式服
+        break;
+    case 'eos-dev.hw.innotick.com':
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 老测试服
+        break;
+    case 'eos-release.horwincloud.com':
+        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
+        break;
     default:
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
@@ -34,11 +43,13 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.138:8889'  // zy
+        // URL_POINT = 'http://10.0.0.190:8889' // zy
+        // URL_POINT = 'http://10.10.12.204:8888' // zny
         break;
 }
 
 let Const = {
+    ...constModules,
     NET: {
         URL_POINT: URL_POINT,
         OSS_POINT: OSS_POINT,
@@ -1197,9 +1208,9 @@ let Const = {
             REPAIR_ORDER_DEDUCTIONS: 50,
         },
         SUBJECT_MAP: {
-            '101': { key: 101, zh: '管理员操作', en: 'Admin action' },
-            '201': { key: 201, zh: '采购单', en: 'Purchase order' },
-            '501': { key: 501, zh: '维修单', en: 'Repair order' },
+            '10': { key: 10, zh: '管理员操作', en: 'Admin action' },
+            '20': { key: 20, zh: '采购单', en: 'Purchase order' },
+            '50': { key: 50, zh: '维修单', en: 'Repair order' },
         }
     },
     FAULT_ENTITY: { //故障件
@@ -1658,33 +1669,33 @@ let Const = {
             DISTRIBUTE: 40,          // 40代理分销
             OTHER: 50,               // 50其他
         },
-		TYPE_MAP: {
-			'10': { key: 10, zh: '产品销售',en: 'Product Sales', value: 10 },
-			'20': { key: 20, zh: '业务合作',en: 'Cooperation', value: 20 },
-			'30': { key: 30, zh: '服务',en: 'Service', value: 30 },
-			'40': { key: 40, zh: '代理分销',en: 'Distribute', value: 40 },
-			'50': { key: 50, zh: '其他',en: 'Others', value: 50 },
-		},
-		STATUS: {
-            // 对应下面 STATUS_MAP
-            WAIT_AUDIT: 20,      
-            REFUSE: 30,          
-            TOBEPAID: 35,        
-            EXECUTING: 40,       
-            REFUND: 44,          
-            REFUND_PROGRESS: 44, 
-            FINISH: 50,          
+        TYPE_MAP: {
+            '10': { key: 10, zh: '产品销售', en: 'Product Sales', value: 10 },
+            '20': { key: 20, zh: '业务合作', en: 'Cooperation', value: 20 },
+            '30': { key: 30, zh: '服务', en: 'Service', value: 30 },
+            '40': { key: 40, zh: '代理分销', en: 'Distribute', value: 40 },
+            '50': { key: 50, zh: '其他', en: 'Others', value: 50 },
         },
-		STATUS_MAP: {
-			'10': { key: 10, zh: '初始化',en: 'Init', value: 10 },
-			'20': { key: 20, zh: '待审核',en: 'Pending Review', value: 20 },
-			'30': { key: 30, zh: '审核拒绝',en: 'Review Rejected', value: 30 },
-			'35': { key: 35, zh: '待支付',en: 'To be paid', value: 35 },
-			'40': { key: 40, zh: '执行中',en: 'Executing', value: 40 },
-			'44': { key: 44, zh: '申请退款',en: 'Apply for a refund', value: 44 },            
-			'46': { key: 46, zh: '退款中',en: 'Refund in progress', value: 46 },
-			'50': { key: 50, zh: '已结束',en: 'Finished', value: 50 },
-		},
+        STATUS: {
+            // 对应下面 STATUS_MAP
+            WAIT_AUDIT: 20,
+            REFUSE: 30,
+            TOBEPAID: 35,
+            EXECUTING: 40,
+            REFUND: 44,
+            REFUND_PROGRESS: 44,
+            FINISH: 50,
+        },
+        STATUS_MAP: {
+            '10': { key: 10, zh: '初始化', en: 'Init', value: 10 },
+            '20': { key: 20, zh: '待审核', en: 'Pending Review', value: 20 },
+            '30': { key: 30, zh: '审核拒绝', en: 'Review Rejected', value: 30 },
+            '35': { key: 35, zh: '待支付', en: 'To be paid', value: 35 },
+            '40': { key: 40, zh: '执行中', en: 'Executing', value: 40 },
+            '44': { key: 44, zh: '申请退款', en: 'Apply for a refund', value: 44 },
+            '46': { key: 46, zh: '退款中', en: 'Refund in progress', value: 46 },
+            '50': { key: 50, zh: '已结束', en: 'Finished', value: 50 },
+        },
         CUSTOMER_MAP: {
             '10': { key: 10, zh: '私人客户', en: 'Private client', value: 10 },
             '40': { key: 40, zh: '公海客户', en: 'High seas customers', value: 40 },
@@ -2321,6 +2332,66 @@ let Const = {
             '3': { key: 3, zh: 'C类', en: 'C kind', value: 3 },
         }
 
+    },
+    VOTE: {
+        SOURCE_TYPE_MAP: {
+            '1': { value: 1,  text: '好友分享'},
+		    '2': { value: 2,  text: '官网'},
+		    '3': { value: 3,  text: '公众号二维码'},
+		    '4': { value: 4,  text: '微博链接'},
+		    '5': { value: 5,  text: '直接进入'},
+        },
+        TYPE: {
+            DAILYVOTE: 1,
+            SOURCE: 2,
+            PAID: 3,
+            COLOR: 4,
+            AREA: 5,
+            SHARE: 6,
+        },
+        VOTE_RESULT: {
+            '1': { key: 1, text: '白日梦影', value: 1  },
+            '2': { key: 2, text: '月影华彩', value: 2  },
+            '3': { key: 2, text: '星际漫游', value: 3  },
+            '4': { key: 2, text: '朝日炫影', value: 4  },
+            '5': { key: 2, text: '黑曜星尘', value: 5  },
+            '6': { key: 2, text: '紫光幻境', value: 6  },
+            '7': { key: 2, text: '浩万橙光', value: 7  },
+            '8': { key: 2, text: '深空炽橙', value: 8  },
+        }
+    },
+
+    // 好物订单
+    GOODITEMORDER: {
+        Order_Status_Map: {
+
+            '1': { key: 1, zh: '全部', en: 'All', value: 0 },
+            '2': { key: 2, zh: '待发货', en: 'To Be Paid', value: 300 },
+            '3': { key: 3, zh: '已发货', en: 'Shipped', value: 400 },
+            '4': { key: 4, zh: '已完成', en: 'Completed', value: 500 },
+        },
+        // 奖品订单来源
+        Source_Channel: {
+
+            // '1': { key: 1, zh: '新春贺礼订单', en: 'New Year Gift Order',value:1 },
+            // '1': { key: 1, zh: '投票分享', en: 'Voting Sharing', value: 1 },
+            '2': { key: 2, zh: '分享好友', en: 'Share friends', value: 2 },
+            '3': { key: 3, zh: '投票抽奖', en: 'Voting lottery', value: 3 },
+        },
+        // 修改好物订单记录
+        Update_Record: {
+
+            '1': { key: 1, zh: '快递单号', en: 'Modify Tracking Number', value: 1 }
+        },
+        // 活动入口--来源类型1好友分享 2官网 3公众号 4 微博 5 直接进入
+        Source_Type: {
+
+            '1': { key: 1, zh: '好友分享', en: 'Friends Share', value: 1 },
+            '2': { key: 1, zh: '官网', en: 'Official Website', value: 2 },
+            '3': { key: 1, zh: '公众号', en: 'Official Account', value: 3 },
+            '4': { key: 1, zh: '微博', en: 'Weibo', value: 4 },
+            '5': { key: 1, zh: '直接进入', en: 'Direct Entry', value: 5 },
+        }
     },
     // 飞书人员所属类型
     FEISHUTYPE: {
