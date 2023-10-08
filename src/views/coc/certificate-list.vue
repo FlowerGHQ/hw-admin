@@ -7,9 +7,13 @@
           <a class="order-link">{{ oderNumer }}</a>
           {{ $t("certificate-list.coc_certificateList") }}
         </div>
-        <div class="all_download title-container" v-if=" props.cocProps &&
-    Object.keys(props.cocProps).length > 0 &&
-    props.cocProps.isOther">
+        <div
+          class="all_download title-container"
+          v-if="
+            props.cocProps &&
+            Object.keys(props.cocProps).length > 0 &&
+            props.cocProps.isOther
+          ">
           <a-button type="primary" @click="onAllDownLoad({})">{{
             $t("certificate-list.coc_allDownloaded")
           }}</a-button>
@@ -348,6 +352,7 @@ const allGenerated = () => {
     target_id: route.query.id,
   };
   regenerateFile(param).then((res) => {
+    handleReset();
     getCerList();
     $message.success($t("coc.coc_generate_success"));
   });
@@ -499,7 +504,7 @@ onMounted(() => {
           text-decoration: underline;
         }
       }
-      .all_download{
+      .all_download {
         display: flex;
         justify-content: flex-end;
         padding: 0 !important;

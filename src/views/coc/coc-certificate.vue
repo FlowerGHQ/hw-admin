@@ -435,6 +435,7 @@ const allGenerated = () => {
     target_id: "",
   };
   regenerateFile(params).then((res) => {
+    handleReset();
     certificateList();
     $message.success($t("coc.coc_generate_success"));
   });
