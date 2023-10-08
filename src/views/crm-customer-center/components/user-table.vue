@@ -378,7 +378,7 @@ const routerChange = (type, item = {}) => {
     switch (type) {
         case "detail": // 详情
             routeUrl = router.resolve({
-                path: "/crm-staging/staging",
+                path: "/crm-staging/staging-detail",
                 query: { id: item.id },
             });
             window.open(routeUrl.href, "_blank");

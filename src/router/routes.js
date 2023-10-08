@@ -1697,6 +1697,17 @@ const routes = [
 					auth: ["crm-label.list"],
 				}
 			},
+			{// 工作台详情
+				path: 'staging-detail',
+				name: 'stagingDetail',
+				component: () => import('@/views/crm-staging-detail/staging.vue'),
+				meta: {
+					title: '工作台详情',
+					title_en: 'StagingDetail',
+					auth: ["crm-label.list"],
+                    hidden: true,
+				}
+			},
 		]
 	},
 	{ // 客户
