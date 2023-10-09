@@ -49,6 +49,11 @@ const $prop = defineProps({
         required: true,
         type: Boolean,
     },
+    // 是否有省市
+    isProvince: {
+        required: true,
+        type: Boolean,
+    },
 })
 const $emit = defineEmits(['next', 'toTop','follow', 'order'])
 
@@ -62,7 +67,13 @@ const list = [
 ]
 const leadShowPop = ref(false);
 const listRender = computed(() => {
-    return list.map(item => {
+    let arr = []
+    if (!$prop.isProvince) {
+        arr = list.filter(item => item.alt !== '线索转移')
+    } else {
+        arr = list
+    }
+    return arr.map(item => {
         if (item.alt === '置顶' || item.alt === '取消置顶') {
             if ($prop.isTop) {
                 return { src: offTop, alt: '取消置顶' }

@@ -44,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>
+                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" :isProvince="isProvince" @next="nextTask" @toTop="toTop" @order="order"/>
             </div>
         </div>
         <a-drawer
@@ -117,6 +117,7 @@ const menuLeftRender = computed(() => {
 //置顶
 const QuickOrderRef = ref(null)
 const openOrder = ref(false)
+const isProvince = ref(false)
 const order = () => {
     openOrder.value = true
     nextTick(() => {
@@ -190,6 +191,17 @@ const getAllChildData = () => {
     if (!userId.value) return
     const arr = ['1', '2', '3', '4', '5', '6', 'userDetailRef']
     arr.forEach(item => getChildData(item))
+
+    // 获取当前人员省市情况
+    Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
+        if (res.province || res.city) {
+            isProvince.value = true
+        } else {
+            isProvince.value = false
+        }
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const getChildData = (key) => {
     nextTick(() => {
@@ -242,7 +254,12 @@ const handleScroll = (e, type) => {
     }
 }
 
+const getTaskList = () => {
+    getAllChildData()
+}
+
 provide('userId', userId); // 提供id
+provide('getTaskList', getTaskList); // 提供更新任务数据方法
 provide('getChildData', getChildData); // 提供获取子组件数据方法
 </script>
 

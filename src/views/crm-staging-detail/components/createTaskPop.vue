@@ -32,6 +32,7 @@
   const { proxy } = getCurrentInstance();
   const $emit = defineEmits(['finalyCreate'])
   const userId = inject('userId');
+  const getTaskList = inject('getTaskList');
   const props = defineProps({
     isShowCreate: {
       type: Boolean,
@@ -65,6 +66,7 @@
     }).then(res=>{
       proxy.$message.success('取消成功');
       $emit('finalyCreate')
+      getTaskList()
     }).catch(err=>{
     }).finally(()=>{
       resetFollow()
@@ -81,8 +83,9 @@
         customer_id:userId.value,
         next_track_time:time
       },"数据",res);
-       proxy.$message.success('创建成功');
+        proxy.$message.success('创建成功');
         $emit('finalyCreate')
+        getTaskList()
     }).catch(err=>{
       Core.Logger.error("参数",{
       customer_id:userId.value,

@@ -439,10 +439,15 @@ const Static = {
 	// 来源
 	SOURCE_TYPE_MAP: {
 		'1': { key: '预定小程序', value: 1, },
-		'2': { key: '人工创建', value: 2, },
-		'3': { key: '官网', value: 3, },
-		'4': { key: '体验官二维码', value: 4, },
-		'5': { key: '门店二维码', value: 5, },
+		'2': { key: '后台注册', value: 2, },
+		'3': { key: 'Shopify', value: 3, },
+		'4': { key: '官网2.0', value: 4, },
+		'5': { key: '官网1.0', value: 5, },
+        '30': { key: '落地页1', value: 30, },
+        '31': { key: '落地页2', value: 31, },
+		'32': { key: '体验官二维码', value: 32, },
+		'33': { key: '门店二维码', value: 33, },
+		'34': { key: '人工创建', value: 34, },
 	},
 	// 标签
 	TAG_TYPE_MAP: {

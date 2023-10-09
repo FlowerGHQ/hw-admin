@@ -99,7 +99,7 @@
                         </div>
                     </div>
                 </div>
-                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" @next="nextTask" @toTop="toTop" @order="order"/>
+                <FixedSelect :isTop="isTop" :current="taskCurrent" :amount="taskAmount" :isProvince="isProvince" @next="nextTask" @toTop="toTop" @order="order"/>
             </div>
         </div>
         <a-drawer
@@ -342,6 +342,7 @@ const updateTask = () => {
 //置顶
 const QuickOrderRef = ref(null)
 const openOrder = ref(false)
+const isProvince = ref(false)
 const toTop = (index) => {
     const params = {
         id: taskList.value[index].id
@@ -435,6 +436,17 @@ const getAllChildData = () => {
     if (!userId.value) return
     const arr = ['1', '2', '3', '4', '5', '6', 'userDetailRef']
     arr.forEach(item => getChildData(item))
+
+     // 获取当前人员省市情况
+     Core.Api.CustomService.detail({ id: userId.value }).then(res=>{
+        if (res.province || res.city) {
+            isProvince.value = true
+        } else {
+            isProvince.value = false
+        }
+	}).catch(err=>{
+        Core.Logger.error("参数", "数据", err)
+	})
 }
 const getChildData = (key) => {
     nextTick(() => {
