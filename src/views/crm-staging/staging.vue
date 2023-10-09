@@ -640,11 +640,13 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
                     }
                 }
                 &-body {
-                    overflow-y: auto;
-                    padding: 0 6px 20px 20px;
+                    overflow: hidden;
+                    padding: 0 14px 20px 20px;
                     margin-right: 6px;
-                    /* 自定义滚动条样式 */
-                    
+                    &:hover {
+                        padding: 0 6px 20px 20px;
+                        overflow-y: scroll;
+                    }
                     &-item {
                         display: flex;
                         border-radius: 6px;

@@ -235,6 +235,7 @@ defineExpose({ getUserDetail })
             flex-direction: column;
             border-radius: 8px;
             border: 1px solid #F2F3F5;
+            margin-bottom: 24px;
             .version-title {
                 display: flex;
                 justify-content: space-between;
