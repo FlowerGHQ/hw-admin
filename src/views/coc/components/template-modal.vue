@@ -106,13 +106,21 @@
             @change="handleFileChange"
             :before-upload="handleFileCheck">
             <div
-              v-if="searchForm.fileList && searchForm.fileList.length == 0"
-              class="upload-area">
-              <plus-outlined></plus-outlined>
-              <div class="ant-upload-text">
-                {{ $t("coc.coc_placeholder_upload") }}
+              class="tips_upload"
+              v-if="searchForm.fileList && searchForm.fileList.length == 0">
+              <div class="upload-area">
+                <plus-outlined></plus-outlined>
+                <div class="ant-upload-text">
+                  {{ $t("coc.coc_placeholder_upload") }}
+                </div>
+              </div>
+              <div class="tips">
+                注：请把以下字段放到模版里对应的位置再上传：
+                &#123;&#123;车架号&#125;&#125; &#123;&#123;电机号&#125;&#125;
+                &#123;&#123;生产时间&#125;&#125;
               </div>
             </div>
+
             <div v-else class="upload-file-list">
               <div
                 v-for="(item, index) in searchForm.fileList"
@@ -447,17 +455,31 @@ onMounted(() => {
     }
   }
 }
-.upload-area {
-  display: flex;
-  width: 80px;
-  height: 80px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 2px;
-  border: 1px dashed var(--Color-border-2, #e5e6eb);
-  background: var(--Color-fill-1, #f7f8fa);
+.upload-item {
+  .tips_upload {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    .upload-area {
+      display: flex;
+      min-width: 80px;
+      height: 80px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 2px;
+      border: 1px dashed var(--Color-border-2, #e5e6eb);
+      background: var(--Color-fill-1, #f7f8fa);
+    }
+    .tips {
+      height: 80px;
+      font-size: 12px;
+      margin-left: 20px;
+      // 超出换行
+      white-space: normal;
+    }
+  }
 }
 .ant-form-item-control-input-content > span {
   display: block;
