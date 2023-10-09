@@ -55,8 +55,8 @@
                 </div>
             </div>
             <div class="operate-container flex">
-                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('choose')">批量导出</a-button>
-                <a-button :disabled="exportDisabled" type="primary" @click="handleExport('all')">全部导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExportExcel">批量导出</a-button>
+                <a-button :disabled="exportDisabled" type="primary" @click="handleExportExcel">全部导出</a-button>
             </div>
             <div class="table-container">
                 <a-table :check-mode='true' :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -101,6 +101,7 @@
 import Core from '../../core';
 import TimeSearch from '@/components/common/TimeSearch.vue'
 import VEHICLE_INSPECTION from "@/core/modules/const/vehicle-inspection";
+import axios from "axios";
 
 
 export default {
@@ -224,25 +225,40 @@ export default {
                 this.expandedRowKeys = []
             });
         },
-        // 导出
-        handleExport(type) {
+        excelRequest() { // 订单导出
             this.exportDisabled = true;
             let form = Core.Util.deepCopy(this.searchForm);
             for (const key in form) {
-              form[key] = form[key] || '';
+                form[key] = form[key] || '';
             }
-            let params = {
-              ...form
-            };
-            if (type === 'choose') {
-              params.id_list = this.selectedRowKeys;
-            }
-            let exportUrl = Core.Api.Export.vehicleInspection({
-                ...params
-            });
-            console.log("handleExport exportUrl", exportUrl);
-            window.open(exportUrl, '_blank');
-            this.exportDisabled = false;
+            return axios({
+                url: Core.Const.NET.URL_POINT + `/admin/1/mes-quality-inspect/finished-export?token=${Core.Data.getToken()}`,
+                method: 'post',
+                responseType: 'blob', //必须设置为blod，不然不能保存
+                headers: {
+                    'token': Core.Data.getToken(),
+                    'Content-Type': 'application/json', // 设置请求体的内容类型为JSON
+                },
+                data: {
+                    ...form,
+                    id_list: this.selectedRowKeys
+                },
+            })
+        },
+        handleExportExcel() {
+            this.excelRequest().then(res => {
+                const blob = new Blob([res.data]);
+                const fileName = `整车完检.xlsx`;
+                const elink = document.createElement('a');
+                elink.download = fileName;
+                elink.style.display = 'none';
+                elink.href = URL.createObjectURL(blob);
+                document.body.appendChild(elink);
+                elink.click();
+                URL.revokeObjectURL(elink.href); // 释放URL 对象
+                document.body.removeChild(elink);
+                this.exportDisabled = false;
+            })
         }
     }
 };

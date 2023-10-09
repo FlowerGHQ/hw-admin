@@ -44,7 +44,6 @@ const apiList = {
         materialExport: ['PostJson', 'material/export-material'], // 物料导出
         goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
         downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
-        vehicleInspection: ['GetJson', 'mes-quality-inspect/finished-export'], // 整车完检列表导出
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
     },
     User: { // 用户
@@ -56,7 +55,6 @@ const apiList = {
         setAdmin: ['PostJson', 'user/set-admin'],
         listGroup: ['PostJson', 'user/list-group'],
         setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
-
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
