@@ -543,7 +543,7 @@ export default {
                     border: 0.5px dashed#D9D9D9;
                     background: #FFF;
                     cursor: pointer;
-                    margin-bottom: 12px;
+                    // margin-bottom: 12px;
 
                     >img {
                         width: 12px;

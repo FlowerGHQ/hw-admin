@@ -85,7 +85,7 @@
               ref="TimeSearch"
             >
                 <template #suffixIcon>
-                    <CalendarOutlined style="font-size: 20px; color: #86909C;"/>
+                    <CalendarOutlined style="font-size: 16px; color: #86909C;"/>
                 </template>
             </a-range-picker>
         </div>
@@ -214,8 +214,6 @@ defineExpose({openClear})
         }
     }
     .clear {
-        position: absolute;
-        right: 0;
         color: #86909C;
         cursor: pointer;
         &:hover {
