@@ -1628,7 +1628,7 @@ const routes = [
                     title: 'COC模板',
                     title_en: 'COC Template',
                     roles: [LOGIN_TYPE.ADMIN],
-                    super_admin_show: true, 
+                    auth: ["coc.template"],
                 }
             },
             {
@@ -2346,7 +2346,7 @@ const routes = [
             title: '系统管理',
             title_en: 'System Management',
             icon: 'i_setting',
-            auth: ['MANAGER'],
+            auth: ['MANAGER'], // 管理员
         },
         children: [
             {

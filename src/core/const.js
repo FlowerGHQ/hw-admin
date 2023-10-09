@@ -31,9 +31,6 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
-        // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.10.12.75:8889'  // zy
         break;
 }
@@ -905,7 +902,12 @@ let Const = {
         },
     },
 
-    AUTH_LIST_TEMP: [ // 权限
+    AUTH_LIST_TEMP: [ 
+        /**
+         * list是渲染列表
+         * select表示之前被选择过了
+         * key 中英文翻译的头
+        */
         { list: [], select: [], key: 'home', name: '总览' },
         { list: [], select: [], key: 'data', name: '时效看板' },
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
@@ -954,7 +956,8 @@ let Const = {
         { list: [], select: [], key: 'crm-store', name: '门店管理' },
         { list: [], select: [], key: 'crm-user', name: '人员管理' },
         { list: [], select: [], key: 'feishu-data', name: '飞书管理' }, // (需要小程序判断权限(还未接入))
-
+        // 新加入2023/10/9
+        { list: [], select: [], key: 'coc', name: 'COC证书管理' },
     ],
 
     ATTACHMENT: {

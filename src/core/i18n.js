@@ -1784,12 +1784,15 @@ const messages = {
                 'crm-label': 'CRM标签',
                 'crm-dict': 'CRM数据字典',
                 'crm-test-drive': 'CRM试驾单',
-                'crm-group': '区域',
-
+                'crm-group': 'CRM区域',
                 'data': '数据看板',
+
+                // 新加的2023/8/14
                 'crm-store': '门店管理',
                 'crm-user': '人员管理',
                 'feishu-data': '飞书管理',
+                // 新加入2023/10/9
+                'coc': 'COC证书管理'
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2097,6 +2100,7 @@ const messages = {
             'data': {
                 'board': "时效看板",
             },
+            // 新加的2023/8/14
             'crm-store': {
                 'list': "门店列表",
                 'detail': "门店详情",
@@ -2121,6 +2125,9 @@ const messages = {
                 'repair-order': "维修数据",
                 'production': "生产数据",
                 'test-report': "测试数据",
+            },
+            'coc': {
+                'template': 'COC模板',                
             }
         },
         error_code: {
@@ -4309,11 +4316,14 @@ const messages = {
                 'crm-order-income': 'CRM receipt order',
                 'crm-label': 'CRM label',
                 'crm-dict': 'CRM dictionary',
-
+                'crm-test-drive': 'CRM test drive sheet',
+                'crm-group': 'CRM region',
                 'data': 'Data kanban',
+
                 'crm-store': 'Store management',
                 'crm-user': 'Personnel management',
-                'feishu-data': 'Flying book management'
+                'feishu-data': 'Flying book management',
+                'coc': 'Coc Certificate Management',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4587,11 +4597,22 @@ const messages = {
                 'delete': 'delete label',
             },
             'crm-dict': {
-                'list': 'view dictionary list',
-                'save': 'edit entry',
-                'delete': 'delete entry',
-                'preset': 'set preset',
-                'status': 'set status',
+                'list': 'View dictionary list',
+                'save': 'Edit a dictionary entry',
+                'delete': 'Delete dictionary entry',
+                'set': 'Set dictionary entry',
+            },
+            'crm-test-drive': {
+                'list': 'Check out the test drive list',
+                'save': 'Edit the test drive ticket',
+                'detail': 'Test drive ticket details',
+                'delete': 'Delete the test drive ticket',
+            },
+            'crm-group': {
+                'list': 'View area list',
+                'save': 'Edit area',
+                'detail': 'Area details',
+                'delete': 'Delete area',
             },
             'inventory': {
                 'list': 'View inventory list',
@@ -4634,6 +4655,9 @@ const messages = {
                 'repair-order': "Maintenance data",
                 'production': "Production data",
                 'test-report': "Test data",
+            },
+            'coc': {
+                'template': 'Coc Template',                
             }
         },
         error_code: {
