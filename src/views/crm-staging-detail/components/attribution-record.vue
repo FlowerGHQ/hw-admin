@@ -12,16 +12,16 @@
           <template #bodyCell="{ column, record }">
               <template v-if="column.key === 'store_user_name'">
                   <div class="person">
-                    <img class="person-img" :src="record.store_user_avatar || Static.defaultAvatar">
-                    <span class="person-name">{{ record.store_user_name || '-' }}</span>
-                    <span class="person-id">{{ record.store_user_employee_no || '-' }}</span>
+                    <img class="person-img" :src="Static.defaultAvatar">
+                    <span class="person-name">{{ record.store_user_name }}</span>
+                    <span class="person-id">{{ record.store_user_id }}</span>
                   </div>
               </template>
-              <template v-if="column.key === 'operator_name'">
+              <template v-if="column.key === 'create_user_name'">
                   <div class="person">
-                    <img class="person-img" :src="record.operator_avatar || Static.defaultAvatar">
-                    <span class="person-name">{{ record.operator_name || '-' }}</span>
-                    <span class="person-id">{{ record.operator_employee_no || '-'  }}</span>
+                    <img class="person-img" :src="Static.defaultAvatar" v-if="record.create_user_name">
+                    <span class="person-name">{{ record.create_user_name || '-' }}</span>
+                    <span class="person-id">{{ record.create_user_id || '-'  }}</span>
                   </div>
               </template>
               <template v-if="column.key === 'create_time'">
@@ -68,8 +68,8 @@ const columns = [
 },
 {
   title: '分配人',
-  key: 'operator_name',
-  dataIndex: 'operator_name'
+  key: 'create_user_name',
+  dataIndex: 'create_user_name'
 },
 {
   title: '分配日期',
@@ -82,12 +82,12 @@ const data = ref([]);
 
 const userMes = reactive({})
 const sourceList = [
-  { label: '留资城市', value: '--', labelWidth: 84, prop: 'source_city' },
-  { label: '营业时间', value: '--', labelWidth: 70, prop: '' },
-  // { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
+  { label: '留资城市', value: '--', labelWidth: 70, prop: 'source_city' },
+  { label: '营业时间', value: '--', labelWidth: 84, prop: '' },
+  { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
   { label: '创建人', value: '--', labelWidth: 84, prop: 'create_user_name' },
-  { label: '所属大区', value: '--', labelWidth: 70, prop: 'store_group_name' },
-  { label: '所属城市', value: '--', labelWidth: 84, prop: 'store_city' },
+  { label: '所属大区', value: '--', labelWidth: 70, prop: 'group_name' },
+  { label: '所属城市', value: '--', labelWidth: 84, prop: 'city' },
   { label: '所属门店', value: '--', labelWidth: 70, prop: 'store_name' },
   { label: '绑定体验官', value: '--', labelWidth: 84, prop: 'store_user_name' },
 ]

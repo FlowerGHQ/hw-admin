@@ -238,6 +238,7 @@ export default {
             tagMap: Core.Const.INTENTION.TAG_TYPE,
             tagDrawerShow: false,
             focusDrawerShow: false,
+            backUrl: ''
         };
     },
     computed: {
@@ -245,6 +246,11 @@ export default {
             return item
         }
 
+    },
+    beforeRouteEnter(to, from, next) {
+        next((vm) => {
+            vm.backUrl = from.path
+        })
     },
     mounted() {
         if(this.$route.query.id) {
@@ -264,7 +270,14 @@ export default {
                     window.open(routeUrl.href, '_blank')
                     break;
                 case 'back':    // 取消返回
-                    this.$router.go(-1);
+                    if (this.backUrl === '/crm-staging/staging') {
+                        this.$router.push({
+                            path: this.backUrl,
+                            query: { id: this.form.id },
+                        })
+                    } else {
+                        this.$router.go(-1);
+                    }
                     break;
             }
         },

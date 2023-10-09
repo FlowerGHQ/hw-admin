@@ -1,63 +1,8 @@
 <template>
     <div id="Staging">
-        <!-- 左边切换栏 -->
-        <div class="menu-left">
-            <div class="menu-left-item" :class="[menuLeftIndex === index ? 'selected' : '']" v-for="(item, index) in menuLeft" :key="index" @click="change(index)">
-                <div class="menu-left-item-name" v-html="item.name"></div>
-                <div class="menu-left-item-num">{{ `${item.complete}/${item.total}` }}</div>
-            </div>
-        </div>
         <div class="container">
-            <!-- 顶部筛选 -->
-            <Search @enter="searchEnter" @clearId="clearId" ref="search"/>
             <!-- 内容区域 -->
             <div class="content">
-                <div class="task-list" :style="{ width: '360px'}">
-                    <div class="task-list-top">
-                        <div class="task-list-top-left">
-                            <!-- <img src="./images/menu.png" class="image"> -->
-                            <span class="title">任务列表</span>
-                        </div>
-                        <div class="task-list-top-right">
-                            <span class="task-list-top-right-item" :class="staskStatusIndex === index ? 'selected' : ''" v-for="(item, index) in staskStatusList" :key="index" @click="staskStatusChange(index)">{{ item.name }}</span>
-                        </div>
-                    </div>
-                    <div class="task-list-body" id="taskBody" @scroll="(e) => handleScroll(e, 'task')">
-                        <div
-                            v-for="(item, index) in taskList"
-                            :key="item.id"
-                            class="task-list-body-item"
-                            :class="[taskIndex === index ? 'selected' : '', item.flag_top === 1 ? 'is-top' : '']"
-                            @click="changeTask(index)"
-                        >
-                            <div class="avatar">
-                                <img :src="item.avatar || Static.defaultAvatar" class="avatar-img">
-                                <img v-if="item.gender === 1 || item.gender === 2" :src="item.gender === 1 ? getAssetURL('images/gender-male.png') : getAssetURL('images/gender-female.png')" class="avatar-gender">
-                            </div>
-                            <div class="message">
-                                <div class="message-item">
-                                    <div class="nameAndAge">
-                                        <span class="name">{{ item.name }}</span>
-                                        <span class="age">{{ item.age }}岁</span>
-                                    </div>
-                                    <IntentionStairs :status="item.intention"/>
-                                </div>
-                                <div class="message-item">
-                                    <span class="phone">{{ item.phone }}</span>
-                                    <span class="time">{{ $Util.timeFilter(item.next_track_time, 2) || '-' }}</span>
-                                </div>
-                                <div class="labels">
-                                    <my-tag class="message-label" v-if="item.pre_order_status === 1">已支付意向金</my-tag>
-                                    <my-tag class="message-label" v-if="item.pre_order_status === 1">已试驾</my-tag>
-                                    <div v-for="(item_label, index) in item.label_group_list" v-if="item.label_group_list.length > 0" class="label-item">
-                                        <my-tag :color="Static.TAG_TYPE_MAP[item_label.type]?.color" :bgColor="Static.TAG_TYPE_MAP[item_label.type]?.bgColor" class="message-label">{{ item_label.name }}</my-tag>
-                                    </div>
-                                    <div v-if="item.isSpill"> ... </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="content-right">
                     <div class="user-card">
                         <UserDetail ref="userDetailRef" :id="userId" @updateLabel="updateTask"/>
@@ -140,26 +85,10 @@ import dayjs from "dayjs";
 
 const router = useRouter()
 const route = useRoute()
-const id = ref(route.query?.id)
+const userId = ref(route.query?.id)
 const { proxy } = getCurrentInstance();
 onMounted(() => {    
-    getAmountList()
     getAllChildData()
-    if (id.value) {
-        search.value.openClear()
-        Core.Api.CustomService.detail({ id: id.value }).then(res=>{
-            // id筛选用户状态回显
-            if (res.province || res.city) {
-                staskStatusChange(1)
-            } else {
-                staskStatusChange(0)
-            }
-	    }).catch(err=>{
-            Core.Logger.error("参数", "数据", err)
-	    })
-    } else {
-        getTaskNum()
-    }
 })
 
 // a-drawer bodyStyle样式
@@ -185,188 +114,14 @@ const menuLeftRender = computed(() => {
 		return obj
     })
 })
-const change = (index) => {
-    menuLeftIndex.value = index
-    // 同步切换状态
-    updateStatus(staskStatusIndex.value)
-    getTaskNum({ page: 1 }, true)
-}
-
-// 搜索栏
-const searchMes = reactive({})
-const search = ref(null)
-const searchEnter = (value) => {
-    Object.assign(searchMes, value)
-    if (searchMes.time && searchMes.time.length > 0) {
-        searchMes.begin_time = parseInt(dayjs(searchMes.time[0]).valueOf() / 1000)
-        searchMes.end_time = parseInt(dayjs(searchMes.time[1]).valueOf() / 1000)
-    } else {
-        searchMes.begin_time = undefined
-        searchMes.end_time = undefined
-    }
-    getTaskNum({ page: 1 }, true)
-}
-
-//任务列表
-const userId = ref(null)
-const isTop = ref(false)
-const taskIndex = ref(0)
-const taskCurrent = ref(1)
-const taskAmount = ref(1)
-const staskStatus = ref(0)
-const staskStatusIndex = ref(0)
-const staskStatusList = [{ name: '待办' }, { name: '已办' }]
-const taskList = ref([])
-const userPagination = reactive({
-    page_size: 20,
-    page: 1,
-    total: 0,
-    total_page: 0
-})
-
-taskAmount.value = taskList.value.length
-const staskStatusChange = (index) => {
-    staskStatusIndex.value = index
-    updateStatus(index)
-    getTaskNum({ page: 1 }, true)
-}
-const updateStatus = (index) => {
-    switch (index) {
-        case 0:
-            if (menuLeft[menuLeftIndex.value].status_mapping === 1) {
-                staskStatus.value = 0
-            } else {
-                staskStatus.value = 25
-            }
-            break;
-        case 1:
-            if (menuLeft[menuLeftIndex.value].status_mapping === 1) {
-                staskStatus.value = 10
-            } else {
-                staskStatus.value = 30
-            }
-            break;
-    
-        default:
-            break;
-    }
-}
-const changeTask = (index) => {
-    taskIndex.value = index
-    taskCurrent.value = index + 1
-    userId.value = taskList.value[index].id
-    isTop.value = taskList.value[index].flag_top === 1 ? true : false
-    getAllChildData()
-}
-const getAmountList = () => {
-    Core.Api.CustomService.amountList().then(res=>{
-		Core.Logger.success('getAmountList',res);
-        res.forEach(item => {
-            menuLeft.forEach(menuItem => {
-                if (menuItem.status_mapping === item.status_mapping) {
-                    menuItem.complete = item.deal_amount
-                    menuItem.total = item.total
-                }
-            }) 
-        })
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
-const getTaskNum = (params = {}, isSearch = false) => {
-    scrollLoading.value = true
-    let obj = {
-        status_mapping: menuLeft[menuLeftIndex.value].status_mapping,
-        status: staskStatus.value,
-        page_size: userPagination.page_size,
-        page: userPagination.page,
-        ...searchMes,
-        ...params
-	}
-    Core.Logger.success('params', obj)
-    Core.Api.CustomService.list(obj).then(res=>{
-        userPagination.total = res.count
-        userPagination.total_page = Math.ceil(userPagination.total / userPagination.page_size)
-
-		Core.Logger.success('getTaskNum',res);
-        // 是否是搜索的
-        if (isSearch) {
-            taskList.value = []
-            userPagination.page = 1
-        }
-        taskList.value = taskList.value.concat(res.list)
-        filterData(taskList.value)
-
-        taskAmount.value = taskList.value.length
-        userId.value = taskList.value[taskIndex.value]?.id
-        isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
-        getAllChildData()
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	}).finally(() => {
-        scrollLoading.value = false
-    })
-}
-const filterData = (data) => {
-    data.forEach(item => {
-        // 目的是取前三个
-        let count = 3
-        if (item.pre_order_status === 1) {
-            // 支付意向金
-            count--
-        }
-        if (item.test_drive_status === 1) {
-            // 已试驾状态
-            count--
-        }
-        let list = []
-        // 这里这么写的原因是页面只是展示三个标签(但前面的两个判断是本来就有的标签)
-        for (let label of item.label_group_list) {
-            if (!label.label_list) return
-            for (let labelItem of label.label_list) {
-                if (count !== 0) {
-                    count--
-                    list.push(labelItem)
-                }
-            }
-        }
-        item.label_group_list = list
-        // Core.Logger.log("每一项的次数", count)
-        // 是否显示后面的 ... 三个点
-        item.isSpill = count === 0
-    }); 
-}
-const updateTask = () => {
-    getTaskNum({ page: 1 }, true)
-}
 //置顶
 const QuickOrderRef = ref(null)
 const openOrder = ref(false)
-const toTop = (index) => {
-    const params = {
-        id: taskList.value[index].id
-    }
-    Core.Api.CustomService.editIsTop({ ...params }).then(res=>{
-		getTaskNum({ page: 1 }, true)
-	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
-	})
-}
 const order = () => {
     openOrder.value = true
     nextTick(() => {
         QuickOrderRef.value.getUserDetail()
     })
-}
-const nextTask = (current) => {
-    taskCurrent.value = current
-    taskIndex.value = current - 1
-    userId.value = taskList.value[taskIndex.value].id
-    isTop.value = taskList.value[taskIndex.value]?.flag_top === 1 ? true : false
-    getAllChildData()
-    // 下一步 同步滚动条
-    const taskEl = document.querySelector('#taskBody')
-    taskEl.children[taskIndex.value].scrollIntoView({ behavior: 'smooth' })
 }
 
 // 日志
@@ -474,44 +229,20 @@ const getAssetURL = (image) => {
   // 参数一: 相对路径
   return new URL(`../crm-staging/${image}`, import.meta.url).href
 }
-
 // 监听滚轮事件
 const scrollLoading = ref(false)
 const handleScroll = (e, type) => {
     const element = e.target;
     if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - Static.hitBottomHeight) {
         Core.Logger.log("滑到底部")
-        switch (type) {
-            case 'task':
-                if ((userPagination.page < userPagination.total_page) && !scrollLoading.value) {
-                    userPagination.page++
-                    getTaskNum({ page: userPagination.page })
-                }
-                break;
-            case 'log':
-                if ((logPagination.page < logPagination.total_page) && !scrollLoading.value) {
-                    logPagination.page++
-                    getLogListFetch({ page: logPagination.page })
-                }
-                break;
-        
-            default:
-                break;
+        if ((logPagination.page < logPagination.total_page) && !scrollLoading.value) {
+            logPagination.page++
+            getLogListFetch({ page: logPagination.page })
         }
     }
 }
-const clearId = () => {
-    router.replace({ query: {} })
-    id.value = undefined
-}
-
-const getTaskList = () => {
-    getAmountList()
-    getTaskNum({ page: 1 }, true)
-}
 
 provide('userId', userId); // 提供id
-provide('getTaskList', getTaskList); // 提供更新任务数据方法
 provide('getChildData', getChildData); // 提供获取子组件数据方法
 </script>
 
@@ -562,11 +293,11 @@ provide('getChildData', getChildData); // 提供获取子组件数据方法
     .container {
         flex: 1;
         height: 100%;
-        padding: 0 36px 0 16px;
+        padding-right: 36px;
         .content {
             position: relative;
             display: flex;
-            height: calc(100% - 48px);
+            height: 100%;
             .task-list {
                 display: flex;
                 flex-direction: column;

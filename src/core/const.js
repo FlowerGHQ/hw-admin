@@ -35,7 +35,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.138:8889'  // zy
+        // URL_POINT = 'http://10.10.12.78:8889'  // zy
         break;
 }
 
@@ -65,6 +65,7 @@ let Const = {
         COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
         SUPER_ADMIN: 'super_admin',
+        CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -1630,11 +1631,16 @@ let Const = {
             '800': { key: 800, zh: '2000人以上', en: 'More than 2000', value: 800 },
         },
         SOURCE_TYPE_MAP: {
-            '1': { key: 1, zh: '预定小程序', en: 'Order Applets', value: 1 },
-            '2': { key: 2, zh: '后台注册', en: 'Background Registration', value: 2 },
-            '3': { key: 3, zh: 'Shopify', en: 'Shopify', value: 3 },
-            '4': { key: 4, zh: '官网2.0', en: 'Official website 2.0', value: 4 },
-            '5': { key: 5, zh: '官网1.0', en: 'Official website 1.0', value: 5 },
+            '1': { key: '预定小程序', value: 1, },
+		    '2': { key: '后台注册', value: 2, },
+		    '3': { key: 'Shopify', value: 3, },
+		    '4': { key: '官网2.0', value: 4, },
+		    '5': { key: '官网1.0', value: 5, },
+            '30': { key: '落地页1', value: 30, },
+            '31': { key: '落地页2', value: 31, },
+		    '32': { key: '体验官二维码', value: 32, },
+		    '33': { key: '门店二维码', value: 33, },
+		    '34': { key: '人工创建', value: 34, },
         },
         // 落地页
         Landing_Page: {
@@ -2156,12 +2162,15 @@ let Const = {
         // 客户来源
         SOURCE_TYPE_MAP: {
             '1': { key: '预定小程序', value: 1, },
-            '2': { key: '后台注册', value: 2, },
-            '3': { key: 'Shopify', value: 3, },
-            '4': { key: '官网2.0', value: 4, },
-            '5': { key: '官网1.0', value: 5, },
-            '6': { key: '落地页1', value: 6, },
-            '7': { key: '落地页2', value: 7, }
+		    '2': { key: '后台注册', value: 2, },
+		    '3': { key: 'Shopify', value: 3, },
+		    '4': { key: '官网2.0', value: 4, },
+		    '5': { key: '官网1.0', value: 5, },
+            '30': { key: '落地页1', value: 30, },
+            '31': { key: '落地页2', value: 31, },
+		    '32': { key: '体验官二维码', value: 32, },
+		    '33': { key: '门店二维码', value: 33, },
+		    '34': { key: '人工创建', value: 34, },
         },
         // 标签
         TAG_TYPE_MAP: {
@@ -2443,22 +2452,6 @@ let Const = {
                 "30": { text: '高意向', key: 30 },
                 "40": { text: 'Hot', key: 40 },
             }
-        },
-        Clue_Status_Map: {
-            all: 1,  // 全部
-            loss: 2, // 信息缺失
-            undistributed: 3, // 未分配
-            notFollow: 4, // 未跟进
-            followed: 5, // 已跟进
-            dormancy: 6, // 休眠
-        },
-        User_Status_Map: {
-            all: 1,  // 全部
-            loss: 2, // 信息缺失
-            undistributed: 3, // 未分配
-            notFollow: 4, // 未跟进
-            followed: 5, // 已跟进
-            dormancy: 6, // 休眠
         },
     },
     // COC证书

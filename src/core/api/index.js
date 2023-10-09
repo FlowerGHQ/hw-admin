@@ -852,6 +852,7 @@ const apiList = {
         trackRecordList: ['PostJson', 'customer-service/track-record/list'], // 跟进记录-列表
         createRecord: ['PostJson', 'customer-service/track-record/save'],   //创建跟进记录
         createTrack: ['PostJson', 'customer-service/track-record/save-task'],   //创建任务记录
+        cancelTrack: ['PostJson', 'customer-service/track-record/cancel-task'],   //创建任务记录
         storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
         upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
         getCityList: ['GetJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
@@ -882,6 +883,11 @@ const apiList = {
         downLoadCertificateDetailLis: ['BlobPost', 'crm-coc-certificate/download'], // 证书清单列表下载
         setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
         getCertificatNumber: ['PostJson', 'crm-coc-certificate/detail/statistics'], // 获取证书编号
+    },
+    // 用户中心
+    USER_CENTER: {
+        getClueList: ['PostJson', 'user-center/clue/list'], // 线索ist
+        distributionStore: ['PostJson', 'user-center/update-store-transfer'], // 分配门店
     }
 };
 

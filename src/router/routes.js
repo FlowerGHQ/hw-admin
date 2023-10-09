@@ -1697,6 +1697,17 @@ const routes = [
 					auth: ["crm-label.list"],
 				}
 			},
+			{// 工作台详情
+				path: 'staging-detail',
+				name: 'stagingDetail',
+				component: () => import('@/views/crm-staging-detail/staging.vue'),
+				meta: {
+					title: '工作台详情',
+					title_en: 'StagingDetail',
+					auth: ["crm-label.list"],
+                    hidden: true,
+				}
+			},
 		]
 	},
 	{ // 客户
@@ -2141,6 +2152,7 @@ const routes = [
             title: '用户中心',
             title_en: 'User Center',
             icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -2150,8 +2162,7 @@ const routes = [
                 meta: {
                     title: '线索',
                     title_en: 'Clue List',
-                    icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    icon: 'i_home',                    
                 },
             },
             {
@@ -2161,8 +2172,7 @@ const routes = [
                 meta: {
                     title: '用户列表',
                     title_en: 'User List',
-                    icon: 'i_home',
-                    roles: [LOGIN_TYPE.ADMIN],
+                    icon: 'i_home',                    
                 },
             },
             {
