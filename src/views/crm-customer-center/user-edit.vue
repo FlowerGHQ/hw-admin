@@ -273,7 +273,11 @@ export default {
             if(!this.form.phone) {
                 return this.phoneFormatErrorFlag = false
             } else if(this.form.phone.length !== 11) {
-                return this.phoneFormatErrorFlag = true
+                if(this.form.id) {
+                    return this.phoneFormatErrorFlag = false
+                } else {
+                    return this.phoneFormatErrorFlag = true
+                }
             } else {
                 this.phoneFormatErrorFlag = false
             }
