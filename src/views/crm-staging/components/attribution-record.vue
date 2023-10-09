@@ -82,12 +82,12 @@ const data = ref([]);
 
 const userMes = reactive({})
 const sourceList = [
-  { label: '留资城市', value: '--', labelWidth: 70, prop: 'source_city' },
-  { label: '营业时间', value: '--', labelWidth: 84, prop: '' },
-  { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
+  { label: '留资城市', value: '--', labelWidth: 84, prop: 'source_city' },
+  { label: '营业时间', value: '--', labelWidth: 70, prop: '' },
+  // { label: '信息来源', value: '--', labelWidth: 70, prop: 'source_type' },
   { label: '创建人', value: '--', labelWidth: 84, prop: 'create_user_name' },
-  { label: '所属大区', value: '--', labelWidth: 70, prop: 'group_name' },
-  { label: '所属城市', value: '--', labelWidth: 84, prop: 'city' },
+  { label: '所属大区', value: '--', labelWidth: 70, prop: 'store_group_name' },
+  { label: '所属城市', value: '--', labelWidth: 84, prop: 'store_city' },
   { label: '所属门店', value: '--', labelWidth: 70, prop: 'store_name' },
   { label: '绑定体验官', value: '--', labelWidth: 84, prop: 'store_user_name' },
 ]
