@@ -148,7 +148,6 @@
                   <a-button
                     type="link"
                     @click.stop.prevent="handleFileview(item)"
-                    danger
                     v-if="isDisable">
                     {{ $t("coc.coc_btn_view") }}
                   </a-button>
