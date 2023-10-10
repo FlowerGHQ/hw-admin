@@ -1352,9 +1352,21 @@ const Util = {
         })
         return str || ''
     },
+    // 质检状态
     inspectionStatusColorFilter(val, to = 'text') {
         const MAP = Const.INSPECTION.STATUS_MAP
         const COLOR_MAP = Const.INSPECTION.STATUS_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+    // 质检方式
+    inspectionTypeColorFilter(val, to = 'text') {
+        const MAP = Const.INSPECTION.TYPE_MAP
+        const COLOR_MAP = Const.INSPECTION.TYPE_COLOR__MAP
         switch (to) {
             case 'text':
                 return MAP[val + ''] || '未知'

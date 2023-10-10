@@ -21,13 +21,13 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">收货单号:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.material_purchase_arrival_order_code" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.order_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <div class="key">采购订单号:</div>
                         <div class="value">
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.material_purchase_arrival_order_item_source_code" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.order_item_source_code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
@@ -66,6 +66,11 @@
                     <template #bodyCell="{ column, text , record }">
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'status'">
+                            <div class="status status-bg status-tag" :class="$Util.inspectionTypeColorFilter(text, 'color')">
+                                {{ $Util.inspectionTypeColorFilter(text) }}
+                            </div>
                         </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text) }}
@@ -118,8 +123,8 @@ export default {
                 material_code: undefined, // 物料编码
                 begin_time: '',
                 end_time: '',
-                material_purchase_arrival_order_code: undefined, // 收货单号
-                material_purchase_arrival_order_item_source_code: undefined, // 采购订单号
+                order_code: undefined, // 收货单号
+                order_item_source_code: undefined, // 采购订单号
                 supplier_name: undefined, // 供应商名称
             },
             // 表格
@@ -136,8 +141,9 @@ export default {
             return [
                 {title: '物料编码', dataIndex: 'material_code', key: 'item'},
                 {title: '物料名称', dataIndex: 'name', key: 'item'},
-                {title: '收货单号', dataIndex: 'material_purchase_arrival_order_code', key: 'item'},
-                {title: '采购订单号', dataIndex: 'material_purchase_arrival_order_item_source_code', key: 'item'},
+                {title: '收货单号', dataIndex: 'order_code', key: 'item'},
+                {title: '采购订单号', dataIndex: 'order_item_source_code', key: 'item'},
+                {title: '质检方式', dataIndex: 'inspection_type', key: 'status'},
                 {title: '供应商名称', dataIndex: 'supplier_name', key: 'item'},
                 {title: '收货仓库', dataIndex: 'warehouse_name', key: 'item'},
                 {title: '收货数量', dataIndex: 'arrival_amount', key: 'item'},
