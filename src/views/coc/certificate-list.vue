@@ -54,7 +54,7 @@
               {{ $t("certificate-list.coc_deliveryDate") }}：
             </div>
             <div class="value">
-              <TimeSearch @search="onDeliveryTime" />
+              <TimeSearch @search="onDeliveryTime" ref="timer"/>
             </div>
           </a-col>
           <!-- 按钮 -->
@@ -132,7 +132,16 @@
             <template
               v-else-if="column.key === 'certificate_status' && !distributor">
               <!-- tag -->
-              <a-tag :color="COC.TAB_TYPE[record.certificate_status].color">
+              <!-- :color="COC.TAB_TYPE[record.certificate_status].color" -->
+              <a-tag  
+                :style="{
+                  color:COC.TAB_TYPE[record.certificate_status].color + `!important`, 
+                  backgroundColor: '#fff',
+                  border: '1px solid ' + COC.TAB_TYPE[record.certificate_status].color,
+                  fontWeight: '600'
+
+                }"
+              >
                 {{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
               </a-tag>
             </template>
@@ -179,6 +188,7 @@ const distributor = ref(isDistributor === "true"); // 是否是经销商
 const activeKey = ref(undefined); // tab切换
 const selectedRowKeyArr = ref([]); // 选中的哪些项
 const oderNumer = ref(order_number); // 订单号
+const timer = ref(null);
 const searchForm = reactive({
   certificate_status: 0,
   delivery_end_time: "",
@@ -372,7 +382,8 @@ const getAllNumer = () => {
     });
 };
 const handleReset = () => {
-  searchForm.certificate_status = 0;
+  timer.value.handleReset();
+  searchForm.certificate_status = activeKey.value;
   searchForm.delivery_end_time = "";
   searchForm.delivery_start_time = "";
   searchForm.motor_uid = "";

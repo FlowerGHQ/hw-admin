@@ -1,7 +1,7 @@
 <template>
   <div class="tamplate-modal">
     <a-modal
-      v-model:visible="visible"
+      v-model:visible="dialogVisible"
       destroyOnClose
       @ok="handleOk"
       @cancel="handleCancel">
@@ -181,7 +181,7 @@ const $t = useI18n().t;
 const $message = getCurrentInstance().proxy.$message;
 
 const props = defineProps({
-  visible: {
+  dialogVisible: {
     type: Boolean,
     default: false,
   },
@@ -198,7 +198,7 @@ const props = defineProps({
     default: () => {},
   },
 });
-const $emit = defineEmits(["update:visible", "search"]);
+const $emit = defineEmits(["update:dialogVisible", "search"]);
 const formLayout = ref("horizontal");
 const labelCol = ref({ style: { width: "100px" } });
 const wrapperCol = ref({ span: 18 });
@@ -280,49 +280,82 @@ const searchForm = reactive({
   id: "",
 });
 
+// watch(
+//   () => props.recordItem,
+//   (val) => {
+//     if (val) {
+//       searchForm.name = val.name;
+//       searchForm.version_number = val.version_number;
+//       searchForm.coc_validity_date =
+//         val.effective_start_time && val.effective_start_time
+//           ? [
+//               dayjsReview(val.effective_start_time),
+//               dayjsReview(val.effective_end_time),
+//             ]
+//           : [];
+//       searchForm.model =
+//         val.model && val.model.length > 0 ? val.model.split(",") : [];
+//       searchForm.fileList =
+//         val.file_name && val.file_url
+//           ? [
+//               {
+//                 response: {
+//                   data: {
+//                     filename: val.file_url,
+//                     name: val.file_name,
+//                   },
+//                 },
+//                 name: val.file_name,
+//                 url: OSS_POINT + "/" + val.file_url,
+//               },
+//             ]
+//           : [];
+//       searchForm.id = val.id;
+//     }
+//   },
+//   {
+//     deep: true,
+//   }
+// );
 watch(
-  () => props.recordItem,
+  [() => props.modalType, () => props.recordItem],
   (val) => {
-    if (val) {
-      searchForm.name = val.name;
-      searchForm.version_number = val.version_number;
+    console.log("val", val);
+    if(val[0] === 'add') {
+      getCateGory();
+    }else{
+      if(val[1].id){
+        getCateGory(val[1].id);
+      }
+    }
+    if (val[1]) {
+      searchForm.name = val[1].name;
+      searchForm.version_number = val[1].version_number;
       searchForm.coc_validity_date =
-        val.effective_start_time && val.effective_start_time
+      val[1].effective_start_time && val[1].effective_start_time
           ? [
-              dayjsReview(val.effective_start_time),
-              dayjsReview(val.effective_end_time),
+              dayjsReview(val[1].effective_start_time),
+              dayjsReview(val[1].effective_end_time),
             ]
           : [];
       searchForm.model =
-        val.model && val.model.length > 0 ? val.model.split(",") : [];
+      val[1].model && val[1].model.length > 0 ? val[1].model.split(",") : [];
       searchForm.fileList =
-        val.file_name && val.file_url
+      val[1].file_name && val[1].file_url
           ? [
               {
                 response: {
                   data: {
-                    filename: val.file_url,
-                    name: val.file_name,
+                    filename: val[1].file_url,
+                    name: val[1].file_name,
                   },
                 },
-                name: val.file_name,
-                url: OSS_POINT + "/" + val.file_url,
+                name: val[1].file_name,
+                url: OSS_POINT + "/" + val[1].file_url,
               },
             ]
           : [];
-      searchForm.id = val.id;
-    }
-  },
-  {
-    deep: true,
-  }
-);
-watch(
-  () => props.modalType,
-  (val) => {
-   console.log("val", val);
-    if (val === "add" || val === "edit") {
-      getCateGory()
+      searchForm.id = val[1].id;
     }
   }
 );
@@ -363,9 +396,8 @@ const handleSelectChange = (value) => {
 
 // methods
 // 获取下拉框数据
-const getCateGory = async () => {
-  const res = await getCateGoryList();
-  console.log("res", res);
+const getCateGory = async (id="") => {
+  const res = await getCateGoryList({coc_template_id:id});
   option.value = res;
 };
 
@@ -378,7 +410,7 @@ const hanleeEdit = (form) => {
       $message.success($t("coc.coc_add_success"));
     }
     console.log("res", searchForm);
-    $emit("update:visible", false);
+    $emit("update:dialogVisible", false);
     $emit("search");
   });
 };
@@ -411,7 +443,7 @@ const handleOk = () => {
     });
 };
 const handleCancel = () => {
-  $emit("update:visible", false);
+  $emit("update:dialogVisible", false);
 };
 onMounted(() => {
   getCateGory();
@@ -431,6 +463,9 @@ onMounted(() => {
   }
 }
 :deep(.ant-upload) {
+  width: 100%;
+}
+:deep(.ant-picker-range){
   width: 100%;
 }
 .upload-file-list {

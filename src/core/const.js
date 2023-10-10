@@ -2344,9 +2344,9 @@ let Const = {
     COC: {
         TAB_TYPE: {
             '0': { key: 0, zh: "全部", en: 'ALL', color: 'default' },
-            '1': { key: 1, zh: "已生成", en: 'Generated', color: 'green' },
-            '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: 'orange' },
-            '3': { key: 3, zh: "未生成", en: 'Not Generate', color: 'default' },
+            '1': { key: 1, zh: "已生成", en: 'Generated', color: '#00B42A' },
+            '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: '#F77234' },
+            '3': { key: 3, zh: "未生成", en: 'Not Generate', color: '#86909C' },
         },
         DOWN_LOAD_TYPE: {
             "1": { key: 1, type: '证书列表' },
@@ -2354,8 +2354,8 @@ let Const = {
         },
         // 证书状态
         CER_STATUS: {
-            '0': { key: 0, zh: "已过期", en: "Expired", color: 'red' },
-            '1': { key: 1, zh: "生效中", en: 'In effect', color: 'green' },
+            '0': { key: 0, zh: "已过期", en: "Expired", color: '#F53F3F' },
+            '1': { key: 1, zh: "生效中", en: 'In effect', color: '#00B42A' },
         },
     }
 };

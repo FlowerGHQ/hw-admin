@@ -146,9 +146,12 @@
             <template v-else-if="column.key === 'certificate_status'">
               <!-- tag -->
               <a-tag
-                :color="
-                  COC.TAB_TYPE[record.certificate_status]?.color || 'default'
-                ">
+              :style="{
+                  color:COC.TAB_TYPE[record.certificate_status].color + `!important`, 
+                  backgroundColor: '#fff',
+                  border: '1px solid ' + COC.TAB_TYPE[record.certificate_status].color,
+                  fontWeight: '600'
+                }">
                 {{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
               </a-tag>
             </template>
@@ -373,6 +376,7 @@ const certificateList = () => {
     page_size: channelPagination.pageSize,
   };
   let params = Object.assign({}, pagination, searchForm.value);
+  console.log("params", params);
   getCertificateList(params)
     .then((res) => {
       channelPagination.total = res.count;
@@ -383,7 +387,6 @@ const certificateList = () => {
       loading.value = false;
     })
     .catch((err) => {
-      Core.Logger.error("参数", searchForm, "结果", err);
       $message.error(err.message);
     })
     .finally(() => {
@@ -396,6 +399,7 @@ const handleSearch = () => {
   };
   // 判断是否存在状态判断，如果存在就赋值
   if (activeKey.value) {
+    console.log("activeKey", activeKey);
     params.certificate_status = activeKey.value;
   }
   console.log("params", params);
@@ -406,18 +410,17 @@ const handleSearch = () => {
   certificateList(params);
 };
 const handleReset = () => {
-  searchForm.value = {};
-  activeKey.value = 0;
+  searchForm.value = {
+    certificate_status: activeKey.value,
+  };
   oderTimeRef.value.handleReset();
   channelPagination.page = 1;
   channelPagination.current = 1;
   channelPagination.pageSize = 20;
   isChangeTable.value = false;
-  certificateList();
+  handleSearch();
 };
 const reRenerate = (record) => {
-  console.log(record);
-  console.log("isChangeTable", isChangeTable);
   let params = {
     all_generated_flag: 0,
     source_type: !isChangeTable.value ? 1 : 2,
@@ -460,7 +463,6 @@ const handleSwitch = (record) => {
   };
   setCertificateVisible(params)
     .then((res) => {
-      Core.Logger.success("参数", params, "结果", res);
       // 重新请求列表
       certificateList();
     })

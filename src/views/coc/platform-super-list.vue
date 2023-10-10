@@ -38,7 +38,15 @@
 						</template>
 						<template v-else-if="column.key === 'state'">
 								<!-- tag -->
-							<a-tag :color="Core.Const.COC.CER_STATUS[record.state].color">
+								<!-- :color="Core.Const.COC.CER_STATUS[record.state].color" -->
+							<a-tag 
+							:style="{
+								color:Core.Const.COC.CER_STATUS[record.state].color + `!important`, 
+								backgroundColor: '#fff',
+								border: '1px solid ' + Core.Const.COC.CER_STATUS[record.state].color,
+								fontWeight: '600'
+							}"
+							>
 								{{ Core.Const.COC.CER_STATUS[record.state][$i18n.locale] }}
 							</a-tag>
 						</template>
@@ -75,7 +83,7 @@
 		</div>
 		<TemplateMoudal
 			ref="modalRef"
-			v-model:visible="visible"
+			v-model:dialogVisible="visible"
 			:modalType="modalType"
 			:recordItem="recordItem"
 			:isDisable="isDisable"
