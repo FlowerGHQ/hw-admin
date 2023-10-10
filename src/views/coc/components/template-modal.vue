@@ -76,14 +76,13 @@
             showArrow
             :disabled="isDisable"
             :placeholder="$t('coc.coc_placeholder_apply_vehicle')"
-            @select="handleSelectChange"
-            :options="filteredOptions.map((item) => ({ value: item }))">
-            <!-- <a-select-option
+            @select="handleSelectChange">
+            <a-select-option
               v-for="(item, index) in option"
-              :key="index"
-              :value="item">
-              {{ item }}
-            </a-select-option> -->
+              :key="item.key"
+              :value="item.key">
+              {{ item.label }}
+            </a-select-option>
           </a-select>
         </a-form-item>
         <a-form-item
@@ -280,14 +279,10 @@ const searchForm = reactive({
   fileList: [],
   id: "",
 });
-const filteredOptions = computed(() => {
-  return option.value.filter((o) => !searchForm.model.includes(o));
-});
 
 watch(
   () => props.recordItem,
   (val) => {
-    console.log("props.recordItem", val);
     if (val) {
       searchForm.name = val.name;
       searchForm.version_number = val.version_number;
@@ -320,6 +315,15 @@ watch(
   },
   {
     deep: true,
+  }
+);
+watch(
+  () => props.modalType,
+  (val) => {
+   console.log("val", val);
+    if (val === "add" || val === "edit") {
+      getCateGory()
+    }
   }
 );
 // 上传前检查文件
@@ -361,6 +365,7 @@ const handleSelectChange = (value) => {
 // 获取下拉框数据
 const getCateGory = async () => {
   const res = await getCateGoryList();
+  console.log("res", res);
   option.value = res;
 };
 

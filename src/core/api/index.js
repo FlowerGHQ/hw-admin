@@ -842,7 +842,7 @@ const apiList = {
         addCocTemplate: ['PostJson', 'coc-template/save'], // 添加模板
         viewCocTemplate: ['PostJson', 'coc-template/detail'], // 查看模板
         deleteCocTemplate: ['PostJson', 'coc-template/delete'], // 删除模板
-        getCateGoryList: ['PostJson', 'coc-template/item-category-name'], // 车型名称
+        getCateGoryList: ['PostJson', 'item/list-vehicle-item-name'], // 车型名称
         getCertificateList: ['PostJson', 'coc-certificate/list'], // 证书列表
         getCertificateDetailList: ['PostJson', 'coc-certificate/detail/list'], // 证书清单列表
         downLoadCertificateDetailLis: ['BlobPost', 'coc-certificate/download'], // 证书清单列表下载
