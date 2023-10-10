@@ -141,6 +141,7 @@ const tableColumns = ref([
 		title: "coc.coc_operation",
 		dataIndex: "operation",
 		key: "operation",
+		fixed: "right",
 	},
 ])
 const channelPagination = reactive({
