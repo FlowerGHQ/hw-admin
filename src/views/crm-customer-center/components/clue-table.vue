@@ -450,7 +450,7 @@ const distributionStoreFetch = (params = {}) => {
     }
     Core.Api.USER_CENTER.distributionStore(obj).then(res => {        
         Core.Logger.success("参数", obj, "获取线索list", res)
-        proxy.$message.warning('分配成功');
+        proxy.$message.success('分配成功');
         onCancel()
         getTableDataFetch({ page: 1 })
     }).catch(err => {

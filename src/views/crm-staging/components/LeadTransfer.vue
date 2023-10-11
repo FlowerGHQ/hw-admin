@@ -226,17 +226,26 @@ const handleOk = () => {
   }else if(!followObj.remark){
     return proxy.$message.warning(proxy.$t("def.enter"));
   }
-
-  Core.Api.CustomService.upDateTransfer({
-    ...followObj,
-    id: userId.value
-  }).then(res=>{
-		Core.Logger.success('upDateTransfer数据',res);
-    proxy.$message.success('转移成功')
-    isShowFollow.value = false;
-	}).catch(err=>{
-    Core.Logger.error("参数", "数据", err)
-	})
+  if (followObj.store_user_id) {
+    Core.Api.CustomService.upDateTransfer({
+      ...followObj,
+      id: userId.value
+    }).then(res=>{
+	  	Core.Logger.success('upDateTransfer数据',res);
+      proxy.$message.success('转移成功')
+      isShowFollow.value = false;
+	  }).catch(err=>{
+      Core.Logger.error("参数", "数据", err)
+	  })
+  } else {
+    Core.Api.USER_CENTER.distributionStore({
+      ...followObj,
+      ids: [userId.value]
+    }).then(res => {        
+      proxy.$message.success('转移成功')
+      isShowFollow.value = false;
+    }).catch(err => {})
+  }
 }
 // 门店人员-获取
 const getPeopleList = () => {
