@@ -56,7 +56,7 @@ const apiList = {
         setAdmin: ['PostJson', 'user/set-admin'],
         listGroup: ['PostJson', 'user/list-group'],
         setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
-
+        checkAdmin: ['PostJson', 'user/check-admin'], // 检查用户是否是超级管理员
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
@@ -786,7 +786,6 @@ const apiList = {
         carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
         customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
         transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
-
         employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
     },
 
@@ -827,20 +826,20 @@ const apiList = {
     RETAIL: {
         // 门店管理接口
         storeList: ['PostJson', 'store/list'],              // 门店-门店列表
-        editStore:['PostJson', 'store/save'],               // 编辑-创建门店
-        deleteStore:['PostJson','store/delete'],            // 删除-门店
-        storeDetail:['Get','store/detail'],                 // 门店-详情
-        storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
-        addStoreUser:['PostJson','store/user/add'],         // 门店-添加人员
-        deleteStoreUser:['PostJson','store/user/delete'],   // 门店-添加人员
+        editStore: ['PostJson', 'store/save'],               // 编辑-创建门店
+        deleteStore: ['PostJson', 'store/delete'],            // 删除-门店
+        storeDetail: ['Get', 'store/detail'],                 // 门店-详情
+        storeUserList: ['PostJson', 'store/user/list'],       // 门店-人员（获取）
+        addStoreUser: ['PostJson', 'store/user/add'],         // 门店-添加人员
+        deleteStoreUser: ['PostJson', 'store/user/delete'],   // 门店-添加人员
         // 区域管理接口          
         regionsList: ['PostJson', 'group/city/list'],       // 门店-区域列表/crm/1/store/list
-        deleteRegion:['PostJson', 'group/city/delete'],     // 删除区域
-        detailRegion:['Get', 'group/city/detail'],          // 区域-详情
-        saveRegion:['PostJson', 'group/city/save'],         // 区域-更新
+        deleteRegion: ['PostJson', 'group/city/delete'],     // 删除区域
+        detailRegion: ['Get', 'group/city/detail'],          // 区域-详情
+        saveRegion: ['PostJson', 'group/city/save'],         // 区域-更新
         // 人员管理接口
-        personList:['PostJson', 'user/list'],               // 人员列表（添加店长可用）
-        deletePersonList:['PostJson', 'user/delete'],       // 删除人员
+        personList: ['PostJson', 'user/list'],               // 人员列表（添加店长可用）
+        deletePersonList: ['PostJson', 'user/delete'],       // 删除人员
         externalList: ['PostJson', 'out/user/list'],        // 人员列表(外部【飞书】)
         addPerson: ['PostJson', 'out/user/save'],           // 添加人员(外部【飞书】)
         personDetail: ['Get', 'store/user/detail'],         // 人员信息详情
@@ -859,7 +858,20 @@ const apiList = {
         statusCount:['PostJson','app-order/count'],                     // 订单状态数量统计
         seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
         wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
-
+    },
+    // COC模块
+    COC: {
+        getCocTemplateList: ['PostJson', 'coc-template/list'], // 获取模板列表
+        addCocTemplate: ['PostJson', 'coc-template/save'], // 添加模板
+        viewCocTemplate: ['PostJson', 'coc-template/detail'], // 查看模板
+        deleteCocTemplate: ['PostJson', 'coc-template/delete'], // 删除模板
+        getCateGoryList: ['PostJson', 'item/list-vehicle-item-name'], // 车型名称
+        getCertificateList: ['PostJson', 'coc-certificate/list'], // 证书列表
+        getCertificateDetailList: ['PostJson', 'coc-certificate/detail/list'], // 证书清单列表
+        downLoadCertificateDetailLis: ['BlobPost', 'coc-certificate/download'], // 证书清单列表下载
+        setCertificateVisible: ['PostJson', 'coc-certificate/set-visibility'], // 设置证书可见
+        getCertificatNumber: ['PostJson', 'coc-certificate/detail/statistics'], // 获取证书编号
+        regenerateFile: ['PostJson','/coc-certificate/regenerate-file'] // 重新生成文件
     }
 }; 
 

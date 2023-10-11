@@ -366,7 +366,7 @@
         <div v-if="!$auth('purchase-order.supply-detail')" class="list-container list-container2">
             <div class="title-container">
                 <div class="title-area" style="font-size: 14px;">
-                    <eosTabs v-model:activeKey="activeValue" :tabsList="nameList">
+                    <eosTabs v-model:activeKey="activeValue" :tabsList="nameList" @handlechange="tableChange">
                     </eosTabs>
                 </div>
                 <div class="btns-area">
@@ -405,6 +405,10 @@
                 <!-- 操作记录 -->
                 <template v-if="activeValue == 'ActionLog'">
                     <ActionLog :id='id' :detail='detail' :sourceType="Core.Const.ACTION_LOG.SOURCE_TYPE.PURCHASE_ORDER" />
+                </template>
+                <!-- 证书列表 -->
+                <template v-if="activeValue == 'cocList'">
+                    <CoCList :cocProps="cocProps"/>
                 </template>
             </div>
         </div>
@@ -542,7 +546,6 @@
         </template>
     </div>
 </template>
-
 <script>
 import Core from '../../core';
 import PurchaseInfo from "./components/PurchaseInfo.vue"
@@ -552,33 +555,26 @@ import DeliveryLogs from './components/DeliveryLogs.vue';
 import ActionLog from './components/ActionLog.vue';
 import paymentList from './components/paymentList.vue';
 import receivingDetails from './components/receivingDetails.vue';
-
 import WaybillShow from "@/components/popup-btn/WaybillShow.vue"
 import AuditHandle from '@/components/popup-btn/AuditHandle.vue';
 import eosTabs from '@/components/common/eos-tabs.vue'
 import EditItem from './components/EditItem.vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-
-
+import CoCList from '@/views/coc/certificate-list.vue';
 const PURCHASE = Core.Const.PURCHASE;
 const DISTRIBUTOR = Core.Const.DISTRIBUTOR;
 const WAYBILL = Core.Const.WAYBILL;
-
 const FLAG = Core.Const.PURCHASE.FLAG;
-
 const STATUS = Core.Const.PURCHASE.STATUS;
 const PAY_TIME = Core.Const.DISTRIBUTOR.PAY_TIME;
 const PAY_STATUS = Core.Const.PURCHASE.PAY_STATUS;
 const FLAG_ORDER_TYPE = Core.Const.PURCHASE.FLAG_ORDER_TYPE;
 const TYPE = Core.Const.PURCHASE.TYPE;
 const PARENT_TYPE = Core.Const.PURCHASE.PARENT_TYPE;
-
-
 const PAYMENT_STATUS = Core.Const.PURCHASE.PAYMENT_STATUS;
 const FLAG_PART_SHIPMENT_MAP = Core.Const.PURCHASE.FLAG_PART_SHIPMENT_MAP;
 const FLAG_TRANSFER_MAP = Core.Const.PURCHASE.FLAG_TRANSFER_MAP;
 const USER_TYPE = Core.Const.USER.TYPE;
-
 export default {
     name: 'PurchaseOrderDetail',
     components: {
@@ -592,7 +588,8 @@ export default {
         eosTabs,
         paymentList,
         receivingDetails,
-        DownOutlined
+        DownOutlined,
+        CoCList
     },
     data() {
         return {
@@ -695,7 +692,7 @@ export default {
             PIShow: false,  // 修改pi model 显隐
             activeValue: 'payment_detail', // nameList的value
             outStockBtnShow: false, // 商品剩余数量为0 就不展示出库按钮
-
+            cocProps: {}
         };
     },
     computed: {
@@ -732,7 +729,6 @@ export default {
                         break;
                     case STATUS.CANCEL:
                 }
-                console.log(this.stepsList[0])
                 if (this.detail.status == STATUS.CANCEL) {
                     this.stepsList = [
                         { status: '100', zh: '取消' },
@@ -759,7 +755,6 @@ export default {
             return {
                 selectedRowKeys: this.selectedRowKeys,
                 onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
-                    // console.log("变化", selectedRowKeys);
                     this.selectedRowKeys = selectedRowKeys
                     this.selectedRowItemsAll.push(...selectedRows)
                     let selectedRowItems = []
@@ -767,7 +762,6 @@ export default {
                         let element = this.selectedRowItemsAll.find(i => i.id == id)
                         selectedRowItems.push(element)
                     });
-                    // console.log("变化2", selectedRowItems);
                     this.selectedRowItems = selectedRowItems
                     // 这句不知何用                 
                     this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
@@ -805,6 +799,7 @@ export default {
                 { weight: 3, key: 'receiving_detail', value: `${this.$t('p.take_delivery_detail')}`, permission: ['DISTRIBUTOR'] }, // 收货明细         
                 { weight: 4, key: 'AttachmentFile', value: `${this.$t('n.attachment')}`, permission: ['DISTRIBUTOR', 'ADMIN'] }, // 附件信息 
                 { weight: 5, key: 'ActionLog', value: `${this.$t('p.record')}`, permission: ['ADMIN'] }, // 操作记录 
+                { weight: 6, key: 'cocList', value: `${this.$t('certificate-list.coc_certificate_list')}`, permission: ['DISTRIBUTOR', 'ADMIN']},
             ]
             let filteredArr = arr.filter(obj => obj.permission.includes(this.userType));
             return filteredArr.sort((a, b) => a.weight - b.weight)
@@ -816,7 +811,6 @@ export default {
         },
     },
     mounted() {
-        console.log('this.userType', this.userType);
         this.getList();
         this.getWarehouseList();
     },
@@ -824,6 +818,18 @@ export default {
         this.id = Number(this.$route.query.id) || 0
     },
     methods: {
+        tableChange(val) {
+            let distributor = this.userType == 'ADMIN'? false : true
+            if (val === 'cocList') {
+                this.cocProps = {
+                    id: Number(this.$route.query.id) || 0,
+                    isDistributor: distributor,
+                    order_number: this.detail.sn,
+                    isOther:true
+                }
+                
+            }
+         },
         /*== FETCH start==*/
 
         // 获取 采购单订单信息
@@ -912,10 +918,8 @@ export default {
                 target_type: Core.Const.WAYBILL.TARGET_TYPE.PURCHASE_ORDER,
                 type: Core.Const.WAYBILL.TYPE.OUT,
             }).then(res => {
-                // console.log('getWaybillDetail:', res);
                 this.waybill = res.detail
                 this.getWaybillInfo(this.waybill.uid, this.waybill.company_uid)
-                console.log('getWaybillDetail', this.waybill)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -927,9 +931,7 @@ export default {
                 uid: uid,
                 company_uid: company_uid,
             }).then(res => {
-                // console.log('getWaybillInfo:', res);
                 this.waybillInfo = JSON.parse(res.waybill).result
-                // console.log('getWaybillInfo', this.waybillInfo)
             }).catch(err => {
                 console.log('getPurchaseInfo err', err)
             }).finally(() => {
@@ -963,7 +965,6 @@ export default {
 
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.purchaseTemplateExport(params);
-            // console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
@@ -984,7 +985,6 @@ export default {
 
             this.exportDisabled = true;
             let exportUrl = Core.Api.Export.purchaseOrderExport(params);
-            console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
@@ -1048,7 +1048,6 @@ export default {
 
         // 修改pi model的事件
         UpdatePI() {
-            // console.log("rowSelection", this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: form.id,
@@ -1087,7 +1086,6 @@ export default {
         },
         // 确认出库
         handleOutStock() {
-            // console.log("rowSelection",this.selectedRowItems)
             let form = Core.Util.deepCopy(this.form);
             const param = {
                 id: this.id,
@@ -1123,7 +1121,6 @@ export default {
         },
         // 确认收款
         handlePayment() {
-            console.log(this.form);
             this.loading = true
             let form = Core.Util.deepCopy(this.form)
             if (!form.path) {
@@ -1215,12 +1212,10 @@ export default {
         },
         //删除文件
         handleremove() {
-            console.log(this.upload.fileList)
             this.form.path = ''
         },
         // 上传文件
         handleFileChange({ file, fileList }) {
-            // console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
@@ -1237,7 +1232,6 @@ export default {
         /*== 确认收款model end ==*/
 
         authOrg(orgId, orgType) {
-            // console.log('org',this.loginOrgId === orgId && this.loginOrgType === orgType)
             if (this.loginOrgId === orgId && this.loginOrgType === orgType) {
                 return true
             } else { return false }
