@@ -4,7 +4,7 @@
       <div class="title-container">
         <div class="title-area">
           {{ $t("coc_business.coc_order_number") }}
-          <a class="order-link">{{ oderNumer }}</a>
+          <a class="order-link" @click="goToDetail">{{ oderNumer }}</a>
           {{ $t("certificate-list.coc_certificateList") }}
         </div>
         <div
@@ -100,18 +100,6 @@
             {{ $t(title) }}
           </template>
           <template #bodyCell="{ column, text, record }">
-            <!-- 订单号 -->
-            <template v-if="column.key === 'order_number'">
-              <a-button
-                type="link"
-                block
-                @click="goToDetail(record)"
-                :style="{
-                  justifyContent: 'flex-start',
-                }"
-                >{{ record.order_number }}</a-button
-              >
-            </template>
             <template v-if="column.key === 'coc_operation'">
               <a-button
                 type="link"
@@ -179,12 +167,11 @@ import {
   toRefs,
   watch,
 } from "vue";
-import { useRoute } from "vue-router";
 import Core from "@/core";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import fileSave from "@/core/fileSave";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
 
 const { proxy } = getCurrentInstance();
@@ -511,7 +498,7 @@ const goToDetail = (record) => {
   router.push({
     path: `/purchase/purchase-order-detail`,
     query: {
-      id: record.order_id,
+      id: route.query.id,
     },
   });
 };
