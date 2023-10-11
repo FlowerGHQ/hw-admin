@@ -308,7 +308,7 @@ const getPeopleList = () => {
   }
   .form-item {
     .key {
-      width: 110px;
+      width: 135px;
     }
   }
 </style>

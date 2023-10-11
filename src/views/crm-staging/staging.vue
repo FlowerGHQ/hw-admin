@@ -349,8 +349,9 @@ const toTop = (index) => {
     }
     Core.Api.CustomService.editIsTop({ ...params }).then(res=>{
 		getTaskNum({ page: 1 }, true)
+        proxy.$message.success(isTop.value ? '已取消置顶' : '已成功置顶');
 	}).catch(err=>{
-        Core.Logger.error("参数", "数据", err)
+        proxy.$message.error(isTop.value ? '取消置顶失败' : '置顶失败');
 	})
 }
 const order = () => {
