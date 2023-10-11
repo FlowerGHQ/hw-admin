@@ -54,7 +54,7 @@
               {{ $t("certificate-list.coc_deliveryDate") }}：
             </div>
             <div class="value">
-              <TimeSearch @search="onDeliveryTime" ref="timer"/>
+              <TimeSearch @search="onDeliveryTime" ref="timer" />
             </div>
           </a-col>
           <!-- 按钮 -->
@@ -72,9 +72,12 @@
         <a-button type="primary" @click="batchDownload">{{
           $t("certificate-list.coc_batchDownload")
         }}</a-button>
-        <a-button type="primary" @click="allGenerated">{{
-          $t("certificate-list.coc_allGenerated")
-        }}</a-button>
+        <a-button
+          type="primary"
+          @click="allGenerated"
+          v-if="!roles.DISTRIBUTOR"
+          >{{ $t("certificate-list.coc_allGenerated") }}</a-button
+        >
       </div>
       <!-- table -->
       <div class="table-container">
@@ -97,6 +100,18 @@
             {{ $t(title) }}
           </template>
           <template #bodyCell="{ column, text, record }">
+            <!-- 订单号 -->
+            <template v-if="column.key === 'order_number'">
+              <a-button
+                type="link"
+                block
+                @click="goToDetail(record)"
+                :style="{
+                  justifyContent: 'flex-start',
+                }"
+                >{{ record.order_number }}</a-button
+              >
+            </template>
             <template v-if="column.key === 'coc_operation'">
               <a-button
                 type="link"
@@ -115,7 +130,7 @@
                 type="link"
                 @click="reRenerate(record)"
                 danger
-                v-if="record.regenerate_flag === '1'"
+                v-if="record.regenerate_flag === '1' && !roles.DISTRIBUTOR"
                 >{{ $t("coc_business.coc_re_generate") }}</a-button
               >
             </template>
@@ -133,15 +148,17 @@
               v-else-if="column.key === 'certificate_status' && !distributor">
               <!-- tag -->
               <!-- :color="COC.TAB_TYPE[record.certificate_status].color" -->
-              <a-tag  
+              <a-tag
                 :style="{
-                  color:COC.TAB_TYPE[record.certificate_status].color + `!important`, 
+                  color:
+                    COC.TAB_TYPE[record.certificate_status].color +
+                    `!important`,
                   backgroundColor: '#fff',
-                  border: '1px solid ' + COC.TAB_TYPE[record.certificate_status].color,
-                  fontWeight: '600'
-
-                }"
-              >
+                  border:
+                    '1px solid ' +
+                    COC.TAB_TYPE[record.certificate_status].color,
+                  fontWeight: '600',
+                }">
                 {{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
               </a-tag>
             </template>
@@ -167,10 +184,13 @@ import Core from "@/core";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import fileSave from "@/core/fileSave";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
 const { proxy } = getCurrentInstance();
 const COC = Core.Const.COC;
 const Util = Core.Util;
+
 const { $message } = proxy;
 const $t = useI18n().t;
 const { TAB_TYPE } = COC;
@@ -486,6 +506,16 @@ const onDeliveryTime = (params) => {
   searchForm.delivery_start_time = params.begin_time;
   searchForm.delivery_end_time = params.end_time;
 };
+
+const goToDetail = (record) => {
+  router.push({
+    path: `/purchase/purchase-order-detail`,
+    query: {
+      id: record.order_id,
+    },
+  });
+};
+
 onMounted(() => {
   searchForm.order_number = order_number;
   if (

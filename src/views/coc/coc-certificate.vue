@@ -75,9 +75,12 @@
         <a-button type="primary" @click="batchDownload">{{
           $t("certificate-list.coc_batchDownload")
         }}</a-button>
-        <a-button type="primary" @click="allGenerated" v-if="!isChangeTable">{{
-          $t("certificate-list.coc_allGenerated")
-        }}</a-button>
+        <a-button
+          type="primary"
+          @click="allGenerated"
+          v-if="!isChangeTable && !roles.DISTRIBUTOR"
+          >{{ $t("certificate-list.coc_allGenerated") }}</a-button
+        >
       </div>
       <!-- table -->
       <div class="table-container">
@@ -102,6 +105,18 @@
             {{ $t(title) }}
           </template>
           <template #bodyCell="{ column, text, record }">
+            <!-- 订单号 -->
+            <template v-if="column.key === 'order_number'">
+              <a-button
+                type="link"
+                block
+                @click="goToDetail(record)"
+                :style="{
+                  justifyContent: 'flex-start',
+                }"
+                >{{ record.order_number }}</a-button
+              >
+            </template>
             <template v-if="column.key === 'operation'">
               <div v-if="record.certificate_status !== 3">
                 <a-button
@@ -114,9 +129,13 @@
                   $t("coc_business.coc_certificate_inventory")
                 }}</a-button>
                 <!-- 重新生成 -->
-                <a-button type="link" @click="reRenerate(record)" danger>{{
-                  $t("coc_business.coc_re_generate")
-                }}</a-button>
+                <a-button
+                  v-if="!roles.DISTRIBUTOR"
+                  type="link"
+                  @click="reRenerate(record)"
+                  danger
+                  >{{ $t("coc_business.coc_re_generate") }}</a-button
+                >
               </div>
               <span v-else>--</span>
             </template>
@@ -146,11 +165,15 @@
             <template v-else-if="column.key === 'certificate_status'">
               <!-- tag -->
               <a-tag
-              :style="{
-                  color:COC.TAB_TYPE[record.certificate_status].color + `!important`, 
+                :style="{
+                  color:
+                    COC.TAB_TYPE[record.certificate_status].color +
+                    `!important`,
                   backgroundColor: '#fff',
-                  border: '1px solid ' + COC.TAB_TYPE[record.certificate_status].color,
-                  fontWeight: '600'
+                  border:
+                    '1px solid ' +
+                    COC.TAB_TYPE[record.certificate_status].color,
+                  fontWeight: '600',
                 }">
                 {{ COC.TAB_TYPE[record.certificate_status][$i18n.locale] }}
               </a-tag>
@@ -505,6 +528,15 @@ const onDownLoad = (record, array) => {
       console.log("err", err);
       Core.Logger.error("参数", {}, "结果", JSON.stringify(err));
     });
+};
+
+const goToDetail = (record) => {
+  router.push({
+    path: `/purchase/purchase-order-detail`,
+    query: {
+      id: record.id,
+    },
+  });
 };
 
 // 查看

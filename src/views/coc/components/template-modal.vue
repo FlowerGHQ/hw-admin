@@ -74,15 +74,29 @@
             v-model:value="searchForm.model"
             mode="multiple"
             showArrow
+            showSearch
             :disabled="isDisable"
             :placeholder="$t('coc.coc_placeholder_apply_vehicle')"
-            @select="handleSelectChange">
-            <a-select-option
-              v-for="(item, index) in option"
+            @select="handleSelectChange"
+            :options="
+              option.map((item) => {
+                return {
+                  label: `${item.label} - ${item.key}`,
+                  value: item.key,
+                  key: item.label,
+                };
+              })
+            "
+            :filter-option="filterOption">
+            <!-- <a-select-option
+              v-for="(item, index) in filterOption"
               :key="item.key"
               :value="item.key">
-              {{ item.label }}
-            </a-select-option>
+              {{ item.label }} - {{ item.key }}
+            </a-select-option> -->
+            <!-- <template #tagRender="{ value, label, closable, onClose, option }">
+              <a-tag> {{ label }} - {{ value }} </a-tag>
+            </template> -->
           </a-select>
         </a-form-item>
         <a-form-item
@@ -279,7 +293,9 @@ const searchForm = reactive({
   fileList: [],
   id: "",
 });
-
+const filterOption = (input, option) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
 // watch(
 //   () => props.recordItem,
 //   (val) => {
@@ -317,48 +333,45 @@ const searchForm = reactive({
 //     deep: true,
 //   }
 // );
-watch(
-  [() => props.modalType, () => props.recordItem],
-  (val) => {
-    console.log("val", val);
-    if(val[0] === 'add') {
-      getCateGory();
-    }else{
-      if(val[1].id){
-        getCateGory(val[1].id);
-      }
-    }
-    if (val[1]) {
-      searchForm.name = val[1].name;
-      searchForm.version_number = val[1].version_number;
-      searchForm.coc_validity_date =
-      val[1].effective_start_time && val[1].effective_start_time
-          ? [
-              dayjsReview(val[1].effective_start_time),
-              dayjsReview(val[1].effective_end_time),
-            ]
-          : [];
-      searchForm.model =
-      val[1].model && val[1].model.length > 0 ? val[1].model.split(",") : [];
-      searchForm.fileList =
-      val[1].file_name && val[1].file_url
-          ? [
-              {
-                response: {
-                  data: {
-                    filename: val[1].file_url,
-                    name: val[1].file_name,
-                  },
-                },
-                name: val[1].file_name,
-                url: OSS_POINT + "/" + val[1].file_url,
-              },
-            ]
-          : [];
-      searchForm.id = val[1].id;
+watch([() => props.modalType, () => props.recordItem], (val) => {
+  console.log("val", val);
+  if (val[0] === "add") {
+    getCateGory();
+  } else {
+    if (val[1].id) {
+      getCateGory(val[1].id);
     }
   }
-);
+  if (val[1]) {
+    searchForm.name = val[1].name;
+    searchForm.version_number = val[1].version_number;
+    searchForm.coc_validity_date =
+      val[1].effective_start_time && val[1].effective_start_time
+        ? [
+            dayjsReview(val[1].effective_start_time),
+            dayjsReview(val[1].effective_end_time),
+          ]
+        : [];
+    searchForm.model =
+      val[1].model && val[1].model.length > 0 ? val[1].model.split(",") : [];
+    searchForm.fileList =
+      val[1].file_name && val[1].file_url
+        ? [
+            {
+              response: {
+                data: {
+                  filename: val[1].file_url,
+                  name: val[1].file_name,
+                },
+              },
+              name: val[1].file_name,
+              url: OSS_POINT + "/" + val[1].file_url,
+            },
+          ]
+        : [];
+    searchForm.id = val[1].id;
+  }
+});
 // 上传前检查文件
 const handleFileCheck = (file) => {
   if (
@@ -396,8 +409,8 @@ const handleSelectChange = (value) => {
 
 // methods
 // 获取下拉框数据
-const getCateGory = async (id="") => {
-  const res = await getCateGoryList({coc_template_id:id});
+const getCateGory = async (id = "") => {
+  const res = await getCateGoryList({ coc_template_id: id });
   option.value = res;
 };
 
@@ -465,7 +478,7 @@ onMounted(() => {
 :deep(.ant-upload) {
   width: 100%;
 }
-:deep(.ant-picker-range){
+:deep(.ant-picker-range) {
   width: 100%;
 }
 .upload-file-list {
