@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
 
 const props = defineProps({  
     // v-model 绑定值  
@@ -37,10 +37,18 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits(['update:activeKey']) 
+const emits = defineEmits(['update:activeKey','handlechange']) 
 const onClick = ($1) => {      
     emits("update:activeKey", $1)
+    emits("handlechange", $1)
 }
+onMounted(() => {
+    // 初始化传递参数
+    if(props.tabsList.length > 0){
+        emits("update:activeKey", props.tabsList[0].key)
+        emits("handlechange", props.tabsList[0].key)
+    }
+})
 </script>
 
 <style lang="less" scoped>

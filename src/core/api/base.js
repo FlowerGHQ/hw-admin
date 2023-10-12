@@ -15,7 +15,7 @@ class ApiBase {
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:
                 mark = 'admin/1'
-                if(RETAILModule.includes(moduleName)){
+                if (RETAILModule.includes(moduleName)) {
                     mark = 'crm/1'
                 }
                 break;
@@ -45,15 +45,13 @@ class ApiBase {
     http(config, moduleName, args = {}) {
         let mark = ApiBase.getMark(moduleName)
         const token = Data.getToken()
-
         const commonModule = ['Common']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
-
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;
         if (moduleName == 'Export') {
-            return fullUrl + '?' + ApiBase.stringify({token, ...args})
+            return fullUrl + '?' + ApiBase.stringify({ token, ...args })
         }
-        switch(config[0]) {
+        switch (config[0]) {
             case 'PostJson':
                 return ajax({
                     headers: { 'Content-Type': 'application/json' },
@@ -67,7 +65,7 @@ class ApiBase {
                     headers: { 'Content-Type': 'application/json' },
                     method: 'get',
                     url: fullUrl,
-                    params: {token, ...args},
+                    params: { token, ...args },
                 })
             case 'Post':
                 console.log('config', config)
@@ -75,14 +73,26 @@ class ApiBase {
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'post',
                     url: fullUrl,
-                    data: ApiBase.stringify({token, ...args}),
+                    data: ApiBase.stringify({ token, ...args }),
                 })
             case 'Get':
                 return ajax({
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     method: 'get',
                     url: fullUrl,
-                    params: {token, ...args},
+                    params: { token, ...args },
+                })
+            case 'BlobPost':
+                return ajax({
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'post',
+                    url: fullUrl,
+                    responseType: 'blob',
+                    // 参数放入body中
+                    data: args,
+                    params: { token },
                 })
         }
     }
@@ -105,5 +115,6 @@ class Api extends ApiBase {
         }
     }
 }
+
 
 export default Api;

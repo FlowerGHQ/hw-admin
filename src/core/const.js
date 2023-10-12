@@ -14,14 +14,14 @@ let DISABLELOG = false
 switch (window.location.hostname) {
     case 'eos.horwincloud.com':
         URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
-        DISABLELOG = true        
+        DISABLELOG = true
         break;
-    case 'eos-release.horwincloud.com':        
+    case 'eos-release.horwincloud.com':
         URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
-        break;     
+        break;
     case "10.0.0.213":
         URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
@@ -73,6 +73,7 @@ let Const = {
         TAB_POSITION: 'tab.position',
         COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
+        SUPER_ADMIN: 'super_admin',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -915,7 +916,12 @@ let Const = {
         },
     },
 
-    AUTH_LIST_TEMP: [ // 权限
+    AUTH_LIST_TEMP: [ 
+        /**
+         * list是渲染列表
+         * select表示之前被选择过了
+         * key 中英文翻译的头
+        */
         { list: [], select: [], key: 'home', name: '总览' },
         { list: [], select: [], key: 'data', name: '时效看板' },
         { list: [], select: [], key: 'distributor', name: '分销商管理' },
@@ -964,7 +970,8 @@ let Const = {
         { list: [], select: [], key: 'crm-store', name: '门店管理' },
         { list: [], select: [], key: 'crm-user', name: '人员管理' },
         { list: [], select: [], key: 'feishu-data', name: '飞书管理' }, // (需要小程序判断权限(还未接入))
-
+        // 新加入2023/10/9
+        { list: [], select: [], key: 'coc', name: 'COC证书管理' },
     ],
 
     ATTACHMENT: {
@@ -2260,7 +2267,7 @@ let Const = {
             '103002': { father_type: 2, key: 103002, zh: "大区经理", en: 'Regional manager' },
             '103003': { father_type: 3, key: 103003, zh: "城市经理", en: 'City manager' },
             '103004': { father_type: 6, key: 103004, zh: "运营", en: 'operate' },
-            '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },            
+            '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },
             '3000001': { father_type: 4, key: 3000001, zh: "门店店长", en: 'Store manager' },
             '3000002': { father_type: 5, key: 3000002, zh: "用户体验官", en: 'User experience officer' },
         },
@@ -2407,6 +2414,24 @@ let Const = {
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
         }
+    },
+    // COC证书
+    COC: {
+        TAB_TYPE: {
+            '0': { key: 0, zh: "全部", en: 'ALL', color: 'default' },
+            '1': { key: 1, zh: "已生成", en: 'Generated', color: '#00B42A' },
+            '2': { key: 2, zh: "已部分生成", en: 'Partially Generated', color: '#F77234' },
+            '3': { key: 3, zh: "未生成", en: 'Not Generate', color: '#86909C' },
+        },
+        DOWN_LOAD_TYPE: {
+            "1": { key: 1, type: '证书列表' },
+            "2": { key: 2, type: '证书详情' },
+        },
+        // 证书状态
+        CER_STATUS: {
+            '0': { key: 0, zh: "已过期", en: "Expired", color: '#F53F3F' },
+            '1': { key: 1, zh: "生效中", en: 'In effect', color: '#00B42A' },
+        },
     }
 };
 
