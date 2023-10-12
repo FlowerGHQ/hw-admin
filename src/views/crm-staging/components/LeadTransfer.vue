@@ -82,7 +82,7 @@
             </div>
           </div> 
           <!-- 转移目标体验官 -->
-          <div class="form-item">
+          <div class="form-item required">
             <div class="key">转移目标体验官：</div>
             <div class="value">
               <a-select
@@ -120,6 +120,7 @@ import Core from "@/core";
 import { reactive,ref ,getCurrentInstance ,onMounted ,inject } from 'vue';
 
 const userId = inject('userId');
+const getChildData = inject('getChildData');
 
 const { proxy } = getCurrentInstance();
 // 弹窗显示变量
@@ -223,6 +224,8 @@ const handleOk = () => {
     return proxy.$message.warning(proxy.$t("def.enter"));
   }else if(!followObj.store_id){
     return proxy.$message.warning(proxy.$t("def.enter"));
+  }else if(!followObj.store_user_id){
+    return proxy.$message.warning(proxy.$t("def.enter"));
   }else if(!followObj.remark){
     return proxy.$message.warning(proxy.$t("def.enter"));
   }
@@ -234,6 +237,7 @@ const handleOk = () => {
 	  	Core.Logger.success('upDateTransfer数据',res);
       proxy.$message.success('转移成功')
       isShowFollow.value = false;
+      getChildData('3')
 	  }).catch(err=>{
       Core.Logger.error("参数", "数据", err)
 	  })
@@ -244,6 +248,7 @@ const handleOk = () => {
     }).then(res => {        
       proxy.$message.success('转移成功')
       isShowFollow.value = false;
+      getChildData('3')
     }).catch(err => {})
   }
 }
