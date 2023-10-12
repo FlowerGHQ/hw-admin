@@ -1708,7 +1708,284 @@ const routes = [
 			// 	}
 			// },
 		]
+	},    
+	{ // 工作台
+		path: '/crm-staging',
+		component: Layout,
+		redirect: '/crm-staging/staging',
+		name: 'crm-staging',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '工作台',
+			title_en: 'Staging',
+			icon: 'i_crm_bo',
+			auth: ["crm-label.list"],
+		},
+		children: [
+			{
+				path: 'staging',
+				name: 'CrmStaging',
+				component: () => import('@/views/crm-staging/staging.vue'),
+				meta: {
+					title: '工作台',
+					title_en: 'Staging',
+					auth: ["crm-label.list"],
+				}
+			},
+			{// 工作台详情
+				path: 'staging-detail',
+				name: 'stagingDetail',
+				component: () => import('@/views/crm-staging-detail/staging.vue'),
+				meta: {
+					title: '工作台详情',
+					title_en: 'StagingDetail',
+					auth: ["crm-label.list"],
+                    hidden: true,
+				}
+			},
+		]
 	},
+    { // 用户中心
+        path:'/user-center',
+        component: Layout,
+        redirect: '/user-center/clue-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '用户中心',
+            title_en: 'User Center',
+            icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'clue-list',
+                name: 'clueList',
+                component: () => import('@/views/crm-customer-center/clue-list.vue'),
+                meta: {
+                    title: '线索',
+                    title_en: 'Clue List',
+                    icon: 'i_home',                    
+                },
+            },
+            {
+                path: 'user-list',
+                name: 'userList',
+                component: () => import('@/views/crm-customer-center/user-list.vue'),
+                meta: {
+                    hidden: true,
+                    title: '',
+                    parent: '/stores-vehicle/stores-list',
+                }
+            },
+            {
+                path: 'user-edit',
+                name: 'userEdit',
+                component: () => import('@/views/crm-customer-center/user-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '门店详情',
+                    title_en: 'Payment Receipt Phase',
+                    parent: '/stores-vehicle/stores-list',
+                }
+            },
+        ]
+    }, 
+    { // 门店管理
+        path:'/stores-vehicle',
+        component: Layout, 
+        redirect: '/stores-vehicle/stores-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '门店管理',
+            title_en: 'Stores Management',
+            icon: 'i_stores',
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'stores-list',
+                name: 'storesList',
+                component: () => import('@/views/retail-crm/stores/store-list.vue'),
+                meta: {
+                    title: '门店列表',
+                    title_en: 'Stores List',
+                    icon: 'i_home',                    
+                },
+            },
+            {
+                path: 'regional-mangage',
+                name: 'regionalMangage',
+                component: () => import('@/views/retail-crm/stores/regional-mangage.vue'),
+                meta: {
+                    title: '区域管理',
+                    title_en: 'Regional Mangage',
+                    icon: 'i_home',                    
+                },
+            },
+            {
+                path: 'shift-mangage',
+                name: 'shiftMangage',
+                component: () => import('@/views/retail-crm/stores/shift-mangage.vue'),
+                meta: {
+                    title: '班次管理',
+                    title_en: 'Shift Mangage',
+                    icon: 'i_home',
+                    hidden: true,
+
+                },       
+            },
+            {
+                path: 'target-mangage',
+                name: 'targetMangage',
+                component: () => import('@/views/retail-crm/stores/target-mangage.vue'),
+                meta: {
+                    title: '目标管理',
+                    title_en: 'Target Mangage',
+                    icon: 'i_home',
+                    hidden: true,
+                },       
+            },
+			{
+				path: 'store-edit',
+				name: 'store-edit',
+				component: () => import('@/views/retail-crm/stores/store-edit.vue'),
+				meta: {
+					hidden: true,
+					title: '',
+					parent: '/stores-vehicle/stores-list',
+                    auth: [],
+				}
+			},
+			{
+				path: 'stores-detail',
+				name: 'storesDetail',
+				component: () => import('@/views/retail-crm/stores/store-detail.vue'),
+				meta: {
+					hidden: true,
+					title: '门店详情',
+					title_en: 'Payment Receipt Phase',
+					parent: '/stores-vehicle/stores-list',
+                    auth: [],
+				}
+			},
+        ]
+    },
+    { // 人员管理
+        path:'/retail-personnel',
+        component: Layout, 
+        redirect: '/retail-personnel/personnel-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '人员管理',
+            title_en: 'Personnel Management',
+            icon: 'i_renyuan-',
+            // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
+            roles: [LOGIN_TYPE.ADMIN],
+        },
+        children: [
+            {
+                path: 'personnel-list',
+                name: 'personnelList',
+                component: () => import('@/views/retail-crm/personnel/list.vue'),
+                meta: {
+                    title: '人员列表',
+                    title_en: 'Personnel List',
+                    icon: 'i_s_user',
+                    roles: [LOGIN_TYPE.ADMIN],
+                },
+            },
+            {
+                path: 'personnel-detail',
+                name: 'personnelDetail',
+                component: () => import('@/views/retail-crm/personnel/detail.vue'),
+                meta: {
+                    hidden: true,
+                    title: '人员详情',
+                    title_en: 'Personnel Detail',                    
+                },
+            }                   
+        ]
+    },  
+    { // 探索
+
+        path:'/retail-explore',
+        component: Layout, 
+        redirect: '/retail-explore/file-list',
+        type: [ROUTER_TYPE.CRM],
+        meta: {
+            title: '探索',
+            title_en: 'Explore',
+            icon: 'i_tansuo',
+            hidden: true,
+
+        },       
+        children: [
+            {
+                path: 'file-list',
+                name: 'fileList',
+                component: () => import('@/views/retail-crm/explore/file-list.vue'),
+                meta: {
+                    title: '文件',
+                    title_en: 'File',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },       
+            },
+            {
+                path: 'que-answer-list',
+                name: 'queAnswerList',
+                component: () => import('@/views/retail-crm/explore/que-answer-list.vue'),
+                meta: {
+                    // hidden: true,
+                    title: '问卷解答',
+                    title_en: 'Questionnaire Answers',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },
+            },
+            {
+                path: 'que-naire-list',
+                name: 'queNaireList',
+                component: () => import('@/views/retail-crm/explore/que-naire-list.vue'),
+                meta: {
+                    title: '问卷列表',
+                    title_en: 'List Of Questionnaires',                    
+                    roles: [LOGIN_TYPE.  ADMIN],
+                },
+            },
+            {
+                path: 'naire-edit',
+                name: 'naireEdit',
+                component: () => import('@/views/retail-crm/explore/naire-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '编辑问卷',
+                    title_en: 'Edit The Questionnaire',                    
+                },
+            }
+        ]
+    },   
+    { // 分配规则
+        path:'/service',
+        component: Layout, 
+        redirect: '/service/lead-list',
+        type: [ROUTER_TYPE.CRM], 
+        meta: {
+            title: '分配规则',
+            title_en: 'Allocation rules',
+            icon: 'i_renyuan-',
+            roles: [LOGIN_TYPE.ADMIN],
+        }, 
+        children: [
+            {
+                path: 'lead-list',
+                name: 'leadList',
+                component: () => import('@/views/crm-service-customer/lead-list.vue'),
+                meta: {
+                    title: '分配规则',
+                    title_en: 'Allocation rules',
+                },
+            }            
+        ]
+    },
 	{ // 好物订单
 		path: '/good-items-order',
 		component: Layout,
@@ -1753,42 +2030,6 @@ const routes = [
         component: Layout,
         redirect: '/crm-customer/customer-list',
         name: 'CRMCustomerManagement',
-	},    
-	{ // 工作台
-		path: '/crm-staging',
-		component: Layout,
-		redirect: '/crm-staging/staging',
-		name: 'crm-staging',
-        type: [ROUTER_TYPE.CRM],
-		meta: {
-			title: '工作台',
-			title_en: 'Staging',
-			icon: 'i_crm_bo',
-			auth: ["crm-label.list"],
-		},
-		children: [
-			{
-				path: 'staging',
-				name: 'CrmStaging',
-				component: () => import('@/views/crm-staging/staging.vue'),
-				meta: {
-					title: '工作台',
-					title_en: 'Staging',
-					auth: ["crm-label.list"],
-				}
-			},
-			{// 工作台详情
-				path: 'staging-detail',
-				name: 'stagingDetail',
-				component: () => import('@/views/crm-staging-detail/staging.vue'),
-				meta: {
-					title: '工作台详情',
-					title_en: 'StagingDetail',
-					auth: ["crm-label.list"],
-                    hidden: true,
-				}
-			},
-		]
 	},
 	{ // 客户
 		path: '/crm-customer',
@@ -2140,190 +2381,6 @@ const routes = [
         ]
     },
     /*----  零售业务新添加在CRM中的 ----*/
-    { // 门店管理
-        path:'/stores-vehicle',
-        component: Layout, 
-        redirect: '/stores-vehicle/stores-list',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '门店管理',
-            title_en: 'Stores Management',
-            icon: 'i_stores',
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'stores-list',
-                name: 'storesList',
-                component: () => import('@/views/retail-crm/stores/store-list.vue'),
-                meta: {
-                    title: '门店列表',
-                    title_en: 'Stores List',
-                    icon: 'i_home',                    
-                },
-            },
-            {
-                path: 'regional-mangage',
-                name: 'regionalMangage',
-                component: () => import('@/views/retail-crm/stores/regional-mangage.vue'),
-                meta: {
-                    title: '区域管理',
-                    title_en: 'Regional Mangage',
-                    icon: 'i_home',                    
-                },
-            },
-            {
-                path: 'shift-mangage',
-                name: 'shiftMangage',
-                component: () => import('@/views/retail-crm/stores/shift-mangage.vue'),
-                meta: {
-                    title: '班次管理',
-                    title_en: 'Shift Mangage',
-                    icon: 'i_home',
-                    hidden: true,
-
-                },       
-            },
-            {
-                path: 'target-mangage',
-                name: 'targetMangage',
-                component: () => import('@/views/retail-crm/stores/target-mangage.vue'),
-                meta: {
-                    title: '目标管理',
-                    title_en: 'Target Mangage',
-                    icon: 'i_home',
-                    hidden: true,
-                },       
-            },
-			{
-				path: 'store-edit',
-				name: 'store-edit',
-				component: () => import('@/views/retail-crm/stores/store-edit.vue'),
-				meta: {
-					hidden: true,
-					title: '',
-					parent: '/stores-vehicle/stores-list',
-                    auth: [],
-				}
-			},
-			{
-				path: 'stores-detail',
-				name: 'storesDetail',
-				component: () => import('@/views/retail-crm/stores/store-detail.vue'),
-				meta: {
-					hidden: true,
-					title: '门店详情',
-					title_en: 'Payment Receipt Phase',
-					parent: '/stores-vehicle/stores-list',
-                    auth: [],
-				}
-			},
-        ]
-    },
-    { // 用户中心
-        path:'/user-center',
-        component: Layout,
-        redirect: '/user-center/clue-list',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '用户中心',
-            title_en: 'User Center',
-            icon: 'i_s_customer',
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'clue-list',
-                name: 'clueList',
-                component: () => import('@/views/crm-customer-center/clue-list.vue'),
-                meta: {
-                    title: '线索',
-                    title_en: 'Clue List',
-                    icon: 'i_home',                    
-                },
-            },
-            {
-                path: 'user-list',
-                name: 'userList',
-                component: () => import('@/views/crm-customer-center/user-list.vue'),
-                meta: {
-                    title: '用户列表',
-                    title_en: 'User List',
-                    icon: 'i_home',
-                }
-            },
-            {
-                path: 'user-edit',
-                name: 'userEdit',
-                component: () => import('@/views/crm-customer-center/user-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '门店详情',
-                    title_en: 'Payment Receipt Phase',
-                    parent: '/stores-vehicle/stores-list',
-                }
-            },
-        ]
-    },    
-    { // 客服线索分配
-        path:'/service',
-        component: Layout, 
-        redirect: '/service/lead-list',
-        type: [ROUTER_TYPE.CRM], 
-        meta: {
-            title: '客服线索分配',
-            title_en: 'Customer service lead distribution',
-            icon: 'i_renyuan-',
-            roles: [LOGIN_TYPE.ADMIN],
-        }, 
-        children: [
-            {
-                path: 'lead-list',
-                name: 'leadList',
-                component: () => import('@/views/crm-service-customer/lead-list.vue'),
-                meta: {
-                    title: '客服线索分配',
-                    title_en: 'Customer service lead distribution',
-                },
-            }            
-        ]
-    },
-    { // 人员管理
-        path:'/retail-personnel',
-        component: Layout, 
-        redirect: '/retail-personnel/personnel-list',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '人员管理',
-            title_en: 'Personnel Management',
-            icon: 'i_renyuan-',
-            // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
-            roles: [LOGIN_TYPE.ADMIN],
-        },
-        children: [
-            {
-                path: 'personnel-list',
-                name: 'personnelList',
-                component: () => import('@/views/retail-crm/personnel/list.vue'),
-                meta: {
-                    title: '人员列表',
-                    title_en: 'Personnel List',
-                    icon: 'i_s_user',
-                    roles: [LOGIN_TYPE.ADMIN],
-                },
-            },
-            {
-                path: 'personnel-detail',
-                name: 'personnelDetail',
-                component: () => import('@/views/retail-crm/personnel/detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '人员详情',
-                    title_en: 'Personnel Detail',                    
-                },
-            }                   
-        ]
-    },
     // 车辆管理和订单管理这期隐藏开启 hidden: 用这个字段
     { // 车辆管理
         path:'/retail-vehicle',
@@ -2389,63 +2446,6 @@ const routes = [
                     hidden: true,
                     title: '订单详情',
                     title_en: 'Order Detail',
-                },
-            }
-        ]
-    },  
-    { // 探索
-
-        path:'/retail-explore',
-        component: Layout, 
-        redirect: '/retail-explore/file-list',
-        type: [ROUTER_TYPE.CRM],
-        meta: {
-            title: '探索',
-            title_en: 'Explore',
-            icon: 'i_tansuo',
-            hidden: true,
-
-        },       
-        children: [
-            {
-                path: 'file-list',
-                name: 'fileList',
-                component: () => import('@/views/retail-crm/explore/file-list.vue'),
-                meta: {
-                    title: '文件',
-                    title_en: 'File',                    
-                    roles: [LOGIN_TYPE.  ADMIN],
-                },       
-            },
-            {
-                path: 'que-answer-list',
-                name: 'queAnswerList',
-                component: () => import('@/views/retail-crm/explore/que-answer-list.vue'),
-                meta: {
-                    // hidden: true,
-                    title: '问卷解答',
-                    title_en: 'Questionnaire Answers',                    
-                    roles: [LOGIN_TYPE.  ADMIN],
-                },
-            },
-            {
-                path: 'que-naire-list',
-                name: 'queNaireList',
-                component: () => import('@/views/retail-crm/explore/que-naire-list.vue'),
-                meta: {
-                    title: '问卷列表',
-                    title_en: 'List Of Questionnaires',                    
-                    roles: [LOGIN_TYPE.  ADMIN],
-                },
-            },
-            {
-                path: 'naire-edit',
-                name: 'naireEdit',
-                component: () => import('@/views/retail-crm/explore/naire-edit.vue'),
-                meta: {
-                    hidden: true,
-                    title: '编辑问卷',
-                    title_en: 'Edit The Questionnaire',                    
                 },
             }
         ]
