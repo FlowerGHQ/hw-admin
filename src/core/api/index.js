@@ -859,19 +859,59 @@ const apiList = {
         seePhone:['PostJson','app-order/show-phone'],                   // 查看手机号   
         wayillDetail:['PostJson','app-waybill/detail'],                   // 物流详情   
     },
+    CustomService: {
+        list: ['PostJson', 'customer-service/customer/list'],
+        amountList: ['PostJson', 'customer-service/home/my-task/amount-list'],  // 我的任务- 已处理/全部 数量
+        detail: ['PostJson', 'customer-service/customer/detail'],       // 用户线索详情
+        deleteLabel: ['PostJson', 'customer-service/label-bind/delete'],
+        updateLabel: ['PostJson', 'customer-service/label-bind/batch-update'],
+        storeList: ['PostJson', 'customer-service/store/list-name'],   // 门店列表
+        groupList: ['PostJson', 'customer-service/group/list-name'],    // 大区列表
+        bindList: ['PostJson', 'customer-service/customer-store-user-bind/list'],
+        getTestDriveList: ['PostJson', 'customer-service/crm-test-drive-order/list'],  // 试驾单list
+        getLogList: ['PostJson', 'customer-service/action-log/list'],  // 日志list
+
+
+        trackRecordList: ['PostJson', 'customer-service/track-record/list'], // 跟进记录-列表
+        createRecord: ['PostJson', 'customer-service/track-record/save'],   //创建跟进记录
+        createTrack: ['PostJson', 'customer-service/track-record/save-task'],   //创建任务记录
+        cancelTrack: ['PostJson', 'customer-service/track-record/cancel-task'],   //创建任务记录
+        storeUserList: ['PostJson', 'customer-service/store-user/list'],          // 店员列表
+        upDateTransfer: ['PostJson', 'customer-service/customer/update-store-user-transfer'],   // 线索转移
+        getCityList: ['GetJson', 'customer-service/group/cityList'],   // 城市列表(根据大区)
+
+        editIsTop: ['PostJson', 'customer-service/customer/editIsTop'],
+        createOrder: ['PostJson', 'customer-service/crm-order/create'],
+        orderDetail: ['PostJson', 'customer-service/crm-order/detail'],
+        orderList: ['PostJson', 'customer-service/crm-order/list'],
+        pushApp: ['GetJson', 'customer-service/crm-order/push-app'],
+        orderUpdate: ['PostJson', 'customer-service/crm-order/update'],
+        logList: ['PostJson', 'customer-service/action-log/list'],
+
+        getAllocationList: ['PostJson', 'customer-service/user/list'], // 客服-线索-分配list
+        setAllocation: ['PostJson', 'customer-service/user/set-system-assign-rate'], // 客服-线索-设置系统分配比例
+        editUser: ['PostJson','customer-service/customer/save'],    // 编辑用户线索
+        verifyPhoneAndEmail: ['PostJson','customer-service/customer/verifyPhoneAndEmail'],    // 验证手机号 / 邮箱号
+
+    },
     // COC模块
     COC: {
-        getCocTemplateList: ['PostJson', 'coc-template/list'], // 获取模板列表
-        addCocTemplate: ['PostJson', 'coc-template/save'], // 添加模板
-        viewCocTemplate: ['PostJson', 'coc-template/detail'], // 查看模板
-        deleteCocTemplate: ['PostJson', 'coc-template/delete'], // 删除模板
-        getCateGoryList: ['PostJson', 'item/list-vehicle-item-name'], // 车型名称
-        getCertificateList: ['PostJson', 'coc-certificate/list'], // 证书列表
-        getCertificateDetailList: ['PostJson', 'coc-certificate/detail/list'], // 证书清单列表
-        downLoadCertificateDetailLis: ['BlobPost', 'coc-certificate/download'], // 证书清单列表下载
-        setCertificateVisible: ['PostJson', 'coc-certificate/set-visibility'], // 设置证书可见
-        getCertificatNumber: ['PostJson', 'coc-certificate/detail/statistics'], // 获取证书编号
+        getCocTemplateList: ['PostJson', 'crm-coc-template/list'], // 获取模板列表
+        addCocTemplate: ['PostJson', 'crm-coc-template/save'], // 添加模板
+        viewCocTemplate: ['PostJson', 'crm-coc-template/detail'], // 查看模板
+        deleteCocTemplate: ['PostJson', 'crm-coc-template/delete'], // 删除模板
+        getCateGoryList: ['PostJson', 'crm-coc-template/item-category-name'], // 车型名称
+        getCertificateList: ['PostJson', 'crm-coc-certificate/list'], // 证书列表
+        getCertificateDetailList: ['PostJson', 'crm-coc-certificate/detail/list'], // 证书清单列表
+        downLoadCertificateDetailLis: ['BlobPost', 'crm-coc-certificate/download'], // 证书清单列表下载
+        setCertificateVisible: ['PostJson', 'crm-coc-certificate/set-visibility'], // 设置证书可见
+        getCertificatNumber: ['PostJson', 'crm-coc-certificate/detail/statistics'], // 获取证书编号
         regenerateFile: ['PostJson','/coc-certificate/regenerate-file'] // 重新生成文件
+    },
+    // 用户中心
+    USER_CENTER: {
+        getClueList: ['PostJson', 'user-center/clue/list'], // 线索ist
+        distributionStore: ['PostJson', 'user-center/update-store-transfer'], // 分配门店
     }
 }; 
 

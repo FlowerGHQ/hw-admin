@@ -39,6 +39,15 @@ const CRM_CUSTOMER_CENTER = {
 		'-300': { key: '-300', text: '已退款', bgColor:'', border_color: '#F7BA1E33', color: '#722ED1' },
 		'-400': { key: '-400', text: '申请退款', bgColor:'', border_color: '#F5E8FF', color: '#722ED1' },
 	},
+    ORDER_STATUS_TEXT_MAPS: {
+        Do_not_place_an_order: 0,
+        Do_not_place_an_order50: 50,        
+        To_be_paid: 100,
+        Have_paid: 200,
+        Cancelled: -200,
+        Refunded: -300,
+        Apply_for_refund: -400,
+    },
     // 来源（1.预定小程序 2.后台注册 3.Shopify 4.官网2.0 5.官网1.0 30.落地页1 31.落地页2 101-投票分享）
     SOURCE_TYPE: [
         { title:'全部', value: 0, key: 0 },
@@ -50,6 +59,9 @@ const CRM_CUSTOMER_CENTER = {
         { title:'落地页1', value: 30, key: 30  },
         { title:'落地页2', value: 31, key: 31  },
         { title:'投票分享', value: 101, key: 101  },
+        { title:'体验官二维码', value: 32, key: 32  },
+        { title:'门店二维码', value: 33, key: 33  },
+        { title:'人工录入', value: 34, key: 34  },
     ],
 	// 来源
 	SOURCE_TYPE_MAP: {
@@ -61,13 +73,16 @@ const CRM_CUSTOMER_CENTER = {
 		'30': { key: '落地页1', value: 30, },
 		'31': { key: '落地页2', value: 31, },
 		'101': { key: '投票分享', value: 101, },
+        '32': { key:'体验官二维码', value: 32, },
+        '33': { key:'门店二维码', value: 33, },
+        '34': { key:'人工录入', value: 34, },
 	},   
     // 判断接口事线索list还是用户list
     CHOOSE_TYPE: {
         CLUE: 1,
         USER: 2
     },
-    // 查询类型 0-全部(默认) 1-信息缺失 2-未绑定 3-未跟进 4-已跟进 5-休眠 6-未下订 7-已下订 8-已成交 9-已交付
+    // 查询类型 0-全部(默认) 1-信息缺失 2-未绑定(未分配) 3-未跟进 4-已跟进 5-休眠 6-未下订 7-已下订 8-已成交 9-已交付
     SEARCH_TYPE: {
         All: 0,
         Information_loss: 1,

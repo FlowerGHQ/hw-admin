@@ -1,11 +1,6 @@
 import Const from "./const";
 
 class Logger  {
-    static bgColors = {
-        error: "#ff0000",
-        warn: "#C25700",
-        info: "#5460ff",
-    }
     static success() {
         this.conslogFilter("log", arguments)
     }
@@ -14,15 +9,15 @@ class Logger  {
     }
 
     static error() {
-        this.conslogFilter("error", arguments)
+        this.conslogFilter("error", arguments)        
     }
 
     static warn() {
-        this.conslogFilter("warn", arguments)
+        this.conslogFilter("warn", arguments)        
     }
 
     static info() {
-        this.conslogFilter("info", arguments)
+        this.conslogFilter("info", arguments)        
     }
     
     // 统一方法输出方法过滤
@@ -30,14 +25,9 @@ class Logger  {
         if (Const.NET.DISABLELOG && fn === "log" ) return // 停止输出(只有log的禁用了)
 
         const time = `[${ this.formatDate() }] `
-        const result = fn + " " + time + "%c" + [...args]
-        const logStyle = `color: white; background-color: ${ this.bgColors[fn] }; padding: 2px 10px; display: inline-block;`
-        // 判断先是否是浏览器是 打印的不是log的话会有颜色
-        if (this.isWindows() && fn !== "log") {
-            console[fn](result, logStyle);
-        } else {
-            console[fn](`${fn}`, ...args);
-        }
+        const result = fn + " " + time                
+
+        console[fn](result, ...args);    
     }
     // 时间计算
     static formatDate() {

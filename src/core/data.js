@@ -80,7 +80,7 @@ class StorageHandler {
     removeItem(key) {
         key = normalizeKey(key);
         const FINAL_KEY = `${Const.DATA.KEY_PREFIX}${key}`;
-        return JSON.parse(localStorage.removeItem(FINAL_KEY));
+        return localStorage.removeItem(FINAL_KEY);
     }
 
     setToken(value) {
@@ -183,6 +183,16 @@ class StorageHandler {
     }
     clearManager() {
         this.removeItem(Const.DATA.SUPER_ADMIN)
+    }
+    // 存客服分配线索
+    setCustomerServiceClue(value) {
+        this.setItem(Const.DATA.CUSTOMER_SERVICE_CLUE, value);
+    }
+    getCustomerServiceClue() {
+        return this.getItem(Const.DATA.CUSTOMER_SERVICE_CLUE) || []
+    }
+    clearCustomerServiceClue() {
+        this.removeItem(Const.DATA.CUSTOMER_SERVICE_CLUE)
     }
 }
 

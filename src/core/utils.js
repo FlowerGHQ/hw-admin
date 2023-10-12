@@ -1274,7 +1274,174 @@ const Util = {
   },
   /* =============== 测试报告 ================ */
 
-  /* ======== 搜索条件筛选null过滤掉去 
+    /* =============== CRM商机 ================ */
+    CRMBoSourceMapFilter(val, to = 'zh') {
+        console.log(val)
+        const MAP = Const.CRM_BO.SOURCE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMBoLostReasonFilter(val, to = 'zh') {
+        console.log(val)
+        const MAP = Const.CRM_BO.LOST_REASON_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM商机 ================ */
+
+    /* =============== CRM退款记录 ================ */
+    CRMRefundRecordTypeMapFilter(val, to = 'zh') {
+        console.log(val)
+        const MAP = Const.CRM_REFUND_RECORD.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM退款记录 ================ */
+
+    /* =============== CRM标签 ================ */
+    CRMLabelCategoryMapFilter(val, to = 'zh') {
+        const MAP = Const.LABEl.CATEGORY_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM标签 ================ */
+
+    /* =============== CRM设置 ================ */
+    CRMDictTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_DICT.TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== CRM设置 ================ */
+
+    /* =============== 试驾单 ================ */
+    CRMTestDriveChannelMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.CHANNEL_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveStatusMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveBuyTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.BUY_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveRentalDemandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.RENTAL_DEMAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveTravelRangeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.TRAVEL_RANGE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveGreenCarOwnerMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.GREEN_CAR_OWNER_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveDriverLicenseMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.DRIVER_LICENSE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveRideExpMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.RIDE_EXP_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveMotoExpMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.MOTO_EXP_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveMotoTourIntentionMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.MOTO_TOUR_INTENTION_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDrivePayAttentionToMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.PAY_ATTENTION_TO_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveGreenEnergyUnderstandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.GREEN_ENERGY_UNDERSTAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveElectricTwoWheelerUnderstandMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.ELECTRIC_TWO_WHEELER_UNDERSTAND_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMPreOrderCarTypeMapFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TEST_DRIVE.PRE_ORDER_CAR_TYPE_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveStatusCycFilter(val, to = 'zh') {
+        const MAP = Const.test_drive.test_drive_status
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    CRMTestDriveSourceFilter(val, to = 'zh') {
+        const MAP = Const.test_drive.appointment_channel
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+
+    /* =============== 试驾单 ================ */
+    /* =============== 待办事项 ================ */
+    CRMToDoStatusFilter(val, to = 'zh') {
+        const MAP = Const.CRM_TODO.STATUS_MAP
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    /* =============== 待办事项 ================ */
+    /* =============== 测试报告 ================ */
+    testCaseNameFilter(id, type) {
+        const TAR = Const.TEST.TYPE_CASE_MAP[type + ''] || {}
+        return TAR[id + ''] || ''
+    },
+    /* =============== 测试报告 ================ */
+    /* =============== 意向程度 ================ */
+    intentionTypeFilter(val, to = 'key') {
+        const MAP = Const.INTENTION.TYPE_MAP
+        switch (to) {
+            case 'key':
+                try {                    
+                    return MAP[val + ''].key || {}
+                } catch (error) {
+                    return ""
+                }
+            case 'status':
+                return MAP[val + ''].status || 'empty'
+        }
+    },
+    /* =============== 意向程度 ================ */
+    /* =============== 意向车辆 ================ */
+    intentionCarTypeFilter(val, to='key') {
+        const MAP = Const.INTENTION.CAR_TYPE_MAP
+        let ITEM = MAP[val + ''] || {key: ''}
+        return ITEM[to] || '未知'
+    },
+    /* =============== 意向车辆 ================ */
+    /* =============== 客户来源 ================ */
+    // 客户来源
+    intentionSourceTypeFilter(val, to='key') {
+        const MAP = Const.INTENTION.SOURCE_TYPE_MAP
+        let ITEM = MAP[val + ''] || {key: ''}
+        return ITEM[to] || '未知'
+    },
+    /* =============== 客户来源 ================ */
+
+    /* ======== 搜索条件筛选null过滤掉去 
     * obj { uid: null, status: null }
     start========== */
   searchFilter(obj) {
@@ -1384,6 +1551,41 @@ const Util = {
     // 门店状态
     storeSTATUS(val, to = 'zh') {
         const MAP = Const.RETAIL.STORE_STATUS
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },    
+    /**
+     * 计算时间 返回days，hours, minutes
+     * @param {*} startTimestamp  // 开始时间
+     * @param {*} endTimestamp  // 结束时间
+    */
+    calculateTimeDifference(startTimestamp, endTimestamp) {
+        const start = dayjs.unix(startTimestamp);
+        const end = dayjs.unix(endTimestamp);
+      
+        const diffInSeconds = end.diff(start, 'second');
+      
+        const days = Math.floor(diffInSeconds / (24 * 60 * 60));
+        const hours = Math.floor((diffInSeconds % (24 * 60 * 60)) / (60 * 60));
+        const minutes = Math.floor((diffInSeconds % (60 * 60)) / 60);
+      
+        return { days, hours, minutes };      
+    },
+    // 跟进方式标签状态
+    tabStatus(val, to = 'zh') {
+        const MAP = Const.WORK_OPERATION.FOLLOW_TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 门店人员-职务
+    peoStoreStatus(val, to = 'zh') {
+        const MAP = Const.FEISHUTYPE.TYPE
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+    // 跟进方式标签状态
+    tabTypeStatus(val, to = 'zh') {
+        const MAP = Const.WORK_OPERATION.COMMUNICATE_TYPE
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },

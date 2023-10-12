@@ -484,7 +484,6 @@ export default {
       if (!isLt10M) {
         this.$message.warning(this.$t("n.picture_smaller"));
       }
-
       // this.loadImage(TEST_IMAGE);
       // return false;
       return isCanUpType && isLt10M;
@@ -523,11 +522,9 @@ export default {
           this.trackRecordForm.image_attachment_list.filter((el) => {
             return el.uid != file.uid;
           });
-        console.log("99999", this.trackRecordForm.image_attachment_list);
       }
 
       this.upload.detailList = fileList;
-      // console.log('handleCoverChange------------follow', file, 'fileList', fileList, 'this.upload.detailList ', this.upload.detailList, 'this.trackRecordForm.image_attachment_list', this.trackRecordForm.image_attachment_list, 'this.upload.coverList', this.upload.coverList);
     },
     // 获取区域
     getRegionsData() {

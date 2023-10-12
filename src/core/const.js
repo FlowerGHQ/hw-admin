@@ -21,7 +21,7 @@ switch (window.location.hostname) {
         break;
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 新测试服
-        break;
+        break;     
     case "10.0.0.213":
         URL_POINT = 'http://10.0.0.213:8889'
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
@@ -37,14 +37,13 @@ switch (window.location.hostname) {
         URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
+        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
-        URL_POINT = 'http://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.0.0.190:8889' // zy
-        // URL_POINT = 'http://10.10.12.204:8888' // zny
+        // URL_POINT = 'http://10.10.12.78:8889'  // zy
         break;
 }
 
@@ -74,6 +73,7 @@ let Const = {
         COUNTRY_CODE: 'country.code',
         GROUP_ID: 'group.id',
         SUPER_ADMIN: 'super_admin',
+        CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -1651,6 +1651,11 @@ let Const = {
             '4': { key: 4, zh: '官网2.0', en: 'Official website 2.0', value: 4 },
             '5': { key: 5, zh: '官网1.0', en: 'Official website 1.0', value: 5 },
             '101': { key: 6, zh: '投票分享', en: 'Vote Sharing', value: 101 },
+            '30': { key: 30, en:'Landing page 1', zh: '落地页1', value: 30, },
+            '31': { key: 31, en:'Landing page 2', zh: '落地页2', value: 31, },
+		    '32': { key: 32, en:'Qr code of experience officer', zh: '体验官二维码', value: 32, },
+		    '33': { key: 33, en:'Store QR code', zh: '门店二维码', value: 33, },
+		    '34': { key: 34, en:'Manual creation', zh: '人工创建', value: 34, },
         },
         // 落地页
         Landing_Page: {
@@ -2151,6 +2156,51 @@ let Const = {
             '2': { key: 2, zh: 'SENMENTI X', en: 'SENMENTI X' },
         },
     },
+    INTENTION: {
+        TYPE_MAP: {
+			'10': { key: '无意向', value: 10, status: 'empty', img_url:'INTENT_EMPTY' },
+			'20': { key: '有意向', value: 20, status: 'little', img_url:'INTENT_LITTLE' },
+			'30': { key: '高意向', value: 30, status: 'tall', img_url:'INTENT_HIGH' },
+			'40': { key: 'Hot', value: 40, status: 'hot', img_url:'INTENT_HOT' },
+		},
+        IMG_MAP: {
+            INTENT_EMPTY: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/4e6c67d8f5a90c0206b8c307e404771e705060fe923b4a22f56cd1cafc6992de.png", // 无意向图标
+            INTENT_LITTLE: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/1f032557ea384714de805694d90a8ef47caf3349c2f968de8a70f4c91a1f0149.png", // 有意向图标
+            INTENT_HIGH: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/c6b26b933225fba3e06b58e2193214d9a59f9527843e10688b91752b7bcacc81.png", // 高意向图标
+            INTENT_HOT: "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/8a917d79979a636dc22b7c2fed8dd95d45eb7e67e01816dfcddda485b01ff180.png", // HOT意向图标
+        },
+        // 车型
+        CAR_TYPE_MAP: {
+            '1': { key: 'SENMENTI 0', value: 1, },
+            '2': { key: 'SENMENTI X', value: 2, },
+        },
+        // 客户来源
+        SOURCE_TYPE_MAP: {
+            '1': { key: '预定小程序', value: 1, },
+		    '2': { key: '后台注册', value: 2, },
+		    '3': { key: 'Shopify', value: 3, },
+		    '4': { key: '官网2.0', value: 4, },
+		    '5': { key: '官网1.0', value: 5, },
+            '30': { key: '落地页1', value: 30, },
+            '31': { key: '落地页2', value: 31, },
+		    '32': { key: '体验官二维码', value: 32, },
+		    '33': { key: '门店二维码', value: 33, },
+		    '34': { key: '人工创建', value: 34, },
+        },
+        // 标签
+        TAG_TYPE_MAP: {
+            '3': { key: '标签', value: 3, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+            '4': { key: '关注点', value: 4, color: '#00B42A'/*字体颜色*/, bgColor:'#E1F7E3'/*背景颜色*/, },
+            '5': { key: '摩托车型号', value: 5, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+            '6': { key: '用车城市', value: 6, color: '#3381FF'/*字体颜色*/, bgColor:'#E6EFFF'/*背景颜色*/, },
+        },
+        TAG_TYPE: {
+            TAG: 3, // 正常标签
+            FOCUS: 4, // 关注点
+            MODEL: 5, // 摩托车型号
+            CITY: 6, // 用车城市
+        },
+    },
 
     // 测试
     TEST: {
@@ -2270,6 +2320,15 @@ let Const = {
             '103005': { father_type: 7, key: 103005, zh: "客服", en: 'Customer Service' },
             '3000001': { father_type: 4, key: 3000001, zh: "门店店长", en: 'Store manager' },
             '3000002': { father_type: 5, key: 3000002, zh: "用户体验官", en: 'User experience officer' },
+        },
+        Job_Map: {
+            MARKET_MANAGER: 103001,
+            REGIONAL_MANAGER: 103002,
+            CITY_MANAGER: 103003,
+            OPERATE: 103004,
+            CUSTOMER_SERVICE: 103005,
+            STORE_MANAGER: 3000001,
+            OFFICER: 3000002,
         },
         // 车辆用途
         Vehicle_Usage: {
@@ -2413,7 +2472,62 @@ let Const = {
             // 这两个字段前端自己玩自己的不传给后端
             '6': { key: 6, zh: "运营", en: 'operate' },
             '7': { key: 7, zh: "客服", en: 'Customer Service' },
+            '10': { key: 10, zh: "管理员", en: 'Admin' },
         }
+    },
+    // 国内销售-（工作台）运营
+    WORK_OPERATION: {
+
+        // 沟通方式
+        COMMUNICATE_TYPE: {
+            "20": { key: 20, value: 20, zh: '电话沟通' },
+            "10": { key: 10, value: 10, zh: '面谈' },
+            "30": { key: 30, value: 30, zh: '未打通' },
+        },
+        // 跟进类型
+        FOLLOW_TYPE: {
+            "10": { key: 10, value: 10, zh: '补充信息缺失', background: '#FFECE8', color:'#F53F3F', borderC:'#FCB9B6' },
+            "20": { key: 20, value: 20, zh: '预约试驾', background: '#E6EFFF', color:'#3381FF', borderC:'#A1C5FF'  },
+            "30": { key: 30, value: 30, zh: '跟进', background: '#E8FFEA', color:'#00B42A', borderC:'#A3E9B1'  },
+        },
+        // 试驾状态
+        TEST_DRIVE_STATUS: {
+            // 试驾单状态 10 预约 15 签到 20 试驾中 30 试驾结束 40 过期未试驾 50 取消试驾
+            "10": { key: 10, value: 10, zh: '预约' },
+            "15": { key: 15, value: 15, zh: '签到' },
+            "20": { key: 20, value: 20, zh: '试驾中' },
+            "30": { key: 30, value: 30, zh: '试驾结束' },
+            "40": { key: 40, value: 40, zh: '过期未试驾' },
+            "50": { key: 50, value: 50, zh: '取消试驾' },
+        },
+        LOG_KEY_MAP: {
+            'name': { key: 'name',text: '客户名称'},
+            'phone': { key: 'phone',text: '手机号'},
+            'email': { key: 'email',text: '邮箱'},
+            'city': { key: 'city',text: '城市'},
+            'address': { key: 'address',text: '地址'},
+            'birthday': { key: 'birthday',text: '出生日期'},
+            'country': { key: 'country',text: '国家' },
+            'province': { key: 'province',text: '省份' },
+            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '意向车型' },
+            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '车型' },
+            'gender': { key: 'gender',text: '性别' },
+            'intention': { key: 'intention',text: '意向度' },
+        },
+        INTENTION: {
+            TYPE_LIST: [
+                { key: '无意向', value: 10 },
+                { key: '有意向', value: 20 },
+                { key: '高意向', value: 30 },
+                { key: 'Hot', value: 40 },
+            ],
+            TYPE_MAP: {
+                "10": { text: '无意向', key: 10 },
+                "20": { text: '有意向', key: 20 },
+                "30": { text: '高意向', key: 30 },
+                "40": { text: 'Hot', key: 40 },
+            }
+        },
     },
     // COC证书
     COC: {
@@ -2434,5 +2548,6 @@ let Const = {
         },
     }
 };
+
 
 export default Const;
