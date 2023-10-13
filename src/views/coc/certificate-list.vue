@@ -377,7 +377,9 @@ const allGenerated = () => {
 // 获取数量信息
 const getAllNumer = () => {
   getCertificatNumber({
-    order_number: query.order_number,
+    order_number:  props.cocProps &&
+    Object.keys(props.cocProps).length > 0 &&
+    props.cocProps.order_number ? props.cocProps.order_number : query.order_number,
   })
     .then((res) => {
       numberForm[0].number = res?.total_num || 0;
