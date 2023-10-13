@@ -1772,9 +1772,9 @@ const routes = [
                 name: 'userList',
                 component: () => import('@/views/crm-customer-center/user-list.vue'),
                 meta: {
-                    hidden: true,
-                    title: '',
-                    parent: '/stores-vehicle/stores-list',
+                    title: '用户列表',
+                    title_en: 'User List',
+                    icon: 'i_home',
                 }
             },
             {
