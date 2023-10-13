@@ -79,11 +79,11 @@
             :placeholder="$t('coc.coc_placeholder_apply_vehicle')"
             @select="handleSelectChange"
             :options="
-              option.map((item) => {
+              option.map((item,index) => {
                 return {
                   label: `${item.label} - ${item.key}`,
                   value: item.key,
-                  key: item.label,
+                  key: item.key,
                 };
               })
             "
@@ -294,7 +294,7 @@ const searchForm = reactive({
   id: "",
 });
 const filterOption = (input, option) => {
-  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+      return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 };
 // watch(
 //   () => props.recordItem,
