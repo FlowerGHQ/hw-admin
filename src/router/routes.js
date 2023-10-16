@@ -1763,8 +1763,7 @@ const routes = [
 		meta: {
 			title: '工作台',
 			title_en: 'Staging',
-			icon: 'i_crm_bo',
-			auth: ["crm-label.list"],
+			icon: 'i_crm_bo',			
 		},
 		children: [
 			{
@@ -1773,8 +1772,7 @@ const routes = [
 				component: () => import('@/views/crm-staging/staging.vue'),
 				meta: {
 					title: '工作台',
-					title_en: 'Staging',
-					auth: ["crm-label.list"],
+					title_en: 'Staging',					
 				}
 			},
 			{// 工作台详情
