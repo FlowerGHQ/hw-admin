@@ -7,7 +7,7 @@ import constModules from './modules/const/index'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
-let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
+let URL_POINT = 'https://eos-dev-api.horwincloud.com'  // 测试服
 // let URL_POINT = 'http://10.0.0.100'  // zy
 let DISABLELOG = false
 
@@ -32,9 +32,6 @@ switch (window.location.hostname) {
         break;
     case 'eos-dev.hw.innotick.com':
         URL_POINT = 'https://eos-dev-api.horwincloud.com' // 老测试服
-        break;
-    case 'eos-release.horwincloud.com':
-        URL_POINT = 'http://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
         URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
@@ -2510,7 +2507,6 @@ let Const = {
             'country': { key: 'country',text: '国家' },
             'province': { key: 'province',text: '省份' },
             'intent_vehidle_model': { key: 'intent_vehidle_model',text: '意向车型' },
-            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '车型' },
             'gender': { key: 'gender',text: '性别' },
             'intention': { key: 'intention',text: '意向度' },
         },
