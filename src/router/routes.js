@@ -2024,12 +2024,40 @@ const routes = [
                 }
             },
         ]
-    },
-    { // 客户管理
-        path: '/crm-customer',
-        component: Layout,
-        redirect: '/crm-customer/customer-list',
-        name: 'CRMCustomerManagement',
+    },  
+	{ // 工作台
+		path: '/crm-staging',
+		component: Layout,
+		redirect: '/crm-staging/staging',
+		name: 'crm-staging',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '工作台',
+			title_en: 'Staging',
+			icon: 'i_crm_bo',			
+		},
+		children: [
+			{
+				path: 'staging',
+				name: 'CrmStaging',
+				component: () => import('@/views/crm-staging/staging.vue'),
+				meta: {
+					title: '工作台',
+					title_en: 'Staging',					
+				}
+			},
+			{// 工作台详情
+				path: 'staging-detail',
+				name: 'stagingDetail',
+				component: () => import('@/views/crm-staging-detail/staging.vue'),
+				meta: {
+					title: '工作台详情',
+					title_en: 'StagingDetail',
+					auth: ["crm-label.list"],
+                    hidden: true,
+				}
+			},
+		]
 	},
 	{ // 客户
 		path: '/crm-customer',
