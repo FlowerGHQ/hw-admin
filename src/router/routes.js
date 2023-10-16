@@ -1719,7 +1719,6 @@ const routes = [
 			title: '工作台',
 			title_en: 'Staging',
 			icon: 'i_crm_bo',
-			auth: ["crm-label.list"],
 		},
 		children: [
 			{
@@ -1729,7 +1728,6 @@ const routes = [
 				meta: {
 					title: '工作台',
 					title_en: 'Staging',
-					auth: ["crm-label.list"],
 				}
 			},
 			{// 工作台详情
@@ -1739,7 +1737,6 @@ const routes = [
 				meta: {
 					title: '工作台详情',
 					title_en: 'StagingDetail',
-					auth: ["crm-label.list"],
                     hidden: true,
 				}
 			},
@@ -1789,7 +1786,7 @@ const routes = [
                 }
             },
         ]
-    }, 
+    },
     { // 门店管理
         path:'/stores-vehicle',
         component: Layout, 
@@ -1905,7 +1902,7 @@ const routes = [
                 },
             }                   
         ]
-    },  
+    },
     { // 探索
 
         path:'/retail-explore',
@@ -1962,7 +1959,7 @@ const routes = [
                 },
             }
         ]
-    },   
+    },
     { // 分配规则
         path:'/service',
         component: Layout, 
@@ -2024,41 +2021,7 @@ const routes = [
                 }
             },
         ]
-    },  
-	{ // 工作台
-		path: '/crm-staging',
-		component: Layout,
-		redirect: '/crm-staging/staging',
-		name: 'crm-staging',
-        type: [ROUTER_TYPE.CRM],
-		meta: {
-			title: '工作台',
-			title_en: 'Staging',
-			icon: 'i_crm_bo',			
-		},
-		children: [
-			{
-				path: 'staging',
-				name: 'CrmStaging',
-				component: () => import('@/views/crm-staging/staging.vue'),
-				meta: {
-					title: '工作台',
-					title_en: 'Staging',					
-				}
-			},
-			{// 工作台详情
-				path: 'staging-detail',
-				name: 'stagingDetail',
-				component: () => import('@/views/crm-staging-detail/staging.vue'),
-				meta: {
-					title: '工作台详情',
-					title_en: 'StagingDetail',
-					auth: ["crm-label.list"],
-                    hidden: true,
-				}
-			},
-		]
-	},
+    },
 	{ // 客户
 		path: '/crm-customer',
 		component: Layout,
