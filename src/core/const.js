@@ -2510,7 +2510,6 @@ let Const = {
             'country': { key: 'country',text: '国家' },
             'province': { key: 'province',text: '省份' },
             'intent_vehidle_model': { key: 'intent_vehidle_model',text: '意向车型' },
-            'intent_vehidle_model': { key: 'intent_vehidle_model',text: '车型' },
             'gender': { key: 'gender',text: '性别' },
             'intention': { key: 'intention',text: '意向度' },
         },
