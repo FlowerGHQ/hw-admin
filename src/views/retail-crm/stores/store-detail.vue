@@ -70,11 +70,11 @@
               <span class="key">{{ $t("dis.business_hours") }}：</span>
               <span class="value">
                 {{
-                  form.business_time?.length
+                  form.business_time?.length&&form.business_time[0]&&form.business_time[1]
                     ? form.business_time[0] +
                       "&nbsp;~&nbsp;" +
                       form.business_time[1]
-                    : ""
+                    : "-"
                 }}
               </span>
             </a-col>
@@ -217,7 +217,7 @@ const getStoreDetail = () => {
             JSON.parse(d.business_time).time.morning.begin,
             JSON.parse(d.business_time).time.afternoon.end,
           ]
-        : undefined;
+        : [];
       d.localtion = d.localtion
         ? JSON.parse(d.localtion)
         : {

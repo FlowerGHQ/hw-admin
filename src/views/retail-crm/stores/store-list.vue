@@ -243,6 +243,9 @@
                 >
               </a-tooltip>
             </template>
+            <template v-else-if="column.key === 'group_name'">
+              {{ text&&record.city?text+'-'+record.city:text || "-" }}
+            </template>
             <template v-else-if="column.key === 'order_uid'">
               {{ text || "-" }}
             </template>
@@ -369,14 +372,12 @@ export default {
           this.pageSize = 20;
         }
 
-        console.log("searchForm", oldValue, newValue);
         if (
           newValue.group_id == undefined ||
           oldValue.group_id != newValue.group_id
         ) {
           this.searchForm.city = undefined;
         }
-        console.log("newValue.group_id", newValue.group_id);
       },
     },
   },
@@ -509,7 +510,6 @@ export default {
       }
     },
     handleSearch() {
-      console.log("this.sea", this.searchForm);
       this.pageChange(1);
     },
     // 外部组件方法
@@ -535,7 +535,6 @@ export default {
         page_size: this.pageSize,
       })
         .then((res) => {
-          console.log("getTableData res:", res);
           this.total = res.count;
           this.tableData = res.list;
           /*    this.total = res.count;
@@ -568,7 +567,6 @@ export default {
         key: "",
       })
         .then((res) => {
-          console.log("getRegionsData res:", res);
           this.regionsList = res.list;
         })
         .catch((err) => {
@@ -617,7 +615,6 @@ export default {
     // 城市选择
     handleAddressSelect(address = []) {
       this.defAddr = Core.Util.deepCopy(address);
-      console.log("handleAddressSelect", address, "this.defAddr", this.defAddr);
       this.msgForm.province = address[0] ? address[0] : "";
       this.msgForm.city = address[1] ? address[1] : "";
       this.msgForm.county = address[2] ? address[2] : "";
@@ -634,13 +631,11 @@ export default {
     // 分页
     pageChange(curr) {
       // 页码改变
-      console.log("pageChange-------", curr);
       this.currPage = curr;
       this.getTableData();
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size--------:", current, size);
       this.pageSize = size;
       this.getTableData();
     },
@@ -709,6 +704,7 @@ export default {
   text-overflow: ellipsis;
   /* 文本不换行 */
   white-space: nowrap;
+  text-align: left;
 }
 
 

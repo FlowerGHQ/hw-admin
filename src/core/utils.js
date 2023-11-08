@@ -1590,6 +1590,18 @@ const Util = {
         return item[to] || ''
     },
 
+    // 问卷状态
+    naireStatusColorFilter(val, to = 'text') {
+        const MAP = Const.QUE_NAIRE_LIST.STATUS_FILTER_MAP
+        const COLOR_MAP = Const.QUE_NAIRE_LIST.STATUS_FILTER_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
+    },
+
 }
 
 export default Util

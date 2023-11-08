@@ -6,8 +6,10 @@ import Util from './core/utils'
 import i18n from './core/i18n'
 import Antd from 'ant-design-vue'
 // import './core/vconsole'
-import { message, notification } from 'ant-design-vue';
+console.log('i18n', i18n)
+import {message,notification} from 'ant-design-vue';
 import MyDirective from './core/myDirective/index.js'
+import 'default-passive-events' // 解决ios下click事件报错
 
 // import address from './assets/js/address/cascader-address-options.js'
 
