@@ -56,6 +56,7 @@ const apiList = {
         setAdmin: ['PostJson', 'user/set-admin'],
         listGroup: ['PostJson', 'user/list-group'],
         setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
+        checkAdmin: ['PostJson', 'user/check-admin'], // 检查用户是否是超级管理员
 
     },
     Account: {
