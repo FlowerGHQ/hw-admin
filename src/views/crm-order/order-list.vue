@@ -697,6 +697,9 @@ export default {
               case "eur":
                 item.mType = "€";
                 break;
+              case "cny":
+                item.mType = "￥";
+                break;
             }
           });
           console.log(
