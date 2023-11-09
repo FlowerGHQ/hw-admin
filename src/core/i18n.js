@@ -2308,6 +2308,7 @@ const messages = {
             30007: '邮箱已重复',
             30008: '手机号和邮箱不能为空',
             30009: '该客户不是公海客户，无法修改区域',
+            30011: '该客户存在订单，不能删除',
 
             31001: '商机越界',
             31002: '商机不存在',
@@ -4833,6 +4834,7 @@ const messages = {
             30007: 'Repeated email',
             30008: 'Phone or Email should not be empty',
             30009: "Customer is unassigned, area cann't be modified",
+            30011: 'This customer has an order and cannot be deleted',
 
             31001: "Business opportunities cross the border.",
             31002: "Business opportunities does not exist.",
