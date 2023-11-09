@@ -17,13 +17,15 @@
                         </span>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
-                        <span class="key">{{ $t('n.email') }}：</span>
-                        <span class="value phone-hover">
-                            {{ detail.email }}
+                        <span class="key">{{ $t('n.email') }}：</span> 
+                        <div class="email-style">                        
+                            <a-tooltip placement="topLeft">
+                                <template #title>{{ detail.email  }}</template>
+                                <span class="spils" style="width: 140px;">{{ detail.email }}</span>
+                            </a-tooltip>                        
                             <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER"
                                 class="switch" @click="handleChecking()"><i class="icon i_eyes" /></a-button>
-
-                        </span>
+                        </div>                  
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('crm_c.level') }}：</span>
@@ -174,4 +176,18 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped>
+
+.email-style {
+    display: flex;
+    align-items: center;
+    
+    .spils {
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+</style>
