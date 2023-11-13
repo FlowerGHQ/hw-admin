@@ -2546,7 +2546,6 @@ let Const = {
             '1': { key: 1, zh: "生效中", en: 'In effect', color: '#00B42A' },
         },
     },
-    
     // 质检
     INSPECTION: {
         STATUS_MAP: {

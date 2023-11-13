@@ -1556,7 +1556,7 @@ const Util = {
         const MAP = Const.RETAIL.STORE_STATUS
         let item = MAP[val + ''] || {}
         return item[to] || ''
-    },
+    },    
     /**
      * 计算时间 返回days，hours, minutes
      * @param {*} startTimestamp  // 开始时间
@@ -1592,7 +1592,7 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-     // 质检方式
+    // 质检方式
     inspectionTypeColorFilter(val, to = 'text') {
         const MAP = Const.INSPECTION.TYPE_MAP
         const COLOR_MAP = Const.INSPECTION.TYPE_COLOR__MAP
@@ -1602,7 +1602,7 @@ const Util = {
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
         }
-  },
+    },
 
 }
 

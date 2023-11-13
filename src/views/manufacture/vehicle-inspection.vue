@@ -241,6 +241,7 @@ export default {
                 },
                 data: {
                     ...form,
+                    scene: VEHICLE_INSPECTION.SCENE_TYPE.INSPECTION,
                     id_list: this.selectedRowKeys
                 },
             })
