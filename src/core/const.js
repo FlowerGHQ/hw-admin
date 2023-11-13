@@ -2545,6 +2545,29 @@ let Const = {
             '0': { key: 0, zh: "已过期", en: "Expired", color: '#F53F3F' },
             '1': { key: 1, zh: "生效中", en: 'In effect', color: '#00B42A' },
         },
+    },
+    // 质检
+    INSPECTION: {
+        STATUS_MAP: {
+            '0': '质检中',
+            '100': '不合格',
+            '200': '合格',
+        },
+        STATUS_COLOR_MAP: {
+            '0': 'blue',
+            '100': 'red',
+            '200': 'green',
+        },
+        TYPE_MAP: {
+            '1': '全检',
+            '2': '抽检',
+            '3': '免检',
+        },
+        TYPE_COLOR__MAP: {
+            '1': 'green',
+            '2': 'blue',
+            '3': 'red',
+        }
     }
 };
 
