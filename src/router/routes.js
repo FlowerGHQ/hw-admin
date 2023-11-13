@@ -1177,11 +1177,13 @@ const routes = [
                 }
             },
             {
+                // dev上线了 正式服后端未上
                 path: 'incoming-inspection',
                 name: 'incomingInspection',
                 component: () =>
                     import ('@/views/production/incoming-inspection.vue'),
                 meta: {
+                    hidden: true,
                     title: '来料检验',
 	                title_en: 'Incoming Inspection',
                     roles: [LOGIN_TYPE.ADMIN],
