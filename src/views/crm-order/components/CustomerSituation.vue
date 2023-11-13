@@ -13,7 +13,7 @@
             <a-descriptions-item :label="$t('crm_o.status')" class="label">{{$Util.CRMOrderStatusFilter(detail.status,lang)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.seller_signatory')" class="label">{{detail.seller_signatory}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.buyer_signatory')" class="label">{{detail.buyer_signatory}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_o.remark')" class="label">{{detail.remark || "-"}}</a-descriptions-item>
         </a-descriptions>
         <a-descriptions :title="$t('crm_o.sales_info')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.total_price')" class="label">{{Core.Util.countFilter(detail.total_price)}}</a-descriptions-item>

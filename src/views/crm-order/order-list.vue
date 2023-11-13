@@ -20,6 +20,7 @@
             </a-button>
           </a-upload>
           <a-button
+            class="m-l-10"
             type="primary"
             @click="routerChange('edit')"
             v-if="$auth('crm-order.save')"
@@ -280,12 +281,12 @@
             </template>
             <template v-if="column.key === 'money'">
               {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
-            </template>
-            <!--                        <template v-if="column.key === 'income_money'">-->
-            <!--                            {{$Util.countFilter(text ) + '元' || '-' }}-->
-            <!--                        </template>-->
+            </template>           
             <template v-if="column.key === 'customer_name'">
               {{ record.customer_name || "-" }}
+            </template>
+            <template v-if="column.key === 'remark'">
+              {{ text || "-" }}
             </template>
             <template v-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
@@ -697,6 +698,9 @@ export default {
               case "eur":
                 item.mType = "€";
                 break;
+              case "cny":
+                item.mType = "￥";
+                break;
             }
           });
           console.log(
@@ -864,5 +868,9 @@ export default {
 }
 .nameStyle{
   color: #9000f0;
+}
+
+.m-l-10 {
+    margin-left: 10px;
 }
 </style>
