@@ -183,7 +183,7 @@
         </div>
       </a-col>
       <a-col :xs="24" :sm="24" :lg="8">
-        <div class="tabs-container">
+        <div class="tabs-container right-content">
           <a-tabs v-model:activeKey="tabActiveKey">
             <a-tab-pane key="CustomerSituation" :tab="$t('crm_c.team_members')">
               <Group
@@ -810,6 +810,13 @@ export default {
 .customerInfo_area{
   .gray-panel{
     margin-left: 0;
+  }
+}
+.right-content{
+  height: 100%;
+  padding-bottom: 20px;
+  .ant-tabs{
+    height: 100%;
   }
 }
 </style>
