@@ -1147,6 +1147,7 @@ const messages = {
             export_as_supplier_report: '以供应商报表方式导出',
             error_phone: '手机号输入不正确',
             search_se: '搜索',
+            email_phone_name: '请输入客户名称/邮箱/手机号',
         },
         search: {
             repair_sn: '工单编号',
@@ -1519,6 +1520,8 @@ const messages = {
             postcode: '邮政编码',
             country: '国家区号',
             address: '支付地址',
+            pay_progress: '支付进度',
+
         },
         crm_oi: {
             list: '回款单列表',
@@ -3729,6 +3732,7 @@ const messages = {
             export_as_supplier_report: 'Export as a supplier report',
             error_phone: 'The mobile phone number is not entered correctly',
             search_se: 'Search',
+            email_phone_name: 'Please Enter Your Name/Email/Mobile Phone Number',
         },
         search: {
             repair_sn: 'Warranty Claim Number',
@@ -4080,6 +4084,7 @@ const messages = {
             postcode: 'Postcode',
             country: 'Country Code',
             address: 'Payment Address',
+            pay_progress: 'Payment Progress',
         },
         crm_oi: {
             list: 'Collection Slip List',

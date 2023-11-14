@@ -2,8 +2,10 @@
   <div id="OrderList">
     <div class="list-container">
       <div class="title-container">
-        <div class="title-area">{{ $t("crm_o.list") }}</div>
-        <div class="btns-area">
+        <div class="title-area">{{ $t("retail.order_list") }}</div>
+
+        <!-- 隐藏导入-导出功能-原本的合同列表 -->
+        <div class="btns-area"  v-if="false">
           <a-upload
             name="file"
             class="file-uploader"
@@ -28,25 +30,64 @@
           >
         </div>
       </div>
-      <div class="search-container">
-        <a-row class="search-area">
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("crm_o.name") }}：</div>
-            <!-- 合同名称 -->
+      <div class="tab-box">
+        <a-tabs v-model:activeKey="activeKey" @change="tabChange">
+          <a-tab-pane v-for="item in Order_Status_Map" :key="item.value" :tab="lang=='zh'?item.zh:item.en"></a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="search">
+        <a-row class="row-detail">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("dis.order_source") }}：</div>
+            <!-- 订单来源 -->
             <div class="value">
-              <a-input
+              <!-- <a-input
                 :placeholder="$t('def.input')"
                 v-model:value="searchForm.name"
+                @keydown.enter="handleSearch"
+              /> -->
+              <a-select
+                v-model:value="searchForm.source"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of SOURCE_TYPE_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+          >
+            <div class="key">{{ $t("in.order_number") }}：</div>
+            <!-- 订单号 -->
+            <div class="value">
+              
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.orderNum"
                 @keydown.enter="handleSearch"
               />
             </div>
           </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+          <a-col  :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
             <div class="key">{{ $t("crm_o.customer_name") }}：</div>
             <!-- 客户名称 -->
             <div class="value">
               <a-input
-                :placeholder="$t('def.input')"
+                :placeholder="$t('def.email_phone_name')"
                 v-model:value="searchForm.customer_name"
                 @keydown.enter="handleSearch"
               />
@@ -57,8 +98,7 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
             <div class="key">{{ $t("crm_o.own_user_name") }}：</div>
             <!-- 负责人 -->
@@ -89,11 +129,10 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
-            <div class="key">{{ $t("crm_o.status") }}：</div>
-            <!-- 合同状态 -->
+            <div class="key">{{ $t("crm_o.pay_progress") }}：</div>
+            <!-- 支付进度 -->
             <div class="value">
               <a-select
                 v-model:value="searchForm.status"
@@ -117,8 +156,61 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
+          >
+            <div class="key">{{ $t("p.order_status") }}：</div>
+            <!-- 订单状态 -->
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.status"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of CRM_STATUS_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+          >
+            <div class="key">{{ $t("p.payment_method") }}：</div>
+            <!-- 支付方式 -->
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.status"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of CRM_STATUS_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
           >
             <div class="key">{{ $t("crm_o.collection_schedule") }}：</div>
             <!-- 回款进度 -->
@@ -145,8 +237,7 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
             <div class="key">{{ $t("crm_o.customer_status") }}：</div>
             <!-- 客户状态 -->
@@ -170,8 +261,7 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
             <div class="key">{{ $t("crm_o.create_user") }}：</div>
             <!-- 创建人 -->
@@ -202,20 +292,19 @@
             :sm="24"
             :xl="16"
             :xxl="8"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
             <div class="key">{{ $t("d.create_time") }}：</div>
             <div class="value">
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
             </div>
           </a-col>
-          <a-col
+         <!--  <a-col
             :xs="24"
             :sm="24"
             :xl="2"
             :xxl="3"
-            class="search-item search-text"
+            class="row-item search-text"
             @click="moreSearch"
           >
             {{ show ? $t("search.stow") : $t("search.advanced_search") }}
@@ -229,31 +318,41 @@
               style="margin-left: 5px"
               v-else
             ></i>
-          </a-col>
+          </a-col> -->
         </a-row>
-        <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
-          <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
-        </div>
+        
+        <div class="btns m-b-20" >
+                <div class="btn-left" ></div>
+                <div class="btn-right">                  
+                    <a-button @click="handleSearch(1)" type="primary" >
+                        {{ $t("def.search") }}
+                    </a-button>
+                    <a-button @click="handleSearchReset" >
+                        {{ $t("def.reset") }}
+                    </a-button>
+                </div>
+            </div>
       </div>
-      <div class="operate-container">
+      <!-- 注释多选删除功能 -->
+      <!-- <div class="operate-container"> -->
         <!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>-->
-        <a-button
-          type="danger"
-          @click="handleBatchDelete"
-          v-if="$auth('crm-order.delete')"
-          >{{ $t("crm_c.delete") }}</a-button
-        >
-      </div>
+        <!--    <a-button
+              type="danger"
+              @click="handleBatchDelete"
+              v-if="$auth('crm-order.delete')"
+              >{{ $t("crm_c.delete") }}</a-button
+            > -->
+      <!-- </div> -->
+      <!-- 
+          :row-selection="rowSelection"
+          :row-key="(record) => record.id"
+       -->
+
       <div class="table-container">
         <a-table
           :columns="tableColumns"
           :data-source="tableData"
           :scroll="{ x: true }"
-          :row-selection="rowSelection"
-          :row-key="(record) => record.id"
           :pagination="false"
           @change="getTableDataSorter"
         >
@@ -407,6 +506,7 @@ export default {
   props: {},
   data() {
     return {
+      activeKey: Core.Const.CRM_ORDER.Order_Status_Map['1'].value,
       loginType: Core.Data.getLoginType(),
       show: false,
       // 加载
@@ -419,6 +519,8 @@ export default {
       CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
       CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
       CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,
+      Order_Status_Map: Core.Const.CRM_ORDER.Order_Status_Map,  // 订单切换筛选
+      SOURCE_TYPE_MAP: Core.Const.INTENTION.SOURCE_TYPE_MAP,  // 订单来源
       total: 0,
       orderByFields: {},
       // 搜索
@@ -433,7 +535,9 @@ export default {
         end_time: "",
         type: "",
         create_user_id:undefined,
-        search_type: 10
+        search_type: 10,
+        source: 0,
+        orderNum: '',
       },
       ownUserOptions: [],
       createUserOptions: [], // 创建人列表
@@ -554,7 +658,8 @@ export default {
       ];
       return columns;
     },
-    rowSelection() {
+    // 注释多选删除功能
+    /*  rowSelection() {
       return {
         type: "checkbox",
         selectedRowKeys: this.selectedRowKeys,
@@ -578,7 +683,7 @@ export default {
           // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
         },
       };
-    },
+    }, */
     lang() {
       return this.$store.state.lang;
     },
@@ -855,12 +960,22 @@ export default {
       }
       this.upload.fileList = fileList;
     },
+
+    // 切换选项
+    tabChange() {
+      this.handleSearchReset()
+    }
   },
 };
 </script>
 
 <style lang="less" scoped>
-// #OrderList {}
+#OrderList {
+  .tab-box {
+    padding-left: 20px;
+    margin-bottom: -16px;
+  }
+}
 .search-text {
   margin-left: 30px;
   color: #006ef9;
@@ -872,5 +987,25 @@ export default {
 
 .m-l-10 {
     margin-left: 10px;
+}
+
+
+.btns {
+    .fcc(space-between);
+    .btn-left {
+        .left-btn-style {
+            background-color: #94bfff;
+            color: #ffffff;
+        }
+    }
+    .btn-right {
+        
+    }
+}
+
+
+.m-b-20 {
+    margin-bottom: 20px;
+    margin-top: 20px;
 }
 </style>

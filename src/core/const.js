@@ -1664,6 +1664,7 @@ let Const = {
         }
 
     },
+    // 订单管理
     CRM_ORDER: {
         SEARCH_TYPE: {
             PERSONAL: 10,
@@ -1764,7 +1765,15 @@ let Const = {
         otherTool: {
             '1': { key: 1, zh: '油车', en: 'Oil trucks' },
             '2': { key: 2, zh: '电车', en: 'tram' },
-        }
+        },
+        // 订单列表筛选
+        Order_Status_Map: {
+            '1': { key: 1, zh: '全部', en: 'All', value: 0 },
+            '2': { key: 2, zh: '已支付', en: 'To Be Paid', value: 300 },
+            '3': { key: 3, zh: '待付款', en: 'Pending Payment', value: 400 },
+            '4': { key: 4, zh: '已退款', en: 'Refunded', value: 500 },
+            '5': { key: 6, zh: '已取消', en: 'Canceled', value: 600 },
+        },
     },
     CRM_ORDER_INCOME: {
         STATUS: {
@@ -2432,7 +2441,7 @@ let Const = {
         Order_Status_Map: {
 
             '1': { key: 1, zh: '全部', en: 'All', value: 0 },
-            '2': { key: 2, zh: '待发货', en: 'To Be Paid', value: 300 },
+            '2': { key: 2, zh: '待发货', en: 'To Be Shipped', value: 300 },
             '3': { key: 3, zh: '已发货', en: 'Shipped', value: 400 },
             '4': { key: 4, zh: '已完成', en: 'Completed', value: 500 },
         },

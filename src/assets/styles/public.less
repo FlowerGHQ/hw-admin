@@ -2303,7 +2303,6 @@ p {
             background: #FFFFFF;
             border-radius: 4px;
             padding: 20px;
-
             .table-container {
                 margin: 0 0 20px;
             }
@@ -2495,8 +2494,10 @@ p {
 }
 // form | search
 .row-detail{
+
     .row-item{ 
-        width: 100%;      
+        width: 100%;   
+        
         display: flex;
         align-items: center;                 
         font-size: 14px;        
@@ -2545,7 +2546,19 @@ p {
             width: 100%;
             color:#1D2129;
             padding-right: 20px;
+                
+            >.ant-input,
+            >.ant-select,
+            >.ant-picker,
+            >.ant-cascader-picker {
+                font-size: 14px;
+                width: 100%;
+                >.ant-select-selector {
+                    font-size: 14px;
+                }
+            }
         }
+    
     }
 
     // 收起操作

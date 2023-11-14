@@ -2184,14 +2184,14 @@ const routes = [
 			},
 		]
 	},
-	{ // 合同订单
+	{ // 订单列表
 		path: '/crm-order',
 		component: Layout,
 		redirect: '/crm-order/order-list',
 		name: 'CRMOrder',
         type: [ROUTER_TYPE.CRM],
 		meta: {
-			title: '合同订单',
+			title: '订单管理',
 			title_en: 'Contract Order',
 			icon: 'i_crm_order',
             auth: ["crm-order.list"],
@@ -2202,7 +2202,7 @@ const routes = [
 				name: 'OrderList',
 				component: () => import('@/views/crm-order/order-list.vue'),
 				meta: {
-					title: '合同列表',
+					title: '订单列表',
 					title_en: 'Contract Order list',
                     auth: ["crm-order.list"],
 				}
@@ -2212,6 +2212,7 @@ const routes = [
                 name: 'OrderAuditList',
                 component: () => import('@/views/crm-order/order-audit-list.vue'),
                 meta: {
+					hidden: true,
                     title: '待审列表',
                     title_en: 'Pending List',
                     auth: ["crm-order.list"],
@@ -2221,7 +2222,8 @@ const routes = [
 				path: 'order-pool-list',
 				name: 'OrderPoolList',
 				component: () => import('@/views/crm-order/order-pool-list.vue'),
-				meta: {
+                    meta: {
+					hidden: true,
 					title: '公海列表',
 					title_en: 'Pool List',
 					auth: ["crm-order.list"],
