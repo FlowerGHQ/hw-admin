@@ -1534,13 +1534,16 @@ const Util = {
         })
         return str || ''
     },
-
-
-    /* ======== 门店等级 ========== */
-    storeLevel(val, to = 'zh') {
-        const MAP = Const.RETAIL.STORE_LEVEL
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
+    // 质检状态
+    inspectionStatusColorFilter(val, to = 'text') {
+        const MAP = Const.INSPECTION.STATUS_MAP
+        const COLOR_MAP = Const.INSPECTION.STATUS_COLOR_MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
     },
     // 门店类型
     storeType(val, to = 'zh') {
@@ -1588,6 +1591,17 @@ const Util = {
         const MAP = Const.WORK_OPERATION.COMMUNICATE_TYPE
         let item = MAP[val + ''] || {}
         return item[to] || ''
+    },
+    // 质检方式
+    inspectionTypeColorFilter(val, to = 'text') {
+        const MAP = Const.INSPECTION.TYPE_MAP
+        const COLOR_MAP = Const.INSPECTION.TYPE_COLOR__MAP
+        switch (to) {
+            case 'text':
+                return MAP[val + ''] || '未知'
+            case 'color':
+                return COLOR_MAP[val + ''] || 'grey'
+        }
     },
 
     // 问卷状态

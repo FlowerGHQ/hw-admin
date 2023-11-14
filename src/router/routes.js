@@ -1176,7 +1176,19 @@ const routes = [
                     auth: ['material-category.list'],
                 }
             },
-
+            {
+                // dev上线了 正式服后端未上
+                path: 'incoming-inspection',
+                name: 'incomingInspection',
+                component: () =>
+                    import ('@/views/production/incoming-inspection.vue'),
+                meta: {
+                    hidden: true,
+                    title: '来料检验',
+	                title_en: 'Incoming Inspection',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
         ]
     },
 	{ // 生产管理
@@ -1285,6 +1297,17 @@ const routes = [
 					title: '成套计算',
 					roles: [LOGIN_TYPE.ADMIN],
                     // auth: ['calculate-production.amount'],
+				}
+			},
+            {
+				path: 'vehicle-inspection',
+				name: 'vehicleInspection',
+				component: () =>
+					import ('@/views/manufacture/vehicle-inspection.vue'),
+				meta: {
+					title: '整车完检',
+					title_en: 'Complete vehicle inspection',
+					roles: [LOGIN_TYPE.ADMIN],
 				}
 			},
 		]
