@@ -50,9 +50,9 @@
         </AuditHandle>
       </div>
     </div>
-    <div class="gray-panel">
-      <a-row :gutter="16">
-        <a-col :sx="12" :sm="12" :lg="12">
+    <div class=" infomation">
+      <a-row>
+        <a-col >
           <div class="panel-content desc-container">
             <a-row class="desc-detail">
               <a-col :xs="24" :sm="12" :lg="12" class=" detail-item">
@@ -97,7 +97,7 @@
             </a-row>
           </div>
         </a-col>
-        <a-col :sx="12" :sm="12" :lg="12">
+        <a-col >
           <div class="panel-content desc-container">
             <a-row class="desc-detail">
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
@@ -138,7 +138,7 @@
         </a-col>
       </a-row>
     </div>
-    <a-row>
+    <a-row >
       <a-col :xs="24" :sm="24" :lg="16">
         <div class="tabs-container">
           <a-tabs v-model:activeKey="activeKey">
@@ -795,6 +795,17 @@ export default {
 
   }
 
+}
+.infomation{
+  padding: 20px;
+  .ant-row{
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+    .ant-col{
+      width: calc(100% / 2 - 10px);
+    }
+  }
 }
 .customerInfo_area{
   .gray-panel{
