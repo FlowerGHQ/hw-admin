@@ -63,7 +63,7 @@
                             </a-menu>                                                                          
                         </template>
                         <a-button>
-                            更多操作
+                            {{ $t('def.more_operations') }}
                             <DownOutlined/>
                         </a-button>
                     </a-dropdown>

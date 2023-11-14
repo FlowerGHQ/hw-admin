@@ -62,10 +62,11 @@
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('d.sales_area') }}：</span>
-                        <span class="value" v-if="detail.sales_area_list && detail.sales_area_list.length">
-                            {{ detail.sales_area_list.map(i => i.name).join(' , ') }}
-                        </span>
-                        <span class="value" v-else>-</span>
+                        <a-tooltip  :title="salesAreaStr">
+                            <span class="value">
+                                {{ salesAreaStr }}
+                            </span>
+                        </a-tooltip>
                     </a-col>
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('n.time') }}：</span>
@@ -162,7 +163,18 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        
+        salesAreaStr() {
+            let areaStr; 
+            if(this.detail.sales_area_list && this.detail.sales_area_list.length ){
+                areaStr =  this.detail.sales_area_list.map(i => i.name).join(' , ');
+            }else {
+                areaStr = '-'
+            }
+            return areaStr;
+        }
+    },
     created() {
         this.distributor_id = Number(this.$route.query.id) || Core.Data.getOrgId()
         this.getDistributorDetail();
