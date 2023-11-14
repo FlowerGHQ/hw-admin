@@ -1,10 +1,10 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
-    <div class="panel-title">
+    <!-- <div class="panel-title">
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
-    </div>
+    </div> -->
     <div class="panel-content">
-        <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
+        <!-- <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.contract_no')" class="label">{{detail.uid}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.signing_date')" class="label">{{$Util.timeFilter(detail.signing_date) || '-'}}</a-descriptions-item>
@@ -21,7 +21,7 @@
             <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{Core.Util.countFilter(detail.other_cost)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.money')" class="label">{{Core.Util.countFilter(detail.money)}}</a-descriptions-item>
         </a-descriptions>
-        <p>{{$t('crm_o.money_tip')}}</p>
+        <p>{{$t('crm_o.money_tip')}}</p> -->
         <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" style="margin-top:30px" >
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>

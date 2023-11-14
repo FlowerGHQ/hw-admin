@@ -1320,6 +1320,7 @@ const messages = {
             list: '区域用户列表',
         },
         crm_c: {
+            addMember: '添加成员',
             extended_information: '扩展信息',
             detail: '客户详情',
             level: '客户级别',
@@ -1466,6 +1467,16 @@ const messages = {
             down: '下移',
         },
         crm_o: {
+            editInfo:'修改记录',
+            // 待付款
+            wait_pay: '待付款',
+            // 购买车型:
+            buy_car_type: '购买车型',
+            // 详细地址
+            address: '详细地址',
+            city: '城市',
+            email: '邮箱',
+            phone:'手机号',
             list: '合同列表',
             save: '新建合同',
             edit: '编辑合同',
@@ -3883,6 +3894,8 @@ const messages = {
             list: 'Regional User List',
         },
         crm_c: {
+            // 添加成员
+            addMember: 'Add Member',
             extended_information: 'Extended Information',
             detail: 'Customer Detail',
             level: 'Customer Level',
@@ -4028,6 +4041,13 @@ const messages = {
             down: 'Move down',
         },
         crm_o: {
+            editInfo: 'Edit Customer Information',
+            wait_pay: 'Pending Payment',
+            buy_car_type: 'Purchase Type',
+            address: 'Address',
+            city: 'City',
+            email: 'Email',
+            phone: 'Phone',
             list: 'Contract',
             save: 'New Contract',
             edit: 'Edit Contract',

@@ -3,14 +3,15 @@
     <div class="panel-content">
         <div class="title">
             <span>{{$t("crm_c.team_members")}}({{total}})</span>
-            <div class="right-btn">
+            <!-- <div class="right-btn">
                 <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
-<!--                <a-button type="link" @click="clickAdd"><i class="icon i_add"/></a-button>-->
-<!--                <div class="button" @click="clickEdit"><i class="icon i_edit"/></div>-->
-            </div>
+            </div> -->
         </div>
         <div class="search">
-            <a-input-search v-model:value="search_name" :placeholder="$t('crm_c.team_members')" @search="handleSearch"/>
+            <a-input-search v-model:value="search_name" :placeholder="$t('crm_c.team_members')" @search="handleSearch" class="search-btn"/>
+            <TrackMemberSelect @select="handleGroupShow">
+                {{$t('crm_c.addMember')}}
+            </TrackMemberSelect>
         </div>
         <div class="list">
             <div class="list-item" v-for="(item, i) in tableData" :key="i">
@@ -293,6 +294,19 @@ export default {
 //     }
 // }
 .panel-content {
+    .search{
+        display: flex;
+        align-items: center;
+        margin-bottom: 25px;
+        .search-btn{
+            margin-right: 10px;
+           :deep(.ant-input-search-button){
+                background-color: #006EF9;
+                border-color: #006CFF;
+                color: #fff !important;
+            }
+        }
+    }
     .title {
         // color: @TC_LT;
         position: relative;
@@ -300,19 +314,19 @@ export default {
         font-size: 14px;
         font-weight: bold;
         margin-bottom: 20px;
-        .right-btn {
-            position: absolute;
-            // display: flex;
-            .flex(flex-end, center, row);
-            top: 0;
-            right: 0;
-            width: 50%;
-            text-align: right;
-            .button {
-                margin-left: 8px;
-                cursor: pointer;
-            }
-        }
+        // .right-btn {
+        //     position: absolute;
+        //     // display: flex;
+        //     .flex(flex-end, center, row);
+        //     top: 0;
+        //     right: 0;
+        //     width: 50%;
+        //     text-align: right;
+        //     .button {
+        //         margin-left: 8px;
+        //         cursor: pointer;
+        //     }
+        // }
     }
     .list {
         .list-item {
