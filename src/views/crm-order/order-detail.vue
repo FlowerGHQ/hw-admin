@@ -51,8 +51,8 @@
       </div>
     </div>
     <div class=" infomation">
-      <a-row>
-        <a-col >
+      <a-row :gutter="16">
+        <a-col :xs="24" :sm="24" :lg="12">
           <div class="panel-content desc-container">
             <a-row class="desc-detail">
               <a-col :xs="24" :sm="12" :lg="12" class=" detail-item">
@@ -97,7 +97,7 @@
             </a-row>
           </div>
         </a-col>
-        <a-col >
+        <a-col :xs="24" :sm="24" :lg="12">
           <div class="panel-content desc-container">
             <a-row class="desc-detail">
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
@@ -776,7 +776,7 @@ export default {
   background-color: transparent !important;
 }
 .gray-panel{
-  background-color: #fff;
+  background-color: transparent !important;
 }
 .ant-tabs{
   background-color: #fff;
@@ -798,14 +798,6 @@ export default {
 }
 .infomation{
   padding: 20px;
-  .ant-row{
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
-    .ant-col{
-      width: calc(100% / 2 - 10px);
-    }
-  }
 }
 .customerInfo_area{
   .gray-panel{
