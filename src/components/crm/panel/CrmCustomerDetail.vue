@@ -174,4 +174,14 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="less" scoped>
+.gray-panel{
+   padding: 0 !important;
+}
+.desc-container{
+    padding-top: 0 !important;
+}
+:deep(.panel-content){
+  padding: 0 !important;
+}
+</style>

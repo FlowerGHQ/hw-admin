@@ -22,7 +22,7 @@
             <a-descriptions-item :label="$t('crm_o.money')" class="label">{{Core.Util.countFilter(detail.money)}}</a-descriptions-item>
         </a-descriptions>
         <p>{{$t('crm_o.money_tip')}}</p> -->
-        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" style="margin-top:30px" >
+        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" >
             <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
@@ -209,6 +209,9 @@ export default {
     }
 
 }
+.gray-panel{
+   padding-top: 0 !important;
+}
 .ant-descriptions-view{
     th.ant-descriptions-item-label {
         width: 25%;
@@ -216,5 +219,8 @@ export default {
     td.ant-descriptions-item-content {
         width: 25%;
     }
+}
+:deep(.panel-content){
+  padding: 0 !important;
 }
 </style>

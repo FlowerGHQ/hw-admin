@@ -1438,7 +1438,7 @@ const messages = {
             whether_reactivation_success: '重新激活',
             remark: '备注',
             select_item: '销售信息',
-            discount_price: '销售单价',
+            discount_price: '折扣单价',
             interested_models: '意向车型',
             distribute_bo: '移交商机',
             new_bo: '商机',

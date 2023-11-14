@@ -1,8 +1,5 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
-    <div class="panel-title">
-        <div class="title">{{ $t('n.attachment_list') }}</div>
-    </div>
     <div class="panel-content">
         <div>
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
@@ -200,5 +197,8 @@ export default {
         width: 25%;
     }
 
+}
+:deep(.panel-content){
+  padding: 0 !important;
 }
 </style>

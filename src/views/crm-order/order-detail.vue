@@ -772,9 +772,33 @@ export default {
     font-size: 12px;
   }
 }
-.customerInfo_area{
-    .gray-panel{
-        margin-left: 0;
+.edit-container{
+  background-color: transparent !important;
+}
+.gray-panel{
+  background-color: #fff;
+}
+.ant-tabs{
+  background-color: #fff;
+  .ant-tabs-nav{
+    padding-left: 20px;
+    padding-top: 20px;
+    margin-bottom: 20px !important;
+    .ant-tabs-nav-wrap{
+      .ant-tabs-nav-list{
+        .ant-tabs-tab{
+          padding-bottom: 12px !important;
+        }
+      }
     }
+
+
+  }
+
+}
+.customerInfo_area{
+  .gray-panel{
+    margin-left: 0;
+  }
 }
 </style>
