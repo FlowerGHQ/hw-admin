@@ -911,7 +911,11 @@ const apiList = {
     USER_CENTER: {
         getClueList: ['PostJson', 'user-center/clue/list'], // 线索ist
         distributionStore: ['PostJson', 'user-center/update-store-transfer'], // 分配门店
-    }
+    },
+    // 邮箱订阅状态
+    EMAIL_SUBSCRIPTION: {
+        list: ['PostJson', 'crm-customer/list'] // 列表
+    },
 }; 
 
 export default new Api(baseUrl, apiList);
