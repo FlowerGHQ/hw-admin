@@ -1603,6 +1603,11 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
+    emailSubscriptionFilter(val, to = "text") {
+        const MAP = Const.SUBSCRIPTION.STATUS_MAP
+        let value = MAP[val + ""] || {}
+        return value[to] || "-"
+    },
 
 }
 

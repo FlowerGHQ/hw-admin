@@ -2136,6 +2136,29 @@ const routes = [
 			// },
 		]
 	},
+	{ // 邮箱订阅状态
+		path: '/crm-email-subscription',
+		component: Layout,
+		redirect: '/crm-email-subscription/subscription-list',
+		name: 'CRMEmailSubscription',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '邮箱订阅状态',
+			title_en: 'Mailbox subscription status',
+			icon: 'i_s_customer',
+		},
+		children: [
+			{
+				path: 'subscription-list',
+				name: 'SubscriptionList',
+				component: () => import('@/views/crm-email-subscription/subscription-list.vue'),
+				meta: {
+					title: '邮箱订阅状态列表',
+					title_en: 'List of email subscription status',
+				}
+			},
+		]
+	},
 	{ // 商机管理
 		path: '/crm-bo',
 		component: Layout,

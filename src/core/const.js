@@ -37,13 +37,13 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.78:8889'  // zy
+        URL_POINT = 'http://10.10.12.75:8889'  // zy
         break;
 }
 
@@ -2568,6 +2568,13 @@ let Const = {
             '2': 'blue',
             '3': 'red',
         }
+    },
+    SUBSCRIPTION: {
+        STATUS_MAP: {
+            '0': { color: 'green', text: '已订阅' },
+            '1': { color: 'blue', text: '未订阅' },
+            '2': { color: 'grey', text: '已退订' },
+        },
     }
 };
 
