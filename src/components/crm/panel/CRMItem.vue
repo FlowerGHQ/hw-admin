@@ -41,7 +41,7 @@
             <template v-if="column.key === 'discount'"> {{ text }}% </template>
           </template>
         </a-table>
-        <div class="paging-container">
+        <!-- <div class="paging-container">
           <a-pagination
             v-model:current="currPage"
             :page-size="pageSize"
@@ -56,7 +56,7 @@
             :pageSizeOptions="['10', '20', '30', '40']"
             @change="pageChange"
             @showSizeChange="pageSizeChange" />
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="panel-content">
@@ -100,17 +100,12 @@ export default {
       loginType: Core.Data.getLoginType(),
       // 加载
       loading: false,
-      // 分页
-      currPage: 1,
-      pageSize: 20,
-      total: 0,
-      // 分页2
-      currPage2: 1,
-      pageSize2: 20,
-      total2: 0,
+      // // 分页
+      // currPage: 1,
+      // pageSize: 20,
+      // total: 0,
       // 表格数据
       tableData: [],
-      tableData2: [],
       trackMemberShow: false,
       userId: "",
       userDetail: "",
@@ -194,24 +189,16 @@ export default {
           break;
       }
     },
-    pageChange(curr) {
-      // 页码改变
-      this.currPage = curr;
-      this.getTableData();
-    },
-    pageSizeChange(current, size) {
-      // 页码尺寸改变
-      this.pageSize = size;
-      this.getTableData();
-    },
-    pageChange2(curr) {
-      // 页码改变
-      this.currPage2 = curr;
-    },
-    pageSizeChange2(current, size) {
-      // 页码尺寸改变
-      this.pageSize2 = size;
-    },
+    // pageChange(curr) {
+    //   // 页码改变
+    //   this.currPage = curr;
+    //   this.getTableData();
+    // },
+    // pageSizeChange(current, size) {
+    //   // 页码尺寸改变
+    //   this.pageSize = size;
+    //   this.getTableData();
+    // },
     getTableData() {
       this.loading = true;
       Core.Api.CRMItemBind.list({
@@ -224,7 +211,7 @@ export default {
             it.total_price = it.discount_price * it.amount;
           });
           this.tableData = res.list;
-          this.total = res.count;
+          // this.total = res.count;
         })
         .catch((err) => {
           console.log("getCustomerDetail err", err);
