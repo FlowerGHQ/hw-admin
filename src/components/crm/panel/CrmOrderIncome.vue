@@ -82,7 +82,15 @@ export default {
       groupStatusTableData: [],
     };
   },
-  watch: {},
+  watch: {
+    orderId: {
+      handler(val){
+        if(val){
+          this.getTableData();
+        }
+      }
+    },
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -115,7 +123,7 @@ export default {
     },
   },
   mounted() {
-    this.getTableData();
+    // this.getTableData();
     this.getGroupStatusDetail();
   },
   methods: {
