@@ -206,7 +206,6 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData res", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {

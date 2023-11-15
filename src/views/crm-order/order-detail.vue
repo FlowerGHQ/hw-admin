@@ -1,8 +1,14 @@
 <template>
   <div id="OrderDetail" class="edit-container">
     <div class="title-container">
-      <div class="title-area">订单编号3253465476（国外-官网2.0）</div>
-      <div class="btns-area">
+      <div class="title-area">
+        {{ $t("oder_details.order_number_1") }} {{ detail.uid || "" }}（{{
+          lang === "zh"
+            ? Core.Const.PAY_TYPE[detail.source_type]?.name
+            : Core.Const.PAY_TYPE[detail.source_type]?.en_name
+        }}）
+      </div>
+      <!-- <div class="btns-area">
         <template
           v-if="
             trackMemberDetail != null
@@ -48,14 +54,14 @@
           no-refuse
           ><i class="icon i_audit" />{{ $t("n.audit") }}
         </AuditHandle>
-      </div>
+      </div> -->
     </div>
-    <div class=" infomation">
+    <div class="infomation">
       <a-row :gutter="16">
         <a-col :xs="24" :sm="24" :lg="12">
           <div class="panel-content desc-container">
             <a-row class="desc-detail">
-              <a-col :xs="24" :sm="12" :lg="12" class=" detail-item">
+              <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.customer_name") }}：</span>
                 <router-link
                   target="_blank"
@@ -63,24 +69,24 @@
                     path: '/crm-customer/customer-detail',
                     query: { id: detail.customer_id },
                   }">
-                  {{ detail.customer_name || "-" || "-" }}
+                  {{ detail.customer_name || "-" }}
                 </router-link>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.phone") }}：</span>
-                <span class="value">{{ "-" }}</span>
+                <span class="value">{{ detail.customer_phone || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.email") }}：</span>
-                <span class="value">{{ "-" }}</span>
+                <span class="value">{{ detail.customer_email || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.city") }}：</span>
-                <span class="value">{{ "-" }}</span>
+                <span class="value">{{ detail.to_city || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
-                <span class="key">{{ $t("crm_o.address") }}：</span>
-                <span class="value">{{ "-" }}</span>
+                <span class="key">{{ $t("crm_o.address_details") }}：</span>
+                <span class="value">{{ detail.to_address || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.own_user_name") }}：</span>
@@ -102,23 +108,31 @@
             <a-row class="desc-detail">
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.buy_car_type") }}：</span>
-                <span class="value">{{ "-" }}</span>
+                <span class="value">{{ detail.item_name || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key"> {{ $t("retail.order_amount") }}：</span>
-                <span class="value">&euro;  {{ 0 }}</span>
+                <span class="value"
+                  >{{ currency }} {{ detail.money || 0 }}</span
+                >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("retail.amount_paid") }}：</span>
-                <span class="value">&euro;  {{ 0 }}</span>
+                <span class="value"
+                  >{{ currency }} {{ detail.paid_money || 0 }}</span
+                >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.refunded_amount") }}：</span>
-                <span class="value">&euro;  {{ 0 }}</span>
+                <span class="value"
+                  >{{ currency }} {{ detail.refunded || 0 }}</span
+                >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.wait_pay") }}：</span>
-                <span class="value">&euro;  {{ 0 }}</span>
+                <span class="value"
+                  >{{ currency }} {{ detail.pending_money || 0 }}</span
+                >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.paid_money_progress") }}：</span>
@@ -130,15 +144,19 @@
               <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
                 <span class="key">{{ $t("crm_o.pay_address") }}：</span>
                 <span>{{ detail.payAddress }}</span>
-                <a-button @click="addressEditModalShow" style="margin-left: 20px;" type="link">+ {{ $t('def.edit')
-                        }}</a-button>
+                <a-button
+                  @click="addressEditModalShow"
+                  style="margin-left: 20px"
+                  type="link"
+                  >+ {{ $t("def.edit") }}</a-button
+                >
               </a-col>
-            </a-row> 
+            </a-row>
           </div>
         </a-col>
       </a-row>
     </div>
-    <a-row >
+    <a-row>
       <a-col :xs="24" :sm="24" :lg="16">
         <div class="tabs-container">
           <a-tabs v-model:activeKey="activeKey">
@@ -177,7 +195,7 @@
                 ref="CrmCustomerDetail" />
             </a-tab-pane>
             <a-tab-pane key="editInfo" :tab="$t('crm_o.editInfo')">
-                <CustomerSituation :detail="detail" />
+              <CustomerSituation :detail="detail" />
             </a-tab-pane>
           </a-tabs>
         </div>
@@ -333,11 +351,9 @@
 import Core from "../../core";
 import CustomerSituation from "./components/CustomerSituation.vue";
 import CRMAttachmentFile from "@/components/crm/panel/CRMAttachmentFile.vue";
-
 import Group from "@/components/crm/panel/Group.vue";
 import ActionRecord from "@/components/crm/panel/ActionRecord.vue";
 import AuditHandle from "@/components/popup-btn/AuditHandle.vue";
-
 import dayjs from "dayjs";
 import { get } from "lodash";
 import CRMItem from "@/components/crm/panel/CRMItem.vue";
@@ -444,6 +460,9 @@ export default {
     lang() {
       return this.$store.state.lang;
     },
+    currency() {
+      return this.detail.currency === "eur" ? "€" : "￥";
+    },
   },
   mounted() {
     this.id = Number(this.$route.query.id) || 0;
@@ -513,7 +532,6 @@ export default {
         id: this.id,
       })
         .then((res) => {
-          console.log("getOrderDetail res", res);
           let d = res.detail;
           this.detail = d;
           this.detail.birthday = this.detail.birthday
@@ -656,7 +674,6 @@ export default {
     },
     // 上传文件
     handleFileChange({ file, fileList }) {
-      console.log("handleCoverChange status:", file.status, "file:", file);
       if (file.status == "done") {
         if (file.response && file.response.code > 0) {
           return this.$message.error(file.response.message);
@@ -700,7 +717,6 @@ export default {
         target_type: Core.Const.CRM_TRACK_MEMBER.TARGET_TYPE.ORDER,
       }).then((res) => {
         this.trackMemberDetail = res.detail;
-        console.log("trackMemberDetail", this.trackMemberDetail);
       });
     },
     getUserData(query) {
@@ -712,7 +728,6 @@ export default {
         group_id: this.group_id,
       })
         .then((res) => {
-          console.log("getTableData res:", res);
           this.userData = res.list;
         })
         .catch((err) => {
@@ -727,7 +742,6 @@ export default {
         group_id: this.detail.group_id,
       }).then((res) => {
         this.groupOptions = res.list;
-        console.log(res);
       });
     },
     addressEditModalShow() {
@@ -772,42 +786,39 @@ export default {
     font-size: 12px;
   }
 }
-.edit-container{
+.edit-container {
   background-color: transparent !important;
 }
-.gray-panel{
+.gray-panel {
   background-color: transparent !important;
 }
-.ant-tabs{
+.ant-tabs {
   background-color: #fff;
-  .ant-tabs-nav{
+  .ant-tabs-nav {
     padding-left: 20px;
     padding-top: 20px;
     margin-bottom: 20px !important;
-    .ant-tabs-nav-wrap{
-      .ant-tabs-nav-list{
-        .ant-tabs-tab{
+    .ant-tabs-nav-wrap {
+      .ant-tabs-nav-list {
+        .ant-tabs-tab {
           padding-bottom: 12px !important;
         }
       }
     }
-
-
   }
-
 }
-.infomation{
+.infomation {
   padding: 20px;
 }
-.customerInfo_area{
-  .gray-panel{
+.customerInfo_area {
+  .gray-panel {
     margin-left: 0;
   }
 }
-.right-content{
+.right-content {
   height: 100%;
   padding-bottom: 20px;
-  .ant-tabs{
+  .ant-tabs {
     height: 100%;
   }
 }

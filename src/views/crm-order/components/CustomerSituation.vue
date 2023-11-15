@@ -23,9 +23,9 @@
         </a-descriptions>
         <p>{{$t('crm_o.money_tip')}}</p> -->
         <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" >
-            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name||'-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name||'-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_time')" class="label">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
         </a-descriptions>
         <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
@@ -69,7 +69,14 @@ export default {
             userDetail: '',
         };
     },
-    watch: {},
+    watch: {
+        detail: {
+            handler(val) {
+               console.log('detail', val)
+            },
+            deep: true
+        }
+    },
     computed: {
         tableColumns() {
             let columns = [

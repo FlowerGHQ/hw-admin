@@ -16,6 +16,10 @@ export default {
         payment_amount: '支付金额',
         // 支付时间
         payment_time: '支付时间',
+        // 订单编号
+        order_number_1: '订单编号',
+        // 支付时间
+        payment_time: '支付时间',
     },
     en: {
         // 支付单号
@@ -25,6 +29,9 @@ export default {
         // 支付金额
         payment_amount: 'Payment Amount',
         // 支付时间
+        payment_time: 'Payment Time',
+        // 订单编号
+        order_number_1: 'Order Number',
         payment_time: 'Payment Time',
     }
 }

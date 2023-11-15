@@ -61,72 +61,23 @@
     </div>
     <div class="panel-content">
       <div class="sub_title">支付信息</div>
-      <div>
-        <a-table
-          :columns="tableColumns2"
-          :data-source="tableData2"
-          :scroll="{ x: true }"
-          :row-key="(record) => record.id"
-          :pagination="false"
-          :style="{
-            marginBottom: '12px',
-          }"
-          @change="getTableDataSorter">
-          <template #headerCell="{ title }">
-            {{ $t(title) }}
-          </template>
-          <template #bodyCell="{ column, text, record }">
-            <template v-if="column.key === 'item'">
-              {{ text || "-" }}
-            </template>
-            <template v-if="column.key === 'status'">
-              {{
-                groupStatusTableData[text] !== undefined
-                  ? lang === "zh"
-                    ? groupStatusTableData[text].zh
-                    : groupStatusTableData[text].en
-                  : ""
-              }}
-            </template>
-            <template v-if="column.key === 'time'">
-              {{ $Util.timeFilter(text) }}
-            </template>
-            <template v-if="column.key === 'estimated_deal_time'">
-              {{ $Util.timeFilter(text, 3) }}
-            </template>
-            <template v-if="column.key === 'price'">
-              {{ moneyT + $Util.countFilter(text) }}
-            </template>
-            <template v-if="column.key === 'discount'"> {{ text }}% </template>
-          </template>
-        </a-table>
-        <div class="paging-container">
-          <a-pagination
-            v-model:current="currPage"
-            :page-size="pageSize"
-            :total="total"
-            show-quick-jumper
-            show-size-changer
-            show-less-items
-            :show-total="
-              (total) => $t('n.all_total') + ` ${total} ` + $t('in.total')
-            "
-            :hide-on-single-page="false"
-            :pageSizeOptions="['10', '20', '30', '40']"
-            @change="pageChange"
-            @showSizeChange="pageSizeChange" />
-        </div>
-      </div>
+      <CrmOrderIncome
+        :detail="detail"
+        :orderId="detail.id"
+        ref="CrmOrderIncome" />
     </div>
   </div>
 </template>
 
 <script>
 import Core from "../../../core";
+import CrmOrderIncome from "@/components/crm/panel/CrmOrderIncome.vue";
 
 export default {
   name: "InformationInfo",
-  components: {},
+  components:{
+    CrmOrderIncome
+  },
   props: {
     detail: {
       type: Object,
@@ -153,16 +104,28 @@ export default {
       currPage: 1,
       pageSize: 20,
       total: 0,
+      // 分页2
+      currPage2: 1,
+      pageSize2: 20,
+      total2: 0,
       // 表格数据
       tableData: [],
-      tableData2:[],
+      tableData2: [],
       trackMemberShow: false,
       userId: "",
       userDetail: "",
       groupStatusTableData: [],
     };
   },
-  watch: {},
+  watch: {
+    sourceId: {
+      handler(val) {
+        if (val) {
+          this.getTableData();
+        }
+      },
+    },
+  },
   computed: {
     tableColumns() {
       let columns = [
@@ -180,12 +143,20 @@ export default {
       ];
       return columns;
     },
-    tableColumns2(){
-        let columns = [
+    tableColumns2() {
+      let columns = [
         { title: "oder_details.order_number", dataIndex: "name", key: "item" },
         { title: "oder_details.payment_type", dataIndex: "code", key: "item" },
-        { title: "oder_details.payment_amount", dataIndex: "price", key: "price" },
-        { title: "oder_details.payment_time", dataIndex: "amount", key: "amount" },
+        {
+          title: "oder_details.payment_amount",
+          dataIndex: "price",
+          key: "price",
+        },
+        {
+          title: "oder_details.payment_time",
+          dataIndex: "amount",
+          key: "amount",
+        },
       ];
       return columns;
     },
@@ -202,9 +173,6 @@ export default {
           break;
       }
     },
-  },
-  mounted() {
-    this.getTableData();
   },
   methods: {
     routerChange(type, item = {}) {
@@ -233,9 +201,16 @@ export default {
     },
     pageSizeChange(current, size) {
       // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
       this.getTableData();
+    },
+    pageChange2(curr) {
+      // 页码改变
+      this.currPage2 = curr;
+    },
+    pageSizeChange2(current, size) {
+      // 页码尺寸改变
+      this.pageSize2 = size;
     },
     getTableData() {
       this.loading = true;
@@ -282,8 +257,7 @@ export default {
     width: 25%;
   }
 }
-:deep(.panel-content){
+:deep(.panel-content) {
   padding: 0 !important;
 }
-
 </style>

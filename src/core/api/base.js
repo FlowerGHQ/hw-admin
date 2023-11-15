@@ -44,7 +44,8 @@ class ApiBase {
 
     http(config, moduleName, args = {}) {
         let mark = ApiBase.getMark(moduleName)
-        const token = Data.getToken()
+        // const token = Data.getToken()
+        const token = 'aaa'
         const commonModule = ['Common']
         if (commonModule.includes(moduleName)) { mark = 'core/1' }
         let fullUrl = `${this.baseUrl}/${mark}/${config[1]}`;

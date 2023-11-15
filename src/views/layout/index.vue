@@ -274,7 +274,6 @@ export default {
                     case 'zh': this.locale = zhCN; break;
                     case 'en': this.locale = enUS; break;
                 }
-                console.log('this.locale:', this.locale)
             }
         }
     },
@@ -286,7 +285,6 @@ export default {
         if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
             Core.Data.setLang("zh")
         }
-        console.log("Core.Data.getLang()", Core.Data.getLang())
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1

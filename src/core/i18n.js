@@ -1473,7 +1473,7 @@ const messages = {
             // 购买车型:
             buy_car_type: '购买车型',
             // 详细地址
-            address: '详细地址',
+            address_details: '详细地址',
             city: '城市',
             email: '邮箱',
             phone:'手机号',
@@ -4044,7 +4044,7 @@ const messages = {
             editInfo: 'Edit Customer Information',
             wait_pay: 'Pending Payment',
             buy_car_type: 'Purchase Type',
-            address: 'Address',
+            address_details: 'Address',
             city: 'City',
             email: 'Email',
             phone: 'Phone',

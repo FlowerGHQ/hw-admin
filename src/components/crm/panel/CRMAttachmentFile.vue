@@ -82,7 +82,16 @@ export default {
             userDetail: '',
         };
     },
-    watch: {},
+    watch: {
+        target_id: {
+           handler(val){
+            console.log('target_id',val)
+            this.getTableData();
+           },
+           immediate: true,
+           deep: true
+        }
+    },
     computed: {
 
         tableColumns() {
@@ -100,9 +109,6 @@ export default {
         lang() {
             return this.$store.state.lang
         }
-    },
-    mounted() {
-        this.getTableData();
     },
     methods: {
         routerChange(type, item = {}) {
@@ -146,7 +152,6 @@ export default {
                 target_type: this.target_type,
                 page: 0
             }).then(res => {
-                console.log("AttachmentFile res", res)
                 this.tableData = res.list
             }).catch(err => {
                 console.log('AttachmentFile err', err)

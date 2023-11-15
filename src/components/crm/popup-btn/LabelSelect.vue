@@ -151,7 +151,6 @@ export default {
             deep: true,
             immediate: true,
             handler(disabledChecked) {
-                console.log("disabledChecked",this.disabledChecked)
                 this.disabledList = this.disabledChecked
             }
         },
@@ -170,7 +169,6 @@ export default {
     created() {
     },
     mounted() {
-        console.log('this.disabledChecked:', this.disabledChecked)
         if (this.name !== ''){
             this.searchForm.name = this.name;
         }
