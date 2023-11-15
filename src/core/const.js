@@ -2568,6 +2568,13 @@ let Const = {
             '2': 'blue',
             '3': 'red',
         }
+    },
+    SUBSCRIPTION: {
+        STATUS_MAP: {
+            '1': { color: 'green', text: '已订阅' },
+            '2': { color: 'blue', text: '未订阅' },
+            '3': { color: 'grey', text: '已退订' },
+        },
     }
 };
 
