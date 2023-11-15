@@ -177,17 +177,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-.email-style {
-    display: flex;
-    align-items: center;
-    
-    .spils {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+.gray-panel{
+   padding: 0 !important;
 }
-
+.desc-container{
+    padding-top: 0 !important;
+}
+:deep(.panel-content){
+  padding: 0 !important;
+}
 </style>
