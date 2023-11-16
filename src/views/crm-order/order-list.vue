@@ -478,8 +478,8 @@
               {{ text || "-" }}
             </template>
             <template v-else-if="column.key === 'item_name'">
-              <div style="height: 48px;display: flex;align-items: center;justify-content: flex-start;">
-                <a-image :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
+              <div class="box-car" >
+                <a-image class="image-car" :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
                 {{ text || '-' }}
               </div>
             </template>
@@ -1251,6 +1251,15 @@ export default {
 .m-b-20 {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+.box-car {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  :deep(.ant-image-img) {
+    padding-right: 8px;
+  }
 }
 
 .before-icon {
