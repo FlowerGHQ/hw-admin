@@ -49,7 +49,7 @@
                     </template>
                     <!-- 客户类型 -->
                     <template v-if="column.key === 'customer_type'">
-                        {{ $Util.CRMCustomerTypeFilter(text) || '-' }}
+                        {{ $Util.CRMCustomerTypeFilter(text) || '个人客户' }}
                     </template>
                     <template v-if="column.key === 'source_type'">
                         <span v-if="Landing_Page[text]">
