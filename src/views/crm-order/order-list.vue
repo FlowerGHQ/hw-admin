@@ -493,7 +493,7 @@
               {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
             </template>
             <template v-else-if="column.key === 'country'">
-              {{ `${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
+              {{ countryCityStr(record) }}
             </template>
             <template v-else-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
@@ -880,7 +880,7 @@ export default {
           return obj
       })
       return arr;
-    }
+    },
   },
   mounted() {
     this.getTableData();
@@ -890,6 +890,16 @@ export default {
   },
   methods: {
 
+    countryCityStr(record) {
+      let str = '';
+      // {{ ==='' ? (record.source_type===1?'中国':undefined):`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
+      if(`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}`){
+        str = `${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}`
+      }else if(record.source_type===1){
+        str = '中国'
+      }
+      return str || '-'
+    },
     // 选择地址
     addressSelect(data){
       this.searchForm.to_country = this.lang === 'zh' ? data?.country?.name : data?.country?.name_en;
