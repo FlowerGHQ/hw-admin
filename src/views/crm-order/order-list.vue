@@ -478,8 +478,8 @@
               {{ text || "-" }}
             </template>
             <template v-else-if="column.key === 'item_name'">
-              <div style="height: 48px;display: inline-block;">
-                <a-image :width="70" :src="getSrcImg(text)" />
+              <div style="height: 48px;display: flex;align-items: center;justify-content: flex-start;">
+                <a-image :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
                 {{ text || '-' }}
               </div>
             </template>
