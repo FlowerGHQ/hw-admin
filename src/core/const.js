@@ -1720,11 +1720,11 @@ let Const = {
         //     80_100: 5,      // 回款进度 80%-100%
         // },
         PAID_MONEY_PROGRESS_MAP: {
-            '1': { key: 1, zh: '回款进度 0%-20%', en: 'Payment Collection Progress 0% - 20%', value: 1 },
-            '2': { key: 2, zh: '回款进度 20%-40%', en: 'Payment Collection Progress 20% - 40%', value: 2 },
-            '3': { key: 3, zh: '回款进度 40%-60%', en: 'Payment Collection Progress 40% - 60%', value: 3 },
-            '4': { key: 4, zh: '回款进度 60%-80%', en: 'Payment Collection Progress 60% - 80%', value: 4 },
-            '5': { key: 5, zh: '回款进度 80%-100%', en: 'Payment Collection Progress 80% - 100%', value: 5 },
+            '1': { key: 1, zh: '支付进度 0%-20%', en: 'Payment Collection Progress 0% - 20%', value: 1 },
+            '2': { key: 2, zh: '支付进度 20%-40%', en: 'Payment Collection Progress 20% - 40%', value: 2 },
+            '3': { key: 3, zh: '支付进度 40%-60%', en: 'Payment Collection Progress 40% - 60%', value: 3 },
+            '4': { key: 4, zh: '支付进度 60%-80%', en: 'Payment Collection Progress 60% - 80%', value: 4 },
+            '5': { key: 5, zh: '支付进度 80%-100%', en: 'Payment Collection Progress 80% - 100%', value: 5 },
         },
         WhetherNot: {
             '1': { key: 20, zh: '是', en: 'YES', value: 1 },
@@ -1778,8 +1778,8 @@ let Const = {
             '1': { key: 1, zh: '微信小程序', en: 'WeChat Mini Program', value: 1 },
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
-            '4': { key: 4, zh: '官网国外', en: 'Official Website Abroad', value: 4 },
-            '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
+            '4': { key: 4, zh: '国外官网2.0', en: 'Official Website Abroad', value: 4 },
+            '5': { key: 5, zh: '飞书小程', en: 'Feishu Mini Program', value: 5 },
         },
         // 支付方式
         PAYMENT_TYPE: {
@@ -2310,10 +2310,6 @@ let Const = {
             '30': { key: 30, zh: '已试驾', en: 'tested' },
             '40': { key: 40, zh: '过期未试驾', en: 'No test drive due' },
         },
-        appointment_channel: {
-            '10': { key: 10, zh: '销售录入', en: 'sales entry' },
-            '20': { key: 20, zh: '官网预约', en: 'appointment website' },
-        }
     },
     // 日期
     DATATIMES: {

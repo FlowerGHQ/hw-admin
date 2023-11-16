@@ -1253,11 +1253,6 @@ const Util = {
     let item = MAP[val + ""] || {}
     return item[to] || ""
   },
-  CRMTestDriveSourceFilter(val, to = "zh") {
-    const MAP = Const.test_drive.appointment_channel
-    let item = MAP[val + ""] || {}
-    return item[to] || ""
-  },
 
   /* =============== 试驾单 ================ */
   /* =============== 待办事项 ================ */
@@ -1390,12 +1385,6 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    CRMTestDriveSourceFilter(val, to = 'zh') {
-        const MAP = Const.test_drive.appointment_channel
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
-    },
-
     /* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */
     CRMToDoStatusFilter(val, to = 'zh') {
@@ -1637,6 +1626,14 @@ const Util = {
       let item = MAP[val + ''] || {}
       return item[to] || ''
     },
+    // crm-试驾单-来源
+    orderTestSourceType(val, to = 'zh') {
+
+      const MAP = Const.CRM_TEST_DRIVE.SOURCE_TYPE
+      let item = MAP[val + ''] || {}
+      return item[to] || ''
+    },
+    
 
 }
 
