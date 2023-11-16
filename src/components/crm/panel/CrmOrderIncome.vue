@@ -17,7 +17,7 @@
               <span>定金</span>
             </template>
             <template v-if="column.key === 'money'">
-              {{currency}} {{text}}
+              {{currency}} {{text/100}}
             </template>
             <template v-if="column.key === 'date'">
               <span>{{ $Util.timeFilter(text)}}</span>
