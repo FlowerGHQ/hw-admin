@@ -111,12 +111,12 @@ export default {
             tableData: [],
             statusList: [
                 { text: '全  部', value: '0', color: 'primary',  key: '-1'},
-                { text: '已订阅', value: '0', color: 'green',  key: '0'},
-                { text: '未订阅', value: '0', color: 'yellow',  key: '1'},
+                { text: '已订阅', value: '0', color: 'green',  key: '1'},
+                { text: '未订阅', value: '0', color: 'yellow',  key: '0'},
                 { text: '已退订', value: '0', color: 'red',  key: '2'},
             ],
             searchForm: {
-                status: '0',
+                status: '1',
             }
         };
     },
@@ -166,7 +166,7 @@ export default {
         getTableData() {  // 获取 表格 数据
             this.loading = true;
             Core.Api.EMAIL_SUBSCRIPTION.list({
-                email_subscription_status: this.searchForm.status,
+                email_subscription_status: Number(this.searchForm.status),
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
