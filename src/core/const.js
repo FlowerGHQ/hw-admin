@@ -2191,7 +2191,6 @@ let Const = {
             '30': { key: 30, zh: '落地页1', en: 'Landing page 1', value: 30 },
             '31': { key: 31, zh: '落地页2', en: 'Landing page 2', value: 31 },
             '40': { key: 40, zh: '官网2.0预约', en: 'Official Website 2.0 Appointment', value: 40 },
-
         }
     },
     INTENTION: {
