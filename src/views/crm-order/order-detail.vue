@@ -113,25 +113,31 @@
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key"> {{ $t("retail.order_amount") }}：</span>
                 <span class="value"
-                  >{{ currency }} {{ detail.money || 0 }}</span
+                  >{{ currency }}
+                  {{ detail.money ? detail.money / 100 : 0 }}</span
                 >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("retail.amount_paid") }}：</span>
                 <span class="value"
-                  >{{ currency }} {{ detail.paid_money || 0 }}</span
+                  >{{ currency }}
+                  {{ detail.paid_money ? detail.paid_money / 100 : 0 }}</span
                 >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.refunded_amount") }}：</span>
                 <span class="value"
-                  >{{ currency }} {{ detail.refunded || 0 }}</span
+                  >{{ currency }}
+                  {{ detail.refunded ? detail.refunded / 100 : 0 }}</span
                 >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.wait_pay") }}：</span>
                 <span class="value"
-                  >{{ currency }} {{ detail.pending_money || 0 }}</span
+                  >{{ currency }}
+                  {{
+                    detail.pending_money ? detail.pending_money / 100 : 0
+                  }}</span
                 >
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
@@ -781,10 +787,10 @@ export default {
 </script>
 
 <style lang="less">
-.panel-content{
+.panel-content {
   border-radius: 6px;
   padding: 20px !important;
-  .desc-detail{
+  .desc-detail {
     margin-top: 0 !important;
   }
 }
@@ -830,30 +836,28 @@ export default {
     height: 100%;
   }
 }
-.left-content{
+.left-content {
   padding-right: 0;
 }
 
-
-.desc-container .desc-detail .detail-item .key{
+.desc-container .desc-detail .detail-item .key {
   width: auto;
   min-width: 100px;
 }
-.desc-container .desc-detail .detail-item .value{
+.desc-container .desc-detail .detail-item .value {
   width: auto;
   flex: 1;
 }
-#Layout.en .detail-item .key{
+#Layout.en .detail-item .key {
   width: auto;
   min-width: 120px;
 }
-#Layout.en .detail-item .value{
+#Layout.en .detail-item .value {
   width: auto;
   flex: 1;
 }
-.ant-tabs{
+.ant-tabs {
   border-radius: 6px;
   overflow: hidden;
 }
-
 </style>
