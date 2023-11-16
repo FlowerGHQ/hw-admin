@@ -45,11 +45,12 @@
                 :placeholder="$t('def.input')"
                 v-model:value="searchForm.name"
                 @keydown.enter="handleSearch"
-              /> -->
+              />
+                @change="handleSearch"
+             -->
               <a-select
                 v-model:value="searchForm.source_type"
                 :placeholder="$t('def.select')"
-                @change="handleSearch"
               >
                 <a-select-option :value="0">
                   {{ lang === "zh" ? "全部" : "all" }}
@@ -133,12 +134,12 @@
             v-if="show"
           >
             <div class="key">{{ $t("crm_o.pay_progress") }}：</div>
-            <!-- 支付进度 -->
+                
+            <!-- 支付进度 @change="handleSearch"-->
             <div class="value">
               <a-select
                 v-model:value="searchForm.paid_money_progress"
                 :placeholder="$t('def.select')"
-                @change="handleSearch"
               >
                 <a-select-option :value="0">
                   {{ lang === "zh" ? "全部" : "all" }}
@@ -188,12 +189,11 @@
             v-if="show"
           >
             <div class="key">{{ $t("p.payment_method") }}：</div>
-            <!-- 支付方式 -->
+            <!-- 支付方式@change="handleSearch" -->
             <div class="value">
               <a-select
                 v-model:value="searchForm.payment_type"
                 :placeholder="$t('def.select')"
-                @change="handleSearch"
               >
                 <a-select-option :value="0">
                   {{ lang === "zh" ? "全部" : "all" }}
