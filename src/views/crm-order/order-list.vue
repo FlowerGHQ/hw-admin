@@ -493,7 +493,7 @@
               {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
             </template>
             <template v-else-if="column.key === 'country'">
-              {{ `${record.to_country}${record.to_province}${record.to_city}` || '-' }}
+              {{ `${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
             </template>
             <template v-else-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
@@ -1016,12 +1016,12 @@ export default {
     handleSearchReset() {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
-      this.$refs.TimeSearchOrder.handleReset();
-      this.$refs.TimeSearchPayment.handleReset();
-      this.$refs.TimeSearchRefunded.handleReset();
+      this.$refs.TimeSearchOrder?.handleReset();
+      this.$refs.TimeSearchPayment?.handleReset();
+      this.$refs.TimeSearchRefunded?.handleReset();
       this.orderByFields = {};
       this.areaMap = {};
-      this.$refs.addressRef.handleReset();
+      this.$refs.addressRef?.handleReset();
       this.pageChange(1);
     },
     getTableData() {
