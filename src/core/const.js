@@ -2619,13 +2619,6 @@ let Const = {
             '1': { color: 'green', text: '已订阅' },
             '2': { color: 'grey', text: '已退订' },
         },
-    },
-    PAY_TYPE:{
-        1: {name:'APP',en_name:'APP'},
-        2: {name:'CRM',en_name:'CRM'},
-        3: {name:'shopify',en_name:'shopify'},
-        4: {name:'官网国外',en_name:'official_foreign'},
-        5: {name:'飞书小程序',en_name:'feishu'},
     }
 
 };
