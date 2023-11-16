@@ -1,12 +1,6 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
     <div class="panel-content">
-        <div class="title">
-            <span>{{$t("crm_c.team_members")}}({{total}})</span>
-            <!-- <div class="right-btn">
-                <TrackMemberSelect @select="handleGroupShow" btnType="link"><i class="icon i_add"/></TrackMemberSelect>
-            </div> -->
-        </div>
         <div class="search">
             <a-input-search v-model:value="search_name" :placeholder="$t('crm_c.team_members')" @search="handleSearch" class="search-btn"/>
             <TrackMemberSelect @select="handleGroupShow">
@@ -279,24 +273,21 @@ export default {
 
 <style lang="less" scoped>
 .InformationInfo {
+    padding: 0;
+    .panel-content{
+        padding: 0 20px !important;
+    }
     .table-container {
         margin-top: -10px;
     }
 
 }
-// .ant-descriptions-view{
-//     th.ant-descriptions-item-label {
-//         width: 25%;
-//     }
-//     td.ant-descriptions-item-content {
-//         width: 25%;
-//     }
-// }
 .panel-content {
     .search{
         display: flex;
         align-items: center;
         margin-bottom: 25px;
+        padding: 0;
         .search-btn{
             margin-right: 10px;
            :deep(.ant-input-search-button){

@@ -24,7 +24,7 @@
             </template>
           </template>
         </a-table>
-        <div class="paging-container"
+        <!-- <div class="paging-container"
             :style="{
               marginTop: '20px',
             }"
@@ -43,7 +43,7 @@
             :pageSizeOptions="['10', '20', '30', '40']"
             @change="pageChange"
             @showSizeChange="pageSizeChange" />
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -70,9 +70,9 @@ export default {
       // 加载
       loading: false,
       // 分页
-      currPage: 1,
-      pageSize: 20,
-      total: 0,
+      // currPage: 1,
+      // pageSize: 20,
+      // total: 0,
       // 表格数据
       tableData: [],
       trackMemberShow: false,
@@ -146,28 +146,28 @@ export default {
     //             break;
     //     }
     // },
-    pageChange(curr) {
-      // 页码改变
-      this.currPage = curr;
-      this.getTableData();
-    },
-    pageSizeChange(current, size) {
-      // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
-      this.pageSize = size;
-      this.getTableData();
-    },
+    // pageChange(curr) {
+    //   // 页码改变
+    //   this.currPage = curr;
+    //   this.getTableData();
+    // },
+    // pageSizeChange(current, size) {
+    //   // 页码尺寸改变
+    //   console.log("pageSizeChange size:", size);
+    //   this.pageSize = size;
+    //   this.getTableData();
+    // },
     getTableData() {
       // 获取 表格 数据
       this.loading = true;
       Core.Api.CRMOrderIncome.list({
         order_id: this.orderId,
-        page: this.currPage,
-        page_size: this.pageSize,
+        // page: this.currPage,
+        // page_size: this.pageSize,
       })
         .then((res) => {
           console.log("getTableData res:", res);
-          this.total = res.count;
+          // this.total = res.count;
           this.tableData = res.list;
         })
         .catch((err) => {
@@ -219,6 +219,7 @@ export default {
 <style lang="less" scoped>
 .InformationInfo {
   padding: 0 !important;
+  padding-bottom: 116px !important;
   .table-container {
     margin-top: -10px;
   }

@@ -156,9 +156,9 @@
         </a-col>
       </a-row>
     </div>
-    <a-row>
+    <a-row :gutter="16">
       <a-col :xs="24" :sm="24" :lg="16">
-        <div class="tabs-container">
+        <div class="tabs-container left-content">
           <a-tabs v-model:activeKey="activeKey">
             <!-- <a-tab-pane
               key="CustomerSituation"
@@ -781,6 +781,13 @@ export default {
 </script>
 
 <style lang="less">
+.panel-content{
+  border-radius: 6px;
+  padding: 20px !important;
+  .desc-detail{
+    margin-top: 0 !important;
+  }
+}
 .OrderDetail {
   .icon {
     font-size: 12px;
@@ -818,8 +825,12 @@ export default {
 .right-content {
   height: 100%;
   padding-bottom: 20px;
+  padding-left: 0;
   .ant-tabs {
     height: 100%;
   }
+}
+.left-content{
+  padding-right: 0;
 }
 </style>
