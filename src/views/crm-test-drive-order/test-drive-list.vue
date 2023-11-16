@@ -220,7 +220,7 @@
           <template #bodyCell="{ column, text, record }"> 			
 			<!-- 订单来源	 -->
 			<template v-if="column.key === 'channel'">
-				{{ $Util.CRMTestDriveSourceFilter(text, $i18n.locale) || "-"}}
+				{{ $Util.orderTestSourceType(text, $i18n.locale) || "-"}}
             </template>
 			<!-- 创建时间	 -->
 			<template v-if="column.key === 'create_time'">
@@ -508,7 +508,7 @@ export default {
         case "detail": // 详情
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
-            query: { id: item.customer_id, store_id: item.store.id },
+            query: { id: item.customer_id, store_id: item?.store?.id },
           });
           window.open(routeUrl.href, "_self");
           break;  
