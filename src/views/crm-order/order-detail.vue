@@ -833,4 +833,23 @@ export default {
 .left-content{
   padding-right: 0;
 }
+
+
+.desc-container .desc-detail .detail-item .key{
+  width: auto;
+  min-width: 100px;
+}
+.desc-container .desc-detail .detail-item .value{
+  width: auto;
+  flex: 1;
+}
+#Layout.en .detail-item .key{
+  width: auto;
+  min-width: 120px;
+}
+#Layout.en .detail-item .value{
+  width: auto;
+  flex: 1;
+}
+
 </style>
