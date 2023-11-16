@@ -851,5 +851,9 @@ export default {
   width: auto;
   flex: 1;
 }
+.ant-tabs{
+  border-radius: 6px;
+  overflow: hidden;
+}
 
 </style>
