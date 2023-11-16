@@ -53,9 +53,7 @@ export default {
                 console.log('defArea n:', n)
                 if (!Core.Util.isEmptyObj(n)) {
                     let selectCode = [n.country, n.province, n.city, n.county]
-                    console.log('selectCode:', selectCode)
                     this.selectCode = selectCode.filter(item => item)
-                    console.log('this.selectCode:', this.selectCode)
                 }
             }
         }
