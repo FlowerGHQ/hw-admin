@@ -81,9 +81,14 @@ export default {
             })
         },
         handleChange(value, selectedOptions) {
+            
             this.selectItems = selectedOptions
-
             let update = {}
+            if(!selectedOptions) {
+                this.$emit('update:value', update)
+                this.$emit('select', update)
+                return ;
+            }
             for (const item of selectedOptions) {
                 update[item.key] = {
                     code: item.code,
