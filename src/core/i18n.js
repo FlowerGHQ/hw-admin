@@ -1492,7 +1492,7 @@ const messages = {
             collection_schedule: '回款进度', // 重复
             customer_status: '客户状态',
             create_user: '创建人',
-            paid_money_progress: '回款进度',
+            paid_money_progress: '支付进度',
             belone_customer: '所属客户',
             contract_no: '合同编号',
             signing_date: '签约日期',
