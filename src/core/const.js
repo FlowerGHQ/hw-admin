@@ -1771,7 +1771,7 @@ let Const = {
             '40': { key: 40, zh: '已支付', en: 'To Be Paid', value: 40, color: '#00B42A' },
             '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35, color: '#F77234' },
             '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48, color: '#3491FA' },
-            '50': { key: 50, zh: '已取消', en: 'Canceled', value: 50, color: '#A9B4C2' },
+            '10': { key: 10, zh: '已取消', en: 'Canceled', value: 10, color: '#A9B4C2' },
         },
         // 订单列表-来源
         SOURCE_TYPE: {
