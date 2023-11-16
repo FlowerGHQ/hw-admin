@@ -1775,7 +1775,7 @@ let Const = {
         },
         // 订单列表-来源
         SOURCE_TYPE: {
-            '1': { key: 1, zh: 'APP', en: 'APP', value: 1 },
+            '1': { key: 1, zh: '微信小程序', en: 'WeChat Mini Program', value: 1 },
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
             '4': { key: 4, zh: '官网国外', en: 'Official Website Abroad', value: 4 },
