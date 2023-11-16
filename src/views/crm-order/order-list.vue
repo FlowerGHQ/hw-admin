@@ -32,7 +32,7 @@
       </div>
       <div class="tab-box">
         <a-tabs v-model:activeKey="activeKey" @change="tabChange">
-          <a-tab-pane v-for="item in Order_Status_Map" :key="item.value" :tab="lang=='zh'?item.zh:item.en"></a-tab-pane>
+          <a-tab-pane v-for="item in tabList" :key="item.value" :tab="lang=='zh'?item.zh:item.en"></a-tab-pane>
         </a-tabs>
       </div>
       <div class="search">
@@ -479,7 +479,7 @@
             </template>
             <template v-else-if="column.key === 'item_name'">
               <div class="box-car" >
-                <a-image class="image-car" :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
+                <a-image :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
                 {{ text || '-' }}
               </div>
             </template>
@@ -702,7 +702,7 @@ export default {
       regionsList: [],
       
       areaMap: {}, // 国家城市地址选择
-      showArea:{
+      showArea: {
           /*   country: '', // 国家
             province: '', // 省份           
             city: '',   // 城市
@@ -866,6 +866,21 @@ export default {
     lang() {
       return this.$store.state.lang;
     },
+    tabList() {
+      let arr = ['全部','已支付','待付款','已退款', '已取消'];
+      let Order_Status_Map = this.Order_Status_Map;
+      arr = arr.map((item) => {
+          let obj;
+          for(let key in Order_Status_Map){
+            if(Order_Status_Map[key].zh === item) {
+              obj = Order_Status_Map[key];
+              break;
+            }
+          }
+          return obj
+      })
+      return arr;
+    }
   },
   mounted() {
     this.getTableData();
@@ -1259,7 +1274,10 @@ export default {
   justify-content: flex-start;
   :deep(.ant-image-img) {
     padding-right: 8px;
+    cursor: pointer;
+
   }
+
 }
 
 .before-icon {
