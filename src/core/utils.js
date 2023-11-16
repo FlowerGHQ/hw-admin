@@ -1623,7 +1623,7 @@ const Util = {
 
       const MAP = Const.CRM_ORDER.Order_Status_Map
       let item = MAP[val + ''] || {}
-      return item[to] || ''
+      return item || ''
     },
     // crm-订单管理-支付方式
     orderPaymentType(val, to = 'zh') {

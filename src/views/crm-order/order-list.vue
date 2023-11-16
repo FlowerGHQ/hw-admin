@@ -446,7 +446,7 @@
               {{ $Util.orderSourceType(text,lang) }}
             </template>
             <template v-else-if="column.key === 'status'">
-              {{ $Util.orderManageStatus(text,lang) }}
+              <span class="before-icon" :style="{ background:$Util.orderManageStatus(text)?.color }" v-if="text"></span>{{ $Util.orderManageStatus(text)[lang] || '-'}}
             </template>
             <!-- <template v-else-if="column.key === 'item'">
               {{ text || "-" }}
@@ -456,6 +456,12 @@
             </template>
             <template v-else-if="column.key === 'phone'">
               {{ text || "-" }}
+            </template>
+            <template v-else-if="column.key === 'item_name'">
+              <div style="height: 48px;display: inline-block;">
+                <a-image :width="70" :src="getSrcImg(text)" />
+                {{ text || '-' }}
+              </div>
             </template>
             <template v-else-if="column.key === 'payment_type'">
               {{ $Util.orderPaymentType(text,lang) || '-' }}
@@ -586,6 +592,8 @@ import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
 import addressCascader from '@/components/common/AddressCascader.vue'
 import { take } from 'lodash'
+const modules = import.meta.globEager("../../assets/images/car/*")
+
 export default {
   name: "OrderList",
   components: {
@@ -732,14 +740,14 @@ export default {
         },
         { title: "n.email", dataIndex: "customer_email", key: "customer_email" },
         { title: "n.phone", dataIndex: "customer_phone", key: "customer_phone" },
-        { title: "crm_o.pay_car_type", dataIndex: "item_name", key: "item_name" },
-        { title: "crm_o.pay_progress", dataIndex: "paid_money_progress", key: "paid_money_progress" },
-        /* {
+        {
           title: "crm_o.own_user_name",
           dataIndex: "own_user_id",
           key: "own_user_name",
-          sorter: true,
-        }, */
+        },
+        { title: "crm_o.pay_car_type", dataIndex: "item_name", key: "item_name" },
+        { title: "crm_o.pay_progress", dataIndex: "paid_money_progress", key: "paid_money_progress" },
+        
         /* {
           title: "crm_o.status",
           dataIndex: "status",
@@ -859,6 +867,13 @@ export default {
         this.searchForm.to_city = data?.city?.name_en;
       }
       // this.pageChange(1);
+    },
+    
+    // 获取照片
+    getSrcImg(name, type = 'png') {
+      const path = `../../assets/images/car/${name}.${type}`;
+      console.log('modules[path]?.default',path,modules[path]?.default);
+      return modules[path]?.default;
     },
     // 获取区域
     getRegionsData() {
@@ -1224,5 +1239,13 @@ export default {
 .m-b-20 {
     margin-bottom: 20px;
     margin-top: 20px;
+}
+
+.before-icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
 }
 </style>
