@@ -1764,7 +1764,34 @@ let Const = {
         otherTool: {
             '1': { key: 1, zh: '油车', en: 'Oil trucks' },
             '2': { key: 2, zh: '电车', en: 'tram' },
-        }
+        },
+        // 订单列表筛选(tab)-订单状态
+        Order_Status_Map: {
+            '0': { key: 0, zh: '全部', en: 'All', value: 0 },
+            '40': { key: 40, zh: '已支付', en: 'To Be Paid', value: 40 },
+            '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35 },
+            '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48 },
+            '50': { key: 50, zh: '已取消', en: 'Canceled', value: 50 },
+        },
+        // 订单列表-来源
+        SOURCE_TYPE: {
+            '1': { key: 1, zh: 'APP', en: 'APP', value: 1 },
+            '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
+            '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
+            '4': { key: 4, zh: '官网国外', en: 'Official Website Abroad', value: 4 },
+            '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
+        },
+        // 支付方式
+        PAYMENT_TYPE: {
+            '10': { key: 10, zh: '现金', en: 'cash', value: 10 },
+            '20': { key: 20, zh: '微信', en: 'Wechat', value: 20 },
+            '30': { key: 30, zh: '支付宝', en: 'Alipay', value: 30 },
+            '40': { key: 40, zh: '银联', en: 'UnionPay', value: 40 },
+            '50': { key: 50, zh: '支票', en: 'cheque', value: 50 },
+            '60': { key: 60, zh: '其他', en: 'other', value: 60 },
+            '70': { key: 70, zh: 'paypal', en: 'paypal', value: 70 },
+        },
+
     },
     CRM_ORDER_INCOME: {
         STATUS: {
@@ -1809,6 +1836,15 @@ let Const = {
             '50': { key: 50, zh: '支票', en: 'Check', value: 50 },
             '60': { key: 60, zh: '其他', en: 'Other', value: 60 },
         },
+        // 试驾单-订单来源
+        SOURCE_TYPE: {
+            '10': { key: 10, zh: '销售录入', en: 'Sales Entry', value: 10 },
+            '20': { key: 20, zh: '官网1.0预约', en: 'Official Website 1.0 Appointment', value: 20 },
+            '30': { key: 30, zh: '落地页1', en: 'Landing page 1', value: 30 },
+            '31': { key: 31, zh: '落地页2', en: 'Landing page 2', value: 31 },
+            '40': { key: 40, zh: '官网2.0预约', en: 'Official Website 2.0 Appointment', value: 40 },
+
+        }
     },
     CRM_TRACK_RECORD: {
         TYPE_MAP: {
@@ -2575,7 +2611,15 @@ let Const = {
             '1': { color: 'green', text: '已订阅' },
             '2': { color: 'grey', text: '已退订' },
         },
+    },
+    PAY_TYPE:{
+        1: {name:'APP',en_name:'APP'},
+        2: {name:'CRM',en_name:'CRM'},
+        3: {name:'shopify',en_name:'shopify'},
+        4: {name:'官网国外',en_name:'official_foreign'},
+        5: {name:'飞书小程序',en_name:'feishu'},
     }
+
 };
 
 
