@@ -98,6 +98,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show"
           >
             <div class="key">{{ $t("crm_o.own_user_name") }}：</div>
             <!-- 负责人 -->
@@ -129,6 +130,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show"
           >
             <div class="key">{{ $t("crm_o.pay_progress") }}：</div>
             <!-- 支付进度 -->
@@ -183,6 +185,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show"
           >
             <div class="key">{{ $t("p.payment_method") }}：</div>
             <!-- 支付方式 -->
@@ -205,7 +208,7 @@
             </div>
           </a-col>
     
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item" v-if="show">
               <div class="key">{{$t('crm_o.country_city')}}：</div>
               <div class="value">
                   <!-- 参考 customer -> customer-edit -->
@@ -217,7 +220,7 @@
                       />  
               </div>
           </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item" v-if="show" >
             <div class="key">{{ $t("crm_group.name") }}：</div>
             <!-- 区域 -->
             <div class="value">
@@ -246,6 +249,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show" 
           >
             <div class="key">{{ $t("crm_o.order_time") }}：</div>
             <div class="value">
@@ -259,6 +263,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show" 
           >
             <div class="key">{{ $t("crm_o.pay_time") }}：</div>
             <div class="value">
@@ -272,6 +277,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
+            v-if="show" 
           >
             <div class="key">{{ $t("crm_o.refund_time") }}：</div>
             <div class="value">
@@ -392,6 +398,20 @@
               v-else
             ></i>
           </a-col> -->
+          <a-col
+              :xs="24"
+              :sm="24"
+              :xl="8"
+              :xxl="6"
+              class="row-item"
+              @click="moreSearch"
+          >       
+              <span class="key option-text">
+                  <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                  <i v-if="!show" class="icon i_xialajiantouxiao"></i>
+                  <i v-else class="icon i_shouqijiantouxiao"></i>
+              </span>
+          </a-col>
         </a-row>
         
         <div class="btns m-b-20" >
@@ -872,7 +892,6 @@ export default {
     // 获取照片
     getSrcImg(name, type = 'png') {
       const path = `../../assets/images/car/${name}.${type}`;
-      console.log('modules[path]?.default',path,modules[path]?.default);
       return modules[path]?.default;
     },
     // 获取区域
@@ -1003,18 +1022,11 @@ export default {
       this.orderByFields = {};
       this.areaMap = {};
       this.$refs.addressRef.handleReset();
-      console.log('this.areaMap',this.areaMap);
       this.pageChange(1);
     },
     getTableData() {
       // 获取 表格 数据
       // this.loading = true;
-      console.log('1021020120',{
-        ...this.searchForm,
-        order_by_fields: this.orderByFields,
-        page: this.currPage,
-        page_size: this.pageSize,
-      });
       Core.Api.CRMOrder.list({
         ...this.searchForm,
         order_by_fields: this.orderByFields,
