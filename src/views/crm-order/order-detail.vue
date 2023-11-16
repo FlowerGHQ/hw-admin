@@ -4,8 +4,8 @@
       <div class="title-area">
         {{ $t("oder_details.order_number_1") }} {{ detail.uid || "" }}（{{
           lang === "zh"
-            ? Core.Const.PAY_TYPE[detail.source_type]?.name
-            : Core.Const.PAY_TYPE[detail.source_type]?.en_name
+            ? Core.Const.CRM_ORDER.SOURCE_TYPE[detail.source_type]?.zh
+            : Core.Const.CRM_ORDER.SOURCE_TYPE[detail.source_type]?.en
         }}）
       </div>
       <!-- <div class="btns-area">
