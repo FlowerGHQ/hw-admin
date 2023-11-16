@@ -2191,6 +2191,14 @@ let Const = {
             '1': { key: 1, zh: 'SENMENTI O', en: 'SENMENTI O' },
             '2': { key: 2, zh: 'SENMENTI X', en: 'SENMENTI X' },
         },
+        // 试驾单-订单来源
+        SOURCE_TYPE: {
+            '10': { key: 10, zh: '销售录入', en: 'Sales Entry', value: 10 },
+            '20': { key: 20, zh: '官网1.0预约', en: 'Official Website 1.0 Appointment', value: 20 },
+            '30': { key: 30, zh: '落地页1', en: 'Landing page 1', value: 30 },
+            '31': { key: 31, zh: '落地页2', en: 'Landing page 2', value: 31 },
+            '40': { key: 40, zh: '官网2.0预约', en: 'Official Website 2.0 Appointment', value: 40 },
+        }
     },
     INTENTION: {
         TYPE_MAP: {
