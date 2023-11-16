@@ -274,6 +274,7 @@ export default {
 <style lang="less" scoped>
 .InformationInfo {
     padding: 0;
+    box-shadow: none;
     .panel-content{
         padding: 0 20px !important;
     }
@@ -375,5 +376,11 @@ export default {
         }
     }
 
+}
+.paging-container{
+    padding: 0;
+}
+:deep(.ant-pagination-next){
+    margin-right: 0 !important;
 }
 </style>

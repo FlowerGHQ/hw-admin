@@ -347,6 +347,8 @@ export default {
 
 <style lang="less" scoped>
 .ActionRecord {
+    padding: 0;
+    box-shadow: none;
     .table-container {
         margin-top: -10px;
     }
