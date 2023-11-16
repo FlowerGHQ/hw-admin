@@ -2270,7 +2270,7 @@ const routes = [
 				component: () => import('@/views/crm-order/order-detail.vue'),
 				meta: {
 					hidden: true,
-					title: '合同详情',
+					title: '订单详情',
 					title_en: 'Contract Details',
 					parent: '/crm-order/order-list',
                     auth: ["crm-order.detail"],
