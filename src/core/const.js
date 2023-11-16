@@ -2571,8 +2571,8 @@ let Const = {
     },
     SUBSCRIPTION: {
         STATUS_MAP: {
-            '0': { color: 'green', text: '已订阅' },
-            '1': { color: 'blue', text: '未订阅' },
+            '0': { color: 'blue', text: '未订阅' },
+            '1': { color: 'green', text: '已订阅' },
             '2': { color: 'grey', text: '已退订' },
         },
     }
