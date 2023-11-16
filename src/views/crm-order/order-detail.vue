@@ -821,7 +821,7 @@ export default {
   }
 }
 .infomation {
-  padding: 20px;
+  padding: 20px 0;
 }
 .customerInfo_area {
   .gray-panel {
@@ -832,12 +832,14 @@ export default {
   height: 100%;
   padding-bottom: 20px;
   padding-left: 0;
+  padding-right: 0;
   .ant-tabs {
     height: 100%;
   }
 }
 .left-content {
   padding-right: 0;
+  padding-left: 0;
 }
 
 .desc-container .desc-detail .detail-item .key {
