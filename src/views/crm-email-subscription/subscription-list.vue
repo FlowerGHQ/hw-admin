@@ -159,7 +159,6 @@ export default {
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '备注', dataIndex: 'remark', key: 'item' },
                 { title: '来源类型', dataIndex: 'source_type', key: 'source_type' },
-                { title: '更新时间', dataIndex: 'update_time', key: 'time' },
             ]
             return columns
         },
