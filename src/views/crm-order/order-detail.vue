@@ -787,6 +787,9 @@ export default {
 </script>
 
 <style lang="less">
+.title-container{
+  padding: 0;
+}
 .panel-content {
   border-radius: 6px;
   padding: 20px !important;
@@ -821,7 +824,7 @@ export default {
   }
 }
 .infomation {
-  padding: 20px 0;
+  padding: 16px 0;
 }
 .customerInfo_area {
   .gray-panel {
