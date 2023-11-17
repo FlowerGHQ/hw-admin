@@ -257,7 +257,7 @@
             </template>
 
             <template v-else-if="column.key === 'level'">
-              {{ $Util.storeLevel(text) || "-" }}
+              {{ $Util.storeLevel(text,lang) || "-" }}
             </template>
             <template v-else-if="column.key === 'status'">
               {{ $Util.storeSTATUS(text) || "-" }}

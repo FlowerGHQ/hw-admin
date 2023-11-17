@@ -63,7 +63,7 @@
                         <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                             <span class="key">{{ $t('n.phone') }}：</span>
                             <span class="value phone-hover">
-                                {{ detail.phone_country_code }} {{ detail.phone }}
+                                {{ detail.phone?.includes(detail.phone_country_code)? '' : detail.phone  }} {{ detail.phone }}
                                 <a-button type="link" v-if="(!detail.flag_eyes) && detail.status !== STATUS.CUSTOMER"
                                     class="switch" @click="handleChecking()"><i class="icon i_eyes" /></a-button>
                             </span>
@@ -101,7 +101,7 @@
                         <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                             <span class="key">{{ $t('dis.order_source') }}：</span>
                             <span class="value">
-                                {{ $Util.CRMTestDriveSourceFilter(detail.crm_test_drive_order?.channel, $i18n.locale) || "-"
+                                {{ $Util.orderTestSourceType(detail.crm_test_drive_order?.channel, $i18n.locale) || "-"
                                 }}
                             </span>
                         </a-col>

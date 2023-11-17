@@ -2,8 +2,10 @@
   <div id="OrderList">
     <div class="list-container">
       <div class="title-container">
-        <div class="title-area">{{ $t("crm_o.list") }}</div>
-        <div class="btns-area">
+        <div class="title-area">{{ $t("retail.order_list") }}</div>
+
+        <!-- 隐藏导入-导出功能-原本的合同列表 -->
+        <div class="btns-area"  v-if="false">
           <a-upload
             name="file"
             class="file-uploader"
@@ -28,25 +30,64 @@
           >
         </div>
       </div>
-      <div class="search-container">
-        <a-row class="search-area">
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("crm_o.name") }}：</div>
-            <!-- 合同名称 -->
+      <div class="tab-box">
+        <a-tabs v-model:activeKey="activeKey" @change="tabChange">
+          <a-tab-pane v-for="item in tabList" :key="item.value" :tab="lang=='zh'?item.zh:item.en"></a-tab-pane>
+        </a-tabs>
+      </div>
+      <div class="search">
+        <a-row class="row-detail">
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("dis.order_source") }}：</div>
+            <!-- 订单来源 -->
             <div class="value">
-              <a-input
+              <!-- <a-input
                 :placeholder="$t('def.input')"
                 v-model:value="searchForm.name"
                 @keydown.enter="handleSearch"
               />
+                @change="handleSearch"
+             -->
+              <a-select
+                v-model:value="searchForm.source_type"
+                :placeholder="$t('def.select')"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of SOURCE_TYPE"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
             </div>
           </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+          >
+            <div class="key">{{ $t("in.order_number") }}：</div>
+            <!-- 订单号 -->
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.uid"
+                @keydown.enter="handleSearch"
+              />
+            </div>
+          </a-col>
+          <a-col  :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
             <div class="key">{{ $t("crm_o.customer_name") }}：</div>
             <!-- 客户名称 -->
             <div class="value">
               <a-input
-                :placeholder="$t('def.input')"
+                :placeholder="$t('def.email_phone_name')"
                 v-model:value="searchForm.customer_name"
                 @keydown.enter="handleSearch"
               />
@@ -57,7 +98,7 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
+            class="row-item"
             v-if="show"
           >
             <div class="key">{{ $t("crm_o.own_user_name") }}：</div>
@@ -89,12 +130,39 @@
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
+            class="row-item"
             v-if="show"
           >
-            <div class="key">{{ $t("crm_o.status") }}：</div>
-            <!-- 合同状态 -->
+            <div class="key">{{ $t("crm_o.pay_progress") }}：</div>
+                
+            <!-- 支付进度 @change="handleSearch"-->
             <div class="value">
+              <a-select
+                v-model:value="searchForm.paid_money_progress"
+                :placeholder="$t('def.select')"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of CRM_PAID_MONEY_PROGRESS_MAP"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <!-- <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+          >
+            <div class="key">{{ $t("p.order_status") }}：</div> -->
+            <!-- 订单状态 -->
+          <!--   <div class="value">
               <a-select
                 v-model:value="searchForm.status"
                 :placeholder="$t('def.select')"
@@ -111,18 +179,121 @@
                 >
               </a-select>
             </div>
-          </a-col>
+          </a-col> -->
           <a-col
             :xs="24"
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
+            class="row-item"
             v-if="show"
           >
-            <div class="key">{{ $t("crm_o.collection_schedule") }}：</div>
-            <!-- 回款进度 -->
+            <div class="key">{{ $t("p.payment_method") }}：</div>
+            <!-- 支付方式@change="handleSearch" -->
             <div class="value">
+              <a-select
+                v-model:value="searchForm.payment_type"
+                :placeholder="$t('def.select')"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of PAYMENT_TYPE"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+    
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item" v-if="show">
+              <div class="key">{{$t('crm_o.country_city')}}：</div>
+              <div class="value">
+                  <!-- 参考 customer -> customer-edit -->
+                  <addressCascader 
+                      ref="addressRef"
+                      v-model:value="areaMap" 
+                      :def-area='showArea'
+                      @select="addressSelect"
+                      />  
+              </div>
+          </a-col>
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item" v-if="show" >
+            <div class="key">{{ $t("crm_group.name") }}：</div>
+            <!-- 区域 -->
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.group_id"
+                :placeholder="$t('def.select')"
+                allowClear
+              >
+                <!-- <a-select-option :value="0">
+                                    {{ lang === "zh" ? "全部" : "all" }}
+                                </a-select-option> -->
+                <a-select-option
+                  v-for="item of regionsList"
+                  :key="item.id"
+                  :value="item.value"
+                  >{{ item.name }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+    
+          <!-- 下单时间 -->
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+            v-if="show" 
+          >
+            <div class="key">{{ $t("crm_o.order_time") }}：</div>
+            <div class="value">
+              <TimeSearch @search="handleOtherSearchOrder" ref="TimeSearchOrder" />
+            </div>
+          </a-col>
+          <!-- 付款时间 -->
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+            v-if="show" 
+          >
+            <div class="key">{{ $t("crm_o.pay_time") }}：</div>
+            <div class="value">
+              <TimeSearch @search="handleOtherSearchPayment" ref="TimeSearchPayment" />
+            </div>
+          </a-col>
+          <!-- 退款时间 -->
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+            v-if="show" 
+          >
+            <div class="key">{{ $t("crm_o.refund_time") }}：</div>
+            <div class="value">
+              <TimeSearch @search="handleOtherSearchRefunded" ref="TimeSearchRefunded" />
+            </div>
+          </a-col>
+       <!--    <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="row-item"
+          >
+            <div class="key">{{ $t("crm_o.collection_schedule") }}：</div> -->
+            <!-- 回款进度 -->
+    <!--         <div class="value">
               <a-select
                 v-model:value="searchForm.paid_money_progress"
                 :placeholder="$t('def.select')"
@@ -139,18 +310,17 @@
                 >
               </a-select>
             </div>
-          </a-col>
-          <a-col
+          </a-col> -->
+          <!-- <a-col
             :xs="24"
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
-            <div class="key">{{ $t("crm_o.customer_status") }}：</div>
+            <div class="key">{{ $t("crm_o.customer_status") }}：</div> -->
             <!-- 客户状态 -->
-            <div class="value">
+         <!--    <div class="value">
               <a-select
                 v-model:value="searchForm.search_type"
                 :placeholder="$t('def.select')"
@@ -164,18 +334,17 @@
                 >
               </a-select>
             </div>
-          </a-col>
-          <a-col
+          </a-col> -->
+        <!--   <a-col
             :xs="24"
             :sm="24"
             :xl="8"
             :xxl="6"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
-            <div class="key">{{ $t("crm_o.create_user") }}：</div>
+            <div class="key">{{ $t("crm_o.create_user") }}：</div> -->
             <!-- 创建人 -->
-            <div class="value">
+          <!--   <div class="value">
               <a-select
                 v-model:value="searchForm.create_user_id"
                 show-search
@@ -196,26 +365,25 @@
                 </a-select-option>
               </a-select>
             </div>
-          </a-col>
-          <a-col
+          </a-col> -->
+          <!-- <a-col
             :xs="24"
             :sm="24"
             :xl="16"
             :xxl="8"
-            class="search-item"
-            v-if="show"
+            class="row-item"
           >
             <div class="key">{{ $t("d.create_time") }}：</div>
             <div class="value">
               <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
             </div>
-          </a-col>
-          <a-col
+          </a-col> -->
+         <!--  <a-col
             :xs="24"
             :sm="24"
             :xl="2"
             :xxl="3"
-            class="search-item search-text"
+            class="row-item search-text"
             @click="moreSearch"
           >
             {{ show ? $t("search.stow") : $t("search.advanced_search") }}
@@ -229,31 +397,55 @@
               style="margin-left: 5px"
               v-else
             ></i>
+          </a-col> -->
+          <a-col
+              :xs="24"
+              :sm="24"
+              :xl="8"
+              :xxl="6"
+              class="row-item"
+              @click="moreSearch"
+          >       
+              <span class="key option-text">
+                  <span class="allow-icon">{{ show ? $t("search.stow"): $t("retail.more_screening")}}</span>
+                  <i v-if="!show" class="icon i_xialajiantouxiao"></i>
+                  <i v-else class="icon i_shouqijiantouxiao"></i>
+              </span>
           </a-col>
         </a-row>
-        <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
-          <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
-        </div>
+        
+        <div class="btns m-b-20" >
+                <div class="btn-left" ></div>
+                <div class="btn-right">                  
+                    <a-button @click="handleSearch(1)" type="primary" >
+                        {{ $t("def.search") }}
+                    </a-button>
+                    <a-button @click="handleSearchReset" >
+                        {{ $t("def.reset") }}
+                    </a-button>
+                </div>
+            </div>
       </div>
-      <div class="operate-container">
+      <!-- 注释多选删除功能 -->
+      <!-- <div class="operate-container"> -->
         <!--                <a-button type="primary" @click="handleBatch('transfer')" v-if="$auth('crm-order.save')">{{ $t('crm_c.transfer') }}</a-button>-->
-        <a-button
-          type="danger"
-          @click="handleBatchDelete"
-          v-if="$auth('crm-order.delete')"
-          >{{ $t("crm_c.delete") }}</a-button
-        >
-      </div>
+        <!--    <a-button
+              type="danger"
+              @click="handleBatchDelete"
+              v-if="$auth('crm-order.delete')"
+              >{{ $t("crm_c.delete") }}</a-button
+            > -->
+      <!-- </div> -->
+      <!-- 
+          :row-selection="rowSelection"
+          :row-key="(record) => record.id"
+       -->
+
       <div class="table-container">
         <a-table
           :columns="tableColumns"
           :data-source="tableData"
           :scroll="{ x: true }"
-          :row-selection="rowSelection"
-          :row-key="(record) => record.id"
           :pagination="false"
           @change="getTableDataSorter"
         >
@@ -261,7 +453,7 @@
             {{ $t(title) }}
           </template>
           <template #bodyCell="{ column, text, record }">
-            <template v-if="column.key === 'detail'">
+           <!--  <template v-if="column.key === 'detail'">
               <a-tooltip placement="top" :title="text">
                 <a-button
                   type="link"
@@ -269,36 +461,53 @@
                   v-if="$auth('crm-order.detail')"
                   ><span :class="{nameStyle: nameBoolean(record)}">{{text || "-"}}</span></a-button>
               </a-tooltip>
+            </template> -->
+            <template v-if="column.key === 'source_type'" >
+              {{ $Util.orderSourceType(text,lang) }}
             </template>
-            <template v-if="column.key === 'item'">
+            <template v-else-if="column.key === 'status'">
+              <span class="before-icon" :style="{ background:$Util.orderManageStatus(text)?.color }" v-if="text"></span>{{ $Util.orderManageStatus(text)[lang] || '-'}}
+            </template>
+            <!-- <template v-else-if="column.key === 'item'">
               {{ text || "-" }}
-            </template>
-            <template v-if="column.key === 'phone'">
-              {{ text || "-" }}
-            </template>
-            <template v-if="column.key === 'time'">
-              {{ $Util.timeFilter(text) }}
-            </template>
-            <template v-if="column.key === 'money'">
-              {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
-            </template>           
-            <template v-if="column.key === 'customer_name'">
+            </template> -->           
+            <template v-else-if="column.key === 'customer_name'">
               {{ record.customer_name || "-" }}
             </template>
-            <template v-if="column.key === 'remark'">
+            <template v-else-if="column.key === 'phone'">
               {{ text || "-" }}
             </template>
-            <template v-if="column.key === 'own_user_name'">
+            <template v-else-if="column.key === 'item_name'">
+              <div class="box-car" >
+                <a-image :width="70" :src="getSrcImg(text)" v-if="text && getSrcImg(text)" />
+                {{ text || '-' }}
+              </div>
+            </template>
+            <template v-else-if="column.key === 'payment_type'">
+              {{ $Util.orderPaymentType(text,lang) || '-' }}
+            </template>
+            <template v-else-if="column.key === 'time'">
+              {{ $Util.timeFilter(text) }}
+            </template>
+            <template v-else-if="column.key === 'money'">
+              {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
+            </template>
+            <template v-else-if="column.key === 'country'">
+              {{ countryCityStr(record) }}
+            </template>
+            <template v-else-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
             </template>
-            <template v-if="column.key === 'create_user_name'">
+            <template v-else-if="column.key === 'create_user_name'">
               {{ record.create_user_name || "-" }}
             </template>
-
-            <template v-if="column.key === 'util'">
+            <template v-else-if="column.key === 'util'">
               {{ $Util[column.util](text, $i18n.locale) }}
             </template>
-            <template v-if="column.key === 'operation'">
+            <template v-else-if="column.key === 'remark'">
+              {{ text || "-" }}
+            </template>
+            <template v-else-if="column.key === 'operation'">
               <a-button type="link" @click="handleBatch('transfer', record)">{{
                 $t("crm_c.transfer")
               }}</a-button>
@@ -308,6 +517,9 @@
                 v-if="$auth('crm-order.detail')"
                 ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
               >
+            </template>
+            <template v-else>
+              {{ text || '-' }}
             </template>
           </template>
         </a-table>
@@ -398,15 +610,20 @@
 <script>
 import Core from "../../core";
 import TimeSearch from "../../components/common/TimeSearch.vue";
+import addressCascader from '@/components/common/AddressCascader.vue'
 import { take } from 'lodash'
+const modules = import.meta.globEager("../../assets/images/car/*")
+
 export default {
   name: "OrderList",
   components: {
     TimeSearch,
+    addressCascader
   },
   props: {},
   data() {
     return {
+      activeKey: Core.Const.CRM_ORDER.Order_Status_Map['0'].value,
       loginType: Core.Data.getLoginType(),
       show: false,
       // 加载
@@ -417,25 +634,45 @@ export default {
 
       CRM_TYPE_MAP: Core.Const.CRM_ORDER.TYPE_MAP,
       CRM_STATUS_MAP: Core.Const.CRM_ORDER.STATUS_MAP,
-      CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,
-      CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,
+      CRM_PAID_MONEY_PROGRESS_MAP: Core.Const.CRM_ORDER.PAID_MONEY_PROGRESS_MAP,  //支付进度
+      PAYMENT_TYPE: Core.Const.CRM_ORDER.PAYMENT_TYPE,         //支付方式
+      // CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,  //客户状态
+      Order_Status_Map: Core.Const.CRM_ORDER.Order_Status_Map,  // 订单切换筛选
+      SOURCE_TYPE: Core.Const.CRM_ORDER.SOURCE_TYPE,  // 订单来源
       total: 0,
       orderByFields: {},
       // 搜索
       searchForm: {
-        name: "",
-        customer_name: "",
-        own_user_id: undefined,
-        create_user_name: "",
-        paid_money_progress: 0,
-        status: 0,
+        // name: "",
+        source_type: 0,         // 订单来源
+        uid: '',                // 订单号
+        customer_name: "",      // 客户名称
+        own_user_id: undefined, // 负责人
+        // create_user_name: "", 
+        paid_money_progress: 0, // 支付進度
+        // status: 0,              // 訂單狀態
         begin_time: "",
         end_time: "",
         type: "",
-        create_user_id:undefined,
-        search_type: 10
+        // create_user_id:undefined,
+        // search_type: 10,
+        payment_type: undefined,//支付方式
+        group_id: undefined,  //区域id
+        // 国家城市
+        to_country: '',
+        to_province: '',
+        to_city: '',
+        // 下单时间
+        order_begin_time: '', // （下单开始时间）
+        order_end_time: '',   // （下单结束时间）
+        // 支付时间
+        payment_begin_time: '', // （支付开始时间）
+        payment_end_time: '',   // （支付结束时间）
+        // 退款时间
+        refunded_begin_time: '', // （退款开始时间）
+        refunded_end_time: '',   // （退款结束时间）
       },
-      ownUserOptions: [],
+      ownUserOptions: [],     //負責人
       createUserOptions: [], // 创建人列表
       // 表格
       tableData: [],
@@ -461,6 +698,24 @@ export default {
         },
       },
       nameColor: [],// 表格名字点击存进去数组,判断点击跳转后原先name颜色的
+      // 区域列表
+      regionsList: [],
+      
+      areaMap: {}, // 国家城市地址选择
+      showArea: {
+          /*   country: '', // 国家
+            province: '', // 省份           
+            city: '',   // 城市
+            county: '', 
+              */
+            country: '',
+            country_en: '',
+            province: '',
+            province_en: '',
+            city: '',
+            city_en: '',
+            county: '',
+      }, // 地址选择
     };
   },
   watch: {
@@ -489,26 +744,31 @@ export default {
   computed: {
     tableColumns() {
       let columns = [
-        { title: "crm_o.name", dataIndex: "name", key: "detail", sorter: true },
+        // { title: "crm_o.name", dataIndex: "name", key: "detail", sorter: true },
+        { title: "dis.order_source", dataIndex: "source_type", key: "source_type" },
         {
-          title: "crm_o.contract_no",
+          title: "in.order_number",
           dataIndex: "uid",
           key: "uid",
           sorter: true,
         },
+        { title: "p.order_status", dataIndex: "status", key: "status" },
         {
           title: "crm_o.customer_name",
           dataIndex: "customer_id",
           key: "customer_name",
-          sorter: true,
         },
+        { title: "n.email", dataIndex: "customer_email", key: "customer_email" },
+        { title: "n.phone", dataIndex: "customer_phone", key: "customer_phone" },
         {
           title: "crm_o.own_user_name",
           dataIndex: "own_user_id",
           key: "own_user_name",
-          sorter: true,
         },
-        {
+        { title: "crm_o.pay_car_type", dataIndex: "item_name", key: "item_name" },
+        { title: "crm_o.pay_progress", dataIndex: "paid_money_progress", key: "paid_money_progress" },
+        
+        /* {
           title: "crm_o.status",
           dataIndex: "status",
           key: "util",
@@ -519,42 +779,66 @@ export default {
           title: "crm_o.paid_money_progress",
           dataIndex: "paid_money_progress",
           key: "item",
-        },
+        }, */
         { title: "crm_o.money", dataIndex: "money", key: "money" },
-        { title: "crm_o.income_money", dataIndex: "paid_money", key: "money" },
-        { title: "crm_o.refunded_amount", dataIndex: "refunded", key: "money" },
+        // { title: "crm_o.income_money", dataIndex: "paid_money", key: "money" },//已回款
+        { title: "crm_o.paied_money", dataIndex: "paid_money", key: "money" },  //已付金额
+        { title: "crm_o.refunded_amount", dataIndex: "refunded", key: "money" },// 已退款
+        { title: "crm_o.pending_payment", dataIndex: "pending_money", key: "money" }, //待付款
         { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
         // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-        {
-          title: "crm_c.remark",
-          dataIndex: "remark",
-          key: "remark",
-          sorter: true,
-        },
-        {
+       
+        {title: 'crm_o.country_city', dataIndex: 'to_country', key: 'country'},
+        {title: 'crm_o.address', dataIndex: 'to_address', key: 'address'},
+       /*  {
           title: "crm_o.create_user",
           dataIndex: "create_user_id",
           key: "create_user_name",
           sorter: true,
-        },
-
-        {
+        }, */
+        
+        {title: 'n.store', dataIndex: 'store_name', key: 'store_name'},
+        {title: 'crm_oi.payment_type', dataIndex: 'payment_type', key: 'payment_type'},
+        /* {
           title: "crm_o.signing_date",
           dataIndex: "date",
           key: "time",
-          sorter: true,
         },
-          {
-              title: "d.create_time",
-              dataIndex: "create_time",
-              key: "time",
-              sorter: true,
-          },
+        {
+            title: "d.create_time",
+            dataIndex: "create_time",
+            key: "time",
+            sorter: true,
+        }, */
+        {
+            title: "crm_o.order_time",
+            dataIndex: "order_time",
+            key: "time",
+            sorter: true,
+        }, 
+        {
+            title: "crm_o.pay_time",
+            dataIndex: "payment_time",
+            key: "time",
+            sorter: true,
+        }, 
+        {
+            title: "crm_o.refund_time",
+            dataIndex: "refunded_time",
+            key: "time",
+            sorter: true,
+        }, 
+        {
+          title: "crm_c.remark",
+          dataIndex: "remark",
+          key: "remark",
+        },
         { title: "def.operate", key: "operation", fixed: "right" },
       ];
       return columns;
     },
-    rowSelection() {
+    // 注释多选删除功能
+    /*  rowSelection() {
       return {
         type: "checkbox",
         selectedRowKeys: this.selectedRowKeys,
@@ -578,17 +862,76 @@ export default {
           // this.$emit('submit', this.selectedRowKeys, this.selectedRowItems)
         },
       };
-    },
+    }, */
     lang() {
       return this.$store.state.lang;
+    },
+    tabList() {
+      let arr = ['全部','已支付','待付款','已退款', '已取消'];
+      let Order_Status_Map = this.Order_Status_Map;
+      arr = arr.map((item) => {
+          let obj;
+          for(let key in Order_Status_Map){
+            if(Order_Status_Map[key].zh === item) {
+              obj = Order_Status_Map[key];
+              break;
+            }
+          }
+          return obj
+      })
+      return arr;
     },
   },
   mounted() {
     this.getTableData();
     this.ownUserFetch()
-    this.createUserFetch()
+    // this.createUserFetch()
+    this.getRegionsData()
   },
   methods: {
+
+    countryCityStr(record) {
+      let str = '';
+      // {{ ==='' ? (record.source_type===1?'中国':undefined):`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
+      if(`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}`){
+        str = `${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}`
+      }else if(record.source_type===1){
+        str = '中国'
+      }
+      return str || '-'
+    },
+    // 选择地址
+    addressSelect(data){
+      this.searchForm.to_country = this.lang === 'zh' ? data?.country?.name : data?.country?.name_en;
+      this.searchForm.to_province = this.lang === 'zh' ? data?.province?.name : data?.province?.name_en;
+      this.searchForm.to_city =  this.lang === 'zh' ? data?.city?.name : data?.city?.name_en;
+
+      if(this.lang === 'zh' && data?.country?.code!=='CHN'){
+        this.searchForm.to_country = data?.country?.name_en;
+        this.searchForm.to_province = data?.province?.name_en;
+        this.searchForm.to_city = data?.city?.name_en;
+      }
+      // this.pageChange(1);
+    },
+    
+    // 获取照片
+    getSrcImg(name, type = 'png') {
+      const path = `../../assets/images/car/${name}.${type}`;
+      return modules[path]?.default;
+    },
+    // 获取区域
+    getRegionsData() {
+      Core.Api.RETAIL.regionsList({
+        key: "",
+      })
+        .then((res) => {
+          console.log("getRegionsData res:", res);
+          this.regionsList = res.list;
+        })
+        .catch((err) => {
+          console.log("getRegionsData err:", err);
+        });
+    },
     nameBoolean(v){
       const arr = this.nameColor.filter((el) => {
         return el.id == v.id
@@ -611,7 +954,7 @@ export default {
         });
     },
     // 创建人接口
-    createUserFetch(params = {}){       
+  /*   createUserFetch(params = {}){       
         Core.Api.CRMOrder.createUser({
             ...params         
         }).then((res) => {
@@ -621,7 +964,7 @@ export default {
                 this.createUserOptions = res.list;          
             }          
         });
-    },
+    }, */
     moreSearch() {
       this.show = !this.show;
     },
@@ -663,28 +1006,59 @@ export default {
       // 搜索
       this.pageChange(Core.Data.getItem('currPage')?Core.Data.getItem('currPage'): 1);
     },
-    handleOtherSearch(params) {
+    
+ /*    handleOtherSearch(params) {
       // 时间等组件化的搜索
       for (const key in params) {
         this.searchForm[key] = params[key];
       }
       this.pageChange(1);
+    }, */
+
+    // 下单时间
+    handleOtherSearchOrder(params) {
+      // 时间等组件化的搜索
+      this.searchForm.order_begin_time = params?.begin_time;
+      this.searchForm.order_end_time = params?.end_time;
+      // this.pageChange(1); 
     },
+
+    // 付款时间
+    handleOtherSearchPayment(params) {
+      this.searchForm.payment_begin_time = params?.begin_time;
+      this.searchForm.payment_end_time = params?.end_time;
+      // this.pageChange(1); 
+    },
+
+    // 退款时间
+    handleOtherSearchRefunded(params) {
+      // 时间等组件化的搜索
+      this.searchForm.refunded_begin_time = params?.begin_time;
+      this.searchForm.refunded_end_time = params?.end_time;
+      // this.pageChange(1); 
+    },
+
     handleSearchReset() {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
-      this.$refs.TimeSearch.handleReset();
+      this.$refs.TimeSearchOrder?.handleReset();
+      this.$refs.TimeSearchPayment?.handleReset();
+      this.$refs.TimeSearchRefunded?.handleReset();
       this.orderByFields = {};
+      this.areaMap = {};
+      this.$refs.addressRef?.handleReset();
       this.pageChange(1);
     },
     getTableData() {
       // 获取 表格 数据
-      this.loading = true;
+      // this.loading = true;
       Core.Api.CRMOrder.list({
         ...this.searchForm,
         order_by_fields: this.orderByFields,
         page: this.currPage,
         page_size: this.pageSize,
+        status : this.activeKey
+
       })
         .then((res) => {
           console.log("getTableData res:", res);
@@ -733,12 +1107,12 @@ export default {
         name: name,
       })
     },
-    handleCreateUserSearch(name) {
+    /* handleCreateUserSearch(name) {
       // 创建人条件搜索 下拉框
       this.createUserFetch({
         create_user_name: name,
       })
-    },
+    }, */
     handleDelete(id) {
       let _this = this;
       this.$confirm({
@@ -855,12 +1229,22 @@ export default {
       }
       this.upload.fileList = fileList;
     },
+
+    // 切换选项
+    tabChange() {
+      this.handleSearchReset()
+    }
   },
 };
 </script>
 
 <style lang="less" scoped>
-// #OrderList {}
+#OrderList {
+  .tab-box {
+    padding-left: 20px;
+    margin-bottom: -16px;
+  }
+}
 .search-text {
   margin-left: 30px;
   color: #006ef9;
@@ -872,5 +1256,45 @@ export default {
 
 .m-l-10 {
     margin-left: 10px;
+}
+
+
+.btns {
+    .fcc(space-between);
+    .btn-left {
+        .left-btn-style {
+            background-color: #94bfff;
+            color: #ffffff;
+        }
+    }
+    .btn-right {
+        
+    }
+}
+
+
+.m-b-20 {
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+.box-car {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  :deep(.ant-image-img) {
+    padding-right: 8px;
+    cursor: pointer;
+
+  }
+
+}
+
+.before-icon {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
 }
 </style>

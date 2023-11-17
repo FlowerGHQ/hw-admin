@@ -52,7 +52,7 @@
                     <a-col :xs='24' :sm='12' :lg='8' class='detail-item'>
                         <span class="key">{{ $t('dis.order_source') }}：</span>
                         <span class="value">
-                            {{ $Util.CRMTestDriveSourceFilter(detail.crm_test_drive_order?.channel, $i18n.locale) || "-" }}
+                            {{ $Util.orderTestSourceType(detail.crm_test_drive_order?.channel, $i18n.locale) || "-" }}
                         </span>
                     </a-col>
                     <!-- 试驾车型 -->
@@ -177,17 +177,13 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
-.email-style {
-    display: flex;
-    align-items: center;
-    
-    .spils {
-        display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+.gray-panel{
+   padding: 0 !important;
 }
-
+.desc-container{
+    padding-top: 0 !important;
+}
+:deep(.panel-content){
+  padding: 0 !important;
+}
 </style>

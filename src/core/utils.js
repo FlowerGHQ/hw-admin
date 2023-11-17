@@ -1253,11 +1253,6 @@ const Util = {
     let item = MAP[val + ""] || {}
     return item[to] || ""
   },
-  CRMTestDriveSourceFilter(val, to = "zh") {
-    const MAP = Const.test_drive.appointment_channel
-    let item = MAP[val + ""] || {}
-    return item[to] || ""
-  },
 
   /* =============== 试驾单 ================ */
   /* =============== 待办事项 ================ */
@@ -1390,12 +1385,6 @@ const Util = {
         let item = MAP[val + ''] || {}
         return item[to] || ''
     },
-    CRMTestDriveSourceFilter(val, to = 'zh') {
-        const MAP = Const.test_drive.appointment_channel
-        let item = MAP[val + ''] || {}
-        return item[to] || ''
-    },
-
     /* =============== 试驾单 ================ */
     /* =============== 待办事项 ================ */
     CRMToDoStatusFilter(val, to = 'zh') {
@@ -1603,6 +1592,48 @@ const Util = {
                 return COLOR_MAP[val + ''] || 'grey'
         }
     },
+    emailSubscriptionFilter(val, to = "text") {
+        const MAP = Const.SUBSCRIPTION.STATUS_MAP
+        let value = MAP[val + ""] || {}
+        return value[to] || "-"
+    },
+
+    // 门店-等级方法缺失-补充
+    storeLevel(val, to = 'zh') {
+        const MAP = Const.RETAIL.STORE_LEVEL
+        let item = MAP[val + ''] || {}
+        return item[to] || ''
+    },
+
+    // crm-订单管理-订单来源
+    orderSourceType(val, to = 'zh') {
+      const MAP = Const.CRM_ORDER.SOURCE_TYPE
+      let item = MAP[val + ''] || {}
+      return item[to] || ''
+    },
+
+    // crm-订单管理-订单状态
+    orderManageStatus(val, to = 'zh') {
+
+      const MAP = Const.CRM_ORDER.Order_Status_Map
+      let item = MAP[val + ''] || {}
+      return item || ''
+    },
+    // crm-订单管理-支付方式
+    orderPaymentType(val, to = 'zh') {
+
+      const MAP = Const.CRM_ORDER.PAYMENT_TYPE
+      let item = MAP[val + ''] || {}
+      return item[to] || ''
+    },
+    // crm-试驾单-来源
+    orderTestSourceType(val, to = 'zh') {
+
+      const MAP = Const.CRM_TEST_DRIVE.SOURCE_TYPE
+      let item = MAP[val + ''] || {}
+      return item[to] || ''
+    },
+    
 
 }
 
