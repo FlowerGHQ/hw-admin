@@ -71,13 +71,6 @@
                     <template v-if="column.key === 'customer_type'">
                         {{ $Util.CRMCustomerTypeFilter(text) || '个人客户' }}
                     </template>
-                    <!-- 用车城市 -->
-                    <template v-if="column.key === 'city'">
-                        <div v-if="record.country || record.province || record.city">
-                            {{ record.country || '' }} {{ record.province || '' }} {{ record.city || '' }}
-                        </div>
-                        <div v-else>-</div>
-                    </template>
                     <template v-if="column.key === 'source_type'">
                         <span v-if="Landing_Page[text]">
                             {{ Landing_Page[text][$i18n.locale] }}{{ "-" }}{{ $i18n.locale == 'en' ?
@@ -162,7 +155,7 @@ export default {
                 { title: '创建人', dataIndex: 'update_user_name', key: 'item' },
                 { title: '区域', dataIndex: 'group_name', key: 'item' },
                 { title: '成单数量', dataIndex: 'order_count', key: 'item' },
-                { title: '用车城市', dataIndex: 'address', key: 'city' },
+                { title: '用车城市', dataIndex: 'address', key: 'item' },
                 { title: '创建时间', dataIndex: 'create_time', key: 'time' },
                 { title: '备注', dataIndex: 'remark', key: 'item' },
                 { title: '来源类型', dataIndex: 'source_type', key: 'source_type' },
