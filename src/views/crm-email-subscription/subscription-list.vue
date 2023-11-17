@@ -29,6 +29,26 @@
                             {{ text || '-'}}
                         </a-tooltip>
                     </template>
+                    <template v-if="column.key === 'email'">
+                        <div v-if="text !== ''" class="phone-hover">
+                            {{ text || "-" }}
+                            <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i
+                                class="icon i_eyes" /></a-button>
+                        </div>
+                        <div v-else>
+                            {{ text || "-" }}
+                        </div>
+                    </template>
+                    <template v-if="column.key === 'phone'">
+                        <div v-if="text !== ''" class="phone-hover">
+                            {{ text || "-" }}
+                            <a-button type="link" v-if="!record.flag_eyes" class="switch" @click="handleChecking(record)"><i
+                                class="icon i_eyes" /></a-button>
+                        </div>
+                        <div v-else>
+                            {{ text || "-" }}
+                        </div>
+                    </template>
                     <template v-if="column.key === 'email_subscription_status'">
                         <div class="status status-bg status-tag" :class="$Util.emailSubscriptionFilter(text,'color')">
                             {{ $Util.emailSubscriptionFilter(text) }}
@@ -127,8 +147,8 @@ export default {
         tableColumns() {
             let columns = [
                 { title: '名称', dataIndex: 'name', key: 'detail' },
-                { title: '手机号', dataIndex: 'phone',key: 'item'},  // 工单类型
-                { title: '邮箱', dataIndex: 'email',key: 'item'},
+                { title: '手机号', dataIndex: 'phone',key: 'phone'},  // 工单类型
+                { title: '邮箱', dataIndex: 'email',key: 'email'},
                 { title: '标签', dataIndex: 'label_list', key: 'label_list' },
                 { title: '邮箱订阅状态', dataIndex: 'email_subscription_status', key: 'email_subscription_status'},
                 { title: '客户类型', dataIndex: 'customer_type', key: 'customer_type' },
@@ -200,10 +220,35 @@ export default {
             }).finally(() => {
                 this.loading = false;
             });
-        }
+        },
+        // 查看完整邮箱
+        handleChecking(item) {
+            Core.Api.CRMCustomer.checking({
+                id: item.id,
+            }).then((res) => {
+                item.phone = res.detail.phone;
+                item.email = res.detail.email;
+                item.flag_eyes = true;
+            });
+        },
     }
 };
 </script>
 
 <style lang="less" scoped>
+.i_eyes {
+    font-size: 12px;
+}
+
+.phone-hover {
+    .switch {
+        opacity: 0;
+    }
+
+    &:hover {
+        .switch {
+            opacity: 1;
+        }
+    }
+}
 </style>
