@@ -32,7 +32,6 @@ for (const path in modules) {
     }
     constModules[result] = modules[path].default  // 值赋值
 
-    console.log("最终的结果", constModules);
 }
 
 export default constModules;

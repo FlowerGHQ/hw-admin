@@ -168,7 +168,6 @@ export default {
     created() {
     },
     mounted() {
-        console.log('this.disabledChecked:', this.disabledChecked)
         this.getTableData()
     },
     methods: {

@@ -105,6 +105,47 @@
               </a-select>
             </div>
           </a-col>
+          <!-- 订单来源 -->
+          <a-col
+            :xs="24"
+            :sm="24"
+            :xl="8"
+            :xxl="6"
+            class="search-item"
+            v-if="show"
+          >
+            <div class="key">{{ $t("dis.order_source") }}：</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.channel"
+                :placeholder="$t('def.select')"
+                @change="handleSearch"
+              >
+                <a-select-option :value="0">
+                  {{ lang === "zh" ? "全部" : "all" }}
+                </a-select-option>
+                <a-select-option
+                  v-for="item of SOURCE_TYPE"
+                  :key="item.key"
+                  :value="item.value"
+                  >{{
+                    lang === "zh" ? item.zh : item.en
+                  }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
+          <!-- 邮箱 -->
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+            <div class="key">{{ $t("n.email") }}：</div>
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.email"
+                @keydown.enter="handleSearch"
+              />
+            </div>
+          </a-col>
           <a-col
             :xs="24"
             :sm="24"
@@ -179,7 +220,7 @@
           <template #bodyCell="{ column, text, record }"> 			
 			<!-- 订单来源	 -->
 			<template v-if="column.key === 'channel'">
-				{{ $Util.CRMTestDriveSourceFilter(text, $i18n.locale) || "-"}}
+				{{ $Util.orderTestSourceType(text, $i18n.locale) || "-"}}
             </template>
 			<!-- 创建时间	 -->
 			<template v-if="column.key === 'create_time'">
@@ -333,7 +374,7 @@ export default {
       // 分页
       currPage: 1,
       pageSize: 20,
-
+      SOURCE_TYPE: Core.Const.CRM_TEST_DRIVE.SOURCE_TYPE, //订单来源
       CRM_STATUS: Core.Const.CRM_TEST_DRIVE.STATUS_MAP,
       total: 0,
       orderByFields: {},
@@ -347,6 +388,8 @@ export default {
         type: "",
         status: 0,
         crm_dict_id: 0,
+        channel: 0, // 订单来源
+        email: '',  // 邮箱
       },
       batchForm: {
         own_user_id: "",
@@ -465,7 +508,7 @@ export default {
         case "detail": // 详情
           routeUrl = this.$router.resolve({
             path: "/crm-customer/customer-detail",
-            query: { id: item.customer_id, store_id: item.store.id },
+            query: { id: item.customer_id, store_id: item?.store?.id },
           });
           window.open(routeUrl.href, "_self");
           break;  
