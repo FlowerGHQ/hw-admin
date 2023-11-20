@@ -26,7 +26,7 @@
               <span class="use tabsty">{{ $Util.storeType(form.type) }}</span>
               <!-- 等级 -->
               <span class="test-drive tabsty">{{
-                $Util.storeLevel(form.level)
+                $Util.storeLevel(form.level,lang)
               }}</span>
               <!-- 状态 -->
               <span class="store-type tabsty">{{
@@ -150,7 +150,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, getCurrentInstance } from "vue";
 import { useRoute,useRouter } from "vue-router";
 import CrmEditStorePeo from "@/components/crm/panel/CrmEditStorePeo.vue";
 import ShopCarList from "./components/shop-car-list.vue";
@@ -160,6 +160,7 @@ import ShiftCon from "./components/ShiftCon.vue";
 import Core from "../../../core";
 import dayjs from "dayjs";
 
+const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter()
 const activeKey = ref("sto_person");
@@ -192,6 +193,10 @@ const form = ref({
   },
   user_id: "", //店长用户id
 });
+
+const lang = computed(()=>{
+  return proxy.$store.state.lang;
+})
 onMounted(() => {
   // getWarehouseDetail()
   form.value.id = Number(route.query.id) || 0;

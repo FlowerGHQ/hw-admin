@@ -230,7 +230,7 @@ export default {
                 let con = ""
                 item.forEach(it => {
                   switch (it.key) {
-                    case "crm_o.address" :
+                    case "crm_o.pay_address" :
                         if(!it.old_value) {
                             con += "将 " + this.$t(it.key)+" 从【 】更新为【" + this.valueParsing(it.key, it.new_value) + "】, "
                         } else if (!it.new_value) {
@@ -305,7 +305,7 @@ export default {
                 // 订单
                 case "crm_o.type" : return this.$Util.CRMOrderTypeFilter(value, this.lang)
                 case "crm_o.status" : return this.$Util.CRMOrderStatusFilter(value, this.lang)
-                case "crm_o.address" : return this.$Util.CRMAddressLogFilter(value, this.lang)
+                case "crm_o.pay_address" : return this.$Util.CRMAddressLogFilter(value, this.lang)
                 // 回款单
                 case "crm_oi.type": return this.$Util.CRMOrderIncomeTypeFilter(value, this.lang)
                 case "crm_oi.status": return this.$Util.CRMOrderIncomeStatusFilter(value, this.lang)
@@ -347,6 +347,8 @@ export default {
 
 <style lang="less" scoped>
 .ActionRecord {
+    padding: 0;
+    box-shadow: none;
     .table-container {
         margin-top: -10px;
     }

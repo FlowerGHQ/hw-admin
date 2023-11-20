@@ -2136,6 +2136,29 @@ const routes = [
 			// },
 		]
 	},
+	{ // 邮箱订阅状态
+		path: '/crm-email-subscription',
+		component: Layout,
+		redirect: '/crm-email-subscription/subscription-list',
+		name: 'CRMEmailSubscription',
+        type: [ROUTER_TYPE.CRM],
+		meta: {
+			title: '邮箱订阅状态',
+			title_en: 'Mailbox subscription status',
+			icon: 'i_s_customer',
+		},
+		children: [
+			{
+				path: 'subscription-list',
+				name: 'SubscriptionList',
+				component: () => import('@/views/crm-email-subscription/subscription-list.vue'),
+				meta: {
+					title: '邮箱订阅状态列表',
+					title_en: 'List of email subscription status',
+				}
+			},
+		]
+	},
 	{ // 商机管理
 		path: '/crm-bo',
 		component: Layout,
@@ -2184,14 +2207,14 @@ const routes = [
 			},
 		]
 	},
-	{ // 合同订单
+	{ // 订单列表
 		path: '/crm-order',
 		component: Layout,
 		redirect: '/crm-order/order-list',
 		name: 'CRMOrder',
         type: [ROUTER_TYPE.CRM],
 		meta: {
-			title: '合同订单',
+			title: '订单管理',
 			title_en: 'Contract Order',
 			icon: 'i_crm_order',
             auth: ["crm-order.list"],
@@ -2202,7 +2225,7 @@ const routes = [
 				name: 'OrderList',
 				component: () => import('@/views/crm-order/order-list.vue'),
 				meta: {
-					title: '合同列表',
+					title: '订单列表',
 					title_en: 'Contract Order list',
                     auth: ["crm-order.list"],
 				}
@@ -2212,6 +2235,7 @@ const routes = [
                 name: 'OrderAuditList',
                 component: () => import('@/views/crm-order/order-audit-list.vue'),
                 meta: {
+					hidden: true,
                     title: '待审列表',
                     title_en: 'Pending List',
                     auth: ["crm-order.list"],
@@ -2221,7 +2245,8 @@ const routes = [
 				path: 'order-pool-list',
 				name: 'OrderPoolList',
 				component: () => import('@/views/crm-order/order-pool-list.vue'),
-				meta: {
+                    meta: {
+					hidden: true,
 					title: '公海列表',
 					title_en: 'Pool List',
 					auth: ["crm-order.list"],
@@ -2245,7 +2270,7 @@ const routes = [
 				component: () => import('@/views/crm-order/order-detail.vue'),
 				meta: {
 					hidden: true,
-					title: '合同详情',
+					title: '订单详情',
 					title_en: 'Contract Details',
 					parent: '/crm-order/order-list',
                     auth: ["crm-order.detail"],
