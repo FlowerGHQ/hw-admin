@@ -1183,7 +1183,6 @@ const routes = [
                 component: () =>
                     import ('@/views/production/incoming-inspection.vue'),
                 meta: {
-                    hidden: true,
                     title: '来料检验',
 	                title_en: 'Incoming Inspection',
                     roles: [LOGIN_TYPE.ADMIN],
