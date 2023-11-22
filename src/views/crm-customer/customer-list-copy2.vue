@@ -615,6 +615,7 @@ export default {
             this.handleGroupTree()
             this.group_id = undefined;
             this.batchType = type;
+            this.batchForm.group_id = undefined;
             this.batchGroupShow = true;
 
         },
@@ -623,6 +624,7 @@ export default {
             this.batchGroupShow = false;
             this.batchType = '';
         },
+        // 区域选择-弹窗-请求确定
         handleBatchGroupSubmit() {
             if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
                 return this.$message.warning(this.$t('def.enter'))
@@ -640,6 +642,9 @@ export default {
                         this.handleBatchGroupClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
+                    }).finally(()=>{
+                        this.selectedRowKeys  = [];
+                        this.batchForm.group_id = undefined;
                     })
                     break;
             }
