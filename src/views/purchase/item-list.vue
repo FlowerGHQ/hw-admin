@@ -203,7 +203,7 @@ export default {
             this.pageChange(1);
         },
         handleCategoryChange(category) {
-            console.log('handleCategoryChange category:', category)
+            // console.log('handleCategoryChange category:', category)
             this.tableData = []
             this.isBomShow(category)
             // this.bomShow = false
