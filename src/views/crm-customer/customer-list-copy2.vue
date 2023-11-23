@@ -629,6 +629,7 @@ export default {
         handleBatchGroupSubmit() {
             if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
                 return this.$message.warning(this.$t('def.enter'))
+            }
             if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
                 return this.$message.warning(this.$t('def.enter'))
             }
