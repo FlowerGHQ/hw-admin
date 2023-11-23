@@ -119,9 +119,9 @@ export default {
     },
     watch: {
         category_id: {
-            handler(newValue) {  
-                console.log("输出的值而已", newValue);              
+            handler(newValue) {
                 this.searchForm.category_id = newValue;
+                this.tableData = []
                 this.getTableData();
                 this.isBomShow(this.searchForm.category_id);
             },
