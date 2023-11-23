@@ -628,6 +628,8 @@ export default {
         handleBatchGroupSubmit() {
             if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
                 return this.$message.warning(this.$t('def.enter'))
+            if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
+                return this.$message.warning(this.$t('def.enter'))
             }
             this.batchGroupShow = true;
 
@@ -643,8 +645,8 @@ export default {
                     }).catch(err => {
                         console.log("handleDelete err", err);
                     }).finally(()=>{
-                        this.selectedRowKeys  = [];
                         this.batchForm.group_id = undefined;
+                        this.selectedRowKeys = []
                     })
                     break;
             }
