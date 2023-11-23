@@ -1,8 +1,7 @@
 <template>
     <div id="PurchaseItemList">
         <div
-            class="item-content-container"
-            :class="firstLevelId ? '' : 'full-content'"
+            class="item-content-container full-content"
         >
             <template v-if="!bomShow">
                 <div class="item-content" v-if="tableData.length">
