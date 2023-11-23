@@ -66,6 +66,7 @@ export default {
         ExploredContentPay,
     },
     props: {
+        // 顶部tab-切换id传值
         category_id: { type: Number },
         name: { name: String },
     },
@@ -73,9 +74,10 @@ export default {
         category_id: {
             immediate: true,
             handler(n) {
-                console.log("watch category_id", n)
                 this.searchForm.category_id = n
+                // tab-切换进行请求操作
                 this.getTableData();
+                // tab-切换进行请求操作
                 this.isBomShow(this.searchForm.category_id);
             }
         },
@@ -201,7 +203,7 @@ export default {
             this.pageChange(1);
         },
         handleCategoryChange(category) {
-            // console.log('handleCategoryChange category:', category)
+            console.log('handleCategoryChange category999999999999999999999:', category)
             this.tableData = []
             this.isBomShow(category)
             // this.bomShow = false
@@ -318,13 +320,14 @@ export default {
                 this.orderId = res.id
             })
         },
-
+        // 首次进入进行请求-采购订单list
         getCategoryList() {
             Core.Api.ItemCategory.tree({
                 id: 0,
                 is_authority: 1,
             }).then(res => {
                 this.categoryList = res.list
+                // 切换tab-根据tabId请求
                 this.handleCategoryChange(this.searchForm.category_id)
             })
         },
