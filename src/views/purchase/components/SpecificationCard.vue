@@ -5,7 +5,7 @@
     @click="changeData(data.id, i)">
     <div class="card-left">
       <div class="card-img">
-        <img :src="$Util.imageFilter(data.imgs,2)" />
+        <img :src="getImgUrl(data.imgs)" />
       </div>
       <div class="card-info">
         <div class="title">
@@ -119,6 +119,17 @@ export default {
     }
   },
   methods: {
+    getImgUrl(img) {
+      if (img != undefined && img != null && img != "") {
+        let img = this.imgs.split(",");
+        if (img.length === 0) {
+          return;
+        }
+        return this.$Util.imageFilter(img[0],2)
+      }else{
+        return this.$Util.imageFilter('',2)
+      }
+    },
     // 增加商品数量
     add() {
       this.value++;
