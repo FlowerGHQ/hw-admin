@@ -84,7 +84,7 @@ export default {
         name: {
             immediate: true,
             handler(n) {
-                console.log("watch name", n)
+                // console.log("watch name", n)
                 this.searchForm.name = n
 
             }
@@ -191,7 +191,7 @@ export default {
             this.getTableData()
         },
         pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
+            // console.log('pageSizeChange size:', size)
             this.pageSize = size
             this.getTableData()
         },
@@ -214,23 +214,23 @@ export default {
                     this.$refs.CategoryTree.handleReset();
                 })
             }
-            console.log('pageSizeChange category_id:', this.searchForm.category_id)
+            // console.log('pageSizeChange category_id:', this.searchForm.category_id)
             this.pageChange(1)
         },
         // 是否显示爆炸图
         isBomShow(id) {
             this.bomShow = false
-            console.log(' categoryList:', this.categoryList)
+            // console.log(' categoryList:', this.categoryList)
             for (let i = 0; i < this.categoryList.length; i++) {
-                console.log(' categoryList:', this.categoryList)
+                // console.log(' categoryList:', this.categoryList)
                 if (this.categoryList[i].id === id) {
                     this.bomShow = this.categoryList[i].display_mode === 2
-                    console.log("bomShow", this.bomShow)
+                    // console.log("bomShow", this.bomShow)
                     return
                 }
-                console.log("bomShow", this.bomShow)
+                // console.log("bomShow", this.bomShow)
                 if (this.categoryList[i].children != null) {
-                    console.log("bomShow", this.bomShow)
+                    // console.log("bomShow", this.bomShow)
                     this.isBomChildren(this.categoryList[i], id);
                 }
             };
@@ -242,7 +242,7 @@ export default {
                     this.isBomChildren(element.children[i], id);
                 }
                 // console.log("element.id",element.children[i].id)
-                console.log("id", id)
+                // console.log("id", id)
                 if (element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2
 
@@ -275,7 +275,7 @@ export default {
             }
 
             Core.Api.Item.list(Core.Util.searchFilter(params)).then(res => {
-                console.log("getTableData res:", res)
+                // console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
             }).catch(err => {
@@ -293,18 +293,18 @@ export default {
 
         getShopCartData(flag = false) { // 获取 购物车 数据
             Core.Api.ShopCart.list().then(res => {
-                console.log('getShopCartData res:', res)
+                // console.log('getShopCartData res:', res)
                 this.briefVisible = flag
                 let item = res.list[0] || {}
                 this.briefList = [item.item || {}]
-                console.log('this.briefList: ', this.briefList);
+                // console.log('this.briefList: ', this.briefList);
                 this.briefCount = res.count;
             })
         },
 
         handleCartAdd(item) { // 添加到购物车
             let _this = this;
-            console.log('handleCartAdd item:', item)
+            // console.log('handleCartAdd item:', item)
             if (item.set_id && item.attr_list.length > 1) {
                 this.routerChange('detail', item)
                 return
@@ -314,7 +314,7 @@ export default {
                 amount: 1,
                 price: item.purchase_price
             }).then(res => {
-                console.log('res:', res)
+                // console.log('res:', res)
                 this.$message.success(_this.$t('i.add_success'))
                 this.getShopCartData(true);
                 this.orderId = res.id
@@ -361,7 +361,7 @@ export default {
                 ...form,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
-            console.log("handleRepairExport exportUrl", exportUrl)
+            // console.log("handleRepairExport exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
@@ -369,12 +369,12 @@ export default {
         // 备注
         handleRemarkEditBlur(item) {
             let _item = Core.Util.deepCopy(item)
-            console.log('handleCountEditBlur _item:', _item)
+            // console.log('handleCountEditBlur _item:', _item)
             Core.Api.ShopCart.remark({
                 id: this.orderId,
                 remark: _item.remark,
             }).then(res => {
-                console.log('handleRemarkEditBlur: res', res)
+                // console.log('handleRemarkEditBlur: res', res)
             }).catch(err => {
                 console.log('handleRemarkEditBlur: err', err)
             })
