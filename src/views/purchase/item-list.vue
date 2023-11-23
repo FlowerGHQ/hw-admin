@@ -18,23 +18,19 @@
                             </div>
                             <p class="sub">{{ item.code || "-" }}</p>
                             <p class="name" v-if="lang == 'zh'">
-                                {{
-                                    item.name ? lang == "zh" ? item.name : item.name_en : "-"
+                                {{                                    
+                                    item.name || "-"
                                 }}
                             </p>
                             <p class="name" v-else>
                                 {{
-                                    item?.material?.name_en
-                                        ? item?.material?.name_en
-                                        : item.name_en
-                                        ? item.name_en
-                                        : "-"
+                                    item.name_en || "-"
                                 }}
                             </p>
-                            <p class="desc">&nbsp;</p>
+                            <!-- item.original_price_currency.toUpperCase() === MONETARY_TYPE['€'] // 后期单位可能要变成联动的 -->
                             <p
-                                v-if="currency === 'eur' || currency === 'EUR'"
-                                class="price"
+                                v-if="item.original_price_currency === 'eur' || item.original_price_currency === 'EUR'"
+                                class="price m-t-22"
                             >
                                 {{ 
                                     $Util.priceUnitFilter(currency)
@@ -43,19 +39,23 @@
                                     $Util.countFilter(item[priceKey + "eur"])
                                 }}
                             </p>
-                            <p class="price" v-else>
-                                {{ $Util.priceUnitFilter(currency)
-                                }}{{
+                            <p class="price m-t-22" v-else>
+                                {{
+                                    $Util.priceUnitFilter(currency)
+                                }}
+                                {{
                                     $Util.countFilter(item[priceKey + "usd"])
                                 }}
                             </p>
+                            <!-- 添加到购物车 -->
                             <a-button
                                 class="btn"
                                 type="primary"
                                 ghost
                                 @click.stop="handleCartAdd(item)"
-                                >{{ $t("i.cart") }}</a-button
                             >
+                                {{ $t("i.cart") }}
+                            </a-button>
                         </div>
                     </div>
                     <!-- 分页 -->
@@ -87,7 +87,7 @@
                     :desc="$t('i.no_search_list')"
                 />
             </template>
-            <div class="bom-content" v-else>
+            <div class="bom-content" v-else>                
                 <ExploredContentPay
                     :key="menaKey"
                     :id="searchForm.category_id"
@@ -105,8 +105,7 @@ import Core from "../../core";
 import SimpleImageEmpty from "../../components/common/SimpleImageEmpty.vue";
 import { ExportOutlined } from "@ant-design/icons-vue";
 import ExploredContentPay from "./components/ExploredContentPay.vue";
-const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP;
-const ITEM = Core.Const.ITEM;
+const MONETARY_TYPE = Core.Const.ITEM.MONETARY_TYPE;
 
 export default {
     name: "PurchaseItemList",
@@ -120,8 +119,9 @@ export default {
         name: { name: String }, // 搜索传过来的名称
     },
     watch: {
-        category_id: {            
-            handler(newValue) {                
+        category_id: {
+            handler(newValue) {  
+                console.log("输出的值而已", newValue);              
                 this.searchForm.category_id = newValue;
                 this.getTableData();
                 this.isBomShow(this.searchForm.category_id);
@@ -136,9 +136,7 @@ export default {
     data() {
         return {
             Core,
-            loginType: Core.Data.getLoginType(),
-            pageType: "list",
-            SEARCH_TYPE_MAP,
+            MONETARY_TYPE,
             // 加载
             loading: false,
             searchType: Core.Const.ITEM.SEARCH_TYPE.NAME,
@@ -149,33 +147,18 @@ export default {
             tableData: [],
 
             // 搜索
-            categoryList: [],
-            firstLevelId: 0,
-            firstLevelName: {
-                name: "",
-                name_en: "",
-            },
+            categoryList: [],                       
             searchForm: {
                 name: "",
                 name_en: "",
                 category_id: "",
             },
 
-            // 购物车简略面板
-            briefVisible: false,
-            briefList: [],
-            briefCount: 0,
-
-            //  备注
-            labelCol: { style: { width: "40px" } },
-            wrapperCol: { span: 14 },
-            orderId: "",
 
             // 是否显示爆炸图
             bomShow: false,
             menaKey: 1,
-            currency: "",
-            MONETARY_TYPE_MAP: ITEM.MONETARY_TYPE_MAP, // 单位
+            currency: "", // 获取本地的单位
         };
     },
     computed: {
@@ -190,8 +173,7 @@ export default {
     mounted() {
         this.currency = Core.Data.getCurrency();
         this.getTableData();
-        this.getCategoryList();
-        this.getShopCartData();
+        this.getCategoryList();        
     },
 
     methods: {
@@ -227,16 +209,7 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
-        },
-        getShopCartData(flag = false) {
-            // 获取 购物车 数据
-            Core.Api.ShopCart.list().then((res) => {                
-                this.briefVisible = flag;
-                let item = res.list[0] || {};
-                this.briefList = [item.item || {}];                
-                this.briefCount = res.count;
-            });
-        },
+        },  
         handleCartAdd(item) {
             // 添加到购物车
             let _this = this;            
@@ -249,9 +222,7 @@ export default {
                 amount: 1,
                 price: item.purchase_price,
             }).then((res) => {                
-                this.$message.success(_this.$t("i.add_success"));
-                this.getShopCartData(true);
-                this.orderId = res.id;
+                this.$message.success(_this.$t("i.add_success"));                
             });
         },
         getCategoryList() {
@@ -259,47 +230,11 @@ export default {
                 id: 0,
                 is_authority: 1,
             }).then((res) => {
-                this.categoryList = res.list;
-                this.handleCategoryChange(this.searchForm.category_id);
+                this.categoryList = res.list;                
+            }).catch(err => {
+                console.log("获取类型: err", err);
             });
         },
-        handleRepairExport() {
-            // 订单导出
-            this.exportDisabled = true;
-
-            let form = Core.Util.deepCopy(this.searchForm);
-
-            // 编码
-            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE) {
-                form.code = form.name;
-                form.name = "";
-            }
-
-            for (const key in form) {
-                form[key] = form[key] || "";
-            }
-            let exportUrl = Core.Api.Export.exportOrderPrice({
-                ...form,
-                language: this.$i18n.locale === "en" ? 1 : 0,
-            });            
-            window.open(exportUrl, "_blank");
-            this.exportDisabled = false;
-        },
-        // 备注
-        handleRemarkEditBlur(item) {
-            let _item = Core.Util.deepCopy(item);            
-            Core.Api.ShopCart.remark({
-                id: this.orderId,
-                remark: _item.remark,
-            })
-                .then((res) => {
-                    console.log("handleRemarkEditBlur: res", res);
-                })
-                .catch((err) => {
-                    console.log("handleRemarkEditBlur: err", err);
-                });
-        },
-
         /* Fetch end*/
 
         /* methods start*/
@@ -351,18 +286,7 @@ export default {
         handleSearch() {
             this.pageChange(1);
         },
-        /* methods end*/        
-        handleCategoryChange(category) {            
-            this.tableData = [];
-            this.isBomShow(category);            
-            this.searchForm.category_id = category;
-            if (this.firstLevelId && category === this.firstLevelId) {
-                this.firstLevelName = this.categoryList.find(
-                    (i) => i.id === category
-                );          
-            }
-            this.pageChange(1);
-        },
+        /* methods end*/
         // 是否显示爆炸图
         isBomShow(id) {
             this.bomShow = false;            
@@ -383,28 +307,14 @@ export default {
                 }                                
                 if (element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2;
-
                     return;
                 }
             }
-        },        
+        },
 
         //
         getData() {
             this.getTableData();
-        },
-
-        handleExportConfirm() {
-            // 确认订单是否导出
-            let _this = this;
-            this.$confirm({
-                title: _this.$t("pop_up.sure") + _this.$t("n.export") + "?",
-                okText: _this.$t("def.sure"),
-                cancelText: _this.$t("def.cancel"),
-                onOk() {
-                    _this.handleRepairExport();
-                },
-            });
         },
     },
 };
@@ -782,5 +692,9 @@ export default {
         opacity: 0;
         display: none;
     }
+}
+
+.m-t-22 {
+    margin-top: 22px !important;
 }
 </style>
