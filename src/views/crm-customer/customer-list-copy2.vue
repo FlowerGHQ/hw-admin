@@ -614,6 +614,7 @@ export default {
             }
             this.handleGroupTree()
             this.group_id = undefined;
+            this.batchForm.group_id = undefined;
             this.batchType = type;
             this.batchGroupShow = true;
 
