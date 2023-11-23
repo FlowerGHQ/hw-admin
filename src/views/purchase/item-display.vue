@@ -15,7 +15,7 @@
         @handleChangeIndex="changeId"
         v-else />
     </div>
-    <div class="info-content" v-if="this.specList.length <= 0">
+    <div class="info-content" v-if="this.specList.length <= 1">
       <div>
         <div class="title" v-if="lang == 'zh'">
           {{ $i18n.locale == "zh" ? detail.name : detail.name_en }}
