@@ -557,6 +557,8 @@ const messages = {
             price: '价格',
             price_suggest: '建议零售价包括增值税',
             commercial_specification: '商品规格',
+            // 商品图片
+            commercial_picture: '商品图片',
             fittings: '配件',
             no_search_list: '暂无满足搜索条件的商品',
             no_bom_list: '暂无爆炸图列表',
@@ -3197,6 +3199,7 @@ const messages = {
             price: 'Price',
             price_suggest: 'The Recommended Retail Price Includes Vat',
             commercial_specification: 'Product Specifications',
+            commercial_picture: 'Product Picture',
             fittings: 'Spare Parts',
             no_search_list: 'There Is No Product That Meets The Search Conditions',
             no_bom_list: 'No Explosion Chart List',
