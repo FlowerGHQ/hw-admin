@@ -1,98 +1,143 @@
 <template>
     <div id="PurchaseItemList">
-        <div class="item-content-container" :class="firstLevelId ? '' : 'full-content'">
+        <div
+            class="item-content-container"
+            :class="firstLevelId ? '' : 'full-content'"
+        >
             <template v-if="!bomShow">
                 <div class="item-content" v-if="tableData.length">
                     <div class="list-container">
-                        <div class="list-item" v-for="item of tableData" :key="item.id"
-                            @click="routerChange('detail', item)">
+                        <div
+                            class="list-item"
+                            v-for="item of tableData"
+                            :key="item.id"
+                            @click="routerChange('detail', item)"
+                        >
                             <div class="cover">
                                 <img :src="$Util.imageFilter(item.logo, 2)" />
                             </div>
-                            <p class="sub">{{ item.code || '-' }}</p>
-                            <!-- <p class="sub" v-if="item.type === Core.Const.ITEM.TYPE.PRODUCT">{{ '' || ' ' }} &ensp;</p> -->
-
-                            <p class="name" v-if="lang == 'zh'">{{ item.name ? lang == 'zh' ? item.name : item.name_en : '-'
-                            }}</p>
-                            <p class="name" v-else>{{ item?.material?.name_en ? (item?.material?.name_en) :
-                                (item.name_en ? item.name_en : '-' )}}</p>
+                            <p class="sub">{{ item.code || "-" }}</p>
+                            <p class="name" v-if="lang == 'zh'">
+                                {{
+                                    item.name ? lang == "zh" ? item.name : item.name_en : "-"
+                                }}
+                            </p>
+                            <p class="name" v-else>
+                                {{
+                                    item?.material?.name_en
+                                        ? item?.material?.name_en
+                                        : item.name_en
+                                        ? item.name_en
+                                        : "-"
+                                }}
+                            </p>
                             <p class="desc">&nbsp;</p>
-                            <p class="price" v-if="currency === 'eur' || currency === 'EUR'">
-                                {{ $Util.priceUnitFilter(currency) }}{{ $Util.countFilter(item[priceKey + 'eur']) }}
+                            <p
+                                v-if="currency === 'eur' || currency === 'EUR'"
+                                class="price"
+                            >
+                                {{ 
+                                    $Util.priceUnitFilter(currency)
+                                }}
+                                {{
+                                    $Util.countFilter(item[priceKey + "eur"])
+                                }}
                             </p>
                             <p class="price" v-else>
-                                {{ $Util.priceUnitFilter(currency) }}{{ $Util.countFilter(item[priceKey + 'usd']) }}
+                                {{ $Util.priceUnitFilter(currency)
+                                }}{{
+                                    $Util.countFilter(item[priceKey + "usd"])
+                                }}
                             </p>
-                            <a-button class="btn" type="primary" ghost @click.stop="handleCartAdd(item)">{{ $t('i.cart')
-                            }}</a-button>
+                            <a-button
+                                class="btn"
+                                type="primary"
+                                ghost
+                                @click.stop="handleCartAdd(item)"
+                                >{{ $t("i.cart") }}</a-button
+                            >
                         </div>
                     </div>
+                    <!-- 分页 -->
                     <div class="paging-container">
-                        <a-pagination v-model:current="currPage" :page-size='pageSize' :total="total" show-quick-jumper
-                            show-size-changer show-less-items
-                            :show-total="total => $t('n.all_total') + ` ${total} ` + $t('in.total')"
-                            :hide-on-single-page='false' :pageSizeOptions="['10', '20', '30', '40']" @change="pageChange"
-                            @showSizeChange="pageSizeChange" />
+                        <a-pagination
+                            v-model:current="currPage"
+                            :page-size="pageSize"
+                            :total="total"
+                            show-quick-jumper
+                            show-size-changer
+                            show-less-items
+                            :show-total="
+                                (total) =>
+                                    $t('n.all_total') +
+                                    ` ${total} ` +
+                                    $t('in.total')
+                            "
+                            :hide-on-single-page="false"
+                            :pageSizeOptions="['10', '20', '30', '40']"
+                            @change="pageChange"
+                            @showSizeChange="pageSizeChange"
+                        />
                     </div>
                 </div>
-                <SimpleImageEmpty class="item-content-empty" v-else :desc="$t('i.no_search_list')" />
+                <!-- 空页面 -->
+                <SimpleImageEmpty
+                    v-else
+                    class="item-content-empty"
+                    :desc="$t('i.no_search_list')"
+                />
             </template>
             <div class="bom-content" v-else>
-                <ExploredContentPay v-if="bomShow" :key="menaKey" :id="searchForm.category_id" :data="tableData"
-                    @change="getData"></ExploredContentPay>
+                <ExploredContentPay
+                    :key="menaKey"
+                    :id="searchForm.category_id"
+                    :data="tableData"
+                    @change="getData"
+                ></ExploredContentPay>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-import Core from '../../core';
+import Core from "../../core";
 
-import CategoryTree from './components/CategoryTree.vue'
-import SimpleImageEmpty from '../../components/common/SimpleImageEmpty.vue'
-import { ExportOutlined } from '@ant-design/icons-vue';
-import ExploredContentPay from './components/ExploredContentPay.vue';
-const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP
-const ITEM = Core.Const.ITEM
-
-
+import SimpleImageEmpty from "../../components/common/SimpleImageEmpty.vue";
+import { ExportOutlined } from "@ant-design/icons-vue";
+import ExploredContentPay from "./components/ExploredContentPay.vue";
+const SEARCH_TYPE_MAP = Core.Const.ITEM.SEARCH_TYPE_MAP;
+const ITEM = Core.Const.ITEM;
 
 export default {
-    name: 'PurchaseItemList',
+    name: "PurchaseItemList",
     components: {
-        SimpleImageEmpty,
-        CategoryTree,
+        SimpleImageEmpty,        
         ExportOutlined,
         ExploredContentPay,
     },
     props: {
-        category_id: { type: Number },
-        name: { name: String },
+        category_id: { type: Number },  // 搜索的编码id
+        name: { name: String }, // 搜索传过来的名称
     },
     watch: {
-        category_id: {
-            immediate: true,
-            handler(n) {
-                console.log("watch category_id", n)
-                this.searchForm.category_id = n
+        category_id: {            
+            handler(newValue) {                
+                this.searchForm.category_id = newValue;
                 this.getTableData();
                 this.isBomShow(this.searchForm.category_id);
-            }
+            },
         },
-        name: {
-            immediate: true,
-            handler(n) {
-                console.log("watch name", n)
-                this.searchForm.name = n
-
-            }
+        name: {            
+            handler(newValue) {                
+                this.searchForm.name = newValue;
+            },
         },
     },
     data() {
         return {
             Core,
             loginType: Core.Data.getLoginType(),
-            pageType: 'list',
+            pageType: "list",
             SEARCH_TYPE_MAP,
             // 加载
             loading: false,
@@ -107,13 +152,13 @@ export default {
             categoryList: [],
             firstLevelId: 0,
             firstLevelName: {
-                name: '',
-                name_en: ''
+                name: "",
+                name_en: "",
             },
             searchForm: {
-                name: '',
-                name_en: '',
-                category_id: '',
+                name: "",
+                name_en: "",
+                category_id: "",
             },
 
             // 购物车简略面板
@@ -121,144 +166,43 @@ export default {
             briefList: [],
             briefCount: 0,
 
-
             //  备注
-            labelCol: { style: { width: '40px' } },
+            labelCol: { style: { width: "40px" } },
             wrapperCol: { span: 14 },
-            orderId: '',
+            orderId: "",
 
             // 是否显示爆炸图
             bomShow: false,
             menaKey: 1,
-            currency: '',
+            currency: "",
             MONETARY_TYPE_MAP: ITEM.MONETARY_TYPE_MAP, // 单位
         };
     },
     computed: {
         priceKey() {
-            return this.$auth('DISTRIBUTOR') ? 'fob_' : 'price_'
+            return this.$auth("DISTRIBUTOR") ? "fob_" : "price_";
         },
         lang() {
-            return this.$store.state.lang
-        }
+            return this.$store.state.lang;
+        },
     },
 
     mounted() {
         this.currency = Core.Data.getCurrency();
         this.getTableData();
-        this.getCategoryList()
+        this.getCategoryList();
         this.getShopCartData();
-
     },
 
     methods: {
-        routerChange(type, item = {}) {
-            let routeUrl = ''
-            switch (type) {
-                case 'detail':  // 详情
-                    // routeUrl = this.$router.resolve({
-                    //     path: '/purchase/item-display',
-                    //     query: { id: item.id }
-                    // })
-                    // window.open(routeUrl.href, '_blank')
-                    this.$emit('changeDisplay', true, item.id)
-
-                    break;
-                case 'favorite':  // 收藏夹
-                case 'shop_cart':  // 购物车
-                    routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'settle':  // 结算
-                    routeUrl = this.$router.resolve({
-                        path: "/purchase/item-settle",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-            }
-        },
-        pageChangeName(name, searchType) {  // 页码改变
-            this.searchForm.name = name
-            this.searchType = searchType
-            this.pageChange(1)
-        },
-        pageChange(curr) {  // 页码改变
-            this.currPage = curr
-            this.getTableData()
-        },
-        pageSizeChange(current, size) {  // 页码尺寸改变
-            console.log('pageSizeChange size:', size)
-            this.pageSize = size
-            this.getTableData()
-        },
-        handleSearch() {  // 搜索
-            this.pageChange(1);
-        },
-        handleNameReset() {  // 重置名称
-            this.searchForm.name = ''
-            this.pageChange(1);
-        },
-        handleCategoryChange(category) {
-            // console.log('handleCategoryChange category:', category)
-            this.tableData = []
-            this.isBomShow(category)
-            // this.bomShow = false
-            this.searchForm.category_id = category
-            if (this.firstLevelId && category === this.firstLevelId) {
-                this.firstLevelName = this.categoryList.find(i => i.id === category)
-                this.$nextTick(() => {
-                    this.$refs.CategoryTree.handleReset();
-                })
-            }
-            console.log('pageSizeChange category_id:', this.searchForm.category_id)
-            this.pageChange(1)
-        },
-        // 是否显示爆炸图
-        isBomShow(id) {
-            this.bomShow = false
-            console.log(' categoryList:', this.categoryList)
-            for (let i = 0; i < this.categoryList.length; i++) {
-                console.log(' categoryList:', this.categoryList)
-                if (this.categoryList[i].id === id) {
-                    this.bomShow = this.categoryList[i].display_mode === 2
-                    console.log("bomShow", this.bomShow)
-                    return
-                }
-                console.log("bomShow", this.bomShow)
-                if (this.categoryList[i].children != null) {
-                    console.log("bomShow", this.bomShow)
-                    this.isBomChildren(this.categoryList[i], id);
-                }
-            };
-            // this.bomShow = true
-        },
-        isBomChildren(element, id) {
-            for (let i = 0; i < element.children.length; i++) {
-                if (element.children[i].children != null) {
-                    this.isBomChildren(element.children[i], id);
-                }
-                // console.log("element.id",element.children[i].id)
-                console.log("id", id)
-                if (element.children[i].id === id) {
-                    this.bomShow = element.children[i].display_mode === 2
-
-                    return
-                }
-            }
-        },
-
-        getTableData() { // 获取 商品 数据
+        /* Fetch start*/
+        getTableData() {
+            // 获取 商品 数据
             let searchForm = Core.Util.deepCopy(this.searchForm);
             if (this.searchType == Core.Const.ITEM.SEARCH_TYPE.CODE) {
                 searchForm.code = searchForm.name;
                 searchForm.name = "";
             }
-            // if (this.$i18n.locale === 'en'){
-            //     searchForm.name_en = searchForm.name;
-            //     searchForm.name = "";
-            // }
             this.loading = true;
             const params = {
                 flag_spread: 0,
@@ -269,78 +213,58 @@ export default {
                 page: this.currPage,
                 is_authority: 1,
                 page_size: this.pageSize,
-                has_price: true
-            }
+                has_price: true,
+            };
 
-            Core.Api.Item.list(Core.Util.searchFilter(params)).then(res => {
-                console.log("getTableData res:", res)
-                this.total = res.count;
-                this.tableData = res.list;
-            }).catch(err => {
-                console.log('getTableData err:', err)
-            }).finally(() => {
-                this.loading = false;
+            Core.Api.Item.list(Core.Util.searchFilter(params))
+                .then((res) => {                
+                    this.total = res.count;
+                    this.tableData = res.list;
+                })
+                .catch((err) => {
+                    console.log("getTableData err:", err);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        getShopCartData(flag = false) {
+            // 获取 购物车 数据
+            Core.Api.ShopCart.list().then((res) => {                
+                this.briefVisible = flag;
+                let item = res.list[0] || {};
+                this.briefList = [item.item || {}];                
+                this.briefCount = res.count;
             });
         },
-
-        //
-        getData() {
-            this.getTableData()
-        },
-
-
-        getShopCartData(flag = false) { // 获取 购物车 数据
-            Core.Api.ShopCart.list().then(res => {
-                console.log('getShopCartData res:', res)
-                this.briefVisible = flag
-                let item = res.list[0] || {}
-                this.briefList = [item.item || {}]
-                console.log('this.briefList: ', this.briefList);
-                this.briefCount = res.count;
-            })
-        },
-
-        handleCartAdd(item) { // 添加到购物车
-            let _this = this;
-            console.log('handleCartAdd item:', item)
+        handleCartAdd(item) {
+            // 添加到购物车
+            let _this = this;            
             if (item.set_id && item.attr_list.length > 1) {
-                this.routerChange('detail', item)
-                return
+                this.routerChange("detail", item);
+                return;
             }
             Core.Api.ShopCart.save({
                 item_id: item.id,
                 amount: 1,
-                price: item.purchase_price
-            }).then(res => {
-                console.log('res:', res)
-                this.$message.success(_this.$t('i.add_success'))
+                price: item.purchase_price,
+            }).then((res) => {                
+                this.$message.success(_this.$t("i.add_success"));
                 this.getShopCartData(true);
-                this.orderId = res.id
-            })
+                this.orderId = res.id;
+            });
         },
-
         getCategoryList() {
             Core.Api.ItemCategory.tree({
                 id: 0,
                 is_authority: 1,
-            }).then(res => {
-                this.categoryList = res.list
-                this.handleCategoryChange(this.searchForm.category_id)
-            })
+            }).then((res) => {
+                this.categoryList = res.list;
+                this.handleCategoryChange(this.searchForm.category_id);
+            });
         },
-
-        handleExportConfirm() { // 确认订单是否导出
-            let _this = this;
-            this.$confirm({
-                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
-                okText: _this.$t('def.sure'),
-                cancelText: _this.$t('def.cancel'),
-                onOk() {
-                    _this.handleRepairExport();
-                }
-            })
-        },
-        handleRepairExport() { // 订单导出
+        handleRepairExport() {
+            // 订单导出
             this.exportDisabled = true;
 
             let form = Core.Util.deepCopy(this.searchForm);
@@ -352,31 +276,137 @@ export default {
             }
 
             for (const key in form) {
-                form[key] = form[key] || ''
+                form[key] = form[key] || "";
             }
             let exportUrl = Core.Api.Export.exportOrderPrice({
                 ...form,
-                language: this.$i18n.locale === 'en' ? 1 : 0
-            })
-            console.log("handleRepairExport exportUrl", exportUrl)
-            window.open(exportUrl, '_blank')
+                language: this.$i18n.locale === "en" ? 1 : 0,
+            });            
+            window.open(exportUrl, "_blank");
             this.exportDisabled = false;
         },
-
         // 备注
         handleRemarkEditBlur(item) {
-            let _item = Core.Util.deepCopy(item)
-            console.log('handleCountEditBlur _item:', _item)
+            let _item = Core.Util.deepCopy(item);            
             Core.Api.ShopCart.remark({
                 id: this.orderId,
                 remark: _item.remark,
-            }).then(res => {
-                console.log('handleRemarkEditBlur: res', res)
-            }).catch(err => {
-                console.log('handleRemarkEditBlur: err', err)
             })
+                .then((res) => {
+                    console.log("handleRemarkEditBlur: res", res);
+                })
+                .catch((err) => {
+                    console.log("handleRemarkEditBlur: err", err);
+                });
         },
-    }
+
+        /* Fetch end*/
+
+        /* methods start*/
+        // 路由跳转
+        routerChange(type, item = {}) {
+            let routeUrl = "";
+            switch (type) {
+                case "detail": // 详情      
+                    this.$emit("changeDisplay", true, item.id);
+
+                    break;
+                case "favorite": // 收藏夹
+                case "shop_cart": // 购物车
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-collect",
+                    });
+                    window.open(routeUrl.href, "_self");
+                    break;
+                case "settle": // 结算
+                    routeUrl = this.$router.resolve({
+                        path: "/purchase/item-settle",
+                    });
+                    window.open(routeUrl.href, "_self");
+                    break;
+            }
+        },
+        // refs操作的
+        pageChangeName(name, searchType) {            
+            this.searchForm.name = name;
+            this.searchType = searchType;
+            this.pageChange(1);
+        },
+        handleNameReset() {            
+            this.searchForm.name = "";
+            this.pageChange(1);
+        },
+        // 页面事件
+        pageChange(curr) {
+            // 页码改变
+            this.currPage = curr;
+            this.getTableData();
+        },
+        pageSizeChange(current, size) {
+            // 页码尺寸改变            
+            this.pageSize = size;
+            this.getTableData();
+        },
+        // 搜索逻辑        
+        handleSearch() {
+            this.pageChange(1);
+        },
+        /* methods end*/        
+        handleCategoryChange(category) {            
+            this.tableData = [];
+            this.isBomShow(category);            
+            this.searchForm.category_id = category;
+            if (this.firstLevelId && category === this.firstLevelId) {
+                this.firstLevelName = this.categoryList.find(
+                    (i) => i.id === category
+                );          
+            }
+            this.pageChange(1);
+        },
+        // 是否显示爆炸图
+        isBomShow(id) {
+            this.bomShow = false;            
+            for (let i = 0; i < this.categoryList.length; i++) {
+                if (this.categoryList[i].id === id) {
+                    this.bomShow = this.categoryList[i].display_mode === 2;                    
+                    return;
+                }                
+                if (this.categoryList[i].children != null) {                    
+                    this.isBomChildren(this.categoryList[i], id);
+                }
+            }            
+        },
+        isBomChildren(element, id) {
+            for (let i = 0; i < element.children.length; i++) {
+                if (element.children[i].children != null) {
+                    this.isBomChildren(element.children[i], id);
+                }                                
+                if (element.children[i].id === id) {
+                    this.bomShow = element.children[i].display_mode === 2;
+
+                    return;
+                }
+            }
+        },        
+
+        //
+        getData() {
+            this.getTableData();
+        },
+
+        handleExportConfirm() {
+            // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t("pop_up.sure") + _this.$t("n.export") + "?",
+                okText: _this.$t("def.sure"),
+                cancelText: _this.$t("def.cancel"),
+                onOk() {
+                    _this.handleRepairExport();
+                },
+            });
+        },
+    },
 };
 </script>
 
@@ -422,11 +452,11 @@ export default {
                         padding: 18px 12px;
                         font-size: 16px;
                         line-height: 22px;
-                        color: #1A1A1A;
+                        color: #1a1a1a;
                         margin-left: 44px;
 
                         &.ant-tabs-tab-active .ant-tabs-tab-btn {
-                            color: #1A1A1A;
+                            color: #1a1a1a;
                         }
                     }
 
@@ -440,9 +470,8 @@ export default {
                     padding-right: 44px;
 
                     .search {
-
                         height: 36px;
-                        background: #F5F5F5;
+                        background: #f5f5f5;
                         border-radius: 20px;
                         border: 0;
 
@@ -468,7 +497,7 @@ export default {
 
                     .search_select {
                         .ant-select-selector {
-                            background: #F5F5F5;
+                            background: #f5f5f5;
                             padding-top: 2px;
                             height: 36px;
                             width: 80px;
@@ -477,13 +506,13 @@ export default {
                     }
 
                     .search_input {
-                        background: #F5F5F5;
+                        background: #f5f5f5;
                         height: 36px;
 
                         border-radius: 0px 20px 20px 0px;
 
                         .ant-input-affix-wrapper {
-                            background: #F5F5F5;
+                            background: #f5f5f5;
                             height: 36px;
                             width: 300px;
                             border-radius: 0px 20px 20px 0px;
@@ -491,7 +520,7 @@ export default {
 
                         .ant-input {
                             width: 300px;
-                            background: #F5F5F5;
+                            background: #f5f5f5;
                         }
                     }
 
@@ -500,7 +529,7 @@ export default {
 
                         i.icon {
                             font-size: 20px;
-                            color: #2B2B2B;
+                            color: #2b2b2b;
                         }
                     }
 
@@ -543,7 +572,7 @@ export default {
         }
 
         .item-content {
-            width: calc(~'100% - 260px');
+            width: calc(~"100% - 260px");
 
             .switch-btn {
                 padding: 25px 44px 0;
@@ -588,7 +617,7 @@ export default {
                     .name {
                         .ell();
                         padding-top: 5px;
-                        border-top: 1px solid #E6EAEE;
+                        border-top: 1px solid #e6eaee;
                     }
 
                     .desc,
@@ -612,13 +641,11 @@ export default {
                         }
                     }
                 }
-
             }
 
             .paging-container {
                 padding-right: 44px;
             }
-
         }
 
         .item-content-empty {
@@ -626,7 +653,6 @@ export default {
         }
 
         &.full-content {
-
             .item-content,
             .item-content-empty {
                 width: 100%;
@@ -637,7 +663,6 @@ export default {
             padding: 48px;
             width: 100%;
         }
-
     }
 }
 
@@ -674,7 +699,7 @@ export default {
         margin-bottom: 22px;
 
         .icon.i_check_b {
-            color: #37D347;
+            color: #37d347;
             font-size: 12px;
             margin-right: 10px;
         }
@@ -691,7 +716,7 @@ export default {
         }
 
         .desc {
-            width: calc(~'100% - 78px - 20px');
+            width: calc(~"100% - 78px - 20px");
             display: flex;
             flex-direction: column;
             font-size: 14px;
@@ -727,8 +752,8 @@ export default {
             font-size: 15px;
 
             &.ghost {
-                background: #FFFFFF;
-                border: 1px solid #E5E8EB;
+                background: #ffffff;
+                border: 1px solid #e5e8eb;
                 color: #111111;
 
                 &:hover {
@@ -739,7 +764,7 @@ export default {
             &.black {
                 background: #111111;
                 border: 1px solid #111111;
-                color: #FFFFFF;
+                color: #ffffff;
 
                 &:hover {
                     background: rgba(17, 17, 17, 0.9);
@@ -757,4 +782,5 @@ export default {
         opacity: 0;
         display: none;
     }
-}</style>
+}
+</style>
