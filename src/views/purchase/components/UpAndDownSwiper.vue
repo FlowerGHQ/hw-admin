@@ -21,7 +21,7 @@
                 </a>
             </template>
             <div v-for="(item,index) in imgs" :key="index">
-                <!-- <img :src="$Util.imageFilter(item.logo)"/> -->
+             
             </div>
             <template #prevArrow>
                 <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
@@ -68,7 +68,6 @@ export default {
             immediate: true,
             handler(n) {
                 console.log('watch detail.item_code n:', n)
-               // this.imgs = n
             }
         },
         "type": {
@@ -76,7 +75,6 @@ export default {
             immediate: true,
             handler(n) {
                 console.log('watch detail.item_code n:', n)
-                // this.imgs = n
             }
         },
 
@@ -87,22 +85,17 @@ export default {
             if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
                 let img = ''
                 if (this.type === 0){
-
                     img = this.imgs[i].imgs.split(",")
-
                 } else {
                     if (this.imgs.imgs!== undefined){
                         img = this.imgs.imgs.split(",")
                     }
 
                 }
-
-                // console.log(this.imgs[i])
-                // let img = this.imgs[i].imgs.split(",")
                 if (img.length === 0){
                     return
                 }
-                return this.$Util.imageFilter(img[0])
+                return this.$Util.imageFilter(img[0],2)
             }
 
         },

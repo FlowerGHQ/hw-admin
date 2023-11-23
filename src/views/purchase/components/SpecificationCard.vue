@@ -5,7 +5,7 @@
     @click="changeData(data.id, i)">
     <div class="card-left">
       <div class="card-img">
-        <img :src="$Util.imageFilter(data.imgs)" />
+        <img :src="$Util.imageFilter(data.imgs,2)" />
       </div>
       <div class="card-info">
         <div class="title">

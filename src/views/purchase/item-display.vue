@@ -5,6 +5,7 @@
         :imgs="specList"
         :type="0"
         :imgIndex="mountingIndex"
+        :detail="detail"
         @handleChangeIndex="changeId"
         v-if="specList.length > 0" />
       <UpAndDownSwiper
@@ -97,12 +98,25 @@
       <div class="shop-imgs">
         <div class="title">{{ $t("i.commercial_picture") }}</div>
         <div class="img-list">
-            <div class="img-area" :style="{
-              height: '600px ',
+          <div
+            class="img-area"
+            :style="{
               width: '100%',
               border: '1px solid #e6eaee',
               marginTop: '20px',
-            }"></div>
+            }">
+            <div
+              v-for="item in specList[mountingIndex].imgs.split(',')"
+              v-if="specList[mountingIndex]?.imgs">
+              <img
+                :src="$Util.imageFilter(item)"
+                alt=""
+                style="width: 800px; height: 800px; object-fit: contain" />
+            </div>
+            <div v-else>
+              <SimpleImageEmpty :desc="$t('p.no_detail_img')" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -264,8 +278,11 @@ export default {
         ...params,
       })
         .then((res) => {
-          console.log("getSpecList res", this.specList);
           this.specList = res.list;
+          console.log(
+            "getSpecList res11111111111111111111111111111111111111111111111111111111111111111111111111",
+            this.specList
+          );
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
             item_id: res.list[this.mountingIndex].id,
