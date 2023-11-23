@@ -624,8 +624,8 @@ export default {
             this.batchType = '';
         },
         handleBatchGroupSubmit() {
-            if (this.selectedRowKeys.length === 0) {
-                return this.$message.warning(this.$t('crm_c.select'))
+            if (this.selectedRowKeys.length === 0 || !this.batchForm.group_id) {
+                return this.$message.warning(this.$t('def.enter'))
             }
             this.batchGroupShow = true;
 
@@ -640,6 +640,9 @@ export default {
                         this.handleBatchGroupClose();
                     }).catch(err => {
                         console.log("handleDelete err", err);
+                    }).finally(()=>{
+                        this.batchForm.group_id = undefined;
+                        this.selectedRowKeys = []
                     })
                     break;
             }
