@@ -53,9 +53,7 @@ export default {
                 console.log('defArea n:', n)
                 if (!Core.Util.isEmptyObj(n)) {
                     let selectCode = [n.country, n.province, n.city, n.county]
-                    console.log('selectCode:', selectCode)
                     this.selectCode = selectCode.filter(item => item)
-                    console.log('this.selectCode:', this.selectCode)
                 }
             }
         }
@@ -81,9 +79,14 @@ export default {
             })
         },
         handleChange(value, selectedOptions) {
+            
             this.selectItems = selectedOptions
-
             let update = {}
+            if(!selectedOptions) {
+                this.$emit('update:value', update)
+                this.$emit('select', update)
+                return ;
+            }
             for (const item of selectedOptions) {
                 update[item.key] = {
                     code: item.code,

@@ -1,10 +1,10 @@
 <template>
 <div class="InformationInfo gray-panel no-margin">
-    <div class="panel-title">
+    <!-- <div class="panel-title">
         <div class="title">{{ $t('crm_c.summary_information') }}</div>
-    </div>
+    </div> -->
     <div class="panel-content">
-        <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
+        <!-- <a-descriptions :title="$t('crm_c.information')" bordered :column="2" size="small" class="pannel">
             <a-descriptions-item :label="$t('crm_o.contract_no')" class="label">{{detail.uid}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.name')" class="label">{{detail.name}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.signing_date')" class="label">{{$Util.timeFilter(detail.signing_date) || '-'}}</a-descriptions-item>
@@ -21,11 +21,11 @@
             <a-descriptions-item :label="$t('crm_o.other_cost')" class="label">{{Core.Util.countFilter(detail.other_cost)}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_o.money')" class="label">{{Core.Util.countFilter(detail.money)}}</a-descriptions-item>
         </a-descriptions>
-        <p>{{$t('crm_o.money_tip')}}</p>
-        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" style="margin-top:30px" >
-            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name}}</a-descriptions-item>
+        <p>{{$t('crm_o.money_tip')}}</p> -->
+        <a-descriptions :title="$t('crm_c.data_access')" bordered :column="2" size="small" class="pannel" >
+            <a-descriptions-item :label="$t('crm_c.create_user')" class="label">{{detail.create_user_name||'-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.create_time')" class="label">{{$Util.timeFilter(detail.create_time) || '-'}}</a-descriptions-item>
-            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name}}</a-descriptions-item>
+            <a-descriptions-item :label="$t('crm_c.update_user')" class="label">{{detail.update_user_name||'-'}}</a-descriptions-item>
             <a-descriptions-item :label="$t('crm_c.update_time')" class="label">{{$Util.timeFilter(detail.update_time) || '-'}}</a-descriptions-item>
         </a-descriptions>
         <a-modal v-model:visible="userRoleShow" :title="$t('p.confirm_payment')" :after-close='handleRoleClose'>
@@ -69,7 +69,14 @@ export default {
             userDetail: '',
         };
     },
-    watch: {},
+    watch: {
+        detail: {
+            handler(val) {
+               console.log('detail', val)
+            },
+            deep: true
+        }
+    },
     computed: {
         tableColumns() {
             let columns = [
@@ -209,6 +216,9 @@ export default {
     }
 
 }
+.gray-panel{
+   padding-top: 0 !important;
+}
 .ant-descriptions-view{
     th.ant-descriptions-item-label {
         width: 25%;
@@ -216,5 +226,8 @@ export default {
     td.ant-descriptions-item-content {
         width: 25%;
     }
+}
+:deep(.panel-content){
+  padding: 0 !important;
 }
 </style>

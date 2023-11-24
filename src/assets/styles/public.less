@@ -2303,7 +2303,6 @@ p {
             background: #FFFFFF;
             border-radius: 4px;
             padding: 20px;
-
             .table-container {
                 margin: 0 0 20px;
             }
@@ -2495,17 +2494,23 @@ p {
 }
 // form | search
 .row-detail{
+    display: flex;
     .row-item{ 
-        width: 100%;      
+        width: 100%;   
+
         display: flex;
         align-items: center;                 
         font-size: 14px;        
         font-weight: 400;
         margin-top: 16px;
+        // flex-grow: 0;
+        // flex-shrink: 0;
         // 无宽度
         .key{            
             color:#1D2129;
             white-space: nowrap;
+            min-width: 100px;
+            text-align: right;
         }
         // 有宽度右边对其
         .key-w{
@@ -2545,7 +2550,18 @@ p {
             width: 100%;
             color:#1D2129;
             padding-right: 20px;
+            >.ant-input,
+            >.ant-select,
+            >.ant-picker,
+            >.ant-cascader-picker {
+                font-size: 14px;
+                width: 100%;
+                >.ant-select-selector {
+                    font-size: 14px;
+                }
+            }
         }
+    
     }
 
     // 收起操作
