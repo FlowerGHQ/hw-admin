@@ -10,7 +10,7 @@
         @handleChangeIndex="changeId" />
     </div>
     <!-- 右侧商品详情 -->
-    <div class="info-content" v-if="isShow">
+    <div class="info-content" >
       <div>
         <div class="title" v-if="lang == 'zh'">
           {{ $i18n.locale == "zh" ? detail.name : detail.name_en }}
@@ -28,7 +28,7 @@
       <SimpleImageEmpty
         v-if="!detail.attr_list.length"
         :desc="$t('p.no_item_purchase_data')" />
-      <ul>
+      <ul v-if="isShow">
         <li v-for="attr in detail.attr_list">
           {{
             $i18n.locale == "zh" ? attr.attr_def_name : attr.attr_def_key
@@ -36,6 +36,7 @@
         </li>
       </ul>
       <a-button
+        v-if="isShow"
         type="primary"
         block
         class="btn-cart"
@@ -83,9 +84,9 @@
             :desc="$t('p.no_item_spec')" />
         </div>
       </div>
-      <div class="shop-imgs">
+      <div class="shop-imgs" v-if="specList[mountingIndex]?.imgs && specList.length>0&&detail.imgs">
         <div class="title">{{ $t("i.commercial_picture") }}</div>
-        <div class="img-list">
+        <div class="img-list" >
           <div
             class="img-area"
             :style="{
