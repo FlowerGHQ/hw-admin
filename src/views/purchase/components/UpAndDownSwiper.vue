@@ -88,6 +88,7 @@ export default {
     imgsArr() {
       let activeObj = {}
       activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
+      console.log("activeObj:", activeObj);
       // 如果activeObj.logo或者imgs不存在，返回空数组
       if (!activeObj.logo && !activeObj.imgs) return []
       let arr = []
@@ -104,13 +105,15 @@ export default {
           arr.unshift(logo)
         }
       } else {
-        arr = activeObj.logo
+        arr =[ activeObj.logo]
       }
+      
       return arr
     },
   },
   methods: {
     getImgUrl() {
+      console.log(this.imgsArr)
       return this.$Util.imageFilter(this.imgsArr?this.imgsArr[this.imgIndex]:[],2);
     },
     imgPreview(type) {
