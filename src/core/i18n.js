@@ -950,6 +950,8 @@ const messages = {
             payment_record: '付款记录',
             payment_voucher: '付款凭证',
             receiving_time: '收货时间',
+            synchronization_to_erp: '同步至ERP',
+            reason_fail: '失败原因',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3582,6 +3584,8 @@ const messages = {
             payment_record: 'Payment Record',
             payment_voucher: 'Payment Document',
             receiving_time: 'Receiving Time',
+            synchronization_to_erp: 'Synchronization to ERP',
+            reason_fail: 'Reason for Failure',
         },
         s: {
             store_list: 'Shop list',

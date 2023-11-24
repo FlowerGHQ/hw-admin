@@ -80,13 +80,15 @@
                 <a-button @click="handleSearchReset">{{$t('def.reset')}}</a-button>
             </div>
         </div>
-        <div class="operate-container">
+        <div class="operate-container" >
             <a-button type="primary" @click="handleExportConfirm" v-if="$auth('purchase-order.export')"><i class="icon i_download"/>{{$t('def.export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesReport" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.sales_report_export')}}</a-button>
             <a-button type="primary" @click="handleExportSalesQuantityStatistics" v-if="$auth('ADMIN')"><i class="icon i_download"/>{{$t('def.quantity_sales_report_export')}}</a-button>
+            <a-button class="right-f" v-if="searchForm.status === '150' && $auth('ADMIN')"  :disabled="!isShowErpDisabled" @click="sendErp">{{/* 同步至ERP */ $t('p.synchronization_to_erp') }}</a-button>
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                :row-selection="searchForm.status === '150'? rowSelection : null"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
@@ -95,14 +97,14 @@
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
+                    <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
                             <a-button type="link" @click="routerChange('parent_detail', record)" v-if="text !== ''">{{text }}</a-button>
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
                     </template>
                     <!-- 总价 user_type 分销商可看 状态是等待审核 或者 待审核显示true显示 '-'  -->
-                    <template v-if="column.key === 'total_price'">
+                    <template v-else-if="column.key === 'total_price'">
                         <div v-if="user_type && (record.status === STATUS.WAIT_AUDIT || record.status === STATUS.REVISE_AUDIT)">-</div>
                         <div v-else-if="user_type && record.type == FLAG_ORDER_TYPE.Mix_SALES">                            
                             <!-- 混合订单(分销商有两种显示 平台方可不进这里流程) price_flag 1 表示 拆分订单都审核通过 其他表示都显示 '-' -->
@@ -122,56 +124,59 @@
                         </div>
                     </template>
                     <!-- 运费 -->
-                    <template v-if="column.key === 'freight'">
+                    <template v-else-if="column.key === 'freight'">
                         <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
                         <span>                        
                             {{$Util.countFilter(text)}}
                         </span>
                     </template>
                     <!-- 已支付金额 -->
-                    <template v-if="column.key === 'amount_paid'">
+                    <template v-else-if="column.key === 'amount_paid'">
                         <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
                         <span>                        
                             {{$Util.countFilter(text)}}
                         </span>
                     </template>
-                    <template v-if="column.dataIndex === 'status'">
+                    <template v-else-if="column.dataIndex === 'status'">
                         <div class="status status-bg status-tag" :class="$Util.purchaseStatusFilter(text,'color')">
                             {{$Util.purchaseStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
-                    <template v-if="column.dataIndex === 'payment_status'">
+                    <template v-else-if="column.dataIndex === 'payment_status'">
                         <div class="status status-bg status-tag" :class="$Util.paymentStatusFilter(text,'color')">
                             {{$Util.paymentStatusFilter(text, $i18n.locale)}}
                         </div>
                     </template>
-                    <template v-if="column.dataIndex === 'type'">
+                    <template v-else-if="column.dataIndex === 'type'">
                         {{$Util.purchaseTypeFilter(text, $i18n.locale)}}
                     </template>
-                    <template v-if="column.dataIndex === 'pay_type'">
+                    <template v-else-if="column.dataIndex === 'pay_type'">
                         {{$Util.purchasePayTypeFilter(text, $i18n.locale)}}
                     </template>
-                    <template v-if="column.dataIndex === 'flag_review'">
+                    <template v-else-if="column.dataIndex === 'flag_review'">
                         {{$Util.purchaseFlagReviewFilter(text)}}
                     </template>
-                    <template v-if="column.dataIndex === 'purchase_method'">
+                    <template v-else-if="column.dataIndex === 'purchase_method'">
                         {{$Util.purchasePayMethodFilter(text , $i18n.locale)}}
                     </template>
-                    <template v-if="column.dataIndex === 'item_type'">
+                    <template v-else-if="column.dataIndex === 'item_type'">
                         {{$Util.itemTypeFilter(text)}}
                     </template>
-                    <template v-if="column.key === 'item'">
+                    <template v-else-if="column.key === 'item'">
                         {{ text || '-'}}
                     </template>
-                    <template v-if="column.key === 'tip_item'">
+                    <template v-else-if="column.key === 'tip_item'">
                         <a-tooltip placement="top" :title='text'>
                             <div class="ell" style="max-width: 160px">{{text || '-'}}</div>
                         </a-tooltip>
                     </template>
-                    <template v-if="column.key === 'time'">
+                    <template v-else-if="column.key === 'time'">
                         {{ $Util.timeFilter(text) }}
                     </template>
-                    <template v-if="column.key === 'operation'">
+                    <template v-else-if="column.key === 'sync_failure_reason'">
+                        {{ text || '-' }}
+                    </template>
+                    <template v-else-if="column.key === 'operation'">
                         <a-button type='link' @click="handleRecreate(record)" v-if='search_type === SEARCH_TYPE.SELF'>  <i class="icon i_cart"/> {{ $t('p.buy_again') }}</a-button>
                         <a-button type='link' @click="routerChange('detail', record)" v-if="$auth('purchase-order.detail')"> <i class="icon i_detail"/>{{ $t('def.detail') }}</a-button>
                     </template>
@@ -258,6 +263,9 @@ export default {
             },
             // 表格
             tableData: [],
+
+            // 勾选项
+            selectedRowKeys: [],
         };
     },
     watch: {
@@ -292,9 +300,16 @@ export default {
                 columns.splice(6, 0, { title: this.$t('p.freight'), dataIndex: 'freight', key: 'freight' },)
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' },)
             }
+            // 失败原因列表-仅存在与待生产tab
+            if(this.searchForm.status === '150') {
+                columns.push(
+                    { title: this.$t('p.reason_fail'), key: 'sync_failure_reason', dataIndex: 'sync_failure_reason',}
+                )
+            }
             columns.push(
                 { title: this.$t('def.operate'), key: 'operation', fixed: 'right'}
             )
+
             return columns
         },
         statusList() {
@@ -304,6 +319,8 @@ export default {
                 {zh: '等待审核', en: 'Waiting for review', value: '0', color: 'yellow',  key: '60'},
                 {zh: '待支付', en: 'Wait to pay', value: '0', color: 'yellow',  key: '100'},
                 {zh: '待审核', en: 'Wait to audit', value: '0', color: 'yellow',  key: '630'},
+                {zh: '待生产', en: 'To be produced', value: '0', color: 'blue-2',  key: '150'},
+                {zh: '生产中', en: 'In production', value: '0', color: 'green-2',  key: '160'},
                 {zh: '待发货', en: 'Wait for delivery', value: '0', color: 'orange',  key: '200'},
                 {zh: '已发货', en: 'Shipped',value: '0', color: 'primary',  key: '300'},
                 {zh: '部分收货', en: 'Received',value: '0', color: 'primary',  key: '330'},
@@ -321,6 +338,26 @@ export default {
             let arr = [Core.Const.LOGIN.TYPE.DISTRIBUTOR]  // 分销商
             return arr.includes(Core.Data.getLoginType())  
         },
+        // 勾选情况-方法（仅-待生产）
+        rowSelection() {
+            return {
+                selectedRowKeys: this.selectedRowKeys,
+                // preserveSelectedRowKeys: true,
+                onChange: (selectedRowKeys, selectedRows) => { // 表格 选择 改变
+                    this.selectedRowKeys = selectedRowKeys;
+                },
+            };
+        },
+
+        // 同步erp-按钮禁用变量
+        isShowErpDisabled() {
+            return this.selectedRowKeys.length > 0
+        },
+
+        // 语言控制变量
+        lang() {
+            return this.$store.state.lang
+        }
     },
     mounted() {
         if (this.$auth('ADMIN') || this.$auth('DISTRIBUTOR')) {
@@ -344,6 +381,42 @@ export default {
         clearInterval(this.timer)
     },
     methods: {
+
+        // 点击推送按钮（erp)
+        sendErp() {
+            
+            let _this = this;
+            let title = this.lang === 'zh' ? `是否要将选中的${this.selectedRowKeys.length}条订单同步至ERP?`:`Do you want to synchronize the selected ${this.selectedRowKeys.length} orders to ERP?`;
+            this.$confirm({
+                title: title,
+                okText: _this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    Core.Api.Purchase.erpPush({id_list:_this.selectedRowKeys}).then(res => {
+                        console.log('res  Purchase  11111',res);
+                        _this.confirmNum(res?.success_number || 0,res?.fail_number || 0)
+                    }).catch(err => {
+                        console.log(err);
+                    })
+                },
+            });
+        },
+        // 弹出同步erp-请求情况
+        confirmNum(sNum,fNum) {
+            let _this = this;
+            
+            let title = this.lang === 'zh' ? `${sNum} 条订单同步成功${fNum>0?'， '+ fNum + '条同步失败':''}`:`${sNum} orders were synchronized successfully${fNum>0?', and '+ fNum + 'failed to synchronize':''}`;
+            this.$confirm({
+                title: title,
+                okText: _this.$t('def.sure'),
+                cancelText: this.$t('def.cancel'),
+                
+            });
+            this.selectedRowKeys = [];
+            // 刷新列表
+            this.getTableData()
+        },
+
         async routerChange(type, item = {}) {
             console.log('routerChange item:', item)
             let routeUrl = ''
@@ -598,4 +671,8 @@ export default {
 
 <style lang="less" scoped>
 // #PurchaseList {}
+
+.right-f {
+    float: right;
+}
 </style>

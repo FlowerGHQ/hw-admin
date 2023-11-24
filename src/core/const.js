@@ -37,13 +37,13 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.75:8889'  // zy
+        URL_POINT = 'http://10.10.12.75:8889'  // zy
         break;
 }
 
@@ -632,6 +632,8 @@ let Const = {
             '360': { value: '0', key: 360, color: 'yellow', zh: '全部收货', en: 'Received' },
             '400': { value: '0', key: 400, color: 'green', zh: '交易完成', en: 'Order completed' },
             '630': { value: '0', key: 630, color: 'yellow', zh: '待审核', en: 'To audit' },
+            '150': { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
+            '160': { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             '-100': { value: '0', key: -100, color: 'gray', zh: '交易关闭', en: 'Canceled' },
         },
         // 支付方式
