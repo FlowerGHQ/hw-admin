@@ -16,7 +16,7 @@
     <div class="img-big">
       <img :src="getImgUrl(imgIndex)" />
     </div>
-    <div class="img-active">
+    <div class="img-active"  v-if="imgsArr.length>0">
       <div class="left-icon">
         <left-outlined @click="imgPreview(0)" />
       </div>
@@ -26,7 +26,7 @@
           :class="{ active: index === imgIndex }"
           v-for="(item, index) in imgsArr"
           :key="index"
-          :src="$Util.imageFilter(item,2)"
+          :src="$Util.imageFilter(item)"
           @click="previewImg(index)"
           alt="" />
       </div>
@@ -92,7 +92,7 @@ export default {
       // 如果activeObj.logo或者imgs不存在，返回空数组
       if (!activeObj.logo && !activeObj.imgs) return []
       let arr = []
-        arr = activeObj.imgs.split(",")
+        arr =activeObj.imgs === ''?[]:activeObj.imgs.split(",")
         // 找到imgs中的logo
         let logo = activeObj.logo
         let index = arr.indexOf(logo)
@@ -100,15 +100,12 @@ export default {
         if (index > -1) {
           arr.splice(index, 1)
         } 
-        if(logo) arr.unshift(logo)
-
-      
-      return arr
+        if(logo !== ''&& logo) arr.unshift(logo)
+        return arr
     },
   },
   methods: {
     getImgUrl() {
-      console.log(this.imgsArr)
       return this.$Util.imageFilter(this.imgsArr?this.imgsArr[this.imgIndex]:[],2);
     },
     imgPreview(type) {
