@@ -95,7 +95,13 @@
             }">
             <div
               v-for="item in specList[mountingIndex].imgs.split(',')"
-              v-if="specList[mountingIndex]?.imgs">
+              v-if="specList[mountingIndex]?.imgs && specList.length>0">
+              <img
+                :src="$Util.imageFilter(item)"
+                alt=""
+                style="width: 800px" />
+            </div>
+            <div v-else-if="detail?.imgs" v-for="item in detail.imgs.split(',')">
               <img
                 :src="$Util.imageFilter(item)"
                 alt=""
