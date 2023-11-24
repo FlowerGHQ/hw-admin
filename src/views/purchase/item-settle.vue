@@ -1,8 +1,5 @@
 <template>
 <div id="ItemSettle" class="list-container">
-<!--    <a-select v-model:value="unit" class="monetary-select" @change="handleUnitChange">-->
-<!--        <a-select-option v-for="(item,key) of unitMap" :key="key" :value="key" >{{ item.text }}</a-select-option>-->
-<!--    </a-select>-->
     <a-spin :spinning="loading" class='loading-incontent' v-if="loading"></a-spin>
     <div class="title-area">{{ $t('i.settle') }}</div>
     <div class="config-list">
@@ -180,7 +177,6 @@ export default {
         // 获取已保存的 地址信息列表
         getReceiveList() {
             Core.Api.Receive.list().then(res => {
-                console.log('getReceiveList res:', res)
                 this.receiveList = res.list
                 // this.editMode = res.list.length ? false : true
             })
@@ -188,7 +184,6 @@ export default {
         // 获取购物车列表
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
-                console.log('getShopCartList res:', res)
                 res.list.forEach(item => {
                     let element = item.item || {}
                     if (element.attr_list && element.attr_list.length) {
@@ -203,7 +198,6 @@ export default {
         },
 
         handleUnitChange(val) {
-            console.log('handleUnitChange val:', val)
             let item = this.unitMap[val]
             this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + item.key
             this.currency = item.currency
@@ -217,7 +211,6 @@ export default {
 
         // 切换到编辑状态
         handleConfigEdit(item) {
-            console.log('handleConfigEdit item:', item)
             if (item) {
                 this.form = Core.Util.deepCopy(item)
                 this.defAddr = [item.province, item.city, item.county]

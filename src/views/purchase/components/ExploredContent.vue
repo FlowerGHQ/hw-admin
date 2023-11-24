@@ -119,7 +119,6 @@ export default {
                     })
                 })
                 // 无爆炸图数据
-                console.log('getItemExploreList res', res);
                 if(res.list.count) {
                     this.$emit('noData',false)
                 }

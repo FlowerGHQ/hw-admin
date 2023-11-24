@@ -163,8 +163,6 @@ export default {
         sum_price() {
             let sum = 0
             let key = this.priceKey + this.unitMap[this.currency].key
-            console.log('key',key)
-            console.log('shopCartList',this.shopCartList)
             for (const item of this.shopCartList) {
                 if(item.item) {
                     sum += item.item[key] * item.amount
@@ -177,7 +175,6 @@ export default {
         }
     },
     created() {
-        console.log(Core.Data.getCurrency())
         this.currency = Core.Data.getCurrency()
     },
     mounted() {
@@ -246,13 +243,11 @@ export default {
         },
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
-                console.log('getShopCartList res:', res)
                 this.shopCartList = res.list
             })
         },
         getFavoriteList() {
             Core.Api.Favorite.list().then(res => {
-                console.log('getFavoriteList res:', res)
                 this.favoriteList = res.list
             })
         },
@@ -264,7 +259,6 @@ export default {
             if (this.editCount === item.amount) { return }
             let _item = Core.Util.deepCopy(item)
             _item.amount = this.editCount
-            console.log('handleCountEditBlur _item:', _item)
             Core.Api.ShopCart.save(_item).then(res => {
                 this.getShopCartList();
             }).finally(() => {
@@ -278,10 +272,8 @@ export default {
             this.editRemark = item.remark
         },
         handleRemarkEditBlur(item) {
-            // if (this.editRemark === item.remark) { return }
             let _item = Core.Util.deepCopy(item)
             _item.remark = this.editRemark
-            console.log('handleCountEditBlur _item:', _item)
             Core.Api.ShopCart.remark({
                 id: _item.id,
                 remark: _item.remark,
@@ -294,7 +286,6 @@ export default {
 
         // 从购物车移至收藏
         handleMoveToFavorite(item) {
-            console.log("handleMoveToFavorite item", item)
             let _this = this
             this.$confirm({
                 title: _this.$t('pop_up.move_favorites'),
@@ -364,7 +355,6 @@ export default {
         // 上传文件
         handlePurchaseChange({file, fileList}) {
             let _this = this
-            console.log("handleMatterChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
                     _this.getList()
@@ -393,7 +383,6 @@ export default {
             let exportUrl = Core.Api.Export.ItemCollectExport({
                locale: this.$i18n.locale
             })
-            console.log("handlePurchaseExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },

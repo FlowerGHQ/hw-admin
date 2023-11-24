@@ -515,15 +515,15 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('i.code'), key: 'input', dataIndex: 'code'},    // , fixed: 'left'
                 {title: this.$t('n.name'), key: 'input', dataIndex: 'name'},
                 {title: this.$t('n.name_en'), key: 'input', dataIndex: 'name_en'},
             )
             column.push(
                 {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
-                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
-                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
-                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation', fixed: 'right'},
+                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', unit: '€'}, //, fixed: 'right'
+                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', unit: '$'}, // , fixed: 'right'
+                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
