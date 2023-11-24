@@ -2,19 +2,14 @@
   <div id="ItemDisplay" class="list-container">
     <div class="imgs-content">
       <UpAndDownSwiper
-        :imgs="specList"
-        :type="0"
+        :imgs="specList.length > 0 ? specList : detail"
+        :type="specList.length > 0 ? 0 : 1"
+        :item_id="id"
         :imgIndex="mountingIndex"
         :detail="detail"
-        @handleChangeIndex="changeId"
-        v-if="specList.length > 0" />
-      <UpAndDownSwiper
-        :imgs="detail"
-        :type="1"
-        :imgIndex="mountingIndex"
-        @handleChangeIndex="changeId"
-        v-else />
+        @handleChangeIndex="changeId" />
     </div>
+    <!-- 右侧商品详情 -->
     <div class="info-content" v-if="this.specList.length <= 1">
       <div>
         <div class="title" v-if="lang == 'zh'">
@@ -40,13 +35,6 @@
           }}：{{ $i18n.locale == "zh" ? attr.value : attr.value_en }}
         </li>
       </ul>
-      <!-- <a-button type="primary" block class="btn" v-if="specList.length > 0"
-        >{{ $i18n.locale == "zh" ? "此商品 " : "This commodity has "
-        }}{{ specList.length
-        }}{{
-          $i18n.locale == "zh" ? " 种规格" : " kinds of specifications"
-        }}</a-button
-      > -->
       <a-button
         type="primary"
         block
@@ -54,7 +42,6 @@
         @click="hanldeAddToShopCart(detail.id)"
         >{{ $t("i.cart") }}</a-button
       >
-
       <div class="price-list">
         <div class="retail-price">
           <span
@@ -77,6 +64,7 @@
         }}</span>
       </div>
     </div>
+    <!-- 下方商品规格,商品图片 -->
     <div class="content">
       <div v-if="this.specList.length > 0">
         <!-- 商品规格 -->
@@ -111,7 +99,7 @@
               <img
                 :src="$Util.imageFilter(item)"
                 alt=""
-                style="width: 800px; height: 800px; object-fit: contain" />
+                style="width: 800px; height: 800px;" />
             </div>
             <div v-else>
               <SimpleImageEmpty :desc="$t('p.no_detail_img')" />
@@ -189,8 +177,6 @@ export default {
       immediate: true,
       handler(n) {
         this.id = n;
-        // this.getItemDetail();
-        // this.getAccessoryData();
         this.getDownloadData();
       },
     },
@@ -205,7 +191,6 @@ export default {
       detail: {
         attr_list: {},
       },
-
       specList: [],
       accessoryData: [],
 
@@ -252,7 +237,6 @@ export default {
         ...params,
       })
         .then((res) => {
-          console.log("getItemDetail res", res);
           let detail = res.detail;
           this.detail = detail;
           if (detail.set_id) {
@@ -278,11 +262,9 @@ export default {
         ...params,
       })
         .then((res) => {
+          console.log("getSpecList res", res);
           this.specList = res.list;
-          console.log(
-            "getSpecList res11111111111111111111111111111111111111111111111111111111111111111111111111",
-            this.specList
-          );
+          console.log("this.specList", this.specList);
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
             item_id: res.list[this.mountingIndex].id,
@@ -303,7 +285,6 @@ export default {
         price: this.detail.purchase_price,
         ...params,
       }).then((res) => {
-        console.log("hanldeAddToShopCart res:", res);
         this.$message.success(this.$t("i.add_success"));
         this.detail.in_shopping_cart = true;
       });
@@ -348,7 +329,6 @@ export default {
         ...params,
       })
         .then((res) => {
-          console.log("AttachmentFile res", res);
           this.downloadData = res.list;
         })
         .catch((err) => {
@@ -375,7 +355,6 @@ export default {
           item_id: this.detail.id,
           price: this.detail.fob_eur,
         }).then((res) => {
-          console.log("hanldeAddToFavorite res:", res);
           this.$message.success(_this.$t("i.favorite_success"));
           this.getItemDetail();
         });
@@ -384,7 +363,6 @@ export default {
           item_id: this.detail.id,
           price: this.detail.fob_usd,
         }).then((res) => {
-          console.log("hanldeAddToFavorite res:", res);
           this.$message.success(_this.$t("i.favorite_success"));
           this.getItemDetail();
         });
@@ -426,26 +404,19 @@ export default {
   display: flex;
   flex-wrap: wrap;
   box-sizing: border-box;
-  padding: 63px 70px 200px;
-
+  padding: 63px 70px;
   .imgs-content {
-    // width: calc(~'100% - 620px');
-    width: 900px;
-    height: 600px;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    flex: 1;
+    justify-content: center;
     color: #111111;
     line-height: 22px;
     font-size: 16px;
     font-weight: 500;
     box-sizing: border-box;
-    padding-left: 64px;
   }
 
   .info-content {
-    // width: 500px;
     flex: 1;
     // margin-right: 120px;
     overflow: hidden;

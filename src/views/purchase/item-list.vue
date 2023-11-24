@@ -99,9 +99,9 @@
 </template>
 
 <script>
-import Core from "../../core";
+import Core from "@/core";
 
-import SimpleImageEmpty from "../../components/common/SimpleImageEmpty.vue";
+import SimpleImageEmpty from "@/components/common/SimpleImageEmpty.vue";
 import { ExportOutlined } from "@ant-design/icons-vue";
 import ExploredContentPay from "./components/ExploredContentPay.vue";
 const MONETARY_TYPE = Core.Const.ITEM.MONETARY_TYPE;
@@ -320,37 +320,11 @@ export default {
 </script>
 
 <style lang="less">
-.ant-form {
-    width: 100%;
-}
-
-.ant-form-item {
-    margin: 0;
-}
-
-.ant-input {
-    border: none;
-    border-radius: 0px !important;
-    border-bottom: 1px solid #d9d9d9;
-}
-
-.ant-input:hover {
-    border-color: #fff;
-    border-bottom-color: #d9d9d9;
-}
-
-.ant-input:focus {
-    border-color: #fff;
-    border-bottom-color: #d9d9d9;
-    box-shadow: none;
-    outline: 0;
-}
-
 #PurchaseItemList {
     background-color: #fff;
     border-radius: 6px;
     overflow: hidden;
-
+    flex: 1;
     .item-header-container {
         .ant-tabs.ant-tabs-top {
             .ant-tabs-nav {
@@ -449,11 +423,10 @@ export default {
             }
         }
     }
-
     .item-content-container {
         display: flex;
         width: 100%;
-
+        height: 100%;
         .category-container {
             width: 260px;
             box-sizing: border-box;
@@ -558,23 +531,30 @@ export default {
         }
 
         .item-content-empty {
-            .flex(center);
+            height: 100%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
         }
 
         &.full-content {
             .item-content,
             .item-content-empty {
                 width: 100%;
+                height: 100% !important; 
             }
         }
 
         .bom-content {
             padding: 48px;
             width: 100%;
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
         }
     }
 }
-
 .shop-cart-brief-content {
     visibility: hidden;
 

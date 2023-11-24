@@ -1,28 +1,6 @@
 <template>
-    <div class="banner_container">
-        <!-- <div class="swiper-container">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="(item,index) in imgs" :key="index">
-                    <img :src="$Util.imageFilter(item.logo)" @click="changeIndex(imgs,index)"/>
-                </div>
-            </div> -->
-            <!-- <div class="swiper-pagination"></div> -->
-
-        <!-- </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div> -->
-        <!-- <img :src="getImgUrl(imgIndex)" class="img-big"> -->
-
-
-        <a-carousel arrows dots-class="slick-dots slick-thumb" dotPosition="left" :afterChange="handleAafterChange" v-if="type === 0">
-            <template #customPaging="props">
-                <a >
-                    <img :src="getImgUrl(props.i)" @click="changeIndex(imgs,props.i)"/>
-                </a>
-            </template>
-            <div v-for="(item,index) in imgs" :key="index">
-             
-            </div>
+  <div class="banner_container">
+    <!-- <a-carousel arrows dots-class="slick-dots slick-thumb" dotPosition="left" :afterChange="handleAafterChange" v-if="type === 0">
             <template #prevArrow>
                 <div class="custom-slick-arrow" style="left: 10px; z-index: 1">
                     <up-outlined />
@@ -33,189 +11,201 @@
                     <down-outlined />
                 </div>
             </template>
-        </a-carousel>
-        <div class="img-big">
-            <img :src="getImgUrl(imgIndex)" />
-        </div>
+        </a-carousel> -->
+
+    <div class="img-big">
+      <img :src="getImgUrl(imgIndex)" />
     </div>
+    <div class="img-active" v-if="type === 0">
+      <div class="left-icon">
+        <left-outlined @click="imgPreview(0)" />
+      </div>
+      <div class="img-item" ref="imgArea">
+        <img
+          class="item"
+          :class="{ active: index === imgIndex }"
+          v-for="(item, index) in imgsArr"
+          :key="index"
+          :src="$Util.imageFilter(item)"
+          alt="" />
+      </div>
+      <div class="right-icon">
+        <right-outlined @click="imgPreview(1)" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import { UpOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { LeftOutlined, RightOutlined } from "@ant-design/icons-vue";
 
 export default {
-    props: {
-        imgs: Array,
-        type: {
-            Number,
-            default: 0
-        },
-        imgIndex: Number
+  props: {
+    imgs: {
+      type: [Object, Array],
+      default: () => {
+        return [];
+      },
     },
-    components: {
-        UpOutlined,
-        DownOutlined
+    type: {
+      Number,
+      default: 0,
     },
-    data() {
-        return {
-            // imgs: [],
-            // imgIndex: 0,
+    item_id: {
+      type: Number,
+      default: 0,
+    },
+  },
+  components: {
+    LeftOutlined,
+    RightOutlined,
+  },
+  data() {
+    return {
+      imgIndex: 0,
+    };
+  },
+  watch: {
+    imgs: {
+      handler(n) {
+        console.log("watch imgs or details:", n);
+      },
+    },
+    type: {
+      handler(n) {
+        console.log("watch type:", n);
+      },
+    },
+    item_id: {
+      handler(n) {
+        console.log("watch item_id:", n);
+      },
+      immediate: true,
+    },
+  },
+  computed: {
+    imgsArr() {
+      console.log("imgsArr:", this.imgs);
+      let activeObj = {}
+      activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
+      console.log("activeObj:", activeObj);
+      // 如果activeObj.logo或者imgs不存在，返回空数组
+      if (!activeObj.logo && !activeObj.imgs) return []
+      let arr = []
+      if (activeObj.imgs) {
+        arr = activeObj.imgs.split(",")
+        // 找到imgs中的logo
+        let logo = activeObj.logo
+        let index = arr.indexOf(logo)
+        // 将logo放到第一位
+        if (index > -1) {
+          arr.splice(index, 1)
+          arr.unshift(logo)
+        } else {
+          arr.unshift(logo)
         }
+      } else {
+        arr = activeObj.logo
+      }
+      return arr
+    //   if (!this.imgs) return
+    //   // 找到item_id对应的对象
+    //   let activeObj = this.imgs.find((item) => item.item_id === this.item_id);
+    //   console.log("activeObj:", activeObj);
+    //   let arr = [];
+    // //   if (!this.imgs[0]) return;
+    // //   if (this.imgs[0].imgs) {
+    // //     arr = this.imgs[0].imgs.split(",");
+    // //     // 找到imgs中的logo
+    // //     let logo = this.imgs[0].logo;
+    // //     let index = arr.indexOf(logo);
+    // //     // 将logo放到第一位
+    // //     if (index > -1) {
+    // //       arr.splice(index, 1);
+    // //       arr.unshift(logo);
+    // //     }else{
+    // //         arr.unshift(logo);
+    // //     }
+    // //   } else {
+    // //     arr = this.imgs[0].logo;
+    // //   }
+    //   return arr;
     },
-    watch: {
-        "imgs": {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                console.log('watch detail.item_code n:', n)
-            }
-        },
-        "type": {
-            deep: true,
-            immediate: true,
-            handler(n) {
-                console.log('watch detail.item_code n:', n)
-            }
-        },
-
+  },
+  methods: {
+    getImgUrl() {
+      return this.$Util.imageFilter(this.imgsArr?this.imgsArr[this.imgIndex]:[],2);
     },
-    methods: {
-        getImgUrl(i) {
-            console.log("this.imgs",this.imgs)
-            if (this.imgs != undefined && this.imgs != null&& this.imgs != ""){
-                let img = ''
-                if (this.type === 0){
-                    img = this.imgs[i].imgs.split(",")
-                } else {
-                    if (this.imgs.imgs!== undefined){
-                        img = this.imgs.imgs.split(",")
-                    }
-
-                }
-                if (img.length === 0){
-                    return
-                }
-                return this.$Util.imageFilter(img[0],2)
-            }
-
-        },
-        changeIndex(imgs,i) {
-            // this.imgIndex = i
-            this.$emit('handleChangeIndex',{id:imgs[i].id,i})
-        },
-        handleAafterChange(i) {
-            this.$emit('handleChangeIndex',{id:this.imgs[i].id,i})
+    imgPreview(type) {
+      if (type === 0) {
+        if (this.imgIndex === 0) {
+          this.imgIndex = this.imgsArr.length - 1;
+        } else {
+          this.imgIndex--;
         }
+      } else {
+        if (this.imgIndex === this.imgsArr.length - 1) {
+          this.imgIndex = 0;
+        } else {
+          this.imgIndex++;
+        }
+      }
+    //   让当前图片居中
+      this.$refs.imgArea.scrollLeft = this.imgIndex * 70;
     },
-}
-
-
+  },
+};
 </script>
 
 <style lang="less" scoped>
 .banner_container {
-    position: relative;
-    overflow: hidden;
-    position: relative;
-    top: 60px;
-    display: flex;
-    padding: 20px 100px 20px 0;
-    min-height: 372px;
-    width: 100%;
-}
-
-/* For demo */
-.ant-carousel {
-    width: 90%;
-}
-.ant-carousel :deep(.slick-slider) {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.ant-carousel :deep(.slick-dots-left) {
-  left: 40px;
-}
-.ant-carousel :deep(.slick-dots) {
-  position: relative;
-  height: auto;
-}
-.ant-carousel :deep(.slick-slide img) {
-  border: 5px solid #fff;
-  display: block;
-  margin: auto;
-  max-width: 80%;
-}
-.ant-carousel :deep(.slick-arrow) {
-  display: none !important;
-}
-.ant-carousel :deep(.slick-thumb) {
-  bottom: 0px;
-}
-.ant-carousel :deep(.slick-thumb li) {
-  width: 60px;
-  height: 45px;
-  opacity: .5;
-}
-.ant-carousel :deep(.slick-thumb li img) {
-  width: 100%;
-  height: 100%;
-  filter: grayscale(100%);
-  display: block;
-}
-.ant-carousel :deep img {
-    object-fit: scale-down;
-}
-.ant-carousel :deep .slick-thumb li.slick-active img {
-    object-fit: scale-down;
-  filter: grayscale(0%);
-}
-
-.ant-carousel :deep(.slick-active) {
-    opacity: 1 !important;
-}
-
-.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
-  width: 25px;
-  height: 25px;
-  font-size: 25px;
-  color: #fff;
-  background-color: rgba(31, 45, 61, 0.11);
-  opacity: 0.3;
-  z-index: 1;
-  position: absolute;
-  left: 60px !important;
-  display: inline-block !important;
-}
-.ant-carousel :deep(.custom-slick-arrow:before) {
-  display: none;
-}
-.ant-carousel :deep(.custom-slick-arrow:hover) {
-  opacity: 0.5;
-}
-
-.ant-carousel :deep(.slick-slide h3) {
-  color: #fff;
-}
-
-.ant-carousel :deep(.slick-arrow.custom-slick-arrow) {
-  color: #6E7C94;
-  background: #ffffff;
-}
-.ant-carousel :deep(.slick-prev) {
-  top: 20px;
-}
-.ant-carousel :deep(.slick-next) {
-  top: 480px;
-}
-
-.img-big {
+  display: flex;
+  flex-direction: column;
+  padding: 0 100px;
+  max-width: 700px;
+  .img-big {
     width: 500px;
     height: 500px;
-    .fcc();
+    padding: 0 20px;
     img {
-        width: 500px;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
     // margin-left: 160px;
+  }
+  .img-active {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: center;
+    .left-icon,
+    .right-icon {
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .img-item {
+      height: 50px;
+      margin: 0 10px;
+      flex: 1;
+      display: flex;
+      //   超出滚动
+      overflow-x: auto;
+      overflow-y: hidden;
+    //   隐藏滚动条
+        &::-webkit-scrollbar {
+            display: none;
+        }
+      .item {
+        height: 50px;
+        width: 50px;
+        margin: 0 10px;
+        object-fit: cover;
+      }
+      .active {
+        border: 1px solid #E0E0E0;
+      }
+    }
+  }
 }
 </style>

@@ -241,8 +241,6 @@ export default {
   methods: {
     clickTab(e, a) {
       this.flag_display = false;
-      // if(e == 16)
-      // console.log('click tab >>', e, a)
     },
     routerChange(type, item = {}) {
       let routeUrl = "";
@@ -275,8 +273,6 @@ export default {
       // this.getTableData()
     },
     pageSizeChange(current, size) {
-      // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
       // this.getTableData()
     },
@@ -292,10 +288,6 @@ export default {
       this.$refs.itemList.pageChangeName(this.searchForm.name, this.searchType);
     },
     handleCategoryChange(category) {
-      console.log(
-        "handleCategoryChange category1:",
-        this.searchForm.category_id
-      );
       this.tableData = [];
       this.searchForm.category_id = category;
       this.flag_display = false;
@@ -385,11 +377,9 @@ export default {
     getShopCartData(flag = false) {
       // 获取 购物车 数据
       Core.Api.ShopCart.list().then((res) => {
-        console.log("getShopCartData res:", res);
         this.briefVisible = flag;
         let item = res.list[0] || {};
         this.briefList = [item.item || {}];
-        console.log("this.briefList: ", this.briefList);
         this.briefCount = res.count;
       });
     },
@@ -397,7 +387,6 @@ export default {
     handleCartAdd(item) {
       // 添加到购物车
       let _this = this;
-      console.log("handleCartAdd item:", item);
       if (item.set_id && item.attr_list.length > 1) {
         this.routerChange("detail", item);
         return;
@@ -407,7 +396,6 @@ export default {
         amount: 1,
         price: item.purchase_price,
       }).then((res) => {
-        console.log("res:", res);
         this.$message.success(_this.$t("i.add_success"));
         this.getShopCartData(true);
         this.orderId = res.id;
@@ -461,7 +449,6 @@ export default {
         ...form,
         language: this.$i18n.locale === "en" ? 1 : 0,
       });
-      console.log("handleRepairExport exportUrl", exportUrl);
       window.open(exportUrl, "_blank");
       this.exportDisabled = false;
     },
@@ -469,7 +456,6 @@ export default {
     // 备注
     handleRemarkEditBlur(item) {
       let _item = Core.Util.deepCopy(item);
-      console.log("handleCountEditBlur _item:", _item);
       Core.Api.ShopCart.remark({
         id: this.orderId,
         remark: _item.remark,
@@ -601,7 +587,7 @@ export default {
   }
   .item-content-container {
     display: flex;
-    width: 100%;
+    justify-content: center;
     .category-container {
       width: 260px;
       box-sizing: border-box;

@@ -345,7 +345,6 @@ export default {
     },
     methods: {
         async routerChange(type, item = {}) {
-            console.log('routerChange item:', item)
             let routeUrl = ''
             switch (type) {
                 case 'detail':  // 详情
@@ -418,7 +417,6 @@ export default {
                 page: this.currPage,
                 page_size: this.pageSize
             }).then(res => {
-                console.log("getTableData res:", res)
                 this.total = res.count;
                 this.tableData = res.list;
                 // this.tableData.forEach(item=>{
@@ -436,7 +434,6 @@ export default {
             Core.Api.Purchase.statusList({
                 search_type: this.search_type
             }).then(res => {
-                console.log("getStatusStat res:", res)
                 let total = 0
 
                 this.statusList.forEach(statusItem => {
@@ -478,7 +475,6 @@ export default {
             Core.Api.Purchase.recreate({
                 id: item.id,
             }).then(res => {
-                console.log("handleRecreate res:", res)
                 this.routerChange('edit', item)
             }).catch(err => {
                 console.log('handleRecreate err:', err)
@@ -509,7 +505,6 @@ export default {
                 search_type: this.search_type,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
-            console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
@@ -573,7 +568,6 @@ export default {
                 search_type: this.search_type,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
-            console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },
@@ -588,7 +582,6 @@ export default {
                 search_type: this.search_type,
                 language: this.$i18n.locale === 'en' ? 1 : 0
             })
-            console.log("handleRepairExport _exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
             this.exportDisabled = false;
         },

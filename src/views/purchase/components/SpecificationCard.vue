@@ -99,7 +99,6 @@ export default {
   computed: {
     priceKey() {
       let priceKey = this.$auth("DISTRIBUTOR") ? "fob_" : "purchase_price_";
-      console.log("priceKey:", priceKey);
       return priceKey;
     },
     lang() {
@@ -108,7 +107,6 @@ export default {
   },
   mounted() {
     this.currency = Core.Data.getCurrency();
-    console.log(this.data, "data");
     this.imgs = this.data.imgs;
     if (this.imgs != undefined && this.imgs != null && this.imgs != "") {
       let img = this.imgs.split(",");
@@ -222,6 +220,9 @@ export default {
         width: 100%;
         font-weight: 500;
         .ell();
+        span{
+          margin-right: 10px;
+        }
       }
       .code {
         // margin-top: 6px;
