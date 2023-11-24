@@ -10,7 +10,7 @@
         @handleChangeIndex="changeId" />
     </div>
     <!-- 右侧商品详情 -->
-    <div class="info-content" v-if="this.specList.length <= 1">
+    <div class="info-content" v-if="isShow">
       <div>
         <div class="title" v-if="lang == 'zh'">
           {{ $i18n.locale == "zh" ? detail.name : detail.name_en }}
@@ -191,6 +191,7 @@ export default {
       detail: {
         attr_list: {},
       },
+      isShow: false,
       specList: [],
       accessoryData: [],
 
@@ -241,6 +242,8 @@ export default {
           this.detail = detail;
           if (detail.set_id) {
             this.getSpecList();
+          }else{
+            this.isShow = true;
           }
         })
         .catch((err) => {
@@ -262,9 +265,7 @@ export default {
         ...params,
       })
         .then((res) => {
-          console.log("getSpecList res", res);
           this.specList = res.list;
-          console.log("this.specList", this.specList);
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
             item_id: res.list[this.mountingIndex].id,

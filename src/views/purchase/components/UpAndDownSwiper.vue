@@ -27,6 +27,7 @@
           v-for="(item, index) in imgsArr"
           :key="index"
           :src="$Util.imageFilter(item)"
+          @click="previewImg(index)"
           alt="" />
       </div>
       <div class="right-icon">
@@ -85,10 +86,8 @@ export default {
   },
   computed: {
     imgsArr() {
-      console.log("imgsArr:", this.imgs);
       let activeObj = {}
       activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
-      console.log("activeObj:", activeObj);
       // 如果activeObj.logo或者imgs不存在，返回空数组
       if (!activeObj.logo && !activeObj.imgs) return []
       let arr = []
@@ -108,28 +107,6 @@ export default {
         arr = activeObj.logo
       }
       return arr
-    //   if (!this.imgs) return
-    //   // 找到item_id对应的对象
-    //   let activeObj = this.imgs.find((item) => item.item_id === this.item_id);
-    //   console.log("activeObj:", activeObj);
-    //   let arr = [];
-    // //   if (!this.imgs[0]) return;
-    // //   if (this.imgs[0].imgs) {
-    // //     arr = this.imgs[0].imgs.split(",");
-    // //     // 找到imgs中的logo
-    // //     let logo = this.imgs[0].logo;
-    // //     let index = arr.indexOf(logo);
-    // //     // 将logo放到第一位
-    // //     if (index > -1) {
-    // //       arr.splice(index, 1);
-    // //       arr.unshift(logo);
-    // //     }else{
-    // //         arr.unshift(logo);
-    // //     }
-    // //   } else {
-    // //     arr = this.imgs[0].logo;
-    // //   }
-    //   return arr;
     },
   },
   methods: {
@@ -152,6 +129,9 @@ export default {
       }
     //   让当前图片居中
       this.$refs.imgArea.scrollLeft = this.imgIndex * 70;
+    },
+    previewImg(index) {
+      this.imgIndex = index;
     },
   },
 };
@@ -192,6 +172,7 @@ export default {
       //   超出滚动
       overflow-x: auto;
       overflow-y: hidden;
+      cursor: pointer;
     //   隐藏滚动条
         &::-webkit-scrollbar {
             display: none;
