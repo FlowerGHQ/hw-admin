@@ -99,10 +99,9 @@ export default {
         // 将logo放到第一位
         if (index > -1) {
           arr.splice(index, 1)
-          arr.unshift(logo)
-        } else {
-          arr.unshift(logo)
-        }
+        } 
+        if(logo) arr.unshift(logo)
+
       
       return arr
     },
