@@ -446,7 +446,7 @@ const routes = [
                     title: '采购订单详情',
 	                auth: ["purchase-order.detail"],
                 }
-            }
+            },            
         ]
     },
     { //商品管理 - 平台端
