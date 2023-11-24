@@ -446,7 +446,7 @@ const routes = [
                     title: '采购订单详情',
 	                auth: ["purchase-order.detail"],
                 }
-            }
+            },            
         ]
     },
     { //商品管理 - 平台端
@@ -1730,6 +1730,7 @@ const routes = [
 			title: '工作台',
 			title_en: 'Staging',
 			icon: 'i_crm_bo',
+            roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{
@@ -2004,7 +2005,7 @@ const routes = [
             title: '好物订单',
             title_en: 'Good Items Order',
             icon: 'i_s_customer',
-            // auth: ["crm-customer.list"],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -2134,6 +2135,7 @@ const routes = [
 			title: '邮箱订阅状态',
 			title_en: 'Mailbox subscription status',
 			icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{

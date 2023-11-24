@@ -393,6 +393,7 @@ const messages = {
             id: '税号',
             pay_type: '付款方式',
             sales_area: '销售区域',
+            deposit_payment: "定金支付",
             drawing_code: '图面代号',
             create_time: '创建时间',
             update_time: '更新时间',
@@ -426,6 +427,8 @@ const messages = {
             color_en: '颜色英文',
             net_weight: '净重',
             gross_weight: '毛重',
+            p_enter_amount: '请输入定金金额',
+            not_null_and_0: '不能为空或为0',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -3037,6 +3040,7 @@ const messages = {
             id: 'Tax Id',
             pay_type: 'Payment Method',
             sales_area: 'Sales Region',
+            deposit_payment: "Deposit Payment",
             drawing_code: 'Drawing code',
             update_time: 'Update Time',
             edit: 'Edit The Distributor',
@@ -3070,6 +3074,8 @@ const messages = {
             color_en: 'color(English)',
             net_weight: 'Net weight',
             gross_weight: 'Gross weight',
+            p_enter_amount: 'Please enter the deposit amount',
+            not_null_and_0: 'Cannot be empty or 0',
         },
         e: {
             employee_list: 'employee list',
