@@ -5,7 +5,7 @@
     @click="changeData(data.id, i)">
     <div class="card-left">
       <div class="card-img">
-        <img :src="getImgUrl(data.logo)" />
+        <img :src="$Util.imageFilter(data.logo,2)" />
       </div>
       <div class="card-info">
         <div class="title">
@@ -106,6 +106,7 @@ export default {
     },
   },
   mounted() {
+    console.log(this.data)
     this.currency = Core.Data.getCurrency();
     this.imgs = this.data.imgs;
     if (this.imgs != undefined && this.imgs != null && this.imgs != "") {
