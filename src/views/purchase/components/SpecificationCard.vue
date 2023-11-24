@@ -5,7 +5,7 @@
     @click="changeData(data.id, i)">
     <div class="card-left">
       <div class="card-img">
-        <img :src="getImgUrl(data.imgs)" />
+        <img :src="getImgUrl(data.logo)" />
       </div>
       <div class="card-info">
         <div class="title">
