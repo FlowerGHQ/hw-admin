@@ -84,9 +84,9 @@
             :desc="$t('p.no_item_spec')" />
         </div>
       </div>
-      <div class="shop-imgs">
+      <div class="shop-imgs" v-if="specList[mountingIndex]?.imgs && specList.length>0&&detail.imgs">
         <div class="title">{{ $t("i.commercial_picture") }}</div>
-        <div class="img-list">
+        <div class="img-list" >
           <div
             class="img-area"
             :style="{
