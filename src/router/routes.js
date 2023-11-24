@@ -1741,6 +1741,7 @@ const routes = [
 			title: '工作台',
 			title_en: 'Staging',
 			icon: 'i_crm_bo',
+            roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{
@@ -2015,7 +2016,7 @@ const routes = [
             title: '好物订单',
             title_en: 'Good Items Order',
             icon: 'i_s_customer',
-            // auth: ["crm-customer.list"],
+            roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
             {
@@ -2145,6 +2146,7 @@ const routes = [
 			title: '邮箱订阅状态',
 			title_en: 'Mailbox subscription status',
 			icon: 'i_s_customer',
+            roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{
