@@ -123,6 +123,7 @@ export default {
                 this.searchForm.category_id = newValue;
                 this.tableData = []
                 this.getTableData();
+                // tab-切换进行请求操作
                 this.isBomShow(this.searchForm.category_id);
             },
         },
