@@ -99,7 +99,7 @@
               <img
                 :src="$Util.imageFilter(item)"
                 alt=""
-                style="width: 800px; height: 800px;" />
+                style="width: 800px" />
             </div>
             <div v-else>
               <SimpleImageEmpty :desc="$t('p.no_detail_img')" />
