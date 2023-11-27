@@ -17,7 +17,7 @@
                             </div>
                             <p class="sub">{{ item.code || "-" }}</p>
                             <p class="name" v-if="lang == 'zh'">
-                                {{                                    
+                                {{
                                     item.name || "-"
                                 }}
                             </p>
@@ -31,7 +31,7 @@
                                 v-if="item.original_price_currency === 'eur' || item.original_price_currency === 'EUR'"
                                 class="price m-t-22"
                             >
-                                {{ 
+                                {{
                                     $Util.priceUnitFilter(currency)
                                 }}
                                 {{
@@ -86,7 +86,7 @@
                     :desc="$t('i.no_search_list')"
                 />
             </template>
-            <div class="bom-content" v-else>                
+            <div class="bom-content" v-else>
                 <ExploredContentPay
                     :key="menaKey"
                     :id="searchForm.category_id"
@@ -109,7 +109,7 @@ const MONETARY_TYPE = Core.Const.ITEM.MONETARY_TYPE;
 export default {
     name: "PurchaseItemList",
     components: {
-        SimpleImageEmpty,        
+        SimpleImageEmpty,
         ExportOutlined,
         ExploredContentPay,
     },
@@ -127,8 +127,8 @@ export default {
                 this.isBomShow(this.searchForm.category_id);
             },
         },
-        name: {            
-            handler(newValue) {                
+        name: {
+            handler(newValue) {
                 this.searchForm.name = newValue;
             },
         },
@@ -147,7 +147,7 @@ export default {
             tableData: [],
 
             // 搜索
-            categoryList: [],                       
+            categoryList: [],
             searchForm: {
                 name: "",
                 name_en: "",
@@ -173,7 +173,7 @@ export default {
     mounted() {
         this.currency = Core.Data.getCurrency();
         this.getTableData();
-        this.getCategoryList();        
+        this.getCategoryList();
     },
 
     methods: {
@@ -199,7 +199,7 @@ export default {
             };
 
             Core.Api.Item.list(Core.Util.searchFilter(params))
-                .then((res) => {                
+                .then((res) => {
                     this.total = res.count;
                     this.tableData = res.list;
                 })
@@ -209,10 +209,10 @@ export default {
                 .finally(() => {
                     this.loading = false;
                 });
-        },  
+        },
         handleCartAdd(item) {
             // 添加到购物车
-            let _this = this;            
+            let _this = this;
             if (item.set_id && item.attr_list.length > 1) {
                 this.routerChange("detail", item);
                 return;
@@ -221,16 +221,66 @@ export default {
                 item_id: item.id,
                 amount: 1,
                 price: item.purchase_price,
-            }).then((res) => {                
-                this.$message.success(_this.$t("i.add_success"));                
+            }).then((res) => {
+                this.$message.success(_this.$t("i.add_success"));
             });
         },
         getCategoryList() {
             Core.Api.ItemCategory.tree({
                 id: 0,
                 is_authority: 1,
+                depth: 1
+            }).then(res => {
+                this.categoryList = res.list
+                this.handleCategoryChange(this.searchForm.category_id)
+            })
+        },
+
+        handleExportConfirm() { // 确认订单是否导出
+            let _this = this;
+            this.$confirm({
+                title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+                okText: _this.$t('def.sure'),
+                cancelText: _this.$t('def.cancel'),
+                onOk() {
+                    _this.handleRepairExport();
+                }
+            })
+        },
+        handleRepairExport() { // 订单导出
+            this.exportDisabled = true;
+
+            let form = Core.Util.deepCopy(this.searchForm);
+
+            // 编码
+            if (this.searchType === Core.Const.ITEM.SEARCH_TYPE.CODE) {
+                form.code = form.name;
+                form.name = "";
+            }
+
+            for (const key in form) {
+                form[key] = form[key] || ''
+            }
+            let exportUrl = Core.Api.Export.exportOrderPrice({
+                ...form,
+                language: this.$i18n.locale === 'en' ? 1 : 0
+            })
+            console.log("handleRepairExport exportUrl", exportUrl)
+            window.open(exportUrl, '_blank')
+            this.exportDisabled = false;
+        },
+
+        // 备注
+        handleRemarkEditBlur(item) {
+            let _item = Core.Util.deepCopy(item)
+            console.log('handleCountEditBlur _item:', _item)
+            Core.Api.ShopCart.remark({
+                id: this.orderId,
+                remark: _item.remark,
+            }).then(res => {
+                console.log('handleRemarkEditBlur: res', res)
             }).then((res) => {
-                this.categoryList = res.list;                
+                this.categoryList = res.list;
             }).catch(err => {
                 console.log("获取类型: err", err);
             });
@@ -242,7 +292,7 @@ export default {
         routerChange(type, item = {}) {
             let routeUrl = "";
             switch (type) {
-                case "detail": // 详情      
+                case "detail": // 详情
                     this.$emit("changeDisplay", true, item.id);
 
                     break;
@@ -262,12 +312,12 @@ export default {
             }
         },
         // refs操作的
-        pageChangeName(name, searchType) {            
+        pageChangeName(name, searchType) {
             this.searchForm.name = name;
             this.searchType = searchType;
             this.pageChange(1);
         },
-        handleNameReset() {            
+        handleNameReset() {
             this.searchForm.name = "";
             this.pageChange(1);
         },
@@ -278,33 +328,33 @@ export default {
             this.getTableData();
         },
         pageSizeChange(current, size) {
-            // 页码尺寸改变            
+            // 页码尺寸改变
             this.pageSize = size;
             this.getTableData();
         },
-        // 搜索逻辑        
+        // 搜索逻辑
         handleSearch() {
             this.pageChange(1);
         },
         /* methods end*/
         // 是否显示爆炸图
         isBomShow(id) {
-            this.bomShow = false;            
+            this.bomShow = false;
             for (let i = 0; i < this.categoryList.length; i++) {
                 if (this.categoryList[i].id === id) {
-                    this.bomShow = this.categoryList[i].display_mode === 2;                    
+                    this.bomShow = this.categoryList[i].display_mode === 2;
                     return;
-                }                
-                if (this.categoryList[i].children != null) {                    
+                }
+                if (this.categoryList[i].children != null) {
                     this.isBomChildren(this.categoryList[i], id);
                 }
-            }            
+            }
         },
         isBomChildren(element, id) {
             for (let i = 0; i < element.children.length; i++) {
                 if (element.children[i].children != null) {
                     this.isBomChildren(element.children[i], id);
-                }                                
+                }
                 if (element.children[i].id === id) {
                     this.bomShow = element.children[i].display_mode === 2;
                     return;
@@ -543,7 +593,7 @@ export default {
             .item-content,
             .item-content-empty {
                 width: 100%;
-                height: 100% !important; 
+                height: 100% !important;
             }
         }
 

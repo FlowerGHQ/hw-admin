@@ -407,6 +407,7 @@ export default {
       Core.Api.ItemCategory.tree({
         id: 0,
         is_authority: 1,
+        depth: 3
       })
         .then((res) => {
           this.tabLoading = false;

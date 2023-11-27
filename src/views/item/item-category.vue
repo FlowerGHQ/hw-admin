@@ -169,6 +169,7 @@ export default {
             Core.Api.ItemCategory.tree({
                 page: 0,
                 parent_id: parent_id,
+                depth: 3
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
@@ -194,6 +195,7 @@ export default {
             Core.Api.ItemCategory.tree({
                 page: 0,
                 id: id,
+                depth: 3,
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null
