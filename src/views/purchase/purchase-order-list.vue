@@ -415,6 +415,9 @@ export default {
             this.selectedRowKeys = [];
             // 刷新列表
             this.getTableData()
+            // 刷新tab-数值
+            this.getStatusStat();                
+
         },
 
         async routerChange(type, item = {}) {
