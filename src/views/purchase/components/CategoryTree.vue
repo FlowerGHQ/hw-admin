@@ -57,6 +57,7 @@ export default {
                 page: 0,
                 parent_id: parent_id,
                 is_authority: 1,
+                depth: 3
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null

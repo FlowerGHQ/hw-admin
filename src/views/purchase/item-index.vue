@@ -335,6 +335,7 @@ export default {
             Core.Api.ItemCategory.tree({
                 id: 0,
                 is_authority: 1,
+                depth: 3
             }).then(res => {                
                 this.categoryList = res.list
                 this.handleCategoryChange(this.firstLevelId)
