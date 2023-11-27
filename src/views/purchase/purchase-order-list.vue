@@ -88,7 +88,7 @@
         </div>
         <div class="table-container">
             <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                :row-selection="searchForm.status === '150'? rowSelection : null"
+                :row-selection="searchForm.status === '150' && $auth('ADMIN')? rowSelection : null"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
                     <template v-if="column.dataIndex === 'sn' && $auth('purchase-order.detail')">
@@ -301,7 +301,7 @@ export default {
                 columns.splice(9, 0, { title: this.$t('p.amount_paid'), dataIndex: 'payment', key: 'amount_paid' },)
             }
             // 失败原因列表-仅存在与待生产tab
-            if(this.searchForm.status === '150') {
+            if(this.searchForm.status === '150' && this.$auth('ADMIN')) {
                 columns.push(
                     { title: this.$t('p.reason_fail'), key: 'sync_failure_reason', dataIndex: 'sync_failure_reason',}
                 )
