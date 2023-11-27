@@ -2032,6 +2032,7 @@ let Const = {
             '1003': { key: 1003, zh: '领取客户', en: 'OBTAIN_CUSTOMER', value: 1003 },
             '2001': { key: 2001, zh: '分配客户', en: 'DISTRIBUTE_CUSTOMER', value: 2001 },
             '1004': { key: 1004, zh: '退回公海', en: 'RETURN_POOL', value: 1004 },
+            '1010': { key: 1010, zh: '修改区域信息', en: 'MODIFYING_REGION', value : 1010},
             '2002': { key: 2002, zh: '移交客户', en: 'CUSTOMER_TO_OTHERS', value: 2002 },
 
             '2003': { key: 2003, zh: '新建商机', en: 'CREATE_BO', value: 2003 },

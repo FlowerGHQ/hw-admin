@@ -180,7 +180,7 @@ export default {
             try {
                 item = JSON.parse(content)
             } catch (e) {
-                
+                console.log("e", e)
             }
             // console.log("type", type)
             console.log("item9999", item)
@@ -194,6 +194,7 @@ export default {
                     case this.TYPE.DELETE_ORDER_INCOME: return " 删除了回款单"; break;
                     case this.TYPE.AUDIT_PASS: return "审核人 " + user + " 审核通过"; break;
                     case this.TYPE.AUDIT_REFUSE: return "审核人 " + user + " 审核未通过"; break;
+                    case this.TYPE.MODIFYING_REGION: return item.old_value === ''? `将区域更新为【${item.new_value||""}】`:`将区域【${item.old_value||''}】更新为【${item.new_value||''}】`; break;
                 }
             } else if (type >= 2000 && type < 3000) {
                 switch (type) {
@@ -352,7 +353,6 @@ export default {
     .table-container {
         margin-top: -10px;
     }
-
     .panel-content {
         .title {
             position: relative;
@@ -495,4 +495,6 @@ export default {
         }
     }
 
-}</style>
+}
+
+</style>
