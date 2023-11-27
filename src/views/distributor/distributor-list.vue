@@ -217,6 +217,7 @@ export default {
         handleSearchReset() {  // 重置搜索
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.$refs.CountryCascader.handleReset()
+            this.$refs.TimeSearch?.handleReset()
             this.pageChange(1);
         },
         // 表格筛选
