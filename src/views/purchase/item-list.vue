@@ -231,8 +231,7 @@ export default {
                 is_authority: 1,
                 depth: 1
             }).then(res => {
-                this.categoryList = res.list
-                this.handleCategoryChange(this.searchForm.category_id)
+                this.categoryList = res.list                
             })
         },
 
