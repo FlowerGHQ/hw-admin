@@ -28,7 +28,7 @@
                             </p>
                             <!-- item.original_price_currency.toUpperCase() === MONETARY_TYPE['€'] // 后期单位可能要变成联动的 -->
                             <p
-                                v-if="item.original_price_currency === 'eur' || item.original_price_currency === 'EUR'"
+                                v-if="currency === 'eur' || currency === 'EUR'"
                                 class="price m-t-22"
                             >
                                 {{ 
