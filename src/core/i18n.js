@@ -429,6 +429,7 @@ const messages = {
             gross_weight: '毛重',
             p_enter_amount: '请输入定金金额',
             not_null_and_0: '不能为空或为0',
+            not_null_and_1: '不能填写小于0',
         },
         e: { // 用户
             employee_list: '用户列表',
@@ -3073,6 +3074,7 @@ const messages = {
             gross_weight: 'Gross weight',
             p_enter_amount: 'Please enter the deposit amount',
             not_null_and_0: 'Cannot be empty or 0',
+            not_null_and_1: 'The value cannot be less than 0',
         },
         e: {
             employee_list: 'employee list',
