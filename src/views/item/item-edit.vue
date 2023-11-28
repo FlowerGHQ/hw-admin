@@ -907,6 +907,9 @@ export default {
                 if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
                     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
                 }
+                if (Number(form.deposit) < 0) {
+                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
+                }
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.fob_eur) {
