@@ -34,7 +34,7 @@ export default {
       default: () => {
         return [];
       },
-    },
+    }, 
     type: {
       Number,
       default: 0,
