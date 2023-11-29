@@ -1,6 +1,6 @@
 <template>
 <div class="CategoryTree">
-    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+    <a-table :loading="loading" :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
         :row-key="record => record.id"  :pagination='false' size="small"
         v-model:expandedRowKeys='expandedRowKeys' :expandRowByClick='true' :expandIconColumnIndex='0'
         @expand='handleExpandedChange' :indentSize='24'>
@@ -35,7 +35,7 @@ export default {
             tableData: [],
             tableColumns: [{ title: '分类名称', dataIndex: 'name', width: '100%' }],
             expandedRowKeys: [],
-
+            loading: false,
             selectKeys: '',
         }
     },
@@ -57,6 +57,7 @@ export default {
                 page: 0,
                 parent_id: parent_id,
                 is_authority: 1,
+                depth: 3
             }).then(res => {
                 res.list.forEach(item => {
                     item.has_children ? item.children = [] : item.children = null

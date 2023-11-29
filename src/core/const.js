@@ -632,6 +632,8 @@ let Const = {
             '360': { value: '0', key: 360, color: 'yellow', zh: '全部收货', en: 'Received' },
             '400': { value: '0', key: 400, color: 'green', zh: '交易完成', en: 'Order completed' },
             '630': { value: '0', key: 630, color: 'yellow', zh: '待审核', en: 'To audit' },
+            '150': { value: '0', key: 150, color: 'blue-2', zh: '待生产', en: 'To be produced' },
+            '160': { value: '0', key: 160, color: 'green-2', zh: '生产中', en: 'In production' },
             '-100': { value: '0', key: -100, color: 'gray', zh: '交易关闭', en: 'Canceled' },
         },
         // 支付方式
@@ -2030,6 +2032,7 @@ let Const = {
             '1003': { key: 1003, zh: '领取客户', en: 'OBTAIN_CUSTOMER', value: 1003 },
             '2001': { key: 2001, zh: '分配客户', en: 'DISTRIBUTE_CUSTOMER', value: 2001 },
             '1004': { key: 1004, zh: '退回公海', en: 'RETURN_POOL', value: 1004 },
+            '1010': { key: 1010, zh: '修改区域信息', en: 'MODIFYING_REGION', value : 1010},
             '2002': { key: 2002, zh: '移交客户', en: 'CUSTOMER_TO_OTHERS', value: 2002 },
 
             '2003': { key: 2003, zh: '新建商机', en: 'CREATE_BO', value: 2003 },

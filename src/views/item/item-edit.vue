@@ -82,6 +82,19 @@
                 </div>
             </div>
             <template v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
+                <!-- 定金支付 -->
+                <div class="form-item required">
+                    <div class="key">{{ $t('d.deposit_payment') }}</div>
+                    <div class="value flex-style">
+                        <a-radio-group v-model:value="temporarily_deposit" @change="DepositPaymentChange">
+                            <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+
+                        <template v-if="temporarily_deposit !== 0">
+                            <a-input style="width: 120px;" v-model:value="form.deposit" :placeholder="$t('d.p_enter_amount')" />
+                        </template>
+                    </div>
+                </div>
                 <!-- 图面代号 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('d.drawing_code') }}</div>
@@ -428,6 +441,7 @@ export default {
                 config: '',
                 man_hour: '',
                 sales_area_ids: [],
+                deposit: undefined, // 定金支付
                 drawing_code: "",
                 color: "",
                 color_en: "",
@@ -442,6 +456,7 @@ export default {
                 accessory_code:'',
                 accessory_amount: '',
             },
+            temporarily_deposit: 0,// 临时定金支付按钮
             salesList: [],
             // 商品分类
             item_category: {},
@@ -515,15 +530,15 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('i.code'), key: 'input', dataIndex: 'code'},    // , fixed: 'left'
                 {title: this.$t('n.name'), key: 'input', dataIndex: 'name'},
                 {title: this.$t('n.name_en'), key: 'input', dataIndex: 'name_en'},
             )
             column.push(
                 {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
-                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', fixed: 'right', unit: '€'},
-                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', fixed: 'right', unit: '$'},
-                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation', fixed: 'right'},
+                {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', unit: '€'}, //, fixed: 'right'
+                {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', unit: '$'}, // , fixed: 'right'
+                {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             return column
@@ -591,6 +606,7 @@ export default {
         },
 
         setFormData(res) {
+            console.log("所有的数据", res);
             this.loading = true
             this.detail = res
             let config = []
@@ -631,6 +647,15 @@ export default {
             this.form.net_weight = res.net_weight
             this.form.gross_weight = res.gross_weight
 
+            // 定金支付 逻辑回显
+            if (Number(res.deposit) === 0) {
+                this.temporarily_deposit = 0
+            } else {
+                this.temporarily_deposit = 1
+                this.form.deposit = Core.Util.countFilter(res.deposit)
+            }
+            
+
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
                 this.upload.coverList = logos.map((item, index) => ({
@@ -654,7 +679,6 @@ export default {
 
             if (this.form.type === Core.Const.ITEM.TYPE.PRODUCT){
                 Core.Api.ItemAccessory.list({type: 10}).then(res => {
-
                     if (res.list.length > 0){
                         this.form.accessory_code = res.list[0].target_uid
                         this.form.accessory_name = res.list[0].target_name
@@ -746,8 +770,16 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let specData = Core.Util.deepCopy(this.specific.data)
             let attrDef = Core.Util.deepCopy(this.specific.list)
-            // 校验检查            
+
+            // 校验检查
             if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
+            
+            // 定金支付
+            if (Number(this.temporarily_deposit) === 0) {
+                form.deposit = Number(this.temporarily_deposit)
+            } else {
+                form.deposit = Math.round(form.deposit * 100)
+            }
 
             // 封面上传
             if (this.upload.coverList.length) {
@@ -766,8 +798,8 @@ export default {
             }
 
             if(form.type != 1){
-                // 如果是整车的时候传数据可以删除不必要的
-                Core.Util.deleteParamsFilter(form,["color","color_en","net_weight","gross_weight"])
+                // 如果不是整车的时候传数据可以删除不必要的
+                Core.Util.deleteParamsFilter(form,["deposit", "color","color_en","net_weight","gross_weight"])
             }
 
             form.sales_area_ids = form.sales_area_ids.join(',')
@@ -816,8 +848,9 @@ export default {
                         }),
                     }
                 })
-            }            
-                                   
+            }
+
+            console.log("最后提交的", form);
             Core.Api.Item[apiName](Core.Util.searchFilter(form)).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -869,29 +902,34 @@ export default {
                 if (!form.drawing_code) {
                     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
                 }
+                // (临时存的定金支付)定金支付
+                // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
+                if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
+                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
+                }
+                if (Number(form.deposit) < 0) {
+                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
+                }
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
-                if (!form.code) {
-                    return this.$message.warning(this.$t('def.enter'))
-                }
                 if (!form.fob_eur) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    return this.$message.warning(`${ this.$t('def.enter') }(FOB(EUR))`)
                 }
                 if (!form.fob_usd) {
-                    return this.$message.warning(this.$t('def.enter'))
+                    return this.$message.warning(`${ this.$t('def.enter') }(FOB(USD))`)
                 }
             } else { // 多规格
                 // 规格定义 检查
                 for (let i = 0; i < attrDef.length; i++) {
                     const item = attrDef[i];
                     if (!item.name) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }(${ this.$t('i.name') })`)
                     }
                     if (!item.key) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }(${ this.$t('i.words') })`)
                     }
                     if (!item.option.length) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }`)
                     }
                 }
                 // 规格信息 检查
@@ -899,13 +937,13 @@ export default {
                 for (let i = 0; i < specData.length; i++) {
                     const item = specData[i];
                     if (!item.code) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }(${ this.$t('i.code') })`)
                     }
                     if (!item.fob_eur) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }(FOB(EUR))`)
                     }
                     if (!item.fob_usd) {
-                        return this.$message.warning(this.$t('def.enter'))
+                        return this.$message.warning(`${ this.$t('def.enter') }(FOB(USD))`)
                     }
                     let str = ''
                     for (let j = 0; j < this.specific.list.length; j++) {
@@ -1234,6 +1272,12 @@ export default {
             this.form.accessory_code = ''
             this.form.accessory_amount = 0
         },
+        // 定金支付
+        DepositPaymentChange(e) {
+            this.form.deposit = undefined
+            let target = e.target
+            this.temporarily_deposit = target.value
+        }
     }
 };
 </script>
@@ -1440,5 +1484,9 @@ export default {
             line-height: 25px;
         }
     }
+}
+.flex-style {
+    display: flex;
+    align-items: center;
 }
 </style>
