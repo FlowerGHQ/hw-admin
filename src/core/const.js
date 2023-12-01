@@ -1775,8 +1775,8 @@ let Const = {
             '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35, color: '#F77234' },
             '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48, color: '#3491FA' },
             '10': { key: 10, zh: '已取消', en: 'Canceled', value: 10, color: '#A9B4C2' },
-            '20': { key: 20, zh: '待审核', en: 'Pending Review', value: 20, color: '#F77234' },
-            '30': { key: 30, zh: '审核不通过', en: 'Fail the audit', value: 30, color: '#A9B4C2' },
+            '36': { key: 36, zh: '待审核', en: 'Pending Review', value: 36, color: '#F77234' },
+            '38': { key: 38, zh: '审核不通过', en: 'Fail the audit', value: 38, color: '#A9B4C2' },
 
         },
         // 订单列表-来源
