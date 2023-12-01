@@ -31,22 +31,7 @@
       </div>
       <div class="tab-box">
         <a-tabs v-model:activeKey="activeKey" @change="tabChange">
-          <a-tab-pane v-for="item in tabList" :key="item.value">
-            <template #tab>
-              <span class="tab-title" v-if="item.value !== 110">
-                <span class="tab-title-text">{{
-                  lang == "zh" ? item.zh : item.en
-                }}</span>
-              </span>
-              <a-badge
-                :count="100"
-                v-else
-                :offset="[10, 0]">
-                <span class="tab-title-text">{{
-                  lang == "zh" ? item.zh : item.en
-                }}</span>
-              </a-badge>
-            </template>
+          <a-tab-pane v-for="item in tabList" :key="item.value" :tab="lang == 'zh' ? item.zh : item.en">
           </a-tab-pane>
         </a-tabs>
       </div>
@@ -777,6 +762,7 @@ export default {
         }
         return obj;
       });
+      console.log("tabList arr:", arr);
       return arr;
     },
   },

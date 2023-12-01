@@ -37,13 +37,12 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.75:8889'  // zy
         break;
 }
 
@@ -1774,8 +1773,8 @@ let Const = {
             '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35, color: '#F77234' },
             '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48, color: '#3491FA' },
             '10': { key: 10, zh: '已取消', en: 'Canceled', value: 10, color: '#A9B4C2' },
-            '20': { key: 110, zh: '待审核', en: 'Pending Review', value: 110, color: '#F77234' },
-            '30': { key: 120, zh: '审核不通过', en: 'Fail the audit', value: 120, color: '#A9B4C2' },
+            '20': { key: 20, zh: '待审核', en: 'Pending Review', value: 20, color: '#F77234' },
+            '30': { key: 30, zh: '审核不通过', en: 'Fail the audit', value: 30, color: '#A9B4C2' },
 
         },
         // 订单列表-来源
