@@ -37,13 +37,14 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        // URL_POINT = 'http://10.10.12.75:8889'  // zy
+        URL_POINT = 'http://10.10.12.75:8889'  // zy
+
         break;
 }
 
@@ -1774,6 +1775,9 @@ let Const = {
             '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35, color: '#F77234' },
             '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48, color: '#3491FA' },
             '10': { key: 10, zh: '已取消', en: 'Canceled', value: 10, color: '#A9B4C2' },
+            '36': { key: 36, zh: '待审核', en: 'Pending Review', value: 36, color: '#F77234' },
+            '38': { key: 38, zh: '审核不通过', en: 'Fail the audit', value: 38, color: '#A9B4C2' },
+
         },
         // 订单列表-来源
         SOURCE_TYPE: {
@@ -1788,7 +1792,7 @@ let Const = {
             '10': { key: 10, zh: '现金', en: 'cash', value: 10 },
             '20': { key: 20, zh: '微信', en: 'Wechat', value: 20 },
             '30': { key: 30, zh: '支付宝', en: 'Alipay', value: 30 },
-            '40': { key: 40, zh: '银联', en: 'UnionPay', value: 40 },
+            '40': { key: 40, zh: '银行卡支付', en: 'Bank Card Payment', value: 40 },
             '50': { key: 50, zh: '支票', en: 'cheque', value: 50 },
             '60': { key: 60, zh: '其他', en: 'other', value: 60 },
             '70': { key: 70, zh: 'paypal', en: 'paypal', value: 70 },
