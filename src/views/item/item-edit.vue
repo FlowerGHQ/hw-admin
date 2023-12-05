@@ -541,6 +541,10 @@ export default {
                 {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
                 // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
+            // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
+            if (this.specific.data.length === 1) {
+                column.pop();
+            }
             return column
         }
     },
@@ -1351,14 +1355,14 @@ export default {
             }
             > .ant-btn {
                 font-size: 12px;
-                transition: opacity 0.3s ease;
-                visibility: hidden;
-                opacity: 0;
+                // transition: opacity 0.3s ease;
+                // visibility: hidden;
+                // opacity: 0;
             }
-            &:hover > .ant-btn {
-                visibility: visible;
-                opacity: 1;
-            }
+            // &:hover > .ant-btn {
+            //     visibility: visible;
+            //     opacity: 1;
+            // }
         }
         .option {
             display: flex;
