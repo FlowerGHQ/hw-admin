@@ -1151,24 +1151,35 @@ export default {
         handleAddSpecOption(index) {
             let target = this.specific.list[index]
             let item = Core.Util.deepCopy(this.specific.list[index].addValue)
-
+            let isSame = 0;
             if (!item.zh) {
                 return this.$message.warning(this.$t('def.enter_specification_value'))
             }
             if (!item.en) {
                 return this.$message.warning(this.$t('def.enter_specification_value_en'))
             }
+            target.option.forEach(($1, ind1)=>{
 
-            if (target.option.includes(item.zh)) {
+                if(isSame > 0) return;
+                if($1.zh === item.zh) {
+                    isSame++;
+                    return this.$message.warning(this.$t('def.specification_value_repeated'));
+                }else if($1.en === item.en){
+                    isSame++;
+                    return this.$message.warning(this.$t('def.specification_value_repeated_en'))
+                }
+            })
+            /* if (target.option.includes(item.zh)) {
                 return this.$message.warning(this.$t('def.specification_value_repeated'))
             }
             if (target.option.includes(item.en)) {
                 return this.$message.warning(this.$t('def.specification_value_repeated_en'))
-            }
+            } */
+            // 存在相同的规格定义
+            if(isSame > 0) return;
             item.key = item.en;
             item.disabled = true
             target.option.push(item)
-            console.log("this.specific.list[index]", target)
             this.handleCloseSpecOption(index)
             if (target.id && target.key.trim() && target.name.trim()) {
                 let value = ""
