@@ -165,7 +165,7 @@
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
-                                >{{ val.name }}</a-select-option
+                                >{{ $i18n.locale === 'zh'?val.name:val.name_en }}</a-select-option
                             >
                         </a-select>
                     </div>
