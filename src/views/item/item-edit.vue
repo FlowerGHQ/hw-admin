@@ -238,7 +238,7 @@
                             <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option.zh" class="option-input" :placeholder="$t('def.input')" disabled/>
+                                    <a-input v-model:value="option.zh" class="option-input" :placeholder="$t('def.input')" @keydown.enter="confirmValue(option, i)" @dblclick="changeOption(option, i)" :disabled="option.disabled"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
@@ -262,7 +262,7 @@
                             <p>{{ $t('i.value_en') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input :value="option.en" class="option-input" :placeholder="$t('def.input')" disabled/>
+                                    <a-input v-model:value="option.en" class="option-input" :placeholder="$t('def.input')" @keydown.enter="confirmValue(option, i)" :disabled="option.disabled"  @dblclick="changeOption(option, i)"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                             </div>
@@ -556,10 +556,19 @@ export default {
             this.getItemDetail();
         }
         this.getSalesAreaList();
-        console.log('getSalesAreaList')
     },
     mounted() {},
     methods: {
+        changeOption(option,i){
+            console.log(option)
+            option.disabled = false
+            console.log(this.specific)
+        },
+        confirmValue(option,i){
+            console.log(option)
+            option.disabled = true
+            console.log(this.specific)
+        },  
         routerChange(type, item) {
             let routeUrl
             switch (type) {
@@ -579,13 +588,11 @@ export default {
         getItemDetail() {
             this.loading = true;
             if (this.set_id && !this.indep_flag) {
-                console.log('多规格商品:')
                 // 多规格商品
                 Core.Api.Item.listBySet({set_id: this.set_id}).then(res => {
                     console.log('getItemGroup res', res)
                     let list = res.list
                     let mainItem = list.find(i => i.flag_default === 1)
-                    console.log('getItemGroup mainItem', mainItem)
                     this.setFormData(mainItem)
                     this.setSpecificData(list)
                 }).catch(err => {
@@ -594,12 +601,10 @@ export default {
                     this.loading = false;
                 });
             } else {
-                console.log('单规格商品 或 开启信息个性化的多规格商品')
                 // 单规格商品
                 Core.Api.Item.detail({
                     id: this.form.id,
                 }).then(res => {
-                    console.log('getItemDetail res', res)
                     this.setFormData(res.detail)
                 }).catch(err => {
                     console.log('getItemDetail err', err)
@@ -610,7 +615,6 @@ export default {
         },
 
         setFormData(res) {
-            console.log("所有的数据", res);
             this.loading = true
             this.detail = res
             let config = []
@@ -709,6 +713,7 @@ export default {
                             key: it,
                             zh: item.value.split(',')[index],
                             en: it,
+                            disabled: true,
                         })),
                     addValue:{
                         key: '',
@@ -717,7 +722,6 @@ export default {
                     },
                     addVisible: false,
                 }))
-                console.log('setSpecificData list:', list)
                 let data = itemList.map(item => {
                     let params = {}
                     for (const attr of list) {
@@ -747,7 +751,6 @@ export default {
                         attr_list: item.attr_list,
                     }
                 })
-                console.log('setSpecificData data:', data)
                 this.specific.list = list
                 this.specific.data = data
             })
@@ -854,7 +857,6 @@ export default {
                 })
             }
 
-            console.log("最后提交的", form);
             Core.Api.Item[apiName](Core.Util.searchFilter(form)).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -990,7 +992,6 @@ export default {
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
-            console.log("handleCoverChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
@@ -999,7 +1000,6 @@ export default {
             this.upload.coverList = fileList
         },
         handleDetailChange({ file, fileList }) {
-            console.log("handleDetailChange status:", file.status, "file:", file)
             if (file.status == 'done') {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message)
@@ -1014,7 +1014,6 @@ export default {
             this.item_category = node
             try {
                 this.configTemp = JSON.parse(node.config)
-                console.log('this.configTemp:', this.configTemp)
             } catch (error) {
                 this.configTemp = []
             }
@@ -1035,7 +1034,6 @@ export default {
                 let _target = _config.find(item => item.key === target.key)
                 target.value = _target ? _target.value : ''
             }
-            console.log('handleCategorySelect config:', config)
             this.form.config = config
         },
 
@@ -1114,9 +1112,7 @@ export default {
                 value_en = value_en.replace(reg, "")
                 let _item = { id: item.id, key: item.key, name: item.name, value: value, value_en: value_en }
                 Core.Api.AttrDef.save(_item).then(res => {
-                    console.log('handleSpecEditBlur res:', res)
                     this.specific.list[index].id = res.detail.id
-                    console.log(" this.specific", this.specific)
                     // this.getItemDetail();
                 })
             }
@@ -1140,8 +1136,7 @@ export default {
                 return this.$message.warning(this.$t('def.specification_value_repeated_en'))
             }
             item.key = item.en;
-
-            console.log("addValue", item)
+            item.disabled = true
             target.option.push(item)
             console.log("this.specific.list[index]", target)
             this.handleCloseSpecOption(index)
@@ -1205,7 +1200,6 @@ export default {
         getSalesAreaList() {
             Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
-                console.log('getSalesAreaList res', res)
             });
         },
         // 规格商品
@@ -1258,7 +1252,6 @@ export default {
                 value_en : item.en
             }
             // value.value = item.zh
-            console.log("record",record)
         },
         // 添加商品
         handleAddItemShow(ids, items) {
@@ -1330,7 +1323,6 @@ export default {
         margin-top: 30px;
     }
     .spec-item {
-        padding-bottom: 10px;
         .name ,.option {
             > p {
                 width: 4em;
@@ -1367,11 +1359,10 @@ export default {
         }
         .option {
             display: flex;
-            margin-bottom: 20px;
             > p {
                 padding-left: 34px;
                 padding-right: 50px;
-                height: 32px;
+                min-height: 32px;
                 line-height: 32px;
                 margin-top: 8px;
             }
@@ -1421,6 +1412,7 @@ export default {
         border-radius: 2px;
         background: #FFFFFF;
         font-size: 12px;
+        margin-top: 8px;
     }
     .specific-table {
         th {
