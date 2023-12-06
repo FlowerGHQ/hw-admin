@@ -1400,7 +1400,6 @@ export default {
             console.log(target);
             let value = "";
             let value_en = "";
-            if (!target) return;
             target.option.forEach((it) => {
                 value += it.zh + ",";
                 value_en += it.en + ",";
