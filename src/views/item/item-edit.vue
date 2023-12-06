@@ -466,8 +466,8 @@ export default {
 
             specific: { // 规格
                 mode: 1,
-                list: [], // [{id: '', name: '', key: '', option: [], addVisible: false, addValue: ''}]
-                data: [], // [{code: '', price: '', original_price: [], ……, attr_list}]
+                list: [], // [{id: '', name: '', key: '', option: [], addVisible: false, addValue: ''}] 商品规格属性列表（可定义）
+                data: [], // [{code: '', price: '', original_price: [], ……, attr_list}] 商品规格信息列表
             },
             batchSet: { // 批量设置
                 priceVisible: false,
@@ -697,6 +697,7 @@ export default {
             this.loading = false
 
         },
+        // 获取商品规格列表
         setSpecificData(itemList) {
             this.loading = true
             this.specific.mode = 2
@@ -748,7 +749,9 @@ export default {
                     }
                 })
                 console.log('setSpecificData data:', data)
+                // 商品规格属性列表
                 this.specific.list = list
+                // 多规格商品列表
                 this.specific.data = data
             })
         },
