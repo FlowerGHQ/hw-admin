@@ -264,7 +264,7 @@
                             <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input v-model:value="option.zh" class="option-input" :placeholder="$t('def.input')" @keydown.enter="confirmValue(option, i)" @dblclick="changeOption(option, i)" :disabled="option.disabled"/>
+                                    <a-input v-model:value="option.zh" class="option-input" :placeholder="$t('def.input')" @blur="confirmValue(option, i)" @keydown.enter="confirmValue(option, i)" @dblclick="changeOption(option, i)" :disabled="option.disabled"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
@@ -288,7 +288,7 @@
                             <p>{{ $t('i.value_en') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input v-model:value="option.en" class="option-input" :placeholder="$t('def.input')" @keydown.enter="confirmValue(option, i)" :disabled="option.disabled"  @dblclick="changeOption(option, i)"/>
+                                    <a-input v-model:value="option.en" class="option-input" :placeholder="$t('def.input')"  @blur="confirmValue(option, i)"  @keydown.enter="confirmValue(option, i)" :disabled="option.disabled"  @dblclick="changeOption(option, i)"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                             </div>
@@ -587,12 +587,10 @@ export default {
     mounted() {},
     methods: {
         changeOption(option,i){
-            console.log(option)
             option.disabled = false
             console.log(this.specific)
         },
         confirmValue(option,i){
-            console.log(option)
             option.disabled = true
             console.log(this.specific)
         },  
@@ -640,7 +638,6 @@ export default {
                 });
             }
         },
-
         setFormData(res) {
             this.loading = true
             this.detail = res
@@ -732,6 +729,7 @@ export default {
             this.loading = true
             this.specific.mode = 2
             Core.Api.AttrDef.listBySet({set_id: this.set_id}).then(res => {
+                console.log(res)
                 let list = res.list.map(item => ({
                     id: item.id,
                     key: item.key,
@@ -804,7 +802,6 @@ export default {
             let form = Core.Util.deepCopy(this.form)
             let specData = Core.Util.deepCopy(this.specific.data)
             let attrDef = Core.Util.deepCopy(this.specific.list)
-
             // 校验检查
             if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
             
@@ -883,7 +880,6 @@ export default {
                     }
                 })
             }
-
             Core.Api.Item[apiName](Core.Util.searchFilter(form)).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.routerChange('back')
@@ -1063,7 +1059,6 @@ export default {
             }
             this.form.config = config
         },
-
         // 商品规格模式改变
         handleSpecificModeChange() {
             if (this.specific.mode === 2) {
@@ -1088,7 +1083,6 @@ export default {
                 this.form.original_price = this.specific.data[0].original_price
             }
         },
-
         // 规格定义
         // 规格名
         handleAddSpec() { // 添加规格定义
