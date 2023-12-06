@@ -264,7 +264,7 @@
                             <p>{{ $t('i.value_zh') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input v-model:value="option.zh" class="option-input" :placeholder="$t('def.input')" @blur="confirmValue(option, i)" @keydown.enter="confirmValue(option, i)" @dblclick="changeOption(option, i)" :disabled="option.disabled"/>
+                                    <a-input v-model:value="option.zh" class="option-input" :placeholder="$t('def.input')" @blur="confirmValue(option, i,index)" @keydown.enter="confirmValue(option, i)" @dblclick="changeOption(option, i,index)" :disabled="option.disabled"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                                 <a-popover v-model:visible="item.addVisible" trigger="click" @visibleChange='(visible) => {!visible && handleCloseSpecOption(index)}'>
@@ -288,7 +288,7 @@
                             <p>{{ $t('i.value_en') }}</p>
                             <div class="option-list">
                                 <div class="option-item" v-for="(option, i) of item.option" :key="i">
-                                    <a-input v-model:value="option.en" class="option-input" :placeholder="$t('def.input')"  @blur="confirmValue(option, i)"  @keydown.enter="confirmValue(option, i)" :disabled="option.disabled"  @dblclick="changeOption(option, i)"/>
+                                    <a-input v-model:value="option.en" class="option-input" :placeholder="$t('def.input')"  @blur="confirmValue(option, i)"  @keydown.enter="confirmValue(option, i,index)" :disabled="option.disabled"  @dblclick="changeOption(option, i,index)"/>
                                     <i class="close icon i_close_b" @click="handleRemoveSpecOption(index, i)"/>
                                 </div>
                             </div>
@@ -590,9 +590,24 @@ export default {
             option.disabled = false
             console.log(this.specific)
         },
-        confirmValue(option,i){
+        confirmValue(option,i,index){
             option.disabled = true
-            console.log(this.specific)
+            let target = this.specific.list[index]
+            let value = ""
+            let value_en = ""
+            target.option.forEach(it => {
+                value += it.zh + ","
+                value_en += it.en + ","
+            });
+            var reg =/,$/gi;
+            value = value.replace(reg, "")
+            value_en = value_en.replace(reg, "")
+            let _item = { id: target.id, key: target.key, name: target.name, value: value, value_en:value_en }
+            Core.Api.AttrDef.save(_item).then(res => {
+                console.log(res)
+            }).catch(err => {
+                console.log(err)
+            })
         },  
         routerChange(type, item) {
             let routeUrl
