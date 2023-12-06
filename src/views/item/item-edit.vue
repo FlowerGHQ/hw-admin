@@ -72,14 +72,14 @@
                     </div>
                 </div>
                 <!-- 实例编码 -->
-                <!-- <div class="form-item required" v-if="!indep_flag">
-                <div class="key">{{ $t('n.flag_entity') }}</div>
-                <div class="value">
-                    <a-radio-group v-model:value="form.flag_entity">
-                        <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
-                    </a-radio-group>
+                <div class="form-item required" v-if="!indep_flag">
+                    <div class="key">{{ $t('n.flag_entity') }}</div>
+                    <div class="value">
+                        <a-radio-group v-model:value="form.flag_entity">
+                            <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
+                        </a-radio-group>
+                    </div>
                 </div>
-            </div> -->
                 <!-- 商品品号 -->
                 <div class="form-item required" v-if="!indep_flag">
                     <div
@@ -1240,7 +1240,7 @@ export default {
                 model: "",
                 logo: "",
                 imgs: "",
-                // flag_entity: undefined,
+                flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
                 original_price_currency: "CNY", // 默认
@@ -1839,9 +1839,9 @@ export default {
                 );
             }
             // // 实例编码 否 0 是 1
-            // if (form.flag_entity != 0 && form.flag_entity != 1) {
-            //     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
-            // }
+            if (form.flag_entity != 0 && form.flag_entity != 1) {
+                return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
+            }
             // 商品品号
             if (!form.model) {
                 return this.$message.warning(
