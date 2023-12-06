@@ -165,7 +165,7 @@
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
-                                >{{ val.name }}</a-select-option
+                                >{{ $i18n.locale === 'zh'?val.name:val.name_en }}</a-select-option
                             >
                         </a-select>
                     </div>
@@ -503,11 +503,17 @@
                                                 v-model:value="option.zh"
                                                 class="option-input"
                                                 :placeholder="$t('def.input')"
+                                                @blur="
+                                                    handleSpecOptionBlur(
+                                                        index,
+                                                        i,
+                                                        'zh'
+                                                    )"
                                                 @keydown.enter="
-                                                    confirmValue(option, i)
+                                                    confirmValue(option, i,index)
                                                 "
                                                 @dblclick="
-                                                    changeOption(option, i)
+                                                    changeOption(option, i,index)
                                                 "
                                                 :disabled="option.disabled"
                                             />
@@ -616,12 +622,18 @@
                                                 class="option-input"
                                                 :placeholder="$t('def.input')"
                                                 @keydown.enter="
-                                                    confirmValue(option, i)
+                                                    confirmValue(option, i,index)
                                                 "
                                                 :disabled="option.disabled"
                                                 @dblclick="
-                                                    changeOption(option, i)
+                                                    changeOption(option, i,index)
                                                 "
+                                                @blur="
+                                                    handleSpecOptionBlur(
+                                                        index,
+                                                        i,
+                                                        'zh'
+                                                    )"
                                             />
                                             <i
                                                 class="close icon i_close_b"
@@ -1395,15 +1407,12 @@ export default {
     methods: {
         changeOption(option, i) {
             option.disabled = false;
-            console.log(this.specific);
         },
         confirmValue(option, i, index) {
             option.disabled = true;
             let target = this.specific.list[index];
-            console.log(target);
             let value = "";
             let value_en = "";
-            if (!target) return;
             target.option.forEach((it) => {
                 value += it.zh + ",";
                 value_en += it.en + ",";

@@ -497,7 +497,7 @@ export default {
       }
       // 如果名称和编码都有值的话  +号去掉
       if (this.searchForm.name && this.searchForm.code) {
-        this.isShowAdd = false;
+        this.isShowAdd = true;
       }
       this.pageChange(1);
     },
@@ -522,6 +522,7 @@ export default {
       this.pageChange(1);
     },
     handleSearchReset() {
+      this.isShowAdd = false;
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearch.handleReset();
@@ -539,13 +540,17 @@ export default {
       })
         .then((res) => {
           this.total = res.count;
-          this.tableData = res.list; 
-          // if(res.list.length) {
-          //   const targetTableData = this.removeChildrenFromData(res.list)
-          //   this.tableData = targetTableData; 
-          // } else {
-          //   this.tableData = res.list; 
-          // }
+          // this.tableData = res.list; 
+          
+          // 如果同时查询名称和编码  加号去掉
+          if(this.isShowAdd) {
+            const targetTableData = this.removeChildrenFromData(res.list)
+            this.tableData = targetTableData; 
+          } else {
+            this.tableData = res.list; 
+          }
+
+          
         })
         .catch((err) => {
           console.log("getTableData err:", err);
