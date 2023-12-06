@@ -1362,12 +1362,11 @@ export default {
     .spec-item {
         .name ,.option {
             > p {
-                min-width: 70px;
+                width: 4em;
                 font-size: 12px;
                 color: #000000;
                 padding-left: 16px;
                 box-sizing: content-box;
-                margin-right: 10px;
             }
             .ant-btn {
                 font-size: 12px;
@@ -1398,6 +1397,7 @@ export default {
         .option {
             display: flex;
             > p {
+                padding-left: 34px;
                 padding-right: 50px;
                 min-height: 32px;
                 line-height: 32px;
