@@ -168,7 +168,8 @@ export default {
         salesAreaStr() {
             let areaStr; 
             if(this.detail.sales_area_list && this.detail.sales_area_list.length ){
-                areaStr =  this.detail.sales_area_list.map(i => i.name).join(' , ');
+                // areaStr =  this.detail.sales_area_list.map(i => i.name).join(' , ');
+                areaStr = this.$i18n.locale === 'zh' ? this.detail.sales_area_list.map(i => i.name).join(' , ') : this.detail.sales_area_list.map(i => i.name_en).join(' , ')
             }else {
                 areaStr = '-'
             }
