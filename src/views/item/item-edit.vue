@@ -1075,11 +1075,14 @@
                                             type="link"
                                             danger
                                             @click="
-                                                handleDelete(record.target_id)
+                                                handleDelete(record)
                                             "
-                                            ><i class="icon i_delete" />{{
-                                                $t("def.delete")
-                                            }}</a-button
+                                            >
+                                            <i class="icon i_delete" />
+                                                {{
+                                                    $t("def.delete")
+                                                }}
+                                            </a-button
                                         >
                                     </template>
                                     <template v-if="column.key === 'select'">

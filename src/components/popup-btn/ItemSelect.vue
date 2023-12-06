@@ -192,10 +192,12 @@ export default {
         },
 
         getTableData() {
+            let arr = this.searchForm.code.split(',');
             if (this.purchaseId) {
                 Core.Api.Purchase.itemList({
                     order_id: this.purchaseId,
-                    item_code: this.searchForm.code
+                    // item_code: this.searchForm.code,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
                 }).then(res => {
                     console.log('Purchase.itemList:', res)
                     this.tableData = res.list.map(item => {
