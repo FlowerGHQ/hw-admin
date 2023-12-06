@@ -136,24 +136,24 @@
                 <div class="form-item">
                     <div class="key">{{ $t('d.long') }}</div>
                     <div class="value flex-style">
-                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
-                        <span class="m-l-5">cm</span> -->
+                        <a-input v-model:value="form.length" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span>
                     </div>
                 </div>
                 <!-- 宽 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.wide') }}</div>
                     <div class="value flex-style">
-                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
-                        <span class="m-l-5">cm</span> -->
+                        <a-input v-model:value="form.width" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span>
                     </div>
                 </div>
                 <!-- 高 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.high') }}</div>
                     <div class="value flex-style">
-                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
-                        <span class="m-l-5">cm</span> -->
+                        <a-input v-model:value="form.height" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span>
                     </div>
                 </div>
             </template>   
@@ -498,6 +498,10 @@ export default {
                 accessory_name_en:'',
                 accessory_code:'',
                 accessory_amount: '',
+
+                length: undefined,  // 长
+                width: undefined, // 宽
+                height: undefined, // 高
             },
             // temporarily_deposit: 0,// 临时定金支付按钮
             salesList: [], // 销售区域
@@ -702,6 +706,10 @@ export default {
             this.form.color_en = res.color_en
             this.form.net_weight = res.net_weight
             this.form.gross_weight = res.gross_weight
+            // 长宽高回显逻辑
+            this.form.length = res.length
+            this.form.width = res.width
+            this.form.height = res.height
 
             // 定金支付 逻辑回显
             // if (Number(res.deposit) === 0) {
@@ -710,7 +718,7 @@ export default {
             //     this.temporarily_deposit = 1
             //     this.form.deposit = Core.Util.countFilter(res.deposit)
             // }
-            
+
 
             if (this.form.logo) {
                 let logos = this.form.logo.split(',')
@@ -811,12 +819,35 @@ export default {
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.delete({id: record.target_id}).then(() => {
-                        _this.$message.success(_this.$t('pop_up.delete_success'));
-                        _this.getItemDetail();
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
+                    if (_this.form.id) {
+                        console.log("record 编辑", record);
+                        console.log("record data", _this.specific.data);
+                        if (!record.target_id) {
+                            // 判断在编辑的时候是否新添加信息
+                            const index = _this.specific.data.findIndex(el => el.id === record.id)
+
+                            if (index !== -1) {
+                                _this.specific.data.splice(index, 1)
+                            }
+                        } else {
+                            // 编辑进来的(删除后端存的数据)
+                            Core.Api.Item.delete({id: record.target_id}).then(() => {
+                                _this.$message.success(_this.$t('pop_up.delete_success'));
+                                _this.getItemDetail();
+                            }).catch(err => {
+                                console.log("handleDelete err", err);
+                            })
+                        }
+                    } else {
+                        // 新增进来
+                        const index = _this.specific.data.findIndex(el => el.id === record.id)
+
+                        if (index !== -1) {
+                            _this.specific.data.splice(index, 1)
+                        }
+                        console.log("record 新增", record);
+                        console.log("record data", _this.specific.data);
+                    }
                 },
             });
         },
@@ -1089,6 +1120,7 @@ export default {
         handleSpecificModeChange() {
             if (this.specific.mode === 2) {
                 this.specific.data = [{
+                    id: 1,
                     target_id: this.form.id,
                     code: this.form.code,
                     name: this.form.name,
@@ -1274,17 +1306,16 @@ export default {
                 const len = this.specific.list[i].option.length || 1;
                 maxLen = maxLen*len
             }
-            // if (this.specific.data.length >= maxLen) {
-            //     return this.$message.warning('当前商品规格已达最大规格组合数，请添加规格定义')
-            // }
             this.specific.data.push({
+                id: this.specific.data.length + 1,
                 code: '',
                 name: '',
                 name_en: '',
                 price: '',
-                original_price: '',
                 fob_eur: '',
                 fob_usd: '',
+                original_price: '',
+                original_price_currency: this.form.original_price_currency
             })
         },
 
