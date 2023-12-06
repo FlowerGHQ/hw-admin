@@ -50,6 +50,7 @@ export default {
             form: {
                 id: '',
                 name: '',
+                name_en: '',
             },
             areaList: [],
             defArea: [],
@@ -93,6 +94,7 @@ export default {
                     this.area[key] = d[key]
                 }
                 this.defArea = [d.continent || '', d.country || '']
+
             }).catch(err => {
                 console.log('getSalesAreaDetail err', err)
             }).finally(() => {

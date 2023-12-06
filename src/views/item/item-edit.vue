@@ -1415,6 +1415,12 @@ export default {
                     text-align: center;
                     border: 1px solid #E5E8EB;
                     box-shadow: 0 0 0 0;
+                    cursor: pointer;
+                    // 双击禁止选中，出现蓝色背景
+                    -webkit-user-select: none !important;
+                    -moz-user-select: none !important;
+                    -ms-user-select: none   !important;
+                    user-select: none    !important;
                 }
                 .close {
                     position: absolute;
