@@ -370,7 +370,9 @@
                 <div class="value input-number-unit">
                     <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <a-select v-model:value="form.original_price_currency">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">
+                            {{ val }}
+                        </a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -436,7 +438,7 @@ export default {
                 flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
-                original_price_currency: undefined,
+                original_price_currency: 'CNY', // 默认
                 original_price: undefined,
                 config: '',
                 man_hour: '',
@@ -457,7 +459,7 @@ export default {
                 accessory_amount: '',
             },
             // temporarily_deposit: 0,// 临时定金支付按钮
-            salesList: [],
+            salesList: [], // 销售区域
             // 商品分类
             item_category: {},
             configTemp: [],
@@ -539,7 +541,6 @@ export default {
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', unit: '€'}, //, fixed: 'right'
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', unit: '$'}, // , fixed: 'right'
                 {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
-                // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
             if (this.specific.data.length === 1) {
@@ -556,7 +557,6 @@ export default {
             this.getItemDetail();
         }
         this.getSalesAreaList();
-        console.log('getSalesAreaList')
     },
     mounted() {},
     methods: {
@@ -1202,10 +1202,10 @@ export default {
                 _do()
             }
         },
+        // 销售接口Fetch
         getSalesAreaList() {
             Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
-                console.log('getSalesAreaList res', res)
             });
         },
         // 规格商品
