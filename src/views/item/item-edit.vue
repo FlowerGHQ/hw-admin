@@ -83,7 +83,7 @@
             </div>
             <template v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <!-- 定金支付 -->
-                <div class="form-item required">
+                <!-- <div class="form-item required">
                     <div class="key">{{ $t('d.deposit_payment') }}</div>
                     <div class="value flex-style">
                         <a-radio-group v-model:value="temporarily_deposit" @change="DepositPaymentChange">
@@ -94,7 +94,7 @@
                             <a-input style="width: 120px;" v-model:value="form.deposit" :placeholder="$t('d.p_enter_amount')" />
                         </template>
                     </div>
-                </div>
+                </div> -->
                 <!-- 图面代号 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('d.drawing_code') }}</div>
@@ -232,7 +232,7 @@
                             <a-input v-model:value="item.name" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'name')"/>
                             <p>{{ $t('i.words') }}</p>
                             <a-input v-model:value="item.key" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'key')"/>
-                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(item, index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
                             <p>{{ $t('i.value_zh') }}</p>
@@ -306,7 +306,7 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type='link' danger @click="handleDelete(record)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" :placeholder="$t('def.select')">
@@ -370,7 +370,9 @@
                 <div class="value input-number-unit">
                     <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <a-select v-model:value="form.original_price_currency">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">
+                            {{ val }}
+                        </a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -436,7 +438,7 @@ export default {
                 flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
-                original_price_currency: undefined,
+                original_price_currency: 'CNY', // 默认
                 original_price: undefined,
                 config: '',
                 man_hour: '',
@@ -456,8 +458,8 @@ export default {
                 accessory_code:'',
                 accessory_amount: '',
             },
-            temporarily_deposit: 0,// 临时定金支付按钮
-            salesList: [],
+            // temporarily_deposit: 0,// 临时定金支付按钮
+            salesList: [], // 销售区域
             // 商品分类
             item_category: {},
             configTemp: [],
@@ -539,8 +541,11 @@ export default {
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', unit: '€'}, //, fixed: 'right'
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', unit: '$'}, // , fixed: 'right'
                 {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
-                // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
+            // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
+            if (this.specific.data.length === 1) {
+                column.pop();
+            }
             return column
         }
     },
@@ -552,7 +557,6 @@ export default {
             this.getItemDetail();
         }
         this.getSalesAreaList();
-        console.log('getSalesAreaList')
     },
     mounted() {},
     methods: {
@@ -648,12 +652,12 @@ export default {
             this.form.gross_weight = res.gross_weight
 
             // 定金支付 逻辑回显
-            if (Number(res.deposit) === 0) {
-                this.temporarily_deposit = 0
-            } else {
-                this.temporarily_deposit = 1
-                this.form.deposit = Core.Util.countFilter(res.deposit)
-            }
+            // if (Number(res.deposit) === 0) {
+            //     this.temporarily_deposit = 0
+            // } else {
+            //     this.temporarily_deposit = 1
+            //     this.form.deposit = Core.Util.countFilter(res.deposit)
+            // }
             
 
             if (this.form.logo) {
@@ -748,15 +752,15 @@ export default {
                 this.specific.data = data
             })
         },
-        handleDelete(id){
+        handleDelete(record){
             let _this = this;
             this.$confirm({
-                title: _this.$t('pop_up.sure_delete'),
+                title: `${_this.$t('i.pop_delete_tip')}${record.name}(${_this.$t('d.code')}:${record.code})?`,
                 okText: _this.$t('def.sure'),
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.delete({id}).then(() => {
+                    Core.Api.Item.delete({id: record.target_id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getItemDetail();
                     }).catch(err => {
@@ -774,12 +778,12 @@ export default {
             // 校验检查
             if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
             
-            // 定金支付
-            if (Number(this.temporarily_deposit) === 0) {
-                form.deposit = Number(this.temporarily_deposit)
-            } else {
-                form.deposit = Math.round(form.deposit * 100)
-            }
+            // // 定金支付
+            // if (Number(this.temporarily_deposit) === 0) {
+            //     form.deposit = Number(this.temporarily_deposit)
+            // } else {
+            //     form.deposit = Math.round(form.deposit * 100)
+            // }
 
             // 封面上传
             if (this.upload.coverList.length) {
@@ -902,14 +906,14 @@ export default {
                 if (!form.drawing_code) {
                     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
                 }
-                // (临时存的定金支付)定金支付
-                // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
-                if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
-                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
-                }
-                if (Number(form.deposit) < 0) {
-                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
-                }
+                // // (临时存的定金支付)定金支付
+                // // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
+                // if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
+                //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
+                // }
+                // if (Number(form.deposit) < 0) {
+                //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
+                // }
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.fob_eur) {
@@ -1065,12 +1069,21 @@ export default {
         handleAddSpec() { // 添加规格定义
             this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false,addValue: {key:'', zh:'', en:''}})
         },
-        handleRemoveSpec(index) { // 删除规格定义
-            let item = this.specific.list[index]
-            if (item.id) {
-                Core.Api.AttrDef.delete({id: item.id})
-            }
-            this.specific.list.splice(index, 1)
+        handleRemoveSpec(item, index) { // 删除规格定义
+            let _this = this;
+            this.$confirm({
+                title: `${_this.$t('i.pop_delete_spec')}${item.name}?`,
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    let item = _this.specific.list[index]
+                    if (item.id) {
+                        Core.Api.AttrDef.delete({id: item.id})
+                    }
+                    _this.specific.list.splice(index, 1)
+                },
+            });
         },
         handleSpecEditBlur(index, key) {
             let item = this.specific.list[index]
@@ -1198,6 +1211,7 @@ export default {
                 _do()
             }
         },
+        // 销售接口Fetch
         getSalesAreaList() {
             Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
@@ -1272,12 +1286,12 @@ export default {
             this.form.accessory_code = ''
             this.form.accessory_amount = 0
         },
-        // 定金支付
-        DepositPaymentChange(e) {
-            this.form.deposit = undefined
-            let target = e.target
-            this.temporarily_deposit = target.value
-        }
+        // // 定金支付
+        // DepositPaymentChange(e) {
+        //     this.form.deposit = undefined
+        //     let target = e.target
+        //     this.temporarily_deposit = target.value
+        // }
     }
 };
 </script>
@@ -1351,14 +1365,14 @@ export default {
             }
             > .ant-btn {
                 font-size: 12px;
-                transition: opacity 0.3s ease;
-                visibility: hidden;
-                opacity: 0;
+                // transition: opacity 0.3s ease;
+                // visibility: hidden;
+                // opacity: 0;
             }
-            &:hover > .ant-btn {
-                visibility: visible;
-                opacity: 1;
-            }
+            // &:hover > .ant-btn {
+            //     visibility: visible;
+            //     opacity: 1;
+            // }
         }
         .option {
             display: flex;

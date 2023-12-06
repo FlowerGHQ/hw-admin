@@ -589,6 +589,7 @@ const messages = {
             select_item: '选择商品',
             upload_item_accessory: '上传配件',
             item_accessory_list: '配件列表',
+            sale_bom: '销售BOM',
             save_site: '点位保存',
             add_cart_success: '添加购物车成功',
             eur: '供货价(EUR)',
@@ -604,7 +605,9 @@ const messages = {
             clear_shop_car: '清空购物车',
             confirm_changes: '确认更改',
             source_type: '来源',
-            synchronization_time: '同步时间'
+            synchronization_time: '同步时间',
+            pop_delete_tip: '确定要删除商品',
+            pop_delete_spec: '确定要删除规格',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3237,6 +3240,7 @@ const messages = {
             select_item: 'Choose A Product',
             upload_item_accessory: 'Upload The Spare Parts',
             item_accessory_list: 'Spare Parts List',
+            sale_bom: 'Sale BOM',
             save_site: 'Point Preservation',
             add_cart_success: 'Add The Shopping Cart Successfully',
             eur: 'Supply Price (Eur)',
@@ -3252,7 +3256,9 @@ const messages = {
             clear_shop_car: 'Clear shop car',
             confirm_changes: 'Confirm Changes',
             source_type: 'source',
-            synchronization_time: 'Synchronization Time'
+            synchronization_time: 'Synchronization Time',
+            pop_delete_tip: 'Make sure to delete the item',
+            pop_delete_spec: 'Make sure you want to delete the specifications',
         },
         fe: {
             feedback: 'Feedback',
