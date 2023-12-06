@@ -83,7 +83,7 @@
             </div>
             <template v-if="form.type === Core.Const.ITEM.TYPE.PRODUCT">
                 <!-- 定金支付 -->
-                <div class="form-item required">
+                <!-- <div class="form-item required">
                     <div class="key">{{ $t('d.deposit_payment') }}</div>
                     <div class="value flex-style">
                         <a-radio-group v-model:value="temporarily_deposit" @change="DepositPaymentChange">
@@ -94,7 +94,7 @@
                             <a-input style="width: 120px;" v-model:value="form.deposit" :placeholder="$t('d.p_enter_amount')" />
                         </template>
                     </div>
-                </div>
+                </div> -->
                 <!-- 图面代号 -->
                 <div class="form-item required">
                     <div class="key">{{ $t('d.drawing_code') }}</div>
@@ -456,7 +456,7 @@ export default {
                 accessory_code:'',
                 accessory_amount: '',
             },
-            temporarily_deposit: 0,// 临时定金支付按钮
+            // temporarily_deposit: 0,// 临时定金支付按钮
             salesList: [],
             // 商品分类
             item_category: {},
@@ -648,12 +648,12 @@ export default {
             this.form.gross_weight = res.gross_weight
 
             // 定金支付 逻辑回显
-            if (Number(res.deposit) === 0) {
-                this.temporarily_deposit = 0
-            } else {
-                this.temporarily_deposit = 1
-                this.form.deposit = Core.Util.countFilter(res.deposit)
-            }
+            // if (Number(res.deposit) === 0) {
+            //     this.temporarily_deposit = 0
+            // } else {
+            //     this.temporarily_deposit = 1
+            //     this.form.deposit = Core.Util.countFilter(res.deposit)
+            // }
             
 
             if (this.form.logo) {
@@ -774,12 +774,12 @@ export default {
             // 校验检查
             if (typeof this.checkFormInput(form, specData, attrDef) === 'function') { return }
             
-            // 定金支付
-            if (Number(this.temporarily_deposit) === 0) {
-                form.deposit = Number(this.temporarily_deposit)
-            } else {
-                form.deposit = Math.round(form.deposit * 100)
-            }
+            // // 定金支付
+            // if (Number(this.temporarily_deposit) === 0) {
+            //     form.deposit = Number(this.temporarily_deposit)
+            // } else {
+            //     form.deposit = Math.round(form.deposit * 100)
+            // }
 
             // 封面上传
             if (this.upload.coverList.length) {
@@ -902,14 +902,14 @@ export default {
                 if (!form.drawing_code) {
                     return this.$message.warning(`${this.$t('def.enter')}(${this.$t('d.drawing_code')})`)
                 }
-                // (临时存的定金支付)定金支付
-                // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
-                if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
-                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
-                }
-                if (Number(form.deposit) < 0) {
-                    return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
-                }
+                // // (临时存的定金支付)定金支付
+                // // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
+                // if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
+                //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_0')})`)
+                // }
+                // if (Number(form.deposit) < 0) {
+                //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
+                // }
             }
             if (this.specific.mode === 1 || this.indep_flag) { // 单规格
                 if (!form.fob_eur) {
@@ -1201,6 +1201,7 @@ export default {
         getSalesAreaList() {
             Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
+                console.log('getSalesAreaList res', res)
             });
         },
         // 规格商品
@@ -1272,12 +1273,12 @@ export default {
             this.form.accessory_code = ''
             this.form.accessory_amount = 0
         },
-        // 定金支付
-        DepositPaymentChange(e) {
-            this.form.deposit = undefined
-            let target = e.target
-            this.temporarily_deposit = target.value
-        }
+        // // 定金支付
+        // DepositPaymentChange(e) {
+        //     this.form.deposit = undefined
+        //     let target = e.target
+        //     this.temporarily_deposit = target.value
+        // }
     }
 };
 </script>
