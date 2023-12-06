@@ -128,6 +128,9 @@
           :pagination="false"
           :row-key="(record) => record.id"
           @change="handleTableChange"
+          @expand="handleTableExpand"
+          :expandedRowKeys="expandedRowKeys"
+          :indentSize="0"
           :row-selection="rowSelection"
           >
           <template #bodyCell="{ column, text, record }">
@@ -345,7 +348,7 @@ export default {
       SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
       // 表格
       tableData: [],
-      // expandedRowKeys: [],
+      expandedRowKeys: [],
       selectedRowKeys: [],
       salesAreaVisible: false,
       salesList: [],
@@ -531,12 +534,13 @@ export default {
       })
         .then((res) => {
           this.total = res.count;
-          if(res.list.length) {
-            const targetTableData = this.removeChildrenFromData(res.list)
-            this.tableData = targetTableData; 
-          } else {
-            this.tableData = res.list; 
-          }
+          this.tableData = res.list; 
+          // if(res.list.length) {
+          //   const targetTableData = this.removeChildrenFromData(res.list)
+          //   this.tableData = targetTableData; 
+          // } else {
+          //   this.tableData = res.list; 
+          // }
         })
         .catch((err) => {
           console.log("getTableData err:", err);
@@ -597,26 +601,26 @@ export default {
     },
 
     // 表格行展开-查看同规格商品
-    // handleTableExpand(expanded, record) {
-    //   if (expanded) {
-    //     if (record.device_ports) {
-    //       this.expandedRowKeys.push(record.id);
-    //     } else {
-    //       Core.Api.Item.listBySet({ set_id: record.set_id })
-    //         .then((res) => {
-    //           console.log("handleTableExpand res:", res);
-    //           let list = res.list.filter((i) => i.flag_default !== 1);
-    //           record.children = list;
-    //         })
-    //         .finally(() => {
-    //           this.expandedRowKeys.push(record.id);
-    //         });
-    //     }
-    //   } else {
-    //     let index = this.expandedRowKeys.indexOf(record.id);
-    //     this.expandedRowKeys.splice(index, 1);
-    //   }
-    // },
+    handleTableExpand(expanded, record) {
+      if (expanded) {
+        if (record.device_ports) {
+          this.expandedRowKeys.push(record.id);
+        } else {
+          Core.Api.Item.listBySet({ set_id: record.set_id })
+            .then((res) => {
+              console.log("handleTableExpand res:", res);
+              let list = res.list.filter((i) => i.flag_default !== 1);
+              record.children = list;
+            })
+            .finally(() => {
+              this.expandedRowKeys.push(record.id);
+            });
+        }
+      } else {
+        let index = this.expandedRowKeys.indexOf(record.id);
+        this.expandedRowKeys.splice(index, 1);
+      }
+    },
 
     // 上传文件
     handleMatterChange({ file, fileList }) {

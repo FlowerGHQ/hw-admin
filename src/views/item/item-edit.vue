@@ -119,17 +119,43 @@
                 <!-- 净重 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.net_weight') }}</div>
-                    <div class="value">
+                    <div class="value flex-style">
                         <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">kg</span>
                     </div>
                 </div>
                 <!-- 毛重 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.gross_weight') }}</div>
-                    <div class="value">
+                    <div class="value flex-style">
                         <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">kg</span>
                     </div>
-                </div>    
+                </div>
+                <!-- 长 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.long') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
+                <!-- 宽 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.wide') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
+                <!-- 高 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.high') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
             </template>   
         </div>
     </div>
@@ -232,7 +258,7 @@
                             <a-input v-model:value="item.name" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'name')"/>
                             <p>{{ $t('i.words') }}</p>
                             <a-input v-model:value="item.key" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'key')"/>
-                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(item, index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
                             <p>{{ $t('i.value_zh') }}</p>
@@ -306,7 +332,7 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type='link' danger @click="handleDelete(record)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" :placeholder="$t('def.select')">
@@ -370,7 +396,9 @@
                 <div class="value input-number-unit">
                     <a-input-number v-model:value="form.original_price" :min="0" :precision="2" placeholder="0.00"/>
                     <a-select v-model:value="form.original_price_currency">
-                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">{{ val }}</a-select-option>
+                        <a-select-option v-for="(val,key) in monetaryList" :key="key" :value="key">
+                            {{ val }}
+                        </a-select-option>
                     </a-select>
                 </div>
             </div>
@@ -436,7 +464,7 @@ export default {
                 flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
-                original_price_currency: undefined,
+                original_price_currency: 'CNY', // 默认
                 original_price: undefined,
                 config: '',
                 man_hour: '',
@@ -457,7 +485,7 @@ export default {
                 accessory_amount: '',
             },
             // temporarily_deposit: 0,// 临时定金支付按钮
-            salesList: [],
+            salesList: [], // 销售区域
             // 商品分类
             item_category: {},
             configTemp: [],
@@ -539,7 +567,6 @@ export default {
                 {title: 'FOB(EUR)', key: 'money', dataIndex: 'fob_eur', unit: '€'}, //, fixed: 'right'
                 {title: 'FOB(USD)', key: 'money', dataIndex: 'fob_usd', unit: '$'}, // , fixed: 'right'
                 {title: this.$t('n.operation'), key: 'operation', dataIndex: 'operation'},  // , fixed: 'right'
-                // {title: '建议零售价', key: 'money', dataIndex: 'price', fixed: 'right'},
             )
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
             if (this.specific.data.length === 1) {
@@ -755,15 +782,15 @@ export default {
                 this.specific.data = data
             })
         },
-        handleDelete(id){
+        handleDelete(record){
             let _this = this;
             this.$confirm({
-                title: _this.$t('pop_up.sure_delete'),
+                title: `${_this.$t('i.pop_delete_tip')}${record.name}(${_this.$t('d.code')}:${record.code})?`,
                 okText: _this.$t('def.sure'),
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.delete({id}).then(() => {
+                    Core.Api.Item.delete({id: record.target_id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getItemDetail();
                     }).catch(err => {
@@ -1067,12 +1094,21 @@ export default {
         handleAddSpec() { // 添加规格定义
             this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false,addValue: {key:'', zh:'', en:''}})
         },
-        handleRemoveSpec(index) { // 删除规格定义
-            let item = this.specific.list[index]
-            if (item.id) {
-                Core.Api.AttrDef.delete({id: item.id})
-            }
-            this.specific.list.splice(index, 1)
+        handleRemoveSpec(item, index) { // 删除规格定义
+            let _this = this;
+            this.$confirm({
+                title: `${_this.$t('i.pop_delete_spec')}${item.name}?`,
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    let item = _this.specific.list[index]
+                    if (item.id) {
+                        Core.Api.AttrDef.delete({id: item.id})
+                    }
+                    _this.specific.list.splice(index, 1)
+                },
+            });
         },
         handleSpecEditBlur(index, key) {
             let item = this.specific.list[index]
@@ -1197,6 +1233,7 @@ export default {
                 _do()
             }
         },
+        // 销售接口Fetch
         getSalesAreaList() {
             Core.Api.SalesArea.list({page:0}).then(res => {
                 this.salesList = res.list
@@ -1485,5 +1522,8 @@ export default {
 .flex-style {
     display: flex;
     align-items: center;
+}
+.m-l-5 {
+    margin-left: 5px;
 }
 </style>
