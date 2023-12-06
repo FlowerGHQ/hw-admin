@@ -232,7 +232,7 @@
                             <a-input v-model:value="item.name" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'name')"/>
                             <p>{{ $t('i.words') }}</p>
                             <a-input v-model:value="item.key" :placeholder="$t('def.input')" @blur="handleSpecEditBlur(index, 'key')"/>
-                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(index)">{{ $t('def.delete') }}</a-button>
+                            <a-button type="link" v-if="!form.id" @click="handleRemoveSpec(item, index)">{{ $t('def.delete') }}</a-button>
                         </div>
                         <div class="option">
                             <p>{{ $t('i.value_zh') }}</p>
@@ -306,7 +306,7 @@
                                     :formatter="value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" :parser="value => value.replace(/\$\s?|(,*)/g, '')"/>
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type='link' danger @click="handleDelete(record.target_id)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type='link' danger @click="handleDelete(record)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                             <template v-if="column.key === 'select'">
                                 <a-select v-model:value="record[column.dataIndex]" :placeholder="$t('def.select')">
@@ -752,15 +752,15 @@ export default {
                 this.specific.data = data
             })
         },
-        handleDelete(id){
+        handleDelete(record){
             let _this = this;
             this.$confirm({
-                title: _this.$t('pop_up.sure_delete'),
+                title: `${_this.$t('i.pop_delete_tip')}${record.name}(${_this.$t('d.code')}:${record.code})?`,
                 okText: _this.$t('def.sure'),
                 okType: 'danger',
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.delete({id}).then(() => {
+                    Core.Api.Item.delete({id: record.target_id}).then(() => {
                         _this.$message.success(_this.$t('pop_up.delete_success'));
                         _this.getItemDetail();
                     }).catch(err => {
@@ -1069,12 +1069,21 @@ export default {
         handleAddSpec() { // 添加规格定义
             this.specific.list.push({id: '', name: '', key: '', option: [], addVisible: false,addValue: {key:'', zh:'', en:''}})
         },
-        handleRemoveSpec(index) { // 删除规格定义
-            let item = this.specific.list[index]
-            if (item.id) {
-                Core.Api.AttrDef.delete({id: item.id})
-            }
-            this.specific.list.splice(index, 1)
+        handleRemoveSpec(item, index) { // 删除规格定义
+            let _this = this;
+            this.$confirm({
+                title: `${_this.$t('i.pop_delete_spec')}${item.name}?`,
+                okText: _this.$t('def.sure'),
+                okType: 'danger',
+                cancelText: this.$t('def.cancel'),
+                onOk() {
+                    let item = _this.specific.list[index]
+                    if (item.id) {
+                        Core.Api.AttrDef.delete({id: item.id})
+                    }
+                    _this.specific.list.splice(index, 1)
+                },
+            });
         },
         handleSpecEditBlur(index, key) {
             let item = this.specific.list[index]

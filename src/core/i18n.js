@@ -604,7 +604,9 @@ const messages = {
             clear_shop_car: '清空购物车',
             confirm_changes: '确认更改',
             source_type: '来源',
-            synchronization_time: '同步时间'
+            synchronization_time: '同步时间',
+            pop_delete_tip: '确定要删除商品',
+            pop_delete_spec: '确定要删除规格',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3252,7 +3254,9 @@ const messages = {
             clear_shop_car: 'Clear shop car',
             confirm_changes: 'Confirm Changes',
             source_type: 'source',
-            synchronization_time: 'Synchronization Time'
+            synchronization_time: 'Synchronization Time',
+            pop_delete_tip: 'Make sure to delete the item',
+            pop_delete_spec: 'Make sure you want to delete the specifications',
         },
         fe: {
             feedback: 'Feedback',
