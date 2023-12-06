@@ -117,7 +117,7 @@ export default {
             if (!form.name) {
                 return this.$message.warning(this.$t('def.enter')+this.$t('n.name'))
             }
-            if (!form.name_en) {
+            if (!form.name_en) {      
                 return this.$message.warning(this.$t('def.enter')+this.$t('n.name_en'))
             }
             if (!area.country) {
