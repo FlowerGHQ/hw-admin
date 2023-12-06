@@ -119,17 +119,43 @@
                 <!-- 净重 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.net_weight') }}</div>
-                    <div class="value">
+                    <div class="value flex-style">
                         <a-input v-model:value="form.net_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">kg</span>
                     </div>
                 </div>
                 <!-- 毛重 -->
                 <div class="form-item">
                     <div class="key">{{ $t('d.gross_weight') }}</div>
-                    <div class="value">
+                    <div class="value flex-style">
                         <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">kg</span>
                     </div>
-                </div>    
+                </div>
+                <!-- 长 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.long') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
+                <!-- 宽 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.wide') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
+                <!-- 高 -->
+                <div class="form-item">
+                    <div class="key">{{ $t('d.high') }}</div>
+                    <div class="value flex-style">
+                        <!-- <a-input v-model:value="form.gross_weight" :placeholder="$t('def.input')"/>
+                        <span class="m-l-5">cm</span> -->
+                    </div>
+                </div>
             </template>   
         </div>
     </div>
@@ -1493,5 +1519,8 @@ export default {
 .flex-style {
     display: flex;
     align-items: center;
+}
+.m-l-5 {
+    margin-left: 5px;
 }
 </style>
