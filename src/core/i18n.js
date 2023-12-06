@@ -97,6 +97,7 @@ const messages = {
         n: {
             index: '序号',
             name: '名称',
+            name_en: '英文名',
             state: '状态',
             type: '类型',
             flag_entity: '实例编码',
@@ -2752,6 +2753,7 @@ const messages = {
         n: {
             index: 'Serial Number',
             name: 'Name',
+            name_en: 'English Name',
             state: 'Status',
             type: 'Type',
             flag_entity: 'Instance Code',

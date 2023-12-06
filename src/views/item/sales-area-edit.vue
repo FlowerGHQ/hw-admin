@@ -15,6 +15,12 @@
                     </div>
                 </div>
                 <div class="form-item required">
+                    <div class="key">{{ $t('n.name_en') }}</div>
+                    <div class="value">
+                        <a-input v-model:value="form.name_en" :placeholder="$t('def.input')"/>
+                    </div>
+                </div>
+                <div class="form-item required">
                     <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
                         <CountryCascader v-model:value="areaList" :def-area='defArea'/>
@@ -109,10 +115,13 @@ export default {
             }
             console.log('are',area)
             if (!form.name) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter')+this.$t('n.name'))
+            }
+            if (!form.name_en) {
+                return this.$message.warning(this.$t('def.enter')+this.$t('n.name_en'))
             }
             if (!area.country) {
-                return this.$message.warning(this.$t('def.enter'))
+                return this.$message.warning(this.$t('def.enter')+this.$t('n.area'))
             }
             Core.Api.SalesArea.save({
                 ...form,
@@ -123,7 +132,8 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
-        }
+        },
+
     }
 };
 </script>
