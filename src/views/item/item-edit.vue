@@ -597,8 +597,10 @@ export default {
         confirmValue(option,i,index){
             option.disabled = true
             let target = this.specific.list[index]
+            console.log(target)
             let value = ""
             let value_en = ""
+            if(!target) return
             target.option.forEach(it => {
                 value += it.zh + ","
                 value_en += it.en + ","
