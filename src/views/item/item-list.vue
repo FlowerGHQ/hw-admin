@@ -366,6 +366,7 @@ export default {
         },
       },
       flag_spread: 0, // 0, 2是默认  传其他的是全部
+      isShowAdd: false,//查询时(名称和编码都有)
     };
   },
   watch: {},
@@ -493,6 +494,10 @@ export default {
     handleSearch() {
       if (this.searchForm.name !== "" || this.searchForm.code !== "") {
         this.flag_spread = 1;
+      }
+      // 如果名称和编码都有值的话  +号去掉
+      if (this.searchForm.name && this.searchForm.code) {
+        this.isShowAdd = false;
       }
       this.pageChange(1);
     },

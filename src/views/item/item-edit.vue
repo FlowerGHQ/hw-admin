@@ -11,14 +11,14 @@
         </div>
         <div class="form-content">
             <!-- 名称 -->
-            <div class="form-item required">
+            <div class="form-item required" v-if="this.specific.mode === 1">
                 <div class="key" :class="form.name === '' && isValidate ? 'error' : ''">{{ $t('n.name') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.name" :placeholder="$t('def.input')" :maxlength='50'/>
                 </div>
             </div>
             <!-- 英文名 -->
-            <div class="form-item required">
+            <div class="form-item required" v-if="this.specific.mode === 1">
                 <div class="key" :class="form.name_en === '' && isValidate ? 'error' : ''">{{ $t('n.name_en') }}</div>
                 <div class="value">
                     <a-input v-model:value="form.name_en" :placeholder="$t('def.input')" :maxlength='50'/>
@@ -686,7 +686,9 @@ export default {
                     console.log('getItemGroup res', res)
                     let list = res.list
                     let mainItem = list.find(i => i.flag_default === 1)
+                    // 根据详情-赋值规格等信息
                     this.setFormData(mainItem)
+                    // 赋值规格定义列表-规格商品列表
                     this.setSpecificData(list)
                 }).catch(err => {
                     console.log('getItemGroup err', err)
@@ -706,6 +708,8 @@ export default {
                 });
             }
         },
+
+        // 根据详情-赋值规格等信息
         setFormData(res) {
             this.loading = true
             this.detail = res
