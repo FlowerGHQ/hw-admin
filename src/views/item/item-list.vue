@@ -89,6 +89,22 @@
                 :category-id="searchForm.category_id" />
             </div>
           </a-col>
+          <!-- 商品状态 -->
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+            <div class="key">{{ $t("i.status") }}:</div>
+            <div class="value">
+              <a-select
+                v-model:value="searchForm.status"
+                :placeholder="$t('def.select')">
+                <a-select-option
+                  v-for="(item, index) in itemStatusMap"
+                  :key="index"
+                  :value="item.value"
+                  >{{ item[$i18n.locale] }}</a-select-option
+                >
+              </a-select>
+            </div>
+          </a-col>
           <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
             <div class="key">{{ $t("d.create_time") }}:</div>
             <div class="value">
@@ -111,11 +127,12 @@
           :scroll="{ x: true }"
           :pagination="false"
           :row-key="(record) => record.id"
-          @expand="handleTableExpand"
           @change="handleTableChange"
-          :row-selection="rowSelection"
+          @expand="handleTableExpand"
           :expandedRowKeys="expandedRowKeys"
-          :indentSize="0">
+          :indentSize="0"
+          :row-selection="rowSelection"
+          >
           <template #bodyCell="{ column, text, record }">
             <!-- 名称 -->
             <template v-if="column.key === 'detail'">
@@ -323,10 +340,11 @@ export default {
         begin_time: "",
         end_time: "",
         type: undefined,
-        status: 0,
+        status: '0',
         source_type: undefined,
       },
       itemTypeMap: ITEM.TYPE_MAP,
+      itemStatusMap: ITEM.STATUS_LIST,
       SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
       // 表格
       tableData: [],
@@ -361,12 +379,12 @@ export default {
         {
           title: this.$t("i.status"),
           dataIndex: "status",
-          filters: this.$Util.tableFilterFormat(
-            ITEM.STATUS_LIST,
-            this.$i18n.locale
-          ),
-          filterMultiple: false,
-          filteredValue: filteredInfo.status || [0],
+          // filters: this.$Util.tableFilterFormat(
+          //   ITEM.STATUS_LIST,
+          //   this.$i18n.locale
+          // ),
+          // filterMultiple: false,
+          // filteredValue: filteredInfo.status || [0],
         },
         { title: this.$t("n.type"), dataIndex: ["type"], key: "type" },
         {
@@ -516,17 +534,28 @@ export default {
       })
         .then((res) => {
           this.total = res.count;
-          this.tableData = res.list;
+          this.tableData = res.list; 
+          // if(res.list.length) {
+          //   const targetTableData = this.removeChildrenFromData(res.list)
+          //   this.tableData = targetTableData; 
+          // } else {
+          //   this.tableData = res.list; 
+          // }
         })
         .catch((err) => {
           console.log("getTableData err:", err);
         })
         .finally(() => {
           this.loading = false;
-          this.expandedRowKeys = [];
         });
     },
-
+    removeChildrenFromData(data) {
+      return data.map(item => {
+        const newItem = { ...item };
+        delete newItem.children;
+        return newItem;
+      });
+    },
     handleDelete(id) {
       let _this = this;
       this.$confirm({
