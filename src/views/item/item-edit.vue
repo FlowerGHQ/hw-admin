@@ -504,10 +504,10 @@
                                                 class="option-input"
                                                 :placeholder="$t('def.input')"
                                                 @keydown.enter="
-                                                    confirmValue(option, i)
+                                                    confirmValue(option, i,index)
                                                 "
                                                 @dblclick="
-                                                    changeOption(option, i)
+                                                    changeOption(option, i,index)
                                                 "
                                                 :disabled="option.disabled"
                                             />
@@ -616,11 +616,11 @@
                                                 class="option-input"
                                                 :placeholder="$t('def.input')"
                                                 @keydown.enter="
-                                                    confirmValue(option, i)
+                                                    confirmValue(option, i,index)
                                                 "
                                                 :disabled="option.disabled"
                                                 @dblclick="
-                                                    changeOption(option, i)
+                                                    changeOption(option, i,index)
                                                 "
                                             />
                                             <i
@@ -1392,15 +1392,15 @@ export default {
     methods: {
         changeOption(option, i) {
             option.disabled = false;
-            console.log(this.specific);
         },
         confirmValue(option, i, index) {
             option.disabled = true;
+            console.log(option, i, index);
             let target = this.specific.list[index];
-            console.log(target);
+            console.log(target,'---------------------------',index);
+
             let value = "";
             let value_en = "";
-            if (!target) return;
             target.option.forEach((it) => {
                 value += it.zh + ",";
                 value_en += it.en + ",";
