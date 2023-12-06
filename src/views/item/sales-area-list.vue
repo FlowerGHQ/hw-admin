@@ -41,6 +41,9 @@
                         <template v-if="column.key === 'country'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'name_en'">
+                            {{ text || '-' }}
+                        </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('edit',record)" v-if="$auth('sales-area.save')"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger" v-if="$auth('sales-area.delete')"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
@@ -98,6 +101,7 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('n.name_en'), dataIndex: 'name_en',key: 'name_en'},
                 {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
                 {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
