@@ -503,6 +503,12 @@
                                                 v-model:value="option.zh"
                                                 class="option-input"
                                                 :placeholder="$t('def.input')"
+                                                @blur="
+                                                    handleSpecOptionBlur(
+                                                        index,
+                                                        i,
+                                                        'zh'
+                                                    )"
                                                 @keydown.enter="
                                                     confirmValue(option, i,index)
                                                 "
@@ -622,6 +628,12 @@
                                                 @dblclick="
                                                     changeOption(option, i,index)
                                                 "
+                                                @blur="
+                                                    handleSpecOptionBlur(
+                                                        index,
+                                                        i,
+                                                        'zh'
+                                                    )"
                                             />
                                             <i
                                                 class="close icon i_close_b"
@@ -1395,10 +1407,7 @@ export default {
         },
         confirmValue(option, i, index) {
             option.disabled = true;
-            console.log(option, i, index);
             let target = this.specific.list[index];
-            console.log(target,'---------------------------',index);
-
             let value = "";
             let value_en = "";
             target.option.forEach((it) => {
