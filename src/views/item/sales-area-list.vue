@@ -103,8 +103,6 @@ export default {
             ]
             if (this.$i18n.locale === 'en' ) {
                 columns.splice(1, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
-            }
-            if (this.$i18n.locale === 'en' ) {
                 columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
