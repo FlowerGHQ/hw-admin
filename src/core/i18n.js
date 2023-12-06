@@ -604,7 +604,8 @@ const messages = {
             clear_shop_car: '清空购物车',
             confirm_changes: '确认更改',
             source_type: '来源',
-            synchronization_time: '同步时间'
+            synchronization_time: '同步时间',
+            data_source: '数据来源',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3252,7 +3253,8 @@ const messages = {
             clear_shop_car: 'Clear shop car',
             confirm_changes: 'Confirm Changes',
             source_type: 'source',
-            synchronization_time: 'Synchronization Time'
+            synchronization_time: 'Synchronization Time',
+            data_source: 'Data Source',
         },
         fe: {
             feedback: 'Feedback',
