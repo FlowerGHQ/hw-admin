@@ -25,6 +25,22 @@
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>{{ $t('i.data_source') }}:</span></div>
+                        <div class="value">
+                            <a-select
+                                @change="handleSearch"
+                                v-model:value="source_type"
+                                :placeholder="$t('def.select')">
+                                <a-select-option
+                                    v-for="(item, index) in SOURCE_MAP"
+                                    :key="index"
+                                    :value="item.value"
+                                    >{{ item[$i18n.locale] }}</a-select-option
+                                >
+                            </a-select>
+                        </div>
+                    </a-col>
                 </a-row>
                 <div class="btn-area">
                     <a-button @click="handleSearch" type="primary">{{ $t('def.search') }}</a-button>
@@ -74,7 +90,7 @@ import Core from '@/core';
 
 import ItemTable from '@/components/table/ItemTable.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
-
+const ITEM = Core.Const.ITEM;
 export default {
     components: {
         ItemTable,
@@ -130,7 +146,7 @@ export default {
         return {
             loading: false,
             modalShow: false,
-
+            SOURCE_MAP: ITEM.ITEM_SOURCE_MAP,
             currPage: 1,
             pageSize: 10,
             total: 0,
@@ -139,7 +155,7 @@ export default {
                 name: '',
                 category_id: '',
             },
-
+            source_type: undefined,
             tableData: [],
 
             selectItems: [],
@@ -219,6 +235,7 @@ export default {
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    source_type: this.source_type === 0 ? '' : this.source_type
                 }).then(res => {
                     console.log('Item.list res:', res)
                     this.tableData = res.list
