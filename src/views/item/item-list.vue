@@ -471,7 +471,9 @@ export default {
   },
   async mounted() {
     let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
+    let height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
     this.fixedWidth = width - 40 + 'px';
+    this.fixedHeight = height + 'px';
     await this.getTableData({ flag_spread: 1 });
     await this.getSalesAreaList();
     window.addEventListener('resize', this.handleResize)
