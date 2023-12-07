@@ -4,9 +4,9 @@
       <div class="title-container">
         <div class="title-area">{{ $t("s.store_list") }}</div>
         <!-- <div class="btns-area">
-                    <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
-                    }}</a-button>
-                </div> -->
+              <a-button type="primary" @click="routerChange('edit')"><i class="icon i_add" />{{ $t("crm_st.add_st")
+              }}</a-button>
+        </div> -->
       </div>
       <div class="search-container" style="background-color: #fff">
         <a-row class="search-area" style="width: 100%">

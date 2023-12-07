@@ -192,6 +192,7 @@ export default {
         },
 
         getTableData() {
+            //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
             if (this.purchaseId) {
                 Core.Api.Purchase.itemList({
@@ -214,18 +215,31 @@ export default {
                 });
             } else {
                 Core.Api.Item.list({
-                    ...this.searchForm,
+                    // ...this.searchForm,
+                    name: this.searchForm.name,
+                    category_id: this.searchForm.category_id,
                     warehouse_id: this.warehouseId,
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+
                 }).then(res => {
                     console.log('Item.list res:', res)
-                    this.tableData = res.list
+                    this.tableData = this.removeChildrenFromData(res.list)
                     this.total = res.count;
                 })
             }
         },
+        /* 删除加号 */
+        removeChildrenFromData(data) {
+            return data.map(item => {
+                const newItem = { ...item };
+                delete newItem.children;
+                return newItem;
+            });
+        },
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
