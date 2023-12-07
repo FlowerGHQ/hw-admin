@@ -230,9 +230,9 @@
               <span v-if="text >= 0">{{ column.unit }}</span>
               {{ $Util.countFilter(text) }}
             </template>
-            <template v-if="column.key === 'man_hour'">
+            <!-- <template v-if="column.key === 'man_hour'">
               {{ $Util.countFilter(text) }}
-            </template>
+            </template> -->
             <template v-if="column.dataIndex === 'status'">
               <div
                 class="status status-bg status-tag"
@@ -439,7 +439,7 @@ export default {
           key: "fob_money",
           unit: "$",
         },
-        { title: this.$t("i.hours"), dataIndex: "man_hour", key: "man_hour" },
+        // { title: this.$t("i.hours"), dataIndex: "man_hour", key: "man_hour" },
         {
           title: this.$t("d.create_time"),
           dataIndex: "create_time",
