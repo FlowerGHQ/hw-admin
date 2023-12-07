@@ -1165,6 +1165,9 @@ const messages = {
             search_se: '搜索',
             email_phone_name: '请输入客户名称/邮箱/手机号',
             more_operations: '更多操作',
+            unfold: '展开',
+            stow: '收起',
+
         },
         search: {
             repair_sn: '工单编号',
@@ -3809,6 +3812,8 @@ const messages = {
             search_se: 'Search',
             email_phone_name: 'Please Enter Your Name/Email/Mobile Phone Number',
             more_operations: 'More Operations',
+            unfold: 'Unfold',
+            stow: 'Stow',
         },
         search: {
             repair_sn: 'Warranty Claim Number',

@@ -1,125 +1,142 @@
 <template>
   <div id="ItemList">
-    <div class="list-container">
-      <div class="title-container">
-        <div class="title-area">{{ $t("i.item_list") }}</div>
-        <div class="btns-area">
-          <a-button class="download" type="primary" @click="handleExportConfirm"
-            ><i class="icon i_download" />{{ $t("i.export") }}</a-button
-          >
-          <a-upload
-            name="file"
-            class="file-uploader"
-            :file-list="upload.fileList"
-            :action="upload.action"
-            :show-upload-list="false"
-            :headers="upload.headers"
-            :data="upload.data"
-            accept=".xlsx,.xls"
-            @change="handleMatterChange">
-            <a-button type="primary" ghost class="file-upload-btn">
-              <i class="icon i_add" />{{ $t("i.import") }}
+    <div class="list-container" ref="bigBox">
+      <div id="fixed-box" ref="fixBox">
+        <div class="title-container" >
+          <div class="title-area">{{ $t("i.item_list") }}</div>
+          <div class="btns-area">
+            <a-button class="download" type="primary" @click="handleExportConfirm"
+              ><i class="icon i_download" />{{ $t("i.export") }}</a-button
+            >
+            <a-upload
+              name="file"
+              class="file-uploader"
+              :file-list="upload.fileList"
+              :action="upload.action"
+              :show-upload-list="false"
+              :headers="upload.headers"
+              :data="upload.data"
+              accept=".xlsx,.xls"
+              @change="handleMatterChange">
+              <a-button type="primary" ghost class="file-upload-btn">
+                <i class="icon i_add" />{{ $t("i.import") }}
+              </a-button>
+            </a-upload>
+            <a-button type="primary" @click="handleSalesAreaByIdsShow()"
+              ><i class="icon i_edit" /> {{ $t("ar.set_sales") }}
             </a-button>
-          </a-upload>
-          <a-button type="primary" @click="handleSalesAreaByIdsShow()"
-            ><i class="icon i_edit" /> {{ $t("ar.set_sales") }}
-          </a-button>
-          <a-button type="primary" @click="routerChange('add')"
-            ><i class="icon i_add" />{{ $t("i.new") }}</a-button
-          >
+            <a-button type="primary" @click="routerChange('add')"
+              ><i class="icon i_add" />{{ $t("i.new") }}</a-button>
+          </div>
+        </div>
+        <div class="search-container"  :style="{width: fixedWidth}">
+          <a-row class="search-area">
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+              <div class="key">{{ $t("n.name") }}:</div>
+              <div class="value">
+                <a-input
+                  :placeholder="$t('def.input')"
+                  v-model:value="searchForm.name"
+                  @keydown.enter="handleSearch" />
+              </div>
+            </a-col>
+            <!-- 类型 -->
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+              <div class="key">{{ $t("n.type") }}:</div>
+              <div class="value">
+                <a-select
+                  v-model:value="searchForm.type"
+                  :placeholder="$t('def.select')">
+                  <a-select-option
+                    v-for="(val, key) in itemTypeMap"
+                    :key="key"
+                    :value="key"
+                    >{{ val[$i18n.locale] }}</a-select-option
+                  >
+                </a-select>
+              </div>
+            </a-col>
+            <!-- 来源 -->
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
+              <div class="key">{{ $t("i.source_type") }}:</div>
+              <div class="value">
+                <a-select
+                  v-model:value="searchForm.source_type"
+                  :placeholder="$t('def.select')">
+                  <a-select-option
+                    v-for="(val, index) in SOURCE_TYPE"
+                    :key="index"
+                    :value="val.id"
+                    >{{ val.value }}</a-select-option
+                  >
+                </a-select>
+              </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+              <div class="key">{{ $t("i.code") }}:</div>
+              <div class="value">
+                <a-input
+                  :placeholder="$t('def.input')"
+                  v-model:value="searchForm.code"
+                  @keydown.enter="handleSearch" />
+              </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+              <div class="key">{{ $t("i.categories") }}:</div>
+              <div class="value">
+                <CategoryTreeSelect
+                  @change="handleCategorySelect"
+                  :category-id="searchForm.category_id" />
+              </div>
+            </a-col>
+            <!-- 商品状态 -->
+            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+              <div class="key">{{ $t("i.status") }}:</div>
+              <div class="value">
+                <a-select
+                  v-model:value="searchForm.status"
+                  :placeholder="$t('def.select')">
+                  <a-select-option
+                    v-for="(item, index) in itemStatusMap"
+                    :key="index"
+                    :value="item.value"
+                    >{{ item[$i18n.locale] }}</a-select-option
+                  >
+                </a-select>
+              </div>
+            </a-col>
+            <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item" v-if="show">
+              <div class="key">{{ $t("d.create_time") }}:</div>
+              <div class="value">
+                <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
+              </div>
+            </a-col>
+          </a-row>
+          <div class="btn-area">
+            <a-button @click="handleSearch" type="primary">{{
+              $t("def.search")
+            }}</a-button>
+            <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
+            
+            <a-button type="link" @click="moreSearch">
+            {{ show ? $t("def.stow") : $t("def.unfold") }}
+            <i
+              class="icon i_xialajiantouxiao"
+              style="margin-left: 5px"
+              v-if="!show"
+            ></i>
+            <i
+              class="icon i_shouqijiantouxiao"
+              style="margin-left: 5px"
+              v-else
+            ></i>
+            
+            </a-button>
+          </div>
         </div>
       </div>
-      <div class="search-container">
-        <a-row class="search-area">
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("n.name") }}:</div>
-            <div class="value">
-              <a-input
-                :placeholder="$t('def.input')"
-                v-model:value="searchForm.name"
-                @keydown.enter="handleSearch" />
-            </div>
-          </a-col>
-          <!-- 类型 -->
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("n.type") }}:</div>
-            <div class="value">
-              <a-select
-                v-model:value="searchForm.type"
-                :placeholder="$t('def.select')">
-                <a-select-option
-                  v-for="(val, key) in itemTypeMap"
-                  :key="key"
-                  :value="key"
-                  >{{ val[$i18n.locale] }}</a-select-option
-                >
-              </a-select>
-            </div>
-          </a-col>
-          <!-- 来源 -->
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("i.source_type") }}:</div>
-            <div class="value">
-              <a-select
-                v-model:value="searchForm.source_type"
-                :placeholder="$t('def.select')">
-                <a-select-option
-                  v-for="(val, index) in SOURCE_TYPE"
-                  :key="index"
-                  :value="val.id"
-                  >{{ val.value }}</a-select-option
-                >
-              </a-select>
-            </div>
-          </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("i.code") }}:</div>
-            <div class="value">
-              <a-input
-                :placeholder="$t('def.input')"
-                v-model:value="searchForm.code"
-                @keydown.enter="handleSearch" />
-            </div>
-          </a-col>
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("i.categories") }}:</div>
-            <div class="value">
-              <CategoryTreeSelect
-                @change="handleCategorySelect"
-                :category-id="searchForm.category_id" />
-            </div>
-          </a-col>
-          <!-- 商品状态 -->
-          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-            <div class="key">{{ $t("i.status") }}:</div>
-            <div class="value">
-              <a-select
-                v-model:value="searchForm.status"
-                :placeholder="$t('def.select')">
-                <a-select-option
-                  v-for="(item, index) in itemStatusMap"
-                  :key="index"
-                  :value="item.value"
-                  >{{ item[$i18n.locale] }}</a-select-option
-                >
-              </a-select>
-            </div>
-          </a-col>
-          <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item">
-            <div class="key">{{ $t("d.create_time") }}:</div>
-            <div class="value">
-              <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
-            </div>
-          </a-col>
-        </a-row>
-        <div class="btn-area">
-          <a-button @click="handleSearch" type="primary">{{
-            $t("def.search")
-          }}</a-button>
-          <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
-        </div>
-      </div>
-      <div class="table-container">
+      <div :style="{height: fixedHeight}"></div>
+      <div class="table-container" ref="tabBox" >
         <a-table
           :columns="tableColumns"
           :data-source="tableData"
@@ -366,7 +383,14 @@ export default {
         },
       },
       flag_spread: 0, // 0, 2是默认  传其他的是全部
-      isShowAdd: false,//查询时(名称和编码都有)
+      // isShowAdd: false,//查询时(名称和编码都有)
+
+      fixedHeight: 'auto',
+      fixedWidth: 'auto',
+
+      // 搜索列表 展开收起控制
+      show: false,
+ 
     };
   },
   watch: {},
@@ -441,11 +465,35 @@ export default {
       };
     },
   },
-  mounted() {
-    this.getTableData({ flag_spread: 1 });
-    this.getSalesAreaList();
+  async mounted() {
+    let width = this.$refs.bigBox.offsetWidth;
+    this.fixedWidth = width - 40 + 'px';
+    await this.getTableData({ flag_spread: 1 });
+    await this.getSalesAreaList();
+    window.addEventListener('resize', this.handleResize)
+    this.$nextTick(()=>{
+      this.handleResize()
+    })
+  },
+  beforeDestroy() {
+      window.removeEventListener('resize', this.handleResize)
   },
   methods: {
+    moreSearch() {
+      this.show = !this.show;
+      this.$nextTick(()=>{
+        this.handleResize()
+      })
+    },
+    handleResize() {
+        const width = this.$refs.tabBox.offsetWidth;
+        const height = this.$refs.fixBox.offsetHeight;
+        this.fixedWidth = width + 'px';
+        this.fixedHeight = height + 'px'; 
+
+        // 在这里处理宽高变化的逻辑
+        console.log('盒子宽度:', width, '盒子高度:', height);
+    },
     routerChange(type, item = {}) {
       console.log("routerChange item:", item);
       let routeUrl = "";
@@ -496,9 +544,9 @@ export default {
         this.flag_spread = 1;
       }
       // 如果名称和编码都有值的话  +号去掉
-      if (this.searchForm.name && this.searchForm.code) {
+      /* if (this.searchForm.name && this.searchForm.code) {
         this.isShowAdd = true;
-      }
+      } */
       this.pageChange(1);
     },
     handleOtherSearch(params) {
@@ -522,16 +570,16 @@ export default {
       this.pageChange(1);
     },
     handleSearchReset() {
-      this.isShowAdd = false;
+      // this.isShowAdd = false;
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearch.handleReset();
       this.pageChange(1);
     },
-    getTableData(params = {}) {
+    async getTableData(params = {}) {
       // 获取 表格 数据
       this.loading = true;
-      Core.Api.Item.list({
+      await Core.Api.Item.list({
         ...Core.Util.searchFilter(this.searchForm),
         flag_spread: this.flag_spread,
         page: this.currPage,
@@ -541,14 +589,14 @@ export default {
         .then((res) => {
           this.total = res.count;
           // this.tableData = res.list; 
-          
+
           // 如果同时查询名称和编码  加号去掉
-          if(this.isShowAdd) {
+          // if(this.isShowAdd) {
             const targetTableData = this.removeChildrenFromData(res.list)
             this.tableData = targetTableData; 
-          } else {
-            this.tableData = res.list; 
-          }
+          // } else {
+            // this.tableData = res.list; 
+          // }
 
           
         })
@@ -721,21 +769,44 @@ export default {
 
 <style lang="less" scoped>
 #ItemList {
+  
   .download {
     font-size: 14px;
     text-align: center;
     margin-right: 10px;
   }
   .list-container {
+
     .title-container {
+      padding-left: 0px;
       .btns-area {
         .file-upload-btn {
           margin-right: 15px;
         }
       }
     }
+
+    .search-container {
+      margin: 0px;
+      padding-left: 20px;
+
+    }
+
+    #fixed-box {
+      position: fixed;
+      z-index: 30;
+      box-sizing: border-box;
+      margin-left: 20px;
+      background-color: #ffffff;
+      
+
+    }
   }
   .table-container {
+    z-index: 20;
+    position: relative;
+    height: auto;
+    
     .info {
       display: inline-flex;
       flex-direction: column;
