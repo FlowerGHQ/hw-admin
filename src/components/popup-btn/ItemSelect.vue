@@ -243,11 +243,20 @@ export default {
                     source_type: this.source_type === 0 ? '' : this.source_type
                 }).then(res => {
                     console.log('Item.list res:', res)
-                    this.tableData = res.list
+                    this.tableData = this.removeChildrenFromData(res.list)
                     this.total = res.count;
                 })
             }
         },
+        /* 删除加号 */
+        removeChildrenFromData(data) {
+            return data.map(item => {
+                const newItem = { ...item };
+                delete newItem.children;
+                return newItem;
+            });
+        },
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()

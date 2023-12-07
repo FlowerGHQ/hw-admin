@@ -1734,7 +1734,8 @@ export default {
                 let coverList = this.upload.coverList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });
-                form.logo = coverList[0];
+                // form.logo = coverList[0];
+                form.logo = coverList.join(',');
             }
 
             // 详情页面上传

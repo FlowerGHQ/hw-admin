@@ -2,6 +2,11 @@
   <div id="ItemList">
     <div class="list-container" ref="bigBox">
       <div id="fixed-box" ref="fixBox">
+        <!-- <div style="height:100px;background-color: red;width: 100%;position: absolute;top: -16px;padding: 0 20px;box-sizing: content-box;left: -20px;opacity: 0.2;z-index: -15;display: flex;padding-top: 16px;">
+          <div style="background-color: green;flex: 1;">
+            
+          </div>
+        </div> -->
         <div class="title-container" >
           <div class="title-area">{{ $t("i.item_list") }}</div>
           <div class="btns-area">
@@ -466,7 +471,7 @@ export default {
     },
   },
   async mounted() {
-    let width = this.$refs.bigBox.offsetWidth;
+    let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
     this.fixedWidth = width - 40 + 'px';
     await this.getTableData({ flag_spread: 1 });
     await this.getSalesAreaList();
@@ -486,8 +491,8 @@ export default {
       })
     },
     handleResize() {
-        const width = this.$refs.tabBox.offsetWidth;
-        const height = this.$refs.fixBox.offsetHeight;
+        const width = this.$refs.tabBox && this.$refs.tabBox.offsetWidth;
+        const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
         this.fixedWidth = width + 'px';
         this.fixedHeight = height + 'px'; 
 
