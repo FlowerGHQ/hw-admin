@@ -29,7 +29,8 @@
                         <div class="key"><span>{{ $t('i.data_source') }}:</span></div>
                         <div class="value">
                             <a-select
-                                v-model:value="searchForm.source"
+                                @change="handleSearch"
+                                v-model:value="source_type"
                                 :placeholder="$t('def.select')">
                                 <a-select-option
                                     v-for="(item, index) in SOURCE_MAP"
@@ -153,9 +154,8 @@ export default {
                 code: '',
                 name: '',
                 category_id: '',
-                source: 0,
             },
-
+            source_type: undefined,
             tableData: [],
 
             selectItems: [],
@@ -233,6 +233,7 @@ export default {
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    source_type: this.source_type === 0 ? '' : this.source_type
                 }).then(res => {
                     console.log('Item.list res:', res)
                     this.tableData = res.list

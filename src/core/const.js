@@ -595,8 +595,8 @@ let Const = {
         },
         ITEM_SOURCE_MAP: {
             '0': { value: 0, zh: '全部', en: 'All' },
-            '1': { value: 1, zh: 'U8', en: 'U8' },
-            '2': { value: 2, zh: 'BOS', en: 'BOS' },
+            '1': { value: 1, zh: 'BOS', en: 'BOS' },
+            '2': { value: 2, zh: 'U8', en: 'U8' },
         }
     },
     ITEM_ACCESSORY: {
