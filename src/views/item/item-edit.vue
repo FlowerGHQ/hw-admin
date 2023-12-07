@@ -292,7 +292,7 @@
                     <div class="value">
                         <a-upload
                             name="file"
-                            class="image-uploader"
+                            class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
                             :file-list="upload.coverList"
@@ -317,7 +317,7 @@
                     <div class="value">
                         <a-upload
                             name="file"
-                            class="image-uploader"
+                            class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
                             :file-list="upload.detailList"
@@ -2651,5 +2651,9 @@ export default {
 
 .border-red {
     border: 1px solid red !important;
+}
+
+.item-image-uploader .ant-upload-list-item-thumbnail {
+    font-size: 0px;
 }
 </style>
