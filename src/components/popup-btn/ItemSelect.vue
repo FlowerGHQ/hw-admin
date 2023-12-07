@@ -155,7 +155,7 @@ export default {
                 name: '',
                 category_id: '',
             },
-            source_type: undefined,
+            source_type: 2,
             tableData: [],
 
             selectItems: [],
