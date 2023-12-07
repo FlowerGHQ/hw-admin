@@ -612,6 +612,7 @@ const messages = {
             synchronization_time: '同步时间',
             pop_delete_tip: '确定要删除商品',
             pop_delete_spec: '确定要删除规格',
+            data_source: '数据来源',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3270,6 +3271,7 @@ const messages = {
             synchronization_time: 'Synchronization Time',
             pop_delete_tip: 'Make sure to delete the item',
             pop_delete_spec: 'Make sure you want to delete the specifications',
+            data_source: 'Data Source',
         },
         fe: {
             feedback: 'Feedback',
