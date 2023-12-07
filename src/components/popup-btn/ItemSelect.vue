@@ -16,7 +16,7 @@
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>{{ $t('i.categories') }}:</span></div>
                         <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category_id='searchForm.category_id' />
+                            <CategoryTreeSelect ref="treeSelect" @change="handleCategorySelect" :category_id='searchForm.category_id' />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
@@ -269,6 +269,7 @@ export default {
             this.searchForm.name = ''
             this.searchForm.category_id = ''
             this.source_type = undefined
+            this.$refs.treeSelect?.resetVal();
             this.pageChange(1)
         },
         handleCategorySelect(val) {

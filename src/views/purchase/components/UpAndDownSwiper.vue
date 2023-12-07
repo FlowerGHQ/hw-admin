@@ -3,7 +3,7 @@
     <div class="img-big">
       <img :src="getImgUrl(imgIndex)" />
     </div>
-    <!-- <div class="img-active"  v-if="imgsArr.length>0">
+    <div class="img-active"  v-if="imgsArr.length>0">
       <div class="left-icon">
         <left-outlined @click="imgPreview(0)" />
       </div>
@@ -20,7 +20,7 @@
       <div class="right-icon">
         <right-outlined @click="imgPreview(1)" />
       </div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -75,33 +75,35 @@ export default {
     imgsArr() {
       let activeObj = {}
       activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
-      return activeObj 
+      console.log("imgsArr:", activeObj?.logo?.split(","));
+      return activeObj?.logo?.split(",") || [];
     },
   },
   methods: {
     getImgUrl() {
-      return this.$Util.imageFilter(this.imgsArr.logo,2);
+      console.log("getImgUrl:", this.imgsArr[this.imgIndex]);
+      return this.$Util.imageFilter(this.imgsArr[this.imgIndex]);
     },
-    // imgPreview(type) {
-    //   if (type === 0) {
-    //     if (this.imgIndex === 0) {
-    //       this.imgIndex = this.imgsArr.length - 1;
-    //     } else {
-    //       this.imgIndex--;
-    //     }
-    //   } else {
-    //     if (this.imgIndex === this.imgsArr.length - 1) {
-    //       this.imgIndex = 0;
-    //     } else {
-    //       this.imgIndex++;
-    //     }
-    //   }
-    // //   让当前图片居中
-    //   this.$refs.imgArea.scrollLeft = this.imgIndex * 70;
-    // },
-    // previewImg(index) {
-    //   this.imgIndex = index;
-    // },
+    imgPreview(type) {
+      if (type === 0) {
+        if (this.imgIndex === 0) {
+          this.imgIndex = this.imgsArr.length - 1;
+        } else {
+          this.imgIndex--;
+        }
+      } else {
+        if (this.imgIndex === this.imgsArr.length - 1) {
+          this.imgIndex = 0;
+        } else {
+          this.imgIndex++;
+        }
+      }
+    //   让当前图片居中
+      this.$refs.imgArea.scrollLeft = this.imgIndex * 70;
+    },
+    previewImg(index) {
+      this.imgIndex = index;
+    },
   },
 };
 </script>
@@ -142,6 +144,12 @@ export default {
       overflow-x: auto;
       overflow-y: hidden;
       cursor: pointer;
+      // user-select: none;
+      // 双击不可显示蓝色选中
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     //   隐藏滚动条
         &::-webkit-scrollbar {
             display: none;
