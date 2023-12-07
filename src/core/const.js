@@ -535,13 +535,13 @@ let Const = {
             '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
         },
         MONETARY_TYPE: {
-            // '￥': 'CNY',
+            '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
             // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            // 'CNY': '￥',
+            'CNY': '￥',
             'EUR': '€',
             'USD': '$',
             // 'GBP': '£',
