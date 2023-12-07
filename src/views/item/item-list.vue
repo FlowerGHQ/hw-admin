@@ -579,7 +579,7 @@ export default {
       // this.isShowAdd = false;
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
-      this.$refs.TimeSearch.handleReset();
+      this.$refs.TimeSearch && this.$refs.TimeSearch?.handleReset();
       this.pageChange(1);
     },
     async getTableData(params = {}) {

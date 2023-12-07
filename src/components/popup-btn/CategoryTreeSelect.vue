@@ -87,6 +87,9 @@ export default {
         }
     },
     methods: {
+        resetVal() {
+            this.value = ''
+        },
         getFirstItemCategory() {
             let key = ''
             switch (this.type) {
