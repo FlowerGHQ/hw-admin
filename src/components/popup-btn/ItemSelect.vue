@@ -16,7 +16,7 @@
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>{{ $t('i.categories') }}:</span></div>
                         <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category_id='searchForm.category_id' />
+                            <CategoryTreeSelect ref="treeSelect" @change="handleCategorySelect" :category_id='searchForm.category_id' />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
@@ -192,6 +192,7 @@ export default {
         },
 
         getTableData() {
+            //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
             if (this.purchaseId) {
                 Core.Api.Purchase.itemList({
@@ -214,18 +215,31 @@ export default {
                 });
             } else {
                 Core.Api.Item.list({
-                    ...this.searchForm,
+                    // ...this.searchForm,
+                    name: this.searchForm.name,
+                    category_id: this.searchForm.category_id,
                     warehouse_id: this.warehouseId,
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+
                 }).then(res => {
                     console.log('Item.list res:', res)
-                    this.tableData = res.list
+                    this.tableData = this.removeChildrenFromData(res.list)
                     this.total = res.count;
                 })
             }
         },
+        /* 删除加号 */
+        removeChildrenFromData(data) {
+            return data.map(item => {
+                const newItem = { ...item };
+                delete newItem.children;
+                return newItem;
+            });
+        },
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -237,6 +251,7 @@ export default {
             this.searchForm.code = ''
             this.searchForm.name = ''
             this.searchForm.category_id = ''
+            this.$refs.treeSelect?.resetVal();
             this.pageChange(1)
         },
         handleCategorySelect(val) {

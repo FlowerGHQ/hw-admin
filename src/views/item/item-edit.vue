@@ -299,12 +299,13 @@
                             :action="upload.action"
                             :headers="upload.headers"
                             :data="upload.data"
+                            :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleCoverChange"
                         >
                             <div
                                 class="image-inner"
-                                v-if="upload.coverList.length < 1"
+                                v-if="upload.coverList.length < 10"
                             >
                                 <i class="icon i_upload" />
                             </div>
@@ -324,6 +325,7 @@
                             :action="upload.action"
                             :headers="upload.headers"
                             :data="upload.data"
+                            :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleDetailChange"
                         >
@@ -1339,6 +1341,8 @@ export default {
                 isWords: false,
                 index: undefined,
             },
+            // 图片最多上传张数
+            limit: 10,
         };
     },
     watch: {},
@@ -1730,7 +1734,8 @@ export default {
                 let coverList = this.upload.coverList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });
-                form.logo = coverList[0];
+                // form.logo = coverList[0];
+                form.logo = coverList.join(',');
             }
 
             // 详情页面上传
@@ -1984,7 +1989,19 @@ export default {
         },
 
         // 校验图片
-        handleImgCheck(file) {
+        handleImgCheck(file ,fileList) {
+            /* 拦截逻辑不生效 */
+            /* const isLimit = (this.upload.coverList.length + fileList.length) > this.limit
+            const indexOfFile = fileList.findIndex(item => item.uid === file.uid) + this.upload.coverList.length
+            if (isLimit && indexOfFile === this.limit) {
+                file.status = 'beforeUploadReject'
+                file.statusText = '最多上传' + this.limit + '张图片'
+                return false
+            }
+            if (isLimit && indexOfFile > this.limit) {
+                file.status = 'beforeUploadReject'
+                return false
+            } */
             const isCanUpType = [
                 "image/jpeg",
                 "image/png",
@@ -2002,6 +2019,9 @@ export default {
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
+           if(fileList.length > 10){
+                fileList = fileList.slice(0,10)
+            } 
             if (file.status == "done") {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message);
@@ -2010,6 +2030,9 @@ export default {
             this.upload.coverList = fileList;
         },
         handleDetailChange({ file, fileList }) {
+            if(fileList.length > 10){
+                fileList = fileList.slice(0,10)
+            } 
             if (file.status == "done") {
                 if (file.response && file.response.code > 0) {
                     return this.$message.error(file.response.message);
