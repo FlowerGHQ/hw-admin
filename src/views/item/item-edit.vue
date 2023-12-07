@@ -302,6 +302,7 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleCoverChange"
+                            @preview="handlePreview"
                         >
                             <div
                                 class="image-inner"
@@ -328,6 +329,8 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleDetailChange"
+                            @preview="handlePreview"
+
                         >
                             <div
                                 class="image-inner"
@@ -1215,6 +1218,9 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
+        <a-modal :visible="previewVisible" :title="$t('item_edit.preview')" :footer="null" @cancel="handleCancel">
+            <img alt="preview" style="width: 100%" :src="previewImage" />
+        </a-modal>
     </div>
 </template>
 
@@ -1234,6 +1240,8 @@ export default {
     props: {},
     data() {
         return {
+            previewImage: "",
+            previewVisible: false,
             Core,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -1422,6 +1430,13 @@ export default {
     },
     mounted() {},
     methods: {
+        handlePreview(file) {
+            this.previewImage = file.url || file.thumbUrl;
+            this.previewVisible = true;
+        },
+        handleCancel() {
+            this.previewVisible = false;
+        },
         changeOption(option, i) {
             option.disabled = false;
         },
