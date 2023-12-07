@@ -2,11 +2,10 @@
   <div id="ItemList">
     <div class="list-container" ref="bigBox">
       <div id="fixed-box" ref="fixBox">
-        <!-- <div style="height:100px;background-color: red;width: 100%;position: absolute;top: -16px;padding: 0 20px;box-sizing: content-box;left: -20px;opacity: 0.2;z-index: -15;display: flex;padding-top: 16px;">
-          <div style="background-color: green;flex: 1;">
-            
-          </div>
-        </div> -->
+        <!-- 顶部障眼法-盒子 -->
+        <div class="top-box" >
+          <div class="top-back" > </div>
+        </div>
         <div class="title-container" >
           <div class="title-area">{{ $t("i.item_list") }}</div>
           <div class="btns-area">
@@ -472,7 +471,9 @@ export default {
   },
   async mounted() {
     let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
+    let height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
     this.fixedWidth = width - 40 + 'px';
+    this.fixedHeight = height + 'px';
     await this.getTableData({ flag_spread: 1 });
     await this.getSalesAreaList();
     window.addEventListener('resize', this.handleResize)
@@ -804,6 +805,12 @@ export default {
       margin-left: 20px;
       background-color: #ffffff;
       
+      .top-box {
+        height:100px;background-color: #F0F2F5; width:-moz-calc(100% + 40px); width:-webkit-calc(100% + 40px); width: calc(100% + 40px);position: absolute;top: -16px;box-sizing: content-box;left: -20px;z-index: -15;padding-top: 16px;
+        .top-back {
+          background-color: #FFFFFF;padding: 0 20px;width: 100%;height: 100%;border-radius: 6px 6px 0 0;
+        }
+      }
 
     }
   }
