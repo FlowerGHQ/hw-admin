@@ -252,6 +252,7 @@ export default {
             this.searchForm.code = ''
             this.searchForm.name = ''
             this.searchForm.category_id = ''
+            this.source_type = 2
             this.pageChange(1)
         },
         handleCategorySelect(val) {
