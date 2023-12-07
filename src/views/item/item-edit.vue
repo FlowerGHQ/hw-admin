@@ -441,7 +441,7 @@
                 </div>
                 <template v-if="specific.mode === 2">
                     <div class="form-item specific-config">
-                        <div class="key">
+                        <div class="key" :class="{ 'form-dispaly-key': $i18n.locale === 'en' }">
                             {{ $t("i.define") }}
                             <a-tooltip :title="$t('i.keyword')">
                                 <i
@@ -457,7 +457,7 @@
                                 :key="index"
                             >
                                 <div class="name">
-                                    <p class="star">{{ $t("i.name") }}</p>
+                                    <div class="star">{{ $t("i.name") }}</div>
                                     <a-input
                                         :class="{
                                             'border-red':
@@ -473,7 +473,7 @@
                                             )
                                         "
                                     />
-                                    <p class="star">{{ $t("i.words") }}</p>
+                                    <div class="star">{{ $t("i.words") }}</div>
                                     <a-input
                                         :class="{
                                             'border-red':
@@ -2665,14 +2665,27 @@ export default {
 .m-l-5 {
     margin-left: 5px;
 }
-.star::before {
-    content: "*";
-    color: @TC_required;
-    margin-right: 4px;
-    vertical-align: middle;
+
+.star{
+    margin: 0 5px;
+    &::before {
+        content: "*";
+        color: @TC_required;
+        margin-right: 4px;
+        vertical-align: middle;
+    }
 }
 
 .border-red {
     border: 1px solid red !important;
+}
+.form-dispaly-key {
+    width: auto !important;
+    display: flex;
+    align-items: center;
+    white-space: nowrap !important;
+    .i_hint {
+        margin: 0 5px;
+    }
 }
 </style>
