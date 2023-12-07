@@ -677,7 +677,18 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
-                                <template #headerCell="{ column }">
+                                <template #headerCell="{ title,column }">
+                                    <template
+                                        v-if="column.icon "
+                                    >
+                                        <a-tooltip :title="$t('item_edit.add_spec')">
+                                            <i
+                                                class="icon i_hint"
+                                                style="font-size: 12px;margin-right: 4px;cursor: pointer;"
+                                            ></i>
+                                        </a-tooltip>
+                                        <span>{{title}}</span>
+                                    </template>
                                     <template
                                         v-if="
                                             column.dataIndex ===
@@ -1356,6 +1367,7 @@ export default {
                 key: "select",
                 option: item.option,
                 minWidth: "150px",
+                icon:true
             }));
             column = column.filter((item) => item.title && item.dataIndex);
             column.unshift(
@@ -2526,7 +2538,7 @@ export default {
                 padding-right: 50px;
                 min-height: 32px;
                 line-height: 32px;
-                margin-top: 8px;
+                margin-bottom: 8px;
             }
             .option-list {
                 display: flex;
@@ -2577,7 +2589,6 @@ export default {
         }
     }
     .spec-add {
-        margin-top: 20px;
         border-radius: 2px;
         background: #ffffff;
         font-size: 12px;
@@ -2585,6 +2596,11 @@ export default {
     .specific-table {
         th {
             background-color: #fff;
+            height: 60px;
+            font-size: 14px;
+        }
+        td{
+            height: 60px;
         }
         .ant-input-number,
         .ant-select:not(.ant-input-number + .ant-select) {
@@ -2693,4 +2709,12 @@ export default {
         margin: 0 5px;
     }
 }
+.form-title{
+    min-width: 120px !important;
+    width: auto !important;
+}
+.form-content{
+    width: 100% !important;
+}
+
 </style>
