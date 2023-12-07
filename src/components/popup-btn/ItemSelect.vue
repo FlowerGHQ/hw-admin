@@ -155,7 +155,7 @@ export default {
                 name: '',
                 category_id: '',
             },
-            source_type: 2,
+            source_type: undefined,
             tableData: [],
 
             selectItems: [],
@@ -268,6 +268,7 @@ export default {
             this.searchForm.code = ''
             this.searchForm.name = ''
             this.searchForm.category_id = ''
+            this.source_type = undefined
             this.pageChange(1)
         },
         handleCategorySelect(val) {
