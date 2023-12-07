@@ -2258,6 +2258,8 @@ const messages = {
             21030: '分类名{name}重复',
             21031: '分类英文名{name}重复',
             21032: '商品已在该仓库中',
+            21033: '该整车商品已被销售，无法被删除！',
+            21034: '该整车商品已被绑定，无法被删除！',
 
             21110: '实例编码{uid}已存在',
             21120: '请选择所属商品',
@@ -4860,6 +4862,8 @@ const messages = {
             21030: 'Category Name {Name} Repeated',
             21031: 'Category English Name {Name} Repeated',
             21032: 'The Product Has Been In The Warehouse',
+            21033: 'The whole vehicle has been sold and cannot be deleted!',
+            21034: 'The vehicle has been bound and cannot be deleted!',
             21110: 'The Instance Code Already Existed.',
             21120: 'Please Select The Product.',
             21130: 'The Product Instance Does Not Exist.',
