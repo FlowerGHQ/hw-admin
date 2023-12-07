@@ -1389,6 +1389,7 @@ export default {
                     title: this.$t("n.operation"),
                     key: "operation",
                     dataIndex: "operation",
+                    fixed: 'right'
                 } // , fixed: 'right'
             );
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
