@@ -37,13 +37,16 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        URL_POINT = 'http://10.10.12.75:8889'  // zy
+        // URL_POINT = 'http://10.10.12.194:8889'  // zy
+        // URL_POINT = 'http://10.10.12.75:8889'  // zy
+        // URL_POINT = 'http://10.10.12.65:8889'  // new
+        
 
         break;
 }
@@ -535,13 +538,13 @@ let Const = {
             '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
         },
         MONETARY_TYPE: {
-            // '￥': 'CNY',
+            '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
             // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            // 'CNY': '￥',
+            'CNY': '￥',
             'EUR': '€',
             'USD': '$',
             // 'GBP': '£',

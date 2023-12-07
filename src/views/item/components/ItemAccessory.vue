@@ -5,7 +5,7 @@
         <a-collapse-panel key="attachmentFile" :header="$t('i.upload_item_accessory')" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
-                    <span class="name">{{ $t('i.item_accessory_list') }}</span>
+                    <span class="name">{{ $t('i.sale_bom') }}</span>
                     <div>
                         <ItemSelect 
                             btnType='primary' 

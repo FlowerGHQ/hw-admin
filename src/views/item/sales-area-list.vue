@@ -30,6 +30,7 @@
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+                    :loading="loading"
                     :row-key="record => record.id" :pagination='false'>
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name' && $auth('sales-area.detail')">
@@ -38,6 +39,9 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'country'">
+                            {{ text || '-' }}
+                        </template>
+                        <template v-if="column.key === 'name_en'">
                             {{ text || '-' }}
                         </template>
                         <template v-if="column.key === 'operation'">
@@ -97,15 +101,14 @@ export default {
         tableColumns() {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
+                {title: this.$t('n.name_en'), dataIndex: 'name_en',key: 'name_en'},
                 {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
                 {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {
-                columns.splice(1, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
-            }
-            if (this.$i18n.locale === 'en' ) {
-                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                columns.splice(2, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
+                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
         },
