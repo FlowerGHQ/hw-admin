@@ -97,7 +97,11 @@
 	
 			handleReset() {
 				this.selectKeys = '';
-			}
+			},
+			// 全部收起
+			handleCollapseAll() {
+				this.expandedRowKeys = []
+			},
 		},
 	}
 	</script>

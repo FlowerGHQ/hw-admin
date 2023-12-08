@@ -599,6 +599,9 @@ export default {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearch && this.$refs.TimeSearch?.handleReset();
+      console.log(this.$refs.CategoryTree)
+      this.$refs.CategoryTree && this.$refs.CategoryTree?.handleReset();
+      this.$refs.CategoryTree && this.$refs.CategoryTree?.handleCollapseAll();
       this.pageChange(1);
     },
     async getTableData(params = {}) {
@@ -806,7 +809,6 @@ export default {
       overflow-y: scroll;
       position: sticky;
       top: 0;
-      padding-top: 0;
       // 滚动条的样式
       &::-webkit-scrollbar {
         width: 6px;
