@@ -521,7 +521,7 @@
                                             )
                                         "
                                     />
-                                    <div class="star">{{ $t("i.words") }}</div>
+                                    <div class="star">{{ $t("i.name_en") }}</div>
                                     <a-input
                                         :class="{
                                             'border-red':
@@ -552,20 +552,22 @@
                                                 </div>
                                             </template>
                                             <a-button type="primary" ghost @click="openConfigSet(index, item)" v-if="item.option?.length === 0">
-                                                {{ `${$t("i.addition")}${ ($i18n.locale === 'en' ? ` ${item.key} ` : item.name) || '--'}${$t("i.value")}` }}
+                                                <span style="padding-right: 0;">
+                                                    {{ `${$t("i.addition")}${ ($i18n.locale === 'en' ? ` ${item.key} ` : item.name) || '--'}${$t("i.value")}` }}
+                                                </span>
                                             </a-button>
                                             <a-button type="primary" ghost @click="openConfigSet(index, item)" v-else>
                                                 <span>
-                                                  <span>（{{ item.option?.length }}）</span>
-                                                <span v-for="(optionItem, optionIndex) of item.option">
-                                                    {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/' : '' }}
+                                                    <span v-for="(optionItem, optionIndex) of item.option">
+                                                        {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/' : '' }}
+                                                    </span>
                                                 </span>
-                                                </span>
+                                                <p class="num-tag">{{ item.option.length }}</p>
                                             </a-button>
                                         </a-popover>
                                     </div>
                                 </div>
-                                <div class="button" v-if="!item.id" @click="handleRemoveSpec(item, index)">
+                                <div class="button" v-if="isShowDelete.indexOf(item.key) === -1" @click="handleRemoveSpec(item, index)">
                                     <i class="icon i_delete" />
                                 </div>
                                 <!-- <div class="option">
@@ -1571,6 +1573,14 @@ export default {
         },
         configSetTitle() {
             return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name) || '--'}${this.$t("i.value")}`;
+        },
+        // 是否展示规格定义
+        isShowDelete() {
+            const arr = []
+            for(let key in this.specific.data[0]) {
+                arr.push(key)
+            }
+            return arr
         }
     },
     created() {
@@ -2666,7 +2676,7 @@ export default {
         addConfig() {
             let item = Core.Util.deepCopy({ key: "", zh: "", en: "", validate: false });
             this.specific.list[this.configIndex].option.push(item);
-        }
+        },
     },
 };
 </script>
@@ -2766,9 +2776,25 @@ export default {
                 > .ant-btn {
                     > span {
                         width: 230px;
+                        padding-right: 20px;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         word-break: break-all;
+                    }
+                    .num-tag {
+                        position: absolute;
+                        right: 10px;
+                        width: 20px;
+                        height: 20px;
+                        border-radius: 4px;
+                        background: #F2F3F5;
+                        display: inline-flex;
+                        justify-content: center;
+                        align-items: center;
+                        float: right;
+                        color: #1D2129;
+                        font-family: PingFang SC;
+                        font-size: 14px;
                     }
                 }
             }
@@ -2864,7 +2890,7 @@ export default {
             width: 120px;
         }
         .code {
-            // width: 150px;
+            min-width: 150px;
         }
         .ant-table-container .ant-table-content {
             &::-webkit-scrollbar {
