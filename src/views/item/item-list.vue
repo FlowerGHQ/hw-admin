@@ -85,14 +85,14 @@
                   @keydown.enter="handleSearch" />
               </div>
             </a-col>
-            <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+            <!-- <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
               <div class="key">{{ $t("i.categories") }}:</div>
               <div class="value">
                 <CategoryTreeSelect
                   @change="handleCategorySelect"
                   :category-id="searchForm.category_id" />
               </div>
-            </a-col>
+            </a-col> -->
             <!-- 商品状态 -->
             <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
               <div class="key">{{ $t("i.status") }}:</div>
@@ -141,6 +141,12 @@
       </div>
       <div :style="{height: fixedHeight}"></div>
       <div class="table-container" ref="tabBox" >
+        <div class="select-tree" ref="selectTree">
+              <CategoryTree
+                @change="handleCategoryChange"
+                ref="CategoryTree" 
+              />
+        </div>
         <a-table
           :columns="tableColumns"
           :data-source="tableData"
@@ -334,13 +340,13 @@ import Core from "../../core";
 
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
-import { Time } from "@antv/scale";
+import CategoryTree from './components/TreeSelect.vue'
 const ITEM = Core.Const.ITEM;
-
 export default {
   name: "ItemList",
   components: {
     TimeSearch,
+    CategoryTree,
     CategoryTreeSelect,
   },
   props: {},
@@ -477,14 +483,35 @@ export default {
     await this.getTableData({ flag_spread: 1 });
     await this.getSalesAreaList();
     window.addEventListener('resize', this.handleResize)
+        // 让左侧选择tree始终在可视区范围内
+    let scrollArea = document.querySelector('.layout-main>main')
+    scrollArea.addEventListener('scroll', this.selectTreeAutoTop)
+
     this.$nextTick(()=>{
       this.handleResize()
     })
+
   },
   beforeDestroy() {
       window.removeEventListener('resize', this.handleResize)
+      let scrollArea = document.querySelector('.layout-main>main')
+      scrollArea.removeEventListener('scroll', this.selectTreeAutoTop)
   },
   methods: {
+    selectTreeAutoTop(){
+      let scrollArea = document.querySelector('.layout-main>main')
+      let scrollTop = scrollArea.scrollTop
+      console.log(this.$refs.selectTree)
+      // selectTree的marginTop 为scrollArea的scrollTop
+      if(this.$refs.selectTree){
+        this.$refs.selectTree.style.marginTop = scrollTop + 'px'
+      }
+    },
+    handleCategoryChange(val) {
+      console.log("handleCategoryChange val:", val);
+      this.searchForm.category_id = val;
+      this.pageChange(1);
+    },
     moreSearch() {
       this.show = !this.show;
       this.$nextTick(()=>{
@@ -496,9 +523,7 @@ export default {
         const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
         this.fixedWidth = width + 'px';
         this.fixedHeight = height + 'px'; 
-
         // 在这里处理宽高变化的逻辑
-        console.log('盒子宽度:', width, '盒子高度:', height);
     },
     routerChange(type, item = {}) {
       console.log("routerChange item:", item);
@@ -818,6 +843,38 @@ export default {
     z-index: 20;
     position: relative;
     height: auto;
+    display: flex;
+    .select-tree{
+      min-width: 10%;
+      margin-right: 20px;
+      border: 1px solid #e8e8e8;
+      padding: 10px;
+      height: calc(100vh - 250px);
+      overflow-y: scroll;
+      // 滚动条的样式
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        &-thumb {
+                border-radius: 3px;
+                background-color: @scrollbar-thumb;
+                transition: background-color 0.3s;
+
+                &:hover {
+                    background: @scrollbar-thumb-hover;
+                }
+            }
+
+            &-track {
+                /*滚动条内部轨道*/
+                background: @scrollbar-track;
+            }
+      }
+    }
+    .ant-table-wrapper{
+      flex: 1;
+    }
+
     
     .info {
       display: inline-flex;

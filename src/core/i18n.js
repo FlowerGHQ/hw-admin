@@ -100,7 +100,7 @@ const messages = {
             name_en: '英文名',
             state: '状态',
             type: '类型',
-            flag_entity: '实例编码',
+            flag_entity: '实例编码',            
             contact: '联系人',
             phone: '手机号',
             email: '邮箱',
@@ -426,6 +426,7 @@ const messages = {
             detailed: '明细',
             color: '颜色',
             color_en: '颜色英文',
+            appearance: "重量与尺寸",
             net_weight: '净重',
             gross_weight: '毛重',
             long: '长',
@@ -1560,6 +1561,7 @@ const messages = {
             pay_car_type: '购买车型',
             paied_money: '已付金额',
             pending_payment: '待付款',
+            order_name: '下单名称'
         },
         crm_oi: {
             list: '回款单列表',
@@ -3085,10 +3087,11 @@ const messages = {
             balance: 'Balance',
             available_balance: 'Available balance',
             detailed: 'detailed',
-            color: 'color',
-            color_en: 'color(English)',
-            net_weight: 'Net weight',
-            gross_weight: 'Gross weight',
+            color: 'Color',
+            color_en: 'Color(English)',
+            appearance: "Weight and size",
+            net_weight: 'Net Weight',
+            gross_weight: 'Gross Weight',
             long: 'Long',
             wide: 'Wide',
             high: 'High',
@@ -4186,7 +4189,7 @@ const messages = {
             pay_car_type: 'Purchase Car Model',
             paied_money: 'Amount Paid',
             pending_payment: 'Pending Payment',
-
+            order_name: 'Order Name'
         },
         crm_oi: {
             list: 'Collection Slip List',
