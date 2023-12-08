@@ -246,7 +246,7 @@
                     <!-- 商品重量与外观尺寸 -->
                     <div class="form-item not-aligin-item">
                         <div class="key not-white-space appearance-font">{{ $t("d.appearance") }}</div>
-                        <div>
+                        <div class="value">
                             <a-row gutter="16">
                                     <!-- 净重 -->
                                     <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
@@ -2783,7 +2783,7 @@ export default {
 .l-w-h-style {
     color: #1D2129;
     font-family: PingFang SC;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 400;
 }
 :deep(.ant-input-wrapper) {    
@@ -2795,7 +2795,7 @@ export default {
     white-space: nowrap;
 }
 .appearance-font {
-    color: #1D2129;
+    color: #1D2129 !important;
     font-family: PingFang SC;    
     font-weight: 600;
     margin-top: 5px;
