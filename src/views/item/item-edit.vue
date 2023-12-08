@@ -73,7 +73,15 @@
                 </div>
                 <!-- 实例编码 -->
                 <div class="form-item required" v-if="!indep_flag">
-                    <div class="key">{{ $t('n.flag_entity') }}</div>
+                    <div class="key">
+                        {{ $t('n.flag_entity') }}
+                        <a-tooltip :title="$t('item-edit.flag_entity_keyword')">
+                            <i
+                                class="icon i_hint"
+                                style="font-size: 12px"
+                            ></i>
+                        </a-tooltip>
+                    </div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_entity">
                             <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
@@ -87,6 +95,12 @@
                         :class="form.model === '' && isValidate ? 'error' : ''"
                     >
                         {{ $t("i.number") }}
+                        <a-tooltip :title="$t('item-edit.item_number_keyword')">
+                            <i
+                                class="icon i_hint"
+                                style="font-size: 12px"
+                            ></i>
+                        </a-tooltip>
                     </div>
                     <div class="value">
                         <a-input
@@ -195,6 +209,12 @@
                             "
                         >
                             {{ $t("d.drawing_code") }}
+                            <a-tooltip :title="$t('item-edit.drawing_code_keyword')">
+                                <i
+                                    class="icon i_hint"
+                                    style="font-size: 12px"
+                                ></i>
+                            </a-tooltip>
                         </div>
                         <div class="value">
                             <a-input
@@ -223,59 +243,84 @@
                             />
                         </div>
                     </div>
-                    <!-- 净重 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.net_weight") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.net_weight"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">kg</span>
-                        </div>
-                    </div>
-                    <!-- 毛重 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.gross_weight") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.gross_weight"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">kg</span>
-                        </div>
-                    </div>
-                    <!-- 长 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.long") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.length"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
-                        </div>
-                    </div>
-                    <!-- 宽 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.wide") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.width"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
-                        </div>
-                    </div>
-                    <!-- 高 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.high") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.height"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
+                    <!-- 商品重量与外观尺寸 -->
+                    <div class="form-item not-aligin-item">
+                        <div class="key not-white-space appearance-font">{{ $t("d.appearance") }}</div>
+                        <div>
+                            <a-row gutter="16">
+                                    <!-- 净重 -->
+                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                        <a-input
+                                            v-model:value="form.net_weight"
+                                            :placeholder="$t('def.input')"
+                                        >
+                                            <template #addonBefore>
+                                                <span class="l-w-h-style">{{ $t("d.net_weight") }}</span>
+                                            </template>
+                                            <template #addonAfter>                                
+                                                <span class="l-w-h-style">KG</span>
+                                            </template>
+                                        </a-input>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                        <!-- 毛重 -->
+                                        <a-input
+                                            v-model:value="form.gross_weight"
+                                            :placeholder="$t('def.input')"
+                                        >
+                                            <template #addonBefore>
+                                                <span class="l-w-h-style">{{ $t("d.gross_weight") }}</span>
+                                            </template>
+                                            <template #addonAfter>                                
+                                                <span class="l-w-h-style">KG</span>
+                                            </template>
+                                        </a-input>
+                                    </a-col>
+                            </a-row>
+                            <a-row gutter="16" class="m-t-16">
+                                <!-- 长 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.length"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.long") }}</span>
+                                        </template>
+                                        <template #addonAfter>                                
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                                <!-- 宽 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.width"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.wide") }}</span>
+                                        </template>
+                                        <template #addonAfter>                                
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                                <!-- 高 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.height"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.high") }}</span>
+                                        </template>
+                                        <template #addonAfter>                                
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                            </a-row>
                         </div>
                     </div>
                 </template>
@@ -684,7 +729,7 @@
                                     <template
                                         v-if="column.icon "
                                     >
-                                        <a-tooltip :title="$t('item_edit.add_spec')">
+                                        <a-tooltip :title="$t('item-edit.add_spec')">
                                             <i
                                                 class="icon i_hint"
                                                 style="font-size: 12px;margin-right: 4px;cursor: pointer;"
@@ -1218,7 +1263,7 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal :visible="previewVisible" :title="$t('item_edit.preview')" :footer="null" @cancel="handleCancel">
+        <a-modal :visible="previewVisible" :title="$t('item-edit.preview')" :footer="null" @cancel="handleCancel">
             <img alt="preview" style="width: 100%" :src="previewImage" />
         </a-modal>
     </div>
@@ -2460,7 +2505,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #ItemEdit {
     .error {
         color: @TC_required;
@@ -2697,6 +2742,9 @@ export default {
 .m-l-5 {
     margin-left: 5px;
 }
+.m-t-16 {
+    margin-top: 16px;
+}
 .star{
     margin: 0 5px;
     &::before {
@@ -2741,4 +2789,27 @@ export default {
     width: 100% !important;
 }
 
+.l-w-h-style {
+    color: #1D2129;
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: 400;
+}
+:deep(.ant-input-wrapper) {    
+    .ant-input-group-addon:nth-of-type(1) {
+        background-color: #fff;
+    }
+}
+.not-white-space {
+    white-space: nowrap;
+}
+.appearance-font {
+    color: #1D2129;
+    font-family: PingFang SC;    
+    font-weight: 600;
+    margin-top: 5px;
+}
+.not-aligin-item {
+    align-items: initial;
+}
 </style>
