@@ -2955,6 +2955,15 @@ export default {
 .border-red {
     border: 1px solid red !important;
 }
+.form-dispaly-key {
+    width: auto !important;
+    display: flex;
+    align-items: center;
+    white-space: nowrap !important;
+    .i_hint {
+        margin: 0 5px;
+    }
+}
 
 .item-image-uploader .ant-upload-list-item-thumbnail {
     font-size: 0px;
