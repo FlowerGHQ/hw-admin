@@ -73,7 +73,15 @@
                 </div>
                 <!-- 实例编码 -->
                 <div class="form-item required" v-if="!indep_flag">
-                    <div class="key">{{ $t('n.flag_entity') }}</div>
+                    <div class="key">
+                        {{ $t('n.flag_entity') }}
+                        <a-tooltip :title="$t('item-edit.flag_entity_keyword')">
+                            <i
+                                class="icon i_hint"
+                                style="font-size: 12px"
+                            ></i>
+                        </a-tooltip>
+                    </div>
                     <div class="value">
                         <a-radio-group v-model:value="form.flag_entity">
                             <a-radio class="type-item" v-for="item of flagEntityMap" :key="item.key" :value="item.key">{{ item[$i18n.locale] }}</a-radio>
@@ -87,6 +95,12 @@
                         :class="form.model === '' && isValidate ? 'error' : ''"
                     >
                         {{ $t("i.number") }}
+                        <a-tooltip :title="$t('item-edit.item_number_keyword')">
+                            <i
+                                class="icon i_hint"
+                                style="font-size: 12px"
+                            ></i>
+                        </a-tooltip>
                     </div>
                     <div class="value">
                         <a-input
@@ -195,6 +209,12 @@
                             "
                         >
                             {{ $t("d.drawing_code") }}
+                            <a-tooltip :title="$t('item-edit.drawing_code_keyword')">
+                                <i
+                                    class="icon i_hint"
+                                    style="font-size: 12px"
+                                ></i>
+                            </a-tooltip>
                         </div>
                         <div class="value">
                             <a-input
@@ -223,59 +243,84 @@
                             />
                         </div>
                     </div>
-                    <!-- 净重 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.net_weight") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.net_weight"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">kg</span>
-                        </div>
-                    </div>
-                    <!-- 毛重 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.gross_weight") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.gross_weight"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">kg</span>
-                        </div>
-                    </div>
-                    <!-- 长 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.long") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.length"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
-                        </div>
-                    </div>
-                    <!-- 宽 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.wide") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.width"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
-                        </div>
-                    </div>
-                    <!-- 高 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.high") }}</div>
-                        <div class="value flex-style">
-                            <a-input
-                                v-model:value="form.height"
-                                :placeholder="$t('def.input')"
-                            />
-                            <span class="m-l-5">cm</span>
+                    <!-- 商品重量与外观尺寸 -->
+                    <div class="form-item not-aligin-item">
+                        <div class="key not-white-space appearance-font">{{ $t("d.appearance") }}</div>
+                        <div class="value">
+                            <a-row gutter="16">
+                                    <!-- 净重 -->
+                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                        <a-input
+                                            v-model:value="form.net_weight"
+                                            :placeholder="$t('def.input')"
+                                        >
+                                            <template #addonBefore>
+                                                <span class="l-w-h-style">{{ $t("d.net_weight") }}</span>
+                                            </template>
+                                            <template #addonAfter>
+                                                <span class="l-w-h-style">KG</span>
+                                            </template>
+                                        </a-input>
+                                    </a-col>
+                                    <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
+                                        <!-- 毛重 -->
+                                        <a-input
+                                            v-model:value="form.gross_weight"
+                                            :placeholder="$t('def.input')"
+                                        >
+                                            <template #addonBefore>
+                                                <span class="l-w-h-style">{{ $t("d.gross_weight") }}</span>
+                                            </template>
+                                            <template #addonAfter>
+                                                <span class="l-w-h-style">KG</span>
+                                            </template>
+                                        </a-input>
+                                    </a-col>
+                            </a-row>
+                            <a-row gutter="16" class="m-t-16">
+                                <!-- 长 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.length"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.long") }}</span>
+                                        </template>
+                                        <template #addonAfter>
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                                <!-- 宽 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.width"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.wide") }}</span>
+                                        </template>
+                                        <template #addonAfter>
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                                <!-- 高 -->
+                                <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
+                                    <a-input
+                                        v-model:value="form.height"
+                                        :placeholder="$t('def.input')"
+                                    >
+                                        <template #addonBefore>
+                                            <span class="l-w-h-style">{{ $t("d.high") }}</span>
+                                        </template>
+                                        <template #addonAfter>
+                                            <span class="l-w-h-style">CM</span>
+                                        </template>
+                                    </a-input>
+                                </a-col>
+                            </a-row>
                         </div>
                     </div>
                 </template>
@@ -292,7 +337,7 @@
                     <div class="value">
                         <a-upload
                             name="file"
-                            class="image-uploader"
+                            class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
                             :file-list="upload.coverList"
@@ -302,6 +347,7 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleCoverChange"
+                            @preview="handlePreview"
                         >
                             <div
                                 class="image-inner"
@@ -318,7 +364,7 @@
                     <div class="value">
                         <a-upload
                             name="file"
-                            class="image-uploader"
+                            class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
                             :file-list="upload.detailList"
@@ -328,6 +374,8 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleDetailChange"
+                            @preview="handlePreview"
+
                         >
                             <div
                                 class="image-inner"
@@ -426,7 +474,7 @@
             <div class="form-title">
                 <div class="title">{{ $t("i.information") }}</div>
             </div>
-            <div class="form-content">
+            <div class="form-content" style="overflow-x: auto;">
                 <div class="form-item">
                     <div class="key">{{ $t("i.mode") }}</div>
                     <div class="value">
@@ -456,7 +504,7 @@
                                 v-for="(item, index) of specific.list"
                                 :key="index"
                             >
-                                <div class="name">
+                                <div class="name" style="background-color: #F8F8F8;margin-right: -1px;">
                                     <div class="star">{{ $t("i.name") }}</div>
                                     <a-input
                                         :class="{
@@ -486,14 +534,41 @@
                                             handleSpecEditBlur(index, 'words')
                                         "
                                     />
-                                    <a-button
-                                        type="link"
-                                        v-if="!form.id"
-                                        @click="handleRemoveSpec(item, index)"
-                                        >{{ $t("def.delete") }}</a-button
-                                    >
                                 </div>
-                                <div class="option">
+                                <div class="name">
+                                    <div class="popover-button">
+                                        <a-popover title="" placement="bottom">
+                                            <template #content v-if="item.option.length > 0">
+                                                <div class="popover">
+                                                    <p class="popover-title">{{ $t("n.all_total") }} {{ item.option.length }} {{ $t("i.value_t") }}</p>
+                                                    <p class="popover-subtitle">
+                                                        <span>{{ $t("i.value_zh") }}</span>
+                                                        <span>{{ $t("i.value_en") }}</span>
+                                                    </p>
+                                                    <p v-for="(optionItem, optionIndex) of item.option" class="popover-item">
+                                                        <span class="popover-item-text">{{ optionItem['zh'] }}</span>
+                                                        <span class="popover-item-text">{{ optionItem['en'] }}</span>
+                                                    </p>
+                                                </div>
+                                            </template>
+                                            <a-button type="primary" ghost @click="openConfigSet(index, item)" v-if="item.option?.length === 0">
+                                                {{ `${$t("i.addition")}${ ($i18n.locale === 'en' ? ` ${item.key} ` : item.name) || '--'}${$t("i.value")}` }}
+                                            </a-button>
+                                            <a-button type="primary" ghost @click="openConfigSet(index, item)" v-else>
+                                                <span>
+                                                  <span>（{{ item.option?.length }}）</span>
+                                                <span v-for="(optionItem, optionIndex) of item.option">
+                                                    {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/' : '' }}
+                                                </span>
+                                                </span>
+                                            </a-button>
+                                        </a-popover>
+                                    </div>
+                                </div>
+                                <div class="button" v-if="!item.id" @click="handleRemoveSpec(item, index)">
+                                    <i class="icon i_delete" />
+                                </div>
+                                <!-- <div class="option">
                                     <p>{{ $t("i.value_zh") }}</p>
                                     <div class="option-list">
                                         <div
@@ -648,7 +723,7 @@
                                             />
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                             <a-button
                                 class="spec-add"
@@ -677,7 +752,18 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
-                                <template #headerCell="{ column }">
+                                <template #headerCell="{ title,column }">
+                                    <template
+                                        v-if="column.icon "
+                                    >
+                                        <a-tooltip :title="$t('item-edit.add_spec')">
+                                            <i
+                                                class="icon i_hint"
+                                                style="font-size: 12px;margin-right: 4px;cursor: pointer;"
+                                            ></i>
+                                        </a-tooltip>
+                                        <span>{{title}}</span>
+                                    </template>
                                     <template
                                         v-if="
                                             column.dataIndex ===
@@ -1075,7 +1161,6 @@
                                     >
                                         <a-button
                                             type="link"
-                                            danger
                                             @click="
                                                 handleDelete(record)
                                             "
@@ -1204,6 +1289,70 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
+        <a-modal :visible="previewVisible" :title="$t('item-edit.preview')" :footer="null" @cancel="handleCancel">
+            <img alt="preview" style="width: 100%" :src="previewImage" />
+        </a-modal>
+        <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
+            <div class="config-list">
+                <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
+                    <div class="config-item-title" :style="{ color: uniqueArr.indexOf(i) !== -1 ? 'red' : '' }">
+                        <span>
+                            {{ $t("i.value") }}&nbsp;{{ i + 1 }}
+                        </span>
+                        <i class="icon i_delete" @click="handleRemoveSpecOption(configIndex, i)" />
+                    </div>
+                    <div class="config-item-mes">
+                        <div class="config-item-zh">
+                            <p class="config-item-zh-title">
+                                <span :style="{ color: (option.validate && !option.zh) ? 'red' : '' }">
+                                    {{ $t("i.value_zh") }}
+                                </span>
+                                <span class="content-length">
+                                    {{
+                                        option.zh.length
+                                    }}/50
+                                </span>
+                            </p>
+                            <a-input
+                                v-model:value="
+                                    option.zh
+                                "
+                                :placeholder="
+                                    $t('def.input') +
+                                    $t('i.value_zh')
+                                "
+                                :max-length="50"
+                            />
+                        </div>
+                        <div class="config-item-en">
+                            <p class="config-item-en-title">
+                                <span :style="{ color: (option.validate && !option.en) ? 'red' : '' }">
+                                    {{ $t("i.value_en") }}
+                                </span>
+                                <span class="content-length">
+                                    {{
+                                        option.en.length
+                                    }}/50
+                                </span>
+                            </p>
+                            <a-input
+                                v-model:value="
+                                    option.en
+                                "
+                                :placeholder="
+                                    $t('def.input') +
+                                    $t('i.value_en')
+                                "
+                                :max-length="50"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="add-config-btn" @click="addConfig">
+                    {{ $t("i.addition") }}{{ $t("i.value") }}
+                </div>
+            </div>
+        </a-modal>
     </div>
 </template>
 
@@ -1212,6 +1361,19 @@ import Core from "../../core";
 import CategoryTreeSelectMultiple from "@/components/popup-btn/CategoryTreeSelectMultiple.vue";
 import ItemHeader from "./components/ItemHeader.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
+// 查重
+function findDuplicates(arr) {
+  let set = new Set();
+  let duplicates = [];
+  arr.forEach((item, index) => {
+    let prevSize = set.size;
+    set.add(JSON.stringify(item));
+    if (set.size === prevSize) {
+      duplicates.push(index);
+    }
+  });
+  return duplicates;
+}
 
 export default {
     name: "ItemEdit",
@@ -1223,6 +1385,8 @@ export default {
     props: {},
     data() {
         return {
+            previewImage: "",
+            previewVisible: false,
             Core,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -1343,6 +1507,11 @@ export default {
             },
             // 图片最多上传张数
             limit: 10,
+            showConfigSet: false,
+            configSetMes: {},
+            oldConfigSetMes: {},
+            configIndex: 0,
+            uniqueArr: []
         };
     },
     watch: {},
@@ -1356,39 +1525,42 @@ export default {
                 key: "select",
                 option: item.option,
                 minWidth: "150px",
+                icon:true
             }));
             column = column.filter((item) => item.title && item.dataIndex);
-            column.unshift(
+            column.push(
                 { title: this.$t("i.code"), key: "input", dataIndex: "code" }, // , fixed: 'left'
                 { title: this.$t("n.name"), key: "input", dataIndex: "name" },
                 {
                     title: this.$t("n.name_en"),
                     key: "input",
                     dataIndex: "name_en",
-                }
-            );
-            column.push(
+                },
                 {
                     title: this.$t("i.cost_price"),
                     key: "money",
                     dataIndex: "original_price",
+                    width: 160,
                 },
                 {
                     title: "FOB(EUR)",
                     key: "money",
                     dataIndex: "fob_eur",
                     unit: "€",
+                    width: 160,
                 }, //, fixed: 'right'
                 {
                     title: "FOB(USD)",
                     key: "money",
                     dataIndex: "fob_usd",
                     unit: "$",
+                    width: 160,
                 }, // , fixed: 'right'
                 {
                     title: this.$t("n.operation"),
                     key: "operation",
                     dataIndex: "operation",
+                    fixed: 'right'
                 } // , fixed: 'right'
             );
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
@@ -1397,6 +1569,9 @@ export default {
             }
             return column;
         },
+        configSetTitle() {
+            return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name) || '--'}${this.$t("i.value")}`;
+        }
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1409,6 +1584,13 @@ export default {
     },
     mounted() {},
     methods: {
+        handlePreview(file) {
+            this.previewImage = file.url || file.thumbUrl;
+            this.previewVisible = true;
+        },
+        handleCancel() {
+            this.previewVisible = false;
+        },
         changeOption(option, i) {
             option.disabled = false;
         },
@@ -2198,8 +2380,36 @@ export default {
         // 规格值
         handleAddSpecOption(index) {
             let target = this.specific.list[index];
-            let item = Core.Util.deepCopy(this.specific.list[index].addValue);
             let isSame = 0;
+            let empty = 0;
+            target.option.forEach((item) => {
+                if (!item.zh) {
+                    empty = 1
+                    item.validate = true
+                    return this.$message.warning(
+                        this.$t("def.enter_specification_value")
+                    );
+                }
+                if (!item.en) {
+                    empty = 1
+                    item.validate = true
+                    return this.$message.warning(
+                        this.$t("def.enter_specification_value_en")
+                    );
+                }
+            });
+            // 空值校验
+            if (empty !== 0) return;
+            // 查重校验
+            const zhArr = findDuplicates(target.option.map(item => item.zh));
+            const enArr = findDuplicates(target.option.map(item => item.en));
+            this.uniqueArr = Array.from(new Set(zhArr.concat(enArr)))
+            if (this.uniqueArr.length > 0) {
+                return this.$message.warning(
+                    this.$t("def.specification_value_repeated")
+                );
+            }
+            /* let item = Core.Util.deepCopy(this.specific.list[index].addValue);
             if (!item.zh) {
                 return this.$message.warning(
                     this.$t("def.enter_specification_value")
@@ -2209,8 +2419,8 @@ export default {
                 return this.$message.warning(
                     this.$t("def.enter_specification_value_en")
                 );
-            }
-            target.option.forEach(($1, ind1) => {
+            } */
+           /*  target.option.forEach(($1, ind1) => {
                 if (isSame > 0) return;
                 if ($1.zh === item.zh) {
                     isSame++;
@@ -2223,7 +2433,7 @@ export default {
                         this.$t("def.specification_value_repeated_en")
                     );
                 }
-            });
+            }); */
             /* if (target.option.includes(item.zh)) {
                 return this.$message.warning(this.$t('def.specification_value_repeated'))
             }
@@ -2232,10 +2442,11 @@ export default {
             } */
             // 存在相同的规格定义
             if (isSame > 0) return;
-            item.key = item.en;
+           /*  item.key = item.en;
             item.disabled = true;
             target.option.push(item);
-            this.handleCloseSpecOption(index);
+            this.handleCloseSpecOption(index); */
+            this.closeConfig();
             if (target.id && target.key.trim() && target.name.trim()) {
                 let value = "";
                 let value_en = "";
@@ -2253,7 +2464,9 @@ export default {
                     value: value,
                     value_en: value_en,
                 };
-                Core.Api.AttrDef.save(_item);
+                Core.Api.AttrDef.save(_item).then(res => {
+                    this.$message.success(this.$t("pop_up.save_success"));
+                });
             }
         },
         handleCloseSpecOption(index) {
@@ -2428,11 +2641,37 @@ export default {
             }
             return (this.validateConfigFlag = true);
         },
+        // 打开规格值设置弹出
+        openConfigSet(index, item) {
+            this.configIndex = index
+            this.configSetMes = item
+            this.oldConfigSetMes = Core.Util.deepCopy(item)
+            this.showConfigSet = true
+        },
+        //关闭规格值设置弹出-回调
+        handleCancelConfig() {
+            this.specific.list[this.configIndex] = this.oldConfigSetMes
+            this.closeConfig()
+        },
+        //关闭规格值设置弹出
+        closeConfig() {
+            this.uniqueArr = []
+            this.showConfigSet = false
+        },
+        //确认规格值弹窗
+        handleComfirmConfig() {
+            this.handleAddSpecOption(this.configIndex)
+        },
+        // 添加规格值
+        addConfig() {
+            let item = Core.Util.deepCopy({ key: "", zh: "", en: "", validate: false });
+            this.specific.list[this.configIndex].option.push(item);
+        }
     },
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #ItemEdit {
     .error {
         color: @TC_required;
@@ -2483,6 +2722,10 @@ export default {
         margin-top: 30px;
     }
     .spec-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      min-width: 930px;
         .name,
         .option {
             > p {
@@ -2499,9 +2742,10 @@ export default {
         .name {
             .fac();
             box-sizing: border-box;
-            height: 50px;
+            height: 66px;
+            padding: 0 10px;
             background: #ffffff;
-            border: 1px solid #e5e8eb;
+            border: 1px solid #E2E2E2;
             border-radius: 1px;
             > .ant-input {
                 width: 194px;
@@ -2517,6 +2761,32 @@ export default {
             //     visibility: visible;
             //     opacity: 1;
             // }
+            .popover-button {
+                margin: 0 8px;
+                > .ant-btn {
+                    > span {
+                        width: 230px;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        word-break: break-all;
+                    }
+                }
+            }
+        }
+        .button {
+            margin-left: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--BOS_, #E2E2E2);
+            background: #FFF;
+            cursor: pointer;
+            &:hover {
+              background-color: #eee;
+            }
         }
         .option {
             display: flex;
@@ -2525,7 +2795,7 @@ export default {
                 padding-right: 50px;
                 min-height: 32px;
                 line-height: 32px;
-                margin-top: 8px;
+                margin-bottom: 8px;
             }
             .option-list {
                 display: flex;
@@ -2576,7 +2846,6 @@ export default {
         }
     }
     .spec-add {
-        margin-top: 20px;
         border-radius: 2px;
         background: #ffffff;
         font-size: 12px;
@@ -2584,13 +2853,18 @@ export default {
     .specific-table {
         th {
             background-color: #fff;
+            height: 60px;
+            font-size: 14px;
+        }
+        td{
+            height: 60px;
         }
         .ant-input-number,
         .ant-select:not(.ant-input-number + .ant-select) {
             width: 120px;
         }
         .code {
-            width: 150px;
+            // width: 150px;
         }
         .ant-table-container .ant-table-content {
             &::-webkit-scrollbar {
@@ -2665,7 +2939,9 @@ export default {
 .m-l-5 {
     margin-left: 5px;
 }
-
+.m-t-16 {
+    margin-top: 16px;
+}
 .star{
     margin: 0 5px;
     &::before {
@@ -2679,6 +2955,11 @@ export default {
 .border-red {
     border: 1px solid red !important;
 }
+
+.item-image-uploader .ant-upload-list-item-thumbnail {
+    font-size: 0px;
+}
+
 .form-dispaly-key {
     width: auto !important;
     display: flex;
@@ -2686,6 +2967,126 @@ export default {
     white-space: nowrap !important;
     .i_hint {
         margin: 0 5px;
+    }
+}
+.form-title{
+    min-width: 120px !important;
+    width: auto !important;
+}
+.form-content{
+    width: 100% !important;
+}
+
+.l-w-h-style {
+    color: #1D2129;
+    font-family: PingFang SC;
+    font-size: 12px;
+    font-weight: 400;
+}
+:deep(.ant-input-wrapper) {
+    .ant-input-group-addon:nth-of-type(1) {
+        background-color: #fff;
+    }
+}
+.not-white-space {
+    white-space: nowrap;
+}
+.appearance-font {
+    color: #1D2129 !important;
+    font-family: PingFang SC;
+    font-weight: 600;
+    margin-top: 5px;
+}
+.not-aligin-item {
+    align-items: initial;
+}
+.config-list {
+    .config-item {
+        margin-bottom: 16px;
+        .config-item-title {
+            display: flex;
+            justify-content: space-between;
+            background-color: #F2F3F5;
+            padding: 4px 10px;
+            .icon {
+                cursor: pointer;
+            }
+        }
+        .config-item-mes {
+            display: flex;
+            padding: 16px;
+            border: 1px solid #E2E2E2;
+            border-top: none;
+            .config-item-zh, .config-item-en {
+                flex: 1;
+            }
+            .config-item-zh-title, .config-item-en-title {
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                margin-bottom: 4px;
+                .content-length {
+                    font-size: 10px;
+                    color: #8090a6;
+                }
+            }
+            .config-item-zh {
+                margin-right: 16px;
+            }
+        }
+    }
+    .add-config-btn {
+        color: #0061FF;
+        border-radius: 4px;
+        border: 1px dashed #0061FF;
+        padding: 6px 10px;
+        font-size: 14px;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+}
+.i_delete {
+    color: #0061FF;
+}
+.config-modal {
+    .ant-modal-footer {
+        text-align: center;
+    }
+}
+.popover {
+  min-width: 344px;
+}
+.popover-title {
+    color: #1D2129;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+.popover-subtitle {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    > span {
+        flex: 1;
+        color: #666;
+        font-size: 12px;
+    }
+}
+.popover-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 11px;
+    background-color: #F8F8F8;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    .popover-item-text {
+        flex: 1;
+        color: #333;
+        font-size: 12px;
     }
 }
 </style>
