@@ -536,7 +536,7 @@
                                     />
                                     <a-button
                                         type="link"
-                                        v-if="!form.id"
+                                        v-if="!item.id"
                                         @click="handleRemoveSpec(item, index)"
                                         >{{ $t("def.delete") }}</a-button
                                     >
