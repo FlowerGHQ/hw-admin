@@ -302,6 +302,7 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleCoverChange"
+                            @preview="handlePreview"
                         >
                             <div
                                 class="image-inner"
@@ -328,6 +329,8 @@
                             :multiple="true"
                             :before-upload="handleImgCheck"
                             @change="handleDetailChange"
+                            @preview="handlePreview"
+
                         >
                             <div
                                 class="image-inner"
@@ -488,7 +491,7 @@
                                     />
                                     <a-button
                                         type="link"
-                                        v-if="!form.id"
+                                        v-if="!item.id"
                                         @click="handleRemoveSpec(item, index)"
                                         >{{ $t("def.delete") }}</a-button
                                     >
@@ -677,7 +680,18 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
-                                <template #headerCell="{ column }">
+                                <template #headerCell="{ title,column }">
+                                    <template
+                                        v-if="column.icon "
+                                    >
+                                        <a-tooltip :title="$t('item_edit.add_spec')">
+                                            <i
+                                                class="icon i_hint"
+                                                style="font-size: 12px;margin-right: 4px;cursor: pointer;"
+                                            ></i>
+                                        </a-tooltip>
+                                        <span>{{title}}</span>
+                                    </template>
                                     <template
                                         v-if="
                                             column.dataIndex ===
@@ -1204,6 +1218,9 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
+        <a-modal :visible="previewVisible" :title="$t('item_edit.preview')" :footer="null" @cancel="handleCancel">
+            <img alt="preview" style="width: 100%" :src="previewImage" />
+        </a-modal>
     </div>
 </template>
 
@@ -1223,6 +1240,8 @@ export default {
     props: {},
     data() {
         return {
+            previewImage: "",
+            previewVisible: false,
             Core,
             loginType: Core.Data.getLoginType(),
             // 加载
@@ -1356,6 +1375,7 @@ export default {
                 key: "select",
                 option: item.option,
                 minWidth: "150px",
+                icon:true
             }));
             column = column.filter((item) => item.title && item.dataIndex);
             column.unshift(
@@ -1410,6 +1430,13 @@ export default {
     },
     mounted() {},
     methods: {
+        handlePreview(file) {
+            this.previewImage = file.url || file.thumbUrl;
+            this.previewVisible = true;
+        },
+        handleCancel() {
+            this.previewVisible = false;
+        },
         changeOption(option, i) {
             option.disabled = false;
         },
@@ -2526,7 +2553,7 @@ export default {
                 padding-right: 50px;
                 min-height: 32px;
                 line-height: 32px;
-                margin-top: 8px;
+                margin-bottom: 8px;
             }
             .option-list {
                 display: flex;
@@ -2577,7 +2604,6 @@ export default {
         }
     }
     .spec-add {
-        margin-top: 20px;
         border-radius: 2px;
         background: #ffffff;
         font-size: 12px;
@@ -2585,6 +2611,11 @@ export default {
     .specific-table {
         th {
             background-color: #fff;
+            height: 60px;
+            font-size: 14px;
+        }
+        td{
+            height: 60px;
         }
         .ant-input-number,
         .ant-select:not(.ant-input-number + .ant-select) {
@@ -2666,7 +2697,6 @@ export default {
 .m-l-5 {
     margin-left: 5px;
 }
-
 .star{
     margin: 0 5px;
     &::before {
@@ -2693,4 +2723,22 @@ export default {
 .item-image-uploader .ant-upload-list-item-thumbnail {
     font-size: 0px;
 }
+
+.form-dispaly-key {
+    width: auto !important;
+    display: flex;
+    align-items: center;
+    white-space: nowrap !important;
+    .i_hint {
+        margin: 0 5px;
+    }
+}
+.form-title{
+    min-width: 120px !important;
+    width: auto !important;
+}
+.form-content{
+    width: 100% !important;
+}
+
 </style>
