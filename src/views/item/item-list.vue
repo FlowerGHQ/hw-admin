@@ -489,9 +489,6 @@ export default {
     await this.getTableData({ flag_spread: 1 });
     await this.getSalesAreaList();
     window.addEventListener('resize', this.handleResize)
-        // 让左侧选择tree始终在可视区范围内
-    let scrollArea = document.querySelector('.layout-main>main')
-    scrollArea.addEventListener('scroll', this.selectTreeAutoTop)
 
     this.$nextTick(()=>{
       this.handleResize()
@@ -500,21 +497,10 @@ export default {
   },
   beforeDestroy() {
       window.removeEventListener('resize', this.handleResize)
-      let scrollArea = document.querySelector('.layout-main>main')
-      scrollArea.removeEventListener('scroll', this.selectTreeAutoTop)
+
   },
   methods: {
-    selectTreeAutoTop(){
-      let scrollArea = document.querySelector('.layout-main>main')
-      let scrollTop = scrollArea.scrollTop
-      console.log(this.$refs.selectTree)
-      // selectTree的marginTop 为scrollArea的scrollTop
-      if(this.$refs.selectTree){
-        loadsh.debounce(()=>{
-          this.$refs.selectTree.style.marginTop = scrollTop + 'px'
-        }, 100)()
-      }
-    },
+
     handleCategoryChange(val) {
       console.log("handleCategoryChange val:", val);
       this.searchForm.category_id = val;
@@ -816,8 +802,11 @@ export default {
       border: 1px solid #e8e8e8;
       background-color: #fff;
       padding: 10px;
-      height: calc(100vh - 100px);
+      height: calc(100vh - 95px);
       overflow-y: scroll;
+      position: sticky;
+      top: 0;
+      padding-top: 0;
       // 滚动条的样式
       &::-webkit-scrollbar {
         width: 6px;
