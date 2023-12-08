@@ -542,6 +542,17 @@ const routes = [
 
                 }
             },
+            {
+                path: 'test1',
+                name: 'test1',
+                component: () => import('@/views/z-test/test1.vue'),
+                meta: {
+                    roles: [LOGIN_TYPE.ADMIN],
+                    title: '测试',
+                    title_en: '测试',
+                    auth: ['item-category.list'],
+                }
+            },
         ]
     },
     { // 实例管理
