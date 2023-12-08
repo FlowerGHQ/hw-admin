@@ -76,6 +76,11 @@
                 <span class="key">{{ $t("crm_o.phone") }}：</span>
                 <span class="value">{{ detail.customer_phone || "-" }}</span>
               </a-col>
+              <!-- 下单名称 -->
+              <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
+                <span class="key">{{ $t("crm_o.order_name") }}：</span>
+                <span class="value">{{ detail.buyer_signatory || "-" }}</span>
+              </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.email") }}：</span>
                 <span class="value">{{ detail.customer_email || "-" }}</span>
