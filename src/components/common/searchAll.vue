@@ -52,7 +52,7 @@
                                 { zh: '已下架', en: 'Inactive', value: '-1' },
                             ],
                     select-val:
-                    
+
                             SOURCE_TYPE: {
                                 '1': { id: 1, value: 'EOS' },
                                 '2': { id: 2, value: 'ERP' }
@@ -191,7 +191,6 @@ export default {
         handleSearch() {
             this.$emit("search", this.searchForm)
         },
-        
         // 重置
         handleSearchReset() {
 
