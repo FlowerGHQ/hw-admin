@@ -738,11 +738,11 @@ export default {
   .content-area_main{
     display: flex;
     .select-tree{
-      min-width: 10%;
+      min-width: 14%;
       margin-right: 5px;
       border: 1px solid #e8e8e8;
       background-color: #fff;
-      padding: 10px;
+      padding: 20px;
       height: calc(100vh - 95px);
       overflow-y: scroll;
       position: sticky;
