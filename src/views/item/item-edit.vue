@@ -353,8 +353,14 @@
                                 class="image-inner"
                                 v-if="upload.coverList.length < 10"
                             >
-                                <i class="icon i_upload" />
+                                <!-- <i class="icon i_upload" /> -->
+                                <img src="../../assets/images/upload/add.png" class="upload-add" alt="">
                             </div>
+
+                            
+                            <template #removeIcon>
+                                <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
+                            </template>
                         </a-upload>
                         <div class="tip">{{ $t("n.size") }}：800*800px</div>
                     </div>
@@ -381,8 +387,14 @@
                                 class="image-inner"
                                 v-if="upload.detailList.length < 10"
                             >
-                                <i class="icon i_upload" />
+                                <!-- <i class="icon i_upload" /> -->
+                                <img src="../../assets/images/upload/add.png" class="upload-add" alt="">
                             </div>
+
+                            
+                            <template #removeIcon>
+                                <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
+                            </template>
                         </a-upload>
                         <div class="tip">{{ $t("n.size") }}：800*800px</div>
                     </div>
@@ -1592,6 +1604,7 @@ export default {
     },
     mounted() {},
     methods: {
+
         handlePreview(file) {
             this.previewImage = file.url || file.thumbUrl;
             this.previewVisible = true;
@@ -3140,4 +3153,59 @@ export default {
         font-size: 12px;
     }
 }
+
+::v-deep(.ant-upload-list-item-actions) {
+    /* background-color: rgba(255, 255, 255, 0) !important;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1 !important; */
+
+    // background-color: green;
+    width: 100%;
+    height: 100%;
+
+}
+/* 上传图片样式-穿透 */
+::v-deep(.ant-upload-list-item-info::before)  {
+    opacity: 0 !important;
+    
+}
+
+::v-deep( .ant-upload-list-item-card-actions-btn) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0px !important;
+    z-index: 10;
+}
+
+::v-deep(.ant-upload-list-item) {
+    padding: 0px !important;
+    border: 1px dashed  #E2E2E2;
+    background: #FFF;
+}
+
+::v-deep(.anticon-eye) {
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    left: -5px;
+    opacity: 0;
+    display: inline-block;
+}
+.upload-add {
+    border: 2px solid #0061FF;
+    width: 16px;
+    height: 16px;
+    padding: 3px;
+}
+
+.upload-close {
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+}
+
 </style>
