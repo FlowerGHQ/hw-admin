@@ -2331,7 +2331,7 @@ export default {
             // 删除规格定义
             let _this = this;
             this.$confirm({
-                title: `${_this.$t("i.pop_delete_spec")}${item.name}?`,
+                title: `${_this.$t("i.pop_delete_spec")}${this.$i18n.locale === 'en' ? ` ${item.key}` : item.name}?`,
                 okText: _this.$t("def.sure"),
                 okType: "danger",
                 cancelText: this.$t("def.cancel"),
@@ -2760,7 +2760,6 @@ export default {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
-      min-width: 950px;
         .name,
         .option {
             > p {
@@ -2823,6 +2822,9 @@ export default {
                     }
                 }
             }
+            .star {
+                white-space: nowrap;
+            }
         }
         .button {
             margin-left: 10px;
@@ -2834,6 +2836,7 @@ export default {
             height: 40px;
             border: 1px solid var(--BOS_, #E2E2E2);
             background: #FFF;
+            flex-shrink: 0;// 固定宽度
             cursor: pointer;
             &:hover {
               background-color: #eee;
