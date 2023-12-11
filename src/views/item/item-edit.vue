@@ -351,18 +351,18 @@
                         >
                             <div
                                 class="image-inner"
-                                v-if="upload.coverList.length < 10"
+                                v-if="upload.coverList.length < 9"
                             >
                                 <!-- <i class="icon i_upload" /> -->
                                 <img src="../../assets/images/upload/add.png" class="upload-add" alt="">
                             </div>
 
-                            
                             <template #removeIcon>
                                 <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
                             </template>
+
                         </a-upload>
-                        <div class="tip">{{ $t("n.size") }}：800*800px</div>
+                        <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
                 <div class="form-item img-upload">
@@ -396,7 +396,7 @@
                                 <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
                             </template>
                         </a-upload>
-                        <div class="tip">{{ $t("n.size") }}：800*800px</div>
+                        <div class="tip">{{ $t("n.size_prompt_detail") }}</div>
                     </div>
                 </div>
             </div>
@@ -2251,7 +2251,7 @@ export default {
         },
         // 上传图片
         handleCoverChange({ file, fileList }) {
-           if(fileList.length > 10){
+           if(fileList.length > 9){
                 fileList = fileList.slice(0,10)
             } 
             if (file.status == "done") {
