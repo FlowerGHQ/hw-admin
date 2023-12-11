@@ -2747,7 +2747,7 @@ export default {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
-      min-width: 930px;
+      min-width: 950px;
         .name,
         .option {
             > p {
