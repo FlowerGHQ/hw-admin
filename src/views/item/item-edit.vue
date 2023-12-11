@@ -179,7 +179,7 @@
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
-                                >{{ $i18n.locale === 'zh'?val.name:val.name_en }}</a-select-option
+                                >{{ $i18n.locale === 'zh' ? val.name : val.name_en }}</a-select-option
                             >
                         </a-select>
                     </div>
@@ -353,8 +353,14 @@
                                 class="image-inner"
                                 v-if="upload.coverList.length < 10"
                             >
-                                <i class="icon i_upload" />
+                                <!-- <i class="icon i_upload" /> -->
+                                <img src="../../assets/images/upload/add.png" class="upload-add" alt="">
                             </div>
+
+                            
+                            <template #removeIcon>
+                                <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
+                            </template>
                         </a-upload>
                         <div class="tip">{{ $t("n.size") }}：800*800px</div>
                     </div>
@@ -381,8 +387,14 @@
                                 class="image-inner"
                                 v-if="upload.detailList.length < 10"
                             >
-                                <i class="icon i_upload" />
+                                <!-- <i class="icon i_upload" /> -->
+                                <img src="../../assets/images/upload/add.png" class="upload-add" alt="">
                             </div>
+
+                            
+                            <template #removeIcon>
+                                <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
+                            </template>
                         </a-upload>
                         <div class="tip">{{ $t("n.size") }}：800*800px</div>
                     </div>
@@ -756,7 +768,7 @@
                             >
                                 <template #headerCell="{ title,column }">
                                     <template
-                                        v-if="column.icon "
+                                        v-if="column.icon"
                                     >
                                         <a-tooltip :title="$t('item-edit.add_spec')">
                                             <i
@@ -767,10 +779,7 @@
                                         <span>{{title}}</span>
                                     </template>
                                     <template
-                                        v-if="
-                                            column.dataIndex ===
-                                            'original_price'
-                                        "
+                                        v-if="column.dataIndex === 'original_price'"
                                     >
                                         <div class="title-row">
                                             <span>
@@ -1292,8 +1301,23 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal :visible="previewVisible" :title="$t('item-edit.preview')" :footer="null" @cancel="handleCancel">
-            <img alt="preview" style="width: 100%" :src="previewImage" />
+        <a-modal 
+            :visible="previewVisible" 
+            :title="$t('item-edit.preview')" 、
+            :footer="null" 
+            @cancel="handleCancel"
+            class="preview-modal-image"
+            :centered="true"
+            :bodyStyle="{
+                display: 'flex',
+                justifyContent: 'center',
+            }"
+        >
+            <img 
+                alt="preview"  
+                :src="previewImage"
+                
+            />
         </a-modal>
         <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
@@ -1595,6 +1619,7 @@ export default {
     },
     mounted() {},
     methods: {
+
         handlePreview(file) {
             this.previewImage = file.url || file.thumbUrl;
             this.previewVisible = true;
@@ -1903,15 +1928,28 @@ export default {
         },
         // 保存、新建 商品
         handleSubmit() {
+
+            if (this.specific.mode === 2) {
+                this.form.code = this.specific.data[0].code;
+                this.form.name = this.specific.data[0].name;
+                this.form.name_en = this.specific.data[0].name_en;
+                this.form.price = this.specific.data[0].price;
+                this.form.fob_eur = this.specific.data[0].fob_eur;
+                this.form.fob_usd = this.specific.data[0].fob_usd;
+                this.form.original_price = this.specific.data[0].original_price;
+            }
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+
             // 校验检查
             this.isValidate = true;
+
             if (
                 typeof this.checkFormInput(form, specData, attrDef) ===
                 "function"
             ) {
+
                 return;
             }
 
@@ -1955,6 +1993,7 @@ export default {
             form.config = JSON.stringify(form.config);
 
             let apiName = "save";
+
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 apiName = this.indep_flag ? "update" : "save";
@@ -2277,7 +2316,7 @@ export default {
                         fob_usd: this.form.fob_usd,
                         original_price: this.form.original_price,
                         original_price_currency:
-                            this.form.original_price_currency,
+                        this.form.original_price_currency,
                     },
                 ];
             } else if (this.specific.mode === 1) {
@@ -2307,7 +2346,7 @@ export default {
             // 删除规格定义
             let _this = this;
             this.$confirm({
-                title: `${_this.$t("i.pop_delete_spec")}${item.name}?`,
+                title: `${_this.$t("i.pop_delete_spec")}${this.$i18n.locale === 'en' ? ` ${item.key}` : item.name}?`,
                 okText: _this.$t("def.sure"),
                 okType: "danger",
                 cancelText: this.$t("def.cancel"),
@@ -2736,7 +2775,6 @@ export default {
       display: flex;
       align-items: center;
       margin-bottom: 16px;
-      min-width: 930px;
         .name,
         .option {
             > p {
@@ -2799,6 +2837,9 @@ export default {
                     }
                 }
             }
+            .star {
+                white-space: nowrap;
+            }
         }
         .button {
             margin-left: 10px;
@@ -2810,6 +2851,7 @@ export default {
             height: 40px;
             border: 1px solid var(--BOS_, #E2E2E2);
             background: #FFF;
+            flex-shrink: 0;// 固定宽度
             cursor: pointer;
             &:hover {
               background-color: #eee;
@@ -2924,6 +2966,7 @@ export default {
             }
         }
     }
+  
 }
 .specific-option-edit-popover,
 .batch-set-edit-popover {
@@ -3126,4 +3169,59 @@ export default {
         font-size: 12px;
     }
 }
+
+::v-deep(.ant-upload-list-item-actions) {
+    /* background-color: rgba(255, 255, 255, 0) !important;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1 !important; */
+
+    // background-color: green;
+    width: 100%;
+    height: 100%;
+
+}
+/* 上传图片样式-穿透 */
+::v-deep(.ant-upload-list-item-info::before)  {
+    opacity: 0 !important;
+    
+}
+
+::v-deep( .ant-upload-list-item-card-actions-btn) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0px !important;
+    z-index: 10;
+}
+
+::v-deep(.ant-upload-list-item) {
+    padding: 0px !important;
+    border: 1px dashed  #E2E2E2;
+    background: #FFF;
+}
+
+::v-deep(.anticon-eye) {
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    left: -5px;
+    opacity: 0;
+    display: inline-block;
+}
+.upload-add {
+    border: 2px solid #0061FF;
+    width: 16px;
+    height: 16px;
+    padding: 3px;
+}
+
+.upload-close {
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+}
+
 </style>

@@ -747,6 +747,7 @@ export default {
       overflow-y: scroll;
       position: sticky;
       top: 0;
+      border-radius: 6px;
       // 滚动条的样式
       &::-webkit-scrollbar {
         width: 6px;
@@ -755,7 +756,6 @@ export default {
                 border-radius: 3px;
                 background-color: @scrollbar-thumb;
                 transition: background-color 0.3s;
-
                 &:hover {
                     background: @scrollbar-thumb-hover;
                 }
