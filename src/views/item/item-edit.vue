@@ -1610,7 +1610,8 @@ export default {
     methods: {
 
         handlePreview(file) {
-            this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : ''
+            console.log(file)
+            this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : file?.url? file.url: ''
             this.previewVisible = true;
         },
         changeOption(option, i) {
