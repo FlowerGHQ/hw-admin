@@ -8,7 +8,7 @@
 export default {
     zh: {
 		// 新增规格
-		add_spec: '新增规格',
+		add_spec: '请根据商品的真实规格选择合适的规格值',
 		// 图片预览
 		preview: '图片预览',
 		flag_entity_keyword: '实力编码：有些商品具有唯一标识，例如整车可通过整车码做为区分标识，就属于有实例编码。出入库时可以根据实例编码进行库存统计。',
@@ -17,7 +17,7 @@ export default {
     },
     en: {
 		// 新增规格
-		add_spec: 'Add Spec',
+		add_spec: 'Please select the appropriate specification value according to the actual specification of the product',
 		// 图片预览
 		preview: 'Preview',
 		flag_entity_keyword: "Strength code: some goods have a unique identification, for example, the whole vehicle can be identified by the whole vehicle code, which belongs to the case code. Inventory statistics can be carried out according to the case code when entering and leaving the warehouse.",
