@@ -120,6 +120,7 @@
                                 <template v-for="i of item.children">
                                     <template v-if="$auth(...i.auth)">
                                         <a-menu-item 
+                                            v-if="isExistArr(i.meta?.admin_module, tabPosition)"
                                             :key="item.path + '/' + i.path" 
                                             @click="handleLink(item.path + '/' + i.path)"
                                         >
@@ -206,11 +207,12 @@ export default {
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
                 let newShowList = []                
-                SIDER.ADMIN.forEach(item => {             
+                SIDER.ADMIN.forEach(item => {       
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
-                })                
+                })
+
                 showList = newShowList;
                 
                 // 是否只在超级管理员显示，普通平台方不展示
@@ -415,6 +417,14 @@ export default {
             } else {
                 this.collapsed = false
             }
+        },
+            // 判断一个值是否在这个数组中
+        isExistArr(arr, value) {
+            if(!arr) return true  // 默认arr不传 全部显示
+            // 传了arr 数据走下面逻辑
+            const Arr = arr || []
+            const result = Arr.includes(value)
+            return result  // true为显示 false 为不显示
         }
     }
 };
