@@ -567,13 +567,13 @@
                                                     {{ `${$t("i.addition")}${ $i18n.locale === 'en' ? ` ${item.key} ` : item.name}${$t("i.value")}` }}
                                                 </span>
                                             </a-button>
-                                            <a-button type="primary" ghost @click="openConfigSet(index, item)" v-else>
-                                                <span>
-                                                    <span v-for="(optionItem, optionIndex) of item.option">
-                                                        {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/ ' : '' }}
+                                            <a-button class="tag-button" type="primary" ghost @click="openConfigSet(index, item)" v-else>
+                                                <span class="tag-body">
+                                                    <span v-for="(optionItem, optionIndex) of item.option" class="tag-value">
+                                                        {{ optionItem[$i18n.locale] }}
                                                     </span>
                                                 </span>
-                                                <p class="num-tag">{{ item.option.length }}</p>
+                                                <!-- <p class="num-tag">{{ item.option.length }}</p> -->
                                             </a-button>
                                         </a-popover>
                                     </div>
@@ -2794,7 +2794,7 @@ export default {
     }
     .spec-item {
       display: flex;
-      align-items: center;
+    //   align-items: center;
       margin-bottom: 16px;
         .name,
         .option {
@@ -2810,10 +2810,12 @@ export default {
             }
         }
         .name {
-            .fac();
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
             box-sizing: border-box;
-            height: 66px;
-            padding: 0 10px;
+            // height: 66px;
+            padding: 10px;
             background: #ffffff;
             border: 1px solid #E2E2E2;
             border-radius: 1px;
@@ -2833,14 +2835,12 @@ export default {
             // }
             .popover-button {
                 margin: 0 8px;
+                .tag-button {
+                    height: auto;
+                    padding: 2px 8px;
+                }
                 > .ant-btn {
-                    > span {
-                        width: 230px;
-                        padding-right: 20px;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        word-break: break-all;
-                    }
+                    width: 336px;
                     .num-tag {
                         position: absolute;
                         right: 10px;
@@ -2860,9 +2860,27 @@ export default {
             }
             .star {
                 white-space: nowrap;
+                margin-top: 5px;
+            }
+            .tag-body {
+                display: flex;
+                flex-wrap: wrap;
+                width: 338px;
+            }
+            .tag-value {
+                padding: 2px 10px;
+                border-radius: 4px;
+                background: rgba(0, 97, 255, 0.10);
+                font-size: 12px;
+                color: #0061FF;
+                margin: 2px 2px 2px 0;
+                &:last-child {
+                    margin-right: 0;
+                }
             }
         }
         .button {
+            margin-top: 6px;
             margin-left: 10px;
             display: flex;
             justify-content: center;
