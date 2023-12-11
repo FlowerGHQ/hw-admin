@@ -1397,7 +1397,6 @@ export default {
         CategoryTreeSelectMultiple,
         ItemHeader,
         ItemSelect,
-        CloseOutlined
     },
     props: {},
     data() {
