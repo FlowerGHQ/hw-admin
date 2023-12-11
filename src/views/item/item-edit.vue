@@ -1292,8 +1292,23 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal :visible="previewVisible" :title="$t('item-edit.preview')" :footer="null" @cancel="handleCancel">
-            <img alt="preview" style="width: 100%" :src="previewImage" />
+        <a-modal 
+            :visible="previewVisible" 
+            :title="$t('item-edit.preview')" 、
+            :footer="null" 
+            @cancel="handleCancel"
+            class="preview-modal-image"
+            :centered="true"
+            :bodyStyle="{
+                display: 'flex',
+                justifyContent: 'center',
+            }"
+        >
+            <img 
+                alt="preview"  
+                :src="previewImage"
+                
+            />
         </a-modal>
         <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
@@ -2924,6 +2939,7 @@ export default {
             }
         }
     }
+  
 }
 .specific-option-edit-popover,
 .batch-set-edit-popover {
