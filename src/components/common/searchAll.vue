@@ -1,7 +1,7 @@
 
     <!-- 
         例子：
-            <searchAll :options = "searchList" @search = "getSearchFrom" @reset = "handleSearchReset" >
+            <SearchAll :options = "searchList" @search = "getSearchFrom" @reset = "handleSearchReset" >
                 // 时间插槽
                 <template v-slot:time>
                     <div  class="item-box">
@@ -13,7 +13,7 @@
                         </div>
                     </div>
                 </template>
-            </searchAll>
+            </SearchAll>
         
             搜索组件：样式+重置+查询+可slot自定义(slot = extend、slot = time)
 
@@ -148,7 +148,7 @@
 <script>
 import Core from "@/core";
 export default {
-    name: 'searchAll',
+    name: 'SearchAll',
     props: {
         options: {
             type: Array,

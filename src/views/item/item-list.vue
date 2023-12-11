@@ -41,7 +41,7 @@
             </div>
           </div>
           <div :style="{width: fixedWidth}">
-            <searchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
+            <SearchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
                 <template v-slot:time>
                     <div  class="item-box">
                         <div class="key-box">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </template>
-            </searchAll>
+            </SearchAll>
               <!-- 商品分类：
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
                 <div class="key">{{ $t("i.categories") }}:</div>
@@ -261,7 +261,7 @@
 <script>
 import Core from "../../core";
 
-import searchAll from "@/components/common/searchAll.vue"
+import SearchAll from "@/components/common/SearchAll.vue"
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
@@ -273,7 +273,7 @@ export default {
     TimeSearch,
     CategoryTree,
     CategoryTreeSelect,
-    searchAll
+    SearchAll
   },
   props: {},
   data() {
