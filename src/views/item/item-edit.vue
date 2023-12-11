@@ -743,7 +743,7 @@
                                 !validateConfigFlag && isValidate ? 'error' : ''
                             "
                         >
-                            {{ $t("i.message") }}
+                            {{ $t("i.specs") }}
                         </div>
                         <div class="value table-container no-mg">
                             <a-table
@@ -1204,6 +1204,7 @@
                             </a-table>
                             <a-button
                                 class="spec-add"
+                                style="margin-top: 24px;"
                                 type="primary"
                                 ghost
                                 @click="handleAddSpecItem"

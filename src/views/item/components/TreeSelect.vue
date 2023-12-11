@@ -1,9 +1,22 @@
 <template>
 	<div class="CategoryTree">
-		<a-table :loading="loading" :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-			:row-key="record => record.id"  :pagination='false' size="small"
-			v-model:expandedRowKeys='expandedRowKeys' :expandRowByClick='true' :expandIconColumnIndex='0'
-			@expand='handleExpandedChange' :indentSize='24'>
+		<!-- 
+			@expand='handleExpandedChange' 
+		 -->
+		<a-table 
+			:loading="loading" 
+			:columns="tableColumns" 
+			:data-source="tableData" 
+			:scroll="{ x: true }"
+			:row-key="record => record.id"  
+			:pagination='false' 
+			size="small"
+			v-model:expandedRowKeys='expandedRowKeys' 
+			:expandRowByClick='true' 
+			:expandIconColumnIndex='0'
+			:indentSize='24'
+			@expand='handleExpandedChange' 
+		>
 			<template #bodyCell="{ column, text , record }">
 				<template v-if="column.dataIndex === 'name'">
 					<div class="name" :class="record.id === selectKeys ? 'active' : ''" @click="handleSelect(record)">
@@ -23,12 +36,6 @@
 		components: {
 			SimpleImageEmpty,
 		},
-		props: {
-			parentId: {
-				type: Number,
-				default: 0
-			}
-		},
 		emit: ['change'],
 		data() {
 			return {
@@ -39,19 +46,11 @@
 				selectKeys: '',
 			}
 		},
-		watch: {
-			parentId(n) {
-				console.log('parentId:', n)
-				this.getDataByParent(n)
-				this.selectKeys = ''
-			}
-		},
-		computed: {},
 		mounted() {
-			this.getDataByParent(this.parentId)
+			this.getDataByParent()
 		},
 		methods: {
-			getDataByParent(parent_id = 0, parentNode) {  // 通过父节点获取子级数据
+			getDataByParent(parent_id = 0) {  // 通过父节点获取子级数据
 				this.loading = true;
 				Core.Api.ItemCategory.tree({
 					page: 0,
@@ -59,34 +58,37 @@
 					is_authority: 1,
 					depth: 3
 				}).then(res => {
-					res.list.forEach(item => {
-						item.has_children ? item.children = [] : item.children = null
-					});
-					console.log('getDataByParent res.list:', res.list)
-					if (parent_id === this.parentId) {
-						this.tableData = res.list;
-					} else if (parentNode) {
-						parentNode.children = res.list.length ? res.list : null
-					}
+					this.tableData = res?.list? this.filterChildren(res.list):[];
+					this.tableData.forEach(item=>{
+						if(item.id === 1 || item.id === 2){
+							this.expandedRowKeys.push(item.id)
+						}
+					})
 				}).catch(err => {
 					console.log('getDataByParent err', err)
 				}).finally(() => {
 					this.loading = false;
 				});
 			},
+			filterChildren(arr) {
+				arr.forEach(item => {
+					if (item.has_children && item.children.length>0) {
+						this.filterChildren(item.children)
+					} else {
+						item.children = null
+					}
+				})
+				return arr
+			},
 			handleExpandedChange(expanded, record) {
-				console.log('expanded, record:', expanded, record)
 				if (expanded) {
-					this.getDataByParent(record.id, record)
 					this.expandedRowKeys.push(record.id)
 				} else {
-					let index = this.expandedRowKeys.indexOf(record.id)
-					this.expandedRowKeys.splice(index, 1)
+					this.expandedRowKeys = this.expandedRowKeys.filter(item => item !== record.id)
 				}
+				console.log(this.expandedRowKeys,'expandedRowKeys')
 			},
-	
 			handleSelect(record) {
-	
 				if (record.id === this.selectKeys) {
 					this.$emit('clickCurrent');
 					return;
@@ -94,7 +96,6 @@
 				this.selectKeys = record.id
 				this.$emit('change', record.id)
 			},
-	
 			handleReset() {
 				this.selectKeys = '';
 			},
