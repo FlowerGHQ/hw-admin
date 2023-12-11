@@ -532,10 +532,10 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle' },
-            '2': { key: 2, zh: '零部件', en: 'Parts' },
-            '3': { key: 3, zh: '周边', en: 'Peripheral' },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2 },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3 },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4 },
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
