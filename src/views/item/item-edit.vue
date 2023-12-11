@@ -2877,6 +2877,7 @@ export default {
         font-size: 12px;
     }
     .specific-table {
+        margin-bottom: 16px;
         th {
             background-color: #fff;
             height: 60px;
