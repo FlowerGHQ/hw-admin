@@ -179,7 +179,7 @@
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
-                                >{{ $i18n.locale === 'zh'?val.name:val.name_en }}</a-select-option
+                                >{{ $i18n.locale === 'zh' ? val.name : val.name_en }}</a-select-option
                             >
                         </a-select>
                     </div>
@@ -756,7 +756,7 @@
                             >
                                 <template #headerCell="{ title,column }">
                                     <template
-                                        v-if="column.icon "
+                                        v-if="column.icon"
                                     >
                                         <a-tooltip :title="$t('item-edit.add_spec')">
                                             <i
@@ -767,10 +767,7 @@
                                         <span>{{title}}</span>
                                     </template>
                                     <template
-                                        v-if="
-                                            column.dataIndex ===
-                                            'original_price'
-                                        "
+                                        v-if="column.dataIndex === 'original_price'"
                                     >
                                         <div class="title-row">
                                             <span>
@@ -1903,15 +1900,28 @@ export default {
         },
         // 保存、新建 商品
         handleSubmit() {
+
+            if (this.specific.mode === 2) {
+                this.form.code = this.specific.data[0].code;
+                this.form.name = this.specific.data[0].name;
+                this.form.name_en = this.specific.data[0].name_en;
+                this.form.price = this.specific.data[0].price;
+                this.form.fob_eur = this.specific.data[0].fob_eur;
+                this.form.fob_usd = this.specific.data[0].fob_usd;
+                this.form.original_price = this.specific.data[0].original_price;
+            }
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+
             // 校验检查
             this.isValidate = true;
+
             if (
                 typeof this.checkFormInput(form, specData, attrDef) ===
                 "function"
             ) {
+
                 return;
             }
 
@@ -1955,6 +1965,7 @@ export default {
             form.config = JSON.stringify(form.config);
 
             let apiName = "save";
+
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 apiName = this.indep_flag ? "update" : "save";
@@ -2277,7 +2288,7 @@ export default {
                         fob_usd: this.form.fob_usd,
                         original_price: this.form.original_price,
                         original_price_currency:
-                            this.form.original_price_currency,
+                        this.form.original_price_currency,
                     },
                 ];
             } else if (this.specific.mode === 1) {
