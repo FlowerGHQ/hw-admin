@@ -532,10 +532,10 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle' },
-            '2': { key: 2, zh: '零部件', en: 'Parts' },
-            '3': { key: 3, zh: '周边', en: 'Peripheral' },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2 },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3 },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4 },
         },
         MONETARY_TYPE: {
             '￥': 'CNY',
@@ -1788,7 +1788,7 @@ let Const = {
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
             '4': { key: 4, zh: '国外官网2.0', en: 'Official Website Abroad', value: 4 },
-            '5': { key: 5, zh: '飞书小程', en: 'Feishu Mini Program', value: 5 },
+            '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
         },
         // 支付方式
         PAYMENT_TYPE: {
