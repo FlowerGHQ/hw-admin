@@ -1306,6 +1306,7 @@
             :title="$t('item-edit.preview')" 、
             :footer="null" 
             @cancel="handleCancel"
+            width="800px"
             class="preview-modal-image"
             :centered="true"
             :bodyStyle="{
@@ -1316,6 +1317,9 @@
             <img 
                 alt="preview"  
                 :src="previewImage"
+                style="
+                    width: 100%;
+                "
                 
             />
         </a-modal>
@@ -1621,7 +1625,9 @@ export default {
     methods: {
 
         handlePreview(file) {
-            this.previewImage = file.url || file.thumbUrl;
+            console.log(file)
+            console.log(this.upload)
+            this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : ''
             this.previewVisible = true;
         },
         handleCancel() {
