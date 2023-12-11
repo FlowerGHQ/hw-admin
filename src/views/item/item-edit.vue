@@ -553,13 +553,13 @@
                                             </template>
                                             <a-button type="primary" ghost @click="openConfigSet(index, item)" v-if="item.option?.length === 0">
                                                 <span style="padding-right: 0;">
-                                                    {{ `${$t("i.addition")}${ ($i18n.locale === 'en' ? ` ${item.key} ` : item.name) || '--'}${$t("i.value")}` }}
+                                                    {{ `${$t("i.addition")}${ $i18n.locale === 'en' ? ` ${item.key} ` : item.name}${$t("i.value")}` }}
                                                 </span>
                                             </a-button>
                                             <a-button type="primary" ghost @click="openConfigSet(index, item)" v-else>
                                                 <span>
                                                     <span v-for="(optionItem, optionIndex) of item.option">
-                                                        {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/' : '' }}
+                                                        {{ optionItem[$i18n.locale] }} {{ optionIndex < item.option.length - 1 ? '/ ' : '' }}
                                                     </span>
                                                 </span>
                                                 <p class="num-tag">{{ item.option.length }}</p>
@@ -1204,7 +1204,7 @@
                             </a-table>
                             <a-button
                                 class="spec-add"
-                                style="margin-top: 24px;"
+                                style="margin-top: 0px;"
                                 type="primary"
                                 ghost
                                 @click="handleAddSpecItem"
@@ -2878,6 +2878,7 @@ export default {
         font-size: 12px;
     }
     .specific-table {
+        margin-bottom: 16px;
         th {
             background-color: #fff;
             height: 60px;

@@ -404,8 +404,8 @@ export default {
             { type: "input", value: "name",  tabname: 'n.name', },                                           // 名称
             { type: "select", value: "type",  tabname: 'n.type', selectMap: this.itemTypeMap },              // 类型
             { type: "select-val", value: "source_type",  tabname: 'i.source_type', selectMap: this.SOURCE_TYPE }, // 来源
-            { type: "input", value: "code", tabname: 'i.code', },                                        // 商品编码
-            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },    // 商品状态
+            { type: "input", value: "code", tabname: 'i.code', },                                           // 商品编码
+            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },        // 商品状态
         ]
         return arr;
     }
