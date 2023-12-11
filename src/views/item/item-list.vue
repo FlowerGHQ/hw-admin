@@ -8,7 +8,7 @@
             />
       </div>
       <div class="list-container" ref="bigBox">
-          <div id="fixed-box" ref="fixBox">
+          <div id="fixed-box" ref="fixBox" :style="{width: fixedWidth}">
           <!-- 顶部障眼法-盒子 -->
           <div class="top-box" >
             <div class="top-back" > </div>
@@ -323,7 +323,7 @@ export default {
 
       fixedHeight: 'auto',
       fixedWidth: 'auto',
-
+      observer: null,
     };
   },
   watch: {},
@@ -423,9 +423,14 @@ export default {
       this.handleResize()
     })
 
+    const dom = this.$refs.bigBox;   // this.$refs.bigBox 返回是VueComponent对象
+    this.observer = new ResizeObserver(this.handleResize);//  监听宽度变化
+    this.observer.observe(dom, { box: "border-box" });
+
   },
   beforeDestroy() {
       window.removeEventListener('resize', this.handleResize)
+      this.observer.disconnect();    //取消监听
 
   },
   methods: {
@@ -450,6 +455,7 @@ export default {
       this.searchForm.category_id = val;
       this.pageChange(1);
     },
+    /* 监听 */
     handleResize() {
         const width = this.$refs.tabBox && this.$refs.tabBox.offsetWidth;
         const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
@@ -775,6 +781,7 @@ export default {
         box-sizing: border-box;
         margin-left: 20px;
         background-color: #ffffff;
+        // background-color: red;
         
         .top-box {
           width: calc(100% + 40px) !important;
@@ -789,11 +796,14 @@ export default {
           left: -20px;
           z-index: -15;
           padding-top: 16px;
+          box-sizing: border-box;
+
           .top-back {
             background-color: #FFFFFF;
             padding: 0 20px;width: 100%;
             height: 100%;
             border-radius: 6px 6px 0 0;
+            box-sizing: border-box;
           }
         }
 
