@@ -41,7 +41,7 @@
             </div>
           </div>
           <div :style="{width: fixedWidth}">
-            <searchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
+            <SearchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
                 <template v-slot:time>
                     <div  class="item-box">
                         <div class="key-box">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                 </template>
-            </searchAll>
+            </SearchAll>
               <!-- 商品分类：
                 <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
                 <div class="key">{{ $t("i.categories") }}:</div>
@@ -261,7 +261,7 @@
 <script>
 import Core from "../../core";
 
-import searchAll from "@/components/common/searchAll.vue"
+import SearchAll from "@/components/common/SearchAll.vue"
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
@@ -273,7 +273,7 @@ export default {
     TimeSearch,
     CategoryTree,
     CategoryTreeSelect,
-    searchAll
+    SearchAll
   },
   props: {},
   data() {
@@ -404,8 +404,8 @@ export default {
             { type: "input", value: "name",  tabname: 'n.name', },                                           // 名称
             { type: "select", value: "type",  tabname: 'n.type', selectMap: this.itemTypeMap },              // 类型
             { type: "select-val", value: "source_type",  tabname: 'i.source_type', selectMap: this.SOURCE_TYPE }, // 来源
-            { type: "input", value: "code", tabname: 'i.code', },                                        // 商品编码
-            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },    // 商品状态
+            { type: "input", value: "code", tabname: 'i.code', },                                           // 商品编码
+            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },        // 商品状态
         ]
         return arr;
     }
@@ -738,11 +738,11 @@ export default {
   .content-area_main{
     display: flex;
     .select-tree{
-      min-width: 10%;
+      min-width: 14%;
       margin-right: 5px;
       border: 1px solid #e8e8e8;
       background-color: #fff;
-      padding: 10px;
+      padding: 20px;
       height: calc(100vh - 95px);
       overflow-y: scroll;
       position: sticky;
