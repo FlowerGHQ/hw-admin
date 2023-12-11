@@ -340,7 +340,7 @@
                             class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
-                            :file-list="upload.coverList"
+                            v-model:file-list="upload.coverList"
                             :action="upload.action"
                             :headers="upload.headers"
                             :data="upload.data"
@@ -360,7 +360,6 @@
                             <template #removeIcon>
                                 <img src="../../assets/images/upload/close.png" class="upload-close" alt="">
                             </template>
-
                         </a-upload>
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
@@ -373,7 +372,7 @@
                             class="item-image-uploader"
                             list-type="picture-card"
                             accept="image/*"
-                            :file-list="upload.detailList"
+                            v-model:file-list="upload.detailList"
                             :action="upload.action"
                             :headers="upload.headers"
                             :data="upload.data"
@@ -1301,28 +1300,6 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal 
-            :visible="previewVisible" 
-            :title="$t('item-edit.preview')" 、
-            :footer="null" 
-            @cancel="handleCancel"
-            width="800px"
-            class="preview-modal-image"
-            :centered="true"
-            :bodyStyle="{
-                display: 'flex',
-                justifyContent: 'center',
-            }"
-        >
-            <img 
-                alt="preview"  
-                :src="previewImage"
-                style="
-                    width: 100%;
-                "
-                
-            />
-        </a-modal>
         <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
@@ -1384,6 +1361,14 @@
                 </div>
             </div>
         </a-modal>
+
+        <!-- 自定义图片预览 -->
+        <div class="image-preview" :class="{'preview-wrap':previewVisible}" @click="previewVisible = false">
+            <img
+                :src="previewImage"
+                alt=""
+            />
+        </div>
     </div>
 </template>
 
@@ -1625,13 +1610,8 @@ export default {
     methods: {
 
         handlePreview(file) {
-            console.log(file)
-            console.log(this.upload)
             this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : ''
             this.previewVisible = true;
-        },
-        handleCancel() {
-            this.previewVisible = false;
         },
         changeOption(option, i) {
             option.disabled = false;
@@ -2265,6 +2245,13 @@ export default {
                     return this.$message.error(file.response.message);
                 }
             }
+            fileList.forEach((item) => {
+                if (item.response) {
+                    item.url =
+                        Core.Const.NET.FILE_URL_PREFIX +
+                        item.response.data.filename;
+                }
+            });
             this.upload.coverList = fileList;
         },
         handleDetailChange({ file, fileList }) {
@@ -2276,6 +2263,13 @@ export default {
                     return this.$message.error(file.response.message);
                 }
             }
+            fileList.forEach((item) => {
+                if (item.response) {
+                    item.url =
+                        Core.Const.NET.FILE_URL_PREFIX +
+                        item.response.data.filename;
+                }
+            });
             this.upload.detailList = fileList;
         },
 
@@ -2729,6 +2723,27 @@ export default {
 
 <style lang="less" scoped>
 #ItemEdit {
+    .image-preview{
+        position: fixed;
+        width:100vw;
+        height:100vh;
+        top:0;
+        left:0;
+        z-index: 998;
+        background: rgba(0,0,0,.5);
+        display: none;
+
+    }
+    .preview-wrap{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        img{
+            min-width:800px;
+            max-width: 1400px;
+        }
+
+    }
     .error {
         color: @TC_required;
     }
