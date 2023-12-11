@@ -37,13 +37,13 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
-        URL_POINT = 'http://10.10.12.75:8889'  // zy
+        // URL_POINT = 'http://10.10.12.75:8889'  // zy
 
         break;
 }
@@ -529,19 +529,19 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle' },
-            '2': { key: 2, zh: '零部件', en: 'Parts' },
-            '3': { key: 3, zh: '周边', en: 'Peripheral' },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2 },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3 },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4 },
         },
         MONETARY_TYPE: {
-            // '￥': 'CNY',
+            '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
             // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            // 'CNY': '￥',
+            'CNY': '￥',
             'EUR': '€',
             'USD': '$',
             // 'GBP': '£',
@@ -592,6 +592,11 @@ let Const = {
         SOURCE_STOCK_TYPE: {
             '1': { id: 2, value: 'ERP' },
             '2': { id: 1, value: 'EOS' },
+        },
+        ITEM_SOURCE_MAP: {
+            '0': { value: 0, zh: '全部', en: 'All' },
+            '1': { value: 1, zh: 'BOS', en: 'BOS' },
+            '2': { value: 2, zh: 'U8', en: 'U8' },
         }
     },
     ITEM_ACCESSORY: {
@@ -1785,7 +1790,7 @@ let Const = {
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
             '4': { key: 4, zh: '国外官网2.0', en: 'Official Website Abroad', value: 4 },
-            '5': { key: 5, zh: '飞书小程', en: 'Feishu Mini Program', value: 5 },
+            '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
         },
         // 支付方式
         PAYMENT_TYPE: {
