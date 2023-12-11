@@ -40,59 +40,21 @@
                 ><i class="icon i_add" />{{ $t("i.new") }}</a-button>
             </div>
           </div>
-          <div class="search-container"  :style="{width: fixedWidth}">
-            <a-row class="search-area">
-              <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-                <div class="key">{{ $t("n.name") }}:</div>
-                <div class="value">
-                  <a-input
-                    :placeholder="$t('def.input')"
-                    v-model:value="searchForm.name"
-                    @keydown.enter="handleSearch" />
-                </div>
-              </a-col>
-              <!-- 类型 -->
-              <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-                <div class="key">{{ $t("n.type") }}:</div>
-                <div class="value">
-                  <a-select
-                    v-model:value="searchForm.type"
-                    :placeholder="$t('def.select')">
-                    <a-select-option
-                      v-for="(val, key) in itemTypeMap"
-                      :key="key"
-                      :value="key"
-                      >{{ val[$i18n.locale] }}</a-select-option
-                    >
-                  </a-select>
-                </div>
-              </a-col>
-              <!-- 来源 -->
-              <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item">
-                <div class="key">{{ $t("i.source_type") }}:</div>
-                <div class="value">
-                  <a-select
-                    v-model:value="searchForm.source_type"
-                    :placeholder="$t('def.select')">
-                    <a-select-option
-                      v-for="(val, index) in SOURCE_TYPE"
-                      :key="index"
-                      :value="val.id"
-                      >{{ val.value }}</a-select-option
-                    >
-                  </a-select>
-                </div>
-              </a-col>
-              <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
-                <div class="key">{{ $t("i.code") }}:</div>
-                <div class="value">
-                  <a-input
-                    :placeholder="$t('def.input')"
-                    v-model:value="searchForm.code"
-                    @keydown.enter="handleSearch" />
-                </div>
-              </a-col>
-              <!-- <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
+          <div :style="{width: fixedWidth}">
+            <searchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
+                <template v-slot:time>
+                    <div  class="item-box">
+                        <div class="key-box">
+                            {{ $t("d.create_time") }}
+                        </div>
+                        <div class="value-box">
+                            <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
+                        </div>
+                    </div>
+                </template>
+            </searchAll>
+              <!-- 商品分类：
+                <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
                 <div class="key">{{ $t("i.categories") }}:</div>
                 <div class="value">
                   <CategoryTreeSelect
@@ -100,50 +62,6 @@
                     :category-id="searchForm.category_id" />
                 </div>
               </a-col> -->
-              <!-- 商品状态 -->
-              <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="search-item" v-if="show">
-                <div class="key">{{ $t("i.status") }}:</div>
-                <div class="value">
-                  <a-select
-                    v-model:value="searchForm.status"
-                    :placeholder="$t('def.select')">
-                    <a-select-option
-                      v-for="(item, index) in itemStatusMap"
-                      :key="index"
-                      :value="item.value"
-                      >{{ item[$i18n.locale] }}</a-select-option
-                    >
-                  </a-select>
-                </div>
-              </a-col>
-              <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-item" v-if="show">
-                <div class="key">{{ $t("d.create_time") }}:</div>
-                <div class="value">
-                  <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
-                </div>
-              </a-col>
-            </a-row>
-            <div class="btn-area">
-              <a-button @click="handleSearch" type="primary">{{
-                $t("def.search")
-              }}</a-button>
-              <a-button @click="handleSearchReset">{{ $t("def.reset") }}</a-button>
-              
-              <a-button type="link" @click="moreSearch">
-              {{ show ? $t("def.stow") : $t("def.unfold") }}
-              <i
-                class="icon i_xialajiantouxiao"
-                style="margin-left: 5px"
-                v-if="!show"
-              ></i>
-              <i
-                class="icon i_shouqijiantouxiao"
-                style="margin-left: 5px"
-                v-else
-              ></i>
-              
-              </a-button>
-            </div>
           </div>
           </div>
           <div :style="{height: fixedHeight}"></div>
@@ -343,6 +261,7 @@
 <script>
 import Core from "../../core";
 
+import searchAll from "@/components/common/searchAll.vue"
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
@@ -354,6 +273,7 @@ export default {
     TimeSearch,
     CategoryTree,
     CategoryTreeSelect,
+    searchAll
   },
   props: {},
   data() {
@@ -404,9 +324,6 @@ export default {
       fixedHeight: 'auto',
       fixedWidth: 'auto',
 
-      // 搜索列表 展开收起控制
-      show: false,
- 
     };
   },
   watch: {},
@@ -480,6 +397,18 @@ export default {
         },
       };
     },
+
+    /* search组件 */
+    searchList() {
+        let arr = [
+            { type: "input", value: "name",  tabname: 'n.name', },                                           // 名称
+            { type: "select", value: "type",  tabname: 'n.type', selectMap: this.itemTypeMap },              // 类型
+            { type: "select-val", value: "source_type",  tabname: 'i.source_type', selectMap: this.SOURCE_TYPE }, // 来源
+            { type: "input", value: "code", tabname: 'i.code', },                                        // 商品编码
+            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },    // 商品状态
+        ]
+        return arr;
+    }
   },
   async mounted() {
     let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
@@ -501,16 +430,25 @@ export default {
   },
   methods: {
 
+    // 刷新页面高度
+    freshPageHeight() {
+        
+        this.$nextTick(()=>{
+          this.handleResize()
+        })
+      },
+    // 获取search组件对象
+    getSearchFrom(data) {
+        for(let key in data){
+            this.searchForm[key] = data[key];
+        }
+        this.handleSearch();
+    },
+
     handleCategoryChange(val) {
       console.log("handleCategoryChange val:", val);
       this.searchForm.category_id = val;
       this.pageChange(1);
-    },
-    moreSearch() {
-      this.show = !this.show;
-      this.$nextTick(()=>{
-        this.handleResize()
-      })
     },
     handleResize() {
         const width = this.$refs.tabBox && this.$refs.tabBox.offsetWidth;
@@ -579,7 +517,7 @@ export default {
       for (const key in params) {
         this.searchForm[key] = params[key];
       }
-      this.pageChange(1);
+      // this.pageChange(1);
     },
     handleCategorySelect(val) {
       this.searchForm.category_id = val;
