@@ -90,8 +90,10 @@
                     </div>
                 </div>
                 <div class="panel-content info-container item-list-container">
+                    <!-- 多规格商品切换 -->
                     <div v-if="detail.set_id" class="item-list-wrap">
-                        <div @click="handleSelectItemCode(item.id)"
+                        <div 
+                            @click="handleSelectItemCode(item.id)"
                             :class="item.onClick ? 'item-list-block on-click' : 'item-list-block'"
                             v-for="(item, index) in specific.data" :key="index">
                             <div :class="item.onClick ? 'item-block-name on-click' : 'item-block-name'" v-if="item.name">
@@ -105,8 +107,9 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 商品展示图/附件/爆炸图/销售BOM -->
                     <div :class="detail.set_id ? 'tab-container' : 'tab-container pd0'">
-                        <a-tabs v-model:activeKey="tabKey" @change='handleTabChange'>
+                        <a-tabs v-model:activeKey="tabKey" @change="handleTabChange">
                             <a-tab-pane :key="item.key" v-for="item of tabList">
                                 <template #tab>
                                     <div class="tabs-title">{{ item[lang] }}
@@ -117,6 +120,10 @@
                         <!-- 展示图 -->
                         <template v-if="tabKey === 0">
                             <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList"/>
+                        </template>
+                        <!-- 爆炸图 -->
+                        <template v-if="tabKey === 2">
+                            <ExplosionImage :id="currentSpecId "/>
                         </template>
                     </div>
                 </div>
@@ -263,6 +270,7 @@ import ItemHeader from './components/ItemHeader.vue'
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import ItemAccessory from './components/ItemAccessory.vue';
 import DisplayImage from './components/DisplayImage.vue';
+import ExplosionImage from './components/ExplosionImage.vue';
 export default {
     name: 'RepairDetail',
     components: { 
@@ -270,6 +278,7 @@ export default {
         AttachmentFile, 
         ItemAccessory, 
         DisplayImage, 
+        ExplosionImage,
     },
     props: {},
     data() {
@@ -286,22 +295,21 @@ export default {
                 list: [], // 规格定义
                 data: [], // 规格商品
             },
-
             activeKey: ['itemInfo'],
-
             indep_flag: 0,
             tableTheadHeight: '',
             tableHeight: '',
             expand: false,
             tabList: [
-                { zh: '展示图', en: 'Display Drawing', value: 0, key: 0 },
-                { zh: '附  件', en: 'File', value: 1, key: 1 },
+                { zh: '展示图', en: 'Picture', value: 0, key: 0 },
+                { zh: '附件', en: 'File', value: 1, key: 1 },
                 { zh: '爆炸图', en: 'Explosive View', value: 2, key: 2 },
                 { zh: '销售BOM', en: 'Sale BOM', value: 3, key: 3 }
             ],
             tabKey: 0,
             coverImageList: [],
             detailImageList: [],
+            currentSpecId: 0,
         };
     },
     watch: {
@@ -488,6 +496,7 @@ export default {
                 this.specific.data = data
                 if (this.specific.data.length) {
                     this.specific.data[0].onClick = true
+                    this.currentSpecId = Number(this.specific.data[0].id)
                 }
                 this.$nextTick(() => {
                     //获取table和table-header高度
@@ -585,6 +594,7 @@ export default {
             });
         },
         handleSelectItemCode(id) {
+            this.currentSpecId = Number(id)
             this.specific.data = this.specific.data.map(item => {
                 return {
                     ...item,
@@ -648,9 +658,19 @@ export default {
 .item-list-wrap {
     width: 200px;
     background: #FFF;
-    border-right: 1px solid #EEE;
+    // border-right: 1px solid #EEE;
     padding-right: 20px;
     box-sizing: border-box;
+    position: relative;
+    &::after {
+        content: '';
+        width: 1px;
+        height: calc(100% + 40px);
+        background: #EEE;
+        position: absolute;
+        right: 0px;
+        top: -20px;
+    }
 
     .item-list-block {
         color: #333;
@@ -693,7 +713,8 @@ export default {
 }
 
 .tab-container {
-    padding: 0 20px;
+    width: 100%;
+    padding-left: 20px;
     box-sizing: border-box;
     &.pd0 {
         padding: 0;
@@ -704,4 +725,10 @@ export default {
     padding: 0px 0 4px 0;
     box-sizing: border-box;
     font-size: 16px;
-}</style>
+    width: 80px;
+    justify-content: center;
+}
+:deep(.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before) {
+    border-bottom: none;
+}
+</style>
