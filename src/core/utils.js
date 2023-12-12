@@ -1637,7 +1637,7 @@ const Util = {
       return item[to] || ''
     },
     isExternal(path) {
-      return /^(https?:|mailto:|tel:)/.test(path)
+      return /^(https?:|mailto:|tel:)/.test(path) //匹配是否是外部链接
     },
 }
 
