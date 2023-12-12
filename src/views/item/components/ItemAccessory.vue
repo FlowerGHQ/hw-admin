@@ -30,12 +30,15 @@
                 {{ $Util.itemTypeFilter(text, $i18n.locale) }}
             </template>
             <template v-if="column.key === 'amount'">
-                <a-input-number 
-                    v-model:value="record.amount" 
-                    style="width: 120px;" 
-                    :min="0" 
-                    :precision="0"
-                />
+                <p class="input-number" :class="record.amount ? '' : 'border-red'">
+                    <a-input-number 
+                        v-model:value="record.amount" 
+                        style="width: 120px;" 
+                        :min="0" 
+                        :precision="0"
+                        :placeholder="$t('def.input')"
+                    />
+                </p>
             </template>
             <!-- 价格 -->
             <template v-if="column.key === 'fob_money'">
@@ -50,6 +53,18 @@
             </template>
         </template>
     </a-table>
+    <a-modal v-model:visible="infoShow" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
+        <div class="modal">
+            <p class="modal-title">{{ $t('i.modal_title') }}</p>
+            <p class="modal-content">{{ $t('i.modal_content') }}</p>
+        </div>
+        <template #footer>
+            <div class="btns">
+                <a-button @click="infoShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleOk" type="primary">{{ $t('def.sure_exit') }}</a-button>
+            </div>
+        </template>
+    </a-modal>
 </div>
 </template>
 
@@ -98,6 +113,8 @@ export default {
                 },
             },
             disabledChecked: [], // 传给上传配件选择商品中哪些不选中的
+            infoShow: false,
+            nextFn: undefined
         };
     },
     computed: {
@@ -120,6 +137,9 @@ export default {
         can_delete() {
             return true
         },
+    },
+    beforeRouteLeave(to, from, next){
+        console.log(to)
     },
     mounted() {
         this.getTableData();
@@ -246,7 +266,28 @@ export default {
                     item_accessory_list: ItemAccessoryList,
                 })      
             }
-        }
+        },
+        infoOpen() {
+            this.infoShow = true
+        },
+        infoClose() {
+            this.infoShow = false
+        },
+        handleOk() {
+            this.nextFn()
+        },
+        // 校验数量
+        validateAmount(fn) {
+            const arr = this.tableData.filter(item => !item.amount)
+            if (arr.length > 0) {
+                this.nextFn = fn
+                this.infoOpen()
+            } else {
+                // 校验成功执行 next
+                fn()
+            }
+        },
+        // 未配置提示
     },
 }
 </script>
@@ -273,9 +314,44 @@ export default {
         color: #1D2129;
     }
     :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
+        padding: 10px 16px;
         font-size: 14px;
         font-weight: 500;
         color: #1D2129;
+    }
+}
+</style>
+<style lang="less">
+.ItemAccessory {
+    .input-number {
+        display: inline-block;
+    }
+    .border-red {
+        .ant-input-number {
+            border: 1px solid red !important;
+        }
+    }
+}
+.attachment-file-upload-modal {
+    .modal {
+        .modal-title {
+            color: #1D2129;
+            text-align: center;
+            font-family: PingFang SC;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .modal-content {
+            color: #1D2129;
+            text-align: center;
+            font-family: PingFang SC;
+            font-size: 14px;
+            font-weight: 400;
+        }
+    }
+    .btns {
+        text-align: center;
     }
 }
 </style>

@@ -621,6 +621,8 @@ const messages = {
             data_source: '数据来源',
             pop_delete_tip: '确定要删除商品',
             pop_delete_spec: '确定要删除规格',
+            modal_title: '还未配置数量',
+            modal_content: '当前还未对BOM配置数量，确定切换到其他界面吗',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -1130,6 +1132,7 @@ const messages = {
             submit: '提交',
             ok: '确定',
             sure: '确定',
+            sure_exit: '确定退出',
             create_time: '创建时间',
             start_time: '开始时间',
             end_time: '结束时间',
@@ -3290,6 +3293,8 @@ const messages = {
             data_source: 'Data Source',
             pop_delete_tip: 'Make sure to delete the item',
             pop_delete_spec: 'Make sure you want to delete the specifications',
+            modal_title: 'Quantity not yet configured',
+            modal_content: 'The quantity has not been configured for BOM yet. Are you sure you want to switch to another interface.',
         },
         fe: {
             feedback: 'Feedback',
@@ -3790,6 +3795,7 @@ const messages = {
             submit: 'Submit',
             ok: 'Confirm',
             sure: 'Confirm',
+            sure_exit: 'Confirm Exit',
             create_time: 'Creation Time',
             operate: 'Operate',
             detail: 'Details',

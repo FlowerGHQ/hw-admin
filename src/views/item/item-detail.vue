@@ -346,6 +346,9 @@ export default {
             return column
         }
     },
+    beforeRouteLeave(to, from, next) {
+        this.$refs.AttachmentFile.validateAmount(next)
+    },
     created() {
         this.id = Number(this.$route.query.id) || 0
         console.log('this route id', this.id);
@@ -632,6 +635,7 @@ export default {
             color: #1D2129;
         }
         :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
+            padding: 10px 16px;
             font-size: 14px;
             font-weight: 500;
             color: #1D2129;

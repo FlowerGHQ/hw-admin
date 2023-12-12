@@ -10,15 +10,15 @@
             <template v-if="column.key === 'detail'">
                 <div class="table-img">
                     <!-- 图片、视频、音频、文档 -->
-                    <div class="default" :class="record.fileType" v-if="record.fileType !== 'img'">
+                    <div class="default" :class="record.fileType" v-if="record.fileType !== 'img'" @click="preView($Util.imageFilter(record.path ? record.path : '', 4), record.fileType)">
                         <img src="@images/item/audio_default.svg" v-if="record.fileType === 'audio'">
-                        <video width="32" height="32" :src="$Util.imageFilter(record.path ? record.path : '', 4)" v-else-if="record.fileType === 'video'"></video>
-                        <img src="@images/item/pdf_default.svg" v-else-if="record.fileType === 'pdf'" @click="preView($Util.imageFilter(record.path ? record.path : '', 4), 'pdf')">
+                        <img src="@images/item/audio_default.svg" v-else-if="record.fileType === 'video'">
+                        <img src="@images/item/pdf_default.svg" v-else-if="record.fileType === 'pdf'">
                         <img class="default-img" :src="defult_img" v-else>
                     </div>
                     <a-image class="img" :width="32" :height="32" :src="$Util.imageFilter(record.path.includes('img') ? record.path : '', 4)" :fallback="$t('def.none')" v-else/>
                     <a-tooltip placement="top" :title='text'>
-                        <p class="ell" style="max-width:120px;margin-left:12px;">{{text || '-'}}</p>
+                        <p class="ell" style="max-width:200px;margin-left:12px;">{{text || '-'}}</p>
                     </a-tooltip>
                 </div>
             </template>
@@ -59,6 +59,18 @@
             <a-button @click="modalShow = false">{{ $t('def.cancel') }}</a-button>
             <a-button @click="handleModalSubmit" type="primary" :disabled="submitDisabled">{{ $t('def.sure') }}</a-button>
         </template>
+    </a-modal>
+    <!-- 音频预览 -->
+    <a-modal v-model:visible="audioShow" centered :title="null" :footer="null">
+        <div class="modal-body">
+            <audio :src="preViewSrc" autoplay controls></audio>
+        </div>
+    </a-modal>
+    <!-- 视频预览 -->
+    <a-modal width="1200px" v-model:visible="videoShow" centered :title="null" :footer="null">
+        <div class="modal-body">
+            <video width="1140" height="600" :src="preViewSrc" autoplay controls></video>
+        </div>
     </a-modal>
 </div>
 </template>
@@ -110,7 +122,10 @@ export default {
                 video: ['avi', 'wmv', 'mpeg', 'mp4', 'm4v', 'mov', 'asf', 'flv', 'f4v', 'rmvb', 'rm', '3gp', 'vob'],
                 audio: ['mp3', 'aac', 'wav', 'wma', 'cda', 'flac', 'm4a', 'mid', 'mka', 'mp2', 'mpa', 'mpc', 'ape', 'ofr', 'ogg', 'ra', 'wv', 'tta', 'ac3', 'dts'],
                 pdf: ['pdf'],
-            }
+            },
+            preViewSrc: '',
+            audioShow: false,
+            videoShow: false,
         };
     },
     computed: {
@@ -259,10 +274,16 @@ export default {
         },
         // 预览文件
         preView(src, type) {
+            this.preViewSrc = src
             switch (type) {
                 case 'pdf':
-                    console.log(src)
-                    window.open(src, '_blank')
+                    window.open('http://www.pfile.com.cn/api/profile/onlinePreview?url='+encodeURIComponent(this.preViewSrc));
+                    break;
+                case 'audio':
+                    this.audioShow = true;
+                    break;
+                case 'video':
+                    this.videoShow = true;
                     break;
             
                 default:
@@ -300,6 +321,7 @@ export default {
         color: #1D2129;
     }
     :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
+        padding: 10px 16px;
         font-size: 14px;
         font-weight: 500;
         color: #1D2129;
@@ -307,6 +329,10 @@ export default {
 }
 </style>
 <style lang="less">
+.modal-body {
+    .fcc();
+    padding: 20px 0;
+}
 .table-img {
     .default {
         border-radius: 4px;
@@ -330,9 +356,10 @@ export default {
         }
     }
     .video {
+        background: rgba(76, 73, 233, 0.30);
         > img {
-            height: 32px;
-            width: 32px;
+            height: 16px;
+            width: 16px;
         }
         object-fit: cover;
     }
