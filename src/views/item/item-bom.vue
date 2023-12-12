@@ -12,7 +12,7 @@
                     <MySvgIcon icon-class="down-arrow"/>
                     <MySvgIcon icon-class="up-arrow"/>
                     <MySvgIcon icon-class="edit"/>
-                    <MySvgIcon icon-class="group-active"/>
+                    <MySvgIcon icon-class="group-active" class="active" style="color: #0061FF;"/>
                     <MySvgIcon icon-class="group-common"/>
                     <MySvgIcon icon-class="new-dom"/>
                     <MySvgIcon icon-class="old-dom"/>

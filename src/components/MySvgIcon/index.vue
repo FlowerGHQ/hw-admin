@@ -53,7 +53,7 @@ export default {
     width: 1em;
     height: 1em;
     vertical-align: -0.15em;
-    fill: currentColor;
+    fill: currentColor; /* 与color属性一致 */
     overflow: hidden;
 }
 
