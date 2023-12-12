@@ -20,7 +20,76 @@
             </div>
             <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
             <div class="gray-panel">
-                <p class="title">123</p>
+                <p class="title">{{ $t('i.information') }}</p>
+                <div class="expand-body">
+                    <div class="table" :style="{ height: expand ? `${tableHeight}px` : `${tableTheadHeight}px` }">
+                        <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
+                                 :row-key="record => record.id" :pagination='false'>
+                            <template #headerCell="{ column}">
+                                <template v-if="column.key === 'select'">
+                                    {{ lang =='zh' ? column.title: column.dataIndex }}
+                                </template>
+                            </template>
+                            <template #bodyCell="{ column, text, record, index }">
+                                <template v-if="column.key === 'input'">
+                                    {{ lang =='zh' ? detail.name : detail.name_en }}({{ $t('d.code') }}：{{ text }})
+                                </template>
+                                <template v-if="column.key === 'select'">
+                                    {{ lang =='zh' ? text.value:text.value_en }}
+                                </template>
+                                <template v-if="column.key === 'item'">
+                                    {{ text || '' }}
+                                </template>
+                                <template v-if="column.key === 'money'">
+                                    {{ $Util.priceUnitFilter(record.original_price_currency) }}
+                                    {{ $Util.countFilter(text) }}
+                                </template>
+                                <template v-if="column.key === 'fob'">
+                                    {{ column.unit }} {{ $Util.countFilter(text) }}
+                                </template>
+                                <template v-if="column.dataIndex === 'flag_independent_info'">
+                                    <template v-if="index === 0">
+                                        <a-tooltip :title="$t('i.default_a')">
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <a-switch v-model:checked="record.flag_independent_info"
+                                                  @change='handleIndepChange(record)'/>
+                                    </template>
+                                </template>
+                                <template v-if="column.dataIndex === 'flag_default'">
+                                    <template v-if="index === 0">
+                                        <a-tooltip :title="$t('i.default_a')">
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                        </a-tooltip>
+                                    </template>
+                                    <template v-else>
+                                        <a-switch v-model:checked="record.flag_default"
+                                                  @change='handleDefaults(record)'/>
+                                    </template>
+                                </template>
+
+                                <template v-if="column.key === 'operation'">
+                                    <template v-if="record.flag_independent_info">
+                                        <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
+                                            class="icon i_relevance"/> {{ $t('i.view') }}
+                                        </a-button>
+                                        <a-button type="link" @click="routerChange('edit-indep', record)"><i
+                                            class="icon i_edit"/>{{ $t('def.edit') }}
+                                        </a-button>
+                                        <a-button type="link" @click="routerChange('detail-indep', record)"><i
+                                            class="icon i_detail"/>{{ $t('def.detail') }}
+                                        </a-button>
+                                    </template>                    
+                                </template>
+                            </template>
+                        </a-table>
+                    </div>
+                    <div :class="expand ? 'unexpand' : 'expand'" @click="expand = !expand">
+                        <img src="@images/item/expend.svg">
+                    </div>
+                </div>
             </div>
             <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon><i class="icon i_expan_l"/></template>
@@ -186,6 +255,9 @@ export default {
             activeKey: ['itemInfo'],
 
             indep_flag: 0,
+            tableTheadHeight: '',
+            tableHeight: '',
+            expand: false
         };
     },
     watch: {
@@ -207,12 +279,12 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                {title: this.$t('r.item_name'), key: 'input', dataIndex: 'code', fixed: 'left'},
             )
             column.push(
                 {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
-                {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
-                {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
+                // {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
+                // {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
                 {title: this.$t('i.default_display'), dataIndex: 'flag_default'},
@@ -228,10 +300,13 @@ export default {
     mounted() {
         // this.id = Number(this.$route.query.id) || 0
         this.indep_flag = Number(this.$route.query.indep_flag) || 0
-
         this.getItemDetail();
     },
     methods: {
+        initHeight () {
+            this.tableTheadHeight = document.querySelector('.ant-table-thead').offsetHeight
+            this.tableHeight = document.querySelector('.table').offsetHeight
+        },
         routerChange(type, item = {}) {
             let routeUrl = ''
             switch (type) {
@@ -297,6 +372,11 @@ export default {
                         this.activeKey.push('itemSpec')
                     }
                     this.getAttrDef();
+                } else {
+                    this.$nextTick(() => {
+                        //获取table和table-header高度
+                        this.initHeight()
+                    })
                 }
             }).catch(err => {
                 console.log('getItemDetail err', err)
@@ -358,6 +438,10 @@ export default {
                     }
                 })
                 this.specific.data = data
+                this.$nextTick(() => {
+                    //获取table和table-header高度
+                    this.initHeight()
+                })
                 console.log('getSpecList this.specific.data:', data)
             }).catch(err => {
                 console.log('getSpecList err', err)
@@ -460,5 +544,33 @@ export default {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 13px;
+}
+.expand-body {
+    position: relative;
+    background-color: #FFF;
+    padding: 20px;
+    margin-bottom: 16px;
+    .table {
+        overflow: hidden;
+        transition: 0.2s;
+    }
+    .expand, .unexpand {
+        width: 121px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #E2E2E2;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        cursor: pointer;
+    }
+    .unexpand {
+        transform: translateX(-50%) rotate(180deg);
+    }
 }
 </style>
