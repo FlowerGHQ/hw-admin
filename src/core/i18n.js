@@ -623,6 +623,10 @@ const messages = {
             pop_delete_spec: '确定要删除规格',
             modal_title: '还未配置数量',
             modal_content: '当前还未对BOM配置数量，确定切换到其他界面吗',
+            delete_bom_pic: '删除当前爆炸图',
+            point_parts_list: '点位零件表',
+            new_part: '新增零件',
+            point_position: '点位',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -977,6 +981,7 @@ const messages = {
             receiving_time: '收货时间',
             synchronization_to_erp: '同步至ERP',
             reason_fail: '失败原因',
+            upload_explosion: '上传爆炸图',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -3295,6 +3300,10 @@ const messages = {
             pop_delete_spec: 'Make sure you want to delete the specifications',
             modal_title: 'Quantity not yet configured',
             modal_content: 'The quantity has not been configured for BOM yet. Are you sure you want to switch to another interface.',
+            delete_bom_pic: 'Delete the current explosion diagram',
+            point_parts_list: 'Point Parts List',
+            new_part: 'New Part',
+            point_position: 'Point Position',
         },
         fe: {
             feedback: 'Feedback',
@@ -3641,6 +3650,7 @@ const messages = {
             receiving_time: 'Receiving Time',
             synchronization_to_erp: 'Synchronization to ERP',
             reason_fail: 'Reason for Failure',
+            upload_explosion: 'Upload Explosion Map',
         },
         s: {
             store_list: 'Shop list',
