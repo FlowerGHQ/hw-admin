@@ -43,14 +43,16 @@
           <div :style="{width: fixedWidth}">
             <SearchAll :options = "searchList" @search = "getSearchFrom" @freshPageHeight = "freshPageHeight" @reset = "handleSearchReset" >
                 <template v-slot:time>
-                    <div  class="item-box">
-                        <div class="key-box">
-                            {{ $t("d.create_time") }}
+                    <a-col :xs="24" :sm="24" :xl="16" :xxl="12" class="search-box">
+                        <div  class="item-box">
+                            <div class="key-box">
+                                {{ $t("d.create_time") }}
+                            </div>
+                            <div class="value-box">
+                                <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
+                            </div>
                         </div>
-                        <div class="value-box">
-                            <TimeSearch @search="handleOtherSearch" ref="TimeSearch" />
-                        </div>
-                    </div>
+                    </a-col>
                 </template>
             </SearchAll>
               <!-- 商品分类：
@@ -66,7 +68,6 @@
           </div>
           <div :style="{height: fixedHeight}"></div>
           <div class="table-container" ref="tabBox" >
-
             <a-table
               :columns="tableColumns"
               :data-source="tableData"
@@ -296,7 +297,6 @@ export default {
         status: '0',
         source_type: undefined,
       },
-      itemTypeMap: ITEM.TYPE_MAP,
       itemStatusMap: ITEM.STATUS_LIST,
       SOURCE_TYPE: ITEM.SOURCE_TYPE, // 来源类型
       // 表格
@@ -324,6 +324,27 @@ export default {
       fixedHeight: 'auto',
       fixedWidth: 'auto',
       observer: null,
+
+      //  
+      searchList: [
+            { type: "input", value: "", searchParmas: "name",  key: 'n.name', },                                           // 名称
+            { type: "select", value: undefined, searchParmas: "type",  key: 'n.type', selectMap: ITEM.TYPE_MAP },          // 类型
+            { type: "select", value: undefined, searchParmas: "source_type",  key: 'i.source_type',
+              selectMap: (() => {
+                          // 数据统一处理 
+                          const result = Core.Util.deepCopy(ITEM.SOURCE_TYPE)
+                          for (const i in result) {
+                              result[i].zh = result[i].value
+                              result[i].en = result[i].value
+                              result[i].value = result[i].id
+                          }
+                          console.log("过滤的结果", result);
+                          return result
+                      })()
+            }, // 来源
+            { type: "input", value: "", searchParmas: "code", key: 'i.code', },                                           // 商品编码
+            { type: "select", value: undefined, searchParmas: "status", key: 'i.status', selectMap: ITEM.STATUS_LIST },   // 商品状态
+      ]
     };
   },
   watch: {},
@@ -398,17 +419,6 @@ export default {
       };
     },
 
-    /* search组件 */
-    searchList() {
-        let arr = [
-            { type: "input", value: "name",  tabname: 'n.name', },                                           // 名称
-            { type: "select", value: "type",  tabname: 'n.type', selectMap: this.itemTypeMap },              // 类型
-            { type: "select-val", value: "source_type",  tabname: 'i.source_type', selectMap: this.SOURCE_TYPE }, // 来源
-            { type: "input", value: "code", tabname: 'i.code', },                                           // 商品编码
-            { type: "select", value: "status", tabname: 'i.status', selectMap: this.itemStatusMap },        // 商品状态
-        ]
-        return arr;
-    }
   },
   async mounted() {
     let width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
