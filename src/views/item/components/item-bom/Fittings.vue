@@ -1,5 +1,8 @@
 <template>
     <div class="fittings">
+        <div class="title">
+            {{ $t('item-bom.accessories_list') }}
+        </div>
         <a-table
             :row-key="(record) => record.id"
             :data-source="tableData"
@@ -7,9 +10,7 @@
             :scroll="{ x: true, }"
             :pagination="channelPagination"
             @change="handleTableChange"
-        >   
-            <!-- :pagination="channelPagination"
-            @change="handleTableChange" -->
+        >
             <template #bodyCell="{ column, text, record }">            
                 <span v-if="column.key === 'name'/*商品名称*/">
                     <a-tooltip>
@@ -17,17 +18,6 @@
                         <div 
                             class="one-spils cursor" 
                             :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
-                        >
-                            {{ text }}
-                        </div>
-                    </a-tooltip>
-                </span>
-                <span v-if="column.key === 'manufacturer_name'/*厂商名称*/">
-                    <a-tooltip>
-                        <template #title>{{ text }}</template>
-                        <div 
-                            class="one-spils cursor" 
-                            :style="{ width: text?.length > 4 ? 5 * 12 + 'px' : '' }"
                         >
                             {{ text }}
                         </div>
@@ -80,12 +70,6 @@ const tableColumns = computed(() => {
             title: proxy.$t('item-bom.commodity_code'), 
             dataIndex: "name", 
             key: "detail"
-        },
-        { 
-            // 厂商名称
-            title: proxy.$t('item-bom.manufacturer_name'), 
-            dataIndex: "manufacturer_name", 
-            key: "manufacturer_name"
         },
         { 
             // 版本号
@@ -206,6 +190,13 @@ const handleTableChange = (pagination, filters, sorter) => {
 <style lang="less" scoped>
 .fittings {
     width: 100%;
+    .title {
+        color: #1D2129;
+        font-family: PingFang SC;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
 }
 
 .set-width {

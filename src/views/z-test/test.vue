@@ -1,109 +1,141 @@
 <template>
-  <div>
-    <!-- <div id="container" class="chart"></div> -->
-
-    <!-- <a-input v-model:value="testValue" v-focus placeholder="Basic usage" /> -->
-
-    <!-- <a-button @click="btns">点击</a-button> -->
-    <a-textarea
-      v-model:value="frame_uid"
-      placeholder="Basic usage"
-      :rows="10"
-    />
-    <a-button @click="submit">提交</a-button>
-  </div>
+    <div class="test">
+        <canvas ref="exploreCanvas"></canvas>
+        <div 
+            v-for="(item, index) in pointerList" :key="index"
+            class="pointer-start" 
+            :style="{'left': `${item?.start?.x}px`, 'top': `${item?.start?.y }px`}"
+        >
+        </div>
+        <div 
+            v-for="(item, index) in pointerList" :key="index"
+            class="pointer-end"
+            :style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
+        >
+        
+        </div>
+    </div>
 </template>
 
 <script setup>
-import { onMounted, ref, defineComponent, reactive, toRefs, watch } from "vue"
-import { Chart } from "@antv/g2"
+import { onMounted, ref, getCurrentInstance } from 'vue';
+import imgs  from '../../assets/images/vehicle.png'
+let ctx = null // canvas 2d实例
+const { proxy } = getCurrentInstance();
 
-const chart = ref(null)
-const testValue = ref("")
-const frame_uid = ref(undefined)
+
+
+const exploreCanvas = ref(null)
+
+const pointerList = ref([
+    {
+        end_point:"{\"x\":423,\"y\":310}",
+        start_point:"{\"x\":416,\"y\":153}",
+        create_time:1702363893,
+        id:1335,
+        index:1,        
+        material:null,
+        set_id:805,
+        target_id:7637,
+        target_type:1,
+        update_time:1702363893,
+        weight:0,
+    },
+    {
+        end_point:"{\"x\":74,\"y\":67}",
+        start_point: "{\"x\":137,\"y\":223}",
+        create_time:1702363893,
+        id:1335,
+        index:1,        
+        material:null,
+        set_id:805,
+        target_id:7637,
+        target_type:1,
+        update_time:1702363893,
+        weight:0,
+    }
+]) // 点位列表
+
 onMounted(() => {
-  // charts()
+    pointerList.value = pointerList.value.map(el => {
+        return {
+            ...el,
+            start: JSON.parse(el.start_point),
+            end: JSON.parse(el.end_point),
+        }
+    })
+    console.log("结果", pointerList.value);
+
+    loadImage()
 })
 
-const submit = () => {
-  const uidList = frame_uid.value
-    .trim()
-    .split("\n")
-    .map((str) => str.trim())
-  console.log("uidList", uidList)
+/* methods */
+// 加载照片
+const loadImage = () => {
+    ctx = exploreCanvas.value.getContext("2d")
+
+    let img = new Image()
+
+    img.src = imgs
+
+    console.dir(img);
+
+    img.onload = function() {
+        setCanvasAttr(img.width, img.height)
+        ctx.drawImage(img, 0, 0)
+    }
+}
+// 设置canvas的大小
+const setCanvasAttr = (width, height) => {
+    if(width > 800 || height > 800) {
+        let rate = width / height
+        console.log("rate", rate);
+
+        exploreCanvas.value.width = rate >= 1 ? 800 : width / height * 800;
+        exploreCanvas.value.height = rate >= 1 ? 800 : height / width * 800;
+    } else {
+        exploreCanvas.value.width = width;
+        exploreCanvas.value.height = height;
+    }
+
 }
 
-// 试验charts
-const charts = () => {
-  chart.value = new Chart({
-    container: "container",
-    autoFit: true,
-    height: 500,
-  })
+// 初始化画线
+const canvasLine = (ctx) => {
 
-  const data = [
-    { country: "Asia", year: "1750", value: 502 },
-    { country: "Asia", year: "1800", value: 635 },
-    { country: "Asia", year: "1850", value: 809 },
-    { country: "Asia", year: "1900", value: 5268 },
-    { country: "Asia", year: "1950", value: 4400 },
-    { country: "Asia", year: "1999", value: 3634 },
-    { country: "Asia", year: "2050", value: 947 },
-
-    { country: "Africa", year: "1750", value: 106 },
-    { country: "Africa", year: "1800", value: 107 },
-    { country: "Africa", year: "1850", value: 111 },
-    { country: "Africa", year: "1900", value: 1766 },
-    { country: "Africa", year: "1950", value: 221 },
-    { country: "Africa", year: "1999", value: 767 },
-    { country: "Africa", year: "2050", value: 133 },
-
-    { country: "Europe", year: "1750", value: 163 },
-    { country: "Europe", year: "1800", value: 203 },
-    { country: "Europe", year: "1850", value: 276 },
-    { country: "Europe", year: "1900", value: 628 },
-    { country: "Europe", year: "1950", value: 547 },
-    { country: "Europe", year: "1999", value: 729 },
-    { country: "Europe", year: "2050", value: 408 },
-
-    { country: "Oceania", year: "1750", value: 200 },
-    { country: "Oceania", year: "1800", value: 200 },
-    { country: "Oceania", year: "1850", value: 200 },
-    { country: "Oceania", year: "1900", value: 460 },
-    { country: "Oceania", year: "1950", value: 230 },
-    { country: "Oceania", year: "1999", value: 300 },
-    { country: "Oceania", year: "2050", value: 300 },
-  ]
-
-  chart.value.data(data)
-
-  chart.value.scale({
-    year: {
-      type: "cat",
-      range: [0.03, 0.92],
-    },
-    value: {
-      nice: true,
-    },
-  })
-
-  chart.value.area().shape("smooth").position("year*value").color("country")
-  chart.value.line().shape("smooth").position("year*value").color("country")
-
-  chart.value.interaction("element-highlight")
-
-  chart.value.render()
 }
 
-const btns = () => {
-  console.log("输出的", testValue.value)
-}
+// 清除画布
+// const canvasClear =
 </script>
 
 <style lang="less" scoped>
-.chart {
-  width: 800px;
-  margin-top: 100px;
-  margin-left: 40px;
+.test {
+    margin: 90px;
+    position: relative;
+    .pointer-start, .pointer-end  {
+        position: absolute;
+        z-index: 10;
+        border-radius: 50px;
+        user-select: none;
+        opacity: 0.6;
+        transition: opacity 0.15s ease;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        &:hover {
+            z-index: 20;
+            opacity: 1;
+        }
+    }
+    .pointer-start {
+        width: 8px;
+        height: 8px;
+        background-color: blue;
+    }
+    .pointer-end {
+        width: 20px;
+        height: 20px;
+        background-color: red;
+    }
 }
 </style>
