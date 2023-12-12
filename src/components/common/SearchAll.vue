@@ -202,9 +202,6 @@ export default {
             this.isShow = !this.isShow;
             this.$emit('freshPageHeight');
 
-            /* 不需要-展开收起 */
-            if(!this.isShowMore) return;
-
             /* 展开-设置显示 */
             if (this.isShow) {
                 this.getSearchItem('block');
