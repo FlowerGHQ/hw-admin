@@ -35,7 +35,7 @@
                         </a-button>
                     </div>
                     <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                        <img :src="detailImageUrl" ref="exploreImg" alt="">
+                        <img v-if="detailImageUrl" :src="detailImageUrl" ref="exploreImg" alt="">
                         <canvas ref="exploreCanvas"></canvas>
                         <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
                             :style="{'left': `${item.start.x}px`, 'top': `${item.start.y }px`}"
@@ -205,6 +205,7 @@ export default {
     watch: {
         id: {
             handler(val){
+                this.detailImageUrl = ''
                 this.$nextTick(() => {
                     this.canvas = this.$refs.exploreCanvas;
                     this.ctx = this.canvas.getContext("2d");
@@ -393,7 +394,7 @@ export default {
                 this.loading = false;
             });
         },
-        parsePoint (isParse) {
+        parsePoint(isParse) {
             this.tabsArray.forEach(item => {
                 let list = get(item, "item_component_list", []);
                 list.forEach(point => {
