@@ -64,7 +64,7 @@ const compChange = () => {
                 min-width: 454px;
                 height: 100%;
                 background-color: #F8FAFC;
-                font-size: 24px;
+                font-size: 48px;
             }
             .item-tree-right {
                 width: calc(100% - 454px);
