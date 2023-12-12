@@ -44,6 +44,9 @@
                         </div>
                     </a-tooltip>
                 </span>
+                <span v-if="column.key === 'create_time'/*创建时间*/">
+                    {{ $Util.timeFilter(text) }}
+                </span>
                 <span v-if="column.key === 'remark'/*备注*/">
                     <a-tooltip>
                         <template #title>{{ text }}</template>
@@ -112,7 +115,7 @@ const tableColumns = computed(() => {
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
             dataIndex: "create_time", 
-            key: "detail"
+            key: "create_time"
         },
         {
             // 备注
@@ -124,24 +127,27 @@ const tableColumns = computed(() => {
     return result
 })
 const tableData = ref([
-    {
-        name: "你好啊你好啊你好啊",
-        manufacturer_name: "你好啊你好啊你好啊",
-        sales_area: "你好啊你好啊你好啊",
-        remark: "测试的东西是什么啊送达的傻大姐撒肯定撒看的艰苦撒旦就卡死进度加快撒可见度刷卡机的空间的健康撒可见度",
-    },
-    {
-        name: "你好啊世界经济发",
-        manufacturer_name: "你好啊世界经济发",
-        sales_area: "你好啊世界经济发",
-        remark: "ss",
-    },
-    {
-        name: "你好啊sss",
-        manufacturer_name: "你好啊sss",
-        sales_area: "你好啊sss",
-        remark: "ss",
-    },
+    // {
+    //     name: "你好啊你好啊你好啊",
+    //     manufacturer_name: "你好啊你好啊你好啊",
+    //     sales_area: "你好啊你好啊你好啊",
+    //     create_time: "1702363337",
+    //     remark: "测试的东西是什么啊送达的傻大姐撒肯定撒看的艰苦撒旦就卡死进度加快撒可见度刷卡机的空间的健康撒可见度",
+    // },
+    // {
+    //     name: "你好啊世界经济发",
+    //     manufacturer_name: "你好啊世界经济发",
+    //     sales_area: "你好啊世界经济发",
+    //     create_time: "1702363337",
+    //     remark: "ss",
+    // },
+    // {
+    //     name: "你好啊sss",
+    //     manufacturer_name: "你好啊sss",
+    //     sales_area: "你好啊sss",
+    //     create_time: "1702363337",
+    //     remark: "ss",
+    // },
 ])
 // 分页
 const channelPagination = ref({
@@ -151,12 +157,12 @@ const channelPagination = ref({
     showQuickJumper: true, // 是否可以快速跳转至某页
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
-    showTotal: (total) => `${proxy.$t('n.all_total')} ${total} ${proxy.$t('in.total')}`
+    showTotal: (total) => `${ proxy.$t('n.all_total') } ${total} ${ proxy.$t('in.total') }`
 })
 
 
 onMounted(() => {
-    // getTableDataFetch()
+    getTableDataFetch()
 })
 /* Fetch start*/
 // 获取表格list
