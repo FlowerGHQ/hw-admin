@@ -19,7 +19,10 @@
                 </div>
             </div>
             <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
-            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+            <div class="gray-panel">
+                <p class="title">123</p>
+            </div>
+            <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
                 <template #expandIcon><i class="icon i_expan_l"/></template>
                 <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
@@ -143,14 +146,14 @@
                             </template>
                         </a-table>
                     </div>
-                </a-collapse-panel>
+                </a-collapse-panel> -->
                 <!-- 上传配件 -->
-                <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                               @submit="getItemDetail" ref="AttachmentFile"/>
+                <!-- <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                               @submit="getItemDetail" ref="AttachmentFile"/> -->
                 <!-- 上传附件 -->
-                <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                                @submit="getItemDetail" ref="AttachmentFile"/>
-            </a-collapse>
+                <!-- <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                                @submit="getItemDetail" ref="AttachmentFile"/> -->
+            <!-- </a-collapse> -->
         </div>
     </div>
 </template>
@@ -452,4 +455,10 @@ export default {
 
 <style lang="less" scoped>
 // #ItemDetail {}
+.title {
+    color: #000;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 13px;
+}
 </style>

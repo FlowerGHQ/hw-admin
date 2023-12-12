@@ -7,22 +7,44 @@
                 <span>                
                     {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
                 </span>
-                <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
-                    {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
-                </span>
-            </div>
-            <div class="model">
                 <span>{{ $t('i.number') }}：{{detail.model}}</span>
+                <!-- <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
+                    {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
+                </span> -->
+            </div>
+            <div class="info">
+                <div class="info-item">
+                    <span class="info-key">{{ $t('i.code') }}</span>
+                    <span class="info-value">{{ detail.code || '-' }}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-key">{{ $t('n.type') }}</span>
+                    <span class="info-value">{{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</span>
+                </div>
+                <div class="info-item">
+                    <div class="info-key">{{ $t('i.categories') }}</div>
+                    <div class="info-value">
+                        <span v-for="(category, index) in detail.category_list">
+                            <span v-if="index !== 0">,</span>{{$i18n.locale =='zh' ? category.category_name : category.category_name_en }}
+                        </span>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="info-key">{{ $t('n.flag_entity') }}</span>
+                    <span class="info-value">{{ $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale) }}</span>
+                </div>
+            </div>
+            <!-- <div class="model">
                 <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" style="margin-left: 25px;">
                     {{ $t("i.synchronization_time") }}：{{ $Util.timeFilter(detail.sync_time) || "-" }}
                 </span>
             </div>
             <div v-if="showSpec" class="spec" ><span>{{ $t('i.spec') }}：</span>{{attr_str}}</div>
-            <div class="price">{{ $t('i.cost_price') }}：{{$Util.priceUnitFilter(detail.original_price_currency)}}{{$Util.countFilter(detail.original_price)}}</div>
+            <div class="price">{{ $t('i.cost_price') }}：{{$Util.priceUnitFilter(detail.original_price_currency)}}{{$Util.countFilter(detail.original_price)}}</div> -->
         </div>
-        <div class="status status-bg status-tag" :class="detail.status === 0 ? 'green' : 'red'">
+        <!-- <div class="status status-bg status-tag" :class="detail.status === 0 ? 'green' : 'red'">
             {{detail.status === 0 ? $t('i.active') : $t('i.inactive') }}
-        </div>
+        </div> -->
     </div>
 </div>
 </template>
@@ -68,9 +90,10 @@ export default {
 <style lang="less">
 .ItemHeader {
     .panel-content {
-        padding-bottom: 0 20px;
+        padding: 0;
         display: flex;
         position: relative;
+        background-color: #F8FAFC;
         img {
             width: 120px;
             height: 120px;
@@ -90,8 +113,24 @@ export default {
             font-size: 14px;
             line-height: 20px;
             .name {
-                color: #111111;
-                font-weight: 500;
+                display: flex;
+                align-items: center;
+                margin-bottom: 12px;
+                > span {
+                    &:nth-child(1) {
+                        color: #1D2129;
+                        font-size: 24px;
+                        font-weight: 600;
+                        margin-right: 6px;
+                    }
+                    &:nth-child(2) {
+                        border-radius: 4px;
+                        padding: 2px 8px;
+                        background-color: #EFEFEF;
+                        color: #666;
+                        font-size: 14px;
+                    }
+                }
             }
             .model {
                 color: #757575;
@@ -125,6 +164,29 @@ export default {
                 border-radius: 30px;
                 font-size: 12px; 
                 margin-left: 5px;               
+            }
+            .info {
+                display: flex;
+                flex-wrap: wrap;
+                .info-item {
+                    display: flex;
+                    align-items: center;
+                    margin-right: 23px;
+                    margin-bottom: 4px;
+                    .info-key {
+                        color: #666;
+                        font-size: 14px;
+                        padding-right: 10px;
+                        &::after {
+                            content: '：';
+                        }
+                    }
+                    .info-value {
+                        color: #1D2129;
+                        font-size: 14px;
+                        min-width: 189px;
+                    }
+                }
             }
         }
     }
