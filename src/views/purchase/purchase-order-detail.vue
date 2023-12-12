@@ -345,7 +345,7 @@
                                         detail.receive_info.provinceEn + detail.receive_info.cityEn +
                                         detail.receive_info.county
                                         + detail.receive_info.address || '-' }}</template>
-                                    <div class="one_spils" style="width: 250px;">{{ this.$i18n.locale === 'zh' ?
+                                    <div class="one-spils" style="width: 250px;">{{ this.$i18n.locale === 'zh' ?
                                         detail.receive_info.country + detail.receive_info.province +
                                         detail.receive_info.city +
                                         detail.receive_info.county + detail.receive_info.address || '-' :
