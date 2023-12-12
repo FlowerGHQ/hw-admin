@@ -118,9 +118,11 @@
                                     </span>
                                 </template>
                                 <template v-for="i of item.children">
-                                    <template v-if="$auth(...i.auth)">
-                                        <a-menu-item 
-                                            v-if="isExistArr(i.meta?.admin_module, tabPosition)"
+                                    <template 
+                                        v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
+                                        /*判断子children meta.admin_module admin中四大模块*/"
+                                    >
+                                        <a-menu-item
                                             :key="item.path + '/' + i.path" 
                                             @click="handleLink(item.path + '/' + i.path)"
                                         >
@@ -133,7 +135,7 @@
                     </a-menu>
                 </a-layout-sider>
                 <a-layout class="layout-main" :class="{ longer: collapsed }">
-                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
+                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> 面包屑没用上-->
                     <a-layout-content class="layout-content">
                         <router-view></router-view>
                     </a-layout-content>
@@ -418,7 +420,7 @@ export default {
                 this.collapsed = false
             }
         },
-            // 判断一个值是否在这个数组中
+        // 判断一个值是否在这个数组中
         isExistArr(arr, value) {
             if(!arr) return true  // 默认arr不传 全部显示
             // 传了arr 数据走下面逻辑
