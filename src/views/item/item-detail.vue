@@ -5,25 +5,44 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.detail') }}</div>
                 <div class="btns-area">
-                    <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance"/>{{ $t('i.view') }}
+                    <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance" />{{ $t('i.view') }}
                     </a-button>
-                    <a-button type="primary" ghost @click="routerChange('edit')"><i
-                        class="icon i_edit"/>{{ $t('def.edit') }}
-                    </a-button>                    
+                    <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit" />{{ $t('def.edit')
+                    }}
+                    </a-button>
                     <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
-                        <template v-if="detail.status === -1"><i class="icon i_putaway"/>{{ $t('i.active_a') }}
+                        <template v-if="detail.status === -1"><i class="icon i_putaway" />{{ $t('i.active_a') }}
                         </template>
-                        <template v-if="detail.status === 0"><i class="icon i_downaway"/>{{ $t('i.inactive_a') }}
+                        <template v-if="detail.status === 0"><i class="icon i_downaway" />{{ $t('i.inactive_a') }}
                         </template>
                     </a-button>
                 </div>
             </div>
-            <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false'/>
+            <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false' />
             <div class="gray-panel">
                 <p class="title">123</p>
+                <div class="panel-content info-container item-list-container">
+                    <div class="item-list-wrap">
+                        <div @click="handleSelectItemCode(item.id)"
+                            :class="item.onClick ? 'item-list-block on-click' : 'item-list-block'"
+                            v-for="(item, index) in specific.data" :key="index">
+                            {{ item.code || '-' }}
+                        </div>
+                    </div>
+                    <div class="tab-container">
+                        <a-tabs v-model:activeKey="tabKey" @change='handleTabChange'>
+                            <a-tab-pane :key="item.key" v-for="item of tabList">
+                                <template #tab>
+                                    <div class="tabs-title">{{ item[$i18n.locale] }}
+                                    </div>
+                                </template>
+                            </a-tab-pane>
+                        </a-tabs>
+                    </div>
+                </div>
             </div>
-            <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                <template #expandIcon><i class="icon i_expan_l"/></template>
+            <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
+                <!-- <template #expandIcon><i class="icon i_expan_l"/></template>
                 <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
                     <a-row class="panel-content info-container">
                         <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
@@ -153,7 +172,7 @@
                 <!-- 上传附件 -->
                 <!-- <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                 @submit="getItemDetail" ref="AttachmentFile"/> -->
-            <!-- </a-collapse> -->
+            </a-collapse>
         </div>
     </div>
 </template>
@@ -166,7 +185,7 @@ import ItemAccessory from './components/ItemAccessory.vue';
 
 export default {
     name: 'RepairDetail',
-    components: {ItemHeader, AttachmentFile, ItemAccessory},
+    components: { ItemHeader, AttachmentFile, ItemAccessory },
     props: {},
     data() {
         return {
@@ -186,6 +205,13 @@ export default {
             activeKey: ['itemInfo'],
 
             indep_flag: 0,
+            tabList: [
+                { zh: '展示图', en: 'Display Drawing', value: 0, key: 0 },
+                { zh: 'BOM', en: 'BOM', value: 1, key: 1 },
+                { zh: '附  件', en: 'File', value: 2, key: 2 },
+                { zh: '爆炸图', en: 'Explosive View', value: 3, key: 3 }
+            ],
+            tabKey: 0,
         };
     },
     watch: {
@@ -207,23 +233,23 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                { title: this.$t('i.code'), key: 'input', dataIndex: 'code', fixed: 'left' },
             )
             column.push(
-                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
-                {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
-                {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
+                { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
+                { title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€' },
+                { title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$' },
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
-                {title: this.$t('i.custom'), dataIndex: 'flag_independent_info'},
-                {title: this.$t('i.default_display'), dataIndex: 'flag_default'},
-                {title: this.$t('def.operate'), key: 'operation'},
+                { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
+                { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
+                { title: this.$t('def.operate'), key: 'operation' },
             )
             return column
         }
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
-        console.log('this route id',this.id);
+        console.log('this route id', this.id);
     },
     mounted() {
         // this.id = Number(this.$route.query.id) || 0
@@ -239,8 +265,8 @@ export default {
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
                         query: {
-                            id: this.id, 
-                            set_id: this.detail.set_id, 
+                            id: this.id,
+                            set_id: this.detail.set_id,
                             indep_flag: this.indep_flag,
                             edit: true,
                         }
@@ -250,28 +276,28 @@ export default {
                 case 'edit-indep':  // 商品个性化编辑
                     routeUrl = this.$router.resolve({
                         path: "/item/item-edit",
-                        query: {id: item.id, indep_flag: 1}
+                        query: { id: item.id, indep_flag: 1 }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'detail-indep':  // 商品个性化详情
                     routeUrl = this.$router.resolve({
                         path: "/item/item-detail",
-                        query: {id: item.id, indep_flag: 1}
+                        query: { id: item.id, indep_flag: 1 }
                     })
                     window.open(routeUrl.href, '_blank')
                     break;
                 case 'edit-explored':
                     routeUrl = this.$router.resolve({
                         path: "/item/item-explored-edit",
-                        query: {id: this.id, indep_flag: this.indep_flag}
+                        query: { id: this.id, indep_flag: this.indep_flag }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
                 case 'edit-explored-indep':
                     routeUrl = this.$router.resolve({
                         path: "/item/item-explored-edit",
-                        query: {id: item.id, indep_flag: 1}
+                        query: { id: item.id, indep_flag: 1 }
                     })
                     window.open(routeUrl.href, '_self')
                     break;
@@ -331,7 +357,7 @@ export default {
                     let params = {}
                     for (const attr of this.specific.list) {
                         let element = item.attr_list.find(i => i.attr_def_id === attr.id)
-                        if (element != undefined){
+                        if (element != undefined) {
                             params[attr.key] = {
                                 value: element.value,
                                 value_en: element.value_en
@@ -358,6 +384,9 @@ export default {
                     }
                 })
                 this.specific.data = data
+                if (this.specific.data.length) {
+                    this.specific.data[0].onClick = true
+                }
                 console.log('getSpecList this.specific.data:', data)
             }).catch(err => {
                 console.log('getSpecList err', err)
@@ -396,7 +425,7 @@ export default {
                 okText: this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.setIndep({id: record.id}).then(() => {
+                    Core.Api.Item.setIndep({ id: record.id }).then(() => {
                         _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
@@ -417,7 +446,7 @@ export default {
                 okText: this.$t('def.sure'),
                 cancelText: this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.setDefaults({id: record.id}).then(() => {
+                    Core.Api.Item.setDefaults({ id: record.id }).then(() => {
                         _this.$message.success(_this.$t('pop_up.save_success'))
                         _this.getSpecList();
                     }).catch(err => {
@@ -440,7 +469,7 @@ export default {
                 content: _this.detail.status === -1 ? '' : _this.$t('i.after'),
                 cancelText: _this.$t('def.cancel'),
                 onOk() {
-                    Core.Api.Item.updateStatus({id: _this.detail.id}).then(() => {
+                    Core.Api.Item.updateStatus({ id: _this.detail.id }).then(() => {
                         _this.$message.success(name + _this.$t('pop_up.success'));
                         _this.getItemDetail();
                     }).catch(err => {
@@ -449,7 +478,18 @@ export default {
                 },
             });
         },
-    }
+        handleSelectItemCode(id) {
+            this.specific.data = this.specific.data.map(item => {
+                return {
+                    ...item,
+                    onClick: item.id === id
+                };
+            });
+        },
+        handleTabChange(e) {
+            console.log('e', e);
+        }
+    },
 };
 </script>
 
@@ -460,5 +500,50 @@ export default {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 13px;
+}
+
+.item-list-container {
+    display: flex;
+}
+
+.item-list-wrap {
+    width: 200px;
+    background: #FFF;
+    border-right: 1px solid #EEE;
+    padding-right: 20px;
+    box-sizing: border-box;
+
+    .item-list-block {
+        color: #333;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        padding: 6px 24px;
+        height: 33px;
+        border-radius: 4px;
+        border: 1px solid #E2E2E2;
+        background: #FFF;
+        .fcc();
+        cursor: pointer;
+        margin-bottom: 10px;
+
+        &.on-click {
+            color: #0061FF;
+            background: rgba(0, 97, 255, 0.10);
+            border: 1px solid rgba(0, 97, 255, 0.10);
+        }
+    }
+}
+
+.tab-container {
+    padding: 0 20px;
+    box-sizing: border-box;
+
+
+}
+:deep(.ant-tabs-tab) {
+    padding: 0px 0 4px 0;
+    box-sizing: border-box;
+    font-size: 16px;
 }
 </style>
