@@ -90,18 +90,26 @@
                     </div>
                 </div>
                 <div class="panel-content info-container item-list-container">
-                    <div class="item-list-wrap">
+                    <div v-if="detail.set_id" class="item-list-wrap">
                         <div @click="handleSelectItemCode(item.id)"
                             :class="item.onClick ? 'item-list-block on-click' : 'item-list-block'"
                             v-for="(item, index) in specific.data" :key="index">
-                            {{ item.code || '-' }}
+                            <div :class="item.onClick ? 'item-block-name on-click' : 'item-block-name'" v-if="item.name">
+                                {{ lang === 'zh' ? item.name : item.name_en }}
+                            </div>
+                            <div :class="item.onClick ? 'item-block-name on-click' : 'item-block-name'" v-else>
+                                -
+                            </div>
+                            <div :class="item.onClick ? 'item-block-code on-click' : 'item-block-code'">
+                                {{ item.code || '-' }}
+                            </div>
                         </div>
                     </div>
-                    <div class="tab-container">
+                    <div :class="detail.set_id ? 'tab-container' : 'tab-container pd0'">
                         <a-tabs v-model:activeKey="tabKey" @change='handleTabChange'>
                             <a-tab-pane :key="item.key" v-for="item of tabList">
                                 <template #tab>
-                                    <div class="tabs-title">{{ item[$i18n.locale] }}
+                                    <div class="tabs-title">{{ item[lang] }}
                                     </div>
                                 </template>
                             </a-tab-pane>
@@ -278,9 +286,9 @@ export default {
             expand: false,
             tabList: [
                 { zh: '展示图', en: 'Display Drawing', value: 0, key: 0 },
-                { zh: 'BOM', en: 'BOM', value: 1, key: 1 },
-                { zh: '附  件', en: 'File', value: 2, key: 2 },
-                { zh: '爆炸图', en: 'Explosive View', value: 3, key: 3 }
+                { zh: '附  件', en: 'File', value: 1, key: 1 },
+                { zh: '爆炸图', en: 'Explosive View', value: 2, key: 2 },
+                { zh: '销售BOM', en: 'Sale BOM', value: 3, key: 3 }
             ],
             tabKey: 0,
         };
@@ -453,6 +461,8 @@ export default {
                         ...params,
                         id: item.id,
                         code: item.code,
+                        name: item.name,
+                        name_en: item.name_en,
                         price: item.price,
                         original_price: item.original_price,
                         original_price_currency: item.original_price_currency,
@@ -635,18 +645,36 @@ export default {
         font-style: normal;
         font-weight: 500;
         padding: 6px 24px;
-        height: 33px;
         border-radius: 4px;
         border: 1px solid #E2E2E2;
         background: #FFF;
-        .fcc();
         cursor: pointer;
         margin-bottom: 10px;
-
         &.on-click {
             color: #0061FF;
             background: rgba(0, 97, 255, 0.10);
             border: 1px solid rgba(0, 97, 255, 0.10);
+        }
+        .item-block-name {
+            color:#333;
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            &.on-click {
+                color: #0061FF;
+            }
+        }
+        .item-block-code {
+            color: #8E8E8E;
+            opacity: 0.6;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+            &.on-click {
+                color: #0061FF;
+            }
         }
     }
 }
@@ -654,8 +682,9 @@ export default {
 .tab-container {
     padding: 0 20px;
     box-sizing: border-box;
-
-
+    &.pd0 {
+        padding: 0;
+    }
 }
 
 :deep(.ant-tabs-tab) {
