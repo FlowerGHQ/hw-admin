@@ -114,6 +114,10 @@
                                 </template>
                             </a-tab-pane>
                         </a-tabs>
+                        <!-- 展示图 -->
+                        <template v-if="tabKey === 0">
+                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList"/>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -258,10 +262,15 @@ import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
 import AttachmentFile from '@/components/panel/AttachmentFile.vue';
 import ItemAccessory from './components/ItemAccessory.vue';
-
+import DisplayImage from './components/DisplayImage.vue';
 export default {
     name: 'RepairDetail',
-    components: { ItemHeader, AttachmentFile, ItemAccessory },
+    components: { 
+        ItemHeader,
+        AttachmentFile, 
+        ItemAccessory, 
+        DisplayImage, 
+    },
     props: {},
     data() {
         return {
@@ -291,6 +300,8 @@ export default {
                 { zh: '销售BOM', en: 'Sale BOM', value: 3, key: 3 }
             ],
             tabKey: 0,
+            coverImageList: [],
+            detailImageList: [],
         };
     },
     watch: {
@@ -395,6 +406,8 @@ export default {
                 let detail = res.detail || {}
                 detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
                 this.detail = detail;
+                this.coverImageList = this.detail.logo.split(',');
+                this.detailImageList = this.detail.imgs.split(',');
                 try {
                     this.config = JSON.parse(detail.config)
                 } catch (err) {
