@@ -24,18 +24,18 @@
                 <div class="expand-body">
                     <div class="table" :style="{ height: expand ? `${tableHeight}px` : `${tableTheadHeight}px` }">
                         <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
-                                 :row-key="record => record.id" :pagination='false'>
-                            <template #headerCell="{ column}">
+                            :row-key="record => record.id" :pagination='false'>
+                            <template #headerCell="{ column }">
                                 <template v-if="column.key === 'select'">
-                                    {{ lang =='zh' ? column.title: column.dataIndex }}
+                                    {{ lang == 'zh' ? column.title : column.dataIndex }}
                                 </template>
                             </template>
                             <template #bodyCell="{ column, text, record, index }">
                                 <template v-if="column.key === 'input'">
-                                    {{ lang =='zh' ? detail.name : detail.name_en }}({{ $t('d.code') }}：{{ text }})
+                                    {{ lang == 'zh' ? detail.name : detail.name_en }}({{ $t('d.code') }}：{{ text }})
                                 </template>
                                 <template v-if="column.key === 'select'">
-                                    {{ lang =='zh' ? text.value:text.value_en }}
+                                    {{ lang == 'zh' ? text.value : text.value_en }}
                                 </template>
                                 <template v-if="column.key === 'item'">
                                     {{ text || '' }}
@@ -50,36 +50,35 @@
                                 <template v-if="column.dataIndex === 'flag_independent_info'">
                                     <template v-if="index === 0">
                                         <a-tooltip :title="$t('i.default_a')">
-                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;" />
                                         </a-tooltip>
                                     </template>
                                     <template v-else>
                                         <a-switch v-model:checked="record.flag_independent_info"
-                                                  @change='handleIndepChange(record)'/>
+                                            @change='handleIndepChange(record)' />
                                     </template>
                                 </template>
                                 <template v-if="column.dataIndex === 'flag_default'">
                                     <template v-if="index === 0">
                                         <a-tooltip :title="$t('i.default_a')">
-                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
+                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;" />
                                         </a-tooltip>
                                     </template>
                                     <template v-else>
-                                        <a-switch v-model:checked="record.flag_default"
-                                                  @change='handleDefaults(record)'/>
+                                        <a-switch v-model:checked="record.flag_default" @change='handleDefaults(record)' />
                                     </template>
                                 </template>
 
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="record.flag_independent_info">
                                         <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
-                                            class="icon i_relevance"/> {{ $t('i.view') }}
+                                                class="icon i_relevance" /> {{ $t('i.view') }}
                                         </a-button>
                                         <a-button type="link" @click="routerChange('edit-indep', record)"><i
-                                            class="icon i_edit"/>{{ $t('def.edit') }}
+                                                class="icon i_edit" />{{ $t('def.edit') }}
                                         </a-button>
                                         <a-button type="link" @click="routerChange('detail-indep', record)"><i
-                                            class="icon i_detail"/>{{ $t('def.detail') }}
+                                                class="icon i_detail" />{{ $t('def.detail') }}
                                         </a-button>
                                     </template>
                                 </template>
@@ -235,11 +234,11 @@
                         </a-table>
                     </div>
                 </a-collapse-panel> -->
-                <!-- 上传配件 -->
-                <!-- <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+            <!-- 上传配件 -->
+            <!-- <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                @submit="getItemDetail" ref="AttachmentFile"/> -->
-                <!-- 上传附件 -->
-                <!-- <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+            <!-- 上传附件 -->
+            <!-- <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                 @submit="getItemDetail" ref="AttachmentFile"/> -->
             <!-- </a-collapse> -->
         </div>
@@ -305,10 +304,10 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                {title: this.$t('r.item_name'), key: 'input', dataIndex: 'code', fixed: 'left'},
+                { title: this.$t('r.item_name'), key: 'input', dataIndex: 'code', fixed: 'left' },
             )
             column.push(
-                {title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price'},
+                { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
                 // {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
                 // {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
                 // {title: '建议零售价', key: 'money', dataIndex: 'price'},
@@ -329,7 +328,7 @@ export default {
         this.getItemDetail();
     },
     methods: {
-        initHeight () {
+        initHeight() {
             this.tableTheadHeight = document.querySelector('.ant-table-thead').offsetHeight
             this.tableHeight = document.querySelector('.table').offsetHeight
         },
@@ -585,16 +584,20 @@ export default {
     font-weight: 500;
     margin-bottom: 13px;
 }
+
 .expand-body {
     position: relative;
     background-color: #FFF;
     padding: 20px;
     margin-bottom: 16px;
+
     .table {
         overflow: hidden;
         transition: 0.2s;
     }
-    .expand, .unexpand {
+
+    .expand,
+    .unexpand {
         width: 121px;
         height: 16px;
         display: flex;
@@ -609,6 +612,7 @@ export default {
         border-bottom-right-radius: 4px;
         cursor: pointer;
     }
+
     .unexpand {
         transform: translateX(-50%) rotate(180deg);
     }
@@ -653,9 +657,9 @@ export default {
 
 
 }
+
 :deep(.ant-tabs-tab) {
     padding: 0px 0 4px 0;
     box-sizing: border-box;
     font-size: 16px;
-}
-</style>
+}</style>
