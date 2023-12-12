@@ -2866,7 +2866,6 @@ export default {
             .tag-body {
                 display: flex;
                 flex-wrap: wrap;
-                width: 338px;
             }
             .tag-value {
                 padding: 2px 10px;

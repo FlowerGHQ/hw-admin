@@ -23,7 +23,7 @@
                 <p class="title">{{ $t('i.information') }}</p>
                 <div class="expand-body">
                     <div class="table" :style="{ height: expand ? `${tableHeight}px` : `${tableTheadHeight}px` }">
-                        <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
+                        <a-table id="expand-table" :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
                             <template #headerCell="{ column }">
                                 <template v-if="column.key === 'select'">
@@ -114,6 +114,16 @@
                                 </template>
                             </a-tab-pane>
                         </a-tabs>
+                        <template v-if="tabKey === 0"></template>
+                        <template v-else-if="tabKey === 1">
+                            <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                                @submit="getItemDetail" ref="AttachmentFile"/>
+                        </template>
+                        <template v-else-if="tabKey === 2"></template>
+                        <template v-else-if="tabKey === 3">
+                            <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                               @submit="getItemDetail" ref="AttachmentFile"/>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -256,7 +266,7 @@
 <script>
 import Core from '../../core';
 import ItemHeader from './components/ItemHeader.vue'
-import AttachmentFile from '@/components/panel/AttachmentFile.vue';
+import AttachmentFile from './components/AttachmentFile.vue';
 import ItemAccessory from './components/ItemAccessory.vue';
 
 export default {
@@ -281,7 +291,7 @@ export default {
             activeKey: ['itemInfo'],
 
             indep_flag: 0,
-            tableTheadHeight: '',
+            tableTheadHeight: 0,
             tableHeight: '',
             expand: false,
             tabList: [
@@ -338,7 +348,7 @@ export default {
     methods: {
         initHeight() {
             this.tableTheadHeight = document.querySelector('.ant-table-thead').offsetHeight
-            this.tableHeight = document.querySelector('.table').offsetHeight
+            this.tableHeight = document.getElementById('expand-table').offsetHeight
         },
         routerChange(type, item = {}) {
             let routeUrl = ''
@@ -604,6 +614,16 @@ export default {
     .table {
         overflow: hidden;
         transition: 0.2s;
+        :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #1D2129;
+        }
+        :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1D2129;
+        }
     }
 
     .expand,
@@ -680,8 +700,9 @@ export default {
 }
 
 .tab-container {
-    padding: 0 20px;
+    padding: 0 0 0 20px;
     box-sizing: border-box;
+    width: calc(100% - 200px);
     &.pd0 {
         padding: 0;
     }

@@ -4,10 +4,10 @@
         <img :src="$Util.imageFilter(detail.logo ? detail.logo : '', 2)" />
         <div class="info-block">
             <div class="name">
-                <span>                
+                <p>                
                     {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
-                </span>
-                <span>{{ $t('i.number') }}：{{detail.model}}</span>
+                </p>
+                <p>{{ $t('i.number') }}：{{detail.model}}</p>
                 <!-- <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
                     {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
                 </span> -->
@@ -111,12 +111,11 @@ export default {
         }
         .info-block {
             font-size: 14px;
-            line-height: 20px;
             .name {
                 display: flex;
                 align-items: center;
                 margin-bottom: 12px;
-                > span {
+                > p {
                     &:nth-child(1) {
                         color: #1D2129;
                         font-size: 24px;
@@ -125,7 +124,7 @@ export default {
                     }
                     &:nth-child(2) {
                         border-radius: 4px;
-                        padding: 2px 8px;
+                        padding: 1px 8px;
                         background-color: #EFEFEF;
                         color: #666;
                         font-size: 14px;

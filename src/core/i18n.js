@@ -230,6 +230,7 @@ const messages = {
 
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
+            file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -600,6 +601,7 @@ const messages = {
             upload_item_accessory: '上传配件',
             item_accessory_list: '配件列表',
             sale_bom: '销售BOM',
+            sale_bom_dis: '选择商品后请配置商品数量',
             save_site: '点位保存',
             add_cart_success: '添加购物车成功',
             eur: '供货价(EUR)',
@@ -2898,7 +2900,7 @@ const messages = {
 
             size_prompt_cover: 'The Cover Size Is Recommended To Be 800X800, And Up To 9 Photos Can Be Transmitted.',
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
-
+            file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -3268,6 +3270,7 @@ const messages = {
             upload_item_accessory: 'Upload The Spare Parts',
             item_accessory_list: 'Spare Parts List',
             sale_bom: 'Sale BOM',
+            sale_bom_dis: 'Please configure the quantity of products after selecting them',
             save_site: 'Point Preservation',
             add_cart_success: 'Add The Shopping Cart Successfully',
             eur: 'Supply Price (Eur)',
