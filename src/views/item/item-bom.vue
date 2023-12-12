@@ -8,7 +8,14 @@
             <div class="item-tree" :style="{ height: 'calc(100% - ' + titleHeight + ')' }">            
                 <!-- 左边 -->
                 <div class="item-tree-left">
-                    
+                    <MySvgIcon icon-class="delete"/>
+                    <MySvgIcon icon-class="down-arrow"/>
+                    <MySvgIcon icon-class="up-arrow"/>
+                    <MySvgIcon icon-class="edit"/>
+                    <MySvgIcon icon-class="group-active"/>
+                    <MySvgIcon icon-class="group-common"/>
+                    <MySvgIcon icon-class="new-dom"/>
+                    <MySvgIcon icon-class="old-dom"/>
                 </div>
                 <!-- 右边 -->
                 <div class="item-tree-right">
@@ -25,7 +32,7 @@
 <script setup>
 import { ref, shallowRef, onMounted } from 'vue';
 import fittings from './components/item-bom/Fittings.vue'
-
+import MySvgIcon from '@/components/MySvgIcon/index.vue'
 const componentName = shallowRef(fittings)
 // 标题高度
 const titleRefs = ref(null)
@@ -57,6 +64,7 @@ const compChange = () => {
                 min-width: 454px;
                 height: 100%;
                 background-color: #F8FAFC;
+                font-size: 24px;
             }
             .item-tree-right {
                 width: calc(100% - 454px);
