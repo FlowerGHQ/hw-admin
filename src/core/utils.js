@@ -1636,6 +1636,9 @@ const Util = {
       let item = MAP[val + ''] || {}
       return item[to] || ''
     },
+    isExternal(path) {
+      return /^(https?:|mailto:|tel:)/.test(path)
+    },
 }
 
 export default Util
