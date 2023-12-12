@@ -75,7 +75,7 @@
             </div>
           </a-col>
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-            <div class="key">{{ $t("crm_o.customer_name") }}：</div>
+            <div class="key">{{ $t("crm_o.order_name") }}：</div>
             <!-- 客户名称 -->
             <div class="value">
               <a-input
@@ -309,7 +309,7 @@
               >{{ $Util.orderManageStatus(text)[lang] || "-" }}
             </template>
             <template v-else-if="column.key === 'customer_name'">
-              {{ record.customer_name || "-" }}
+              {{ record.buyer_signatory || "-" }}
             </template>
             <template v-else-if="column.key === 'phone'">
               {{ text || "-" }}
@@ -601,7 +601,7 @@ export default {
         },
         { title: "p.order_status", dataIndex: "status", key: "status" },
         {
-          title: "crm_o.customer_name",
+          title: "crm_o.order_name",
           dataIndex: "customer_id",
           key: "customer_name",
         },

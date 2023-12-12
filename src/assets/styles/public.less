@@ -1544,7 +1544,7 @@ p {
 
             .value {
                 width: calc(~'100% - 86px');
-                max-width: 420px;
+                max-width: 650px;
             }
 
             .sp {
@@ -2608,5 +2608,49 @@ p {
     }
     .select-w-9 {
         width: 90%;
+    }
+}
+/* 搜索项样式 */
+.search-container-new {
+    .item-box {
+        display: flex;
+        margin: 0 20px 20px 0;
+
+        .key-box {
+            padding: 0px 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+
+            color:  #1D2129;
+            font-size: 14px;
+            font-weight: 400;
+            border: 1px solid #E2E2EA;
+            border-radius: 4px 0px 0px 4px ;
+            border-right: none;
+            background-color: #FFFFFF;
+
+        }
+        
+        .value-box {
+
+            flex: 1;
+            overflow: hidden;
+
+            >.ant-input,
+            >.ant-select,
+            >.ant-select-selector,
+            >.ant-picker,
+            >.ant-cascader-picker,
+            >.ant-select-single,
+            >.ant-select-show-arrow {
+                width: 100%;
+                border-radius: 0px 4px 4px 0px !important;
+            }
+            .ant-select:not(.ant-select-customize-input) .ant-select-selector{
+                border-radius: 0px 4px 4px 0px !important;
+            }
+            
+        }
     }
 }

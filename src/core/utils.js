@@ -355,7 +355,10 @@ const Util = {
       let map = Const.DEFULT_IMG
       return map[default_type] || ""
     }
-
+    // 如果是多张-逗号拼接形式
+    if(item.includes(',')){
+      item = item.split(',')?.[0]
+    }
     if (item.includes("http")) {
       return item
     } else {
