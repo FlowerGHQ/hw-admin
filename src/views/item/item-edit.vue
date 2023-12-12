@@ -2239,7 +2239,7 @@ export default {
         // 上传图片
         handleCoverChange({ file, fileList }) {
            if(fileList.length > 9){
-                fileList = fileList.slice(0,10)
+                fileList = fileList.slice(0,9)
             } 
             if (file.status == "done") {
                 if (file.response && file.response.code > 0) {

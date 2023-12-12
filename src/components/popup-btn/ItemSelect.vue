@@ -238,9 +238,9 @@ export default {
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    source_type: this.source_type === 0 ? '' : this.source_type,
                     code_list: arr, //更换数组形式传参,字符串逗号分隔输入
 
-                    source_type: this.source_type === 0 ? '' : this.source_type
                 }).then(res => {
                     console.log('Item.list res:', res)
                     this.tableData = this.removeChildrenFromData(res.list)
