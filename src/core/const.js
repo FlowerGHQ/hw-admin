@@ -44,6 +44,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.213:8889' // zwq
         // URL_POINT = 'http://10.10.12.75:8889'  // zy
+
         break;
 }
 
@@ -528,19 +529,19 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle' },
-            '2': { key: 2, zh: '零部件', en: 'Parts' },
-            '3': { key: 3, zh: '周边', en: 'Peripheral' },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products' },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2 },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3 },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4 },
         },
         MONETARY_TYPE: {
-            // '￥': 'CNY',
+            '￥': 'CNY',
             '€': 'EUR',
             '$': 'USD',
             // '£': 'GBP',
         },
         MONETARY_TYPE_MAP: {
-            // 'CNY': '￥',
+            'CNY': '￥',
             'EUR': '€',
             'USD': '$',
             // 'GBP': '£',
@@ -591,6 +592,11 @@ let Const = {
         SOURCE_STOCK_TYPE: {
             '1': { id: 2, value: 'ERP' },
             '2': { id: 1, value: 'EOS' },
+        },
+        ITEM_SOURCE_MAP: {
+            '0': { value: 0, zh: '全部', en: 'All' },
+            '1': { value: 1, zh: 'BOS', en: 'BOS' },
+            '2': { value: 2, zh: 'U8', en: 'U8' },
         }
     },
     ITEM_ACCESSORY: {
@@ -1774,6 +1780,9 @@ let Const = {
             '35': { key: 35, zh: '待付款', en: 'Pending Payment', value: 35, color: '#F77234' },
             '48': { key: 48, zh: '已退款', en: 'Refunded', value: 48, color: '#3491FA' },
             '10': { key: 10, zh: '已取消', en: 'Canceled', value: 10, color: '#A9B4C2' },
+            '36': { key: 36, zh: '待审核', en: 'Pending Review', value: 36, color: '#F77234' },
+            '38': { key: 38, zh: '审核不通过', en: 'Fail the audit', value: 38, color: '#A9B4C2' },
+
         },
         // 订单列表-来源
         SOURCE_TYPE: {
@@ -1781,14 +1790,14 @@ let Const = {
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
             '4': { key: 4, zh: '国外官网2.0', en: 'Official Website Abroad', value: 4 },
-            '5': { key: 5, zh: '飞书小程', en: 'Feishu Mini Program', value: 5 },
+            '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
         },
         // 支付方式
         PAYMENT_TYPE: {
             '10': { key: 10, zh: '现金', en: 'cash', value: 10 },
             '20': { key: 20, zh: '微信', en: 'Wechat', value: 20 },
             '30': { key: 30, zh: '支付宝', en: 'Alipay', value: 30 },
-            '40': { key: 40, zh: '银联', en: 'UnionPay', value: 40 },
+            '40': { key: 40, zh: '银行卡支付', en: 'Bank Card Payment', value: 40 },
             '50': { key: 50, zh: '支票', en: 'cheque', value: 50 },
             '60': { key: 60, zh: '其他', en: 'other', value: 60 },
             '70': { key: 70, zh: 'paypal', en: 'paypal', value: 70 },

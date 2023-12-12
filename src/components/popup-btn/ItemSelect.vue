@@ -16,13 +16,29 @@
                     <a-col :xs='24' :sm='24' :md='12' class="search-item" v-if="!purchaseId">
                         <div class="key"><span>{{ $t('i.categories') }}:</span></div>
                         <div class="value">
-                            <CategoryTreeSelect @change="handleCategorySelect" :category_id='searchForm.category_id' />
+                            <CategoryTreeSelect ref="treeSelect" @change="handleCategorySelect" :category_id='searchForm.category_id' />
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :md='12' class="search-item">
                         <div class="key"><span>{{ $t('i.code') }}:</span></div>
                         <div class="value">
                             <a-input :placeholder="$t('def.input')" v-model:value="searchForm.code" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :md='12' class="search-item">
+                        <div class="key"><span>{{ $t('i.data_source') }}:</span></div>
+                        <div class="value">
+                            <a-select
+                                @change="handleSearch"
+                                v-model:value="source_type"
+                                :placeholder="$t('def.select')">
+                                <a-select-option
+                                    v-for="(item, index) in SOURCE_MAP"
+                                    :key="index"
+                                    :value="item.value"
+                                    >{{ item[$i18n.locale] }}</a-select-option
+                                >
+                            </a-select>
                         </div>
                     </a-col>
                 </a-row>
@@ -74,7 +90,7 @@ import Core from '@/core';
 
 import ItemTable from '@/components/table/ItemTable.vue'
 import CategoryTreeSelect from '@/components/popup-btn/CategoryTreeSelect.vue'
-
+const ITEM = Core.Const.ITEM;
 export default {
     components: {
         ItemTable,
@@ -130,7 +146,7 @@ export default {
         return {
             loading: false,
             modalShow: false,
-
+            SOURCE_MAP: ITEM.ITEM_SOURCE_MAP,
             currPage: 1,
             pageSize: 10,
             total: 0,
@@ -139,7 +155,7 @@ export default {
                 name: '',
                 category_id: '',
             },
-
+            source_type: undefined,
             tableData: [],
 
             selectItems: [],
@@ -192,10 +208,13 @@ export default {
         },
 
         getTableData() {
+            //更换数组形式传参,字符串逗号分隔输入--编码
+            let arr = this.searchForm.code.split(',');
             if (this.purchaseId) {
                 Core.Api.Purchase.itemList({
                     order_id: this.purchaseId,
-                    item_code: this.searchForm.code
+                    // item_code: this.searchForm.code,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
                 }).then(res => {
                     console.log('Purchase.itemList:', res)
                     this.tableData = res.list.map(item => {
@@ -212,18 +231,32 @@ export default {
                 });
             } else {
                 Core.Api.Item.list({
-                    ...this.searchForm,
+                    // ...this.searchForm,
+                    name: this.searchForm.name,
+                    category_id: this.searchForm.category_id,
                     warehouse_id: this.warehouseId,
                     page: this.currPage,
                     page_size: this.pageSize,
                     flag_spread: 1,
+                    source_type: this.source_type === 0 ? '' : this.source_type,
+                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+
                 }).then(res => {
                     console.log('Item.list res:', res)
-                    this.tableData = res.list
+                    this.tableData = this.removeChildrenFromData(res.list)
                     this.total = res.count;
                 })
             }
         },
+        /* 删除加号 */
+        removeChildrenFromData(data) {
+            return data.map(item => {
+                const newItem = { ...item };
+                delete newItem.children;
+                return newItem;
+            });
+        },
+
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()
@@ -235,6 +268,8 @@ export default {
             this.searchForm.code = ''
             this.searchForm.name = ''
             this.searchForm.category_id = ''
+            this.source_type = undefined
+            this.$refs.treeSelect?.resetVal();
             this.pageChange(1)
         },
         handleCategorySelect(val) {

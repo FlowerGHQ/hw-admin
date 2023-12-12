@@ -882,7 +882,8 @@ const routes = [
 				meta: {
 					title: '反馈单列表',
 					title_en: 'Feedback orders',
-					auth: ['quality-feedback.list'],				}
+					auth: ['quality-feedback.list'],				
+                }
 			},
 			// {
 			// 	path: 'feedback-audit-list',

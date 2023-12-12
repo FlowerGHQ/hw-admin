@@ -5,7 +5,7 @@
         <a-collapse-panel key="attachmentFile" :header="$t('i.upload_item_accessory')" class="gray-collapse-panel">
             <div class="panel-content table-container no-mg">
                 <div class="panel-header">
-                    <span class="name">{{ $t('i.item_accessory_list') }}</span>
+                    <span class="name">{{ $t('i.sale_bom') }}</span>
                     <div>
                         <ItemSelect 
                             btnType='primary' 
@@ -191,13 +191,23 @@ export default {
         },
         getTableData() {
             Core.Api.ItemAccessory.list({item_id: this.item_id}).then(res => {
-                this.tableData = res.list  
+                // this.tableData = res.list;
+                this.tableData =  this.removeChildrenFromData(res.list); 
+
                 // 每次先清空                         
                 this.disabledChecked = []
                 res.list.forEach($1 => {
                     this.disabledChecked.push($1.item_id)
                 });                            
             })
+        },
+        // 去除加号 
+        removeChildrenFromData(data) {
+            return data.map(item => {
+                const newItem = { ...item };
+                delete newItem.children;
+                return newItem;
+            });
         },
         handleSelectItem(ids, items) {
             console.log('handleSelectItem ids, items:', ids, items)            
