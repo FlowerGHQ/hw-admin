@@ -6,7 +6,7 @@
                     {{ item.name || '-' }}
                 </div>
             </div>
-            <a-button type="primary" class="add-explosion-btn" @click="clickShowAdd(true)">
+            <a-button v-if="detailImageUrl" type="primary" class="add-explosion-btn" @click="clickShowAdd(true)">
                 {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
             </a-button>
         </div>
@@ -35,7 +35,7 @@
                         </a-button>
                     </div>
                     <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                        <img v-if="detailImageUrl" :src="detailImageUrl" ref="exploreImg" alt="">
+                        <img style="max-height: 385px;" v-if="detailImageUrl" :src="detailImageUrl" ref="exploreImg" alt="">
                         <canvas ref="exploreCanvas"></canvas>
                         <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
                             :style="{'left': `${item.start.x}px`, 'top': `${item.start.y }px`}"
@@ -64,15 +64,37 @@
                     </div>
                 </div>
             </div>
+            <div v-show="!detailImageUrl" class="empty-picture-container">
+                <a-tooltip title="①上传配件，②上传爆炸图，③配置点位">
+                    <div class="tip-wrap">
+                        <img class="tip-icon" :src="tipIcon" alt="">
+                        <div class="tip-text">
+                            {{ $t(/*操作说明*/'i.operation_instruction') }}
+                        </div>
+                    </div>
+                </a-tooltip>
+                <div class="empty-upload-container">
+                    <img :src="uploadPic" alt="">
+                    <div class="empty-upload-title">
+                        请先上传爆炸图
+                    </div>
+                    <div class="empty-upload-tip">
+                        上传爆炸图，以配置点位
+                    </div>
+                    <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true)">
+                        {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
+                    </a-button> 
+                </div>
+            </div>
             <div class="point-table-container">
                 <div class="point-table-wrap">
                     <div class="point-table-head">
                         <div class="point-table-head-title">
                             {{ $t(/*点位零件表*/'i.point_parts_list') }}
                         </div>
-                        <a-button @click="clickAdd" type="primary">{{ $t(/*新增零件*/'i.new_part') }} </a-button>
+                        <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">{{ $t(/*新增零件*/'i.new_part') }} </a-button>
                     </div>
-                    <a-table :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
+                    <a-table v-if="detailImageUrl" :columns="specificColumns" :data-source="pointerList" :scroll="{ x: true }"
                         :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, record, index }">
                             <template v-if="column.dataIndex === 'index'" width="100px">
@@ -86,6 +108,31 @@
                             </template>
                         </template>
                     </a-table>
+                    <div v-if="!detailImageUrl" class="empty-table-container">
+                        <div class="empty-table-head">
+                            <div class="empty-table-head-block">
+                                {{ $t('i.point_position') }}
+                            </div>
+                            <div class="empty-table-head-block">
+                                {{ $t('n.name') }}
+                            </div>
+                            <div class="empty-table-head-block">
+                                {{ $t('i.number') }}
+                            </div>
+                            <div class="empty-table-head-block">
+                                {{ $t('i.code') }}
+                            </div>
+                        </div>
+                        <div class="empty-add-item-container">
+                            <img :src="addPic" alt="">
+                            <div class="empty-add-item-text-wrap">
+                                <div class="empty-add-item-tip">
+                                    为爆炸图添加配件
+                                </div>
+                                <a-button @click="clickAdd" type="primary">添加配件</a-button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -170,6 +217,9 @@ export default {
                 data: [], // 规格商品
             },
             deleteIcon: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/8e32624eb3c65e763296a147d72cfdc0c4b50ceafed576e04b358b3a9becda10.png',
+            tipIcon: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/fdbe378097b4f3f08dbf97bd49d7dae700b138d2827db87d6bc5001d46fa3364.png',
+            uploadPic: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/6fc9bbb2b751a01d86c5a9d900311d97b5a56ed8c7f2fd3e5b2230fc289efbe9.png',
+            addPic: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png',
         };
     },
     computed: {
@@ -328,10 +378,17 @@ export default {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         imageLoadCallback(width, height) {
+            console.log('width', width);
+            console.log('height', height);
             if(width > 800 || height > 800) {
                 let rate = width / height;
-                this.canvas.width = rate >= 1 ? 800 : width / height * 800;
+                this.canvas.width = rate >= 1 ? 700 : width / height * 800;
                 this.canvas.height = rate <= 1 ? 800 : height / width * 800;
+                if(height > 385) {
+                    this.canvas.height = 385
+                }
+                console.log('this.canvas.width', this.canvas.width);
+                console.log('this.canvas.height', this.canvas.height);
             } else {
                 this.canvas.width = width;
                 this.canvas.height = height;
@@ -382,12 +439,6 @@ export default {
                 if(this.tabsArray.length > 0) {
                     this.clickChangTab(this.currentTab);
                 }
-                // else {
-                //     const imgTargetElement = document.querySelector('.image-contain');
-                //     if (imgTargetElement) {
-                //         imgTargetElement.remove();
-                //     }
-                // }
             }).catch( err => {
                 console.log('getItemExploreList err', err);
             }).finally(()=>{
@@ -489,6 +540,7 @@ export default {
         },
         requestSave(param, msg = this.$t('i.save_site'), cb) {
             Core.Api.Item.bindItemComponent(param).then(res => {
+                this.detailImageUrl = ''
                 this.$message.success(`${msg}`+this.$t('pop_up.success'));
                 this.isChangedPoint = false;
                 this.getItemExploreList();
@@ -611,6 +663,56 @@ export default {
                 margin-bottom: 0;
             }
         }
+        .empty-picture-container {
+            padding: 20px;
+            box-sizing: border-box;
+            .tip-wrap {
+                display: flex;
+                align-items: center;
+                width: 85px;
+                .tip-icon {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 5px;
+                }
+                .tip-text {
+                    color: #1D2129;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
+            }
+            .empty-upload-container {
+                margin-top: 156px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                >img {
+                    width: 260px;
+                    height: 106px;
+                    margin-bottom: 10px;
+                }
+                .empty-upload-title {
+                    font-size: 24px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: normal;
+                }
+                .empty-upload-tip {
+                    color:#333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin-bottom: 24px;
+                }
+                .empty-upload-btn {
+                    margin-bottom: 40px;
+                }
+            }
+        }
         .point-table-container {
             padding: 20px;
             box-sizing: border-box;
@@ -634,6 +736,53 @@ export default {
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
+                }
+            }
+            :deep(.ant-table-wrapper) {
+                padding: 10px;
+                box-sizing: border-box;
+            }
+            .empty-table-container {
+                padding: 10px;
+                box-sizing: border-box;
+                .empty-table-head {
+                    width: 100%;
+                    background: #F7F8FA;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 10px 16px;
+                    box-sizing: border-box;
+                    .empty-table-head-block {
+                        color:#1D2129;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 500;
+                        width: calc(100% / 4);
+                    }
+                }
+                .empty-add-item-container {
+                    margin-top: 20px;
+                    margin-bottom: 10px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    >img {
+                        width: 143px;
+                        height: 78px;
+                    }
+                    .empty-add-item-text-wrap {
+                        margin-left: 16px;
+                        .empty-add-item-tip {
+                            color: #333;
+                            font-size: 14px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            margin-bottom: 10px;
+                        }
+                    }
                 }
             }
         }
