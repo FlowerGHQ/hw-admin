@@ -1948,16 +1948,15 @@ export default {
             // }
 
             // 封面上传
-            if (this.upload.coverList.length) {
+            if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });
                 // form.logo = coverList[0];
                 form.logo = coverList.join(',');
             }
-
             // 详情页面上传
-            if (this.upload.detailList.length) {
+            if (this.upload.detailList.length || this.upload.detailList.length === 0) {
                 let detailList = this.upload.detailList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });

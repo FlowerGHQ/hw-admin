@@ -506,7 +506,7 @@ export default {
 
 <style lang="less" scoped>
 #ItemDetail {
-    font-family: MiSans-Regular;
+    font-family: Alibaba_PuHuiTi;
 }
 .title {
     color: #000;
