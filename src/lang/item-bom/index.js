@@ -4,6 +4,8 @@ export default {
         title: "BOM管理",
         bom_list: "BOM列表",
         product_name: "商品名称",
+        //序列
+        ordinal: '序号',
         commodity_code: "商品编码",
         version_number: "版本号",
         dosage: "用量",        
@@ -34,6 +36,7 @@ export default {
         title: "BOM Management",
         bom_list: "BOM List",
         product_name: "Product Name",
+        ordinal: 'Ordinal',
         commodity_code: "Commodity Code",
         version_number: "Version Number",
         dosage: "Dosage",
