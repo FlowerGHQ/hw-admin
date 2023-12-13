@@ -12,7 +12,7 @@
                     <!-- 图片、视频、音频、文档 -->
                     <div class="default" :class="record.fileType" v-if="record.fileType !== 'img'" @click="preView($Util.imageFilter(record.path ? record.path : '', 4), record.fileType)">
                         <img src="@images/item/audio_default.svg" v-if="record.fileType === 'audio'">
-                        <img src="@images/item/audio_default.svg" v-else-if="record.fileType === 'video'">
+                        <img src="@images/item/video_default.svg" v-else-if="record.fileType === 'video'">
                         <img src="@images/item/pdf_default.svg" v-else-if="record.fileType === 'pdf'">
                         <img class="default-img" :src="defult_img" v-else>
                     </div>
@@ -77,7 +77,7 @@
 
 <script>
 import Core from '@/core';
-import defult_img from '@images/defult_file.png';
+import defult_img from '@images/item/default_file.svg';
 
 export default {
     name: "AttachmentFile",
@@ -346,29 +346,22 @@ export default {
         border-radius: 4px;
         height: 32px;
         width: 32px;
+        background-color: rgba(73, 147, 233, 0.1);
         .fcc();
         cursor: pointer;
+        > img {
+            height: 16px;
+            width: 16px;
+        }
     }
     .pdf {
         background: rgba(233, 73, 74, 0.10);
-        > img {
-            height: 16px;
-            width: 16px;
-        }
     }
     .audio {
         background: rgba(76, 73, 233, 0.30);
-        > img {
-            height: 16px;
-            width: 16px;
-        }
     }
     .video {
-        background: rgba(76, 73, 233, 0.30);
-        > img {
-            height: 16px;
-            width: 16px;
-        }
+        background: rgba(233, 92, 73, 0.1);
         object-fit: cover;
     }
     .img {
