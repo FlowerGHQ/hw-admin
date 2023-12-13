@@ -25,12 +25,17 @@ import TreeCircle from "./TreeCircle.vue";
 // 搜索关键词
 const keyWord = ref("");
 // emit
-const $emit = defineEmits(["handleLevel", "handleKey"]);
+const $emit = defineEmits(["update:activeObj"]);
 
 // 搜索事件
 const onSearch = (value) => {
   console.log("搜索", value);
 };
+
+const activeObj = reactive({
+  level: "",
+  key: "",
+});
 
 const treeData = reactive([
   {
@@ -76,10 +81,12 @@ const treeData = reactive([
 ]);
 
 const handleActiveLevel = (level) => {
-  $emit("handleLevel", level);
+  activeObj.level = level;
+  $emit("update:activeObj", activeObj);
 };
 const handleActiveKey = (key) => {
-  $emit("handleKey", key);
+  activeObj.key = key;
+  $emit("update:activeObj", activeObj);
 };
 </script>
 
