@@ -1,6 +1,20 @@
 <template>
     <div class="test">
-        <div class="point-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
+        <div :class="{ sidebar:  sidebarData.length > 0 }">
+            <div 
+                v-for="(item, i) in sidebarData" 
+                :key="i" 
+                class="sidebar-item"
+                :class="{  'silder-bottom-border': (i + 1) !== sidebarData.length }"
+            >
+                <div class="silder-index">{{ item.index }}</div>
+                <div class="silder-operate">
+                    <div class="silder-copy" @click="onSilderCopy(item, i)">复制</div>
+                    <div class="silder-delete" @click="onSilderDelete(item, i)">删除</div>                
+                </div>
+            </div>
+        </div>
+        <div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
             <img ref="exploreImg" src="../../assets//images/vehicle.png" alt="">
             <canvas class="explore-canvas" ref="exploreCanvas"></canvas>
 
@@ -15,20 +29,23 @@
                 </div>
             </template>
             <div 
-                v-for="(item, index) in pointerList" :key="index"
+                v-for="(item, itemIndex) in pointerList" :key="itemIndex"
                 class="pointer-end"
                 :style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
-                @mousedown="pointMousedown(index, 'end')"
+                @mousedown="pointMousedown(itemIndex, 'end')"
                 @mousemove.stop=""
             >
                 {{item.index || 0}}
             </div>
         </div>
+
+        <button @click="btn">添加点位</button>
     </div>
 </template>
 
 <script setup>
 import { onMounted, ref, getCurrentInstance } from 'vue';
+import Core from '../../core';
 
 var ctx = null // canvas 2d实例
 const { proxy } = getCurrentInstance();
@@ -39,32 +56,32 @@ const exploreCanvas = ref(null) // canvas ref
 const exploreImg = ref(null) // 照片 ref 之所以不直接画在canvas中是为了后面移动要清除整个画布
 
 const pointerList = ref([
-    {
-        end_point:"{\"x\":423,\"y\":310}",  // 结束点只有一个
-        start_point:"[{\"x\":416,\"y\":153}, {\"x\":316,\"y\":253}]", // 开始点有多个
-        create_time:1702363893,
-        id:1335,
-        index:1,        
-        material:null,
-        set_id:805,
-        target_id:7637,
-        target_type:1,
-        update_time:1702363893,
-        weight:0,
-    },
-    {
-        end_point:"{\"x\":74,\"y\":67}",
-        start_point: "[{\"x\":137,\"y\":223},{\"x\":237,\"y\":323}]",
-        create_time:1702363893,
-        id:1335,
-        index:1,        
-        material:null,
-        set_id:805,
-        target_id:7637,
-        target_type:1,
-        update_time:1702363893,
-        weight:0,
-    }
+    // {
+    //     end_point:"{\"x\":423,\"y\":310}",  // 结束点只有一个
+    //     start_point:"[{\"x\":416,\"y\":153}, {\"x\":316,\"y\":253}]", // 开始点有多个
+    //     create_time:1702363893,
+    //     id:1335,
+    //     index:1,        
+    //     material:null,
+    //     set_id:805,
+    //     target_id:7637,
+    //     target_type:1,
+    //     update_time:1702363893,
+    //     weight:0,
+    // },
+    // {
+    //     end_point:"{\"x\":74,\"y\":67}",
+    //     start_point: "[{\"x\":137,\"y\":223},{\"x\":237,\"y\":323}]",
+    //     create_time:1702363893,
+    //     id:1335,
+    //     index:1,        
+    //     material:null,
+    //     set_id:805,
+    //     target_id:7637,
+    //     target_type:1,
+    //     update_time:1702363893,
+    //     weight:0,
+    // }
 ]) // 点位列表
 
 // 移动点操作
@@ -75,29 +92,45 @@ const moveParams = ref({
     itemStartIndex: undefined,
 })
 
+// 侧边栏数据
+const sidebarData = ref([
+
+])
+
 onMounted(() => {
-    pointerList.value = pointerList.value.map(el => {
-        return {
-            ...el,
-            start: JSON.parse(el.start_point) instanceof Array ? JSON.parse(el.start_point) : [],
-            end: JSON.parse(el.end_point),
-        }
-    })
+    // pointerList.value = pointerListFilter(pointerList.value)
     // console.log("结果", pointerList.value);
 
     init()
 })
 
 /* methods */
-const test = () => {
-    console.log("创建时间");
+const pointerListFilter = (arr) => {
+    const result = arr.map(el => {
+        return {
+            ...el,
+            start: JSON.parse(el.start_point) instanceof Array ? JSON.parse(el.start_point) : [],
+            end: JSON.parse(el.end_point),
+        }
+    })
+    return result
+}
+// 初始化
+const init = () => {
+    ctx = exploreCanvas.value.getContext("2d")
+    
+    // 等图片加载完
+    exploreImg.value.onload = () => {
+        setCanvasAttr(exploreImg.value.width, exploreImg.value.height)        
+    }
+    
 }
 // 容器内鼠标移动
 const mousemoveHandler = (e) => {
     if(!moveParams.value.isMove)  return;
 
     if (moveParams.value.moveType === 'start') {
-
+        
         pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemStartIndex].x = e.offsetX;
         pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemStartIndex].y = e.offsetY;
         console.log("结果 start", pointerList.value);
@@ -112,31 +145,22 @@ const mousemoveHandler = (e) => {
         canvasLine(ctx)
     })
 }
-// 容器内鼠标移动
-const mouseupHandler = () => {
+// 容器内松开
+const mouseUpHandler = () => {
     console.log("松开");
-    moveParams.value.isMove = false    
+    moveParams.value.isMove = false 
     moveParams.value.moveIndex = undefined    
     moveParams.value.moveType = undefined    
     moveParams.value.itemStartIndex = undefined
 }
 // points 鼠标按下
 const pointMousedown = (index, type, itemStartIndex) => {
+    console.log("按下", index, type, itemStartIndex);
     moveParams.value.isMove = true
     moveParams.value.moveIndex = index
     moveParams.value.moveType = type
-    moveParams.value.itemStartIndex = itemStartIndex || undefined
-}
-// 初始化
-const init = () => {
-    ctx = exploreCanvas.value.getContext("2d")
-    
-    // 等图片加载完
-    exploreImg.value.onload = () => {
-        setCanvasAttr(exploreImg.value.width, exploreImg.value.height)
-        canvasLine(ctx)
-    }
-    
+    moveParams.value.itemStartIndex = itemStartIndex
+    console.log("moveParams", moveParams.value);
 }
 // 设置canvas的大小
 const setCanvasAttr = (width, height) => {
@@ -183,14 +207,108 @@ const clearCanvas = (ctx) => {
     ctx.clearRect(0, 0, exploreCanvas.value.width, exploreCanvas.value.height)
 }
 
-const btn = () => {
-    clearCanvas(ctx)
+
+// 复制/删除silder
+const onSilderCopy = (item, index) => {
+    console.log("item", item, "index", index);
+
+    const obj = item  // 防止改变原数组
+
+    item.start.forEach((el,index) => {
+        obj.start[index + 1] = {
+            x: obj.start[index].x + 20,
+            y: obj.start[index].y,
+        }
+    })
+    sidebarData.value.push(obj)
+
+    console.log("onSilderCopy", sidebarData.value);
+
+    pointerList.value.forEach(el => {
+        if (el.index === item.index) {
+            el.start = sidebarData.value[sidebarData.value.length - 1].start
+        }
+    })
+    
+    canvasLine(ctx)
 }
+const onSilderDelete = (item, index) => {
+
+}
+
+const btn = () => {
+    pointerList.value.push(
+        {
+            end_point:"{\"x\":0,\"y\":100}",  // 结束点只有一个
+            start_point:"[{\"x\":0,\"y\":0}]", // 开始点有多个    
+            // end: undefined,
+            // start: undefined,
+            id: 1335,
+            index: 1,
+        },
+    )
+    pointerList.value = pointerListFilter(pointerList.value)
+    console.log("添加点位", pointerList.value);
+    canvasLine(ctx)
+
+    pointerList.value.forEach($1 => {
+        sidebarData.value.push({
+            index: $1.index,
+            end: $1.end,
+            start: $1.start
+        })
+    })
+
+    console.log("sidebarData", sidebarData.value);
+}
+
 </script>
 
 <style lang="less" scoped>
 .test {
     margin: 90px;
+    .sidebar {
+        width: 200px;
+        margin-bottom: 100px;
+        border: 1px solid #EEEEEE;
+        border-radius: 4px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        .sidebar-item {
+            background-color: #fff;
+            padding: 10px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            
+            &.silder-bottom-border {
+                border-bottom: 1px solid #E2E2E2;                
+            }
+            .silder-index {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                text-align: center;
+                background-color: #F2F3F5;
+                border-radius: 50%;
+
+                color: #666;
+                font-family: PingFang SC;
+                font-size: 12px;
+                font-weight: 500;
+            }
+            .silder-operate {
+                display: flex;
+                .silder-copy {
+                    margin-right: 5px;
+                }
+                .silder-delete {
+    
+                }
+            }
+        }
+    }
     
     .point-contain {
         

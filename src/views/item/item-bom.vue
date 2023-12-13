@@ -16,7 +16,9 @@
         </div>
         <!-- 右边 -->
         <div class="item-tree-right">
-          <div class="search-content"></div>
+          <div class="search-content">
+            <SearchAll :isShowMore="false"></SearchAll>
+          </div>
           <component :is="componentName"></component>
         </div>
       </div>
@@ -26,6 +28,7 @@
 
 <script setup>
 import { ref, shallowRef, onMounted, computed ,watch} from "vue";
+import SearchAll from '../../components/common/SearchAll.vue'
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
@@ -36,7 +39,6 @@ const titleRefs = ref(null);
 const titleHeight = ref(0);
 // 选择层级对象
 const activeObj = ref({});
-
 
 watch(
     activeObj,
@@ -104,11 +106,8 @@ const compChange = () => {};
         width: calc(100% - 454px);
         overflow-y: auto;
         padding: 0 17px;
-        .search-content {
-          width: 100%;
-          height: 100px;
-          margin-bottom: 16px;
-          background-color: #f7f8fa;
+        .search-content {      
+            margin-bottom: 24px;    
         }
       }
     }
