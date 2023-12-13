@@ -6,11 +6,7 @@
                     <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="" />
                         <div class="tip-text">
-                            {{
-                                $t(
-                                    /*操作说明*/ "item-bom.operation_instructions"
-                                )
-                            }}
+                            {{ $t(/*操作说明*/ "item-bom.operation_instructions") }}
                         </div>
                     </div>
                 </a-tooltip>
@@ -24,11 +20,7 @@
                         <div class="empty-upload-tip">
                             {{ $t("item-bom.upload_text") }}
                         </div>
-                        <a-button
-                            class="empty-upload-btn"
-                            type="primary"
-                            @click="clickShowAdd(true, false)"
-                        >
+                        <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
                             {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
                         </a-button>
                     </div>
@@ -66,8 +58,7 @@
                             <div
                                 class="one-spils cursor"
                                 :style="{
-                                    width:
-                                        text?.length > 6 ? 7 * 12 + 'px' : '',
+                                    width: text?.length > 6 ? 7 * 12 + 'px' : '',
                                 }"
                             >
                                 {{ text }}
@@ -80,8 +71,7 @@
                             <div
                                 class="one-spils cursor"
                                 :style="{
-                                    width:
-                                        text?.length > 5 ? 6 * 12 + 'px' : '',
+                                    width: text?.length > 5 ? 6 * 12 + 'px' : '',
                                 }"
                             >
                                 {{ text }}
@@ -107,11 +97,7 @@
                             <div class="empty-add-item-tip">
                                 {{ $t("item-bom.explosion_diagram") }}
                             </div>
-                            <div
-                                class="disable-add-btn"
-                                @click="onAddFittings"
-                                type="primary"
-                            >
+                            <div class="disable-add-btn" @click="onAddFittings" type="primary">
                                 {{ $t("item-bom.add_fittings") }}
                             </div>
                         </div>
@@ -192,8 +178,7 @@ const channelPagination = ref({
     showQuickJumper: true, // 是否可以快速跳转至某页
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
-    showTotal: (total) =>
-        `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
+    showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
 // tableData增加序号的字段
 const realData = computed(() => {
@@ -201,11 +186,7 @@ const realData = computed(() => {
         return {
             ...item,
             editOrdinal: false,
-            ordinal:
-                (channelPagination.value.current - 1) *
-                    channelPagination.value.pageSize +
-                1 +
-                index,
+            ordinal: (channelPagination.value.current - 1) * channelPagination.value.pageSize + 1 + index,
         };
     });
     return result;
