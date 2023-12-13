@@ -1,7 +1,6 @@
 <template>
     <div class="fittings-three">
         <div class="upload">
-            <BomUpload />
         </div>
         <div class="table-container">
             <div class="title">
@@ -60,7 +59,6 @@
 </template>
 
 <script setup>
-import BomUpload from "./BomUpLoad.vue";
 import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import Core from "@/core";
 
