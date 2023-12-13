@@ -15,6 +15,7 @@ export default {
         search_ph: "请输入名称或编码",
         // 添加分类
         add_category: "添加分类",
+        add_category_ph: "请输入分类名称",
     },
     en: {
         title: "BOM Management",
@@ -31,5 +32,6 @@ export default {
         search_ph: "Please enter a name or code",
         // 添加分类
         add_category: "Add Category",
+        add_category_ph: "Please enter the category name",
     }
 }
