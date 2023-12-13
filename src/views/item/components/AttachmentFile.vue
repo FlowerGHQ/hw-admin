@@ -23,7 +23,7 @@
                 </div>
             </template>
             <template v-if="column.key === 'org'">
-                {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}·{{ text.org_name }}
+                {{ $Util.userTypeFilter(text.org_type, $i18n.locale) }}{{ text.org_name ? `·${text.org_name}` : '' }}
             </template>
             <template v-if="column.key === 'item'">
                 {{ text || '-'}}
@@ -61,13 +61,13 @@
         </template>
     </a-modal>
     <!-- 音频预览 -->
-    <a-modal v-model:visible="audioShow" centered :title="null" :footer="null">
+    <a-modal v-model:visible="audioShow" centered :title="null" :footer="null" destroyOnClose>
         <div class="modal-body">
             <audio :src="preViewSrc" autoplay controls></audio>
         </div>
     </a-modal>
     <!-- 视频预览 -->
-    <a-modal width="1200px" v-model:visible="videoShow" centered :title="null" :footer="null">
+    <a-modal width="1200px" v-model:visible="videoShow" centered :title="null" :footer="null" destroyOnClose>
         <div class="modal-body">
             <video width="1140" height="600" :src="preViewSrc" autoplay controls></video>
         </div>
@@ -315,6 +315,13 @@ export default {
             margin-right: 6px;
         }
     }
+    .i_download, .i_delete {
+        font-size: 16px;
+    }
+    /* 表格样式-start */
+    .ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
+        font-size: 14px;
+    }
     :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
         padding: 10px 16px;
         font-size: 14px;
@@ -326,6 +333,7 @@ export default {
         font-weight: 500;
         color: #1D2129;
     }
+    /* 表格样式-end */
 }
 </style>
 <style lang="less">

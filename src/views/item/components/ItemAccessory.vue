@@ -87,6 +87,7 @@ export default {
         },
         detail: {},
     },
+    inject: ['setIndex'],
     data() {
         return {
             // 加载
@@ -150,7 +151,7 @@ export default {
                 ...params
             }).then(res => {
                 console.log("修改成功", res);
-                this.$message.warning(this.$t('p.modify_success'))
+                this.$message.success(this.$t('p.modify_success'))
                 this.getTableData()
             }).catch(err => {
                 console.log('修改失败', err)
@@ -271,9 +272,12 @@ export default {
         },
         infoClose() {
             this.infoShow = false
+            // 回归左侧和顶部菜单栏选中样式
+            this.setIndex(1, ['/item/item-list'])
         },
         handleOk() {
             this.nextFn()
+            this.infoShow = false
         },
         // 校验数量
         validateAmount(fn) {
@@ -299,9 +303,9 @@ export default {
         .fcc(flex-start, center);
         margin-bottom: 10px;
         .name {
-            font-weight: 500;
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.85);
+            color: #666;
+            font-family: PingFang SC;
+            font-size: 14px;
             margin-left: 6px;
         }
         .ant-btn {
@@ -311,6 +315,13 @@ export default {
     .confirm-btn {
         margin-top: 10px;
         text-align: center;
+    }
+    .i_delete {
+        font-size: 16px;
+    }
+    /* 表格样式-start */
+    .ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
+        font-size: 14px;
     }
     :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
         padding: 10px 16px;
@@ -323,6 +334,7 @@ export default {
         font-weight: 500;
         color: #1D2129;
     }
+    /* 表格样式-end */
 }
 </style>
 <style lang="less">
