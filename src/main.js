@@ -16,6 +16,7 @@ import '@/assets/styles/reset.css';
 import 'ant-design-vue/dist/antd.less';
 import '@/assets/iconfont/iconfont.css';
 import '@/assets/styles/public.less';
+import '@/assets/font-family/index.css'
 
 const app = createApp(App)
 
