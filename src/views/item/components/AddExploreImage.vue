@@ -93,7 +93,6 @@ export default {
                         percent: 100,
                     }
                 }
-                console.log('val', val);
             },
             immediate: true,
             deep: true

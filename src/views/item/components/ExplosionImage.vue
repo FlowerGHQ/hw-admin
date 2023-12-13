@@ -199,6 +199,9 @@ export default {
         id: {
             type: Number,
         },
+        detailId: {
+            type: Number,
+        },
     },
     data() {
         return {
@@ -303,8 +306,6 @@ export default {
         // 点击切换爆炸图
         clickChangTab(key) {
             this.currentTab = key
-            console.log('currentTab', this.currentTab);
-            console.log('tabsArray', this.tabsArray);
             if (this.isChangedPoint === true) {
                 this.changeTabConfirm(key);
                 return;
@@ -316,7 +317,7 @@ export default {
             this.pointerList.forEach(item => {
                 item.isEdit = false;
             })
-            console.log('this.pointerList >> ', this.pointerList);
+            console.log('pointerList >> ', this.pointerList);
             this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
         },
@@ -393,7 +394,7 @@ export default {
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
-                id: this.id
+                id: this.detailId
             }).then(res => {
                 let detail = res.detail || {}
                 detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
@@ -422,8 +423,6 @@ export default {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         imageLoadCallback(width, height) {
-            console.log('width', width);
-            console.log('height', height);
             if (width > 800 || height > 800) {
                 let rate = width / height;
                 this.canvas.width = rate >= 1 ? 700 : width / height * 800;
@@ -431,14 +430,6 @@ export default {
                 if (height > 385) {
                     this.canvas.height = 385
                 }
-                // if(window.innerWidth <= 1440) {
-                //     this.canvas.width = 430
-                //     this.isBookWidth = true
-                // } else {
-                //     this.isBookWidth = false   
-                // }
-                console.log('this.canvas.width', this.canvas.width);
-                console.log('this.canvas.height', this.canvas.height);
             } else {
                 this.canvas.width = width;
                 this.canvas.height = height;
