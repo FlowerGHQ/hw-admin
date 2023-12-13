@@ -5,11 +5,11 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.detail') }}</div>
                 <div class="btns-area">
-                    <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance" />{{ $t('i.view') }}
-                    </a-button>
-                    <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit" />{{ $t('def.edit')
+                    <!-- <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance" />{{ $t('i.view') }}
+                    </a-button> -->
+                    <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit" />{{ $t('def.edit')
                     }}
-                    </a-button>
+                    </a-button> -->
                     <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
                         <template v-if="detail.status === -1"><i class="icon i_putaway" />{{ $t('i.active_a') }}
                         </template>
@@ -70,7 +70,7 @@
                                 </template>
 
                                 <template v-if="column.key === 'operation'">
-                                    <template v-if="record.flag_independent_info">
+                                    <!-- <template v-if="record.flag_independent_info"> -->
                                         <!-- <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
                                                 class="icon i_relevance" /> {{ $t('i.view') }}
                                         </a-button> -->
@@ -80,7 +80,7 @@
                                         <!-- <a-button type="link" @click="routerChange('detail-indep', record)"><i
                                                 class="icon i_detail" />{{ $t('def.detail') }}
                                         </a-button> -->
-                                    </template>
+                                    <!-- </template> -->
                                 </template>
                             </template>
                         </a-table>
@@ -630,7 +630,7 @@ export default {
     color: #000;
     font-size: 16px;
     font-weight: 500;
-    margin-bottom: 13px;
+    margin-bottom: 16px;
 }
 
 .expand-body {
@@ -756,5 +756,12 @@ export default {
 }
 :deep(.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before) {
     border-bottom: none;
+}
+.title-area {
+    color: #1D2129;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
 }
 </style>
