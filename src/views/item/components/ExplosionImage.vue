@@ -138,7 +138,7 @@
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
                                 <a-button type="link" @click="showEdit(index)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                                <a-button type="link" @click="clickDeletePoint(index)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                         </template>
                     </a-table>
