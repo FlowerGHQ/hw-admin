@@ -200,6 +200,7 @@ export default {
                 name: '',
                 category_id: '',
             }
+            this.source_type = undefined
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
