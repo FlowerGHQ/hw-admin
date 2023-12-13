@@ -171,28 +171,28 @@
             </div> -->
         </div>
         <!-- 绑定配件弹窗 -->
-        <!-- <div class="form-block form-hide">
+        <div class="form-block form-hide">
             <ItemSelect ref="itemSelect" btn-class="panel-btn" :radioMode="true" :disabled-checked='checkedIds'
                 @select="(ids, items) => handleAddShow(TARGET_TYPE.ITEM, ids, items)">
                 {{ $t('i.add') }}
             </ItemSelect>
-        </div> -->
-        <!-- <AddExploreImage :uploadForm="uploadForm" :isUploadEdit="isUploadEdit" :modalShow="showAddModal"
-            @addExplore="handlerAdd" @closeModal="clickShowAdd(false)" /> -->
+        </div>
+        <AddExploreImage :uploadForm="uploadForm" :isUploadEdit="isUploadEdit" :modalShow="showAddModal"
+            @addExplore="handlerAdd" @closeModal="clickShowAdd(false)" />
     </div>
 </template>
     
 <script>
 import Core from '@/core';
-// import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
-// import AddExploreImage from './AddExploreImage.vue';
+import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
+import AddExploreImage from '../AddExploreImage.vue';
 import { get } from 'lodash';
 const TARGET_TYPE = Core.Const.BOM.TARGET_TYPE;
 export default {
     name: "DisplayImage",
     components: {
-        // ItemSelect,
-        // AddExploreImage
+        ItemSelect,
+        AddExploreImage
     },
     props: {
         id: {
