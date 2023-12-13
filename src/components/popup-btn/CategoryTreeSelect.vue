@@ -88,7 +88,7 @@ export default {
     },
     methods: {
         resetVal() {
-            this.value = ''
+            this.value = undefined
         },
         getFirstItemCategory() {
             let key = ''
