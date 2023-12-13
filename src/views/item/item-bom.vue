@@ -76,7 +76,7 @@ const componentName = computed(() => {
   } else if (activeObj.value.level === 3) {
     return FittingsThree;
   } else {
-    return fittings;
+    return FittingsThree;
   }
 });
 

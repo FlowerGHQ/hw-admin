@@ -26,6 +26,9 @@ export default {
         explosion_diagram: "为爆炸图添加配件",
         add_fittings: "添加配件",
         operation_instructions: '操作说明',
+        upload_text: "上传爆炸图，以配置点位",
+        upload_explosion: "上传爆炸图",
+        tips_tooltip: "①上传配件，②上传爆炸图，③配置点位",
     },
     en: {
         title: "BOM Management",
@@ -53,6 +56,8 @@ export default {
         explosion_diagram: "Add accessories to the explosion diagram.",
         add_fittings: "Add fittings",
         operation_instructions: 'Operation Instructions',
-
+        upload_text: "Upload the explosion image to configure the point.",
+        upload_explosion: "Upload Explosion",
+        tips_tooltip: "①upload accessories，②upload explosion pictures，③configure points",
     }
 }

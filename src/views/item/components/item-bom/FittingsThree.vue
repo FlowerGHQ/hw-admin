@@ -1,8 +1,33 @@
 <template>
     <div class="fittings-three">
-        <div class="upload">
+        <div class="explosion-diagram">
+            <div class="explosion-diagram-tip">
+                <a-tooltip title="①上传配件，②上传爆炸图，③配置点位">
+                    <div class="tip-wrap">
+                        <img class="tip-icon" :src="tipIcon" alt="">
+                        <div class="tip-text">
+                            {{ $t(/*操作说明*/'item-bom.operation_instructions') }}
+                        </div>
+                    </div>
+                </a-tooltip>
+
+                <div class="operation"></div>
+            </div>
+            <div class="explosion-diagram-bottom">
+                <div class="empty-upload-container">
+                    <img :src="uploadPic" alt="">
+                    <div class="empty-upload-flex-wrap">
+                        <div class="empty-upload-tip">
+                            {{ $t('item-bom.upload_text') }}
+                        </div>
+                        <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
+                            {{ $t(/*上传爆炸图*/'item-bom.upload_explosion') }}
+                        </a-button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="table-container">
+        <div class="fittings-table-container">
             <div class="title">
                 {{ $t('item-bom.accessories_list') }}
             </div>
@@ -75,6 +100,8 @@
 import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import Core from "@/core";
 const emptyImage = "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png"
+const tipIcon = 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/fdbe378097b4f3f08dbf97bd49d7dae700b138d2827db87d6bc5001d46fa3364.png'
+const uploadPic = 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/b3f294686cc11e3cacbe2c7ea720b740574c051623cd75a00efec3e6aece72d6.png'
 
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
@@ -212,13 +239,69 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .fittings-three {
-    .upload {
+    .explosion-diagram {
         width: 100%;
         min-height: 158px;
         border: 1px solid  #E2E2E2;
-        padding: 23px 20px;
+        padding: 20px 20px 40px 20px;
+
+        .explosion-diagram-tip {
+            display: flex;
+            .tip-wrap {
+                display: flex;
+                align-items: center;
+                .tip-icon {
+                    width: 16px;
+                    height: 16px;
+                }
+                .tip-text {
+                    margin-left: 5px;
+                    color: #666;
+                    font-family: PingFang SC;
+                    font-size: 16px;
+                    font-weight: 400;
+                }
+            }
+
+            .operation {
+
+            }
+        }
+        .explosion-diagram-bottom {
+            .empty-upload-container {
+                width: 100%;                
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                .empty-upload-flex-wrap {
+                    margin-left: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                >img {
+                    width: 99px;
+                    height: 78px;
+                }
+
+                .empty-upload-tip {
+                    color: #333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin-bottom: 10px;
+                }
+
+                .empty-upload-btn {
+                    // margin-bottom: 40px;
+                }
+            }
+
+        }
     }
-    .table-container {
+    .fittings-table-container {
+        margin-top: 20px;
         .title {
             color: #1D2129;
             font-family: PingFang SC;
