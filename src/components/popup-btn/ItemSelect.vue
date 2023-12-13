@@ -200,7 +200,7 @@ export default {
                 name: '',
                 category_id: '',
             }
-            this.source_type = undefined
+            this.handleSearchReset();
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
