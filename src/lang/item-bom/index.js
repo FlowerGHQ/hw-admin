@@ -13,6 +13,8 @@ export default {
         remark: "备注",
         accessories_list: "配件列表",
         search_ph: "请输入名称或编码",
+        // 添加分类
+        add_category: "添加分类",
     },
     en: {
         title: "BOM Management",
@@ -27,5 +29,7 @@ export default {
         remark: "Remark",
         accessories_list: "Accessories List",
         search_ph: "Please enter a name or code",
+        // 添加分类
+        add_category: "Add Category",
     }
 }
