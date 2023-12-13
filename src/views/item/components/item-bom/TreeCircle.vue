@@ -89,9 +89,9 @@
               </div>
             </div>
             <a-select
-              v-if="addShow"
+              v-if="item1.add"
               class="add-category-select"
-              v-model:value="value"
+              v-model:value="addValue"
               show-search
               :placeholder="$t('item-bom.add_category_ph')"
               style="width: 200px"
@@ -131,6 +131,7 @@ const circleChildren = (arr) => {
       key: item.key,
       select: false,
       children: item.children ? circleChildren(item.children) : [],
+      add: false,
     };
   });
 };
@@ -153,7 +154,7 @@ const expand = (item) => {
     item.select = !item.select;
     if(!item.select){
       // 隐藏
-      addShow.value = false
+      item.add =  false 
     }
   }
 };
@@ -171,6 +172,7 @@ const options = ref([
   { value: "lucy", label: "Lucy" },
   { value: "tom", label: "Tom" },
 ]);
+const addValue = ref(null);
 // 前端筛选
 const filterOption = (input, option) => {
   return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -179,8 +181,10 @@ const filterOption = (input, option) => {
 const addShow = ref(false);
 // 添加分类
 const addCategory = (item) => {
+  activeKey.value = item.key;
   // 展开
   item.select = true
+  item.add = true
   // 显示
   addShow.value = true;
 };
