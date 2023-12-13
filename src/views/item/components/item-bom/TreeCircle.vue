@@ -17,7 +17,8 @@
             "
             @click.stop="expand(item)"
             class="arrow" />
-          <MySvgIcon icon-class="group-select" class="group" />
+          <img class="group" src='@/assets/images/bom/group-active.png' alt="" v-if=" item.key == activeKey">
+          <img class="group" src='@/assets/images/bom/group-common.png' alt="" v-else>
           <div class="title">{{ item.title }}</div>
         </div>
         <div class="edit">
@@ -160,6 +161,7 @@ const expand = (item) => {
 const selectKey = (item, level) => {
   activeKey.value = item.key;
   activeLevel.value = level;
+
   $emit("activeLevel", level);
   $emit("activeKey", item.key);
 };
@@ -214,9 +216,14 @@ const addCategory = (item) => {
         svg {
           font-size: 16px;
         }
-        .group {
-          font-size: 32px;
+        .group{
+          width: 32px;
+          height: 32px;
           margin-left: 10px;
+          img{
+            width: 32px;
+            height: 32px;
+          }
         }
         .title {
           margin-left: 10px;
@@ -340,9 +347,6 @@ const addCategory = (item) => {
         .title {
           color: #0061ff;
         }
-      }
-      .group {
-        color: #0061ff;
       }
     }
   }
