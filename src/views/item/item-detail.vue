@@ -306,12 +306,16 @@ export default {
                 } catch (err) {
                     this.config = []
                 }
+                console.log('set_id:', detail.set_id)
                 if (detail.set_id && !this.indep_flag) {
+                    // 多规格展开
+                    this.expand = true
                     if (!this.activeKey.includes('itemSpec')) {
                         this.activeKey.push('itemSpec')
                     }
                     this.getAttrDef();
                 } else {
+                    this.expand = false
                     this.$nextTick(() => {
                         //获取table和table-header高度
                         this.initHeight()
