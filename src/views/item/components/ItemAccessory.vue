@@ -32,6 +32,7 @@
                         :min="0" 
                         :precision="0"
                         :placeholder="$t('def.input')"
+                        @blur="handleBlur"
                     />
                 </p>
             </template>
@@ -49,12 +50,12 @@
         </template>
     </a-table>
     <!-- 确认更改 -->
-    <div class="confirm-btn">
+    <!-- <div class="confirm-btn">
         <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
             <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
             <a-button type="primary" ghost>{{$t('i.confirm_changes')}}</a-button>                            
         </a-popconfirm>
-    </div>
+    </div> -->
     <a-modal v-model:visible="infoShow" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
         <div class="modal">
             <p class="modal-title">{{ $t('i.modal_title') }}</p>
@@ -291,7 +292,10 @@ export default {
                 fn()
             }
         },
-        // 未配置提示
+        // 数量失焦
+        handleBlur() {
+            this.confirmEvent()
+        }
     },
 }
 </script>

@@ -32,7 +32,7 @@
                             </template>
                             <template #bodyCell="{ column, text, record, index }">
                                 <template v-if="column.key === 'input'">
-                                    {{ lang == 'zh' ? detail.name : detail.name_en }}({{ $t('d.code') }}：{{ text }})
+                                    {{ lang == 'zh' ? record.name : record.name_en }}({{ $t('d.code') }}：{{ text }})
                                 </template>
                                 <template v-if="column.key === 'select'">
                                     {{ lang == 'zh' ? text.value : text.value_en }}
