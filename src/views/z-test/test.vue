@@ -28,15 +28,17 @@
                 >
                 </div>
             </template>
-            <div 
-                v-for="(item, itemIndex) in pointerList" :key="itemIndex"
-                class="pointer-end"
-                :style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
-                @mousedown="pointMousedown(itemIndex, 'end')"
-                @mousemove.stop=""
-            >
-                {{item.index || 0}}
-            </div>
+            <template v-for="(item, itemIndex) in pointerList" :key="itemIndex">            
+                <div    
+                    v-if="item?.end"
+                    class="pointer-end"
+                    :style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
+                    @mousedown="pointMousedown(itemIndex, 'end')"
+                    @mousemove.stop=""
+                >
+                    {{item.index || 0}}
+                </div>
+            </template>
         </div>
 
         <button @click="btn">添加点位</button>
@@ -93,9 +95,7 @@ const moveParams = ref({
 })
 
 // 侧边栏数据
-const sidebarData = ref([
-
-])
+const sidebarData = ref([])
 
 onMounted(() => {
     // pointerList.value = pointerListFilter(pointerList.value)
@@ -149,8 +149,8 @@ const mousemoveHandler = (e) => {
 const mouseUpHandler = () => {
     console.log("松开");
     moveParams.value.isMove = false 
-    moveParams.value.moveIndex = undefined    
-    moveParams.value.moveType = undefined    
+    moveParams.value.moveIndex = undefined
+    moveParams.value.moveType = undefined
     moveParams.value.itemStartIndex = undefined
 }
 // points 鼠标按下
@@ -187,13 +187,13 @@ const canvasLine = (ctx) => {
         var start = $1.start
         var end = $1.end
 
-        if (start.length > 0) {
+        if (start.length > 1) {
             start.forEach($2 => {                
                 ctx.moveTo($2.x, $2.y)
                 ctx.lineTo(end.x, end.y)
                 ctx.stroke();
             })
-        } else {
+        } else if (start.length === 1) {
             ctx.moveTo(start[0].x, start[0].y)
             ctx.lineTo(end.x, end.y)
             ctx.stroke();
@@ -208,35 +208,49 @@ const clearCanvas = (ctx) => {
 }
 
 
-// 复制/删除silder
+// 复制silder
 const onSilderCopy = (item, index) => {
     console.log("item", item, "index", index);
 
-    const obj = item  // 防止改变原数组
+    const obj = item
 
-    item.start.forEach((el,index) => {
-        obj.start[index + 1] = {
-            x: obj.start[index].x + 20,
-            y: obj.start[index].y,
+    item.start.forEach((el,i) => {
+        obj.start[i + 1] = {
+            x: obj.start[i].x + 20,
+            y: obj.start[i].y,
         }
     })
     sidebarData.value.push(obj)
-
-    console.log("onSilderCopy", sidebarData.value);
-
-    pointerList.value.forEach(el => {
-        if (el.index === item.index) {
-            el.start = sidebarData.value[sidebarData.value.length - 1].start
-        }
-    })
     
+
+    const data = pointerList.value.find(el => el.index === item.index)
+    data.start = sidebarData.value[sidebarData.value.length - 1].start  // 替换掉start让其为 sidebarData底下 的start
+
     canvasLine(ctx)
 }
+// 删除silder
 const onSilderDelete = (item, index) => {
+    console.log("item", item, "index", index);
 
+    item.start.splice(index, 1) // 删除sidebarData每个对应的start中的数据操作
+    const silderCategory = sidebarData.value.filter(el => el.index === item.index) // 找出当前点击的所属类别
+    
+    const data = pointerList.value.find(el => el.index === item.index)
+    if (silderCategory.length === 1) {
+        data.start = sidebarData.value[sidebarData.value.length - 1].start
+        data.end = undefined
+    } else {
+        data.start = sidebarData.value[sidebarData.value.length - 1].start
+    }
+
+    sidebarData.value.splice(index, 1) // 最后删除页面上的效果
+    canvasLine(ctx)
+
+    console.log("最后的结果", pointerList.value);
 }
 
 const btn = () => {
+    pointerList.value = []
     pointerList.value.push(
         {
             end_point:"{\"x\":0,\"y\":100}",  // 结束点只有一个

@@ -85,12 +85,6 @@ const tableColumns = computed(() => {
             key: "detail"
         },
         { 
-            // 商品图片
-            title: proxy.$t('item-bom.commodity_picture'), 
-            dataIndex: "name", 
-            key: "detail"
-        },
-        { 
             // 销售区域
             title: proxy.$t('item-bom.sales_area'), 
             dataIndex: "sales_area", 

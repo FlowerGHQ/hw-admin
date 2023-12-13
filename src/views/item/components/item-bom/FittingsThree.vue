@@ -1,6 +1,9 @@
 <template>
     <div class="fittings-three">
-
+        <div class="upload">
+            
+        </div>
+        <div class="table-container"></div>
     </div>
 </template>
 
@@ -9,5 +12,12 @@
 </script>
 
 <style lang="less" scoped>
-.fittings-three {}
+.fittings-three {
+    .upload {
+
+    }
+    .table-container {
+        
+    }
+}
 </style>
