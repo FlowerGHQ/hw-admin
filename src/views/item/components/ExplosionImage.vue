@@ -79,15 +79,16 @@
                         </div>
                         <!-- 爆炸图操作按钮 -->
                         <div class="btns-area">
+                            <a-button class="panel-btn" v-if="isChangedPoint" type="primary" @click="clickSave">
+                                {{ $t('def.save') }}
+                            </a-button>
                             <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickEditExplore">
                                 {{ $t(/*替换爆炸图*/'i.edit_bom_pic') }}
                             </a-button>
                             <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
                                 {{ $t(/*删除爆炸图*/'i.delete_bom_pic') }}
                             </a-button>
-                            <a-button class="panel-btn" v-if="isChangedPoint" type="primary" @click="clickSave">
-                                {{ $t('def.save') }}
-                            </a-button>
+
                         </div>
                     </div>
                 </div>
@@ -125,7 +126,7 @@
                     <a-table v-if="pointerList.length" :columns="specificColumns" :data-source="pointerList"
                         :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, record, index }">
-                            <template v-if="column.dataIndex === 'index'" width="100px">
+                            <template v-if="column.dataIndex === 'index'">
                                 <a-input v-model:value="record.index" @blur="saveRowIndex(record)"
                                     :placeholder="$t('search.enter_sn')"></a-input>
                             </template>
@@ -265,7 +266,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index', width: '329px' },
+                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index' }, 
                 { title: this.$t('n.name'), key: 'name', dataIndex: 'name' },
                 { title: this.$t('i.number'), key: 'model', dataIndex: 'model' },
                 { title: this.$t('i.code'), key: 'code', dataIndex: 'name' },
@@ -347,6 +348,7 @@ export default {
         clickShowAdd(show, isEdit = false) {
             this.showAddModal = show;
             this.isUploadEdit = isEdit
+            if(!isEdit) { return }
             this.uploadForm = {
                 id: this.tabsArray.filter((item, index) => index === this.currentTab)[0].id,
                 name: this.tabsArray.filter((item, index) => index === this.currentTab)[0].name,
@@ -1142,7 +1144,19 @@ export default {
             left: 0;
         }
     }
-
+    .btns-area {
+        display: flex;
+    }
+    @media (max-width: 1700px) {
+        .btns-area {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .panel-btn {
+            margin-left: 0;
+        }
+    }
     .text-c {
         text-align: center;
     }
@@ -1161,6 +1175,9 @@ export default {
         width: 0;
         height: 0;
         overflow: hidden;
+    }
+    .ant-input {
+        width: 100px;
     }
 }</style>
     
