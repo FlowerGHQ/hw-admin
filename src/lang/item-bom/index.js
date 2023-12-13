@@ -23,6 +23,7 @@ export default {
         change_the_content: '设变内容',
         please_enter: "请输入",
         commodity_code_tips: "筛选多个编码，请使用英文,分隔符",
+        title_the_ph: '请输入名称',
     },
     en: {
         title: "BOM Management",
@@ -47,5 +48,7 @@ export default {
         change_the_content: 'Change The Content',
         please_enter: "Please Enter",
         commodity_code_tips: "Filter multiple codes, please use English with delimiters",
+        title_the_ph: 'Please enter a name',
+
     }
 }
