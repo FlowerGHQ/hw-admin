@@ -60,7 +60,7 @@
 				}).then(res => {
 					this.tableData = res?.list? this.filterChildren(res.list):[];
 					this.tableData.forEach(item=>{
-						if(item.id === 1 || item.id === 2){
+						if(item.id === 1  ){
 							this.expandedRowKeys.push(item.id)
 						}
 					})
