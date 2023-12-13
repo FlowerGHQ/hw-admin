@@ -1,62 +1,73 @@
 <template>
-<div class="AttachmentFile">
-    <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-        <template #expandIcon><i class="icon i_expan_l"/></template>
-        <a-collapse-panel key="attachmentFile" :header="$t('i.upload_item_accessory')" class="gray-collapse-panel">
-            <div class="panel-content table-container no-mg">
-                <div class="panel-header">
-                    <span class="name">{{ $t('i.sale_bom') }}</span>
-                    <div>
-                        <ItemSelect 
-                            btnType='primary' 
-                            :btnText="$t('i.select_item')" 
-                            btnClass="item-select-btn"
-                            :disabled-checked='disabledChecked'
-                            @select="handleSelectItem" 
-                        />          
-                        <!-- 确认更改 -->
-                        <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
-                            <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
-                            <a-button >{{$t('i.confirm_changes')}}</a-button>                            
-                        </a-popconfirm>
-                    </div>
-                </div>
-                <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
-                    :row-key="record => record.id" :pagination='false'>
-                    <template #bodyCell="{ column, text , record }">
-                        <template v-if="column.key === 'detail'">
-                            <div>{{$i18n.locale === 'zh' ? record.target_name : record.target_name_en || '-' }}</div>
-                        </template>
-                        <template v-if="column.key === 'item'">
-                            {{ text || '-'}}
-                        </template>
-                        <template v-if="column.key === 'type'">
-                            {{ $Util.itemTypeFilter(text, $i18n.locale) }}
-                        </template>
-                        <template v-if="column.key === 'amount'">
-                            <a-input-number 
-                                v-model:value="record.amount" 
-                                style="width: 120px;" 
-                                :min="0" 
-                                :precision="0"
-                            />
-                        </template>
-                        <!-- 价格 -->
-                        <template v-if="column.key === 'fob_money'">
-                            <span v-if="text >= 0">{{column.unit}}</span>
-                            {{$Util.countFilter(text)}}
-                        </template>
-                        <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>
-                        <template v-if="column.key === 'operation'">
-                            <a-button type='link' @click="handleDelete(record.id)" class="danger" v-if="can_delete"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
-                        </template>
-                    </template>
-                </a-table>
+<div class="ItemAccessory">
+    <div class="panel-header">
+        <div>
+            <ItemSelect 
+                btnType='primary' 
+                :btnText="$t('i.select_item')" 
+                btnClass="item-select-btn"
+                :disabled-checked='disabledChecked'
+                @select="handleSelectItem" 
+            />
+        </div>
+        <span class="name">{{ $t('i.sale_bom_dis') }}</span>
+    </div>
+    <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+        :row-key="record => record.id" :pagination='false'>
+        <template #bodyCell="{ column, text , record }">
+            <template v-if="column.key === 'detail'">
+                <div>{{$i18n.locale === 'zh' ? record.target_name : record.target_name_en || '-' }}</div>
+            </template>
+            <template v-if="column.key === 'item'">
+                {{ text || '-'}}
+            </template>
+            <template v-if="column.key === 'type'">
+                {{ $Util.itemTypeFilter(text, $i18n.locale) }}
+            </template>
+            <template v-if="column.key === 'amount'">
+                <p class="input-number" :class="record.amount ? '' : 'border-red'">
+                    <a-input-number 
+                        v-model:value="record.amount" 
+                        style="width: 120px;" 
+                        :min="0" 
+                        :precision="0"
+                        :placeholder="$t('def.input')"
+                        @blur="handleBlur"
+                    />
+                </p>
+            </template>
+            <!-- 价格 -->
+            <template v-if="column.key === 'fob_money'">
+                <span v-if="text >= 0">{{column.unit}}</span>
+                {{$Util.countFilter(text)}}
+            </template>
+            <template v-if="column.key === 'time'">
+                {{ $Util.timeFilter(text) }}
+            </template>
+            <template v-if="column.key === 'operation'">
+                <a-button type='link' @click="handleDelete(record.id)" v-if="can_delete"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+            </template>
+        </template>
+    </a-table>
+    <!-- 确认更改 -->
+    <!-- <div class="confirm-btn">
+        <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
+            <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
+            <a-button type="primary" ghost>{{$t('i.confirm_changes')}}</a-button>                            
+        </a-popconfirm>
+    </div> -->
+    <a-modal v-model:visible="infoShow" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
+        <div class="modal">
+            <p class="modal-title">{{ $t('i.modal_title') }}</p>
+            <p class="modal-content">{{ $t('i.modal_content') }}</p>
+        </div>
+        <template #footer>
+            <div class="btns">
+                <a-button @click="infoShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleOk" type="primary">{{ $t('def.sure_exit') }}</a-button>
             </div>
-        </a-collapse-panel>
-    </a-collapse>
+        </template>
+    </a-modal>
 </div>
 </template>
 
@@ -66,7 +77,7 @@ import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
 
 
 export default {
-    name: "AttachmentFile",
+    name: "ItemAccessory",
     components: {ItemSelect},
     props: {
         item_id: {
@@ -77,11 +88,12 @@ export default {
         },
         detail: {},
     },
+    inject: ['setIndex'],
     data() {
         return {
             // 加载
             loading: false,
-            activeKey: ['attachmentFile'],
+            activeKey: ['itemAccessory'],
 
             tableData: [],
 
@@ -105,6 +117,8 @@ export default {
                 },
             },
             disabledChecked: [], // 传给上传配件选择商品中哪些不选中的
+            infoShow: false,
+            nextFn: undefined
         };
     },
     computed: {
@@ -138,7 +152,7 @@ export default {
                 ...params
             }).then(res => {
                 console.log("修改成功", res);
-                this.$message.warning(this.$t('p.modify_success'))
+                this.$message.success(this.$t('p.modify_success'))
                 this.getTableData()
             }).catch(err => {
                 console.log('修改失败', err)
@@ -253,24 +267,111 @@ export default {
                     item_accessory_list: ItemAccessoryList,
                 })      
             }
+        },
+        infoOpen() {
+            this.infoShow = true
+        },
+        infoClose() {
+            this.infoShow = false
+            // 回归左侧和顶部菜单栏选中样式
+            this.setIndex(1, ['/item/item-list'])
+        },
+        handleOk() {
+            this.nextFn()
+            this.infoShow = false
+        },
+        // 校验数量
+        validateAmount(fn) {
+            console.log(fn)
+            const arr = this.tableData.filter(item => !item.amount)
+            if (arr.length > 0) {
+                this.nextFn = fn
+                this.infoOpen()
+            } else {
+                // 校验成功执行 next
+                fn()
+            }
+        },
+        // 数量失焦
+        handleBlur() {
+            this.confirmEvent()
         }
     },
 }
 </script>
 
-<style lang="less">
-.AttachmentFile {
+<style lang="less" scoped>
+.ItemAccessory {
     .panel-header {
-        .fsb();
-        margin-bottom: 20px;
+        display: flex;
+        .fcc(flex-start, center);
+        margin-bottom: 10px;
         .name {
-            font-weight: 500;
-            font-size: 12px;
-            color: rgba(0, 0, 0, 0.85);
+            color: #666;
+            font-family: PingFang SC;
+            font-size: 14px;
+            margin-left: 6px;
         }
         .ant-btn {
             border-radius: 2px;
         }
+    }
+    .confirm-btn {
+        margin-top: 10px;
+        text-align: center;
+    }
+    .i_delete {
+        font-size: 16px;
+    }
+    /* 表格样式-start */
+    .ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
+        font-size: 14px;
+    }
+    :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
+        padding: 10px 16px;
+        font-size: 14px;
+        color: #1D2129;
+    }
+    :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
+        padding: 10px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #1D2129;
+    }
+    /* 表格样式-end */
+}
+</style>
+<style lang="less">
+.ItemAccessory {
+    .input-number {
+        display: inline-block;
+    }
+    .border-red {
+        .ant-input-number {
+            border: 1px solid red !important;
+        }
+    }
+}
+.attachment-file-upload-modal {
+    .modal {
+        .modal-title {
+            color: #1D2129;
+            text-align: center;
+            font-family: PingFang SC;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        .modal-content {
+            color: #1D2129;
+            text-align: center;
+            font-family: PingFang SC;
+            font-size: 14px;
+            font-weight: 400;
+        }
+    }
+    .btns {
+        text-align: center;
     }
 }
 </style>
