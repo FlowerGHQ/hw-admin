@@ -230,6 +230,7 @@ const messages = {
 
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
+            file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -600,6 +601,7 @@ const messages = {
             upload_item_accessory: '上传配件',
             item_accessory_list: '配件列表',
             sale_bom: '销售BOM',
+            sale_bom_dis: '选择商品后请配置商品数量',
             save_site: '点位保存',
             add_cart_success: '添加购物车成功',
             eur: '供货价(EUR)',
@@ -619,6 +621,13 @@ const messages = {
             data_source: '数据来源',
             pop_delete_tip: '确定要删除商品',
             pop_delete_spec: '确定要删除规格',
+            modal_title: '还未配置数量',
+            modal_content: '当前还未对BOM配置数量，确定切换到其他界面吗',
+            delete_bom_pic: '删除当前爆炸图',
+            point_parts_list: '点位零件表',
+            new_part: '新增零件',
+            point_position: '点位',
+            operation_instruction: '操作说明',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -973,6 +982,7 @@ const messages = {
             receiving_time: '收货时间',
             synchronization_to_erp: '同步至ERP',
             reason_fail: '失败原因',
+            upload_explosion: '上传爆炸图',
         },
         s: { // 门店
             store_list: '门店列表',
@@ -1128,6 +1138,7 @@ const messages = {
             submit: '提交',
             ok: '确定',
             sure: '确定',
+            sure_exit: '确定退出',
             create_time: '创建时间',
             start_time: '开始时间',
             end_time: '结束时间',
@@ -2898,7 +2909,7 @@ const messages = {
 
             size_prompt_cover: 'The Cover Size Is Recommended To Be 800X800, And Up To 9 Photos Can Be Transmitted.',
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
-
+            file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -3268,6 +3279,7 @@ const messages = {
             upload_item_accessory: 'Upload The Spare Parts',
             item_accessory_list: 'Spare Parts List',
             sale_bom: 'Sale BOM',
+            sale_bom_dis: 'Please configure the quantity of products after selecting them',
             save_site: 'Point Preservation',
             add_cart_success: 'Add The Shopping Cart Successfully',
             eur: 'Supply Price (Eur)',
@@ -3287,6 +3299,13 @@ const messages = {
             data_source: 'Data Source',
             pop_delete_tip: 'Make sure to delete the item',
             pop_delete_spec: 'Make sure you want to delete the specifications',
+            modal_title: 'Quantity not yet configured',
+            modal_content: 'The quantity has not been configured for BOM yet. Are you sure you want to switch to another interface.',
+            delete_bom_pic: 'Delete the current explosion diagram',
+            point_parts_list: 'Point Parts List',
+            new_part: 'New Part',
+            point_position: 'Point Position',
+            operation_instruction: 'Operation Instruction',
         },
         fe: {
             feedback: 'Feedback',
@@ -3633,6 +3652,7 @@ const messages = {
             receiving_time: 'Receiving Time',
             synchronization_to_erp: 'Synchronization to ERP',
             reason_fail: 'Reason for Failure',
+            upload_explosion: 'Upload Explosion Map',
         },
         s: {
             store_list: 'Shop list',
@@ -3787,6 +3807,7 @@ const messages = {
             submit: 'Submit',
             ok: 'Confirm',
             sure: 'Confirm',
+            sure_exit: 'Confirm Exit',
             create_time: 'Creation Time',
             operate: 'Operate',
             detail: 'Details',
