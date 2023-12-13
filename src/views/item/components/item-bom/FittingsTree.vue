@@ -10,7 +10,10 @@
       </template>
     </a-input-search>
     <div class="tree-select-main">
-      <TreeCircle :treeData="treeData" />
+      <TreeCircle
+        :treeData="treeData"
+        @activeLevel="handleActiveLevel"
+        @activeKey="handleActiveKey" />
     </div>
   </div>
 </template>
@@ -21,6 +24,9 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import TreeCircle from "./TreeCircle.vue";
 // 搜索关键词
 const keyWord = ref("");
+// emit
+const $emit = defineEmits(["handleLevel", "handleKey"]);
+
 // 搜索事件
 const onSearch = (value) => {
   console.log("搜索", value);
@@ -68,6 +74,13 @@ const treeData = reactive([
     key: "0-3",
   },
 ]);
+
+const handleActiveLevel = (level) => {
+  $emit("handleLevel", level);
+};
+const handleActiveKey = (key) => {
+  $emit("handleKey", key);
+};
 </script>
 
 <style lang="less" scoped>

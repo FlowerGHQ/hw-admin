@@ -4,7 +4,7 @@
       v-for="item in realData"
       class="item pointer"
       :class="{ 'active-item': item.key == activeKey }"
-      @click.stop="selectKey(item)">
+      @click.stop="selectKey(item, 'one')">
       <div class="tree-item-main">
         <div class="content">
           <MySvgIcon
@@ -30,7 +30,7 @@
           v-for="(item1, index) in item.children"
           :key="item1.key"
           :class="{ 'active-item-one': item1.key == activeKey }"
-          @click.stop="selectKey(item1)">
+          @click.stop="selectKey(item1, 'two')">
           <div class="item-child-one">
             <div class="left-area">
               <div class="top-area">
@@ -76,8 +76,10 @@
               v-for="(item2, index) in item1.children"
               :key="item2.key"
               :class="{ 'active-item-two': item2.key == activeKey }"
-              @click.stop="selectKey(item2)">
-              <span class="title"> {{ item2.title }}&nbsp;&nbsp;&nbsp;({{ 0 }}) </span>
+              @click.stop="selectKey(item2, 'three')">
+              <span class="title">
+                {{ item2.title }}&nbsp;&nbsp;&nbsp;({{ 0 }})
+              </span>
               <div class="right-icon">
                 <MySvgIcon icon-class="edit" />
                 <MySvgIcon icon-class="delete" />
@@ -100,8 +102,12 @@ const proxy = defineProps({
     default: () => [],
   },
 });
+const $emit = defineEmits(["activeLevel", "activeKey"]);
+
 const realData = ref([]);
 const activeKey = ref("");
+// 点击的层级
+const activeLevel = ref("");
 // 递归子节点
 const circleChildren = (arr) => {
   return arr.map((item) => {
@@ -126,15 +132,16 @@ init();
 
 // 点击展开
 const expand = (item) => {
-  console.log("item", item);
   if (hasChildren(item)) {
     item.select = !item.select;
   }
 };
 // 选择选项
-const selectKey = (item) => {
+const selectKey = (item, level) => {
   activeKey.value = item.key;
-  console.log("item", item.key);
+  activeLevel.value = level;
+  $emit("activeLevel", level);
+  $emit("activeKey", item.key);
 };
 </script>
 
@@ -194,6 +201,7 @@ const selectKey = (item) => {
         }
         .item-child-one {
           padding: 16px;
+          padding-left: 24px;
           width: 100%;
           display: flex;
           align-items: center;
@@ -247,7 +255,7 @@ const selectKey = (item) => {
           }
         }
         .expend-area-two {
-          .tree-item-main-child-two{
+          .tree-item-main-child-two {
             margin-top: 10px;
             padding: 10px 16px;
             line-height: 22px; /* 157.143% */
@@ -255,28 +263,27 @@ const selectKey = (item) => {
             align-items: center;
             justify-content: space-between;
             border: 1px solid transparent;
-            &:first-child{
+            &:first-child {
               margin-top: 0;
             }
-            .right-icon{
+            .right-icon {
               font-size: 16px;
-              .svg-icon{
+              .svg-icon {
                 margin-left: 16px;
               }
-
             }
-            .title{
+            .title {
               padding-left: 58px;
             }
           }
-          .active-item-two{
-            background-color: #F2F3F5;
+          .active-item-two {
+            background-color: #f2f3f5;
           }
         }
       }
       .active-item-one {
-        .item-child-one{
-          background-color: #F2F3F5;
+        .item-child-one {
+          background-color: #f2f3f5;
         }
       }
     }

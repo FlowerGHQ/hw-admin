@@ -9,7 +9,7 @@
                 <div class="item-tree-left">
                     <div class="title-area">{{ $t("item-bom.bom_list") }}</div>
                     <div class="tree-content">
-                        <FittingsTree />
+                        <FittingsTree  @handleLevel="handleLevel" @handleKey="handleKey"/>
                     </div>
                 </div>
                 <!-- 右边 -->
@@ -25,13 +25,36 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, onMounted } from 'vue';
+import { ref, shallowRef, onMounted ,computed} from 'vue';
 import fittings from './components/item-bom/Fittings.vue'
+import FittingsTwo from './components/item-bom/FittingsTwo.vue'
+import FittingsThree from './components/item-bom/FittingsThree.vue'
 import FittingsTree from './components/item-bom/FittingsTree.vue'
-const componentName = shallowRef(fittings)
+// const componentName = shallowRef(fittings)
 // 标题高度
 const titleRefs = ref(null)
 const titleHeight = ref(0)
+let actLevel = ref('')
+let actKey = ref('')
+const handleLevel = (level) => {
+    actLevel.value = level
+}
+const handleKey = (key) => {
+    actKey.value = key
+}
+
+const componentName = computed(() => {
+    if (actLevel.value === 'one') {
+        return fittings
+    } else if (actLevel.value === 'two') {
+        return FittingsTwo
+    } else if (actLevel.value === 'three') {
+        return FittingsThree
+    } else {
+        return fittings
+    }
+})
+
 onMounted(() => {
     titleHeight.value = titleRefs.value.offsetHeight + 'px'
     console.log("高度", titleHeight.val);
