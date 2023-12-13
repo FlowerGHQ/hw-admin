@@ -1,7 +1,7 @@
 
 <template>
 
-        <!-- 
+    <!-- 
         使用例子
         * 代表必填字段
         options: [
@@ -26,6 +26,8 @@
               * placeholder: "def.select",
             }
         ]
+        isShowMore  // 是否需要-展开收起
+        isShowButton  // 是否需要-搜索重置按钮
         @search  // 搜索事件  返回了数据
         @reset  // 重置事件
 
@@ -64,7 +66,7 @@
             },
 
      -->
-    <div class="search-container search-container-new">
+    <div class="search-all search-container-new">
 
         <a-row :gutter="[20,20]" class="search-area">
             <slot name="deafult">
@@ -107,7 +109,7 @@
             <slot name="time"></slot>
             <slot name="extend"></slot>
         </a-row>
-        <div class="btn-area-box" >
+        <div class="btn-area-box">
 
             <a-button @click="handleSearchReset" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
             <a-button @click="handleSearch" type="primary" v-if="isShowButton">
@@ -135,7 +137,6 @@ export default {
             type: Array,
             default: function() {
                 return [
-                    { id: 1, type: "input", value: "name", key: "名称" },
                 ];
             }
         },
@@ -225,7 +226,27 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.search-all {
+    width: 100%;
+    background-color: #F7F8FA;
+    padding: 20px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
 
+    .search-area {
+        display: flex;
+        flex-wrap: wrap;
+        width: calc(~'100% - 210px');
+    }
+    .btn-area-box {
+        min-width: 210px;
+        display: flex;
+        justify-content: flex-end;
+    }
+}
 .m-l-5 {
     margin-left: 5px;
 }
