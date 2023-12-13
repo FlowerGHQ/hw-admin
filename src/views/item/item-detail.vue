@@ -354,7 +354,11 @@ export default {
         }
     },
     beforeRouteLeave(to, from, next) {
-        this.$refs.AttachmentFile.validateAmount(next)
+        if (this.tabKey === 3) {
+            this.$refs.AttachmentFile.validateAmount(next)
+        } else {
+            next()
+        }
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
