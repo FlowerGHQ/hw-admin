@@ -7,7 +7,7 @@
                     {{ item.name || '-' }}
                 </div>
             </div>
-            <a-button v-if="detailImageUrl" type="primary" class="add-explosion-btn" @click="clickShowAdd(true)">
+            <a-button v-if="detailImageUrl" type="primary" class="add-explosion-btn" @click="clickShowAdd(true, false)">
                 {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
             </a-button>
         </div>
@@ -16,55 +16,78 @@
             <div v-show="detailImageUrl">
                 <div class="panel-content text-c">
                     <div class="explored-operation-container">
-                        <div class="point-controller">
-                            <div class="point-info-row" v-for="(item, index) in pointerList" :key="index">
-                                <div class="point-info-left">
-                                    <div class="point-pos-num">
-                                        {{ index }}
+                        <!-- 点位操作控件 -->
+                        <div class="point-controller-container">
+                            <div class="point-info-row-head">
+                                点位列表
+                            </div>
+                            <div :class="pointerList.length ? 'point-controller' : 'point-controller'">
+                                <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList" :key="index">
+                                    <div class="point-info-left">
+                                        <div class="point-pos-num">
+                                            {{ index + 1 }}
+                                        </div>
+                                        <div class="point-pos-name">
+                                            点位{{ item.index }}
+                                        </div>
                                     </div>
-                                    <div class="point-pos-name">
-                                        点位{{ item.index }}
+                                    <div class="point-info-right">
+                                        <img @click="clickDeletePoint(index)" :src="deleteIcon" alt="">
                                     </div>
                                 </div>
-                                <div class="point-info-right">
-                                    <img @click="clickDeletePoint(index)" :src="deleteIcon" alt="">
+                                <div class="point-info-empty" v-else>
+                                    当前无点位，请添加配件配置点位序号
                                 </div>
                             </div>
                         </div>
-                        <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
-                            {{ $t(/*删除当前爆炸图*/'i.delete_bom_pic') }}
-                        </a-button>
-                    </div>
-                    <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                        <img style="max-height: 385px;" v-if="detailImageUrl" :src="detailImageUrl" ref="exploreImg" alt="">
-                        <canvas ref="exploreCanvas"></canvas>
-                        <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
-                            :style="{ 'left': `${item.start.x}px`, 'top': `${item.start.y}px` }"
-                            @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop=""></div>
-                        <div class="pointer-end" v-for="(item, index) in pointerList" :key="index"
-                            :style="{ 'left': `${item.end.x}px`, 'top': `${item.end.y}px` }"
-                            @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup" @dblclick="showEdit(index)"
-                            @mousemove.stop="pointMouseMove(index)" @mouseleave.stop="pointMouseMove(-1)">
-                            {{ item.index || 0 }}
-                            <div class="component-container" @mousemove.stop="pointMouseMove(index)" v-show="pointMouseMoveIndex === index" @mousedown.stop="">
-                                <div class="component">
-                                    <div class="component-contain">
-                                        <div class="contain-header"><i class="icon i_close" style="color: #fff"
-                                                @click.stop="clickDeletePoint(index)" /></div>
-                                        <div class="contain-name">
-                                            <i class="icon i_skew-bg" />
-                                            <span class="icon-name">{{ $t('n.name') }}</span>
-                                            {{ (item.item || {}).name }}
-                                        </div>
-                                        <div class="contain-type">
-                                            <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model }}
+                        <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
+                            <img :class="isBookWidth ? 'canvas-img w630' : 'canvas-img'" v-if="detailImageUrl"
+                                :src="detailImageUrl" ref="exploreImg" alt="">
+                            <canvas ref="exploreCanvas"></canvas>
+                            <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
+                                :style="{ 'left': `${item.start.x}px`, 'top': `${item.start.y}px` }"
+                                @mousedown="pointMousedown(index, 'start')" @mouseup="pointMouseup" @mousemove.stop="">
+                            </div>
+                            <div class="pointer-end" v-for="(item, index) in pointerList" :key="index"
+                                :style="{ 'left': `${item.end.x}px`, 'top': `${item.end.y}px` }"
+                                @mousedown="pointMousedown(index, 'end')" @mouseup="pointMouseup"
+                                @dblclick="showEdit(index)" @mousemove.stop="pointMouseMove(index)"
+                                @mouseleave.stop="pointMouseMove(-1)">
+                                {{ item.index || 0 }}
+                                <div class="component-container" @mousemove.stop="pointMouseMove(index)"
+                                    v-show="pointMouseMoveIndex === index" @mousedown.stop="">
+                                    <div class="component">
+                                        <div class="component-contain">
+                                            <!-- <div class="contain-header"> -->
+                                                <!-- <i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)" /> -->
+                                            <!-- </div> -->
+                                            <div class="contain-name">
+                                                <!-- <i class="icon i_skew-bg" /> -->
+                                                <!-- <span class="icon-name">{{ $t('n.name') }}</span> -->
+                                                {{ (item.item || {}).name }}
                                             </div>
-                                            <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
+                                            <!-- <div class="contain-type">
+                                                <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item ||
+                                                    {}).model }}
+                                                </div>
+                                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <!-- 爆炸图操作按钮 -->
+                        <div class="btns-area">
+                            <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickEditExplore">
+                                {{ $t(/*替换爆炸图*/'i.edit_bom_pic') }}
+                            </a-button>
+                            <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickDeleteExplore">
+                                {{ $t(/*删除爆炸图*/'i.delete_bom_pic') }}
+                            </a-button>
+                            <a-button class="panel-btn" v-if="isChangedPoint" type="primary" @click="clickSave">
+                                {{ $t('def.save') }}
+                            </a-button>
                         </div>
                     </div>
                 </div>
@@ -80,15 +103,14 @@
                 </a-tooltip>
                 <div class="empty-upload-container">
                     <img :src="uploadPic" alt="">
-                    <div class="empty-upload-title">
-                        请先上传爆炸图
+                    <div class="empty-upload-flex-wrap">
+                        <div class="empty-upload-tip">
+                            上传爆炸图，以配置点位
+                        </div>
+                        <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
+                            {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
+                        </a-button>
                     </div>
-                    <div class="empty-upload-tip">
-                        上传爆炸图，以配置点位
-                    </div>
-                    <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true)">
-                        {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
-                    </a-button>
                 </div>
             </div>
             <div class="point-table-container">
@@ -97,10 +119,10 @@
                         <div class="point-table-head-title">
                             {{ $t(/*点位零件表*/'i.point_parts_list') }}
                         </div>
-                        <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">{{ $t(/*新增零件*/'i.new_part') }}
+                        <a-button v-if="pointerList.length" @click="clickAdd" type="primary">{{ $t(/*新增零件*/'i.new_part') }}
                         </a-button>
                     </div>
-                    <a-table v-if="detailImageUrl" :columns="specificColumns" :data-source="pointerList"
+                    <a-table v-if="pointerList.length" :columns="specificColumns" :data-source="pointerList"
                         :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                         <template #bodyCell="{ column, record, index }">
                             <template v-if="column.dataIndex === 'index'" width="100px">
@@ -113,9 +135,13 @@
                             <template v-if="column.dataIndex === 'model'">
                                 {{ (record.item || {}).model }}
                             </template>
+                            <template v-if="column.dataIndex === 'operation'">
+                                <a-button type="link" @click="showEdit(index)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
+                                <a-button type="link" @click="clickDeletePoint(index)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                            </template>
                         </template>
                     </a-table>
-                    <div v-if="!detailImageUrl" class="empty-table-container">
+                    <div v-if="!pointerList.length" class="empty-table-container">
                         <div class="empty-table-head">
                             <div class="empty-table-head-block">
                                 {{ $t('i.point_position') }}
@@ -136,16 +162,13 @@
                                 <div class="empty-add-item-tip">
                                     为爆炸图添加配件
                                 </div>
-                                <a-button @click="clickAdd" type="primary">添加配件</a-button>
+                                <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">添加配件</a-button>
+                                <div class="disable-add-btn" v-else @click="clickUnDetailPic" type="primary">添加配件</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="foot-btn" v-if="isChangedPoint">
-            <a-button type="primary" @click="clickSave">{{ $t('def.save') }}</a-button>
-            <!-- <a-button @click="clickCancel">{{ $t('def.cancel') }}</a-button> -->
         </div>
         <!-- 绑定配件弹窗 -->
         <div class="form-block form-hide">
@@ -154,7 +177,8 @@
                 {{ $t('i.add') }}
             </ItemSelect>
         </div>
-        <AddExploreImage :modalShow="showAddModal" @addExplore="handlerAdd" @closeModal="clickShowAdd(false)" />
+        <AddExploreImage :uploadForm="uploadForm" :isUploadEdit="isUploadEdit" :modalShow="showAddModal"
+            @addExplore="handlerAdd" @closeModal="clickShowAdd(false)" />
     </div>
 </template>
     
@@ -220,9 +244,12 @@ export default {
             },
             deleteIcon: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/8e32624eb3c65e763296a147d72cfdc0c4b50ceafed576e04b358b3a9becda10.png',
             tipIcon: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/fdbe378097b4f3f08dbf97bd49d7dae700b138d2827db87d6bc5001d46fa3364.png',
-            uploadPic: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/6fc9bbb2b751a01d86c5a9d900311d97b5a56ed8c7f2fd3e5b2230fc289efbe9.png',
+            uploadPic: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/b3f294686cc11e3cacbe2c7ea720b740574c051623cd75a00efec3e6aece72d6.png',
             addPic: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png',
             pointMouseMoveIndex: undefined,
+            isBookWidth: false,
+            isUploadEdit: false,
+            uploadForm: {},
         };
     },
     computed: {
@@ -242,6 +269,8 @@ export default {
                 { title: this.$t('n.name'), key: 'name', dataIndex: 'name' },
                 { title: this.$t('i.number'), key: 'model', dataIndex: 'model' },
                 { title: this.$t('i.code'), key: 'code', dataIndex: 'name' },
+                { title: this.$t('i.code'), key: 'code', dataIndex: 'name' },
+                { title: this.$t('def.operate'), dataIndex: 'operation', key: 'operation' },
             )
             return column
         },
@@ -315,8 +344,14 @@ export default {
                 }
             });
         },
-        clickShowAdd(show) {
+        clickShowAdd(show, isEdit = false) {
             this.showAddModal = show;
+            this.isUploadEdit = isEdit
+            this.uploadForm = {
+                id: this.tabsArray.filter((item, index) => index === this.currentTab)[0].id,
+                name: this.tabsArray.filter((item, index) => index === this.currentTab)[0].name,
+                img: this.tabsArray.filter((item, index) => index === this.currentTab)[0].img
+            }
         },
         // 删除当前爆炸图
         clickDeleteExplore() {
@@ -335,6 +370,10 @@ export default {
                     ths.requestSave(param, ths.$t('pop_up.delete'), ths.getItemExploreList.bind(ths))
                 },
             });
+        },
+        // 编辑当前爆炸图
+        clickEditExplore() {
+            this.clickShowAdd(true, true);
         },
         // 添加｜编辑弹窗确认回调
         handlerAdd(info) {
@@ -390,6 +429,12 @@ export default {
                 if (height > 385) {
                     this.canvas.height = 385
                 }
+                // if(window.innerWidth <= 1440) {
+                //     this.canvas.width = 430
+                //     this.isBookWidth = true
+                // } else {
+                //     this.isBookWidth = false   
+                // }
                 console.log('this.canvas.width', this.canvas.width);
                 console.log('this.canvas.height', this.canvas.height);
             } else {
@@ -484,6 +529,10 @@ export default {
         clickAdd() {
             this.editPointer = null;
             this.$refs.itemSelect.handleModalShow();
+        },
+        // 未上传爆炸图提示信息
+        clickUnDetailPic() {
+            this.$message.warning(this.$t('i.upload_tip'))
         },
         // 删除点位
         clickDeletePoint(index = -1) {
@@ -590,16 +639,37 @@ export default {
             width: 100%;
             display: flex;
             justify-content: space-between;
+            .point-controller-container {
+                width: 208px;
+            }
+
+            .point-info-row-head {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                background: #F2F3F5;
+                padding: 6px;
+                box-sizing: border-box;
+                color: #000;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+            }
 
             .point-controller {
+                width: 100%;
                 padding: 20px;
                 box-sizing: border-box;
-                width: 208px;
                 max-height: 433px;
                 overflow-y: scroll;
                 background: #FFF;
                 border: 1px solid #EEE;
                 border-radius: 4px;
+
+                &.border-none {
+                    border: none;
+                }
 
                 &::-webkit-scrollbar {
                     /*滚动条整体样式*/
@@ -623,7 +693,14 @@ export default {
                     // opacity: 0.9;
                     background: #FFF;
                 }
-
+                .point-info-empty {
+                    color: #BFBFBF;
+                    text-align: center;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                }
                 .point-info-row {
                     margin-bottom: 12px;
                     width: 100%;
@@ -707,23 +784,20 @@ export default {
             }
 
             .empty-upload-container {
-                margin-top: 156px;
                 width: 100%;
+                height: 369px;
                 display: flex;
-                flex-direction: column;
+                justify-content: center;
                 align-items: center;
-
-                >img {
-                    width: 260px;
-                    height: 106px;
-                    margin-bottom: 10px;
+                .empty-upload-flex-wrap {
+                    margin-left: 10px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: flex-start;
                 }
-
-                .empty-upload-title {
-                    font-size: 24px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;
+                >img {
+                    width: 99px;
+                    height: 78px;
                 }
 
                 .empty-upload-tip {
@@ -732,11 +806,11 @@ export default {
                     font-style: normal;
                     font-weight: 400;
                     line-height: normal;
-                    margin-bottom: 24px;
+                    margin-bottom: 10px;
                 }
 
                 .empty-upload-btn {
-                    margin-bottom: 40px;
+                    // margin-bottom: 40px;
                 }
             }
         }
@@ -821,6 +895,21 @@ export default {
                             line-height: normal;
                             margin-bottom: 10px;
                         }
+
+                        .disable-add-btn {
+                            height: 32px;
+                            border-radius: 4px;
+                            opacity: 0.39;
+                            background: #0061FF;
+                            padding: 4px 15px;
+                            box-sizing: border-box;
+                            .fcc();
+                            color: #FFF;
+                            font-size: 14px;
+                            font-style: normal;
+                            font-weight: 400;
+                            cursor: not-allowed;
+                        }
                     }
                 }
             }
@@ -866,9 +955,15 @@ export default {
         display: inline-block;
         position: relative;
         max-width: 857px;
-        ;
         max-height: 397px;
         min-height: 100px;
+        margin: 0 auto;
+        padding: 0 20px;
+        box-sizing: content-box;
+
+        .canvas-img {
+            max-height: 385px;
+        }
 
         .pointer-end,
         .pointer-start {
@@ -903,9 +998,11 @@ export default {
             color: @TC_L;
             border: 1px solid @BG_LP;
             background-color: @BG_LP;
+
             .component-container {
                 padding-top: 10px;
             }
+
             .component {
                 position: relative;
                 display: inline-block;
@@ -915,31 +1012,32 @@ export default {
 
                 .component-contain {
                     position: absolute;
-                    display: flex;
-                    flex-wrap: wrap;
+                    // display: flex;
+                    // flex-wrap: wrap;
+                    .fcc();
                     z-index: 2;
-                    padding-bottom: 12px;
-                    top: -2px;
-                    left: -26px;
-                    width: 250px;
+                    padding: 10px;
+                    top: -44px;
+                    left: 26px;
+                    // width: 250px;
                     border-radius: 2px;
                     background-color: @BG_LP;
                     border: 1px solid @BG_LP;
                     font-size: 0;
 
-                    &:before,
-                    &:after {
-                        content: "";
-                        display: block;
-                        border-width: 5px;
-                        position: absolute;
-                        top: -10px;
-                        left: 30px;
-                        border-style: solid dashed dashed;
-                        border-color: transparent transparent @BG_LP transparent;
-                        font-size: 0;
-                        line-height: 0;
-                    }
+                    // &:before,
+                    // &:after {
+                    //     content: "";
+                    //     display: block;
+                    //     border-width: 5px;
+                    //     position: absolute;
+                    //     top: -10px;
+                    //     left: 30px;
+                    //     border-style: solid dashed dashed;
+                    //     border-color: transparent transparent @BG_LP transparent;
+                    //     font-size: 0;
+                    //     line-height: 0;
+                    // }
 
                     &:after {
                         top: -9px;
@@ -963,7 +1061,6 @@ export default {
 
                     .contain-name {
                         position: relative;
-                        padding: 0 16px;
                         width: 100%;
                         height: 20px;
                         line-height: 20px;
@@ -1044,12 +1141,6 @@ export default {
             bottom: 0;
             left: 0;
         }
-    }
-
-    .foot-btn {
-        margin-top: 20px;
-        width: 100%;
-        text-align: center;
     }
 
     .text-c {

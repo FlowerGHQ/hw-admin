@@ -136,138 +136,6 @@
                     </div>
                 </div>
             </div>
-            <!-- <a-collapse v-model:activeKey="activeKey" ghost expand-icon-position="right">
-                <template #expandIcon><i class="icon i_expan_l"/></template>
-                <a-collapse-panel key="itemInfo" :header="$t('i.product_information')" class="gray-collapse-panel">
-                    <a-row class="panel-content info-container">
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block">
-                            <div class="info-item">
-                                <div class="key">{{ $t('i.code') }}</div>
-                                <div class="value">{{ detail.code || '-' }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('n.type') }}</div>
-                                <div class="value"> {{ $Util.itemTypeFilter(detail.type, $i18n.locale) }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('n.flag_entity') }}</div>
-                                <div class="value"> {{
-                                        $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale)
-                                    }}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('i.categories') }}</div>
-                                <div class="value">
-                                <span v-for="(category, index) in detail.category_list">
-                                    <span v-if="index !== 0">,</span>{{$i18n.locale =='zh' ? category.category_name : category.category_name_en }}
-                                </span>
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">{{ $t('d.sales_area') }}</div>
-                                <div class="value">{{ detail.sales_area_name }}</div>
-                            </div>
-                        </a-col>                        
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='6' class="info-block" v-if="indep_flag">
-                            <div class="info-item">
-                                <div class="key">{{ $t('i.cost_price') }}</div>
-                                <div class="value">{{ $Util.priceUnitFilter(detail.original_price_currency) }}
-                                    {{ $Util.countFilter(detail.original_price) }}
-                                </div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">FOB(EUR)</div>
-                                <div class="value">€{{ $Util.countFilter(detail.fob_eur) }}</div>
-                            </div>
-                            <div class="info-item">
-                                <div class="key">FOB(USD)</div>
-                                <div class="value">${{ $Util.countFilter(detail.fob_usd) }}</div>
-                            </div>
-                        </a-col>
-                        <a-col :xs='24' :sm='24' :lg='12' :xl='8' :xxl='12' class="info-block">
-                            <template v-for="(item, index) of config" :key="index">
-                                <a-col :xs='24' :sm='24' :lg='12' :xl='12' :xxl='8' class="info-item"
-                                       :class="item.type" v-if="item.value">
-                                    <div class="key">{{ item.name }}</div>
-                                    <div class="value" v-if="item.type == 'rich_text'" v-html='item.value'></div>
-                                    <div class="value" v-else>{{ item.value || '-' }}</div>
-                                </a-col>
-                            </template>
-                        </a-col>
-                    </a-row>
-                </a-collapse-panel>
-                <a-collapse-panel key="itemSpec" :header="$t('i.information')" class="gray-collapse-panel"
-                                  v-if="detail.set_id && !this.indep_flag">
-                    <div class="panel-content table-container no-mg">
-                        <a-table :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
-                                 :row-key="record => record.id" :pagination='false'>
-                            <template #headerCell="{ column}">
-                                <template v-if="column.key === 'select'">
-                                    {{ lang =='zh' ? column.title: column.dataIndex }}
-                                </template>
-                            </template>
-                            <template #bodyCell="{ column, text, record, index }">
-                                <template v-if="column.key === 'select'">
-                                    {{ lang =='zh' ? text.value:text.value_en }}
-                                </template>
-                                <template v-if="column.key === 'item'">
-                                    {{ text || '' }}
-                                </template>
-                                <template v-if="column.key === 'money'">
-                                    {{ $Util.priceUnitFilter(record.original_price_currency) }}
-                                    {{ $Util.countFilter(text) }}
-                                </template>
-                                <template v-if="column.key === 'fob'">
-                                    {{ column.unit }} {{ $Util.countFilter(text) }}
-                                </template>
-                                <template v-if="column.dataIndex === 'flag_independent_info'">
-                                    <template v-if="index === 0">
-                                        <a-tooltip :title="$t('i.default_a')">
-                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
-                                        </a-tooltip>
-                                    </template>
-                                    <template v-else>
-                                        <a-switch v-model:checked="record.flag_independent_info"
-                                                  @change='handleIndepChange(record)'/>
-                                    </template>
-                                </template>
-                                <template v-if="column.dataIndex === 'flag_default'">
-                                    <template v-if="index === 0">
-                                        <a-tooltip :title="$t('i.default_a')">
-                                            {{ $t('i.default') }} <i class="icon i_hint" style="font-size: 12px;"/>
-                                        </a-tooltip>
-                                    </template>
-                                    <template v-else>
-                                        <a-switch v-model:checked="record.flag_default"
-                                                  @change='handleDefaults(record)'/>
-                                    </template>
-                                </template>
-
-                                <template v-if="column.key === 'operation'">
-                                    <template v-if="record.flag_independent_info">
-                                        <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
-                                            class="icon i_relevance"/> {{ $t('i.view') }}
-                                        </a-button>
-                                        <a-button type="link" @click="routerChange('edit-indep', record)"><i
-                                            class="icon i_edit"/>{{ $t('def.edit') }}
-                                        </a-button>
-                                        <a-button type="link" @click="routerChange('detail-indep', record)"><i
-                                            class="icon i_detail"/>{{ $t('def.detail') }}
-                                        </a-button>
-                                    </template>                    
-                                </template>
-                            </template>
-                        </a-table>
-                    </div>
-                </a-collapse-panel> -->
-            <!-- 上传配件 -->
-            <!-- <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                               @submit="getItemDetail" ref="AttachmentFile"/> -->
-            <!-- 上传附件 -->
-            <!-- <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                                @submit="getItemDetail" ref="AttachmentFile"/> -->
-            <!-- </a-collapse> -->
         </div>
     </div>
 </template>
@@ -625,7 +493,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// #ItemDetail {}
+#ItemDetail {
+    font-family: MiSans-Regular;
+}
 .title {
     color: #000;
     font-size: 16px;
