@@ -121,7 +121,7 @@
 					padding-bottom: 4px;
 					padding-right: 0;
 					line-height: 22px;
-					font-size: 14px;
+					font-size: 12px;
 					font-weight: 400;
 					color: #111111;
 					position: relative;

@@ -3110,9 +3110,8 @@ export default {
     white-space: nowrap;
 }
 .appearance-font {
-    color: #1D2129 !important;
+    color: #8090A6 !important;
     font-family: PingFang SC;
-    font-weight: 600;
     margin-top: 5px;
 }
 .not-aligin-item {
