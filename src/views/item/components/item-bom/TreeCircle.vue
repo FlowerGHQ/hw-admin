@@ -148,7 +148,6 @@ const selectKey = (item) => {
     background-color: #fff;
     margin-bottom: 16px;
     border-radius: 4px;
-    padding: 16px;
     border: 1px solid transparent;
     &:last-child {
       margin-bottom: 0;
@@ -158,6 +157,7 @@ const selectKey = (item) => {
       justify-content: space-between;
       align-items: center;
       font-size: 14px;
+      padding: 16px;
       .content {
         display: flex;
         align-items: center;
@@ -187,17 +187,13 @@ const selectKey = (item) => {
       width: 100%;
       background-color: #fff;
       .tree-item-main-child-one {
-        margin-left: 8px;
-        padding: 10px 16px 10px 16px;
-        margin-top: 10px;
         border: 1px solid transparent;
         &:first-child {
           margin-top: 16px;
-          padding-top: 20px;
           border-top: 1px solid #e2e2e2;
         }
         .item-child-one {
-          height: 44px;
+          padding: 16px;
           width: 100%;
           display: flex;
           align-items: center;
@@ -253,14 +249,14 @@ const selectKey = (item) => {
         .expend-area-two {
           .tree-item-main-child-two{
             margin-top: 10px;
-            padding: 16px;
+            padding: 10px 16px;
             line-height: 22px; /* 157.143% */
             display: flex;
             align-items: center;
             justify-content: space-between;
             border: 1px solid transparent;
-            .title{
-              padding-left: 48px;
+            &:first-child{
+              margin-top: 0;
             }
             .right-icon{
               font-size: 16px;
@@ -269,14 +265,19 @@ const selectKey = (item) => {
               }
 
             }
+            .title{
+              padding-left: 58px;
+            }
           }
           .active-item-two{
-            border: 1px solid #0061ff !important;
+            background-color: #F2F3F5;
           }
         }
       }
       .active-item-one {
-        border: 1px solid #0061ff !important;
+        .item-child-one{
+          background-color: #F2F3F5;
+        }
       }
     }
   }
