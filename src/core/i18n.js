@@ -627,6 +627,7 @@ const messages = {
             point_parts_list: '点位零件表',
             new_part: '新增零件',
             point_position: '点位',
+            operation_instruction: '操作说明',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3304,6 +3305,7 @@ const messages = {
             point_parts_list: 'Point Parts List',
             new_part: 'New Part',
             point_position: 'Point Position',
+            operation_instruction: 'Operation Instruction',
         },
         fe: {
             feedback: 'Feedback',

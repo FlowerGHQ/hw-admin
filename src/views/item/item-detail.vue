@@ -71,15 +71,15 @@
 
                                 <template v-if="column.key === 'operation'">
                                     <template v-if="record.flag_independent_info">
-                                        <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
+                                        <!-- <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
                                                 class="icon i_relevance" /> {{ $t('i.view') }}
-                                        </a-button>
+                                        </a-button> -->
                                         <a-button type="link" @click="routerChange('edit-indep', record)"><i
                                                 class="icon i_edit" />{{ $t('def.edit') }}
                                         </a-button>
-                                        <a-button type="link" @click="routerChange('detail-indep', record)"><i
+                                        <!-- <a-button type="link" @click="routerChange('detail-indep', record)"><i
                                                 class="icon i_detail" />{{ $t('def.detail') }}
-                                        </a-button>
+                                        </a-button> -->
                                     </template>
                                 </template>
                             </template>
