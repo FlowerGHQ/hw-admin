@@ -1,7 +1,7 @@
 <template>
     <div class="fittings-three">
         <div class="upload">
-            
+            <BomUpload />
         </div>
         <div class="table-container">
             <div class="title">
@@ -73,6 +73,7 @@
 </template>
 
 <script setup>
+import BomUpload from "./BomUpLoad.vue";
 import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import Core from "@/core";
 const emptyImage = "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png"
@@ -214,7 +215,10 @@ const handleTableChange = (pagination, filters, sorter) => {
 <style lang="less" scoped>
 .fittings-three {
     .upload {
-
+        width: 100%;
+        min-height: 158px;
+        border: 1px solid  #E2E2E2;
+        padding: 23px 20px;
     }
     .table-container {
         .title {

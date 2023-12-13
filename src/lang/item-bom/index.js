@@ -23,8 +23,12 @@ export default {
         please_enter: "请输入",
         commodity_code_tips: "筛选多个编码，请使用英文,分隔符",
         title_the_ph: '请输入名称',
+<<<<<<< HEAD
         explosion_diagram: "为爆炸图添加配件",
         add_fittings: "添加配件",
+=======
+        operation_instructions: '操作说明',
+>>>>>>> 8b52f090c255c8167f73f1ad1dd0d7c5057591f1
     },
     en: {
         title: "BOM Management",
@@ -49,7 +53,12 @@ export default {
         please_enter: "Please Enter",
         commodity_code_tips: "Filter multiple codes, please use English with delimiters",
         title_the_ph: 'Please enter a name',
+<<<<<<< HEAD
         explosion_diagram: "Add accessories to the explosion diagram.",
         add_fittings: "Add fittings",
+=======
+        operation_instructions: 'Operation Instructions',
+
+>>>>>>> 8b52f090c255c8167f73f1ad1dd0d7c5057591f1
     }
 }
