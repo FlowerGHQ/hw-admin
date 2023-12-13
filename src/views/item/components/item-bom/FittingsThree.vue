@@ -53,6 +53,19 @@
                         </a-tooltip>
                     </span>
                 </template>
+                <template #emptyText>
+                    <div class="empty-add-item-container">
+                        <img :src="emptyImage" alt="">
+                        <div class="empty-add-item-text-wrap">
+                            <div class="empty-add-item-tip">
+                                {{ $t('item-bom.explosion_diagram') }}
+                            </div>                            
+                            <div class="disable-add-btn" @click="onAddFittings" type="primary">
+                                {{ $t('item-bom.add_fittings') }}
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </a-table>
         </div>
     </div>
@@ -61,6 +74,7 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import Core from "@/core";
+const emptyImage = "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png"
 
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
@@ -135,6 +149,7 @@ const tableData = ref([
     //     remark: "ss",
     // },
 ])
+
 // 分页
 const channelPagination = ref({
     current: 1,
@@ -148,7 +163,7 @@ const channelPagination = ref({
 
 
 onMounted(() => {
-    getTableDataFetch()
+    // getTableDataFetch()
 })
 /* Fetch start*/
 // 获取表格list
@@ -174,6 +189,10 @@ const getTableDataFetch = (parmas = {}) => {
 /* Fetch end*/
 
 /* methods start*/
+// 添加配件
+const onAddFittings = () => {
+    console.log("添加配件");
+}
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...channelPagination.value }
@@ -214,6 +233,45 @@ const handleTableChange = (pagination, filters, sorter) => {
             font-size: 14px;
             font-weight: 500;
         }
+
+        .empty-add-item-container {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            > img {
+                width: 143px;
+                height: 78px;
+            }
+            .empty-add-item-text-wrap {
+                margin-left: 16px;
+                .empty-add-item-tip {
+                    color: #333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin-bottom: 10px;
+                }
+                .disable-add-btn {
+                    height: 32px;
+                    border-radius: 4px;
+                    opacity: 0.39;
+                    background: #0061FF;
+                    padding: 4px 15px;
+                    box-sizing: border-box;
+                    .fcc();
+                    color: #FFF;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    cursor: not-allowed;
+                }
+            }
+        }
+
     }
 }
 </style>
