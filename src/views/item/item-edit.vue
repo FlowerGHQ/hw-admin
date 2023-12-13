@@ -1948,16 +1948,15 @@ export default {
             // }
 
             // 封面上传
-            if (this.upload.coverList.length) {
+            if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });
                 // form.logo = coverList[0];
                 form.logo = coverList.join(',');
             }
-
             // 详情页面上传
-            if (this.upload.detailList.length) {
+            if (this.upload.detailList.length || this.upload.detailList.length === 0) {
                 let detailList = this.upload.detailList.map((item) => {
                     return item.short_path || item.response.data.filename;
                 });
@@ -2239,7 +2238,7 @@ export default {
         // 上传图片
         handleCoverChange({ file, fileList }) {
            if(fileList.length > 9){
-                fileList = fileList.slice(0,10)
+                fileList = fileList.slice(0,9)
             } 
             if (file.status == "done") {
                 if (file.response && file.response.code > 0) {
@@ -2866,7 +2865,6 @@ export default {
             .tag-body {
                 display: flex;
                 flex-wrap: wrap;
-                width: 338px;
             }
             .tag-value {
                 padding: 2px 10px;
@@ -3114,7 +3112,6 @@ export default {
 .appearance-font {
     color: #1D2129 !important;
     font-family: PingFang SC;
-    font-weight: 600;
     margin-top: 5px;
 }
 .not-aligin-item {
