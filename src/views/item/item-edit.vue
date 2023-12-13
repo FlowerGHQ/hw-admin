@@ -3110,7 +3110,7 @@ export default {
     white-space: nowrap;
 }
 .appearance-font {
-    color: #8090A6 !important;
+    color: #1D2129 !important;
     font-family: PingFang SC;
     margin-top: 5px;
 }
