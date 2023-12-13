@@ -138,7 +138,7 @@
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
                                 <a-button type="link" @click="showEdit(index)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                                <a-button type="link" @click="clickDeletePoint(index)" class="danger"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -197,6 +197,9 @@ export default {
     },
     props: {
         id: {
+            type: Number,
+        },
+        detailId: {
             type: Number,
         },
     },
@@ -303,8 +306,6 @@ export default {
         // 点击切换爆炸图
         clickChangTab(key) {
             this.currentTab = key
-            console.log('currentTab', this.currentTab);
-            console.log('tabsArray', this.tabsArray);
             if (this.isChangedPoint === true) {
                 this.changeTabConfirm(key);
                 return;
@@ -316,7 +317,7 @@ export default {
             this.pointerList.forEach(item => {
                 item.isEdit = false;
             })
-            console.log('this.pointerList >> ', this.pointerList);
+            console.log('pointerList >> ', this.pointerList);
             this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
         },
@@ -331,7 +332,7 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param, ths.$t('def.save'), ths.getItemExploreList.bind(ths))
@@ -366,7 +367,7 @@ export default {
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item, index) => index !== ths.currentTab),
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param, ths.$t('pop_up.delete'), ths.getItemExploreList.bind(ths))
@@ -380,7 +381,7 @@ export default {
         // 添加｜编辑弹窗确认回调
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
+            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
                 this.loadImage(info.img);
                 this.$message.success(info.id ? this.$t('n.amend') + this.$t('pop_up.success') : this.$t('v.save') + this.$t('pop_up.success'));
                 this.clickShowAdd(false);
@@ -393,7 +394,7 @@ export default {
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
-                id: this.id
+                id: this.detailId
             }).then(res => {
                 let detail = res.detail || {}
                 detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
@@ -422,8 +423,6 @@ export default {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         imageLoadCallback(width, height) {
-            console.log('width', width);
-            console.log('height', height);
             if (width > 800 || height > 800) {
                 let rate = width / height;
                 this.canvas.width = rate >= 1 ? 700 : width / height * 800;
@@ -431,14 +430,6 @@ export default {
                 if (height > 385) {
                     this.canvas.height = 385
                 }
-                // if(window.innerWidth <= 1440) {
-                //     this.canvas.width = 430
-                //     this.isBookWidth = true
-                // } else {
-                //     this.isBookWidth = false   
-                // }
-                console.log('this.canvas.width', this.canvas.width);
-                console.log('this.canvas.height', this.canvas.height);
             } else {
                 this.canvas.width = width;
                 this.canvas.height = height;
@@ -485,7 +476,7 @@ export default {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res) => {
                 this.tabsArray = get(res, "list.list", []);
                 this.parsePoint(true);
@@ -591,7 +582,7 @@ export default {
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                target_id: ths.id,
+                target_id: ths.id || ths.detailId,
                 target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
             }
             this.requestSave(param)
