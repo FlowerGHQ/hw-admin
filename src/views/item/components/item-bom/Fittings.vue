@@ -9,6 +9,7 @@
             :columns="tableColumns"
             :scroll="{ x: true, }"
             :pagination="channelPagination"
+            :loading="loading"
             @change="handleTableChange"
         >
             <template #bodyCell="{ column, text, record }">            
@@ -55,7 +56,7 @@ import { onMounted, ref, getCurrentInstance, computed } from 'vue';
 import Core from "@/core";
 
 const { proxy } = getCurrentInstance();
-
+const loading = ref(false)
 
 const tableColumns = computed(() => {
     const result = [
@@ -151,6 +152,7 @@ onMounted(() => {
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
+    loading.value = true
     let obj = {
         flag_spread: 1,
         page: 1,
@@ -162,8 +164,10 @@ const getTableDataFetch = (parmas = {}) => {
     Core.Api.Item.list(obj).then(res => {
         channelPagination.value.total = res.count
         tableData.value = res.list
+        loading.value = false
     }).catch(err => {
         console.log("getTableDataFetch", err);
+        loading.value = false
     })
 }
 /* Fetch end*/

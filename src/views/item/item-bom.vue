@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, shallowRef, onMounted, computed } from "vue";
+import { ref, shallowRef, onMounted, computed ,watch} from "vue";
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
@@ -38,15 +38,22 @@ const titleHeight = ref(0);
 const activeObj = ref({});
 
 
+watch(
+    activeObj,
+    (newVal)=>{
+        console.log("newVal",newVal)
+    },
+    {
+        deep:true
+    }
+)
+
 const componentName = computed(() => {
-    console.log("activeObj", activeObj.value);
-
-
-  if (activeObj.value.level === "one") {
+  if (activeObj.value.level === 1) {
     return fittings;
-  } else if (activeObj.value.level === "two") {
+  } else if (activeObj.value.level === 2) {
     return FittingsTwo;
-  } else if (activeObj.value.level === "three") {
+  } else if (activeObj.value.level === 3) {
     return FittingsThree;
   } else {
     return fittings;

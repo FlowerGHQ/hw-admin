@@ -4,7 +4,7 @@
       v-for="item in realData"
       class="item pointer"
       :class="{ 'active-item': item.key == activeKey }"
-      @click.stop="selectKey(item, 'one')">
+      @click.stop="selectKey(item, 1)">
       <div class="tree-item-main">
         <div class="content">
           <MySvgIcon
@@ -30,7 +30,7 @@
           v-for="(item1, index) in item.children"
           :key="item1.key"
           :class="{ 'active-item-one': item1.key == activeKey }"
-          @click.stop="selectKey(item1, 'two')">
+          @click.stop="selectKey(item1, 2)">
           <div class="item-child-one">
             <div class="left-area">
               <div class="top-area">
@@ -76,7 +76,7 @@
               v-for="(item2, index) in item1.children"
               :key="item2.key"
               :class="{ 'active-item-two': item2.key == activeKey }"
-              @click.stop="selectKey(item2, 'three')">
+              @click.stop="selectKey(item2, 3)">
               <span class="title">
                 {{ item2.title }}&nbsp;&nbsp;&nbsp;({{ 0 }})
               </span>
