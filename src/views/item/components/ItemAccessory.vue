@@ -29,10 +29,10 @@
                     <a-input-number 
                         v-model:value="record.amount" 
                         style="width: 120px;" 
-                        :min="0" 
+                        :min="1" 
                         :precision="0"
                         :placeholder="$t('def.input')"
-                        @blur="handleBlur"
+                        @blur="handleBlur(record.amount)"
                     />
                 </p>
             </template>
@@ -56,14 +56,14 @@
             <a-button type="primary" ghost>{{$t('i.confirm_changes')}}</a-button>                            
         </a-popconfirm>
     </div> -->
-    <a-modal v-model:visible="infoShow" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
+    <a-modal v-model:visible="infoShow" :maskClosable="false" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
         <div class="modal">
             <p class="modal-title">{{ $t('i.modal_title') }}</p>
             <p class="modal-content">{{ $t('i.modal_content') }}</p>
         </div>
         <template #footer>
             <div class="btns">
-                <a-button @click="infoShow = false">{{ $t('def.cancel') }}</a-button>
+                <a-button @click="handleCancle">{{ $t('def.cancel') }}</a-button>
                 <a-button @click="handleOk" type="primary">{{ $t('def.sure_exit') }}</a-button>
             </div>
         </template>
@@ -273,12 +273,15 @@ export default {
         },
         infoClose() {
             this.infoShow = false
-            // 回归左侧和顶部菜单栏选中样式
-            this.setIndex(1, ['/item/item-list'])
         },
         handleOk() {
             this.nextFn()
             this.infoShow = false
+        },
+        handleCancle() {
+            this.infoShow = false
+            // 回归左侧和顶部菜单栏选中样式
+            this.setIndex(1, ['/item/item-list'])
         },
         // 校验数量
         validateAmount(fn) {
@@ -292,8 +295,10 @@ export default {
             }
         },
         // 数量失焦
-        handleBlur() {
-            this.confirmEvent()
+        handleBlur(value) {
+            if (value) {
+                this.confirmEvent()
+            }
         }
     },
 }
