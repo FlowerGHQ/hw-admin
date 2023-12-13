@@ -476,7 +476,7 @@ export default {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res) => {
                 this.tabsArray = get(res, "list.list", []);
                 this.parsePoint(true);
