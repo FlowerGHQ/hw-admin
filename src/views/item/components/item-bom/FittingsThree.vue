@@ -11,16 +11,60 @@
                     </div>
                 </a-tooltip>
 
-                <div class="operation"></div>
+                <div v-if="!isExplosionImg" class="operation">
+					<a-button class="delete-btn" @click="onOperation('delete')">{{ $t('item-bom.delete_explosive') }}</a-button>
+					<a-button class="replace-btn" @click="onOperation('replace')">{{ $t('item-bom.alternate_explosive') }}</a-button>
+					<a-button class="save-btn" type="primary" @click="onOperation('save')">{{ $t('item-bom.save') }}</a-button>
+				</div>
             </div>
             <div class="explosion-diagram-bottom">
-                <div class="empty-upload-container">
+				<div class="explosion-diagram-content">
+					<div class="content-left">
+						<div class="left-list">
+							<div class="left-list-header">点位列表</div>
+							<div class="left-list-emtpy-text">
+								当前无点位，请添加配件配置点位序号
+							</div>
+							<div class="sidebar-item"></div>
+						</div>
+					 </div>
+					<div class="content-right">
+						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
+							<img ref="exploreImg" src="@/assets/images/vehicle.png" alt="">
+							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
+
+							<!-- <template v-for="(item, itemIndex) in pointerList">            
+								<div      
+									v-for="(itemStart, itemStartIndex) in item.start" :key="index"     
+									class="pointer-start" 
+									:style="{'left': `${itemStart?.x}px`, 'top': `${itemStart?.y }px`}"
+									@mousedown="pointMousedown(itemIndex, 'start', itemStartIndex)"
+									@mousemove.stop=""
+								>
+								</div>
+							</template>
+							<template v-for="(item, itemIndex) in pointerList" :key="itemIndex">            
+								<div    
+									v-if="item?.end"
+									class="pointer-end"
+									:style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
+									@mousedown="pointMousedown(itemIndex, 'end')"
+									@mousemove.stop=""
+								>
+									{{item.index || 0}}
+								</div>
+							</template> -->
+						</div>
+					 </div>
+				</div>
+				<!-- 空状态 -->
+                <div v-if="isExplosionImg" class="empty-upload-container">
                     <img :src="uploadPic" alt="" />
                     <div class="empty-upload-flex-wrap">
                         <div class="empty-upload-tip">
                             {{ $t("item-bom.upload_text") }}
                         </div>
-                        <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
+                        <a-button class="empty-upload-btn" type="primary" @click="onUploadExplosion">
                             {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
                         </a-button>
                     </div>
@@ -168,6 +212,8 @@ const tableColumns = computed(() => {
     ];
     return result;
 });
+
+const isExplosionImg = ref(false) // 是否有爆炸图
 const tableData = ref([]);
 
 // 分页
@@ -191,9 +237,9 @@ const realData = computed(() => {
     });
     return result;
 });
-console.log("realData", realData);
+
 onMounted(() => {
-    getTableDataFetch();
+    // getTableDataFetch();
 });
 /* Fetch start*/
 // 获取表格list
@@ -221,10 +267,18 @@ const getTableDataFetch = (parmas = {}) => {
 /* Fetch end*/
 
 /* methods start*/
+// 上传爆炸图
+const onUploadExplosion = () => {
+    console.log("上传爆炸图");
+};
 // 添加配件
 const onAddFittings = () => {
-    console.log("添加配件");
+    console.log("添加配件"); 
 };
+// 按钮操作
+const onOperation = () => {
+
+}
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...channelPagination.value };
@@ -244,6 +298,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .fittings-three {
+	font-family: PingFang SC;
     .explosion-diagram {
         width: 100%;
         min-height: 158px;
@@ -252,6 +307,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 
         .explosion-diagram-tip {
             display: flex;
+			justify-content: space-between;
             .tip-wrap {
                 display: flex;
                 align-items: center;
@@ -261,17 +317,97 @@ const handleTableChange = (pagination, filters, sorter) => {
                 }
                 .tip-text {
                     margin-left: 5px;
-                    color: #666;
-                    font-family: PingFang SC;
+                    color: #666;                    
                     font-size: 16px;
                     font-weight: 400;
                 }
             }
 
-            .operation {
+            .operation {				
+				font-weight: 400;					
+				font-size: 14px;
+				.delete-btn {
+					color: #666;
+				}
+				.replace-btn {
+					color: #666;
+				}
+				.save-btn {
+					color: #FFF;
+				}
             }
         }
         .explosion-diagram-bottom {
+			.explosion-diagram-content {
+				margin-top: 31px;
+				display: flex;
+				.content-left {
+					width: 206px;
+					.left-list {
+						border: 1px solid #EEE;
+						border-radius: 4px;
+						.left-list-header {
+							padding: 6px;
+							box-sizing: border-box;						
+							color: #000;
+							font-size: 14px;
+							font-weight: 400;
+							background-color: #F2F3F5;
+						}
+						.left-list-emtpy-text {
+							padding: 10px 27px;
+							box-sizing: border-box;
+							text-align: center;
+							color: #BFBFBF;
+							text-align: center;							
+							font-size: 14px;
+							font-weight: 400;
+						}
+					}
+				}
+				.content-right {
+					.point-contain {
+        
+						display: inline-block;
+						position: relative;
+
+						.explore-canvas {
+							position: absolute;
+							top: 0;
+							right: 0;
+							bottom: 0;
+							left: 0;
+						}
+						.pointer-start, .pointer-end  {
+							position: absolute;
+							z-index: 10;
+							border-radius: 50px;
+							user-select: none;
+							opacity: 0.6;
+							transition: opacity 0.15s ease;
+							transform: translate(-50%, -50%);
+							cursor: pointer;
+							&:hover {
+								z-index: 20;
+								opacity: 1;
+							}
+						}
+						.pointer-start {
+							width: 8px;
+							height: 8px;
+							background-color: @BG_LP;
+						}
+						.pointer-end {
+							width: 20px;
+							height: 20px;
+							line-height: 20px;
+							text-align: center;
+							background-color: @BG_LP;
+							color: #fff;
+						}
+					}
+				}
+			}
             .empty-upload-container {
                 width: 100%;
                 display: flex;
@@ -306,16 +442,14 @@ const handleTableChange = (pagination, filters, sorter) => {
     .fittings-table-container {
         margin-top: 20px;
         .title {
-            color: #1d2129;
-            font-family: PingFang SC;
+            color: #1d2129;            
             font-size: 16px;
             font-weight: 600;
             margin-bottom: 10px;
         }
 
         .table-title {
-            color: #1d2129;
-            font-family: PingFang SC;
+            color: #1d2129;            
             font-size: 14px;
             font-weight: 500;
         }
@@ -359,8 +493,7 @@ const handleTableChange = (pagination, filters, sorter) => {
         }
 
         .table-title {
-            color: #1d2129;
-            font-family: PingFang SC;
+            color: #1d2129;            
             font-size: 14px;
             font-weight: 500;
         }

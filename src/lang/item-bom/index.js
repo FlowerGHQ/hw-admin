@@ -31,6 +31,9 @@ export default {
         upload_text: "上传爆炸图，以配置点位",
         upload_explosion: "上传爆炸图",
         tips_tooltip: "①上传配件，②上传爆炸图，③配置点位",
+        delete_explosive: "删除爆炸图",
+        alternate_explosive: "替换爆炸图",
+        save: "保存",
     },
     en: {
         title: "BOM Management",
@@ -62,5 +65,8 @@ export default {
         upload_text: "Upload the explosion image to configure the point.",
         upload_explosion: "Upload Explosion",
         tips_tooltip: "①upload accessories，②upload explosion pictures，③configure points",
+        delete_explosive: "Delete explosive pattern",
+        alternate_explosive: "Alternate explosive pattern",
+        save: "save",
     }
 }
