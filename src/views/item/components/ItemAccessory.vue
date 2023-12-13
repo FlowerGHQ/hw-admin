@@ -8,12 +8,7 @@
                 btnClass="item-select-btn"
                 :disabled-checked='disabledChecked'
                 @select="handleSelectItem" 
-            />          
-            <!-- 确认更改 -->
-            <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
-                <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
-                <a-button >{{$t('i.confirm_changes')}}</a-button>                            
-            </a-popconfirm>
+            />
         </div>
         <span class="name">{{ $t('i.sale_bom_dis') }}</span>
     </div>
@@ -53,6 +48,13 @@
             </template>
         </template>
     </a-table>
+    <!-- 确认更改 -->
+    <div class="confirm-btn">
+        <a-popconfirm v-if="tableData.length"  @confirm="confirmEvent">    
+            <template #title>{{ $t('i.confirm_changes') + '?' }}</template>                        
+            <a-button type="primary" ghost>{{$t('i.confirm_changes')}}</a-button>                            
+        </a-popconfirm>
+    </div>
     <a-modal v-model:visible="infoShow" width="320px" centered :title="null" class="attachment-file-upload-modal" :after-close="infoClose">
         <div class="modal">
             <p class="modal-title">{{ $t('i.modal_title') }}</p>
@@ -137,9 +139,6 @@ export default {
         can_delete() {
             return true
         },
-    },
-    beforeRouteLeave(to, from, next){
-        console.log(to)
     },
     mounted() {
         this.getTableData();
@@ -278,6 +277,7 @@ export default {
         },
         // 校验数量
         validateAmount(fn) {
+            console.log(fn)
             const arr = this.tableData.filter(item => !item.amount)
             if (arr.length > 0) {
                 this.nextFn = fn
@@ -307,6 +307,10 @@ export default {
         .ant-btn {
             border-radius: 2px;
         }
+    }
+    .confirm-btn {
+        margin-top: 10px;
+        text-align: center;
     }
     :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
         padding: 10px 16px;

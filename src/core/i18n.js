@@ -615,7 +615,7 @@ const messages = {
             home_page_redirect_number: '首页跳转序号',
             on_board_battery: '随车电池',
             clear_shop_car: '清空购物车',
-            confirm_changes: '确认更改',
+            confirm_changes: '确认修改',
             source_type: '来源',
             synchronization_time: '同步时间',
             data_source: '数据来源',
