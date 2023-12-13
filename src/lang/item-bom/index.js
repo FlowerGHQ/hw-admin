@@ -16,6 +16,11 @@ export default {
         // 添加分类
         add_category: "添加分类",
         add_category_ph: "请输入分类名称",
+        manufacturer_name: "厂家名称",
+        classify: '分类',
+        ordinal: '序号',
+        change_content: '变化内容',
+        change_the_content: '设变内容',
     },
     en: {
         title: "BOM Management",
@@ -33,5 +38,11 @@ export default {
         // 添加分类
         add_category: "Add Category",
         add_category_ph: "Please enter the category name",
+        manufacturer_name: "Manufacturer Name",
+        classify: 'Classify',
+        ordinal: 'ordinal',
+        change_content: 'Change Content',
+        change_the_content: 'Change The Content',
+
     }
 }
