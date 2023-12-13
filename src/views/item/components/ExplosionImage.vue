@@ -332,7 +332,7 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param, ths.$t('def.save'), ths.getItemExploreList.bind(ths))
@@ -367,7 +367,7 @@ export default {
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item, index) => index !== ths.currentTab),
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param, ths.$t('pop_up.delete'), ths.getItemExploreList.bind(ths))
@@ -381,7 +381,7 @@ export default {
         // 添加｜编辑弹窗确认回调
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
+            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
                 this.loadImage(info.img);
                 this.$message.success(info.id ? this.$t('n.amend') + this.$t('pop_up.success') : this.$t('v.save') + this.$t('pop_up.success'));
                 this.clickShowAdd(false);
@@ -476,7 +476,7 @@ export default {
             this.pointerList = [];
             this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res) => {
                 this.tabsArray = get(res, "list.list", []);
                 this.parsePoint(true);
@@ -582,7 +582,7 @@ export default {
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                target_id: ths.id,
+                target_id: ths.id || ths.detailId,
                 target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
             }
             this.requestSave(param)
