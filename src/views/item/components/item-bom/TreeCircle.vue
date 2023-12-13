@@ -17,11 +17,26 @@
             "
             @click.stop="expand(item)"
             class="arrow" />
-          <img class="group" src='@/assets/images/bom/group-active.png' alt="" v-if=" item.key == activeKey">
-          <img class="group" src='@/assets/images/bom/group-common.png' alt="" v-else>
-          <div class="title">{{ item.title }}</div>
+          <img
+            class="group"
+            src="@/assets/images/bom/group-active.png"
+            alt=""
+            v-if="item.key == activeKey" />
+          <img
+            class="group"
+            src="@/assets/images/bom/group-common.png"
+            alt=""
+            v-else />
+          <div class="title">
+            <span v-if="!item.edit">{{ item.title }}</span>
+            <a-input
+              v-else
+              v-model:value="item.title"
+              :placeholder="$t('item-bom.title_the_ph')"
+              @pressEnter="item.edit = false" />
+          </div>
         </div>
-        <div class="edit">
+        <div class="edit" @click.stop="handleEdit(item)">
           <MySvgIcon icon-class="edit" />
         </div>
       </div>
@@ -52,9 +67,8 @@
                         ? 'new-dom '
                         : 'old-dom'
                       : ''
-                    "
-                  v-if="hasChildren(item1)" 
-                  />
+                  "
+                  v-if="hasChildren(item1)" />
                 <span
                   :class="{
                     'common-title': index !== 0,
@@ -81,11 +95,21 @@
               :class="{ 'active-item-two': item2.key == activeKey }"
               @click.stop="selectKey(item2, 3)">
               <span class="title">
-                {{ item2.title }}&nbsp;&nbsp;&nbsp;({{ 0 }})
+                <div class="title-area">
+                  <span v-if="!item2.edit">{{ item2.title }}</span>
+                  <a-input
+                    v-else
+                    v-model:value="item2.title"
+                    :placeholder="$t('item-bom.title_the_ph')"
+                    @pressEnter="item2.edit = false" />
+                </div>
+                <div class="number">&nbsp;&nbsp;&nbsp;({{ 0 }})</div>
               </span>
               <div class="right-icon">
-                <MySvgIcon icon-class="edit" />
-                <MySvgIcon icon-class="delete" />
+                <MySvgIcon icon-class="edit" @click.stop="handleEdit(item2)" />
+                <MySvgIcon
+                  icon-class="delete"
+                  @click.stop="handleDelete(item2)" />
               </div>
             </div>
             <a-select
@@ -110,6 +134,9 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import Util from "@/core/utils";
+import { useI18n } from "vue-i18n";
+const $t = useI18n().t
 
 const proxy = defineProps({
   treeData: {
@@ -132,6 +159,7 @@ const circleChildren = (arr) => {
       select: false,
       children: item.children ? circleChildren(item.children) : [],
       add: false,
+      edit: false,
     };
   });
 };
@@ -152,9 +180,9 @@ init();
 const expand = (item) => {
   if (hasChildren(item)) {
     item.select = !item.select;
-    if(!item.select){
+    if (!item.select) {
       // 隐藏
-      item.add =  false 
+      item.add = false;
     }
   }
 };
@@ -183,10 +211,27 @@ const addShow = ref(false);
 const addCategory = (item) => {
   activeKey.value = item.key;
   // 展开
-  item.select = true
-  item.add = true
+  item.select = true;
+  item.add = true;
   // 显示
   addShow.value = true;
+};
+
+// 编辑逻辑
+const handleEdit = (item) => {
+  item.edit = true;
+};
+// 删除逻辑
+const handleDelete = (item) => {
+  Util.confirm({
+    title: $t("pop_up.sure_delete"),
+    okText: $t("def.sure"),
+    okType: "danger",
+    cancelText: $t("def.cancel"),
+    onOk() {
+      console.log("OK");
+    },
+  });
 };
 </script>
 
@@ -220,11 +265,11 @@ const addCategory = (item) => {
         svg {
           font-size: 16px;
         }
-        .group{
+        .group {
           width: 32px;
           height: 32px;
           margin-left: 10px;
-          img{
+          img {
             width: 32px;
             height: 32px;
           }
@@ -247,7 +292,6 @@ const addCategory = (item) => {
       .tree-item-main-child-one {
         border: 1px solid transparent;
         &:first-child {
-          margin-top: 16px;
           border-top: 1px solid #e2e2e2;
         }
         .item-child-one {
@@ -325,6 +369,8 @@ const addCategory = (item) => {
             }
             .title {
               padding-left: 58px;
+              display: flex;
+              align-items: center;
             }
           }
           .active-item-two {

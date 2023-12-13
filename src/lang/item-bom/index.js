@@ -21,6 +21,7 @@ export default {
         ordinal: '序号',
         change_content: '变化内容',
         change_the_content: '设变内容',
+        title_the_ph: '请输入名称',
     },
     en: {
         title: "BOM Management",
@@ -43,6 +44,7 @@ export default {
         ordinal: 'ordinal',
         change_content: 'Change Content',
         change_the_content: 'Change The Content',
+        title_the_ph: 'Please enter a name',
 
     }
 }
