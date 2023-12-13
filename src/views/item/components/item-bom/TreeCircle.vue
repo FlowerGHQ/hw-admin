@@ -17,7 +17,8 @@
             "
             @click.stop="expand(item)"
             class="arrow" />
-          <MySvgIcon icon-class="group-select" class="group" />
+          <img class="group" src='@/assets/images/bom/group-active.png' alt="" v-if=" item.key == activeKey">
+          <img class="group" src='@/assets/images/bom/group-common.png' alt="" v-else>
           <div class="title">{{ item.title }}</div>
         </div>
         <div class="edit">
@@ -51,7 +52,9 @@
                         ? 'new-dom '
                         : 'old-dom'
                       : ''
-                  " />
+                    "
+                  v-if="hasChildren(item1)" 
+                  />
                 <span
                   :class="{
                     'common-title': index !== 0,
@@ -65,7 +68,7 @@
                 <span class="time">2023.12.21</span>
               </div>
             </div>
-            <div class="add">
+            <div class="add" @click.stop="addCategory(item1)">
               <MySvgIcon icon-class="add" />
               <span>{{ $t("item-bom.add_category") }}</span>
             </div>
@@ -85,6 +88,18 @@
                 <MySvgIcon icon-class="delete" />
               </div>
             </div>
+            <a-select
+              v-if="addShow"
+              class="add-category-select"
+              v-model:value="value"
+              show-search
+              :placeholder="$t('item-bom.add_category_ph')"
+              style="width: 200px"
+              :options="options"
+              :filter-option="filterOption"
+              @focus="handleFocus"
+              @blur="handleBlur"
+              @change="handleChange"></a-select>
           </div>
         </div>
       </div>
@@ -126,6 +141,8 @@ const hasChildren = (item) => {
 // 初始化
 const init = () => {
   realData.value = circleChildren(proxy.treeData);
+  activeKey.value = realData.value[0].key;
+  realData.value[0].select = true;
 };
 // 调用
 init();
@@ -134,14 +151,38 @@ init();
 const expand = (item) => {
   if (hasChildren(item)) {
     item.select = !item.select;
+    if(!item.select){
+      // 隐藏
+      addShow.value = false
+    }
   }
 };
 // 选择选项
 const selectKey = (item, level) => {
   activeKey.value = item.key;
   activeLevel.value = level;
+
   $emit("activeLevel", level);
   $emit("activeKey", item.key);
+};
+//新增分类的option选项
+const options = ref([
+  { value: "jack", label: "Jack" },
+  { value: "lucy", label: "Lucy" },
+  { value: "tom", label: "Tom" },
+]);
+// 前端筛选
+const filterOption = (input, option) => {
+  return option.value.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+// 创建addShow
+const addShow = ref(false);
+// 添加分类
+const addCategory = (item) => {
+  // 展开
+  item.select = true
+  // 显示
+  addShow.value = true;
 };
 </script>
 
@@ -175,9 +216,14 @@ const selectKey = (item, level) => {
         svg {
           font-size: 16px;
         }
-        .group {
-          font-size: 32px;
+        .group{
+          width: 32px;
+          height: 32px;
           margin-left: 10px;
+          img{
+            width: 32px;
+            height: 32px;
+          }
         }
         .title {
           margin-left: 10px;
@@ -193,6 +239,7 @@ const selectKey = (item, level) => {
     .expand-area {
       width: 100%;
       background-color: #fff;
+      padding-bottom: 16px;
       .tree-item-main-child-one {
         border: 1px solid transparent;
         &:first-child {
@@ -280,6 +327,11 @@ const selectKey = (item, level) => {
             background-color: #f2f3f5;
           }
         }
+        .add-category-select {
+          margin-left: 68px;
+          margin-top: 5px;
+          margin-bottom: 5px;
+        }
       }
       .active-item-one {
         .item-child-one {
@@ -295,9 +347,6 @@ const selectKey = (item, level) => {
         .title {
           color: #0061ff;
         }
-      }
-      .group {
-        color: #0061ff;
       }
     }
   }
