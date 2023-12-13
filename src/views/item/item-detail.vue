@@ -121,8 +121,8 @@
                                 @submit="getItemDetail" ref="AttachmentFile"/>
                         </template>
                         <!-- 爆炸图 -->
-                        <template v-if="tabKey === 2">
-                            <ExplosionImage :id="currentSpecId "/>
+                        <template v-else-if="tabKey === 2">
+                            <ExplosionImage :detailId="id" :id="currentSpecId "/>
                         </template>
                         <template v-else-if="tabKey === 3">
                             <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
@@ -213,9 +213,6 @@ export default {
             )
             column.push(
                 { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
-                // {title: 'FOB(EUR)', key: 'fob', dataIndex: 'fob_eur', unit: '€'},
-                // {title: 'FOB(USD)', key: 'fob', dataIndex: 'fob_usd', unit: '$'},
-                // {title: '建议零售价', key: 'money', dataIndex: 'price'},
                 { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
                 { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
                 { title: this.$t('def.operate'), key: 'operation' },
@@ -232,10 +229,9 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
-        console.log('this route id', this.id);
+        console.log('id', this.id);
     },
     mounted() {
-        // this.id = Number(this.$route.query.id) || 0
         this.indep_flag = Number(this.$route.query.indep_flag) || 0
         this.getItemDetail();
     },
@@ -291,6 +287,7 @@ export default {
         },
         // 获取 商品详情
         getItemDetail() {
+            console.log('this.id', this.id);
             this.loading = true;
             Core.Api.Item.detail({
                 id: this.id
@@ -306,7 +303,6 @@ export default {
                 } catch (err) {
                     this.config = []
                 }
-                console.log('set_id:', detail.set_id)
                 if (detail.set_id && !this.indep_flag) {
                     // 多规格展开
                     this.expand = true
@@ -361,7 +357,6 @@ export default {
                                 value_en: ""
                             }
                         }
-
                     }
                     return {
                         ...params,
@@ -394,28 +389,6 @@ export default {
                 this.loading = false;
             });
         },
-
-        // 删除 商品
-        /* handleDelete(id) {
-            let _this = this;
-            this.$confirm({
-                title: '确定要删除该商品吗？',
-                okText: '确定',
-                okType: 'danger',
-                cancelText: '取消',
-                onOk() {
-                    Core.Api.Item.delete({id: this.id}).then(() => {
-                        _this.$message.success('删除成功');
-                        _this.getItemDetail();
-                        if (!_this.set_id) {
-                            _this.routerChange('back');
-                        }
-                    }).catch(err => {
-                        console.log("handleDelete err", err);
-                    })
-                },
-            });
-        },*/
         // 开启、关闭 商品个性化
         handleIndepChange(record) {
             console.log('handleIndepChange record:', record)

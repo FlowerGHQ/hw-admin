@@ -282,7 +282,6 @@ export default {
         },
         // 校验数量
         validateAmount(fn) {
-            console.log(fn)
             const arr = this.tableData.filter(item => !item.amount)
             if (arr.length > 0) {
                 this.nextFn = fn
