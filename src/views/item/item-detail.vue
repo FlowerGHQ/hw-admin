@@ -121,7 +121,7 @@
                                 @submit="getItemDetail" ref="AttachmentFile"/>
                         </template>
                         <!-- 爆炸图 -->
-                        <template v-if="tabKey === 2">
+                        <template v-else-if="tabKey === 2">
                             <ExplosionImage :id="currentSpecId "/>
                         </template>
                         <template v-else-if="tabKey === 3">
