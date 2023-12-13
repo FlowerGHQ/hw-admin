@@ -21,7 +21,7 @@
             <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false' />
             <div class="gray-panel">
                 <p class="title">{{ $t('i.information') }}</p>
-                <div class="expand-body">
+                <div class="expand-body" v-if="detail.set_id && !indep_flag">
                     <div class="table" :style="{ height: expand ? `${tableHeight}px` : `${tableTheadHeight}px` }">
                         <a-table id="expand-table" :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
                             :row-key="record => record.id" :pagination='false'>
@@ -316,10 +316,6 @@ export default {
                     this.getAttrDef();
                 } else {
                     this.expand = false
-                    this.$nextTick(() => {
-                        //获取table和table-header高度
-                        this.initHeight()
-                    })
                 }
             }).catch(err => {
                 console.log('getItemDetail err', err)
