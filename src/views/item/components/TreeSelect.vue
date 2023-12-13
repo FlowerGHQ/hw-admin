@@ -60,7 +60,7 @@
 				}).then(res => {
 					this.tableData = res?.list? this.filterChildren(res.list):[];
 					this.tableData.forEach(item=>{
-						if(item.id === 1 || item.id === 2){
+						if(item.id === 1  ){
 							this.expandedRowKeys.push(item.id)
 						}
 					})
@@ -121,7 +121,7 @@
 					padding-bottom: 4px;
 					padding-right: 0;
 					line-height: 22px;
-					font-size: 16px;
+					font-size: 14px;
 					font-weight: 400;
 					color: #111111;
 					position: relative;
