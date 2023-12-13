@@ -71,20 +71,20 @@
         <a-row :gutter="[20,20]" class="search-area">
             <slot name="deafult">
                 <template v-for="(item, index) in options" :key="index">
-                    <a-col v-if="item.type === 'input'" :xs="24" :sm="24" :xl="8" :xxl="6" class="search-box">
+                    <a-col v-if="item.type === 'input'" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box">
                         <div  class="item-box">
                             <div class="key-box">
                                 {{ $t(item.key) }}
                             </div>
                             <div class="value-box">
                                 <a-input
-                                    :placeholder="$t('def.input')"
+                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)"
                                     v-model:value="item.value"
                                     @keydown.enter="handleSearch" />
                             </div>
                         </div>
                     </a-col>    
-                    <a-col v-else-if="(item.type === 'select')" :xs="24" :sm="24" :xl="8" :xxl="6" class="search-box" >
+                    <a-col v-else-if="(item.type === 'select')" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box" >
 
                         <div  class="item-box">
                             <div class="key-box">
@@ -93,7 +93,7 @@
                             <div class="value-box">
                                 <a-select
                                     v-model:value="item.value"
-                                    :placeholder="$t('def.select')">
+                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)">
                                     <a-select-option
                                         v-for="(val, key) in item.selectMap"
                                         :key="key"
@@ -239,10 +239,9 @@ export default {
     .search-area {
         display: flex;
         flex-wrap: wrap;
-        width: calc(~'100% - 210px');
+        width: 100%;
     }
     .btn-area-box {
-        min-width: 210px;
         display: flex;
         justify-content: flex-end;
     }

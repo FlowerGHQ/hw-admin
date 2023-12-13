@@ -17,7 +17,7 @@
         <!-- 右边 -->
         <div class="item-tree-right">
           <div class="search-content">
-            <SearchAll :isShowMore="false"></SearchAll>
+            <SearchAll :isShowMore="false" :options="searchOptions"></SearchAll>
           </div>
           <component :is="componentName"></component>
         </div>
@@ -39,6 +39,24 @@ const titleRefs = ref(null);
 const titleHeight = ref(0);
 // 选择层级对象
 const activeObj = ref({});
+const searchOptions = ref([
+    {
+        id: 1,
+        type: "input",
+        key: 'item-bom.product_name',
+        value: undefined,
+        searchParmas: "name",                    
+        placeholder: "item-bom.please_enter",
+    },
+    {
+        id: 2,
+        type: "input",
+        key: 'item-bom.commodity_code',
+        value: undefined,
+        searchParmas: "code",                    
+        placeholder: "item-bom.commodity_code_tips",
+    },
+]) // 搜索options
 
 watch(
     activeObj,
@@ -66,9 +84,12 @@ onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
   console.log("高度", titleHeight.val);
 });
-/* methods */
-// 组件切换
-const compChange = () => {};
+
+/* fetch start */
+/* fetch end */
+
+/* methods start*/
+/* methods end*/
 </script>
 
 <style lang="less" scoped>
