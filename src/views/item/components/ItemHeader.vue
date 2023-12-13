@@ -95,8 +95,8 @@ export default {
         position: relative;
         background-color: #F8FAFC;
         img {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
             background: #F3F3F3;
             border-radius: 4px 4px 4px 4px;
@@ -114,17 +114,17 @@ export default {
             .name {
                 display: flex;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 16px;
                 > p {
                     &:nth-child(1) {
                         color: #1D2129;
-                        font-size: 24px;
+                        font-size: 18px;
                         font-weight: 600;
-                        margin-right: 6px;
+                        margin-right: 10px;
                     }
                     &:nth-child(2) {
                         border-radius: 4px;
-                        padding: 1px 8px;
+                        padding: 2px 10px;
                         background-color: #EFEFEF;
                         color: #666;
                         font-size: 14px;
@@ -189,5 +189,8 @@ export default {
             }
         }
     }
+}
+.gray-panel {
+    padding: 20px;
 }
 </style>
