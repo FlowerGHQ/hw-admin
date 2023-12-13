@@ -182,6 +182,11 @@ export default {
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
         };
     },
+    provide() {
+        return {
+            setIndex: this.setIndex
+        }
+    },
     computed: {
         showList() {            
             let showList
@@ -415,6 +420,11 @@ export default {
             } else {
                 this.collapsed = false
             }
+        },
+        setIndex(tabPosition, selectedKeys) {
+            this.tabPosition = tabPosition
+            this.selectedKeys = selectedKeys
+            Core.Data.setTabPosition(this.tabPosition)
         }
     }
 };
@@ -680,10 +690,18 @@ export default {
 
     .layout-content {
         padding: 16px;
+        padding-right: 10px;
         box-sizing: border-box;
         height: 100%;
         // height: calc(~"100% - 38px");
-        overflow-y: auto;
+        overflow-y: scroll;
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background-color: #6E7C94;
+            border-radius: 3px;
+        }
     }
 
     @media (min-width: 820px) {}

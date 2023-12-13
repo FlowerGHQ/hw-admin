@@ -32,7 +32,7 @@
                             </template>
                             <template #bodyCell="{ column, text, record, index }">
                                 <template v-if="column.key === 'input'">
-                                    {{ lang == 'zh' ? detail.name : detail.name_en }}({{ $t('d.code') }}：{{ text }})
+                                    {{ lang == 'zh' ? record.name : record.name_en }}({{ $t('d.code') }}：{{ text }})
                                 </template>
                                 <template v-if="column.key === 'select'">
                                     {{ lang == 'zh' ? text.value : text.value_en }}
@@ -109,14 +109,9 @@
                     </div>
                     <!-- 商品展示图/附件/爆炸图/销售BOM -->
                     <div :class="detail.set_id ? 'tab-container' : 'tab-container pd0'">
-                        <a-tabs v-model:activeKey="tabKey" @change="handleTabChange">
-                            <a-tab-pane :key="item.key" v-for="item of tabList">
-                                <template #tab>
-                                    <div class="tabs-title">{{ item[lang] }}
-                                    </div>
-                                </template>
-                            </a-tab-pane>
-                        </a-tabs>
+                        <div class="my-tabs">
+                            <my-tabs v-model:activeKey="tabKey" :canClick="canClick" :tabsList="tabList" @handlechange="handleTabChange"></my-tabs>
+                        </div>
                         <!-- 展示图 -->
                         <template v-if="tabKey === 0">
                             <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList"/>
@@ -147,6 +142,7 @@ import AttachmentFile from './components/AttachmentFile.vue';
 import ItemAccessory from './components/ItemAccessory.vue';
 import DisplayImage from './components/DisplayImage.vue';
 import ExplosionImage from './components/ExplosionImage.vue';
+import MyTabs from './components/MyTabs.vue';
 export default {
     name: 'RepairDetail',
     components: {
@@ -155,6 +151,7 @@ export default {
         ItemAccessory,
         DisplayImage,
         ExplosionImage,
+        MyTabs
     },
     props: {},
     data() {
@@ -186,6 +183,11 @@ export default {
             coverImageList: [],
             detailImageList: [],
             currentSpecId: 0,
+            nameList: [
+                { key: '1', value: 'aa' },
+                { key: '2', value: 'bb' },
+            ],
+            canClick: false
         };
     },
     watch: {
@@ -485,8 +487,14 @@ export default {
                 };
             });
         },
-        handleTabChange(e) {
-            console.log('e', e);
+        handleTabChange(next) {
+            if (typeof(next) === 'function') {
+                if (this.tabKey === 3) {
+                    this.$refs.AttachmentFile.validateAmount(next)
+                } else {
+                    next()
+                }
+            }
         }
     },
 };
@@ -614,6 +622,9 @@ export default {
     width: calc(100% - 200px);
     &.pd0 {
         padding: 0;
+    }
+    .my-tabs {
+        margin-bottom: 16px;
     }
 }
 
