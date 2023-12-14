@@ -922,6 +922,10 @@ const apiList = {
     },
     ITEM_BOM:{
         versionList: ['PostJson', '/aftermarket/bom/list-version'], // 版本列表
+        partsList: ['PostJson', '/aftermarket/bom/list-parts'], // 配件list
+        saveOrEdit: ['PostJson', '/item/item-component-set-save'], // 新增编辑爆炸图
+        getExplosionImg: ['PostJson', '/item/item-component-set-list'], // 爆炸图list
+        editPoint: ['PostJson', '/item/bind-item-component'], // 编辑点位
     }
 }; 
 
