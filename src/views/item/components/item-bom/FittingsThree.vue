@@ -2,7 +2,7 @@
     <div class="fittings-three">
         <div class="explosion-diagram">
             <div class="explosion-diagram-tip">
-                <a-tooltip title="①上传配件，②上传爆炸图，③配置点位">
+                <a-tooltip class="cursor" title="①上传配件，②上传爆炸图，③配置点位">
                     <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="" />
                         <div class="tip-text">
@@ -11,29 +11,59 @@
                     </div>
                 </a-tooltip>
 
-                <div v-if="!isExplosionImg" class="operation">
+                <div v-if="isExplosionImg" class="operation">
 					<a-button class="delete-btn" @click="onOperation('delete')">{{ $t('item-bom.delete_explosive') }}</a-button>
 					<a-button class="replace-btn" @click="onOperation('replace')">{{ $t('item-bom.alternate_explosive') }}</a-button>
 					<a-button class="save-btn" type="primary" @click="onOperation('save')">{{ $t('item-bom.save') }}</a-button>
 				</div>
             </div>
             <div class="explosion-diagram-bottom">
-				<div class="explosion-diagram-content">
-					<div class="content-left">
+				<div v-if="isExplosionImg" class="explosion-diagram-content">
+					<div class="content-left /*点位*/">
 						<div class="left-list">
-							<div class="left-list-header">点位列表</div>
-							<div class="left-list-emtpy-text">
-								当前无点位，请添加配件配置点位序号
+							<div class="left-list-header">{{ $t('item-bom.point_list') }}</div>
+							<div v-if="sidebarDataGroup.length === 0" class="left-list-emtpy-text">
+								{{ $t('item-bom.current_point_tips') }}
 							</div>
-							<div class="sidebar-item"></div>
+                            <div v-else class="sidebar-points">                     
+                                <div 
+                                    v-for="(item, itemIndex) in sidebarDataGroup" 
+                                    :key="itemIndex"
+                                    class="sidebar"
+                                    :class="{ 'silder-bottom-10': (i + 1) !== item.length }"
+                                    >
+                                    <div 
+                                        v-for="(ground, i) in item" 
+                                        :key="i" 
+                                        class="sidebar-item"
+                                        :class="{ 'silder-bottom-border': (i + 1) !== ground.length }"
+                                    >
+                                        <div class="silder-index-left">                                            
+                                            <div class="silder-index-text">
+                                                {{ $t('item-bom.point') }}
+                                                {{ ground.index }}
+                                            </div>                                    
+                                        </div>
+                                    
+                                        <div class="silder-operate">
+                                            <div class="silder-copy" @click="onSilderCopy(ground, i)">
+                                                <MySvgIcon icon-class="copy" class="f-s-16"/>
+                                            </div>
+                                            <div class="silder-delete" @click="onSilderDelete(ground, i)">
+                                                <MySvgIcon icon-class="delete" class="f-s-16"/>
+                                            </div>                
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 						</div>
-					 </div>
-					<div class="content-right">
+					</div>
+					<div class="content-right /*爆炸图*/">
 						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
-							<img ref="exploreImg" src="@/assets/images/vehicle.png" alt="">
+							<img ref="exploreImg" src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png" alt="">
 							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
 
-							<!-- <template v-for="(item, itemIndex) in pointerList">            
+							<template v-for="(item, itemIndex) in pointerList">            
 								<div      
 									v-for="(itemStart, itemStartIndex) in item.start" :key="index"     
 									class="pointer-start" 
@@ -53,12 +83,12 @@
 								>
 									{{item.index || 0}}
 								</div>
-							</template> -->
+							</template>
 						</div>
-					 </div>
+					</div>
 				</div>
 				<!-- 空状态 -->
-                <div v-if="isExplosionImg" class="empty-upload-container">
+                <div v-else class="empty-upload-container">
                     <img :src="uploadPic" alt="" />
                     <div class="empty-upload-flex-wrap">
                         <div class="empty-upload-tip">
@@ -77,7 +107,7 @@
             </div>
             <a-table
                 :row-key="(record) => record.id"
-                :data-source="realData"
+                :data-source="tableData"
                 :columns="tableColumns"
                 :scroll="{ x: true }"
                 :pagination="channelPagination"
@@ -88,12 +118,10 @@
                     <div class="table-title">{{ title }}</div>
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
-                    <div class="ordinal" v-if="column.key === 'ordinal'">
-                        <!--a-input 可编辑输入框改变页码 -->
+                    <div class="ordinal" v-if="column.key === 'ordinal' /*序号*/">
                         <a-input
                             v-model:value="record.ordinal"
-                            :style="{ width: '100%' }"
-                            @change="onOrdinalChange(record, index)"
+                            :placeholder="$t('item-bom.point_configure_number')"
                         />
                     </div>
                     <span v-if="column.key === 'name' /*商品名称*/">
@@ -149,12 +177,28 @@
                 </template>
             </a-table>
         </div>
+        <!-- <button @click="btn">添加点位</button> -->
     </div>
 </template>
 
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed } from "vue";
 import Core from "@/core";
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import {
+    pointerList,
+    exploreCanvas,
+    exploreImg,      
+    init, 
+    mousemoveHandler, 
+    mouseUpHandler, 
+    pointMousedown, 
+    onSilderCopy, 
+    onSilderDelete,    
+    sidebarDataGroup,
+    btn,
+}   from './bom-explosion'
+
 const emptyImage =
     "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png";
 const tipIcon =
@@ -166,13 +210,7 @@ const { proxy } = getCurrentInstance();
 const loading = ref(false);
 
 const tableColumns = computed(() => {
-    const result = [
-        {
-            // 序号
-            title: proxy.$t("item-bom.ordinal"),
-            dataIndex: "ordinal",
-            key: "ordinal",
-        },
+    const result = [      
         {
             // 商品编码
             title: proxy.$t("item-bom.commodity_code"),
@@ -210,11 +248,20 @@ const tableColumns = computed(() => {
             key: "remark",
         },
     ];
+
+    if (isExplosionImg) {
+        result.unshift(  {
+            // 序号
+            width: 250,
+            title: proxy.$t("item-bom.ordinal"),
+            dataIndex: "ordinal",
+            key: "ordinal",
+        })
+    }
     return result;
 });
-
-const isExplosionImg = ref(false) // 是否有爆炸图
 const tableData = ref([]);
+const isExplosionImg = ref(false) // 是否有爆炸图
 
 // 分页
 const channelPagination = ref({
@@ -226,19 +273,11 @@ const channelPagination = ref({
     total: 0,
     showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
-// tableData增加序号的字段
-const realData = computed(() => {
-    const result = tableData.value.map((item, index) => {
-        return {
-            ...item,
-            editOrdinal: false,
-            ordinal: (channelPagination.value.current - 1) * channelPagination.value.pageSize + 1 + index,
-        };
-    });
-    return result;
-});
 
 onMounted(() => {
+    if (isExplosionImg.value) {
+        init()
+    }
     // getTableDataFetch();
 });
 /* Fetch start*/
@@ -279,6 +318,7 @@ const onAddFittings = () => {
 const onOperation = () => {
 
 }
+
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     const pager = { ...channelPagination.value };
@@ -342,7 +382,8 @@ const handleTableChange = (pagination, filters, sorter) => {
 				margin-top: 31px;
 				display: flex;
 				.content-left {
-					width: 206px;
+					min-width: 206px;
+					max-width: 206px;
 					.left-list {
 						border: 1px solid #EEE;
 						border-radius: 4px;
@@ -363,20 +404,82 @@ const handleTableChange = (pagination, filters, sorter) => {
 							font-size: 14px;
 							font-weight: 400;
 						}
+                        .sidebar-points {
+                            padding: 0 10px;
+                            box-sizing: border-box;
+                            .sidebar {
+                                width: 100%;
+                                margin-top: 10px;
+                                padding: 0 10px;
+                                box-sizing: border-box;
+                                border-radius: 4px;
+                                background-color: #F8F8F8;    
+                                
+                                &.silder-bottom-10 {
+                                    margin-bottom: 10px;
+                                }
+                                .sidebar-item {
+                                    padding: 10px 0;
+                                    box-sizing: border-box;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: space-between;
+                                    
+                                    &.silder-bottom-border {
+                                        border-bottom: 1px solid #E2E2E2;                
+                                    }
+    
+                                    .silder-index-left {
+                                        display: flex;
+                                        align-items: center;
+                                        .silder-index {
+                                            width: 20px;
+                                            height: 20px;
+                                            line-height: 20px;
+                                            text-align: center;
+                                            background-color: #F2F3F5;
+                                            border-radius: 50%;
+        
+                                            color: #666;                                    
+                                            font-size: 12px;
+                                            font-weight: 500;
+        
+                                        }
+                                        .silder-index-text {                                            
+                                            color: #1D2129;
+                                            font-size: 14px;
+                                            font-weight: 400;
+                                        }
+                                    }
+                                    .silder-operate {
+                                        display: flex;
+                                        .silder-copy {
+                                            margin-right: 10px;
+                                        }
+                                        .silder-delete {
+                            
+                                        }
+                                    }
+                                }
+                            }
+                        }
 					}
 				}
 				.content-right {
+                    flex: 1;
 					.point-contain {
         
 						display: inline-block;
-						position: relative;
+                        position: relative;
+                        left: 50%;
+                        transform: translateX(-50%);
 
 						.explore-canvas {
 							position: absolute;
-							top: 0;
-							right: 0;
-							bottom: 0;
-							left: 0;
+                            top: 0;
+                            right: 0;
+                            bottom: 0;
+                            left: 0;
 						}
 						.pointer-start, .pointer-end  {
 							position: absolute;
@@ -536,5 +639,9 @@ const handleTableChange = (pagination, filters, sorter) => {
             }
         }
     }
+}
+
+.f-s-16 {
+    font-size: 16px;
 }
 </style>
