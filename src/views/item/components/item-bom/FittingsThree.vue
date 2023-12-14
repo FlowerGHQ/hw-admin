@@ -13,9 +13,32 @@
                 </a-tooltip>
 
                 <div v-if="isExplosionImg" class="operation">
-					<a-button class="delete-btn" @click="onOperation('delete')">{{ $t('item-bom.delete_explosive') }}</a-button>
-					<a-button class="replace-btn" @click="onOperation('replace')">{{ $t('item-bom.alternate_explosive') }}</a-button>
-					<a-button class="save-btn" type="primary" @click="onOperation('save')">{{ $t('item-bom.save') }}</a-button>
+					<a-button 
+                        class="delete-btn m-r-10" 
+                        @click="onOperation('delete')"
+                    >
+                        {{ /*删除*/ $t('item-bom.delete_explosive') }}
+                    </a-button>
+
+                    <a-upload
+                        class="m-r-10"
+                        name="file"                              
+                        accept='image/*'
+                        :file-list="uploadOptions.coverList"
+                        :action="uploadOptions.action"
+                        :headers="uploadOptions.headers"
+                        :data='uploadOptions.data'
+                        :maxCount="1"
+                        :showUploadList="false"
+                        @change="(event) => onUploadExplosion(event, explosionImgItem.id)"
+                    >
+                        <a-button class="replace-btn">
+                            {{ /* 替换爆炸图 */ $t('item-bom.alternate_explosive') }}
+                        </a-button>
+                    </a-upload>					
+					<a-button class="save-btn" type="primary" @click="onOperation('save')">
+                        {{ $t('item-bom.save') }}
+                    </a-button>
 				</div>
             </div>
             <div class="explosion-diagram-bottom">
@@ -61,7 +84,7 @@
 					</div>
 					<div class="content-right /*爆炸图*/">
 						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
-							<img ref="exploreImg" :src="explosionImg" alt="">
+							<img ref="exploreImg" :src="explosionImgItem.img" alt="">
 							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
 
 							<template v-for="(item, itemIndex) in pointerList">            
@@ -104,7 +127,7 @@
                             :data='uploadOptions.data'
                             :maxCount="1"
                             :showUploadList="false"
-                            @change="onUploadExplosion"
+                            @change="(event) => onUploadExplosion(event, 0)"
                         >
                             <a-button class="empty-upload-btn" type="primary">
                                 {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
@@ -136,6 +159,7 @@
                         <a-input
                             v-model:value="record.tag"
                             :placeholder="$t('item-bom.point_configure_number')"
+                            @blur="onOperation('blur', record)"
                         />
                     </div>
                     <span v-if="column.key === 'sync_name' /*商品名称*/">
@@ -252,7 +276,7 @@ const tableColumns = computed(() => {
         {
             // 销售区域
             title: proxy.$t("item-bom.sales_area"),
-            dataIndex: "sales_area_list",
+            dataIndex: "sales_area_list1",
             key: "sales_area_list",
         },
         {
@@ -282,60 +306,60 @@ const tableColumns = computed(() => {
     return result;
 });
 const tableData = ref([
-    {
-        "id": 885, //Bom商品ID
-        "bom_id": 6, //BOMId
-        "bom_category_id": 0, //分类id
-        "production_code": "", //生产编码
-        "target_id": 279, //商品id
-        "target_type": 1, //商品类型
-        "tag": "", //序号
-        "amount": 1, //用量
-        "comment": "萨基发生纠纷萨科JFK吉萨反抗军萨福克就是部分你就撒开积分", //备注
-        "version_num": 0, //版本信息
-        "effective_time": 1670169600, //版本生效时间
-        "weight": 0, 
+    // {
+    //     "id": 885, //Bom商品ID
+    //     "bom_id": 6, //BOMId
+    //     "bom_category_id": 0, //分类id
+    //     "production_code": "", //生产编码
+    //     "target_id": 279, //商品id
+    //     "target_type": 1, //商品类型
+    //     "tag": "", //序号
+    //     "amount": 1, //用量
+    //     "comment": "萨基发生纠纷萨科JFK吉萨反抗军萨福克就是部分你就撒开积分", //备注
+    //     "version_num": 0, //版本信息
+    //     "effective_time": 1670169600, //版本生效时间
+    //     "weight": 0, 
         
-        "create_time": 1702454601, 
+    //     "create_time": 1702454601, 
         
-        "update_time": 1702454601, 
+    //     "update_time": 1702454601, 
         
-        "sync_id": "47100-TLA3-E000", //同步编号
-        "sync_name": "后牌照支架", //同步名称
-        "sync_type": 1, //同步类型
-        "sync_time": 1702454601, //同步时间
-        // "sales_area_list": [
-        //     {
-        //         "id": 6, //销售区域id
-        //         "continent": "亚洲", //洲
-        //         "continent_en": "Asia", //洲
-        //         "country": "韩国", //销售区域国家
-        //         "country_en": "Korea", //销售区域英文名称
-        //         "country_code": "KOR", //销售区域code
-        //         "name": "韩国", //销售区域名称
-        //         "name_en": "",                 
-        //         "weight": 0,                 
-        //         "create_time": 1651045507,                 
-        //         "update_time": 1657594395             
-        //     },
-        //     {
-        //         "id": 7, //销售区域id
-        //         "continent": "欧洲", //洲
-        //         "continent_en": "Europe", //洲
-        //         "country": "比利时", //销售区域国家
-        //         "country_en": "Belgium", //销售区域英文名称
-        //         "country_code": "BEL", //销售区域code
-        //         "name": "比利时", //销售区域名称
-        //         "name_en": "",                 
-        //         "weight": 0,                 
-        //         "create_time": 1653358167,                 
-        //         "update_time": 1657594335             
-        //     }
-        // ]
-    }
+    //     "sync_id": "47100-TLA3-E000", //同步编号
+    //     "sync_name": "后牌照支架", //同步名称
+    //     "sync_type": 1, //同步类型
+    //     "sync_time": 1702454601, //同步时间
+    //     // "sales_area_list": [
+    //     //     {
+    //     //         "id": 6, //销售区域id
+    //     //         "continent": "亚洲", //洲
+    //     //         "continent_en": "Asia", //洲
+    //     //         "country": "韩国", //销售区域国家
+    //     //         "country_en": "Korea", //销售区域英文名称
+    //     //         "country_code": "KOR", //销售区域code
+    //     //         "name": "韩国", //销售区域名称
+    //     //         "name_en": "",                 
+    //     //         "weight": 0,                 
+    //     //         "create_time": 1651045507,                 
+    //     //         "update_time": 1657594395             
+    //     //     },
+    //     //     {
+    //     //         "id": 7, //销售区域id
+    //     //         "continent": "欧洲", //洲
+    //     //         "continent_en": "Europe", //洲
+    //     //         "country": "比利时", //销售区域国家
+    //     //         "country_en": "Belgium", //销售区域英文名称
+    //     //         "country_code": "BEL", //销售区域code
+    //     //         "name": "比利时", //销售区域名称
+    //     //         "name_en": "",                 
+    //     //         "weight": 0,                 
+    //     //         "create_time": 1653358167,                 
+    //     //         "update_time": 1657594335             
+    //     //     }
+    //     // ]
+    // }
 ]);
 const isExplosionImg = ref(false) // 是否有爆炸图
-const explosionImg = ref(undefined) // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
+const explosionImgItem = ref({ img: "", }) // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
 
 const uploadOptions = ref({
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -365,7 +389,8 @@ onMounted(() => {
     if (isExplosionImg.value) {
         init()
     }
-    // getTableDataFetch();
+    getTableDataFetch();
+    getExplosionImgFetch({ target_id: 6 })
 });
 /* Fetch start*/
 // 获取表格list
@@ -398,33 +423,62 @@ const saveImgeFetch = (parmas = {}) => {
         img: undefined,        
         target_id: undefined, // bom_category.id (分类id)
         target_type: 3, // bom分类(固定死这里)
-        id: 0,  // 0 新增  1 是编辑
+        // id: 0,  // 不传id新增 传id是替换
         ...parmas
     }
     Core.Api.ITEM_BOM.saveOrEdit(obj)
         .then((res) => {
-            getExplosionImgFetch()
+            getExplosionImgFetch({ target_id: obj.target_id })
         })
         .catch((err) => {
-            console.log("saveImgeFetch", err);
+            console.log("saveImgeFetchError", err);
+        });
+}
+// 删除|编辑|添加点位Fetch
+const addTagItem = ref({
+    target_id: 6, // bom_category.id (分类id)
+    target_type: 3, // bom分类(固定死这里)
+    item_component_set_list: []
+})
+const editPointFetch = (parmas = {}, type) => {
+    let obj = {            
+        target_id: undefined, // bom_category.id (分类id)
+        target_type: 3, // bom分类(固定死这里)
+        item_component_set_list: [],        
+        ...parmas
+    }
+    Core.Api.ITEM_BOM.editPoint(obj)
+        .then((res) => {            
+            console.log("deleteExplosionImgFetchSuccess", res);
+            if (type === 'delete') {
+                proxy.$message.success("删除成功")
+            }
+            getExplosionImgFetch({ target_id: obj.target_id })
+        })
+        .catch((err) => {
+            console.log("deleteExplosionImgFetchError", err);
         });
 }
 // 获取爆炸图Fetch
 const getExplosionImgFetch = (parmas = {}) => {
     let obj = {
-        img: undefined,        
-        target_id: undefined, // bom_category.id (分类id)
-        target_type: 3, // bom分类(固定死这里)
-        id: 0,  // 0 新增  1 是编辑
+        target_id: undefined, // bom_category.id
+        target_type: 3, //  bom分类(固定死这里)
         ...parmas
     }
     Core.Api.ITEM_BOM.getExplosionImg(obj)
         .then((res) => {
-            isExplosionImg.value = true
-            explosionImg.value = res.list[0].img
+            console.log("获取爆炸图信息", res);
+            if (res.list.list[0]?.img) {
+                isExplosionImg.value = true
+                explosionImgItem.value = res.list.list[0]
+            } else {
+                isExplosionImg.value = false
+                explosionImgItem.value = undefined
+            }
         })
         .catch((err) => {
-            console.log("getExplosionImgFetch", err);
+            console.log("getExplosionImgFetchError", err);
         });
 }
 
@@ -432,17 +486,18 @@ const getExplosionImgFetch = (parmas = {}) => {
 
 /* methods start*/
 // 上传爆炸图
-const onUploadExplosion = ({ file, fileList }) => {
+const onUploadExplosion = ({ file, fileList }, type) => {
+    console.log("上传爆炸图", file, fileList, type);
     // console.log("上传爆炸图", file, fileList);
     if (file.status == 'done') {
         if (file.response && file.response.code > 0) {
             return proxy.$message.error(file.response.message)
         }
-        // saveImgeFetch({
-        //     img: Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename,
-        //     id: 0,
-        //     target_id: ""
-        // })
+        saveImgeFetch({
+            img: Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename,
+            id: type,
+            target_id: 6
+        })
     }
     uploadOptions.value.coverList = fileList;
 };
@@ -451,8 +506,72 @@ const onAddFittings = () => {
     console.log("添加配件"); 
 };
 // 按钮操作
-const onOperation = () => {
+const onOperation = (type, record) => {
+    switch(type) {
+        case 'delete':            
+            proxy.$confirm({
+                title: "确定要删除爆炸图?",
+                okText: proxy.$t('def.sure'),
+                cancelText: proxy.$t('def.cancel'),
+                okType: 'danger',
+                onOk() {
+                    editPointFetch({ target_id: 6 }, 'delete')
+                },
+                onCancel () {
+                }
+            });
+        break;
+        case 'save':
+        break;
+        case 'blur':
+            // console.log("失去焦点", record);
+            // console.log("爆炸图数据", explosionImgItem.value);            
+            
+            // 找到添加是否是对应的数据不是push是删除了在push
+            const findIndex = addTagItem.value.item_component_set_list.findIndex(el => el.blurId == record.id)            
 
+            let obj = {}
+            
+            if (findIndex !== -1) {     
+                // 取得还是旧得配件id 直接替换
+                obj = {
+                    blurId: addTagItem.value.item_component_set_list[findIndex].blurId , // 旧的
+                    ...explosionImgItem.value,
+                    item_component_list: []
+                }
+                let addPointItem = {
+                    index: record.tag,
+                    set_id: explosionImgItem.value.id, // 爆炸图id
+                    target_id: record.id, // 配件id
+                    start_point: JSON.stringify({ x: 0, y: 100 }),
+                    end_point: JSON.stringify([{ x: 0, y: 0 }]),
+                }
+                                
+                obj.item_component_list.push(addPointItem)
+
+                addTagItem.value.item_component_set_list.splice(findIndex, 1, obj)
+            } else {
+                obj = {
+                    blurId: record.id, // 用于识别最后传到数据里面要删掉
+                    ...explosionImgItem.value,
+                    item_component_list: []
+                }
+                let addPointItem = {
+                    index: record.tag,
+                    set_id: explosionImgItem.value.id, // 爆炸图id
+                    target_id: record.id, // 配件id
+                    start_point: JSON.stringify([{ x: 0, y: 0 }]),
+                    end_point: JSON.stringify({ x: 0, y: 100 }),
+                }
+                                
+                obj.item_component_list.push(addPointItem)
+                addTagItem.value.item_component_set_list.push(obj)
+            }
+            console.log("失去焦点结果", addTagItem.value);
+                        
+            editPointFetch(addTagItem.value)
+        break;
+    }
 }
 
 // 分页事件
@@ -781,5 +900,8 @@ const handleTableChange = (pagination, filters, sorter) => {
 }
 .f-s-16 {
     font-size: 16px;
+}
+.m-r-10 {
+    margin-right: 10px;
 }
 </style>
