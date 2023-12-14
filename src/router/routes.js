@@ -38,7 +38,6 @@ const routes = [
         path: '/login',
         component: () => import ('@/views/Login.vue'),
         meta: {
-            hidden: true,
             title: '登录',
 	        title_en: 'Login',
         }
@@ -52,6 +51,7 @@ const routes = [
             title: '数据看板',
             title_en: 'Data Board',
             icon: 'i_s_dashboard',            
+            hidden: true,
         },
         children: [
             {
@@ -71,7 +71,7 @@ const routes = [
                 meta: {
                     title: '时效看板',
                     title_en: 'RTDB',
-                }
+                },
             },
 
         ]
