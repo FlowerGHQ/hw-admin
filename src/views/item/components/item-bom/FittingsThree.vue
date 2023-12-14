@@ -396,9 +396,8 @@ onMounted(() => {
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
-    let obj = {
-        bom_id: 6, // Bom Id
-        bom_category_id: 1, // 分类 id
+    let obj = {        
+        bom_category_id: 6, // 分类 id
         name: "", // search 商品名称
         code_list: [], // search 商品编号
         page: 1, //页数
@@ -543,8 +542,8 @@ const onOperation = (type, record) => {
                     index: record.tag,
                     set_id: explosionImgItem.value.id, // 爆炸图id
                     target_id: record.id, // 配件id
-                    start_point: JSON.stringify({ x: 0, y: 100 }),
-                    end_point: JSON.stringify([{ x: 0, y: 0 }]),
+                    start_point: JSON.stringify([{ x: 0, y: 0 }]),
+                    end_point: JSON.stringify({ x: 0, y: 100 }),
                 }
                                 
                 obj.item_component_list.push(addPointItem)
@@ -569,7 +568,7 @@ const onOperation = (type, record) => {
             }
             console.log("失去焦点结果", addTagItem.value);
                         
-            editPointFetch(addTagItem.value)
+            // editPointFetch(addTagItem.value)
         break;
     }
 }

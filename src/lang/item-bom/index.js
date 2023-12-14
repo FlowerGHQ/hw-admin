@@ -1,3 +1,5 @@
+import { version } from "less";
+
 export default {
 
     zh: {
@@ -8,6 +10,7 @@ export default {
         ordinal: '序号',
         commodity_code: "商品编码",
         version_number: "版本号",
+        version:'版本',
         dosage: "用量",        
         sales_area: "销售区域",
         create_time: "创建时间",
@@ -37,6 +40,10 @@ export default {
         current_point_tips: "当前无点位，请添加配件配置点位序号",
         point: "点位",
         point_configure_number: "请配置点位序号",
+        // 设变新版本
+        change_new_version: "设变新版本",
+        // 设变
+        change: "设变",
     },
     en: {
         title: "BOM Management",
@@ -45,6 +52,7 @@ export default {
         ordinal: 'Ordinal',
         commodity_code: "Commodity Code",
         version_number: "Version Number",
+        version:'Version',
         dosage: "Dosage",
         sales_area: "Sales Area",
         create_time: "Creation Time",
@@ -74,5 +82,7 @@ export default {
         current_point_tips: "Currently there is no point, please add the accessory configuration point serial number",
         point: "Point",
         point_configure_number: "Configure the point sequence number",
+        change_new_version: "Change New Version",
+        change: "Change",
     }
 }

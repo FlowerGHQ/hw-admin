@@ -921,11 +921,15 @@ const apiList = {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
     ITEM_BOM:{
+        listName: ['PostJson', 'aftermarket/bom/list-name'], // 产品名称列表
         versionList: ['PostJson', 'aftermarket/bom/list-version'], // 版本列表
+        listCategory: ['PostJson', 'aftermarket/bom/list-category'], // 分类列表
         partsList: ['PostJson', 'aftermarket/bom/list-parts'], // 配件list
         saveOrEdit: ['PostJson', 'item/item-component-set-save'], // 新增编辑爆炸图
         getExplosionImg: ['PostJson', 'item/item-component-set-list'], // 爆炸图list
-        editPoint: ['PostJson', 'item/bind-item-component'], // 编辑点位 和删除爆炸图一个接口     
+        editPoint: ['PostJson', 'item/bind-item-component'], // 编辑点位
+        updateName: ['PostJson', 'aftermarket/bom/update-name'], // 编辑Bom商品名称
+        saveCategoryName: ['PostJson', 'bom-category/save'], // 新增编辑分类
     }
 }; 
 
