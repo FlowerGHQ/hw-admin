@@ -588,6 +588,7 @@ export default {
 
     &.pd0 {
         padding: 0;
+        width: 100%;
     }
 
     .my-tabs {
