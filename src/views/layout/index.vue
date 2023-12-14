@@ -404,7 +404,7 @@ export default {
                 this.$router.replace('/crm-dashboard');
             } else {
                 if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                    this.$router.replace({ path: '/distributor/purchase-order-list', query: { from: 'login' } })
+                    this.$router.replace({ path: '/dashboard', query: { from: 'login' } })
                 } else {
                     this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
                 }
