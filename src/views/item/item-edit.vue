@@ -1586,7 +1586,7 @@ export default {
             return column;
         },
         configSetTitle() {
-            return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name) || '--'}${this.$t("i.value")}`;
+            return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name)}${this.$t("i.value")}`;
         },
         // 是否展示规格定义
         isShowDelete() {

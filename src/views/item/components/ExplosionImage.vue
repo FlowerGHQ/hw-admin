@@ -364,6 +364,8 @@ export default {
                         target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
+                    ths.pointerList = [];
+                    ths.tabsArray = [];
                     ths.requestSave(param, ths.$t('pop_up.delete'), ths.getItemExploreList.bind(ths))
                 },
             });
@@ -467,8 +469,8 @@ export default {
         },
         // 获取 商品爆炸图
         getItemExploreList() {
-            this.pointerList = [];
-            this.tabsArray = [];
+            // this.pointerList = [];
+            // this.tabsArray = [];
             Core.Api.Item.getItemComponent({
                 target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res) => {
@@ -536,6 +538,7 @@ export default {
             row.isEdit = !row.isEdit;
         },
         saveRowIndex(row) {
+            console.log('row', row);
             this.clickSave();
         },
         // 编辑点位详情
@@ -548,6 +551,7 @@ export default {
             let obj;
             this.isChangedPoint = true;
             if (this.editPointer === null) {
+                console.log('handleAddShow before', this.pointerList);
                 obj = {
                     id: null,
                     start: { x: 50, y: 50 },
@@ -558,6 +562,7 @@ export default {
                     item: null,
                 }
                 this.pointerList.push(obj);
+                console.log('handleAddShow after', this.pointerList);
                 this.canvasUpdata();
             } else {
                 obj = this.editPointer;
@@ -573,6 +578,8 @@ export default {
             const ths = this;
             this.errorArray = [];
             this.savePointNum = this.pointerList.length;
+            console.log('clickSave pointerList', this.pointerList);
+            console.log('clickSave tabsArray', this.tabsArray);
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
