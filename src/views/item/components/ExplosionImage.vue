@@ -25,9 +25,9 @@
                                 <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList"
                                     :key="index">
                                     <div class="point-info-left">
-                                        <div class="point-pos-num">
+                                        <!-- <div class="point-pos-num">
                                             {{ index + 1 }}
-                                        </div>
+                                        </div> -->
                                         <div class="point-pos-name">
                                             {{ $t(/*点位*/'i.point_position') }}{{ item.index }}
                                         </div>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                            <img :class="isBookWidth ? 'canvas-img w630' : 'canvas-img'" v-if="detailImageUrl"
+                            <img class="canvas-img" v-if="detailImageUrl"
                                 :src="detailImageUrl" ref="exploreImg" alt="">
                             <canvas ref="exploreCanvas"></canvas>
                             <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
