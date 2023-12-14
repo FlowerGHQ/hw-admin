@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
             } else {
                 // 表前userType禁止访问
                 message.warning('当前身份无法访问');
-                next('/dashboard');
+                next('/distributor/purchase-order-list');
                 NProgress.done();
             }
         } else {

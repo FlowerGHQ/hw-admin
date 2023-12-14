@@ -73,7 +73,7 @@ const getAuthority = (userId, userType, loginType, roleId, flag_admin, flagGroup
         Core.Data.setAuthority(authorityMap)
         if (userType === Core.Const.USER.TYPE.ADMIN){
             setTimeout(() => {
-                router.replace({ path: '/dashboard', query: {from: 'login'} })
+                router.replace({ path: '/distributor/purchase-order-list', query: {from: 'login'} })
             }, 1000)
         } else {
             setTimeout(() => {

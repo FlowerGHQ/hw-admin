@@ -20,7 +20,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
+        redirect: '/distributor/purchase-order-list',
         meta: {
             hidden: true
         }
@@ -52,6 +52,7 @@ const routes = [
             title: '数据看板',
             title_en: 'Data Board',
             icon: 'i_s_dashboard',            
+            hidden: true,
         },
         children: [
             {
@@ -71,7 +72,7 @@ const routes = [
                 meta: {
                     title: '时效看板',
                     title_en: 'RTDB',
-                }
+                },
             },
 
         ]
