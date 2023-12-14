@@ -327,8 +327,8 @@ export default {
 
       //  
       searchList: [
-            { type: "input", value: "", searchParmas: "name",  key: 'n.name', },                                           // 名称
-            { type: "select", value: undefined, searchParmas: "type",  key: 'n.type', selectMap: ITEM.TYPE_MAP },          // 类型
+            { type: "input", value: "", searchParmas: "name",  key: 'n.name' },                                           // 名称
+            { type: "select", value: undefined, searchParmas: "type",  key: 'n.type', selectMap: ITEM.TYPE_MAP, placeholder: 'n.choose'},          // 类型
             { type: "select", value: undefined, searchParmas: "source_type",  key: 'i.source_type',
               selectMap: (() => {
                           // 数据统一处理 
@@ -340,10 +340,11 @@ export default {
                           }
                           console.log("过滤的结果", result);
                           return result
-                      })()
+                      })(),
+              placeholder: 'n.choose',
             }, // 来源
             { type: "input", value: "", searchParmas: "code", key: 'i.code', },                                           // 商品编码
-            { type: "select", value: undefined, searchParmas: "status", key: 'i.status', selectMap: ITEM.STATUS_LIST },   // 商品状态
+            { type: "select", value: undefined, searchParmas: "status", key: 'i.status', selectMap: ITEM.STATUS_LIST,  placeholder: 'n.choose', },   // 商品状态
       ]
     };
   },

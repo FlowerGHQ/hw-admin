@@ -19,20 +19,25 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions"></SearchAll>
           </div>
-          <component :is="componentName"></component>
+          <component :is="componentName" :id="activeObj.id"></component>
         </div>
       </div>
     </div>
+
+    <ClassifyModal v-model:visibility="classifyModalShow" :id="activeObj.id" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
+    <a-button @click="classifyModalShow=true">dddd{{ classifyModalShow }}</a-button>
+    
   </div>
 </template>
 
 <script setup>
-import { ref, shallowRef, onMounted, computed ,watch} from "vue";
+import { ref, shallowRef, onMounted, computed ,watch, provide} from "vue";
 import SearchAll from '../../components/common/SearchAll.vue'
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
 import FittingsTree from "./components/item-bom/FittingsTree.vue";
+import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类弹窗组件
 // const componentName = shallowRef(fittings)
 // 标题高度
 const titleRefs = ref(null);
@@ -58,6 +63,9 @@ const searchOptions = ref([
     },
 ]) // 搜索options
 
+// 显示分类弹窗组件-变量
+const classifyModalShow = ref(false)
+
 watch(
     activeObj,
     (newVal)=>{
@@ -68,7 +76,11 @@ watch(
     }
 )
 
+const componentProps = ref()
+
 const componentName = computed(() => {
+  componentProps.value = activeObj.value;
+  console.log('componentProps.value',componentProps.value);
   if (activeObj.value.level === 1) {
     return fittings;
   } else if (activeObj.value.level === 2) {
@@ -90,6 +102,18 @@ onMounted(() => {
 
 /* methods start*/
 /* methods end*/
+/* methods */
+// 组件切换
+const compChange = () => {};
+
+// 分类弹窗打开
+const showClassModal = (data) => {
+  classifyModalShow.value = true;
+}
+
+provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
+provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
+
 </script>
 
 <style lang="less" scoped>

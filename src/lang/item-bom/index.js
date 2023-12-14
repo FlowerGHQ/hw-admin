@@ -44,6 +44,8 @@ export default {
         change_new_version: "设变新版本",
         // 设变
         change: "设变",
+        filter_multiple_codes: '筛选多个编码,请使用英文分隔符',
+        obj_currently_grouped: '当前分组对象',
     },
     en: {
         title: "BOM Management",
@@ -84,5 +86,8 @@ export default {
         point_configure_number: "Configure the point sequence number",
         change_new_version: "Change New Version",
         change: "Change",
+        filter_multiple_codes: 'To Filter For Multiple Codes, Use English Separators',
+        obj_currently_grouped: 'The Object Is Currently Grouped',
+
     }
 }

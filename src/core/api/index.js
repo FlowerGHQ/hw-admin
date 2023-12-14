@@ -931,6 +931,8 @@ const apiList = {
         updateName: ['PostJson', 'aftermarket/bom/update-name'], // 编辑Bom商品名称
         saveCategoryName: ['PostJson', 'bom-category/save'], // 新增编辑分类
         
+        changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
+        changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
     }
 }; 
 
