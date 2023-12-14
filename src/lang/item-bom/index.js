@@ -40,6 +40,10 @@ export default {
         current_point_tips: "当前无点位，请添加配件配置点位序号",
         point: "点位",
         point_configure_number: "请配置点位序号",
+        // 设变新版本
+        change_new_version: "设变新版本",
+        // 设变
+        change: "设变",
     },
     en: {
         title: "BOM Management",
@@ -78,5 +82,7 @@ export default {
         current_point_tips: "Currently there is no point, please add the accessory configuration point serial number",
         point: "Point",
         point_configure_number: "Configure the point sequence number",
+        change_new_version: "Change New Version",
+        change: "Change",
     }
 }

@@ -11,31 +11,35 @@
         </a-input-search>
         <div class="tree-select-main">
             <div class="tree-circle">
-                <div
-                    v-for="item in realData"
-                    :key="item.itemId"
-                    class="item pointer"
-                    @click.stop="selectKey(item)"
-                    :class="{ 'active-item': generateId(item) == activeKey }">
-                    <div class="tree-item-main">
-                        <div class="content">
-                            <MySvgIcon
-                                @click.stop="expand(item)"
-                                :icon-class="
-                                    item.expand ? 'down-arrow' : 'up-arrow'
-                                "
-                                class="arrow" />
-                            <img
-                                class="group"
-                                src="@/assets/images/bom/group-active.png"
-                                alt=""
-                                v-if="generateId(item) === activeKey" />
-                            <img
-                                class="group"
-                                src="@/assets/images/bom/group-common.png"
-                                alt=""
-                                v-else />
-                            <div class="title">
+                <a-spin :spinning="loading1" :delay="500">
+                    <div
+                        v-for="item in realData"
+                        :key="item.itemId"
+                        class="item pointer"
+                        @click.stop="selectKey(item)"
+                        :class="{
+                            'active-item': generateId(item) == activeKey,
+                        }">
+                        <div class="tree-item-main">
+                            <div class="content">
+                                <MySvgIcon
+                                    @click.stop="expand(item)"
+                                    :icon-class="
+                                        item.expand ? 'down-arrow' : 'up-arrow'
+                                    "
+                                    class="arrow" />
+                                <img
+                                    class="group"
+                                    src="@/assets/images/bom/group-active.png"
+                                    alt=""
+                                    v-if="generateId(item) === activeKey" />
+                                <img
+                                    class="group"
+                                    src="@/assets/images/bom/group-common.png"
+                                    alt=""
+                                    v-else />
+                                <div class="title">
+                                    <div class="title-left">
                                         <span v-if="!item.edit">{{
                                             item.name
                                         }}</span>
@@ -45,112 +49,158 @@
                                             :placeholder="
                                                 $t('item-bom.title_the_ph')
                                             "
-                                            @pressEnter="item.edit = false" />
-                                   
-                            </div>
-                        </div>
-                        <div class="edit" @click.stop="handleEdit(item)">
-                            <MySvgIcon icon-class="edit" />
-                        </div>
-                    </div>
-                    <div class="expand-area" v-if="item.expand">
-                        <div
-                            class="tree-item-main-child-one"
-                            v-for="(item1, index) in item.children"
-                            :key="item1.id"
-                            :class="{ 'active-item-one': generateId(item1) === activeKey }"
-                            @click.stop="selectKey(item1, 2)">
-                            <div class="item-child-one">
-                                <div class="left-area">
-                                    <div class="top-area">
-                                        <MySvgIcon
-                                            @click.stop="expand(item1)"
-                                            :icon-class="
-                                                item1.expand
-                                                    ? 'down-arrow'
-                                                    : 'up-arrow'
-                                            "
-                                            class="arrow" />
-                                        <MySvgIcon icon-class="new-dom" />
-                                        <span
-                                            :class="{
-                                                'common-title': index !== 0,
-                                                'green-title': index === 0,
-                                            }"
-                                            >{{ item1.name }}</span
-                                        >
-                                        <span
-                                            class="new-version"
-                                            v-if="index === 0">
-                                            设变
-                                        </span>
+                                            @blur.stop="handleEditName(item)"
+                                            @pressEnter.stop="
+                                                handleEditName(item)
+                                            " />
                                     </div>
-                                    <div class="bottom-area">
-                                        <span class="time">2023.12.21</span>
-                                    </div>
-                                </div>
-                                <div
-                                    class="add"
-                                    @click.stop="addCategory(item1)">
-                                    <MySvgIcon icon-class="add" />
-                                    <span>{{
-                                        $t("item-bom.add_category")
-                                    }}</span>
+                                    <div class="title-right">{{ $t('item-bom.change_new_version') }}</div>
                                 </div>
                             </div>
-                            <div class="expend-area-two" v-if="item1.expand">
+                            <div class="edit" @click.stop="handleEdit(item)">
+                                <MySvgIcon icon-class="edit" />
+                            </div>
+                        </div>
+                        <div class="expand-area" v-if="item.expand">
+                            <a-spin :spinning="loading2" :delay="500">
                                 <div
-                                    class="tree-item-main-child-two"
-                                    v-for="(item2, index) in item1.children"
-                                    :key="item2.key"
+                                    class="tree-item-main-child-one"
+                                    v-for="(item1, index) in item.children"
+                                    :key="item1.id"
                                     :class="{
-                                        'active-item-two':
-                                        generateId(item2) == activeKey,
+                                        'active-item-one':
+                                            generateId(item1) === activeKey,
                                     }"
-                                    @click.stop="selectKey(item2)">
-                                    <span class="title">
-                                        <div class="title-area">
-                                            <span v-if="!item2.edit">{{
-                                                item2.name
-                                            }}</span>
-                                            <a-input
-                                                v-else
-                                                v-model:value="item2.name"
-                                                :placeholder="
-                                                    $t('item-bom.title_the_ph')
-                                                "
-                                                @pressEnter="
-                                                    item2.edit = false
-                                                " />
+                                    @click.stop="selectKey(item1, 2)">
+                                    <div class="item-child-one">
+                                        <div class="left-area">
+                                            <div class="top-area">
+                                                <MySvgIcon
+                                                    @click.stop="expand(item1)"
+                                                    :icon-class="
+                                                        item1.expand
+                                                            ? 'down-arrow'
+                                                            : 'up-arrow'
+                                                    "
+                                                    class="arrow" />
+                                                <MySvgIcon
+                                                    icon-class="new-dom" />
+                                                <span
+                                                    :class="{
+                                                        'common-title':
+                                                            index !== 0,
+                                                        'green-title':
+                                                            index === 0,
+                                                    }"
+                                                    >{{ item1.name }}</span
+                                                >
+                                                <span
+                                                    class="new-version"
+                                                    v-if="index === 0">
+                                                    {{ $t('item-bom.change') }}
+                                                </span>
+                                            </div>
+                                            <div class="bottom-area">
+                                                <span class="time"
+                                                    >2023.12.21</span
+                                                >
+                                            </div>
                                         </div>
-                                    </span>
-                                    <div class="right-icon">
-                                        <MySvgIcon
-                                            icon-class="edit"
-                                            @click.stop="handleEdit(item2)" />
-                                        <MySvgIcon
-                                            icon-class="delete"
-                                            @click.stop="handleDelete(item2)" />
+                                        <div
+                                            class="add"
+                                            @click.stop="addCategory(item1)">
+                                            <MySvgIcon icon-class="add" />
+                                            <span>{{
+                                                $t("item-bom.add_category")
+                                            }}</span>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="expend-area-two"
+                                        v-if="item1.expand">
+                                        <a-spin
+                                            :spinning="loading3"
+                                            :delay="500">
+                                            <div
+                                                class="tree-item-main-child-two"
+                                                v-for="(
+                                                    item2, index
+                                                ) in item1.children"
+                                                :key="item2.key"
+                                                :class="{
+                                                    'active-item-two':
+                                                        generateId(item2) ==
+                                                        activeKey,
+                                                }"
+                                                @click.stop="selectKey(item2)">
+                                                <span class="title">
+                                                    <div class="title-area">
+                                                        <span
+                                                            v-if="!item2.edit"
+                                                            >{{
+                                                                item2.name
+                                                            }}</span
+                                                        >
+                                                        <a-input
+                                                            v-else
+                                                            v-model:value="
+                                                                item2.name
+                                                            "
+                                                            :placeholder="
+                                                                $t(
+                                                                    'item-bom.title_the_ph'
+                                                                )
+                                                            "
+                                                            @blur.stop="
+                                                                handleEditName(
+                                                                    item2
+                                                                )
+                                                            "
+                                                            @pressEnter.stop="
+                                                                handleEditName(
+                                                                    item2
+                                                                )
+                                                            " />
+                                                    </div>
+                                                </span>
+                                                <div class="right-icon">
+                                                    <MySvgIcon
+                                                        icon-class="edit"
+                                                        @click.stop="
+                                                            handleEdit(item2)
+                                                        " />
+                                                    <MySvgIcon
+                                                        icon-class="delete"
+                                                        @click.stop="
+                                                            handleDelete(item2)
+                                                        " />
+                                                </div>
+                                            </div>
+                                            <a-select
+                                                v-if="item1.add"
+                                                class="add-category-select"
+                                                v-model:value="addValue"
+                                                show-search
+                                                :placeholder="
+                                                    $t(
+                                                        'item-bom.add_category_ph'
+                                                    )
+                                                "
+                                                style="width: 200px"
+                                                :options="options"
+                                                :filter-option="filterOption"
+                                                @focus="handleFocus"
+                                                @blur="handleBlur"
+                                                @change="
+                                                    handleChange
+                                                "></a-select>
+                                        </a-spin>
                                     </div>
                                 </div>
-                                <a-select
-                                    v-if="item1.add"
-                                    class="add-category-select"
-                                    v-model:value="addValue"
-                                    show-search
-                                    :placeholder="
-                                        $t('item-bom.add_category_ph')
-                                    "
-                                    style="width: 200px"
-                                    :options="options"
-                                    :filter-option="filterOption"
-                                    @focus="handleFocus"
-                                    @blur="handleBlur"
-                                    @change="handleChange"></a-select>
-                            </div>
+                            </a-spin>
                         </div>
                     </div>
-                </div>
+                </a-spin>
             </div>
         </div>
     </div>
@@ -162,7 +212,7 @@ import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import Core from "@/core";
 const $t = useI18n().t;
-const $emit = defineEmits(['update:activeObj']);
+const $emit = defineEmits(["update:activeObj"]);
 
 // -----------------定义数据-------------------------------
 
@@ -171,6 +221,9 @@ const keyWord = ref("");
 const realData = ref([]);
 // 点击的key
 const activeKey = ref("");
+const loading1 = ref(false);
+const loading2 = ref(false);
+const loading3 = ref(false);
 
 // -----------------定义方法--------------------------
 // 搜索
@@ -196,27 +249,27 @@ const selectKey = (item) => {
     switch (item.level) {
         case 1:
             activeKey.value = String(item.itemId) + String(item.level);
-            $emit('update:activeObj',{
+            $emit("update:activeObj", {
                 level: item.level,
                 id: item.itemId,
                 name: item.name,
-            })
+            });
             break;
         case 2:
             activeKey.value = String(item.id) + String(item.level);
-            $emit('update:activeObj',{
+            $emit("update:activeObj", {
                 level: item.level,
                 id: item.id,
                 name: item.name,
-            })
+            });
             break;
         case 3:
             activeKey.value = String(item.id) + String(item.level);
-            $emit('update:activeObj',{
+            $emit("update:activeObj", {
                 level: item.level,
                 id: item.id,
                 name: item.name,
-            })
+            });
             break;
         default:
             break;
@@ -228,6 +281,11 @@ const expand = (item) => {
         case 1:
             if (item.expand) {
                 getVersion(item);
+            }else{
+                // 所有的子集都收起来
+                item.children.forEach((item1) => {
+                    item1.expand = false;
+                });
             }
             break;
         case 2:
@@ -243,9 +301,24 @@ const expand = (item) => {
 const handleEdit = (item) => {
     item.edit = true;
 };
+// 编辑名称后的entry和blur事件
+const handleEditName = (item) => {
+    item.edit = false;
+    switch (item.level) {
+        case 1:
+            editGoodsName(item);
+            break;
+        case 3:
+            editCategoryName(item);
+            break;
+        default:
+            break;
+    }
+};
 
 // 初始化请求商品列表数据
 const getGoodsList = () => {
+    loading1.value = true;
     Core.Api.ITEM_BOM.listName({
         search_key: keyWord.value,
     })
@@ -260,13 +333,16 @@ const getGoodsList = () => {
                 item.add = false;
                 item.level = 1;
             });
+            loading1.value = false;
         })
         .catch((err) => {
+            loading1.value = false;
             console.log(err);
         });
 };
 // 请求版本数据
 const getVersion = (item) => {
+    loading2.value = true;
     Core.Api.ITEM_BOM.versionList({
         sync_id: item.syncId,
     })
@@ -281,13 +357,16 @@ const getVersion = (item) => {
                 item1.add = false;
                 item1.level = 2;
             });
+            loading2.value = false;
         })
         .catch((err) => {
             console.log(err);
+            loading2.value = false;
         });
 };
 // 请求版本下的分类
 const getCategory = (item) => {
+    loading3.value = true;
     Core.Api.ITEM_BOM.listCategory({
         bomId: item.id,
     })
@@ -301,10 +380,44 @@ const getCategory = (item) => {
                 item1.add = false;
                 item1.level = 3;
             });
+            loading3.value = false;
+        })
+        .catch((err) => {
+            loading3.value = false;
+            console.log(err);
+        });
+};
+// 修改bom名称
+const editGoodsName = (item) => {
+    Core.Api.ITEM_BOM.updateName({
+        name: item.name,
+        sync_id: item.syncId,
+    })
+        .then((res) => {
+            console.log(res);
         })
         .catch((err) => {
             console.log(err);
         });
+};
+// 修改分类名称
+const editCategoryName = (item) => {
+    Core.Api.ITEM_BOM.saveCategoryName({
+        ...item
+    })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+// 添加分类
+const addCategory = async (item) => {
+    item.add = true;
+    // 请求分类列表
+    await getCategory(item);
+    item.expand = true;
 };
 
 // 生命周期
@@ -398,6 +511,27 @@ onMounted(() => {
                         }
                         .title {
                             margin-left: 10px;
+                            display: flex;
+                            align-items: center;
+                            .title-left {
+                                display: flex;
+                                align-items: center;
+                                .title-input {
+                                    width: 100px;
+                                    margin-left: 10px;
+                                }
+                            }
+                            .title-right {
+                                min-width: 78px;
+                                height: 24px;
+                                text-align: center;
+                                margin-left: 10px;
+                                border-radius: 4px;
+                                background-color: rgba(38, 171, 84, 0.1);
+                                color: #26ab54;
+                                font-size: 14px;
+                                padding: 0 4px;
+                            }
                         }
                     }
                     .edit {
@@ -443,16 +577,17 @@ onMounted(() => {
                                     }
                                     .new-version {
                                         margin-left: 4px;
-                                        width: 32px;
+                                        min-width: 32px;
+                                        padding: 0 4px;
                                         height: 20px;
                                         background-color: rgba(
                                             rgba(38, 171, 84, 0.1)
                                         );
                                         color: #26ab54;
                                         font-size: 12px;
-                                        font-weight: 400;
                                         line-height: 20px; /* 100% */
                                         text-align: center;
+                                        border-radius: 4px;
                                     }
                                 }
                                 .bottom-area {

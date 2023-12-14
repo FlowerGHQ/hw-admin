@@ -124,7 +124,7 @@ onMounted(() => {
         }
       }
       .item-tree-right {
-        width: calc(100% - 454px);
+        flex: 1;
         overflow-y: auto;
         padding: 0 17px;
         .search-content {      
