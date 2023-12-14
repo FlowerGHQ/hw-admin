@@ -58,12 +58,13 @@ const pointerListFilter = (arr) => {
     return result;
 };
 // 初始化
-const init = () => {
+const init = (arr) => {
     ctx = exploreCanvas.value.getContext("2d");
 
     // 等图片加载完
     exploreImg.value.onload = () => {
         setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
+        initLine(arr)
     };
 };
 // 容器内鼠标移动
@@ -143,7 +144,7 @@ const canvasLine = (ctx) => {
 };
 
 // 清除画布
-const clearCanvas = (ctx) => {
+const clearCanvas = (ctx) => {    
     ctx.clearRect(0, 0, exploreCanvas.value.width, exploreCanvas.value.height);
 };
 
@@ -172,19 +173,18 @@ const onSilderDelete = (item, index) => {
 
     item.start.splice(index, 1); // 删除sidebarData每个对应的start中的数据操作
     const silderCategory = sidebarData.value.filter((el) => el.index === item.index); // 找出当前点击的所属类别
+    console.log("a", silderCategory);
+    // const data = pointerList.value.find((el) => el.index === item.index);
+    // console.log("b", data);
+    // if (silderCategory.length === 1) {
+    //     data.start = sidebarData.value[sidebarData.value.length - 1].start;
+    //     data.end = undefined;
+    // } else {
+    //     data.start = sidebarData.value[sidebarData.value.length - 1].start;
+    // }
 
-    const data = pointerList.value.find((el) => el.index === item.index);
-    if (silderCategory.length === 1) {
-        data.start = sidebarData.value[sidebarData.value.length - 1].start;
-        data.end = undefined;
-    } else {
-        data.start = sidebarData.value[sidebarData.value.length - 1].start;
-    }
-
-    sidebarData.value.splice(index, 1); // 最后删除页面上的效果
-    canvasLine(ctx);
-
-    console.log("最后的结果", pointerList.value);
+    // silderCategory.splice(index, 1); // 最后删除页面上的效果
+    // canvasLine(ctx);
 };
 // 将侧边栏过滤成组的形势
 const sidebarDataGroup = computed(() => {
@@ -200,31 +200,35 @@ const sidebarDataGroup = computed(() => {
         []
     );
 
-    console.log("将侧边栏过滤成组的形势", filteredData);
+    console.log("将侧边栏过滤成组的形势", filteredData); // [ [], [], []]
     return filteredData.length > 0 ? filteredData : [];
 });
 
-// 测试的
-const btn = () => {
-    pointerList.value = [];
-    pointerList.value.push({
-        end_point: '{"x":0,"y":100}', // 结束点只有一个
-        start_point: '[{"x":0,"y":0}]', // 开始点有多个
-        // end: undefined,
-        // start: undefined,
-        id: 1335,
-        index: 1,
-    });
+// 初始化数据和画线
+const initLine = (arr) => {
+    if (arr.length === 0) return
+    console.log("初始化数据和画线", arr);
+    pointerList.value = arr;
+    sidebarData.value = []
+    // pointerList.value.push({
+    //     end_point: '{"x":0,"y":100}', // 结束点只有一个
+    //     start_point: '[{"x":0,"y":0}]', // 开始点有多个
+    //     // end: undefined,
+    //     // start: undefined,
+    //     id: 1335,
+    //     index: 1,
+    // });
     pointerList.value = pointerListFilter(pointerList.value);
-    console.log("添加点位", pointerList.value);
     canvasLine(ctx);
 
     pointerList.value.forEach(($1) => {
-        sidebarData.value.push({
-            index: $1.index,
-            end: $1.end,
-            start: $1.start,
-        });
+        $1.start.forEach(el => {
+            sidebarData.value.push({
+                index: $1.index,
+                end: $1.end,
+                start: $1.start,
+            });
+        })
     });
 
     console.log("sidebarData", sidebarData.value);
@@ -240,6 +244,6 @@ export {
     pointMousedown,
     onSilderCopy,
     onSilderDelete,
-    btn,
+    initLine,
     sidebarDataGroup,
 };

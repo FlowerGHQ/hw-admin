@@ -220,7 +220,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, nextTick } from "vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import {
@@ -234,7 +234,7 @@ import {
     onSilderCopy, 
     onSilderDelete,    
     sidebarDataGroup,
-    btn,
+    initLine,
 }   from './bom-explosion'
 
 const emptyImage =
@@ -371,7 +371,13 @@ const uploadOptions = ref({
         token: Core.Data.getToken(),
         type: 'img',
     },
-})
+}) // 上传参数
+
+const addTagItem = ref({
+    target_id: 6, // bom_category.id (分类id)
+    target_type: 3, // bom分类(固定死这里)
+    item_component_set_list: []
+})  // 最后保存按钮
 
 
 // 分页
@@ -386,9 +392,6 @@ const channelPagination = ref({
 });
 
 onMounted(() => {
-    if (isExplosionImg.value) {
-        init()
-    }
     getTableDataFetch();
     getExplosionImgFetch({ target_id: 6 })
 });
@@ -434,24 +437,23 @@ const saveImgeFetch = (parmas = {}) => {
         });
 }
 // 删除|编辑|添加点位Fetch
-const addTagItem = ref({
-    target_id: 6, // bom_category.id (分类id)
-    target_type: 3, // bom分类(固定死这里)
-    item_component_set_list: []
-})
 const editPointFetch = (parmas = {}, type) => {
     let obj = {            
         target_id: undefined, // bom_category.id (分类id)
         target_type: 3, // bom分类(固定死这里)
-        item_component_set_list: [],        
+        item_component_set_list: [],
         ...parmas
     }
     Core.Api.ITEM_BOM.editPoint(obj)
-        .then((res) => {            
+        .then((res) => {
             console.log("deleteExplosionImgFetchSuccess", res);
+
             if (type === 'delete') {
                 proxy.$message.success("删除成功")
+            } else if (type === 'add') {
+                proxy.$message.success("保存成功")
             }
+
             getExplosionImgFetch({ target_id: obj.target_id })
         })
         .catch((err) => {
@@ -469,8 +471,13 @@ const getExplosionImgFetch = (parmas = {}) => {
         .then((res) => {
             console.log("获取爆炸图信息", res);
             if (res.list.list[0]?.img) {
+                addTagItem.value.item_component_set_list = [res.list.list[0]] // 回显
                 isExplosionImg.value = true
                 explosionImgItem.value = res.list.list[0]
+                
+                proxy.$nextTick(() => {
+                    init(res.list.list[0]?.item_component_list)                  
+                })
             } else {
                 isExplosionImg.value = false
                 explosionImgItem.value = undefined
@@ -521,54 +528,63 @@ const onOperation = (type, record) => {
             });
         break;
         case 'save':
+            console.log("addTagItem", addTagItem.value);
+            console.log("pointerList", pointerList.value);
+            const datas = addTagItem.value.item_component_set_list[0]
+
+            datas.item_component_list = datas.item_component_list.map($1 => {
+
+                // pointerList.value 防止影响 canvas上面得数据
+                const item = Core.Util.deepCopy(pointerList.value).find(el => el.index === $1?.index)
+                if (item) {
+                    item.end_point = JSON.stringify(item.end)
+                    item.start_point = JSON.stringify(item.start)
+                    // 删除字段
+                    Reflect.deleteProperty(item, 'end');
+                    Reflect.deleteProperty(item, 'start');
+                    Reflect.deleteProperty(item, 'blurId');
+                    return item
+                } else {
+                    Reflect.deleteProperty($1, 'blurId');
+                    return $1
+                }
+
+            })   
+            console.log("save", addTagItem.value);
+            editPointFetch(addTagItem.value, 'add')
+
         break;
         case 'blur':
             // console.log("失去焦点", record);
             // console.log("爆炸图数据", explosionImgItem.value);            
             
+            addTagItem.value.item_component_set_list = [{
+                ...explosionImgItem.value,
+            }]
+
+            const data = addTagItem.value.item_component_set_list[0]?.item_component_list
+
             // 找到添加是否是对应的数据不是push是删除了在push
-            const findIndex = addTagItem.value.item_component_set_list.findIndex(el => el.blurId == record.id)            
+            const findIndex = data.findIndex(el => el.blurId == record.id)            
+                                    
+            let addPointItem = {
+                blurId: record.id,  // 用于记录来区分在之后是否要替换
+                index: record.tag,
+                set_id: explosionImgItem.value.id, // 爆炸图id
+                target_id: record.id, // 配件id
+                start_point: JSON.stringify([{ x: 0, y: 0 }]),
+                end_point: JSON.stringify({ x: 0, y: 100 }),
+            }
 
-            let obj = {}
-            
-            if (findIndex !== -1) {     
-                // 取得还是旧得配件id 直接替换
-                obj = {
-                    blurId: addTagItem.value.item_component_set_list[findIndex].blurId , // 旧的
-                    ...explosionImgItem.value,
-                    item_component_list: []
-                }
-                let addPointItem = {
-                    index: record.tag,
-                    set_id: explosionImgItem.value.id, // 爆炸图id
-                    target_id: record.id, // 配件id
-                    start_point: JSON.stringify([{ x: 0, y: 0 }]),
-                    end_point: JSON.stringify({ x: 0, y: 100 }),
-                }
-                                
-                obj.item_component_list.push(addPointItem)
-
-                addTagItem.value.item_component_set_list.splice(findIndex, 1, obj)
+            if (findIndex !== -1) {
+                data.splice(findIndex, 1, addPointItem)
             } else {
-                obj = {
-                    blurId: record.id, // 用于识别最后传到数据里面要删掉
-                    ...explosionImgItem.value,
-                    item_component_list: []
-                }
-                let addPointItem = {
-                    index: record.tag,
-                    set_id: explosionImgItem.value.id, // 爆炸图id
-                    target_id: record.id, // 配件id
-                    start_point: JSON.stringify([{ x: 0, y: 0 }]),
-                    end_point: JSON.stringify({ x: 0, y: 100 }),
-                }
-                                
-                obj.item_component_list.push(addPointItem)
-                addTagItem.value.item_component_set_list.push(obj)
+                data.push(addPointItem)
             }
             console.log("失去焦点结果", addTagItem.value);
-                        
-            // editPointFetch(addTagItem.value)
+                  
+            pointerList.value = data
+            initLine(pointerList.value)
         break;
     }
 }
@@ -587,6 +603,7 @@ const handleTableChange = (pagination, filters, sorter) => {
         page: channelPagination.value.current,
     });
 };
+
 /* methods end*/
 </script>
 
