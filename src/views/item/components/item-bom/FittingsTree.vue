@@ -11,7 +11,6 @@
     </a-input-search>
     <div class="tree-select-main">
       <TreeCircle
-        :treeData="treeData"
         @activeLevel="handleActiveLevel"
         @activeKey="handleActiveKey" />
     </div>
@@ -36,49 +35,6 @@ const activeObj = reactive({
   level: "",
   key: "",
 });
-
-const treeData = reactive([
-  {
-    title: "SK1创始版 黑色（3版本）",
-    key: "0-0",
-    children: [
-      {
-        title: "0-0-0",
-        key: "0-0-0",
-        children: [
-          { title: "0-0-0-0", key: "0-0-0-0" },
-          { title: "0-0-0-1", key: "0-0-0-1" },
-          { title: "0-0-0-2", key: "0-0-0-2" },
-        ],
-      },
-      {
-        title: "0-0-1",
-        key: "0-0-1",
-        children: [
-          { title: "0-0-1-0", key: "0-0-1-0" },
-          { title: "0-0-1-1", key: "0-0-1-1" },
-          { title: "0-0-1-2", key: "0-0-1-2" },
-        ],
-      },
-      {
-        title: "0-0-2",
-        key: "0-0-2",
-      },
-    ],
-  },
-  {
-    title: "SK1创始版 银月白色（3版本）",
-    key: "0-1",
-  },
-  {
-    title: "SK1创始版 红色（3版本）",
-    key: "0-2",
-  },
-  {
-    title: "SK1创始版 蓝色（3版本）",
-    key: "0-3",
-  },
-]);
 
 const handleActiveLevel = (level) => {
   activeObj.level = level;

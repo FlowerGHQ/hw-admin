@@ -132,24 +132,23 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed,onMounted } from "vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Util from "@/core/utils";
 import { useI18n } from "vue-i18n";
+import Core from "@/core";
 const $t = useI18n().t
-
-const proxy = defineProps({
-  treeData: {
-    type: Array,
-    default: () => [],
-  },
-});
 const $emit = defineEmits(["activeLevel", "activeKey"]);
 
+// ---------------初始化数据--------------------------
+const treeData = ref([]);
 const realData = ref([]);
 const activeKey = ref("");
 // 点击的层级
 const activeLevel = ref("");
+
+
+// -----------------方法------------------------
 // 递归子节点
 const circleChildren = (arr) => {
   return arr.map((item) => {
@@ -169,9 +168,7 @@ const hasChildren = (item) => {
 };
 // 初始化
 const init = () => {
-  realData.value = circleChildren(proxy.treeData);
-  activeKey.value = realData.value[0].key;
-  realData.value[0].select = true;
+  realData.value = circleChildren(treeData.value);
 };
 // 调用
 init();
@@ -233,6 +230,20 @@ const handleDelete = (item) => {
     },
   });
 };
+const getVersionList = ()=>{
+  Core.Api.ITEM_BOM.versionList({
+    syncId:'TLA3-Y2-0003'
+  }).then((res) => {
+    treeData.value = res.list 
+  }).catch(err=>{
+    console.log(err)
+  })
+}
+// -----------------生命周期------------------------
+onMounted(()=>{
+  getVersionList()
+})
+
 </script>
 
 <style lang="less" scoped>

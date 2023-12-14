@@ -1,5 +1,6 @@
 import Api from './base';
 import Const from '../const'
+import { version } from 'less';
 
 let baseUrl = Const.NET.URL_POINT
 /*
@@ -919,6 +920,9 @@ const apiList = {
     EMAIL_SUBSCRIPTION: {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
+    ITEM_BOM:{
+        versionList: ['PostJson', '/aftermarket/bom/list-version'], // 版本列表
+    }
 }; 
 
 export default new Api(baseUrl, apiList);
