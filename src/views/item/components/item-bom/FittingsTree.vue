@@ -81,6 +81,7 @@
                                             <div class="top-area">
                                                 <MySvgIcon
                                                     @click.stop="expand(item1)"
+                                                    v-if="item1.count>0"
                                                     :icon-class="
                                                         item1.expand
                                                             ? 'down-arrow'
@@ -93,9 +94,9 @@
                                                             ? 'new-dom'
                                                             : 'old-dom'
                                                     " />
-                                                <span class="common-title">{{
-                                                    item1.name
-                                                }}</span>
+                                                <span class="common-title">{{item1.name}}   ({{
+                                                    item1.version
+                                                }}版本)</span>
                                                 <span
                                                     class="new-version"
                                                     v-if="item1.flag_new">
@@ -132,7 +133,7 @@
                                                 v-for="(
                                                     item2, index
                                                 ) in item1.children"
-                                                :key="item2.key"
+                                                :key="item2.id"
                                                 :class="{
                                                     'active-item-two':
                                                         generateId(item2) ==
@@ -161,11 +162,6 @@
                                                                 handleEditName(
                                                                     item2
                                                                 )
-                                                            "
-                                                            @pressEnter.stop="
-                                                                handleEditName(
-                                                                    item2
-                                                                )
                                                             " />
                                                     </div>
                                                 </div>
@@ -191,7 +187,7 @@
                                                 v-model:value="addValue"
                                                 style="width: 228px"
                                                 class="add-category-select"
-                                                @pressEnter.stop="
+                                                @blur.stop="
                                                     handleAddCategory(item1)
                                                 "
                                                 :placeholder="
@@ -296,7 +292,6 @@ const expand = (item) => {
             }
             break;
         case 2:
-            console.log(item.expand);
             if (item.expand) {
                 item.add = false;
                 getCategory(item);
@@ -332,7 +327,6 @@ const getGoodsList = () => {
         search_key: keyWord.value,
     })
         .then((res) => {
-            console.log(res);
             realData.value = res.list;
             realData.value.forEach((item) => {
                 item.select = false;
@@ -356,7 +350,6 @@ const getVersion = (item) => {
         sync_id: item.sync_id,
     })
         .then((res) => {
-            console.log(res);
             item.children = res.list;
             item.children.forEach((item1) => {
                 item1.select = false;
@@ -455,17 +448,21 @@ const handleAddCategory = (item) => {
             getCategory(item);
             item.add = false;
             addValue.value = null;
+            getGoodsList();
         })
         .catch((err) => {
             console.log(err);
         });
 };
 const handleDelete = (parentItem, item) => {
+    console.log(item);
     Core.Api.ITEM_BOM.saveCategoryName({
         id: item.id,
     })
         .then((res) => {
             getCategory(parentItem);
+            getGoodsList();
+
         })
         .catch((err) => {
             console.log(err);
