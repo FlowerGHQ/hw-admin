@@ -5,11 +5,6 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.detail') }}</div>
                 <div class="btns-area">
-                    <!-- <a-button @click="routerChange('edit-explored')"><i class="icon i_relevance" />{{ $t('i.view') }}
-                    </a-button> -->
-                    <!-- <a-button type="primary" ghost @click="routerChange('edit')"><i class="icon i_edit" />{{ $t('def.edit')
-                    }}
-                    </a-button> -->
                     <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
                         <template v-if="detail.status === -1"><i class="icon i_putaway" />{{ $t('i.active_a') }}
                         </template>
@@ -23,8 +18,8 @@
                 <p class="title">{{ $t('i.information') }}</p>
                 <div class="expand-body" v-if="detail.set_id && !indep_flag">
                     <div class="table" :style="{ height: expand ? `${tableHeight}px` : `${tableTheadHeight}px` }">
-                        <a-table id="expand-table" :columns="specificColumns" :data-source="specific.data" :scroll="{ x: true }"
-                            :row-key="record => record.id" :pagination='false'>
+                        <a-table id="expand-table" :columns="specificColumns" :data-source="specific.data"
+                            :scroll="{ x: true }" :row-key="record => record.id" :pagination='false'>
                             <template #headerCell="{ column }">
                                 <template v-if="column.key === 'select'">
                                     {{ lang == 'zh' ? column.title : column.dataIndex }}
@@ -70,17 +65,9 @@
                                 </template>
 
                                 <template v-if="column.key === 'operation'">
-                                    <!-- <template v-if="record.flag_independent_info"> -->
-                                        <!-- <a-button type="link" @click="routerChange('edit-explored-indep', record)"><i
-                                                class="icon i_relevance" /> {{ $t('i.view') }}
-                                        </a-button> -->
-                                        <a-button type="link" @click="routerChange('edit-indep', record)"><i
-                                                class="icon i_edit" />{{ $t('def.edit') }}
-                                        </a-button>
-                                        <!-- <a-button type="link" @click="routerChange('detail-indep', record)"><i
-                                                class="icon i_detail" />{{ $t('def.detail') }}
-                                        </a-button> -->
-                                    <!-- </template> -->
+                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i
+                                            class="icon i_edit" />{{ $t('def.edit') }}
+                                    </a-button>
                                 </template>
                             </template>
                         </a-table>
@@ -92,8 +79,7 @@
                 <div class="panel-content info-container item-list-container">
                     <!-- 多规格商品切换 -->
                     <div v-if="detail.set_id" class="item-list-wrap">
-                        <div
-                            @click="handleSelectItemCode(item.id)"
+                        <div @click="handleSelectItemCode(item.id)"
                             :class="item.onClick ? 'item-list-block on-click' : 'item-list-block'"
                             v-for="(item, index) in specific.data" :key="index">
                             <div :class="item.onClick ? 'item-block-name on-click' : 'item-block-name'" v-if="item.name">
@@ -110,23 +96,24 @@
                     <!-- 商品展示图/附件/爆炸图/销售BOM -->
                     <div :class="detail.set_id ? 'tab-container' : 'tab-container pd0'">
                         <div class="my-tabs">
-                            <my-tabs v-model:activeKey="tabKey" :canClick="canClick" :tabsList="tabList" @handlechange="handleTabChange"></my-tabs>
+                            <my-tabs v-model:activeKey="tabKey" :canClick="canClick" :tabsList="tabList"
+                                @handlechange="handleTabChange"></my-tabs>
                         </div>
                         <!-- 展示图 -->
                         <template v-if="tabKey === 0">
-                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList"/>
+                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList" />
                         </template>
                         <template v-else-if="tabKey === 1">
                             <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                                @submit="getItemDetail" ref="AttachmentFile"/>
+                                @submit="getItemDetail" ref="AttachmentFile" />
                         </template>
                         <!-- 爆炸图 -->
                         <template v-else-if="tabKey === 2">
-                            <ExplosionImage :detailId="id" :id="currentSpecId "/>
+                            <ExplosionImage :detailId="id" :id="currentSpecId" />
                         </template>
                         <template v-else-if="tabKey === 3">
                             <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
-                               @submit="getItemDetail" ref="AttachmentFile"/>
+                                @submit="getItemDetail" ref="AttachmentFile" />
                         </template>
                     </div>
                 </div>
@@ -461,7 +448,7 @@ export default {
             });
         },
         handleTabChange(next) {
-            if (typeof(next) === 'function') {
+            if (typeof (next) === 'function') {
                 if (this.tabKey === 3) {
                     this.$refs.AttachmentFile.validateAmount(next)
                 } else {
@@ -474,9 +461,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-#ItemDetail {
-    font-family: Alibaba_PuHuiTi;
-}
 .title {
     color: #000;
     font-size: 16px;
@@ -493,11 +477,13 @@ export default {
     .table {
         overflow: hidden;
         transition: 0.2s;
+
         :deep(.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell) {
             padding: 10px 16px;
             font-size: 14px;
             color: #1D2129;
         }
+
         :deep(.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead tr th.ant-table-cell) {
             padding: 10px 16px;
             font-size: 14px;
@@ -539,6 +525,7 @@ export default {
     padding-right: 20px;
     box-sizing: border-box;
     position: relative;
+
     &::after {
         content: '';
         width: 1px;
@@ -560,21 +547,25 @@ export default {
         background: #FFF;
         cursor: pointer;
         margin-bottom: 10px;
+
         &.on-click {
             color: #0061FF;
             background: rgba(0, 97, 255, 0.10);
             border: 1px solid rgba(0, 97, 255, 0.10);
         }
+
         .item-block-name {
-            color:#333;
+            color: #333;
             font-size: 14px;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
+
             &.on-click {
                 color: #0061FF;
             }
         }
+
         .item-block-code {
             color: #8E8E8E;
             opacity: 0.6;
@@ -582,6 +573,7 @@ export default {
             font-style: normal;
             font-weight: 400;
             line-height: normal;
+
             &.on-click {
                 color: #0061FF;
             }
@@ -593,9 +585,11 @@ export default {
     padding-left: 20px;
     box-sizing: border-box;
     width: calc(100% - 200px);
+
     &.pd0 {
         padding: 0;
     }
+
     .my-tabs {
         margin-bottom: 16px;
     }
@@ -608,14 +602,15 @@ export default {
     width: 80px;
     justify-content: center;
 }
+
 :deep(.ant-tabs-top > .ant-tabs-nav::before, .ant-tabs-bottom > .ant-tabs-nav::before, .ant-tabs-top > div > .ant-tabs-nav::before, .ant-tabs-bottom > div > .ant-tabs-nav::before) {
     border-bottom: none;
 }
+
 .title-area {
     color: #1D2129;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
-}
-</style>
+}</style>
