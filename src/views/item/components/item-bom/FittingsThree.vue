@@ -1,5 +1,6 @@
 <template>
     <div class="fittings-three">
+        <!-- 爆炸图 -->
         <div class="explosion-diagram">
             <div class="explosion-diagram-tip">
                 <a-tooltip class="cursor" title="①上传配件，②上传爆炸图，③配置点位">
@@ -60,7 +61,7 @@
 					</div>
 					<div class="content-right /*爆炸图*/">
 						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
-							<img ref="exploreImg" src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png" alt="">
+							<img ref="exploreImg" :src="explosionImg" alt="">
 							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
 
 							<template v-for="(item, itemIndex) in pointerList">            
@@ -94,13 +95,26 @@
                         <div class="empty-upload-tip">
                             {{ $t("item-bom.upload_text") }}
                         </div>
-                        <a-button class="empty-upload-btn" type="primary" @click="onUploadExplosion">
-                            {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
-                        </a-button>
+                        <a-upload 
+                            name="file"                              
+                            accept='image/*'
+                            :file-list="uploadOptions.coverList"
+                            :action="uploadOptions.action"
+                            :headers="uploadOptions.headers"
+                            :data='uploadOptions.data'
+                            :maxCount="1"
+                            :showUploadList="false"
+                            @change="onUploadExplosion"
+                        >
+                            <a-button class="empty-upload-btn" type="primary">
+                                {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
+                            </a-button>
+                        </a-upload>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 表格 -->
         <div class="fittings-table-container">
             <div class="title">
                 {{ $t("item-bom.accessories_list") }}
@@ -118,14 +132,14 @@
                     <div class="table-title">{{ title }}</div>
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
-                    <div class="ordinal" v-if="column.key === 'ordinal' /*序号*/">
+                    <div class="ordinal" v-if="column.key === 'tag' /*序号*/">
                         <a-input
-                            v-model:value="record.ordinal"
+                            v-model:value="record.tag"
                             :placeholder="$t('item-bom.point_configure_number')"
                         />
                     </div>
-                    <span v-if="column.key === 'name' /*商品名称*/">
-                        <a-tooltip>
+                    <span v-if="column.key === 'sync_name' /*商品名称*/">
+                        <a-tooltip placement="topLeft">
                             <template #title>{{ text }}</template>
                             <div
                                 class="one-spils cursor"
@@ -137,8 +151,8 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'sales_area' /*销售区域*/">
-                        <a-tooltip>
+                    <span v-if="column.key === 'sales_area_list' /*销售区域*/">
+                        <a-tooltip placement="topLeft">
                             <template #title>{{ text }}</template>
                             <div
                                 class="one-spils cursor"
@@ -150,10 +164,10 @@
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-if="column.key === 'create_time' /*创建时间*/">
+                    <span v-if="column.key === 'effective_time' /*创建时间*/">
                         {{ $Util.timeFilter(text) }}
                     </span>
-                    <span v-if="column.key === 'remark' /*备注*/">
+                    <span v-if="column.key === 'comment' /*备注*/">
                         <a-tooltip>
                             <template #title>{{ text }}</template>
                             <div class="one-spils set-width cursor">
@@ -212,56 +226,129 @@ const loading = ref(false);
 const tableColumns = computed(() => {
     const result = [      
         {
+            // 商品名称
+            title: proxy.$t("item-bom.product_name"),
+            dataIndex: "sync_name",
+            key: "sync_name",
+        },
+        {
             // 商品编码
             title: proxy.$t("item-bom.commodity_code"),
-            dataIndex: "name",
-            key: "detail",
+            dataIndex: "sync_id",
+            key: "sync_id",
         },
         {
             // 版本号
             title: proxy.$t("item-bom.version_number"),
-            dataIndex: "name",
-            key: "detail",
+            dataIndex: "version_num",
+            key: "version_num",
         },
         {
             // 用量
             title: proxy.$t("item-bom.dosage"),
-            dataIndex: "name",
-            key: "detail",
+            dataIndex: "amount",
+            key: "amount",
         },
         {
             // 销售区域
             title: proxy.$t("item-bom.sales_area"),
-            dataIndex: "sales_area",
-            key: "sales_area",
+            dataIndex: "sales_area_list",
+            key: "sales_area_list",
         },
         {
             // 创建时间
             title: proxy.$t("item-bom.create_time"),
-            dataIndex: "create_time",
-            key: "create_time",
+            dataIndex: "effective_time",
+            key: "effective_time",
         },
         {
             // 备注
             title: proxy.$t("item-bom.remark"),
-            dataIndex: "remark",
-            key: "remark",
+            dataIndex: "comment",
+            key: "comment",
         },
     ];
 
-    if (isExplosionImg) {
+    if (isExplosionImg.value) {
+        // 有爆炸图才添加序号
         result.unshift(  {
             // 序号
             width: 250,
             title: proxy.$t("item-bom.ordinal"),
-            dataIndex: "ordinal",
-            key: "ordinal",
+            dataIndex: "tag",
+            key: "tag",
         })
     }
     return result;
 });
-const tableData = ref([]);
+const tableData = ref([
+    {
+        "id": 885, //Bom商品ID
+        "bom_id": 6, //BOMId
+        "bom_category_id": 0, //分类id
+        "production_code": "", //生产编码
+        "target_id": 279, //商品id
+        "target_type": 1, //商品类型
+        "tag": "", //序号
+        "amount": 1, //用量
+        "comment": "萨基发生纠纷萨科JFK吉萨反抗军萨福克就是部分你就撒开积分", //备注
+        "version_num": 0, //版本信息
+        "effective_time": 1670169600, //版本生效时间
+        "weight": 0, 
+        
+        "create_time": 1702454601, 
+        
+        "update_time": 1702454601, 
+        
+        "sync_id": "47100-TLA3-E000", //同步编号
+        "sync_name": "后牌照支架", //同步名称
+        "sync_type": 1, //同步类型
+        "sync_time": 1702454601, //同步时间
+        // "sales_area_list": [
+        //     {
+        //         "id": 6, //销售区域id
+        //         "continent": "亚洲", //洲
+        //         "continent_en": "Asia", //洲
+        //         "country": "韩国", //销售区域国家
+        //         "country_en": "Korea", //销售区域英文名称
+        //         "country_code": "KOR", //销售区域code
+        //         "name": "韩国", //销售区域名称
+        //         "name_en": "",                 
+        //         "weight": 0,                 
+        //         "create_time": 1651045507,                 
+        //         "update_time": 1657594395             
+        //     },
+        //     {
+        //         "id": 7, //销售区域id
+        //         "continent": "欧洲", //洲
+        //         "continent_en": "Europe", //洲
+        //         "country": "比利时", //销售区域国家
+        //         "country_en": "Belgium", //销售区域英文名称
+        //         "country_code": "BEL", //销售区域code
+        //         "name": "比利时", //销售区域名称
+        //         "name_en": "",                 
+        //         "weight": 0,                 
+        //         "create_time": 1653358167,                 
+        //         "update_time": 1657594335             
+        //     }
+        // ]
+    }
+]);
 const isExplosionImg = ref(false) // 是否有爆炸图
+const explosionImg = ref(undefined) // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
+
+const uploadOptions = ref({
+    action: Core.Const.NET.FILE_UPLOAD_END_POINT,
+    coverList: [],
+    headers: {
+        ContentType: false
+    },
+    data: {
+        token: Core.Data.getToken(),
+        type: 'img',
+    },
+})
+
 
 // 分页
 const channelPagination = ref({
@@ -285,14 +372,16 @@ onMounted(() => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
-        flag_spread: 1,
-        page: 1,
-        page_size: 20,
-        status: "0",
+        bom_id: 6, // Bom Id
+        bom_category_id: 1, // 分类 id
+        name: "", // search 商品名称
+        code_list: [], // search 商品编号
+        page: 1, //页数
+        page_size: 20, //页数大小
         ...parmas,
     };
 
-    Core.Api.Item.list(obj)
+    Core.Api.ITEM_BOM.partsList(obj)
         .then((res) => {
             channelPagination.value.total = res.count;
             tableData.value = res.list;
@@ -303,12 +392,59 @@ const getTableDataFetch = (parmas = {}) => {
             loading.value = false;
         });
 };
+// 新增编辑爆炸图Fetch
+const saveImgeFetch = (parmas = {}) => {
+    let obj = {
+        img: undefined,        
+        target_id: undefined, // bom_category.id (分类id)
+        target_type: 3, // bom分类(固定死这里)
+        id: 0,  // 0 新增  1 是编辑
+        ...parmas
+    }
+    Core.Api.ITEM_BOM.saveOrEdit(obj)
+        .then((res) => {
+            getExplosionImgFetch()
+        })
+        .catch((err) => {
+            console.log("saveImgeFetch", err);
+        });
+}
+// 获取爆炸图Fetch
+const getExplosionImgFetch = (parmas = {}) => {
+    let obj = {
+        img: undefined,        
+        target_id: undefined, // bom_category.id (分类id)
+        target_type: 3, // bom分类(固定死这里)
+        id: 0,  // 0 新增  1 是编辑
+        ...parmas
+    }
+    Core.Api.ITEM_BOM.getExplosionImg(obj)
+        .then((res) => {
+            isExplosionImg.value = true
+            explosionImg.value = res.list[0].img
+        })
+        .catch((err) => {
+            console.log("getExplosionImgFetch", err);
+        });
+}
+
 /* Fetch end*/
 
 /* methods start*/
 // 上传爆炸图
-const onUploadExplosion = () => {
-    console.log("上传爆炸图");
+const onUploadExplosion = ({ file, fileList }) => {
+    // console.log("上传爆炸图", file, fileList);
+    if (file.status == 'done') {
+        if (file.response && file.response.code > 0) {
+            return proxy.$message.error(file.response.message)
+        }
+        // saveImgeFetch({
+        //     img: Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename,
+        //     id: 0,
+        //     target_id: ""
+        // })
+    }
+    uploadOptions.value.coverList = fileList;
 };
 // 添加配件
 const onAddFittings = () => {
@@ -640,7 +776,9 @@ const handleTableChange = (pagination, filters, sorter) => {
         }
     }
 }
-
+.set-width {
+    width: 100px;
+}
 .f-s-16 {
     font-size: 16px;
 }
