@@ -51,7 +51,6 @@ const routes = [
             title: '数据看板',
             title_en: 'Data Board',
             icon: 'i_s_dashboard',            
-            hidden: true,
         },
         children: [
             {
