@@ -38,6 +38,7 @@ const routes = [
         path: '/login',
         component: () => import ('@/views/Login.vue'),
         meta: {
+            hidden: true,
             title: '登录',
 	        title_en: 'Login',
         }
