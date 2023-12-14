@@ -1,3 +1,5 @@
+import { version } from "less";
+
 export default {
 
     zh: {
@@ -8,6 +10,7 @@ export default {
         ordinal: '序号',
         commodity_code: "商品编码",
         version_number: "版本号",
+        version:'版本',
         dosage: "用量",        
         sales_area: "销售区域",
         create_time: "创建时间",
@@ -45,6 +48,7 @@ export default {
         ordinal: 'Ordinal',
         commodity_code: "Commodity Code",
         version_number: "Version Number",
+        version:'Version',
         dosage: "Dosage",
         sales_area: "Sales Area",
         create_time: "Creation Time",

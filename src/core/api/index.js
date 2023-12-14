@@ -921,7 +921,9 @@ const apiList = {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
     ITEM_BOM:{
-        versionList: ['PostJson', '/aftermarket/bom/list-version'], // 版本列表
+        listName: ['PostJson', 'aftermarket/bom/list-name'], // 产品名称列表
+        versionList: ['PostJson', 'aftermarket/bom/list-version'], // 版本列表
+        listCategory: ['PostJson', 'aftermarket/bom/list-category'], // 分类列表
     }
 }; 
 
