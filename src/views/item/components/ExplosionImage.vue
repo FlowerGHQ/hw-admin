@@ -19,16 +19,17 @@
                         <!-- 点位操作控件 -->
                         <div class="point-controller-container">
                             <div class="point-info-row-head">
-                                点位列表
+                                {{ $t(/*点位列表*/'i.point_list') }}
                             </div>
                             <div :class="pointerList.length ? 'point-controller' : 'point-controller'">
-                                <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList" :key="index">
+                                <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList"
+                                    :key="index">
                                     <div class="point-info-left">
                                         <div class="point-pos-num">
                                             {{ index + 1 }}
                                         </div>
                                         <div class="point-pos-name">
-                                            点位{{ item.index }}
+                                            {{ $t(/*点位*/'i.point_position') }}{{ item.index }}
                                         </div>
                                     </div>
                                     <div class="point-info-right">
@@ -36,7 +37,7 @@
                                     </div>
                                 </div>
                                 <div class="point-info-empty" v-else>
-                                    当前无点位，请添加配件配置点位序号
+                                    {{ $t(/*当前无点位，请添加配件配置点位序号*/'i.empty_point_tip') }}
                                 </div>
                             </div>
                         </div>
@@ -58,20 +59,9 @@
                                     v-show="pointMouseMoveIndex === index" @mousedown.stop="">
                                     <div class="component">
                                         <div class="component-contain">
-                                            <!-- <div class="contain-header"> -->
-                                                <!-- <i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)" /> -->
-                                            <!-- </div> -->
                                             <div class="contain-name">
-                                                <!-- <i class="icon i_skew-bg" /> -->
-                                                <!-- <span class="icon-name">{{ $t('n.name') }}</span> -->
                                                 {{ (item.item || {}).name }}
                                             </div>
-                                            <!-- <div class="contain-type">
-                                                <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item ||
-                                                    {}).model }}
-                                                </div>
-                                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
-                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +70,7 @@
                         <!-- 爆炸图操作按钮 -->
                         <div class="btns-area">
                             <a-button class="panel-btn" v-if="isChangedPoint" type="primary" @click="clickSave">
-                                {{ $t('def.save') }}
+                                {{ $t(/*保存*/'def.save') }}
                             </a-button>
                             <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickEditExplore">
                                 {{ $t(/*替换爆炸图*/'i.edit_bom_pic') }}
@@ -94,7 +84,7 @@
                 </div>
             </div>
             <div v-show="!detailImageUrl" class="empty-picture-container">
-                <a-tooltip title="①上传配件，②上传爆炸图，③配置点位">
+                <a-tooltip :title="$t(/*①上传配件，②上传爆炸图，③配置点位*/'i.operation_procedure')">
                     <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="">
                         <div class="tip-text">
@@ -106,7 +96,7 @@
                     <img :src="uploadPic" alt="">
                     <div class="empty-upload-flex-wrap">
                         <div class="empty-upload-tip">
-                            上传爆炸图，以配置点位
+                            {{ $t(/*上传爆炸图，以配置点位*/'i.upload_pic_tip') }}
                         </div>
                         <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
                             {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
@@ -137,8 +127,10 @@
                                 {{ (record.item || {}).model }}
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" @click="showEdit(index)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type="link" @click="showEdit(index)"><i class="icon i_edit" />{{ $t('def.edit')
+                                }}</a-button>
+                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete" />{{
+                                    $t('def.delete') }}</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -161,10 +153,12 @@
                             <img :src="addPic" alt="">
                             <div class="empty-add-item-text-wrap">
                                 <div class="empty-add-item-tip">
-                                    为爆炸图添加配件
+                                    {{ $t(/*为爆炸图添加配件*/'i.add_pic_diagram') }}
                                 </div>
-                                <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">添加配件</a-button>
-                                <div class="disable-add-btn" v-else @click="clickUnDetailPic" type="primary">添加配件</div>
+                                <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">{{
+                                    $t(/*添加配件*/'i.add_diagram') }}</a-button>
+                                <div class="disable-add-btn" v-else @click="clickUnDetailPic" type="primary">{{
+                                    $t(/*添加配件*/'i.add_diagram') }}</div>
                             </div>
                         </div>
                     </div>
@@ -269,7 +263,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index' }, 
+                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index' },
                 { title: this.$t('n.name'), key: 'name', dataIndex: 'name' },
                 { title: this.$t('i.number'), key: 'model', dataIndex: 'model' },
                 { title: this.$t('i.code'), key: 'code', dataIndex: 'name' },
@@ -349,7 +343,7 @@ export default {
         clickShowAdd(show, isEdit = false) {
             this.showAddModal = show;
             this.isUploadEdit = isEdit
-            if(!isEdit) { return }
+            if (!isEdit) { return }
             this.uploadForm = {
                 id: this.tabsArray.filter((item, index) => index === this.currentTab)[0].id,
                 name: this.tabsArray.filter((item, index) => index === this.currentTab)[0].name,
@@ -632,6 +626,7 @@ export default {
             width: 100%;
             display: flex;
             justify-content: space-between;
+
             .point-controller-container {
                 width: 208px;
             }
@@ -686,6 +681,7 @@ export default {
                     // opacity: 0.9;
                     background: #FFF;
                 }
+
                 .point-info-empty {
                     color: #BFBFBF;
                     text-align: center;
@@ -694,6 +690,7 @@ export default {
                     font-weight: 400;
                     line-height: normal;
                 }
+
                 .point-info-row {
                     margin-bottom: 12px;
                     width: 100%;
@@ -782,12 +779,14 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 .empty-upload-flex-wrap {
                     margin-left: 10px;
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
                 }
+
                 >img {
                     width: 99px;
                     height: 78px;
@@ -1135,19 +1134,23 @@ export default {
             left: 0;
         }
     }
+
     .btns-area {
         display: flex;
     }
+
     @media (max-width: 1700px) {
         .btns-area {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
+
         .panel-btn {
             margin-left: 0;
         }
     }
+
     .text-c {
         text-align: center;
     }
@@ -1167,6 +1170,7 @@ export default {
         height: 0;
         overflow: hidden;
     }
+
     .ant-input {
         width: 100px;
     }
