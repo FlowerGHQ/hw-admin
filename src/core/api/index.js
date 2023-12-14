@@ -930,6 +930,7 @@ const apiList = {
         editPoint: ['PostJson', 'item/bind-item-component'], // 编辑点位
         updateName: ['PostJson', 'aftermarket/bom/update-name'], // 编辑Bom商品名称
         saveCategoryName: ['PostJson', 'bom-category/save'], // 新增编辑分类
+        
     }
 }; 
 
