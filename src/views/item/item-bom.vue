@@ -25,7 +25,6 @@
     </div>
 
     <ClassifyModal v-model:visibility="classifyModalShow" :id="activeObj.id" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
-    <a-button @click="classifyModalShow=true">dddd{{ classifyModalShow }}</a-button>
     
   </div>
 </template>
