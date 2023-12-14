@@ -14,7 +14,7 @@
                 <a-spin :spinning="loading1" :delay="500">
                     <div
                         v-for="item in realData"
-                        :key="item.itemId"
+                        :key="item.item_id"
                         class="item pointer"
                         @click.stop="selectKey(item)"
                         :class="{
@@ -54,7 +54,11 @@
                                                 handleEditName(item)
                                             " />
                                     </div>
-                                    <div class="title-right">{{ $t('item-bom.change_new_version') }}</div>
+                                    <div
+                                        class="title-right"
+                                        v-if="item.flag_new">
+                                        {{ $t("item-bom.change_new_version") }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="edit" @click.stop="handleEdit(item)">
@@ -77,6 +81,7 @@
                                             <div class="top-area">
                                                 <MySvgIcon
                                                     @click.stop="expand(item1)"
+                                                    v-if="item1.count>0"
                                                     :icon-class="
                                                         item1.expand
                                                             ? 'down-arrow'
@@ -84,25 +89,27 @@
                                                     "
                                                     class="arrow" />
                                                 <MySvgIcon
-                                                    icon-class="new-dom" />
-                                                <span
-                                                    :class="{
-                                                        'common-title':
-                                                            index !== 0,
-                                                        'green-title':
-                                                            index === 0,
-                                                    }"
-                                                    >{{ item1.name }}</span
-                                                >
+                                                    :icon-class="
+                                                        item1.flag_new
+                                                            ? 'new-dom'
+                                                            : 'old-dom'
+                                                    " />
+                                                <span class="common-title">{{item1.name}}   ({{
+                                                    item1.version
+                                                }}版本)</span>
                                                 <span
                                                     class="new-version"
-                                                    v-if="index === 0">
-                                                    {{ $t('item-bom.change') }}
+                                                    v-if="item1.flag_new">
+                                                    {{ $t("item-bom.change") }}
                                                 </span>
                                             </div>
                                             <div class="bottom-area">
-                                                <span class="time"
-                                                    >2023.12.21</span
+                                                <span class="time">
+                                                    {{
+                                                        Util.timeFilter(
+                                                            item1.effective_time
+                                                        )
+                                                    }}</span
                                                 >
                                             </div>
                                         </div>
@@ -126,14 +133,14 @@
                                                 v-for="(
                                                     item2, index
                                                 ) in item1.children"
-                                                :key="item2.key"
+                                                :key="item2.id"
                                                 :class="{
                                                     'active-item-two':
                                                         generateId(item2) ==
                                                         activeKey,
                                                 }"
                                                 @click.stop="selectKey(item2)">
-                                                <span class="title">
+                                                <div class="title">
                                                     <div class="title-area">
                                                         <span
                                                             v-if="!item2.edit"
@@ -155,14 +162,10 @@
                                                                 handleEditName(
                                                                     item2
                                                                 )
-                                                            "
-                                                            @pressEnter.stop="
-                                                                handleEditName(
-                                                                    item2
-                                                                )
                                                             " />
                                                     </div>
-                                                </span>
+                                                </div>
+
                                                 <div class="right-icon">
                                                     <MySvgIcon
                                                         icon-class="edit"
@@ -172,28 +175,26 @@
                                                     <MySvgIcon
                                                         icon-class="delete"
                                                         @click.stop="
-                                                            handleDelete(item2)
+                                                            handleDelete(
+                                                                item1,
+                                                                item2
+                                                            )
                                                         " />
                                                 </div>
                                             </div>
-                                            <a-select
+                                            <a-input
                                                 v-if="item1.add"
-                                                class="add-category-select"
                                                 v-model:value="addValue"
-                                                show-search
+                                                style="width: 228px"
+                                                class="add-category-select"
+                                                @blur.stop="
+                                                    handleAddCategory(item1)
+                                                "
                                                 :placeholder="
                                                     $t(
                                                         'item-bom.add_category_ph'
                                                     )
-                                                "
-                                                style="width: 200px"
-                                                :options="options"
-                                                :filter-option="filterOption"
-                                                @focus="handleFocus"
-                                                @blur="handleBlur"
-                                                @change="
-                                                    handleChange
-                                                "></a-select>
+                                                " />
                                         </a-spin>
                                     </div>
                                 </div>
@@ -213,29 +214,31 @@ import { useI18n } from "vue-i18n";
 import Core from "@/core";
 const $t = useI18n().t;
 const $emit = defineEmits(["update:activeObj"]);
+import Util from "@/core/utils";
 
 // -----------------定义数据-------------------------------
 
 // 搜索关键字
-const keyWord = ref("");
-const realData = ref([]);
+let keyWord = ref("");
+let realData = ref([]);
 // 点击的key
-const activeKey = ref("");
-const loading1 = ref(false);
-const loading2 = ref(false);
-const loading3 = ref(false);
+let activeKey = ref("");
+let loading1 = ref(false);
+let loading2 = ref(false);
+let loading3 = ref(false);
+let options = ref([]);
+let addValue = ref(null);
 
 // -----------------定义方法--------------------------
 // 搜索
 const onSearch = (value) => {
-    console.log(value);
     getGoodsList();
 };
 // 生成id 组成为唯一标识+level
 const generateId = (item) => {
     switch (item.level) {
         case 1:
-            return String(item.itemId) + String(item.level);
+            return String(item.item_id) + String(item.level);
         case 2:
             return String(item.id) + String(item.level);
         case 3:
@@ -248,10 +251,10 @@ const generateId = (item) => {
 const selectKey = (item) => {
     switch (item.level) {
         case 1:
-            activeKey.value = String(item.itemId) + String(item.level);
+            activeKey.value = String(item.item_id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                id: item.itemId,
+                id: item.item_id,
                 name: item.name,
             });
             break;
@@ -281,7 +284,7 @@ const expand = (item) => {
         case 1:
             if (item.expand) {
                 getVersion(item);
-            }else{
+            } else {
                 // 所有的子集都收起来
                 item.children.forEach((item1) => {
                     item1.expand = false;
@@ -290,6 +293,7 @@ const expand = (item) => {
             break;
         case 2:
             if (item.expand) {
+                item.add = false;
                 getCategory(item);
             }
             break;
@@ -323,7 +327,6 @@ const getGoodsList = () => {
         search_key: keyWord.value,
     })
         .then((res) => {
-            console.log(res);
             realData.value = res.list;
             realData.value.forEach((item) => {
                 item.select = false;
@@ -344,10 +347,9 @@ const getGoodsList = () => {
 const getVersion = (item) => {
     loading2.value = true;
     Core.Api.ITEM_BOM.versionList({
-        sync_id: item.syncId,
+        sync_id: item.sync_id,
     })
         .then((res) => {
-            console.log(res);
             item.children = res.list;
             item.children.forEach((item1) => {
                 item1.select = false;
@@ -368,7 +370,7 @@ const getVersion = (item) => {
 const getCategory = (item) => {
     loading3.value = true;
     Core.Api.ITEM_BOM.listCategory({
-        bomId: item.id,
+        bom_id: item.id,
     })
         .then((res) => {
             item.children = res.list;
@@ -391,7 +393,7 @@ const getCategory = (item) => {
 const editGoodsName = (item) => {
     Core.Api.ITEM_BOM.updateName({
         name: item.name,
-        sync_id: item.syncId,
+        sync_id: item.sync_id,
     })
         .then((res) => {
             console.log(res);
@@ -403,7 +405,7 @@ const editGoodsName = (item) => {
 // 修改分类名称
 const editCategoryName = (item) => {
     Core.Api.ITEM_BOM.saveCategoryName({
-        ...item
+        ...item,
     })
         .then((res) => {
             console.log(res);
@@ -413,11 +415,58 @@ const editCategoryName = (item) => {
         });
 };
 // 添加分类
-const addCategory = async (item) => {
+const addCategory = (item) => {
     item.add = true;
-    // 请求分类列表
-    await getCategory(item);
     item.expand = true;
+    // 请求分类列表
+    Core.Api.ITEM_BOM.listCategory({
+        bom_id: item.id,
+    })
+        .then((res) => {
+            item.children = res.list;
+            item.children.forEach((item1) => {
+                item1.select = false;
+                item1.expand = false;
+                item1.children = [];
+                item1.edit = false;
+                item1.add = false;
+                item1.level = 3;
+            });
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+// 添加分类
+const handleAddCategory = (item) => {
+    Core.Api.ITEM_BOM.saveCategoryName({
+        name: addValue.value,
+        bom_id: item.id,
+        type: 2,
+    })
+        .then((res) => {
+            getCategory(item);
+            item.add = false;
+            addValue.value = null;
+            getGoodsList();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+};
+const handleDelete = (parentItem, item) => {
+    console.log(item);
+    Core.Api.ITEM_BOM.saveCategoryName({
+        id: item.id,
+    })
+        .then((res) => {
+            getCategory(parentItem);
+            getGoodsList();
+
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
 
 // 生命周期
@@ -553,6 +602,7 @@ onMounted(() => {
                         .item-child-one {
                             padding: 16px;
                             padding-left: 24px;
+                            padding-bottom: 10px;
                             width: 100%;
                             display: flex;
                             align-items: center;
@@ -571,6 +621,7 @@ onMounted(() => {
                                     .green-title,
                                     .common-title {
                                         margin-left: 10px;
+                                        font-size: 14px;
                                     }
                                     .green-title {
                                         color: #26ab54;
@@ -594,7 +645,8 @@ onMounted(() => {
                                     margin-top: 4px;
                                     color: #666;
                                     font-size: 12px;
-                                    text-align: right;
+                                    text-align: left;
+                                    padding-left: 54px;
                                 }
                             }
                             .add {
@@ -630,21 +682,36 @@ onMounted(() => {
                                     padding-left: 58px;
                                     display: flex;
                                     align-items: center;
+                                    font-size: 14px;
+                                    font-weight: 500;
                                 }
+                            }
+                            .add-category-select {
+                                margin-left: 68px;
+                                margin-top: 5px;
+                                margin-bottom: 5px;
                             }
                             .active-item-two {
                                 background-color: #f2f3f5;
+                                .title-area {
+                                    color: #0061ff;
+                                }
                             }
-                        }
-                        .add-category-select {
-                            margin-left: 68px;
-                            margin-top: 5px;
-                            margin-bottom: 5px;
+                            :deep(.ant-select-selector) {
+                                border: 1px solid #e2e2e2 !important;
+                                box-shadow: none !important;
+                                &:hover {
+                                    border: 1px solid #e2e2e2 !important;
+                                }
+                            }
                         }
                     }
                     .active-item-one {
                         .item-child-one {
                             background-color: #f2f3f5;
+                            .common-title {
+                                color: #0061ff;
+                            }
                         }
                     }
                 }
@@ -664,5 +731,9 @@ onMounted(() => {
     .pointer {
         cursor: pointer;
     }
+}
+:deep(.ant-spin-spinning) {
+    width: 100%;
+    text-align: center;
 }
 </style>

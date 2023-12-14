@@ -9,6 +9,9 @@
                     <span class="change-title">
                         {{ proxy.$t('item-bom.change_the_content') }}
                     </span>
+                    <span class="change-text">
+                        {{ `本期共涉变${objCount.allNum}个配件，新增${objCount.addNum}，删除${objCount.deleteNum}，修改${objCount.updateNum}` }}
+                    </span>
                 </div>
                 <img class="right" src="@/assets/images/bom/up.png" v-if="isShow" />
                 <img class="right" src="@/assets/images/bom/down.png" v-else />
@@ -20,9 +23,17 @@
                             <th v-for="th in changeTableColumn">{{ th.title }}</th>
                         </tr>
                     </thead>
-                    <tr v-for="tr in tableDataChange">
+                    <tr v-for="(tr,indtr) in tableDataChange" :key="tr.id">
                         <td v-for="td in changeTableColumn">
-                            {{ tr?.[td.dataIndex] }}
+                            <template v-if="td.key === 'order_number'">
+                                {{ indtr+1 }}
+                            </template>
+                            <template v-else-if="td.key === 'content'">
+                                {{ tr?.[td.dataIndex] || (tr?.['type']===1?'新增': tr?.['type']===2?'删除':'修改') }}
+                            </template>
+                            <template v-else>
+                                {{ tr?.[td.dataIndex] }}
+                            </template>
                         </td>
                     </tr>
                 </table>
@@ -39,33 +50,34 @@
                 :columns="tableColumns"
                 :scroll="{ x: true, }"
                 :pagination="channelPagination"
+                :loading="loading"
                 @change="handleTableChange"
             >
                 <template #bodyCell="{ column, text, record }">            
-                    <span v-if="column.key === 'name'/*商品名称*/">
+                    <span v-if="column.key === 'sync_name'/*商品名称*/">
                         <a-tooltip>
                             <template #title>{{ text }}</template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
                             >
-                                {{ text }}
+                                {{ text || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
-                    <span v-else-if="column.key === 'sales_area'/*销售区域*/">
+                    <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ getSalesAreaStr(text) || '-' }}</template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                {{ text }}
+                                {{ getSalesAreaStr(text) || '-' }}
                             </div>
                         </a-tooltip>
                     </span>           
-                    <span v-else-if="column.key === 'classify'/*分类*/">
-                        <!-- <a-tooltip>
+                    <span v-else-if="column.key === 'bom_category'/*分类*/">
+                        <a-tooltip>
                             <template #title>{{ text }}</template>
                             <div 
                                 class="one-spils cursor" 
@@ -73,19 +85,19 @@
                             >
                                 {{ text }}
                             </div>
-                        </a-tooltip> -->
-                        <span class="to-classify" @click="toClassify">
+                        </a-tooltip>
+                        <span class="to-classify" @click="toClassify"  v-if="!text">
                             {{ $t('item-bom.classify') }}
                         </span>
                     </span>
-                    <span v-else-if="column.key === 'create_time'/*创建时间*/">
+                    <span v-else-if="column.key === 'sync_time'/*创建时间*/">
                         {{ $Util.timeFilter(text) }}
                     </span>
-                    <span v-else-if="column.key === 'remark'/*备注*/">
+                    <span v-else-if="column.key === 'comment'/*备注*/">
                         <a-tooltip>
                             <template #title>{{ text }}</template>
                             <div class="one-spils set-width cursor">
-                                {{ text }}
+                                {{ text || '-' }}
                             </div>
                         </a-tooltip>
                     </span>
@@ -97,13 +109,30 @@
 
 <script setup>
 
-import { onMounted, ref, getCurrentInstance, computed } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
+const classifyShowModal = inject('classifyShowModal');
+const bomId = ref(6);
+const { proxy } = getCurrentInstance();
+const loading = ref(false)
+const props = defineProps({  
+    // v-model 绑定值  
+    id:{
+        type: Number,
+        default: 0        
+    }, 
+})
+// 监听弹窗关闭-更改父组件prop弹窗显隐值
+watch(
+    () => props.id,
+    (newValue, oldValue) => {
+        bomId.value = newValue;
+        fresh()
+    }    
+)
 
 const isShow = ref(true)
-const expandOrSollapse = () => {
-    isShow.value = !isShow.value;
-}
+const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
     let arr =  [
                     { 
@@ -113,13 +142,13 @@ const changeTableColumn = computed(()=>{
                     },
                     { 
                         title:  proxy.$t('item-bom.product_name'),
-                        dataIndex: "name",
-                        key: "name",
+                        dataIndex: "sync_name",
+                        key: "sync_name",
                     },
                     { 
                         title: proxy.$t('item-bom.commodity_code'),
-                        dataIndex: "code",
-                        key: "code",
+                        dataIndex: "sync_id",
+                        key: "sync_id",
                     },
                     { 
                         title: proxy.$t('item-bom.change_content'),
@@ -130,92 +159,57 @@ const changeTableColumn = computed(()=>{
     return arr;
 })
 
-const tableDataChange = ref([
-    { order:'1', name: 'hahah',code: '1212121212' ,content: 'jhdf' },
-    { order:'2', name: 'hahah',code: '1212121212' ,content: 'jhdf' },
-    { order:'3', name: 'hahah',code: '1212121212' ,content: 'jhdf' },
-    { order:'4', name: 'hahah',code: '1212121212' ,content: 'jhdf' },
-])
-
-const { proxy } = getCurrentInstance();
-
-
+const lang = computed(()=>{
+    return proxy.$store.state.lang==='zh'?'country':'country_en'
+})
 const tableColumns = computed(() => {
     const result = [
         { 
             // 商品名称
             title: proxy.$t('item-bom.product_name'), 
-            dataIndex: "name", 
-            key: "name"
+            dataIndex: "sync_name", 
+            key: "sync_name"
         },
         { 
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'), 
-            dataIndex: "code", 
-            key: "code"
-        },
-        { 
-            // 厂家名称
-            title: proxy.$t('item-bom.manufacturer_name'), 
-            dataIndex: "manufacturer_name", 
-            key: "manufacturer_name"
+            dataIndex: "sync_id", 
+            key: "sync_id"
         },
         { 
             // 分类
             title: proxy.$t('item-bom.classify'), 
-            dataIndex: "classify", 
-            key: "classify"
+            dataIndex: "bom_category", 
+            key: "bom_category"
         },
         { 
             // 用量
             title: proxy.$t('item-bom.dosage'), 
-            dataIndex: "dosage", 
-            key: "dosage"
+            dataIndex: "amount", 
+            key: "amount"
         },
         { 
             // 销售区域
             title: proxy.$t('item-bom.sales_area'), 
-            dataIndex: "sales_area", 
-            key: "sales_area"
+            dataIndex: "sales_area_list", 
+            key: "sales_area_list"
         },
         { 
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "create_time", 
-            key: "create_time"
+            dataIndex: "sync_time", 
+            key: "sync_time"
         },
         {
             // 备注
             title: proxy.$t('item-bom.remark'), 
-            dataIndex: "remark",
-            key: "remark",
+            dataIndex: "comment",
+            key: "comment",
         },
     ]
     return result
 })
-const tableData = ref([
-    // {
-    //     name: "你好啊你好啊你好啊",
-    //     manufacturer_name: "你好啊你好啊你好啊",
-    //     sales_area: "你好啊你好啊你好啊",
-    //     create_time: "1702363337",
-    //     remark: "测试的东西是什么啊送达的傻大姐撒肯定撒看的艰苦撒旦就卡死进度加快撒可见度刷卡机的空间的健康撒可见度",
-    // },
-    // {
-    //     name: "你好啊世界经济发",
-    //     manufacturer_name: "你好啊世界经济发",
-    //     sales_area: "你好啊世界经济发",
-    //     create_time: "1702363337",
-    //     remark: "ss",
-    // },
-    // {
-    //     name: "你好啊sss",
-    //     manufacturer_name: "你好啊sss",
-    //     sales_area: "你好啊sss",
-    //     create_time: "1702363337",
-    //     remark: "ss",
-    // },
-])
+const tableData = ref([])
 // 分页
 const channelPagination = ref({
     current: 1,
@@ -227,26 +221,90 @@ const channelPagination = ref({
     showTotal: (total) => `${ proxy.$t('n.all_total') } ${total} ${ proxy.$t('in.total') }`
 })
 
+const expandOrSollapse = () => {
+    isShow.value = !isShow.value;
+}
 
-onMounted(() => {
-    getTableDataFetch()
+const getSalesAreaStr = (arr) => {
+    let str = '';
+    arr.forEach((item)=>{
+        str += (str?',':'')+item[lang.value]
+    })
+    return str || '-'
+}
+
+// 设变数字对象
+const objCount = reactive({
+    updateNum: 0,
+    addNum: 0,
+    deleteNum: 0,
+    allNum:0,
 })
+onMounted(() => {
+    fresh()
+})
+
+// 获取设变列表
+const getChangeList = () => {
+    Core.Api.ITEM_BOM.changeBomList({
+        bom_id: bomId.value
+    }).then(res=>{
+        tableDataChange.value = res.list;
+    }).catch(err=>{
+        console.log('err',err);
+    })
+}
+const fresh = () => {
+    
+    getTableDataFetch()
+    getChangeList()
+    getChangeCount();
+}
+// 获取设变数值type
+const getChangeCount = () => {
+    
+    Core.Api.ITEM_BOM.changeCount({
+        bom_id: bomId.value
+    }).then(res=>{
+        objCount.allNum = 0;
+        res.type_list.forEach(element => {
+            if(element.type === 1){
+                objCount.addNum = element.amount;
+                objCount.allNum += element.amount;
+            }else if(element.type === 2){
+                objCount.deleteNum = element.amount;
+                objCount.allNum += element.amount;
+            }else if(element.type === 3){
+                objCount.updateNum = element.amount;
+                objCount.allNum += element.amount;
+            }
+        });
+    }).catch(err=>{
+        console.log('getChangeCount----err',err);
+    })
+}
+
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
+    loading.value = true
     let obj = {
-        flag_spread: 1,
+        bom_id: 6,
+        code_list: [],
+        sync_id: "TLA3-Y2-0003", //同步编号
         page: 1,
         page_size: 20,
-        status: "0",
         ...parmas
     }
 
-    Core.Api.Item.list(obj).then(res => {
-        channelPagination.value.total = res.count
-        tableData.value = res.list
+    Core.Api.ITEM_BOM.partsList(obj).then(res => {
+        console.log('getTableDataFetch',res);
+        channelPagination.value.total = res.count;
+        tableData.value = res.list;
     }).catch(err => {
         console.log("getTableDataFetch", err);
+    }).finally(()=>{
+        loading.value = false
     })
 }
 /* Fetch end*/
@@ -267,8 +325,9 @@ const handleTableChange = (pagination, filters, sorter) => {
     })
 }
 /* methods end*/
+// 分类弹窗展示
 const toClassify = () => {
-    console.log('弹出分类弹窗');
+    classifyShowModal();
 }
 </script>
 
@@ -302,6 +361,14 @@ const toClassify = () => {
                     font-weight: 500;
                     line-height: 14px;
                     margin-left: 4px;
+                }
+
+                .change-text {
+                    color:#666;
+                    font-size: 14px;
+                    font-weight: 400;
+                    line-height: 14px; /* 157.143% */
+                    margin-left: 10px;
                 }
             }
 
