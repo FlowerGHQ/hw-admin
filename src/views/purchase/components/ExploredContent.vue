@@ -11,13 +11,13 @@
                         class="point-start"
                         v-for="(point, j) in (item.item_component_list || [])"
                         :key="j"
-                        :style="{'left': `${(point.start.x * (point.rate || 1)) - 4}px`, 'top': `${(point.start.y * (point.rate || 1))- 4}px`}"></div>
+                        :style="{'left': `${point.start.x}px`, 'top': `${point.start.y}px`}"></div>
                     <div
                         class="point-end"
                         :class="{'point-end-select': selectIndex===j}"
                         v-for="(point, j) in (item.item_component_list || [])"
                         :key="j"
-                        :style="{'left': `${(point.end.x * (point.rate || 1)) - 4* (point.rate || 1)}px`, 'top': `${(point.end.y * (point.rate || 1))- 4* (point.rate || 1)}px`}"
+                        :style="{'left': `${point.end.x - 10}px`, 'top': `${point.end.y - 10}px`}"
                         @mouseenter.stop="showDetail(i,j)" @mouseleave="showDetail(-1)"
                     >
                         {{point.index}}
@@ -132,6 +132,8 @@ export default {
                 list.forEach(point => {
                     point.start = point.start_point ? JSON.parse(point.start_point) : { x: 50, y: 50 };
                     point.end = point.end_point ? JSON.parse(point.end_point) : { x: 50, y: 150 };
+                    console.log('point.start', point.start);
+                    console.log('point.end', point.end);
                 })
             })
         },
@@ -154,12 +156,21 @@ export default {
                 cvs = [cvs]
             }
             this.canvasGroup[index] = cvs
-            // if(cvs.length > 0) this.canvasGroup[index] = cvs;
-            // else return;
-            let rate = width > 800 ? 1 : 800 / width;
+            // let rate = width > 800 ? 1 : 800 / width;
             cvs.forEach(canvas=>{
-                canvas.width = 800;
-                canvas.height = height / width * 800;
+                let rate = width / height;
+                if (width > 800 || height > 800) {
+                    canvas.width = rate >= 1 ? 700 : width / height * 800;
+                    canvas.height = rate <= 1 ? 800 : height / width * 800;
+                    if (height > 385) {
+                        canvas.height = 385
+                    }
+                } else {
+                    canvas.width = width;
+                    canvas.height = height;
+                }
+                // canvas.width = 800;
+                // canvas.height = height / width * 800;
                 this.canvasUpdata(canvas, index, rate);
             })
         },
@@ -174,8 +185,8 @@ export default {
             ctx.beginPath();
             pointerList.forEach(item=>{
                 item.rate = rate;
-                ctx.moveTo(get(item,'start.x', 0) * rate , get(item,'start.y', 0) * rate);
-                ctx.lineTo(get(item,'end.x', 0) * rate, get(item,'end.y', 0) * rate);
+                ctx.moveTo(get(item,'start.x', 0) + 5 , get(item,'start.y', 0));
+                ctx.lineTo(get(item,'end.x', 0), get(item,'end.y', 0));
             })
             ctx.stroke();
         },
@@ -233,12 +244,19 @@ export default {
         margin-bottom: 22px;
     }
     .carousel-list {
-        width: 800px;
+        // width: 800px;
+        // max-width: 857px;
+        max-height: 397px;
+        min-height: 100px;
+        box-sizing: content-box;
         .carousel-item {
+            padding: 0 24px;
+            margin: 0 auto;
             position: relative;
             padding-bottom: 150px;
             >img {
-                width: 800px;
+                // width: 800px;
+                max-height: 385px;
             }
             canvas {
                 position: absolute;
