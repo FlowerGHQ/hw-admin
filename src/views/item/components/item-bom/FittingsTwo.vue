@@ -72,12 +72,12 @@
                     </span>
                     <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title>{{ getSalesAreaStr(text) || '-' }}</template>
+                            <template #title><!-- {{ getSalesAreaStr(text) || '-' }} --></template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                {{ getSalesAreaStr(text) || '-' }}
+                                <!-- {{ getSalesAreaStr(text) || '-' }} -->
                             </div>
                         </a-tooltip>
                     </span>           
@@ -253,7 +253,8 @@ const expandOrSollapse = () => {
 
 const getSalesAreaStr = (arr) => {
     let str = '';
-    arr.forEach((item)=>{
+    if(!(arr instanceof Array)) return '-'
+    arr?.forEach((item)=>{
         str += (str?',':'')+item[lang.value]
     })
     return str || '-'
