@@ -220,7 +220,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 watch(
     [() => props.searchParams,()=>props.activeObj],
     (val) => {
-        console.log("val", val);
+        console.log("val-----------------------------------------", val);
         parmas.value = {
             sync_id: val[1].sync_id,
             name: val[0].name, 
@@ -232,6 +232,7 @@ watch(
     },
     {
         deep: true,
+        immediate: true,
     }
 );
 

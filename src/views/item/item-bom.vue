@@ -77,7 +77,8 @@ const classifyModalShow = ref(false)
 watch(
     activeObj,
     (newVal)=>{
-        console.log("newVal",newVal)
+        console.log("newVal----------------------------------",newVal)
+        activeObj.value = newVal
     },
     {
         deep:true
