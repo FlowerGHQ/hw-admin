@@ -126,7 +126,6 @@ const props = defineProps({
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        console.log('{deep:true}111',newValue);
         bomId.value = newValue?.version_id;
         fresh()
     },
@@ -330,6 +329,11 @@ const handleTableChange = (pagination, filters, sorter) => {
 const toClassify = (sync_id) => {
     classifyShowModal(sync_id);
 }
+
+defineExpose({
+    getTableDataFetch
+})
+
 </script>
 
 <style lang="less" scoped>
