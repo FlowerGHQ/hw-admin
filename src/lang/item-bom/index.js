@@ -51,6 +51,8 @@ export default {
         confirm_delete_content: '确定删除该分组吗',
         // 确定删除
         confirm_delete_btn: '确定删除',
+        // 取消
+        cancel: '取消',
     },
     en: {
         title: "BOM Management",
@@ -96,5 +98,6 @@ export default {
         confirm_delete: 'Are you sure you want to delete it?',
         confirm_delete_content: 'Are you sure you want to delete the group?',
         confirm_delete_btn: 'Confirm Delete',
+        cancel: 'Cancel',
     }
 }

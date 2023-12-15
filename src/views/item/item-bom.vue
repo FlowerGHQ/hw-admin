@@ -80,7 +80,6 @@ watch(
     activeObj,
     (newVal)=>{
         searAllRef.value.handleSearchReset()
-        activeObj.value = newVal
     },
     {
         deep:true

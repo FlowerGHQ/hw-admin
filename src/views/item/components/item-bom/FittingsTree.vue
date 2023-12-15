@@ -214,6 +214,7 @@
             v-model:visible="visible"
             :title="$t('item-bom.confirm_delete')"
             :okText="$t('item-bom.confirm_delete_btn')"
+            :cancelText="$t('item-bom.cancel')"
             @ok="handleOk"
             centered
             :closable="false"
@@ -879,6 +880,7 @@ onMounted(() => {
             padding-top: 24px !important;
             padding-bottom: 0 !important;
             height: auto !important;
+            padding: 24px 80px 0;
             .ant-modal-title{
                 height: auto !important;
                 text-align: center !important;
@@ -907,6 +909,10 @@ onMounted(() => {
                 align-items: center;
                 color:#1D2129;
                 border-radius: 4px;
+                border: 1px solid #E5E6EB;
+                &:hover{
+                    border: 1px solid #E5E6EB;
+                }
             }
             .ant-btn-primary{
                 color: #fff;
