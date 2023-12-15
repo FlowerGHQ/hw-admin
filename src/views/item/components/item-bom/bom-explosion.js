@@ -224,8 +224,7 @@ const sidebarDataGroup = computed(() => {
 
 // 初始化数据和画线
 const initLine = (arr) => {
-    console.log("初始化数据和画线", arr);
-    if (arr.length === 0) return
+    console.log("初始化数据和画线", arr);    
     pointerList.value = arr;
     sidebarData.value = []
     // pointerList.value.push({

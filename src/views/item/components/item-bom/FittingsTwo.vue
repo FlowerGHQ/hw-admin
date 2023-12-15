@@ -126,9 +126,8 @@ const props = defineProps({
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        console.log('{deep:true}111',newValue);
         bomId.value = newValue?.version_id;
-        fresh()
+        refresh()
     },
     { deep:true }  
 )
@@ -243,7 +242,7 @@ const objCount = reactive({
     allNum:0,
 })
 onMounted(() => {
-    fresh()
+    refresh()
 })
 
 // 获取设变列表
@@ -256,7 +255,7 @@ const getChangeList = () => {
         console.log('err',err);
     })
 }
-const fresh = () => {
+const refresh = () => {
     
     getTableDataFetch()
     getChangeList()
@@ -330,6 +329,11 @@ const handleTableChange = (pagination, filters, sorter) => {
 const toClassify = (sync_id) => {
     classifyShowModal(sync_id);
 }
+
+defineExpose({
+    refresh
+})
+
 </script>
 
 <style lang="less" scoped>
