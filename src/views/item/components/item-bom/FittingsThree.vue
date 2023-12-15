@@ -654,6 +654,10 @@ const onOperation = (type, record) => {
     }
 }
 
+defineExpose({
+    getTableDataFetch
+})
+
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
     channelPagination.value.current = pagination.current;

@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
+          <component ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
         </div>
       </div>
     </div>
@@ -106,6 +106,7 @@ const handleSearch = (data)=>{
 const handleReset = ()=>{
   searchParams.value = {}
 }
+const allComRef = ref(null)   // component
 
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
