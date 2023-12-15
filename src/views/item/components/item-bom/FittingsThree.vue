@@ -234,7 +234,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, nextTick, watch, onUnmounted } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, nextTick, watch, onUnmounted, inject } from "vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import {
@@ -251,6 +251,7 @@ import {
     initLine,
     sidebarDataGroup,
 }   from './bom-explosion'
+const classifyShowModal = inject('classifyShowModal');
 
 const emptyImage =
     "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/12516f00dce1e02da63e405e578c65ea6c82e4c4f5e8c750dc64afa1c1ca7450.png";
@@ -545,8 +546,8 @@ const getExplosionImgFetch = (parmas = {}) => {
                 isExplosionImg.value = true
                 explosionImgItem.value = res.list.list[0]
                 
-                proxy.$nextTick(() => {
-                    init(res.list.list[0]?.item_component_list)                  
+                nextTick(() => {              
+                    init(res.list.list[0]?.item_component_list)
                 })
             } else {
                 isExplosionImg.value = false
@@ -581,6 +582,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 // 添加配件
 const onAddFittings = () => {
     console.log("添加配件"); 
+    classifyShowModal();
 };
 // 按钮操作
 const onOperation = (type, record) => {
