@@ -261,7 +261,7 @@ const selectKey = (parentItem = {},item) => {
             activeKey.value = String(item.item_id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                id: item.item_id,
+                shop_id: item.item_id,
                 name: item.name,
             });
             break;
@@ -269,8 +269,8 @@ const selectKey = (parentItem = {},item) => {
             activeKey.value = String(item.id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                id: item.id,
-                parent_id: parentItem.item_id,
+                version_id: item.id,
+                shop_id: parentItem.item_id,
                 name: item.name,
             });
             break;
@@ -278,8 +278,8 @@ const selectKey = (parentItem = {},item) => {
             activeKey.value = String(item.id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                id: item.id,
-                parent_id: parentItem.id,
+                category_id: item.id,
+                version_id: parentItem.id,
                 name: item.name,
             });
             break;
