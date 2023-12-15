@@ -134,7 +134,11 @@ export default {
             if (!form.item_id) {
                 return this.$message.warning('请选择BOM表对应商品')
             }
-            Core.Api.Bom.save(form).then(() => {
+            let obj = {
+                ...form,
+                type: 1, // 1.生产，2.售后
+            }
+            Core.Api.Bom.save(obj).then(() => {
                 this.$message.success(this.$t('pop_up.save_success'))
                 this.handleModalClose()
                 this.$emit('submit')

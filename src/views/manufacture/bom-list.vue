@@ -187,6 +187,7 @@ export default {
         },
         getTableData() {
             Core.Api.Bom.list({
+                type: 1, // 1.生产，2.售后
                 ...this.searchForm,
                 page: this.currPage,
                 page_size: this.pageSize,
