@@ -146,6 +146,16 @@ watch(
         }
     }
 )
+watch(
+    () => categoryId.value,
+    (newValue, oldValue) => {
+        console.log('props.activeObj',props.activeObj);
+        time.value = setTimeout(()=>{
+            nextTick(()=>{
+                handleSearch()
+            })
+        },200)
+    })
 
 watch(
     () => props.activeObj,
