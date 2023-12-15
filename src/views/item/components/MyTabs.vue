@@ -74,6 +74,7 @@ onMounted(() => {
         margin-right: 16px;
         position: relative;
         user-select: none;
+        font-weight: 600;
         &:last-child {
             margin-right: 0;
         }

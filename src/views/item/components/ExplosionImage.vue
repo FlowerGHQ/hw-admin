@@ -19,16 +19,17 @@
                         <!-- 点位操作控件 -->
                         <div class="point-controller-container">
                             <div class="point-info-row-head">
-                                点位列表
+                                {{ $t(/*点位列表*/'i.point_list') }}
                             </div>
                             <div :class="pointerList.length ? 'point-controller' : 'point-controller'">
-                                <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList" :key="index">
+                                <div class="point-info-row" v-if="pointerList.length" v-for="(item, index) in pointerList"
+                                    :key="index">
                                     <div class="point-info-left">
-                                        <div class="point-pos-num">
+                                        <!-- <div class="point-pos-num">
                                             {{ index + 1 }}
-                                        </div>
+                                        </div> -->
                                         <div class="point-pos-name">
-                                            点位{{ item.index }}
+                                            {{ $t(/*点位*/'i.point_position') }}{{ item.index }}
                                         </div>
                                     </div>
                                     <div class="point-info-right">
@@ -36,12 +37,12 @@
                                     </div>
                                 </div>
                                 <div class="point-info-empty" v-else>
-                                    当前无点位，请添加配件配置点位序号
+                                    {{ $t(/*当前无点位，请添加配件配置点位序号*/'i.empty_point_tip') }}
                                 </div>
                             </div>
                         </div>
                         <div class="image-contain" @mouseup="mouseupHandler" @mousemove="mousemoveHandler">
-                            <img :class="isBookWidth ? 'canvas-img w630' : 'canvas-img'" v-if="detailImageUrl"
+                            <img class="canvas-img" v-if="detailImageUrl"
                                 :src="detailImageUrl" ref="exploreImg" alt="">
                             <canvas ref="exploreCanvas"></canvas>
                             <div class="pointer-start" v-for="(item, index) in pointerList" :key="index"
@@ -58,20 +59,9 @@
                                     v-show="pointMouseMoveIndex === index" @mousedown.stop="">
                                     <div class="component">
                                         <div class="component-contain">
-                                            <!-- <div class="contain-header"> -->
-                                                <!-- <i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)" /> -->
-                                            <!-- </div> -->
                                             <div class="contain-name">
-                                                <!-- <i class="icon i_skew-bg" /> -->
-                                                <!-- <span class="icon-name">{{ $t('n.name') }}</span> -->
                                                 {{ (item.item || {}).name }}
                                             </div>
-                                            <!-- <div class="contain-type">
-                                                <div class="type-left">{{ $t('def.model') }}:&nbsp;{{ (item.item ||
-                                                    {}).model }}
-                                                </div>
-                                                <div class="edit-btn" @click="showEdit(index)">{{ $t('def.edit') }}</div>
-                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +70,7 @@
                         <!-- 爆炸图操作按钮 -->
                         <div class="btns-area">
                             <a-button class="panel-btn" v-if="isChangedPoint" type="primary" @click="clickSave">
-                                {{ $t('def.save') }}
+                                {{ $t(/*保存*/'def.save') }}
                             </a-button>
                             <a-button class="panel-btn" v-if="tabsArray.length > 0" @click="clickEditExplore">
                                 {{ $t(/*替换爆炸图*/'i.edit_bom_pic') }}
@@ -94,7 +84,7 @@
                 </div>
             </div>
             <div v-show="!detailImageUrl" class="empty-picture-container">
-                <a-tooltip title="①上传配件，②上传爆炸图，③配置点位">
+                <a-tooltip :title="$t(/*①上传配件，②上传爆炸图，③配置点位*/'i.operation_procedure')">
                     <div class="tip-wrap">
                         <img class="tip-icon" :src="tipIcon" alt="">
                         <div class="tip-text">
@@ -106,7 +96,7 @@
                     <img :src="uploadPic" alt="">
                     <div class="empty-upload-flex-wrap">
                         <div class="empty-upload-tip">
-                            上传爆炸图，以配置点位
+                            {{ $t(/*上传爆炸图，以配置点位*/'i.upload_pic_tip') }}
                         </div>
                         <a-button class="empty-upload-btn" type="primary" @click="clickShowAdd(true, false)">
                             {{ $t(/*上传爆炸图*/'p.upload_explosion') }}
@@ -137,8 +127,10 @@
                                 {{ (record.item || {}).model }}
                             </template>
                             <template v-if="column.dataIndex === 'operation'">
-                                <a-button type="link" @click="showEdit(index)"><i class="icon i_edit"/>{{ $t('def.edit') }}</a-button>
-                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete"/>{{ $t('def.delete') }}</a-button>
+                                <a-button type="link" @click="showEdit(index)"><i class="icon i_edit" />{{ $t('def.edit')
+                                }}</a-button>
+                                <a-button type="link" @click="clickDeletePoint(index)"><i class="icon i_delete" />{{
+                                    $t('def.delete') }}</a-button>
                             </template>
                         </template>
                     </a-table>
@@ -161,10 +153,12 @@
                             <img :src="addPic" alt="">
                             <div class="empty-add-item-text-wrap">
                                 <div class="empty-add-item-tip">
-                                    为爆炸图添加配件
+                                    {{ $t(/*为爆炸图添加配件*/'i.add_pic_diagram') }}
                                 </div>
-                                <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">添加配件</a-button>
-                                <div class="disable-add-btn" v-else @click="clickUnDetailPic" type="primary">添加配件</div>
+                                <a-button v-if="detailImageUrl" @click="clickAdd" type="primary">{{
+                                    $t(/*添加配件*/'i.add_diagram') }}</a-button>
+                                <div class="disable-add-btn" v-else @click="clickUnDetailPic" type="primary">{{
+                                    $t(/*添加配件*/'i.add_diagram') }}</div>
                             </div>
                         </div>
                     </div>
@@ -197,6 +191,9 @@ export default {
     },
     props: {
         id: {
+            type: Number,
+        },
+        detailId: {
             type: Number,
         },
     },
@@ -266,7 +263,7 @@ export default {
             }))
             column = column.filter(item => item.title && item.dataIndex)
             column.unshift(
-                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index' }, 
+                { title: this.$t('i.point_position'), key: 'index', dataIndex: 'index' },
                 { title: this.$t('n.name'), key: 'name', dataIndex: 'name' },
                 { title: this.$t('i.number'), key: 'model', dataIndex: 'model' },
                 { title: this.$t('i.code'), key: 'code', dataIndex: 'name' },
@@ -303,8 +300,6 @@ export default {
         // 点击切换爆炸图
         clickChangTab(key) {
             this.currentTab = key
-            console.log('currentTab', this.currentTab);
-            console.log('tabsArray', this.tabsArray);
             if (this.isChangedPoint === true) {
                 this.changeTabConfirm(key);
                 return;
@@ -316,7 +311,7 @@ export default {
             this.pointerList.forEach(item => {
                 item.isEdit = false;
             })
-            console.log('this.pointerList >> ', this.pointerList);
+            console.log('pointerList >> ', this.pointerList);
             this.pointerListData = Core.Util.deepCopy(this.pointerList);
             this.loadImage(get(this.tabsArray, `[${key}].img`, ""));
         },
@@ -331,7 +326,7 @@ export default {
                     ths.parsePoint(false);
                     const param = {
                         item_component_set_list: ths.tabsArray,
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
                     ths.requestSave(param, ths.$t('def.save'), ths.getItemExploreList.bind(ths))
@@ -348,7 +343,7 @@ export default {
         clickShowAdd(show, isEdit = false) {
             this.showAddModal = show;
             this.isUploadEdit = isEdit
-            if(!isEdit) { return }
+            if (!isEdit) { return }
             this.uploadForm = {
                 id: this.tabsArray.filter((item, index) => index === this.currentTab)[0].id,
                 name: this.tabsArray.filter((item, index) => index === this.currentTab)[0].name,
@@ -366,9 +361,11 @@ export default {
                 onOk() {
                     const param = {
                         item_component_set_list: ths.tabsArray.filter((item, index) => index !== ths.currentTab),
-                        target_id: ths.id,
+                        target_id: ths.id || ths.detailId,
                         target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
                     }
+                    ths.pointerList = [];
+                    ths.tabsArray = [];
                     ths.requestSave(param, ths.$t('pop_up.delete'), ths.getItemExploreList.bind(ths))
                 },
             });
@@ -380,7 +377,7 @@ export default {
         // 添加｜编辑弹窗确认回调
         handlerAdd(info) {
             // addItemComponent
-            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
+            Core.Api.Item.addItemComponent({ ...info, ...{ target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM } }).then(() => {
                 this.loadImage(info.img);
                 this.$message.success(info.id ? this.$t('n.amend') + this.$t('pop_up.success') : this.$t('v.save') + this.$t('pop_up.success'));
                 this.clickShowAdd(false);
@@ -393,7 +390,7 @@ export default {
         getItemDetail() {
             this.loading = true;
             Core.Api.Item.detail({
-                id: this.id
+                id: this.detailId
             }).then(res => {
                 let detail = res.detail || {}
                 detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
@@ -422,8 +419,6 @@ export default {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         imageLoadCallback(width, height) {
-            console.log('width', width);
-            console.log('height', height);
             if (width > 800 || height > 800) {
                 let rate = width / height;
                 this.canvas.width = rate >= 1 ? 700 : width / height * 800;
@@ -431,14 +426,6 @@ export default {
                 if (height > 385) {
                     this.canvas.height = 385
                 }
-                // if(window.innerWidth <= 1440) {
-                //     this.canvas.width = 430
-                //     this.isBookWidth = true
-                // } else {
-                //     this.isBookWidth = false   
-                // }
-                console.log('this.canvas.width', this.canvas.width);
-                console.log('this.canvas.height', this.canvas.height);
             } else {
                 this.canvas.width = width;
                 this.canvas.height = height;
@@ -482,10 +469,10 @@ export default {
         },
         // 获取 商品爆炸图
         getItemExploreList() {
-            this.pointerList = [];
-            this.tabsArray = [];
+            // this.pointerList = [];
+            // this.tabsArray = [];
             Core.Api.Item.getItemComponent({
-                target_id: this.id, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
+                target_id: this.id || this.detailId, target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM
             }).then((res) => {
                 this.tabsArray = get(res, "list.list", []);
                 this.parsePoint(true);
@@ -551,6 +538,7 @@ export default {
             row.isEdit = !row.isEdit;
         },
         saveRowIndex(row) {
+            console.log('row', row);
             this.clickSave();
         },
         // 编辑点位详情
@@ -563,6 +551,7 @@ export default {
             let obj;
             this.isChangedPoint = true;
             if (this.editPointer === null) {
+                console.log('handleAddShow before', this.pointerList);
                 obj = {
                     id: null,
                     start: { x: 50, y: 50 },
@@ -573,6 +562,7 @@ export default {
                     item: null,
                 }
                 this.pointerList.push(obj);
+                console.log('handleAddShow after', this.pointerList);
                 this.canvasUpdata();
             } else {
                 obj = this.editPointer;
@@ -588,10 +578,12 @@ export default {
             const ths = this;
             this.errorArray = [];
             this.savePointNum = this.pointerList.length;
+            console.log('clickSave pointerList', this.pointerList);
+            console.log('clickSave tabsArray', this.tabsArray);
             this.parsePoint();
             const param = {
                 item_component_set_list: this.tabsArray,
-                target_id: ths.id,
+                target_id: ths.id || ths.detailId,
                 target_type: Core.Const.ITEM_COMPONENT_SET.TARGET_TYPE.ITEM,
             }
             this.requestSave(param)
@@ -641,6 +633,7 @@ export default {
             width: 100%;
             display: flex;
             justify-content: space-between;
+
             .point-controller-container {
                 width: 208px;
             }
@@ -695,6 +688,7 @@ export default {
                     // opacity: 0.9;
                     background: #FFF;
                 }
+
                 .point-info-empty {
                     color: #BFBFBF;
                     text-align: center;
@@ -703,6 +697,7 @@ export default {
                     font-weight: 400;
                     line-height: normal;
                 }
+
                 .point-info-row {
                     margin-bottom: 12px;
                     width: 100%;
@@ -791,12 +786,14 @@ export default {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 .empty-upload-flex-wrap {
                     margin-left: 10px;
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
                 }
+
                 >img {
                     width: 99px;
                     height: 78px;
@@ -1144,19 +1141,23 @@ export default {
             left: 0;
         }
     }
+
     .btns-area {
         display: flex;
     }
+
     @media (max-width: 1700px) {
         .btns-area {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
+
         .panel-btn {
             margin-left: 0;
         }
     }
+
     .text-c {
         text-align: center;
     }
@@ -1176,6 +1177,7 @@ export default {
         height: 0;
         overflow: hidden;
     }
+
     .ant-input {
         width: 100px;
     }

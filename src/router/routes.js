@@ -72,7 +72,7 @@ const routes = [
                 meta: {
                     title: '时效看板',
                     title_en: 'RTDB',
-                }
+                },
             },
 
         ]

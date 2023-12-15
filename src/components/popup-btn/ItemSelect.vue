@@ -200,7 +200,7 @@ export default {
                 name: '',
                 category_id: '',
             }
-            this.source_type = undefined
+            this.handleSearchReset();
         },
         handleConfirm() {
             console.log('handleConfirm this.selectItems:', this.selectItems)
@@ -269,7 +269,7 @@ export default {
         handleSearchReset() {
             this.searchForm.code = ''
             this.searchForm.name = ''
-            this.searchForm.category_id = ''
+            this.searchForm.category_id = undefined
             this.source_type = undefined
             this.$refs.treeSelect?.resetVal();
             this.pageChange(1)

@@ -93,7 +93,6 @@ export default {
                         percent: 100,
                     }
                 }
-                console.log('val', val);
             },
             immediate: true,
             deep: true
@@ -129,8 +128,6 @@ export default {
                 this.$message.warning(this.$t('n.picture_smaller'));
             }
 
-            // this.loadImage(TEST_IMAGE);
-            // return false;
             return isCanUpType && isLt10M;
         },
         // 上传图片
@@ -142,7 +139,6 @@ export default {
                 this.shortPath = get(fileList,'[0].response.data.filename', null);
                 if(this.shortPath) {
                     this.form.img = this.shortPath;
-                    // this.loadImage(this.detailImageUrl);
                 }
             }
             this.upload.coverList = fileList;
