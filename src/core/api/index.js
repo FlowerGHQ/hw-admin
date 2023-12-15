@@ -1,6 +1,5 @@
 import Api from './base';
 import Const from '../const'
-import { version } from 'less';
 
 let baseUrl = Const.NET.URL_POINT
 /*
