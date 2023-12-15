@@ -81,7 +81,7 @@
                                             <div class="top-area">
                                                 <MySvgIcon
                                                     @click.stop="expand(item1)"
-                                                    v-if="item1.count>0"
+                                                    v-if="item1.count > 0"
                                                     :icon-class="
                                                         item1.expand
                                                             ? 'down-arrow'
@@ -94,9 +94,11 @@
                                                             ? 'new-dom'
                                                             : 'old-dom'
                                                     " />
-                                                <span class="common-title">{{item1.name}}   ({{
-                                                    item1.version
-                                                }}版本)</span>
+                                                <span class="common-title"
+                                                    >{{ item1.name }} ({{
+                                                        item1.version
+                                                    }}版本)</span
+                                                >
                                                 <span
                                                     class="new-version"
                                                     v-if="item1.flag_new">
@@ -226,8 +228,12 @@ let activeKey = ref("");
 let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
-let options = ref([]);
 let addValue = ref(null);
+
+
+const treeData = computed(()=>{
+    return realData.value
+})
 
 // -----------------定义方法--------------------------
 // 搜索
@@ -396,7 +402,7 @@ const editGoodsName = (item) => {
         sync_id: item.sync_id,
     })
         .then((res) => {
-            console.log(res);
+            // console.log(res);
         })
         .catch((err) => {
             console.log(err);
@@ -408,7 +414,7 @@ const editCategoryName = (item) => {
         ...item,
     })
         .then((res) => {
-            console.log(res);
+            // console.log(res);
         })
         .catch((err) => {
             console.log(err);
@@ -439,30 +445,65 @@ const addCategory = (item) => {
 };
 // 添加分类
 const handleAddCategory = (item) => {
+    if(!addValue.value) return
     Core.Api.ITEM_BOM.saveCategoryName({
         name: addValue.value,
         bom_id: item.id,
         type: 2,
     })
         .then((res) => {
+            // 重新请求分类列表
             getCategory(item);
             item.add = false;
+            item.expand = true;
             addValue.value = null;
-            getGoodsList();
+
+            console.log(realData.value);
+
+            setTimeout(() => {
+                // 找到商品列表中的这个item
+                let parentItemIndex = realData.value.findIndex(
+                    (item1) => item1.sync_id === item.sync_id
+                );
+                let index = realData.value[parentItemIndex].children.findIndex(
+                    (item1) => item1.id === item.id
+                );
+                // 商品列展开
+                realData.value[parentItemIndex].expand = true;
+                // 版本列展开
+                realData.value[parentItemIndex].children[index].expand = true;  
+                realData.value[parentItemIndex].children[index].count
+                    ? realData.value[parentItemIndex].children[index].count++
+                    : (realData.value[parentItemIndex].children[index].count = 1);
+            });
         })
         .catch((err) => {
             console.log(err);
         });
 };
 const handleDelete = (parentItem, item) => {
-    console.log(item);
     Core.Api.ITEM_BOM.saveCategoryName({
         id: item.id,
     })
         .then((res) => {
             getCategory(parentItem);
-            getGoodsList();
-
+            setTimeout(() => {
+                // 找出商品裂变中的item
+                let rootIndex = realData.value.findIndex(
+                    (item1) => item1.sync_id === parentItem.sync_id
+                );
+                // 找出版本列中的item
+                let index = realData.value[rootIndex].children.findIndex(
+                    (item1) => item1.id === parentItem.id
+                );
+                // 商品列展开
+                realData.value[rootIndex].expand = true;
+                // 版本列展开
+                realData.value[rootIndex].children[index].expand = true;
+                realData.value[rootIndex].children[index].count
+                    ? realData.value[rootIndex].children[index].count--
+                    : (realData.value[rootIndex].children[index].count = 0);
+            });
         })
         .catch((err) => {
             console.log(err);
