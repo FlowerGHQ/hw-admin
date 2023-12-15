@@ -41,14 +41,7 @@
             <div class="key">{{ $t("dis.order_source") }}：</div>
             <!-- 订单来源 -->
             <div class="value">
-              <!-- <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.name"
-                                @keydown.enter="handleSearch"
-                            />
-                                @change="handleSearch"
-                            -->
-              <a-select
+              <!-- <a-select
                 v-model:value="searchForm.source_type"
                 :placeholder="$t('def.select')">
                 <a-select-option :value="0">
@@ -60,7 +53,13 @@
                   :value="item.value"
                   >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
                 >
-              </a-select>
+              </a-select> -->
+              <a-cascader
+                  v-model:value="cascaderValue"
+                  :options="CRM_ORDER_SOURCE_TYPE"
+                  :placeholder="$t('def.select')"
+                  @change="onCascaderChange"
+              />
             </div>
           </a-col>
 
@@ -171,7 +170,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
-            v-if="show">
+          >
             <div class="key">{{ $t("crm_o.country_city") }}：</div>
             <div class="value">
               <!-- 参考 customer -> customer-edit -->
@@ -188,7 +187,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
-            v-if="show">
+          >
             <div class="key">{{ $t("crm_group.name") }}：</div>
             <!-- 区域 -->
             <div class="value">
@@ -296,7 +295,9 @@
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'source_type'">
-              {{ $Util.orderSourceType(text, lang) }}
+              {{ $i18n.locale === 'zh' ? SOURCE_TYPE[record.source_type]?.zh : SOURCE_TYPE[record.source_type]?.en }}                           
+              <!-- 订单来源选择国外官网时才有 -->
+              <span v-if="record.source_type === 4"> {{ COUNTRY_MAP[record.channel_country]?.text || ''  }}</span>                            
             </template>
             <template v-else-if="column.key === 'amount'">
                 {{text || "-" }}
@@ -333,7 +334,7 @@
               {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
             </template>
             <template v-else-if="column.key === 'country'">
-              {{ countryCityStr(record) }}
+              {{ $i18n.locale === 'zh' ? zhCountryCityStr(record) : countryCityStr(record) }}
             </template>
             <template v-else-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
@@ -448,6 +449,7 @@ import TimeSearch from "../../components/common/TimeSearch.vue";
 import addressCascader from "@/components/common/AddressCascader.vue";
 import { take } from "lodash";
 const modules = import.meta.globEager("../../assets/images/car/*");
+import axios from 'axios';
 
 export default {
   name: "OrderList",
@@ -474,8 +476,11 @@ export default {
       // CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,  //客户状态
       Order_Status_Map: Core.Const.CRM_ORDER.Order_Status_Map, // 订单切换筛选
       SOURCE_TYPE: Core.Const.CRM_ORDER.SOURCE_TYPE, // 订单来源
+      COUNTRY_MAP: Core.Const.CRM_ORDER.COUNTRY_MAP, // 国家
+      CRM_ORDER_SOURCE_TYPE: Core.Const.CRM_ORDER.CRM_ORDER_SOURCE_TYPE, // 订单来源级联
       total: 0,
       orderByFields: {},
+      cascaderValue: 0,
       // 搜索
       searchForm: {
         // name: "",
@@ -506,6 +511,7 @@ export default {
         // 退款时间
         refunded_begin_time: "", // （退款开始时间）
         refunded_end_time: "", // （退款结束时间）
+        channel_country: "", // 订单来源 国家
       },
       ownUserOptions: [], //負責人
       createUserOptions: [], // 创建人列表
@@ -551,6 +557,7 @@ export default {
         city_en: "",
         county: "",
       }, // 地址选择
+      areaOptions: [], // 区域列表
     };
   },
   watch: {
@@ -769,13 +776,17 @@ export default {
   mounted() {
     this.getTableData();
     this.ownUserFetch();
-    // this.createUserFetch()
     this.getRegionsData();
+    this.getAreaOptions();
   },
   methods: {
+    getAreaOptions() {
+        axios.get(`/ext/address-cascader.json`).then(response => {
+            this.areaOptions = response.data;
+        })
+    },
     countryCityStr(record) {
       let str = "";
-      // {{ ==='' ? (record.source_type===1?'中国':undefined):`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
       if (
         `${record.to_country ? record.to_country + "-" : ""}${
           record.to_province ? record.to_province + "-" : ""
@@ -784,6 +795,21 @@ export default {
         str = `${record.to_country ? record.to_country + "-" : ""}${
           record.to_province ? record.to_province + "-" : ""
         }${record.to_city}`;
+      } else if (record.source_type === 1) {
+        str = "中国";
+      }
+      return str || "-";
+    },
+    zhCountryCityStr(record) {
+      let str = "";
+      if (
+        `${this.convertStringToLanguage(record.to_country || '') ? this.convertStringToLanguage(record.to_country || '') + "-" : ""}${
+          this.convertStringToLanguage(record.to_province || '') ? this.convertStringToLanguage(record.to_province || '') + "-" : ""
+        }${this.convertStringToLanguage(record.to_city || '')}`
+      ) {
+        str = `${this.convertStringToLanguage(record.to_country || '') ? this.convertStringToLanguage(record.to_country || '') + "-" : ""}${
+          this.convertStringToLanguage(record.to_province || '') ? this.convertStringToLanguage(record.to_province || '') + "-" : ""
+        }${this.convertStringToLanguage(record.to_city || '')}`;
       } else if (record.source_type === 1) {
         str = "中国";
       }
@@ -1127,6 +1153,45 @@ export default {
     tabChange() {
       this.handleSearchReset();
     },
+    onCascaderChange(value, selectedOptions) {
+        if(value.length) {
+          if(value[0] === 4) {
+            this.searchForm.source_type = 4
+            this.searchForm.channel_country = value[1]
+          } else {
+            this.searchForm.source_type = value[0]
+            this.searchForm.channel_country = undefined
+          }
+        } else {
+          this.searchForm.source_type = undefined
+          this.searchForm.channel_country = undefined
+        }
+        this.handleSearch();
+    },
+    convertStringToLanguage(str) {
+      if(!str) return ''
+      function findItemByName(items, name) {
+        for (const item of items) {
+          if (item.name_en === name) {
+            return item;
+          }
+          if (item.children) {
+            const foundItem = findItemByName(item.children, name);
+            if (foundItem) {
+              return foundItem;
+            }
+          }
+        }
+        return null;
+      }
+
+      const item = findItemByName(this.areaOptions, str);
+      if (item) {
+        return item.name;
+      }
+
+      return str;
+    }
   },
 };
 </script>
