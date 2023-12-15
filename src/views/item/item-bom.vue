@@ -136,14 +136,19 @@ provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
         height: 100%;
         background-color: #f8fafc;
         font-size: 48px;
-        padding: 24px 20px 0 20px;
+        padding: 24px 20px 16px 20px;
+        display: flex;
+        flex-direction: column;
         .title-area {
           color: #1d2129;
           font-size: 16px;
           font-weight: 600;
+          line-height: 22px;
         }
         .tree-content {
           margin-top: 16px;
+          flex: 1;
+          height: calc(100% - 38px);
         }
       }
       .item-tree-right {
