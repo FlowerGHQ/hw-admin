@@ -17,7 +17,7 @@
         <!-- 右边 -->
         <div class="item-tree-right">
           <div class="search-content">
-            <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
+            <SearchAll ref="searAllRef" :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
           <component ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
         </div>
@@ -79,7 +79,7 @@ const classifyModalShow = ref(false)
 watch(
     activeObj,
     (newVal)=>{
-        activeObj.value = newVal
+        searAllRef.value.handleSearchReset()
     },
     {
         deep:true
@@ -107,7 +107,8 @@ const handleSearch = (data)=>{
 const handleReset = ()=>{
   searchParams.value = {}
 }
-const allComRef = ref(null)   // component
+const allComRef = ref(null)   // component refs
+const searAllRef = ref(null)   // searAll refs
 
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";

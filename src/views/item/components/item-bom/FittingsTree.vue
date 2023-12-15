@@ -16,7 +16,7 @@
                         v-for="item in realData"
                         :key="generateId(item)"
                         class="item pointer"
-                        @click.stop="selectKey(null,item)"
+                        @click.stop="selectKey(null, item)"
                         :class="{
                             'active-item': generateId(item) == activeKey,
                         }">
@@ -75,7 +75,7 @@
                                         'active-item-one':
                                             generateId(item1) === activeKey,
                                     }"
-                                    @click.stop="selectKey(item,item1)">
+                                    @click.stop="selectKey(item, item1)">
                                     <div class="item-child-one">
                                         <div class="left-area">
                                             <div class="top-area">
@@ -141,7 +141,9 @@
                                                         generateId(item2) ==
                                                         activeKey,
                                                 }"
-                                                @click.stop="selectKey(item1,item2)">
+                                                @click.stop="
+                                                    selectKey(item1, item2)
+                                                ">
                                                 <div class="title">
                                                     <div class="title-area">
                                                         <span
@@ -207,16 +209,40 @@
             </div>
         </div>
     </div>
+    <div ref="wrap"> 
+        <a-modal
+            v-model:visible="visible"
+            :title="$t('item-bom.confirm_delete')"
+            :okText="$t('item-bom.confirm_delete_btn')"
+            :cancelText="$t('item-bom.cancel')"
+            @ok="handleOk"
+            centered
+            :closable="false"
+            class="delete-modal"
+            :getContainer="() => wrap"
+            @cancel="visible = false"
+        >
+            <p class="content">{{ $t("item-bom.confirm_delete_content") }}</p>
+        </a-modal>
+    </div>
 </template>
 
 <script setup>
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
-import { ref, reactive, computed, onMounted, watch, onBeforeUnmount} from "vue";
+import {
+    ref,
+    reactive,
+    computed,
+    onMounted,
+    watch,
+    onBeforeUnmount,
+} from "vue";
 import { useI18n } from "vue-i18n";
 import Core from "@/core";
 const $t = useI18n().t;
 const $emit = defineEmits(["update:activeObj"]);
 import Util from "@/core/utils";
+const wrap = ref(null);
 
 // -----------------定义数据-------------------------------
 
@@ -229,6 +255,11 @@ let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
 let addValue = ref(null);
+// 弹框的显示
+let visible = ref(false);
+// 删除的item及其父级item
+let deleteItem = ref(null);
+let deleteParentItem = ref(null);
 
 // 接受activeObj
 const props = defineProps({
@@ -237,10 +268,9 @@ const props = defineProps({
         default: () => {},
     },
     cancelIds: {
-        type: [Number,String],
+        type: [Number, String],
     },
 });
-
 
 // -----------------定义方法--------------------------
 // 搜索
@@ -261,28 +291,30 @@ const generateId = (item) => {
     }
 };
 // 选择key
-const selectKey = (parentItem = {},item) => {
+const selectKey = (parentItem = {}, item) => {
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                version_id:'',
+                version_id: "",
                 shop_id: item.item_id,
-                category_id:'',
+                category_id: "",
                 name: item.name,
                 sync_id: item.sync_id,
             });
             break;
         case 2:
             activeKey.value = String(item.id) + String(item.level);
+            console.log(item)
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: item.id,
                 shop_id: parentItem.item_id,
-                category_id:'',
+                category_id: "",
                 name: item.name,
-                sync_id:''
+                sync_id: "",
+                flag_new:item.flag_new
             });
             break;
         case 3:
@@ -290,10 +322,10 @@ const selectKey = (parentItem = {},item) => {
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: parentItem.id,
-                shop_id:'',
+                shop_id: "",
                 category_id: item.id,
                 name: item.name,
-                sync_id:''
+                sync_id: "",
             });
             break;
         default:
@@ -461,7 +493,7 @@ const addCategory = (item) => {
 };
 // 添加分类
 const handleAddCategory = (item) => {
-    if(!addValue.value) return
+    if (!addValue.value) return;
     Core.Api.ITEM_BOM.saveCategoryName({
         name: addValue.value,
         bom_id: item.id,
@@ -487,10 +519,12 @@ const handleAddCategory = (item) => {
                 // 商品列展开
                 realData.value[parentItemIndex].expand = true;
                 // 版本列展开
-                realData.value[parentItemIndex].children[index].expand = true;  
+                realData.value[parentItemIndex].children[index].expand = true;
                 realData.value[parentItemIndex].children[index].count
                     ? realData.value[parentItemIndex].children[index].count++
-                    : (realData.value[parentItemIndex].children[index].count = 1);
+                    : (realData.value[parentItemIndex].children[
+                          index
+                      ].count = 1);
             });
         })
         .catch((err) => {
@@ -498,19 +532,25 @@ const handleAddCategory = (item) => {
         });
 };
 const handleDelete = (parentItem, item) => {
+    visible.value = true;
+    deleteItem.value = item;
+    deleteParentItem.value = parentItem;
+};
+const handleOk = () => {
     Core.Api.ITEM_BOM.deleteCategory({
-        id: item.id,
+        id: deleteItem.value.id,
     })
         .then((res) => {
-            getCategory(parentItem);
+            getCategory(deleteParentItem.value);
             setTimeout(() => {
                 // 找出商品裂变中的item
                 let rootIndex = realData.value.findIndex(
-                    (item1) => item1.sync_id === parentItem.sync_id
+                    (item1) =>
+                        item1.sync_id === deleteParentItem.value.sync_id
                 );
                 // 找出版本列中的item
                 let index = realData.value[rootIndex].children.findIndex(
-                    (item1) => item1.id === parentItem.id
+                    (item1) => item1.id === deleteParentItem.value.id
                 );
                 // 商品列展开
                 realData.value[rootIndex].expand = true;
@@ -524,11 +564,11 @@ const handleDelete = (parentItem, item) => {
         .catch((err) => {
             console.log(err);
         });
+    visible.value = false;
 };
-
 // 生命周期
 onMounted(() => {
-        // 请求商品列表
+    // 请求商品列表
     loading1.value = true;
     Core.Api.ITEM_BOM.listName({
         search_key: keyWord.value,
@@ -547,7 +587,9 @@ onMounted(() => {
             // 默认展开第一
             realData.value[0].expand = true;
             realData.value[0].select = true;
-            activeKey.value = String(realData.value[0].item_id) + String(realData.value[0].level);
+            activeKey.value =
+                String(realData.value[0].item_id) +
+                String(realData.value[0].level);
             $emit("update:activeObj", {
                 level: realData.value[0].level,
                 shop_id: realData.value[0].item_id,
@@ -829,4 +871,56 @@ onMounted(() => {
     width: 100%;
     text-align: center;
 }
+// antdesign中Modal的样式
+:deep(.delete-modal) {
+    min-width: 320px !important;
+    width: auto !important;
+    .ant-modal-content{
+        border-radius: 4px;
+        .ant-modal-header{
+            border: none !important;
+            padding-top: 24px !important;
+            padding-bottom: 0 !important;
+            height: auto !important;
+            padding: 24px 80px 0;
+            .ant-modal-title{
+                height: auto !important;
+                text-align: center !important;
+                color: #1D2129;
+                font-size: 18px;
+                font-weight: 600;
+            }
+        }
+        .ant-modal-body{
+            padding: 34px 24px 34px;
+            .content{
+                text-align: center;
+                
+            }
+        }
+        .ant-modal-footer{
+            text-align: center;
+            padding-top: 18px;
+            padding-bottom: 18px;
+            height: auto !important;
+            border-color:#F2F3F5 !important ;
+            .ant-btn{
+                height: 32px;
+                padding: 6px 16px;
+                justify-content: center;
+                align-items: center;
+                color:#1D2129;
+                border-radius: 4px;
+                border: 1px solid #E5E6EB;
+                &:hover{
+                    border: 1px solid #E5E6EB;
+                }
+            }
+            .ant-btn-primary{
+                color: #fff;
+            }
+        }
+    }
+}
+
 </style>
