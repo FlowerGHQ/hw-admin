@@ -246,6 +246,14 @@ const uploadPic =
     "http://horwin-app.oss-cn-hangzhou.aliyuncs.com/png/b3f294686cc11e3cacbe2c7ea720b740574c051623cd75a00efec3e6aece72d6.png";
 
 const { proxy } = getCurrentInstance();
+
+const props = defineProps({
+    activeObj: {
+        type: Object,
+        default: () => {}
+    }
+})
+console.log("测试的id", props.id);
 const loading = ref(false);
 
 const tableColumns = computed(() => {
@@ -398,7 +406,8 @@ onMounted(() => {
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
-    let obj = {        
+    let obj = {
+        bom_id: "", // 版本id
         bom_category_id: 6, // 分类 id
         name: "", // search 商品名称
         code_list: [], // search 商品编号
@@ -431,7 +440,7 @@ const getTableDataFetch = (parmas = {}) => {
 const saveImgeFetch = (parmas = {}) => {
     let obj = {
         img: undefined,        
-        target_id: undefined, // bom_category.id (分类id)
+        target_id: undefined, // (分类id)
         target_type: 3, // bom分类(固定死这里)
         // id: 0,  // 不传id新增 传id是替换
         ...parmas

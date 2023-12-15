@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions"></SearchAll>
           </div>
-          <component :is="componentName" :id="activeObj.id"></component>
+          <component :is="componentName" :activeObj="activeObj"></component>
         </div>
       </div>
     </div>

@@ -55,7 +55,7 @@ const pointerListFilter = (arr) => {
             end: !el.end_point ? "" : JSON.parse(el.end_point),
         }
 
-        obj.start = Array.isArray(JSON.parse(el.start_point)) ? JSON.parse(el.start_point) : []
+        obj.start = Array.isArray(JSON.parse(el?.start_point || "")) ? JSON.parse(el.start_point) : []
         
         return obj
     });
