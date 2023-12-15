@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component :is="componentName" :activeObj="activeObj"></component>
+          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams"></component>
         </div>
       </div>
     </div>

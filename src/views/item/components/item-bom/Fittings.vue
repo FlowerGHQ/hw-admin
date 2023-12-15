@@ -80,18 +80,20 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
+    activeObj: {
+        type: Object,
+        default: () => {},
+    },
+});
+const parmas = computed(() => {
+    return {
+        bom_id: props.activeObj.shop_id,
+        name: props.searchParams.name,
+        code_list: props.searchParams.code_list,
+    };
 });
 
-watch(
-    () => props.searchParams,
-    (val) => {
-        console.log("val", val);
-        getTableDataFetch(val);
-    },
-    {
-        deep:true
-    }
-);
+
 
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
@@ -191,7 +193,7 @@ const salesArea = (arr, locale) => {
 };
 
 onMounted(() => {
-    getTableDataFetch();
+    // getTableDataFetch();
 });
 /* Fetch start*/
 // 获取表格list
@@ -232,6 +234,19 @@ const handleTableChange = (pagination, filters, sorter) => {
     });
 };
 /* methods end*/
+
+
+watch(
+    () => parmas.value,
+    (val) => {
+        console.log("parmas", val);
+        getTableDataFetch(val);
+    },
+    {
+        deep:true,
+        immediate: true,
+    }
+);
 </script>
 
 <style lang="less" scoped>
