@@ -122,7 +122,6 @@ const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const flagNew = ref()
 
-const isSearch = ref(false)
 const props = defineProps({  
     // v-model 绑定值  
     activeObj: {
@@ -271,9 +270,6 @@ onMounted(() => {
     refresh()
 })
 
-onUnmounted(() => {
-    isSearch.value = false
-})
 // 获取设变列表
 const getChangeList = () => {
     Core.Api.ITEM_BOM.changeBomList({
