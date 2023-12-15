@@ -203,7 +203,9 @@ export default {
             })
         },
         getBomList() {
-            Core.Api.Bom.listAll().then(res => {
+            Core.Api.Bom.listAll({
+                type: 1, // 1.生产，2.售后
+            }).then(res => {
                 this.bomList = res.list
             })
         },

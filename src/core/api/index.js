@@ -1,5 +1,6 @@
 import Api from './base';
 import Const from '../const'
+import { version } from 'less';
 
 let baseUrl = Const.NET.URL_POINT
 /*
@@ -919,6 +920,22 @@ const apiList = {
     EMAIL_SUBSCRIPTION: {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
+    ITEM_BOM:{
+        listName: ['PostJson', 'aftermarket/bom/list-name'], // 产品名称列表
+        versionList: ['PostJson', 'aftermarket/bom/list-version'], // 版本列表
+        listCategory: ['PostJson', 'aftermarket/bom/list-category'], // 分类列表
+        partsList: ['PostJson', 'aftermarket/bom/list-parts'], // 配件list
+        saveOrEdit: ['PostJson', 'item/item-component-set-save'], // 新增编辑爆炸图
+        getExplosionImg: ['PostJson', 'item/item-component-set-list'], // 爆炸图list
+        editPoint: ['PostJson', 'item/bind-item-component'], // 编辑点位
+        updateName: ['PostJson', 'aftermarket/bom/update-name'], // 编辑Bom商品名称
+        saveCategoryName: ['PostJson', 'bom-category/save'], // 新增编辑分类
+        deleteCategory: ['PostJson', 'bom-category/delete'], // 删除分类
+        changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
+        changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
+        bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类
+
+    }
 }; 
 
 export default new Api(baseUrl, apiList);

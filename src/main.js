@@ -17,6 +17,8 @@ import 'ant-design-vue/dist/antd.less';
 import '@/assets/iconfont/iconfont.css';
 import '@/assets/styles/public.less';
 import '@/assets/font-family/index.css'
+// svg
+import 'virtual:svg-icons-register';
 
 const app = createApp(App)
 
