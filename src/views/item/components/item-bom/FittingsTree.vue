@@ -492,7 +492,7 @@ const handleAddCategory = (item) => {
         });
 };
 const handleDelete = (parentItem, item) => {
-    Core.Api.ITEM_BOM.saveCategoryName({
+    Core.Api.ITEM_BOM.deleteCategory({
         id: item.id,
     })
         .then((res) => {
