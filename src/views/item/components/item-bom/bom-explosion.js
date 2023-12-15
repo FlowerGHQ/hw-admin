@@ -64,11 +64,15 @@ const pointerListFilter = (arr) => {
 // 初始化
 const init = (arr) => {
     ctx = exploreCanvas.value.getContext("2d");
-
+        
     // 等图片加载完
     exploreImg.value.onload = () => {
-        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
+        console.log("图片加载完成");
+        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);        
         initLine(arr)
+    };
+    exploreImg.value.onerror = () => {
+        console.log("加载失败");
     };
 };
 // 容器内鼠标移动
@@ -220,8 +224,8 @@ const sidebarDataGroup = computed(() => {
 
 // 初始化数据和画线
 const initLine = (arr) => {
-    if (arr.length === 0) return
     console.log("初始化数据和画线", arr);
+    if (arr.length === 0) return
     pointerList.value = arr;
     sidebarData.value = []
     // pointerList.value.push({

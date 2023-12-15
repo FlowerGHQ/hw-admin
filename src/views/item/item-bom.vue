@@ -25,7 +25,6 @@
     </div>
 
     <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @refresh="refresh" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
-    <a-button @click="classifyModalShow=true">111111cd{{ classifyModalShow }}</a-button>
   </div>
 </template>
 
@@ -80,7 +79,8 @@ const classifyModalShow = ref(false)
 watch(
     activeObj,
     (newVal)=>{
-        console.log("newVal",newVal)
+        console.log("newVal----------------------------------",newVal)
+        activeObj.value = newVal
     },
     {
         deep:true
