@@ -48,12 +48,16 @@ const pointerList = ref([
 ]); // 点位列表
 
 const pointerListFilter = (arr) => {
+    console.log("pointerListFilter-arr", arr);
     const result = arr.map((el) => {
-        return {
+        const obj = {
             ...el,
-            start: JSON.parse(el.start_point) instanceof Array ? JSON.parse(el.start_point) : [],
-            end: JSON.parse(el.end_point),
-        };
+            end: !el.end_point ? "" : JSON.parse(el.end_point),
+        }
+
+        obj.start = Array.isArray(JSON.parse(el.start_point)) ? JSON.parse(el.start_point) : []
+        
+        return obj
     });
     return result;
 };
@@ -171,34 +175,44 @@ const onSilderCopy = (item, index) => {
 const onSilderDelete = (item, index) => {
     console.log("item", item, "index", index);
 
-    item.start.splice(index, 1); // 删除sidebarData每个对应的start中的数据操作
-    const silderCategory = sidebarData.value.filter((el) => el.index === item.index); // 找出当前点击的所属类别
-    console.log("a", silderCategory);
-    // const data = pointerList.value.find((el) => el.index === item.index);
-    // console.log("b", data);
-    // if (silderCategory.length === 1) {
-    //     data.start = sidebarData.value[sidebarData.value.length - 1].start;
-    //     data.end = undefined;
-    // } else {
-    //     data.start = sidebarData.value[sidebarData.value.length - 1].start;
-    // }
+    item.start.splice(index, 1); // 删除sidebarData每个对应的start中的数据操作    
 
-    // silderCategory.splice(index, 1); // 最后删除页面上的效果
-    // canvasLine(ctx);
+    // console.log("onSilderDelete-sidebarData", sidebarData.value);
+    
+    const silderCategory = sidebarData.value.filter((el) => el.index === item.index); // 找出当前点击的所属类别    
+    const pointerListIndex = pointerList.value.findIndex((el) => el.index === item.index);
+    
+    if (silderCategory.length === 1) {
+        console.log("pointerListIndex", pointerListIndex);
+        pointerList.value.splice(pointerListIndex, 1)
+    }
+    
+    canvasLine(ctx);
+    
+    const sidebarIndex =  sidebarData.value.findIndex(el => el.id === item.id)
+    sidebarData.value.splice(sidebarIndex, 1) // 删除页面的效果
+    
+    console.log("onSilderDelete-pointerList", pointerList.value);
 };
 // 将侧边栏过滤成组的形势
 const sidebarDataGroup = computed(() => {
-    const filteredData = sidebarData.value.reduce(
-        (result, item) => {
-            const groupIndex = item.index - 1;
-            if (!result[groupIndex]) {
-                result[groupIndex] = [];
-            }
-            result[groupIndex].push(item);
-            return result;
-        },
-        []
-    );
+    // console.log("将侧边栏过滤成组的形势 sidebarData", sidebarData.value); // [ [], [], []]
+
+    const arrIndex = []
+    sidebarData.value.forEach($1 => {
+        const i = arrIndex.findIndex($2 => $2 === $1.index)        
+        if (i === -1) {
+            arrIndex.push($1.index)
+        }
+    })
+    
+    const filteredData = arrIndex.reduce((result, el) => {
+        const itemArr = sidebarData.value.filter(item => item.index === el)
+        
+        result.push(itemArr)
+
+        return result
+    }, [])
 
     console.log("将侧边栏过滤成组的形势", filteredData); // [ [], [], []]
     return filteredData.length > 0 ? filteredData : [];
@@ -207,7 +221,7 @@ const sidebarDataGroup = computed(() => {
 // 初始化数据和画线
 const initLine = (arr) => {
     if (arr.length === 0) return
-    console.log("初始化数据和画线", arr);
+    // console.log("初始化数据和画线", arr);
     pointerList.value = arr;
     sidebarData.value = []
     // pointerList.value.push({
@@ -221,9 +235,11 @@ const initLine = (arr) => {
     pointerList.value = pointerListFilter(pointerList.value);
     canvasLine(ctx);
 
+    let count = 1
     pointerList.value.forEach(($1) => {
         $1.start.forEach(el => {
             sidebarData.value.push({
+                id: count++, // 标识
                 index: $1.index,
                 end: $1.end,
                 start: $1.start,
@@ -236,6 +252,7 @@ const initLine = (arr) => {
 
 export {
     pointerList,
+    sidebarData,
     exploreCanvas,
     exploreImg,
     init,

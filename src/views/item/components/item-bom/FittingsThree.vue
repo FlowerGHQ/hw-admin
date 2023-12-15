@@ -155,9 +155,9 @@
                     <div class="table-title">{{ title }}</div>
                 </template>
                 <template #bodyCell="{ text, record, index, column }">
-                    <div class="ordinal" v-if="column.key === 'tag' /*序号*/">
+                    <div class="ordinal" v-if="column.key === 'index' /*序号*/">
                         <a-input
-                            v-model:value="record.tag"
+                            v-model:value="record.index"
                             :placeholder="$t('item-bom.point_configure_number')"
                             @blur="onOperation('blur', record)"
                         />
@@ -225,16 +225,17 @@ import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import {
     pointerList,
+    sidebarData,
     exploreCanvas,
-    exploreImg,      
-    init, 
-    mousemoveHandler, 
-    mouseUpHandler, 
-    pointMousedown, 
-    onSilderCopy, 
-    onSilderDelete,    
-    sidebarDataGroup,
+    exploreImg,
+    init,
+    mousemoveHandler,
+    mouseUpHandler,
+    pointMousedown,
+    onSilderCopy,
+    onSilderDelete,
     initLine,
+    sidebarDataGroup,
 }   from './bom-explosion'
 
 const emptyImage =
@@ -294,13 +295,13 @@ const tableColumns = computed(() => {
     ];
 
     if (isExplosionImg.value) {
-        // 有爆炸图才添加序号
+        // 有爆炸图才添加序号(前端自定义自己删除)
         result.unshift(  {
             // 序号
             width: 250,
             title: proxy.$t("item-bom.ordinal"),
-            dataIndex: "tag",
-            key: "tag",
+            dataIndex: "index",
+            key: "index",
         })
     }
     return result;
@@ -312,8 +313,7 @@ const tableData = ref([
     //     "bom_category_id": 0, //分类id
     //     "production_code": "", //生产编码
     //     "target_id": 279, //商品id
-    //     "target_type": 1, //商品类型
-    //     "tag": "", //序号
+    //     "target_type": 1, //商品类型    
     //     "amount": 1, //用量
     //     "comment": "萨基发生纠纷萨科JFK吉萨反抗军萨福克就是部分你就撒开积分", //备注
     //     "version_num": 0, //版本信息
@@ -391,8 +391,7 @@ const channelPagination = ref({
     showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
 
-onMounted(() => {
-    getTableDataFetch();
+onMounted(() => {    
     getExplosionImgFetch({ target_id: 6 })
 });
 /* Fetch start*/
@@ -410,12 +409,21 @@ const getTableDataFetch = (parmas = {}) => {
 
     Core.Api.ITEM_BOM.partsList(obj)
         .then((res) => {
+            loading.value = false;
             channelPagination.value.total = res.count;
             tableData.value = res.list;
-            loading.value = false;
+            
+            addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
+                // 给配件表格添加index
+                tableData.value.forEach($2 => {
+                    if (Number($1.target_id) === Number($2.id)) {
+                        $2.index = $1.index
+                    }
+                })
+            });
         })
         .catch((err) => {
-            console.log("getTableDataFetch", err);
+            console.log("getTableDataFetchError", err);
             loading.value = false;
         });
 };
@@ -450,6 +458,8 @@ const editPointFetch = (parmas = {}, type) => {
 
             if (type === 'delete') {
                 proxy.$message.success("删除成功")
+                sidebarData.value = []
+                pointerList.value = []
             } else if (type === 'add') {
                 proxy.$message.success("保存成功")
             }
@@ -460,7 +470,7 @@ const editPointFetch = (parmas = {}, type) => {
             console.log("deleteExplosionImgFetchError", err);
         });
 }
-// 获取爆炸图Fetch
+// 获取爆炸图list Fetch
 const getExplosionImgFetch = (parmas = {}) => {
     let obj = {
         target_id: undefined, // bom_category.id
@@ -482,6 +492,8 @@ const getExplosionImgFetch = (parmas = {}) => {
                 isExplosionImg.value = false
                 explosionImgItem.value = undefined
             }
+
+            getTableDataFetch();
         })
         .catch((err) => {
             console.log("getExplosionImgFetchError", err);
@@ -532,24 +544,20 @@ const onOperation = (type, record) => {
             console.log("pointerList", pointerList.value);
             const datas = addTagItem.value.item_component_set_list[0]
 
-            datas.item_component_list = datas.item_component_list.map($1 => {
 
-                // pointerList.value 防止影响 canvas上面得数据
-                const item = Core.Util.deepCopy(pointerList.value).find(el => el.index === $1?.index)
-                if (item) {
-                    item.end_point = JSON.stringify(item.end)
-                    item.start_point = JSON.stringify(item.start)
-                    // 删除字段
-                    Reflect.deleteProperty(item, 'end');
-                    Reflect.deleteProperty(item, 'start');
-                    Reflect.deleteProperty(item, 'blurId');
-                    return item
-                } else {
-                    Reflect.deleteProperty($1, 'blurId');
-                    return $1
-                }
+            const copyPointerList = Core.Util.deepCopy(pointerList.value)
 
-            })   
+            copyPointerList.forEach(item => {
+                item.end_point = JSON.stringify(item.end)
+                item.start_point = JSON.stringify(item.start)
+                // 删除字段
+                Reflect.deleteProperty(item, 'end');
+                Reflect.deleteProperty(item, 'start');
+                Reflect.deleteProperty(item, 'blurId');
+            })
+
+            datas.item_component_list = copyPointerList
+
             console.log("save", addTagItem.value);
             editPointFetch(addTagItem.value, 'add')
 
@@ -569,7 +577,7 @@ const onOperation = (type, record) => {
                                     
             let addPointItem = {
                 blurId: record.id,  // 用于记录来区分在之后是否要替换
-                index: record.tag,
+                index: record.index,
                 set_id: explosionImgItem.value.id, // 爆炸图id
                 target_id: record.id, // 配件id
                 start_point: JSON.stringify([{ x: 0, y: 0 }]),
