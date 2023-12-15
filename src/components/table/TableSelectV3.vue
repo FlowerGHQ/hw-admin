@@ -167,5 +167,7 @@ const rowSelection = computed(() => {
 </script>
 
 <style lang="less" scoped>
-
+:deep(.ant-table) {
+    min-height: 200px;
+}
 </style>

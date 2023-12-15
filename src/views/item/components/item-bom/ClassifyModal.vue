@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="search">
-            <SearchAll :isShowMore="false" @search = "handleSearch" @reset = "handleSearchReset" >
+            <SearchAll :isShowMore="false" :disabled="level===2" @search = "handleSearch" @reset = "handleSearchReset" >
                 <template v-slot:extend>
                     <a-col v-if="options.type === 'input'" :xs="24" :sm="15" :xl="15" :xxl="15" class="search-box">
                             <div  class="item-box">
@@ -31,6 +31,7 @@
                                 </div>
                                 <div class="value-box">
                                     <a-input
+                                        :disabled="level===2"
                                         :placeholder="$t(`${ options.placeholder || 'def.input' }`)"
                                         v-model:value="codeStr"
                                         @keydown.enter="handleSearch" />
@@ -53,7 +54,6 @@
             :default-checked="defaultChecked"
             @submit="handleSelectItem"
         ></TableSelectV3>
-        
         <template #footer>
             <div class="modal-footer">
                 <div class="paging-area">
@@ -61,13 +61,13 @@
                             v-model:current="current"
                             v-model:pageSize="pageSize"
                             show-size-changer
-                            :total="500"
+                            :total="total"
                             @change="pageChange"
                             @showSizeChange="onShowSizeChange"
                         />
                     <div class="tip">
                         {{ $t('in.selected') + ` ${selectItemIds.length} ` + $t('in.total')}}
-                    </div>
+                    </div>{{  level.value  }}1111
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleCancle">{{ $t('def.cancel') }}</a-button>
@@ -84,12 +84,29 @@ import Core from "@/core";
 import SearchAll from "@/components/common/SearchAll.vue"
 import TableSelectV3 from '@/components/table/TableSelectV3.vue'
 
+const initialObject = { 
+    // 商品编码
+    codeList: []
+}
 const props = defineProps({  
     // v-model 绑定值  
     visibility:{
         type: Boolean,
         default:false        
     },
+    id:{
+        type: Number,
+        default: ''
+    },
+    // level
+    level:{
+        type: Number,
+        default: 0
+    },
+    code:{ //二级页面点击单条进行分类
+        type: String,
+        default: ''
+    }
 })
 // 当前分组对象
 const classValue =  ref();
@@ -97,7 +114,8 @@ const searchForm = ref({
     // 商品编码
     codeList: []
 })
-
+const bomId = ref('');
+const level = ref(0)
 const defaultChecked = ref([])
 const emits = defineEmits(['update:visibility']) 
 // 搜索列表组件
@@ -117,13 +135,41 @@ watch(
     () => props.visibility,
     (newValue, oldValue) => {
         emits("update:visibility", newValue)
+        nextTick(()=>{
+            handleSearch()
+        })
+    }    
+)// 监听弹窗id接收变换
+watch(
+    () => props.id,
+    (newValue, oldValue) => {
+        bomId.value = newValue;
+        // console.log('bomId.value',bomId.value);
+    }    
+)
+// 监听弹窗level接收变换
+watch(
+    () => props.level,
+    (newValue, oldValue) => {
+        level.value = newValue;
+        // console.log('level.value',level.value);
+    }    
+)
+
+// 监听弹窗level2时code监听变化接收变换
+watch(
+    () => props.code,
+    (newValue, oldValue) => {
+        codeStr.value = newValue;
+        // console.log('1111codeStr.value',codeStr.value);
+
     }    
 )
 const selectItemIds = ref([])
 const tableData = ref([])
 
 const pageSize = ref(10);
-const current = ref(3);
+const current = ref(1);
 const total = ref(0);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
@@ -140,44 +186,38 @@ const tableColumns = computed(() => {
         { 
             // 商品名称
             title: proxy.$t('item-bom.product_name'), 
-            dataIndex: "name", 
-            key: "name"
+            dataIndex: "sync_name", 
+            key: "sync_name"
         },
         { 
             // 商品编码
             title: proxy.$t('item-bom.commodity_code'), 
-            dataIndex: "code", 
-            key: "code"
-        },
-        { 
-            // 厂家名称
-            title: proxy.$t('item-bom.manufacturer_name'), 
-            dataIndex: "manufacturer_name", 
-            key: "manufacturer_name"
+            dataIndex: "sync_id", 
+            key: "sync_id"
         },
         { 
             // 分类
             title: proxy.$t('item-bom.classify'), 
-            dataIndex: "classify", 
-            key: "classify"
+            dataIndex: "bom_category", 
+            key: "bom_category"
         },
         { 
             // 用量
             title: proxy.$t('item-bom.dosage'), 
-            dataIndex: "dosage", 
-            key: "dosage"
+            dataIndex: "amount", 
+            key: "amount"
         },
         { 
             // 销售区域
             title: proxy.$t('item-bom.sales_area'), 
-            dataIndex: "sales_area", 
-            key: "sales_area"
+            dataIndex: "sales_area_list", 
+            key: "sales_area_list"
         },
         { 
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "create_time", 
-            key: "create_time"
+            dataIndex: "sync_time", 
+            key: "sync_time"
         },
         /* {
             // 备注
@@ -188,28 +228,7 @@ const tableColumns = computed(() => {
     ]
     return result
 })
-/* Fetch start*/
-// 获取表格list
-const getTableDataFetch = (parmas = {}) => {
-    loading.value = true
-    let obj = {
-        flag_spread: 1,
-        page: current.value,
-        page_size: pageSize.value,
-        status: "0",
-        ...parmas
-    }
 
-    Core.Api.Item.list(obj).then(res => {
-        // channelPagination.value.total = res.count
-        tableData.value = res.list
-        console.log('res-sjsjsjsjsjj',res);
-    }).catch(err => {
-        console.log("getTableDataFetch", err);
-    }).finally(()=>{
-        loading.value = false
-    })
-}
 // 获取search组件对象
 /* const getSearchFrom = (data) =>  {
     console.log('data---getSearchFrom',data);
@@ -227,15 +246,21 @@ onMounted(() => {
 const handleSearchReset = ( ) => {
     
       // 重置搜索
-      Object.assign(searchForm.value, proxy.$options.data().searchForm);
-
+      Object.assign(searchForm.value, initialObject);
+      console.log('searchForm.value---handleSearchReset',searchForm.value);
+      getTableDataFetch()
 }
 const handleSearch = () => {
-    
-    //更换数组形式传参,字符串逗号分隔输入--编码
-    let arr = codeStr.value.trim().split(',');
-    arr = arr.map(item => item.trim());
-    searchForm.value.codeList = arr.filter(item => item !== ""); 
+    console.log('codeStr.value---handleSearch',codeStr.value);
+    if(codeStr.value){
+
+        //更换数组形式传参,字符串逗号分隔输入--编码
+        let arr = codeStr.value.trim().split(',');
+        arr = arr.map(item => item.trim());
+        searchForm.value.codeList = arr.filter(item => item !== ""); 
+    }
+
+    getTableDataFetch()
     
 }
 const handleSelectItem = (qqq,bbbb) => {
@@ -248,6 +273,30 @@ const handleCancle = () => {
 const handleOk = (e) => {
     console.log(e);
 };
+
+/* Fetch start*/
+// 获取表格list
+const getTableDataFetch = (parmas = {}) => {
+    loading.value = true
+    let obj = {
+        bom_id: bomId.value,
+        code_list: searchForm.value.codeList,//同步编号
+        page: current.value,
+        page_size: pageSize.value,
+        ...parmas
+    }
+
+    Core.Api.ITEM_BOM.partsList(obj).then(res => {
+        console.log('getTableDataFetch',res);
+        total.value = res.count;
+        tableData.value = res.list;
+    }).catch(err => {
+        console.log("getTableDataFetch", err);
+    }).finally(()=>{
+        loading.value = false
+    })
+}
+
 </script>
 
 <style lang="less" scoped>

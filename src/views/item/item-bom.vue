@@ -24,8 +24,8 @@
       </div>
     </div>
 
-    <ClassifyModal v-model:visibility="classifyModalShow" :id="activeObj.id" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
-    
+    <ClassifyModal v-model:visibility="classifyModalShow" :level="activeObj?.level" :id="activeObj?.id" :code="level2CodeStr" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
+    <a-button @click="classifyModalShow=true">111111cd{{ classifyModalShow }}</a-button>
   </div>
 </template>
 
@@ -43,6 +43,7 @@ const titleRefs = ref(null);
 const titleHeight = ref(0);
 // 选择层级对象
 const activeObj = ref({});
+const level2CodeStr = ref({});
 const searchOptions = ref([
     {
         id: 1,
@@ -107,6 +108,8 @@ const compChange = () => {};
 
 // 分类弹窗打开
 const showClassModal = (data) => {
+  console.log('111111',data);
+  level2CodeStr.value = data;
   classifyModalShow.value = true;
 }
 
