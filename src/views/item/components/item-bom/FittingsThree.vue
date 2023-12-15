@@ -211,10 +211,10 @@
                         </a-tooltip>
                     </span>
                 </template>
-                <template #emptyText>
+                <template v-if="!isSearch"  #emptyText>
                     <div class="empty-add-item-container">
                         <img :src="emptyImage" alt="" />
-                        <div class="empty-add-item-text-wrap">
+                        <div  class="empty-add-item-text-wrap">
                             <div class="empty-add-item-tip">
                                 {{ $t("item-bom.explosion_diagram") }}
                             </div>
@@ -231,7 +231,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, nextTick, watch } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, nextTick, watch, onUnmounted } from "vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import {
@@ -260,6 +260,10 @@ const { proxy } = getCurrentInstance();
 
 const props = defineProps({
     activeObj: {
+        type: Object,
+        default: () => {}
+    },
+    searchParams: {
         type: Object,
         default: () => {}
     }
@@ -392,7 +396,7 @@ const uploadOptions = ref({
 }) // 上传参数
 
 const addTagItem = ref({
-    target_id: props.activeObj.version_id, // bom_category.id (分类id)
+    target_id: props.activeObj.category_id, // bom_category.id (分类id)
     target_type: 3, // bom分类(固定死这里)
     item_component_set_list: []
 })  // 最后保存按钮
@@ -408,12 +412,30 @@ const channelPagination = ref({
     total: 0,
     showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
-
+const isSearch = ref(false)
 watch(
     () => props.activeObj,
 	(newVal) => {
-        console.log("监听了吗", newVal);		
+        console.log("监听 activeObj", newVal);
         getExplosionImgFetch({ target_id: newVal.category_id })
+	},
+	{
+		deep: true,
+	}
+)
+watch(
+    () => props.searchParams,
+	(newVal) => {
+        console.log("监听 searchParams", newVal, Object.keys(newVal).length);
+        if (Object.keys(newVal).length === 0) {
+            // 重置操作
+            isSearch.value = false
+        } else {
+            isSearch.value = true
+        }
+        channelPagination.value.current = 1
+        channelPagination.value.pageSize = 20
+        getTableDataFetch()
 	},
 	{
 		deep: true,
@@ -422,6 +444,11 @@ watch(
 onMounted(() => {    
     getExplosionImgFetch({ target_id: props.activeObj.category_id })    
 });
+
+onUnmounted(() => {
+    console.log("销毁");
+    isSearch.value = false
+})
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
@@ -429,10 +456,11 @@ const getTableDataFetch = (parmas = {}) => {
     let obj = {
         bom_id: props.activeObj.version_id, // 版本id
         bom_category_id: props.activeObj.category_id, // 分类 id
-        name: "", // search 商品名称
-        code_list: [], // search 商品编号
-        page: 1, //页数
-        page_size: 20, //页数大小
+        // name: "", // search 商品名称
+        // code_list: [], // search 商品编号
+        page: channelPagination.value.current,
+        page_size: channelPagination.value.pageSize,
+        ...props.searchParams,
         ...parmas,
     };
 
@@ -608,8 +636,8 @@ const onOperation = (type, record) => {
                 index: record.index,
                 set_id: explosionImgItem.value.id, // 爆炸图id
                 target_id: record.id, // 配件id
-                start_point: JSON.stringify([{ x: 0, y: 0 }]),
-                end_point: JSON.stringify({ x: 0, y: 100 }),
+                start_point: JSON.stringify([{ x: 0, y: 100 }]),
+                end_point: JSON.stringify({ x: 0, y: 0 }),
             }
 
             if (findIndex !== -1) {
@@ -627,17 +655,9 @@ const onOperation = (type, record) => {
 
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...channelPagination.value };
-    pager.current = pagination.current;
-    if (pagination.pageSize !== channelPagination.value.pageSize) {
-        pager.current = 1;
-        pager.pageSize = pagination.pageSize;
-    }
-    channelPagination.value = pager;
-    getTableDataFetch({
-        page_size: channelPagination.value.pageSize,
-        page: channelPagination.value.current,
-    });
+    channelPagination.value.current = pagination.current;
+    channelPagination.value.pageSize = pagination.pageSize;
+    getTableDataFetch();
 };
 
 /* methods end*/
@@ -759,6 +779,7 @@ const handleTableChange = (pagination, filters, sorter) => {
                                         }
                                     }
                                     .silder-operate {
+                                        visibility: hidden;
                                         display: flex;
                                         .silder-copy {
                                             margin-right: 10px;
@@ -766,6 +787,10 @@ const handleTableChange = (pagination, filters, sorter) => {
                                         .silder-delete {
                             
                                         }
+
+                                    }
+                                    &:hover .silder-operate {
+                                        visibility: visible;
                                     }
                                 }
                             }
