@@ -14,7 +14,7 @@
                 <a-spin :spinning="loading1" :delay="500">
                     <div
                         v-for="item in realData"
-                        :key="item.item_id"
+                        :key="generateId(item)"
                         class="item pointer"
                         @click.stop="selectKey(null,item)"
                         :class="{
@@ -70,7 +70,7 @@
                                 <div
                                     class="tree-item-main-child-one"
                                     v-for="(item1, index) in item.children"
-                                    :key="item1.id"
+                                    :key="generateId(item1)"
                                     :class="{
                                         'active-item-one':
                                             generateId(item1) === activeKey,
@@ -135,7 +135,7 @@
                                                 v-for="(
                                                     item2, index
                                                 ) in item1.children"
-                                                :key="item2.id"
+                                                :key="generateId(item2)"
                                                 :class="{
                                                     'active-item-two':
                                                         generateId(item2) ==
@@ -267,7 +267,9 @@ const selectKey = (parentItem = {},item) => {
             activeKey.value = String(item.item_id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
+                version_id:'',
                 shop_id: item.item_id,
+                category_id:'',
                 name: item.name,
                 sync_id: item.sync_id,
             });
@@ -278,16 +280,20 @@ const selectKey = (parentItem = {},item) => {
                 level: item.level,
                 version_id: item.id,
                 shop_id: parentItem.item_id,
+                category_id:'',
                 name: item.name,
+                sync_id:''
             });
             break;
         case 3:
             activeKey.value = String(item.id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                category_id: item.id,
                 version_id: parentItem.id,
+                shop_id:'',
+                category_id: item.id,
                 name: item.name,
+                sync_id:''
             });
             break;
         default:

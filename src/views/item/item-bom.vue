@@ -24,13 +24,13 @@
       </div>
     </div>
 
-    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
+    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @refresh="refresh" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
   </div>
 </template>
 
 <script setup>
-import { ref, shallowRef, onMounted, computed ,watch, provide} from "vue";
-import SearchAll from '../../components/common/SearchAll.vue'
+import { ref, shallowRef, onMounted, computed ,watch, provide, getCurrentInstance,} from "vue";
+import SearchAll from '../../components/common/SearchAll.vue';
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
@@ -42,6 +42,7 @@ const titleRefs = ref(null);
 const titleHeight = ref(0);
 // 取消的id
 const cancelId = ref(0);
+const { proxy } = getCurrentInstance();
 // 选择层级对象
 /**
  * {
@@ -51,6 +52,7 @@ const cancelId = ref(0);
  * }
  * */ 
 const activeObj = ref({});
+const level2CodeStr = ref('')
 const searchOptions = ref([
     {
         id: 1,
@@ -77,7 +79,8 @@ const classifyModalShow = ref(false)
 watch(
     activeObj,
     (newVal)=>{
-        console.log("newVal",newVal)
+        console.log("newVal----------------------------------",newVal)
+        activeObj.value = newVal
     },
     {
         deep:true
@@ -123,12 +126,19 @@ const compChange = () => {};
 
 // 分类弹窗打开
 const showClassModal = (data) => {
+  level2CodeStr.value = data;
   classifyModalShow.value = true;
 }
 
 provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
 provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
-
+const refresh = () => {
+  if(activeObj.value.level===2){
+    allComRef.value.refresh();
+    return;
+  }
+  allComRef.value.getTableDataFetch();
+}
 </script>
 
 <style lang="less" scoped>

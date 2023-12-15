@@ -117,7 +117,7 @@ const defaultChecked = ref([])
 // 分类列表
 const classList = ref([]);
 
-const emits = defineEmits(['update:visibility']) 
+const emits = defineEmits(['update:visibility','refresh']) 
 // 搜索列表组件
 const options = ref(
     {
@@ -288,12 +288,14 @@ const handleOk = () => {
 // 给Bom商品绑定分类
 const toBindCategory = () => {
     let obj = {
+        bom_id: bomId.value,
         bom_item_id_list: selectIdList.value,
         bom_category_id:categoryId.value
     };
     Core.Api.ITEM_BOM.bindCategory(obj).then(res => {
         console.log('toBindCategory',res);
         proxy.$message.success('选择成功');
+        emits('refresh')
     }).catch(err => {
         console.log("toBindCategory", err);
     }).finally(()=>{
