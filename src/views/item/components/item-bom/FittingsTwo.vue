@@ -16,7 +16,7 @@
                 <img class="right" src="@/assets/images/bom/up.png" v-if="isShow" />
                 <img class="right" src="@/assets/images/bom/down.png" v-else />
             </div>
-            <div class="change-table" v-if="isShow">
+            <div class="change-table" v-if="isShow && objCount.allNum">
                 <table class="my-table">
                     <thead class="my-th">
                         <tr>
@@ -62,6 +62,11 @@
                                 :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
                             >
                                 {{ text || '-' }}
+                                <span
+                                    class="new-version title-right"
+                                    v-if="record.bom.flag_new">
+                                    {{ $t("item-bom.change") }}
+                                </span>
                             </div>
                         </a-tooltip>
                     </span>
@@ -132,7 +137,7 @@ watch(
     { deep:true }  
 )
 
-const isShow = ref(true)
+const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
     let arr =  [
@@ -418,5 +423,20 @@ defineExpose({
 .to-classify {
     color: #0061FF;
     cursor: pointer;
+}
+/* 
+.back-new {
+    background-color: yellow;
+    display: inline-block;
+    background-image: url(../../../../assets/images/bom/change.png);
+} */
+.title-right {
+    color:  #26AB54;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 12px; /* 100% */
+    background-color: rgba(38, 171, 84, 0.1);
+    padding: 4px;
+    border-radius: 0px 10px 10px 10px;
 }
 </style>
