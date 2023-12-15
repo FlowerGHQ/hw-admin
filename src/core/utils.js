@@ -1636,9 +1636,9 @@ const Util = {
       let item = MAP[val + ''] || {}
       return item[to] || ''
     },
-    
-    
-
+    isExternal(path) {
+      return /^(https?:|mailto:|tel:)/.test(path) //匹配是否是外部链接
+    },
 }
 
 export default Util

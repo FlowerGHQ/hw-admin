@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import * as path from 'path';
 // 正式环境清除console
 // https://vitejs.dev/config/
@@ -21,6 +22,12 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       vue(),
+      createSvgIconsPlugin({
+        // 配置路劲在src/icons/svg下面
+        iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
+        // 指定symbolId格式 :
+        symbolId: 'icon-[name]', //实例：#icon-user
+    }),
     ],
     resolve: {
       alias: {

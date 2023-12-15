@@ -9,13 +9,14 @@ const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 
 /** 
-* @params type 这个权限是 销售/售后/生产/CRM 路口的权限
-* @params roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
+* @params type 这个权限是 销售/售后/生产/CRM 路口的权限 整个模块
+* @params meta.roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
 * @params meta.auth 这个权限是在系统那边配置每一个用户或者角色的权限显示与否
 * @params meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
-* @params meta hideen判断是否显示到侧边栏上 true为不显示
-* @params meta not_sub_menu: true判断当前路由是否是一级标签
-* @params meta super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中
+* @params meta.hideen判断是否显示到侧边栏上 true为不显示
+* @params meta.not_sub_menu: true判断当前路由是否是一级标签
+* @params meta.super_admin_show: 只在权限为ADMIN(平台方的时候有用) 判断这个路由是否只展示在超级管理员中
+* @params children meta.admin_module: 区分在admin中四大 销售/售后/生产/CRM 路口的权限 子模块判断
 */
 const routes = [
     {
@@ -470,7 +471,6 @@ const routes = [
                 meta: {
                     title: '商品列表',
                     title_en: 'Product list',
-                    roles: [LOGIN_TYPE.ADMIN],
                     auth: ['item.list'],
                 }
             },
@@ -481,7 +481,6 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '商品编辑',
-                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                     auth: ['item.save'],
                 }
@@ -493,7 +492,6 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '商品详情',
-                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                     auth: ['item.detail'],
                 }
@@ -505,7 +503,6 @@ const routes = [
                 meta: {
                     hidden: true,
                     title: '商品爆炸图详情',
-                    roles: [LOGIN_TYPE.ADMIN],
                     parent: '/item/item-list',
                     auth: ['item.save'],
                 }
@@ -515,7 +512,6 @@ const routes = [
                 name: 'ItemCategory',
                 component: () => import('@/views/item/item-category.vue'),
                 meta: {
-                    roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类',
                     title_en: 'Categories',
                     auth: ['item-category.list'],
@@ -527,7 +523,6 @@ const routes = [
                 component: () => import('@/views/item/item-category-config.vue'),
                 meta: {
                     hidden: true,
-                    roles: [LOGIN_TYPE.ADMIN],
                     title: '商品分类配置',
                 }
             },
@@ -537,9 +532,18 @@ const routes = [
                 component: () => import('@/views/item/Item-category-explored.vue'),
                 meta: {
                     hidden: true,
-                    roles: [LOGIN_TYPE.ADMIN],
                     title: '商品爆炸图编辑',
 
+                }
+            },
+            {
+                path: 'item-bom',
+                name: 'ItemBom',
+                component: () => import('@/views/item/item-bom.vue'),                
+                meta: {
+                    title: 'BOM管理',
+                    title_en: 'BOM Management',
+                    admin_module: [ROUTER_TYPE.AFTER],
                 }
             },
         ]
