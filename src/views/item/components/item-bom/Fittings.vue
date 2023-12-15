@@ -84,18 +84,17 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
-    isReset: {
-        type: Boolean,
-        default: false,
-    },
 });
-const parmas = computed(() => {
-    return {
-        bom_id: props.activeObj.shop_id,
-        name: props.searchParams.name,
-        code_list: props.searchParams.code_list,
-    };
+const parmas = ref({
+  
 });
+// const parmas = computed(() => {
+//     return {
+//         bom_id: props.activeObj.shop_id,
+//         name: props.searchParams.name, 
+//         code_list: props.searchParams.code_list,
+//     };
+// });
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
 
@@ -228,23 +227,24 @@ const handleTableChange = (pagination, filters, sorter) => {
     getTableDataFetch(parmas.value);
 };
 /* methods end*/
-
-// 监听搜索参数
 watch(
-    [() => parmas.value,()=>props.isReset],
-    (val,reset) => {
-        console.log("val",val,reset)
-        if(reset){
-            channelPagination.value.current = 1;
-            channelPagination.value.pageSize = 20;
-        }
-        getTableDataFetch(val[0]);
+    [() => props.searchParams,()=>props.activeObj],
+    (val) => {
+        parmas.value = {
+            bom_id: val[1].shop_id,
+            name: val[0].name, 
+            code_list: val[0].code_list,
+        };
+        channelPagination.value.current = 1;
+        channelPagination.value.pageSize = 20;
+        getTableDataFetch(parmas.value);
     },
     {
         deep: true,
         immediate: true,
     }
 );
+
 </script>
 
 <style lang="less" scoped>

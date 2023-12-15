@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams" :isReset="isReset"></component>
+          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams"></component>
         </div>
       </div>
     </div>
@@ -69,8 +69,7 @@ const searchOptions = ref([
     },
 ]) // 搜索options
 const searchParams = ref({}) // 搜索参数
-// 是否重置
-const isReset = ref(false)
+
 // 显示分类弹窗组件-变量
 const classifyModalShow = ref(false)
 
@@ -101,12 +100,9 @@ const componentName = computed(() => {
 const handleSearch = (data)=>{
   searchParams.value = data
   searchParams.value.code_list = data.code_list ? data.code_list.split(',') : []
-  isReset.value = false
 }
 const handleReset = ()=>{
   searchParams.value = {}
-  isReset.value = true
-  console.log('isReset',isReset.value)
 }
 
 onMounted(() => {
