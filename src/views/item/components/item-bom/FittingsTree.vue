@@ -16,7 +16,7 @@
                         v-for="item in realData"
                         :key="item.item_id"
                         class="item pointer"
-                        @click.stop="selectKey(item)"
+                        @click.stop="selectKey(null,item)"
                         :class="{
                             'active-item': generateId(item) == activeKey,
                         }">
@@ -75,7 +75,7 @@
                                         'active-item-one':
                                             generateId(item1) === activeKey,
                                     }"
-                                    @click.stop="selectKey(item1, 2)">
+                                    @click.stop="selectKey(item,item1)">
                                     <div class="item-child-one">
                                         <div class="left-area">
                                             <div class="top-area">
@@ -141,7 +141,7 @@
                                                         generateId(item2) ==
                                                         activeKey,
                                                 }"
-                                                @click.stop="selectKey(item2)">
+                                                @click.stop="selectKey(item1,item2)">
                                                 <div class="title">
                                                     <div class="title-area">
                                                         <span
@@ -254,7 +254,8 @@ const generateId = (item) => {
     }
 };
 // 选择key
-const selectKey = (item) => {
+const selectKey = (parentItem = {},item) => {
+    console.log(parentItem,item);
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
@@ -269,6 +270,7 @@ const selectKey = (item) => {
             $emit("update:activeObj", {
                 level: item.level,
                 id: item.id,
+                parent_id: parentItem.item_id,
                 name: item.name,
             });
             break;
@@ -277,6 +279,7 @@ const selectKey = (item) => {
             $emit("update:activeObj", {
                 level: item.level,
                 id: item.id,
+                parent_id: parentItem.id,
                 name: item.name,
             });
             break;
