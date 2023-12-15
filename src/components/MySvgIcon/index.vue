@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Core from '@/Core'
+import Core from '../../core'
 export default {
     name: 'MySvgIcon',
     props: {
