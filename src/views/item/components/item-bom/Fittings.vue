@@ -85,19 +85,9 @@ const props = defineProps({
         default: () => {},
     },
 });
-const parmas = ref({
-  
-});
-// const parmas = computed(() => {
-//     return {
-//         bom_id: props.activeObj.shop_id,
-//         name: props.searchParams.name, 
-//         code_list: props.searchParams.code_list,
-//     };
-// });
+const parmas = ref({});
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
-
 const tableColumns = computed(() => {
     const result = [
         {

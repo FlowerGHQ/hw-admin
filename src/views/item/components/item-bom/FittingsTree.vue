@@ -236,25 +236,11 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
-});
-// 监听activeObj
-watch(
-    () => props.activeObj,
-    (newVal) => {
-      if(newVal.select === false && newVal.level === 1){
-        activeKey.value = null
-        $emit("update:activeObj", {});
-      }
+    cancelIds: {
+        type: [Number,String],
     },
-    {
-        immediate: true,
-        deep: true,
-    }
-);
+});
 
-const treeData = computed(()=>{
-    return realData.value
-})
 
 // -----------------定义方法--------------------------
 // 搜索
@@ -276,7 +262,6 @@ const generateId = (item) => {
 };
 // 选择key
 const selectKey = (parentItem = {},item) => {
-    console.log(parentItem,item);
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
@@ -553,11 +538,16 @@ onMounted(() => {
             });
             loading1.value = false;
             // 默认展开第一
-            // realData.value[0].expand = true;
-            // realData.value[0].select = true;
-            // activeKey.value = String(realData.value[0].item_id) + String(realData.value[0].level);
-            // // 请求版本列表
-            // getVersion(realData.value[0]);
+            realData.value[0].expand = true;
+            realData.value[0].select = true;
+            activeKey.value = String(realData.value[0].item_id) + String(realData.value[0].level);
+            $emit("update:activeObj", {
+                level: realData.value[0].level,
+                shop_id: realData.value[0].item_id,
+                name: realData.value[0].name,
+            });
+            // 请求版本列表
+            getVersion(realData.value[0]);
         })
         .catch((err) => {
             loading1.value = false;
