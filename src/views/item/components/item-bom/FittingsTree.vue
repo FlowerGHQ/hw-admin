@@ -519,8 +519,10 @@ onMounted(() => {
 
 <style lang="less" scoped>
 .tree-main {
+    height: 100%;
     .tree-search {
         display: block;
+        height: 32px;
         :deep(.ant-input-wrapper) {
             border: 1px solid #e2e2e2 !important;
             height: 100% !important;
@@ -554,12 +556,15 @@ onMounted(() => {
     }
     .tree-select-main {
         width: 100%;
-        height: 64px;
+        height: calc(100% - 48px);
+        overflow-y: scroll;
         display: flex;
         align-items: center;
         font-size: 16px;
         margin-top: 16px;
-
+        &::-webkit-scrollbar {
+            width: 0;
+        }
         .tree-circle {
             width: 100%;
             height: 100%;
