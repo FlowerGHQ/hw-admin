@@ -86,7 +86,7 @@
                                 {{ text }}
                             </div>
                         </a-tooltip>
-                        <span class="to-classify" @click="toClassify"  v-if="!text">
+                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text">
                             {{ $t('item-bom.classify') }}
                         </span>
                     </span>
@@ -326,8 +326,8 @@ const handleTableChange = (pagination, filters, sorter) => {
 }
 /* methods end*/
 // 分类弹窗展示
-const toClassify = () => {
-    classifyShowModal();
+const toClassify = (sync_id) => {
+    classifyShowModal(sync_id);
 }
 </script>
 

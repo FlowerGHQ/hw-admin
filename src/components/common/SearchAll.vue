@@ -111,8 +111,8 @@
         </a-row>
         <div class="btn-area-box">
 
-            <a-button @click="handleSearchReset" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
-            <a-button @click="handleSearch" type="primary" v-if="isShowButton">
+            <a-button @click="handleSearchReset" :disabled="disabled" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
+            <a-button @click="handleSearch" :disabled="disabled" type="primary" v-if="isShowButton">
                 {{  $t("def.search") }}
             </a-button>
             
@@ -156,6 +156,11 @@ export default {
             type: Boolean,
             default: true
         },
+        // 按钮禁用
+        disabled: {
+            type: Boolean,
+            default: false
+        }
     },
     data() {
         return {
