@@ -222,7 +222,7 @@ watch(
     (val) => {
         console.log("val", val);
         parmas.value = {
-            bom_id: val[1].shop_id,
+            sync_id: val[1].sync_id,
             name: val[0].name, 
             code_list: val[0].code_list,
         };

@@ -269,6 +269,7 @@ const selectKey = (parentItem = {},item) => {
                 level: item.level,
                 shop_id: item.item_id,
                 name: item.name,
+                sync_id: item.sync_id,
             });
             break;
         case 2:
@@ -545,6 +546,7 @@ onMounted(() => {
                 level: realData.value[0].level,
                 shop_id: realData.value[0].item_id,
                 name: realData.value[0].name,
+                sync_id: realData.value[0].sync_id,
             });
             // 请求版本列表
             getVersion(realData.value[0]);
