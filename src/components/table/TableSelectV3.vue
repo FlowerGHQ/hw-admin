@@ -63,9 +63,8 @@
 
 <script setup>
 
-import { Table } from 'ant-design-vue';
 import Core from "@/core";
-import { onMounted, ref, getCurrentInstance, computed, watch , unref } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed, watch  } from 'vue';
 const $emit = defineEmits(["submit"])
 
 const { proxy } = getCurrentInstance();
@@ -175,7 +174,7 @@ const rowSelection = computed(() => {
         }],
       }; */
       return {
-        selectedRowKeys: unref(selectedRowKeys),
+        selectedRowKeys: selectedRowKeys.value,
         onChange: onSelectChange,
       }
     });

@@ -72,12 +72,12 @@
                     </span>
                     <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title>{{ getSalesAreaStr(text) || '-' }}</template>
+                            <template #title><!-- {{ getSalesAreaStr(text) || '-' }} --></template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                {{ getSalesAreaStr(text) || '-' }}
+                                <!-- {{ getSalesAreaStr(text) || '-' }} -->
                             </div>
                         </a-tooltip>
                     </span>           
