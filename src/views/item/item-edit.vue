@@ -568,7 +568,7 @@
                                                 </span>
                                             </a-button>
                                             <a-button class="tag-button" type="primary" ghost @click="openConfigSet(index, item)" v-else>
-                                                <span class="tag-body">
+                                                <span key="tag-body" class="tag-body">
                                                     <span v-for="(optionItem, optionIndex) of item.option" class="tag-value">
                                                         {{ optionItem[$i18n.locale] }}
                                                     </span>
@@ -2865,6 +2865,7 @@ export default {
             .tag-body {
                 display: flex;
                 flex-wrap: wrap;
+                width: 100%;
             }
             .tag-value {
                 padding: 2px 10px;
