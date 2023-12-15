@@ -1,47 +1,63 @@
 <template>
     <div class="fittings">
         <div class="title">
-            {{ $t('item-bom.accessories_list') }}
+            {{ $t("item-bom.accessories_list") }}
         </div>
         <a-table
             :row-key="(record) => record.id"
             :data-source="tableData"
             :columns="tableColumns"
-            :scroll="{ x: true, }"
+            :scroll="{ x: true }"
             :pagination="channelPagination"
             :loading="loading"
-            @change="handleTableChange"
-        >
-            <template #headerCell="{title, column}">
+            @change="handleTableChange">
+            <template #headerCell="{ title, column }">
                 <div class="table-title">{{ title }}</div>
             </template>
-            <template #bodyCell="{ column, text, record }">            
-                <span v-if="column.key === 'name'/*商品名称*/">
+            <template #bodyCell="{ column, text, record }">
+                <span v-if="column.key === 'sync_name' /*商品名称*/">
                     <a-tooltip>
                         <template #title>{{ text }}</template>
-                        <div 
-                            class="one-spils cursor" 
-                            :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
-                        >
+                        <div
+                            class="one-spils cursor"
+                            :style="{
+                                width: text?.length > 6 ? 7 * 12 + 'px' : '',
+                            }">
                             {{ text }}
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-if="column.key === 'sales_area'/*销售区域*/">
+                <span v-if="column.key === 'sales_area' /*销售区域*/">
                     <a-tooltip>
-                        <template #title>{{ text }}</template>
-                        <div 
-                            class="one-spils cursor" 
-                            :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
-                        >
-                            {{ text }}
+                        <template #title>
+                            {{
+                                salesArea(record.sales_area_list, $i18n.locale)
+                            }}
+                        </template>
+                        <div
+                            class="one-spils cursor"
+                            :style="{
+                                width:
+                                    salesArea(
+                                        record.sales_area_list,
+                                        $i18n.locale
+                                    )?.length > 5
+                                        ? 6 * 12 + 'px'
+                                        : '',
+                            }">
+                            {{
+                                salesArea(record.sales_area_list, $i18n.locale)
+                            }}
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-if="column.key === 'create_time'/*创建时间*/">
+                <span v-if="column.key === 'version'">
+                    {{ record.bom.version || "-" }}
+                </span>
+                <span v-if="column.key === 'effective_time' /*创建时间*/">
                     {{ $Util.timeFilter(text) }}
                 </span>
-                <span v-if="column.key === 'remark'/*备注*/">
+                <span v-if="column.key === 'comment' /*备注*/">
                     <a-tooltip>
                         <template #title>{{ text }}</template>
                         <div class="one-spils set-width cursor">
@@ -55,59 +71,80 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed } from 'vue';
+import { onMounted, ref, getCurrentInstance, computed,watch } from "vue";
 import Core from "@/core";
+import { useI18n } from "vue-i18n";
+const $i18n = useI18n();
+const props = defineProps({
+    searchParams: {
+        type: Object,
+        default: () => {},
+    },
+    activeObj: {
+        type: Object,
+        default: () => {},
+    },
+});
+const parmas = computed(() => {
+    return {
+        bom_id: props.activeObj.shop_id,
+        name: props.searchParams.name,
+        code_list: props.searchParams.code_list,
+    };
+});
+
+
 
 const { proxy } = getCurrentInstance();
-const loading = ref(false)
+const loading = ref(false);
 
 const tableColumns = computed(() => {
     const result = [
-        { 
+        {
             // 商品名称
-            title: proxy.$t('item-bom.product_name'), 
-            dataIndex: "name", 
-            key: "name"
+            title: proxy.$t("item-bom.product_name"),
+            dataIndex: "sync_name",
+            key: "sync_name",
         },
-        { 
+        {
             // 商品编码
-            title: proxy.$t('item-bom.commodity_code'), 
-            dataIndex: "name", 
-            key: "detail"
+            title: proxy.$t("item-bom.commodity_code"),
+            dataIndex: "sync_id",
+            key: "sync_id",
         },
-        { 
+        {
             // 版本号
-            title: proxy.$t('item-bom.version_number'), 
-            dataIndex: "name", 
-            key: "detail"
+            title: proxy.$t("item-bom.version_number"),
+            dataIndex: "version",
+            key: "version",
         },
-        { 
+        {
             // 用量
-            title: proxy.$t('item-bom.dosage'), 
-            dataIndex: "name", 
-            key: "detail"
+            title: proxy.$t("item-bom.dosage"),
+            dataIndex: "amount",
+            key: "amount",
         },
-        { 
+        {
             // 销售区域
-            title: proxy.$t('item-bom.sales_area'), 
-            dataIndex: "sales_area", 
-            key: "sales_area"
+            title: proxy.$t("item-bom.sales_area"),
+            dataIndex: "sales_area",
+            key: "sales_area",
         },
-        { 
+        {
             // 创建时间
-            title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "create_time", 
-            key: "create_time"
+            title: proxy.$t("item-bom.create_time"),
+            dataIndex: "effective_time",
+            key: "effective_time",
         },
         {
             // 备注
-            title: proxy.$t('item-bom.remark'), 
-            dataIndex: "remark",
-            key: "remark",
+            title: proxy.$t("item-bom.remark"),
+            dataIndex: "comment",
+            key: "comment",
         },
-    ]
-    return result
-})
+    ];
+    return result;
+});
 const tableData = ref([
     // {
     //     name: "你好啊你好啊你好啊",
@@ -130,76 +167,100 @@ const tableData = ref([
     //     create_time: "1702363337",
     //     remark: "ss",
     // },
-])
+]);
 // 分页
 const channelPagination = ref({
     current: 1,
-    pageSizeOptions: ['20', '40', '60', '80', '100'],
+    pageSizeOptions: ["20", "40", "60", "80", "100"],
     pageSize: 20,
     showQuickJumper: true, // 是否可以快速跳转至某页
     showSizeChanger: true, // 是否可以改变 pageSize
     total: 0,
-    showTotal: (total) => `${ proxy.$t('n.all_total') } ${total} ${ proxy.$t('in.total') }`
-})
-
+    showTotal: (total) =>
+        `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
+});
+// 销售区域
+const salesArea = (arr, locale) => {
+    let result = [];
+    arr.forEach((item) => {
+        if (locale === "zh") {
+            result.push(item.country);
+        } else if (locale === "en") {
+            result.push(item.country_en);
+        }
+    });
+    return result.join(" , ") || "-";
+};
 
 onMounted(() => {
-    getTableDataFetch()
-})
+    // getTableDataFetch();
+});
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
-    loading.value = true
+    loading.value = true;
     let obj = {
-        flag_spread: 1,
         page: 1,
         page_size: 20,
-        status: "0",
-        ...parmas
-    }
+        ...parmas,
+    };
 
-    Core.Api.Item.list(obj).then(res => {
-        channelPagination.value.total = res.count
-        tableData.value = res.list
-        loading.value = false
-    }).catch(err => {
-        console.log("getTableDataFetch", err);
-        loading.value = false
-    })
-}
+    Core.Api.ITEM_BOM.partsList(obj)
+        .then((res) => {
+            channelPagination.value.total = res.count;
+            tableData.value = res.list;
+            loading.value = false;
+        })
+        .catch((err) => {
+            console.log("getTableDataFetch", err);
+            loading.value = false;
+        });
+};
 /* Fetch end*/
 
 /* methods start*/
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...channelPagination.value }
-    pager.current = pagination.current
+    const pager = { ...channelPagination.value };
+    pager.current = pagination.current;
     if (pagination.pageSize !== channelPagination.value.pageSize) {
-        pager.current = 1
-        pager.pageSize = pagination.pageSize
+        pager.current = 1;
+        pager.pageSize = pagination.pageSize;
     }
-    channelPagination.value = pager
+    channelPagination.value = pager;
     getTableDataFetch({
         page_size: channelPagination.value.pageSize,
-        page: channelPagination.value.current
-    })
-}
+        page: channelPagination.value.current,
+    });
+};
 /* methods end*/
 
+
+watch(
+    () => parmas.value,
+    (val) => {
+        console.log("parmas", val);
+        getTableDataFetch(val);
+    },
+    {
+        deep:true,
+        immediate: true,
+    }
+);
 </script>
 
 <style lang="less" scoped>
 .fittings {
     width: 100%;
     .title {
-        color: #1D2129;
+        color: #1d2129;
         font-family: PingFang SC;
         font-size: 16px;
         font-weight: 600;
         margin-bottom: 10px;
     }
     .table-title {
-        color: #1D2129;
+        color: #1d2129;
         font-family: PingFang SC;
         font-size: 14px;
         font-weight: 500;

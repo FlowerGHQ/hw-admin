@@ -17,9 +17,9 @@
         <!-- 右边 -->
         <div class="item-tree-right">
           <div class="search-content">
-            <SearchAll :isShowMore="false" :options="searchOptions"></SearchAll>
+            <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component :is="componentName" :activeObj="activeObj"></component>
+          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams"></component>
         </div>
       </div>
     </div>
@@ -50,7 +50,6 @@ const titleHeight = ref(0);
  * }
  * */ 
 const activeObj = ref({});
-const level2CodeStr = ref({});
 const searchOptions = ref([
     {
         id: 1,
@@ -65,10 +64,11 @@ const searchOptions = ref([
         type: "input",
         key: 'item-bom.commodity_code',
         value: undefined,
-        searchParmas: "code",                    
+        searchParmas: "code_list",                    
         placeholder: "item-bom.commodity_code_tips",
     },
 ]) // 搜索options
+const searchParams = ref({}) // 搜索参数
 
 // 显示分类弹窗组件-变量
 const classifyModalShow = ref(false)
@@ -99,6 +99,14 @@ const componentName = computed(() => {
   }
 });
 
+const handleSearch = (data)=>{
+  searchParams.value = data
+  searchParams.value.code_list = data.code_list ? data.code_list.split(',') : []
+}
+const handleReset = ()=>{
+  searchParams.value = {}
+}
+
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
   console.log("高度", titleHeight.val,activeObj.value);
@@ -115,8 +123,6 @@ const compChange = () => {};
 
 // 分类弹窗打开
 const showClassModal = (data) => {
-  console.log('111111',data);
-  level2CodeStr.value = data;
   classifyModalShow.value = true;
 }
 
