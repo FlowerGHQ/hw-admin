@@ -103,6 +103,7 @@ const handleSearch = (data)=>{
 }
 const handleReset = ()=>{
   searchParams.value = {}
+  activeObj.value.select = false
 }
 
 onMounted(() => {

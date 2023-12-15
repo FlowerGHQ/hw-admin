@@ -211,7 +211,7 @@
 
 <script setup>
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
-import { ref, reactive, computed, onMounted, watch } from "vue";
+import { ref, reactive, computed, onMounted, watch, onBeforeUnmount} from "vue";
 import { useI18n } from "vue-i18n";
 import Core from "@/core";
 const $t = useI18n().t;
@@ -230,6 +230,27 @@ let loading2 = ref(false);
 let loading3 = ref(false);
 let addValue = ref(null);
 
+// 接受activeObj
+const props = defineProps({
+    activeObj: {
+        type: Object,
+        default: () => {},
+    },
+});
+// 监听activeObj
+watch(
+    () => props.activeObj,
+    (newVal) => {
+      if(newVal.select === false && newVal.level === 1){
+        activeKey.value = null
+        $emit("update:activeObj", {});
+      }
+    },
+    {
+        immediate: true,
+        deep: true,
+    }
+);
 
 const treeData = computed(()=>{
     return realData.value
@@ -515,8 +536,33 @@ const handleDelete = (parentItem, item) => {
 
 // 生命周期
 onMounted(() => {
-    // 请求商品列表
-    getGoodsList();
+        // 请求商品列表
+    loading1.value = true;
+    Core.Api.ITEM_BOM.listName({
+        search_key: keyWord.value,
+    })
+        .then((res) => {
+            realData.value = res.list;
+            realData.value.forEach((item) => {
+                item.select = false;
+                item.expand = false;
+                item.children = [];
+                item.edit = false;
+                item.add = false;
+                item.level = 1;
+            });
+            loading1.value = false;
+            // 默认展开第一
+            // realData.value[0].expand = true;
+            // realData.value[0].select = true;
+            // activeKey.value = String(realData.value[0].item_id) + String(realData.value[0].level);
+            // // 请求版本列表
+            // getVersion(realData.value[0]);
+        })
+        .catch((err) => {
+            loading1.value = false;
+            console.log(err);
+        });
 });
 </script>
 
