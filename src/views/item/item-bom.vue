@@ -71,7 +71,6 @@ const searchOptions = ref([
 const searchParams = ref({}) // 搜索参数
 // 是否重置
 const isReset = ref(false)
-
 // 显示分类弹窗组件-变量
 const classifyModalShow = ref(false)
 
@@ -84,9 +83,7 @@ watch(
         deep:true
     }
 )
-
 const componentProps = ref()
-
 const componentName = computed(() => {
   componentProps.value = activeObj.value;
   console.log('componentProps.value',componentProps.value);

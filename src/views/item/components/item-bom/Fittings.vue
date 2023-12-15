@@ -224,7 +224,8 @@ const getTableDataFetch = (parmas = {}) => {
 const handleTableChange = (pagination, filters, sorter) => {
     channelPagination.value.current = pagination.current;
     channelPagination.value.pageSize = pagination.pageSize;
-    getTableDataFetch();
+    console.log(parmas.value)
+    getTableDataFetch(parmas.value);
 };
 /* methods end*/
 
