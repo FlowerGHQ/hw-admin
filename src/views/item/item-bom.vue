@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <ClassifyModal v-model:visibility="classifyModalShow" :level="activeObj?.level" :id="activeObj?.id" :code="level2CodeStr" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
+    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
     <a-button @click="classifyModalShow=true">111111cd{{ classifyModalShow }}</a-button>
   </div>
 </template>
@@ -101,7 +101,7 @@ const componentName = computed(() => {
 
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
-  console.log("高度", titleHeight.val);
+  console.log("高度", titleHeight.val,activeObj.value);
 });
 
 /* fetch start */

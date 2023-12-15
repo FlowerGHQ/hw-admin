@@ -67,7 +67,7 @@
                         />
                     <div class="tip">
                         {{ $t('in.selected') + ` ${selectItemIds.length} ` + $t('in.total')}}
-                    </div>{{  level.value  }}1111
+                    </div>
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleCancle">{{ $t('def.cancel') }}</a-button>
@@ -89,11 +89,20 @@ const initialObject = {
     codeList: []
 }
 const props = defineProps({  
-    // v-model 绑定值  
+    activeObj: {
+        type: Object,
+        default: () => {}
+    },
     visibility:{
         type: Boolean,
         default:false        
     },
+    code:{ //二级页面点击单条进行分类
+        type: String,
+        default: ''
+    } 
+    /* // v-model 绑定值  
+    
     id:{
         type: Number,
         default: ''
@@ -102,11 +111,7 @@ const props = defineProps({
     level:{
         type: Number,
         default: 0
-    },
-    code:{ //二级页面点击单条进行分类
-        type: String,
-        default: ''
-    }
+    },*/
 })
 // 当前分组对象
 const classValue =  ref();
@@ -114,7 +119,8 @@ const searchForm = ref({
     // 商品编码
     codeList: []
 })
-const bomId = ref('');
+const bomId = ref('');      // 版本id、bomId
+const categoryId = ref(''); // 分类id
 const level = ref(0)
 const defaultChecked = ref([])
 const emits = defineEmits(['update:visibility']) 
@@ -130,16 +136,25 @@ const options = ref(
 )
 // 商品编码-字符串
 const codeStr = ref();
+const time = ref(null)
 // 监听弹窗关闭-更改父组件prop弹窗显隐值
 watch(
     () => props.visibility,
     (newValue, oldValue) => {
         emits("update:visibility", newValue)
-        nextTick(()=>{
-            handleSearch()
-        })
-    }    
-)// 监听弹窗id接收变换
+        if(!newValue) {
+            codeStr.value = ''
+            time.value=null;
+            return;
+        }
+        time.value = setTimeout(()=>{
+            nextTick(()=>{
+                handleSearch()
+            })
+        },200)
+    }
+)
+/* // 监听弹窗id接收变换
 watch(
     () => props.id,
     (newValue, oldValue) => {
@@ -154,15 +169,20 @@ watch(
         level.value = newValue;
         // console.log('level.value',level.value);
     }    
-)
+) */
 
+watch(
+    () => props.activeObj,
+    (newValue, oldValue) => {
+        categoryId.value = newValue?.category_id;
+        bomId.value = newValue?.version_id;
+        level.value = newValue?.level;
+    }, { deep: true })
 // 监听弹窗level2时code监听变化接收变换
 watch(
     () => props.code,
     (newValue, oldValue) => {
         codeStr.value = newValue;
-        // console.log('1111codeStr.value',codeStr.value);
-
     }    
 )
 const selectItemIds = ref([])
@@ -239,27 +259,24 @@ const tableColumns = computed(() => {
 } */
 
 onMounted(() => {
-    getTableDataFetch()
+    // getTableDataFetch()
 })
   
 // 重置按钮
 const handleSearchReset = ( ) => {
     
       // 重置搜索
+      codeStr.value = ''
       Object.assign(searchForm.value, initialObject);
       console.log('searchForm.value---handleSearchReset',searchForm.value);
       getTableDataFetch()
 }
 const handleSearch = () => {
     console.log('codeStr.value---handleSearch',codeStr.value);
-    if(codeStr.value){
-
-        //更换数组形式传参,字符串逗号分隔输入--编码
-        let arr = codeStr.value.trim().split(',');
-        arr = arr.map(item => item.trim());
-        searchForm.value.codeList = arr.filter(item => item !== ""); 
-    }
-
+    //更换数组形式传参,字符串逗号分隔输入--编码
+    let arr = codeStr?.value.trim().split(',');
+    arr = arr.map(item => item.trim());
+    searchForm.value.codeList = arr.filter(item => item !== ""); 
     getTableDataFetch()
     
 }

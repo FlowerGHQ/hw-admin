@@ -78,12 +78,12 @@
                     </span>           
                     <span v-else-if="column.key === 'bom_category'/*分类*/">
                         <a-tooltip>
-                            <template #title>{{ text }}</template>
+                            <template #title>{{ text?.name }}</template>
                             <div 
                                 class="one-spils cursor" 
-                                :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
+                                :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
                             >
-                                {{ text }}
+                                {{ text?.name }}
                             </div>
                         </a-tooltip>
                         <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text">
@@ -124,9 +124,9 @@ const props = defineProps({
 })
 // 监听弹窗关闭-更改父组件prop弹窗显隐值
 watch(
-    () => props.id,
+    () => props.activeObj,
     (newValue, oldValue) => {
-        bomId.value = newValue;
+        bomId.value = newValue?.version_id;
         fresh()
     }    
 )
@@ -289,6 +289,7 @@ const getChangeCount = () => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true
     let obj = {
+        // name:'主撑弹簧',
         bom_id: 6,
         code_list: [],
         sync_id: "TLA3-Y2-0003", //同步编号
