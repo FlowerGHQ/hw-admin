@@ -1,5 +1,3 @@
-import { version } from "less";
-
 export default {
 
     zh: {
