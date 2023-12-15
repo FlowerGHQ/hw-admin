@@ -30,7 +30,7 @@
 
 <script setup>
 import { ref, shallowRef, onMounted, computed ,watch, provide, getCurrentInstance,} from "vue";
-import SearchAll from '../../components/common/SearchAll.vue'
+import SearchAll from '../../components/common/SearchAll.vue';
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
@@ -133,7 +133,10 @@ const showClassModal = (data) => {
 provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
 provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
 const refresh = () => {
-  console.log('00000000');
+  if(activeObj.value.level===2){
+    allComRef.value.refresh();
+    return;
+  }
   allComRef.value.getTableDataFetch();
 }
 </script>

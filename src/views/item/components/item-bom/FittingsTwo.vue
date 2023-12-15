@@ -127,7 +127,7 @@ watch(
     () => props.activeObj,
     (newValue, oldValue) => {
         bomId.value = newValue?.version_id;
-        fresh()
+        refresh()
     },
     { deep:true }  
 )
@@ -242,7 +242,7 @@ const objCount = reactive({
     allNum:0,
 })
 onMounted(() => {
-    fresh()
+    refresh()
 })
 
 // 获取设变列表
@@ -255,7 +255,7 @@ const getChangeList = () => {
         console.log('err',err);
     })
 }
-const fresh = () => {
+const refresh = () => {
     
     getTableDataFetch()
     getChangeList()
@@ -331,7 +331,7 @@ const toClassify = (sync_id) => {
 }
 
 defineExpose({
-    getTableDataFetch
+    refresh
 })
 
 </script>
