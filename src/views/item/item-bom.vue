@@ -11,7 +11,7 @@
         <div class="item-tree-left">
           <div class="title-area">{{ $t("item-bom.bom_list") }}</div>
           <div class="tree-content">
-            <FittingsTree v-model:activeObj="activeObj" />
+            <FittingsTree v-model:activeObj="activeObj" :cancelIds="cancelId"/>
           </div>
         </div>
         <!-- 右边 -->
@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams"></component>
+          <component :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
         </div>
       </div>
     </div>
@@ -41,6 +41,8 @@ import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类
 // 标题高度
 const titleRefs = ref(null);
 const titleHeight = ref(0);
+// 取消的id
+const cancelId = ref(0);
 // 选择层级对象
 /**
  * {
@@ -103,7 +105,7 @@ const handleSearch = (data)=>{
 }
 const handleReset = ()=>{
   searchParams.value = {}
-  activeObj.value.select = false
+  activeObj.value = {}
 }
 
 onMounted(() => {
