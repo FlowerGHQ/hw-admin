@@ -253,7 +253,8 @@ const expandOrSollapse = () => {
 
 const getSalesAreaStr = (arr) => {
     let str = '';
-    arr.forEach((item)=>{
+    if(!(arr instanceof Array)) return '-'
+    arr?.forEach((item)=>{
         str += (str?',':'')+item[lang.value]
     })
     return str || '-'
