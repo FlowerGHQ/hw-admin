@@ -306,6 +306,7 @@ const selectKey = (parentItem = {}, item) => {
             break;
         case 2:
             activeKey.value = String(item.id) + String(item.level);
+            console.log(item)
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: item.id,
@@ -313,6 +314,7 @@ const selectKey = (parentItem = {}, item) => {
                 category_id: "",
                 name: item.name,
                 sync_id: "",
+                flag_new:item.flag_new
             });
             break;
         case 3:
