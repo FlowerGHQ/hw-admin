@@ -299,8 +299,8 @@ const selectKey = (parentItem = {},item) => {
             activeKey.value = String(item.id) + String(item.level);
             $emit("update:activeObj", {
                 level: item.level,
-                category_id: 6 || item.id,
-                version_id: 6 || parentItem.id,
+                category_id: item.id,
+                version_id: parentItem.id,
                 name: item.name,
             });
             break;
