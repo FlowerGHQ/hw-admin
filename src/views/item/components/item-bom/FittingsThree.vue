@@ -118,7 +118,11 @@
                         <div class="empty-upload-tip">
                             {{ $t("item-bom.upload_text") }}
                         </div>
+                        <div  v-if="tableData.length === 0" class="disable-add-btn">
+                            {{ $t(/*上传爆炸图*/ "item-bom.upload_explosion") }}
+                        </div>
                         <a-upload 
+                            v-else
                             name="file"                              
                             accept='image/*'
                             :file-list="uploadOptions.coverList"
@@ -139,8 +143,15 @@
         </div>
         <!-- 表格 -->
         <div class="fittings-table-container">
-            <div class="title">
-                {{ $t("item-bom.accessories_list") }}
+            <div class="fittings-all">
+                <div class="fittings-title">
+                    {{ $t("item-bom.accessories_list") }}
+                </div>
+                <div v-if="tableData.length > 0" class="fittings-title-options">
+                    <a-button @click="onAddFittings" type="primary">
+                        {{ $t("item-bom.add_fittings") }}
+                    </a-button>
+                </div>
             </div>
             <a-table
                 :row-key="(record) => record.id"
@@ -207,9 +218,9 @@
                             <div class="empty-add-item-tip">
                                 {{ $t("item-bom.explosion_diagram") }}
                             </div>
-                            <div class="disable-add-btn" @click="onAddFittings" type="primary">
+                            <a-button @click="onAddFittings" type="primary">
                                 {{ $t("item-bom.add_fittings") }}
-                            </div>
+                            </a-button>
                         </div>
                     </div>
                 </template>
@@ -220,7 +231,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed, nextTick } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, nextTick, watch } from "vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import {
@@ -253,7 +264,6 @@ const props = defineProps({
         default: () => {}
     }
 })
-console.log("测试的id", props.id);
 const loading = ref(false);
 
 const tableColumns = computed(() => {
@@ -382,7 +392,7 @@ const uploadOptions = ref({
 }) // 上传参数
 
 const addTagItem = ref({
-    target_id: 6, // bom_category.id (分类id)
+    target_id: props.activeObj.version_id, // bom_category.id (分类id)
     target_type: 3, // bom分类(固定死这里)
     item_component_set_list: []
 })  // 最后保存按钮
@@ -399,16 +409,26 @@ const channelPagination = ref({
     showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
 
+watch(
+    () => props.activeObj,
+	(newVal) => {
+        console.log("监听了吗", newVal);		
+        getExplosionImgFetch({ target_id: newVal.category_id })
+	},
+	{
+		deep: true,
+	}
+)
 onMounted(() => {    
-    getExplosionImgFetch({ target_id: 6 })
+    getExplosionImgFetch({ target_id: props.activeObj.category_id })    
 });
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
-        bom_id: "", // 版本id
-        bom_category_id: 6, // 分类 id
+        bom_id: props.activeObj.version_id, // 版本id
+        bom_category_id: props.activeObj.category_id, // 分类 id
         name: "", // search 商品名称
         code_list: [], // search 商品编号
         page: 1, //页数
@@ -440,9 +460,9 @@ const getTableDataFetch = (parmas = {}) => {
 const saveImgeFetch = (parmas = {}) => {
     let obj = {
         img: undefined,        
-        target_id: undefined, // (分类id)
+        target_id: props.activeObj.category_id, // (分类id)
         target_type: 3, // bom分类(固定死这里)
-        // id: 0,  // 不传id新增 传id是替换
+        // id: 0,  // 不传id新增 传id是爆炸图id
         ...parmas
     }
     Core.Api.ITEM_BOM.saveOrEdit(obj)
@@ -456,7 +476,7 @@ const saveImgeFetch = (parmas = {}) => {
 // 删除|编辑|添加点位Fetch
 const editPointFetch = (parmas = {}, type) => {
     let obj = {            
-        target_id: undefined, // bom_category.id (分类id)
+        target_id: props.activeObj.category_id, // bom_category.id (分类id)
         target_type: 3, // bom分类(固定死这里)
         item_component_set_list: [],
         ...parmas
@@ -482,7 +502,7 @@ const editPointFetch = (parmas = {}, type) => {
 // 获取爆炸图list Fetch
 const getExplosionImgFetch = (parmas = {}) => {
     let obj = {
-        target_id: undefined, // bom_category.id
+        target_id: props.activeObj.category_id, // bom_category.id(分类id)
         target_type: 3, //  bom分类(固定死这里)
         ...parmas
     }
@@ -522,8 +542,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
         }
         saveImgeFetch({
             img: Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename,
-            id: type,
-            target_id: 6
+            id: type,            
         })
     }
     uploadOptions.value.coverList = fileList;
@@ -542,7 +561,7 @@ const onOperation = (type, record) => {
                 cancelText: proxy.$t('def.cancel'),
                 okType: 'danger',
                 onOk() {
-                    editPointFetch({ target_id: 6 }, 'delete')
+                    editPointFetch({ target_id: props.activeObj.category_id }, 'delete')
                 },
                 onCancel () {
                 }
@@ -809,6 +828,20 @@ const handleTableChange = (pagination, filters, sorter) => {
                     display: flex;
                     flex-direction: column;
                     align-items: flex-start;
+                    .disable-add-btn {
+                        height: 32px;
+                        border-radius: 4px;
+                        opacity: 0.39;
+                        background: #0061ff;
+                        padding: 4px 15px;
+                        box-sizing: border-box;
+                        .fcc();
+                        color: #fff;
+                        font-size: 14px;
+                        font-style: normal;
+                        font-weight: 400;
+                        cursor: not-allowed;
+                    }
                 }
                 > img {
                     width: 99px;
@@ -832,11 +865,49 @@ const handleTableChange = (pagination, filters, sorter) => {
     }
     .fittings-table-container {
         margin-top: 20px;
-        .title {
-            color: #1d2129;            
-            font-size: 16px;
-            font-weight: 600;
+
+        .fittings-all {
+            display: flex;
+            justify-content: space-between;
+            align-content: center;
             margin-bottom: 10px;
+            .fittings-title {
+                color: #1d2129;            
+                font-size: 16px;
+                font-weight: 600;
+            }
+            .fittings-options {
+
+            }
+        }
+        .table-title {
+            color: #1d2129;            
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .empty-add-item-container {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            > img {
+                width: 143px;
+                height: 78px;
+            }
+            .empty-add-item-text-wrap {
+                margin-left: 16px;
+                .empty-add-item-tip {
+                    color: #333;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin-bottom: 10px;
+                }                
+            }
         }
 
         .table-title {
@@ -865,64 +936,6 @@ const handleTableChange = (pagination, filters, sorter) => {
                     font-weight: 400;
                     line-height: normal;
                     margin-bottom: 10px;
-                }
-                .disable-add-btn {
-                    height: 32px;
-                    border-radius: 4px;
-                    opacity: 0.39;
-                    background: #0061ff;
-                    padding: 4px 15px;
-                    box-sizing: border-box;
-                    .fcc();
-                    color: #fff;
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 400;
-                    cursor: not-allowed;
-                }
-            }
-        }
-
-        .table-title {
-            color: #1d2129;            
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .empty-add-item-container {
-            margin-top: 20px;
-            margin-bottom: 10px;
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            > img {
-                width: 143px;
-                height: 78px;
-            }
-            .empty-add-item-text-wrap {
-                margin-left: 16px;
-                .empty-add-item-tip {
-                    color: #333;
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: normal;
-                    margin-bottom: 10px;
-                }
-                .disable-add-btn {
-                    height: 32px;
-                    border-radius: 4px;
-                    opacity: 0.39;
-                    background: #0061ff;
-                    padding: 4px 15px;
-                    box-sizing: border-box;
-                    .fcc();
-                    color: #fff;
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 400;
-                    cursor: not-allowed;
                 }
             }
         }
