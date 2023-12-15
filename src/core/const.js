@@ -1802,10 +1802,8 @@ let Const = {
             { value: 1, label: '微信小程序' },
             { value: 2, label: 'CRM' },
             { value: 3, label: 'shopify' },
-            { value: 4, label: '国外官网' },
-            { value: 5, label: '飞书小程序' },
             {
-                value: 6,
+                value: 4,
                 label: '国外官网',
                 children: [
                     // 100 欧洲 200 美国
@@ -1822,7 +1820,8 @@ let Const = {
                         label: "美国"
                     },
                 ]
-            }
+            },
+            { value: 5, label: '飞书小程序' },
         ],
         // 支付方式
         PAYMENT_TYPE: {

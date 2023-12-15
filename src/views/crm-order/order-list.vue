@@ -55,7 +55,7 @@
                 >
               </a-select> -->
               <a-cascader
-                  v-model:value="searchForm.source_type"
+                  v-model:value="cascaderValue"
                   :options="CRM_ORDER_SOURCE_TYPE"
                   :placeholder="$t('def.select')"
                   @change="onCascaderChange"
@@ -295,9 +295,9 @@
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'source_type'">
-              <!-- {{ $Util.orderSourceType(text, lang) }} -->
-              {{ $i18n.locale === 'zh' ? SOURCE_TYPE[record.source_type]?.zh : SOURCE_TYPE[record.source_type]?.en }}                            
-              {{ COUNTRY_MAP[record.source_type_country]?.text || ''  }}                            
+              {{ $i18n.locale === 'zh' ? SOURCE_TYPE[record.source_type]?.zh : SOURCE_TYPE[record.source_type]?.en }}                           
+              <!-- 订单来源选择国外官网时才有 -->
+              <span v-if="record.source_type === 4"> {{ COUNTRY_MAP[record.channel_country]?.text || ''  }}</span>                            
             </template>
             <template v-else-if="column.key === 'amount'">
                 {{text || "-" }}
@@ -480,6 +480,7 @@ export default {
       CRM_ORDER_SOURCE_TYPE: Core.Const.CRM_ORDER.CRM_ORDER_SOURCE_TYPE, // 订单来源级联
       total: 0,
       orderByFields: {},
+      cascaderValue: 0,
       // 搜索
       searchForm: {
         // name: "",
@@ -510,6 +511,7 @@ export default {
         // 退款时间
         refunded_begin_time: "", // （退款开始时间）
         refunded_end_time: "", // （退款结束时间）
+        channel_country: "", // 订单来源 国家
       },
       ownUserOptions: [], //負責人
       createUserOptions: [], // 创建人列表
@@ -1152,15 +1154,19 @@ export default {
       this.handleSearchReset();
     },
     onCascaderChange(value, selectedOptions) {
-        this.searchForm.source_type = undefined
-
-        console.log("级联选择change事件", value, selectedOptions);
-        this.searchForm.source_type = value[0] || undefined
-        if (Number(this.searchForm.source_type) === 2 && value[1] === 0/*0代表全部*/) {
-            // 官网国外有个全部选项不需要country字段
-            return
+        if(value.length) {
+          if(value[0] === 4) {
+            this.searchForm.source_type = 4
+            this.searchForm.channel_country = value[1]
+          } else {
+            this.searchForm.source_type = value[0]
+            this.searchForm.channel_country = undefined
+          }
+        } else {
+          this.searchForm.source_type = undefined
+          this.searchForm.channel_country = undefined
         }
-        this.searchForm.source_type = value[1] || undefined
+        this.handleSearch();
     },
     convertStringToLanguage(str) {
       if(!str) return ''
