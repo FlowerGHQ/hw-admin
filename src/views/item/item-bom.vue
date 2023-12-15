@@ -172,6 +172,7 @@ provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
         overflow-y: auto;
         padding: 0 17px;
         .search-content {      
+            min-width: 900px;
             margin-bottom: 24px;    
         }
       }

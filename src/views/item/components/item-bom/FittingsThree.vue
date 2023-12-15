@@ -69,7 +69,10 @@
                                             </div>                                    
                                         </div>
                                     
-                                        <div class="silder-operate">
+                                        <div 
+                                            class="silder-operate"
+                                            :style="{ visibility: i === 0 ? 'visible' : 'hidden' }"    
+                                        >
                                             <div class="silder-copy" @click="onSilderCopy(ground, i)">
                                                 <MySvgIcon icon-class="copy" class="f-s-16"/>
                                             </div>
@@ -609,7 +612,6 @@ const onOperation = (type, record) => {
                 // 删除字段
                 Reflect.deleteProperty(item, 'end');
                 Reflect.deleteProperty(item, 'start');
-                Reflect.deleteProperty(item, 'blurId');
             })
 
             datas.item_component_list = copyPointerList
@@ -620,7 +622,7 @@ const onOperation = (type, record) => {
         break;
         case 'blur':
             // console.log("失去焦点", record);
-            // console.log("爆炸图数据", explosionImgItem.value);            
+            // console.log("爆炸图数据", explosionImgItem.value);
             
             addTagItem.value.item_component_set_list = [{
                 ...explosionImgItem.value,
@@ -629,10 +631,9 @@ const onOperation = (type, record) => {
             const data = addTagItem.value.item_component_set_list[0]?.item_component_list
 
             // 找到添加是否是对应的数据不是push是删除了在push
-            const findIndex = data.findIndex(el => el.blurId == record.id)            
+            const findIndex = data.findIndex(el => el.target_id == record.id)            
                                     
             let addPointItem = {
-                blurId: record.id,  // 用于记录来区分在之后是否要替换
                 index: record.index,
                 set_id: explosionImgItem.value.id, // 爆炸图id
                 target_id: record.id, // 配件id
@@ -667,7 +668,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 .fittings-three {
 	font-family: PingFang SC;
     .explosion-diagram {
-        width: 100%;
+        min-width: 900px;
         min-height: 158px;
         border: 1px solid #e2e2e2;
         padding: 20px 20px 40px 20px;
@@ -790,7 +791,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 
                                     }
                                     &:hover .silder-operate {
-                                        visibility: visible;
+                                        visibility: visible !important;
                                     }
                                 }
                             }
@@ -818,7 +819,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 							z-index: 10;
 							border-radius: 50px;
 							user-select: none;
-							opacity: 0.6;
+							opacity: 0.7;
 							transition: opacity 0.15s ease;
 							transform: translate(-50%, -50%);
 							cursor: pointer;
@@ -831,6 +832,10 @@ const handleTableChange = (pagination, filters, sorter) => {
 							width: 8px;
 							height: 8px;
 							background-color: @BG_LP;
+                            &:hover {
+								width: 14px;
+							    height: 14px;
+							}
 						}
 						.pointer-end {
 							width: 20px;
@@ -889,6 +894,7 @@ const handleTableChange = (pagination, filters, sorter) => {
         }
     }
     .fittings-table-container {
+        min-width: 900px;
         margin-top: 20px;
 
         .fittings-all {
