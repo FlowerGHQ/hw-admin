@@ -489,7 +489,7 @@ const getTableDataFetch = (parmas = {}) => {
         });
 };
 // 新增编辑爆炸图Fetch
-const saveImgeFetch = (parmas = {}) => {
+const saveImgeFetch = (parmas = {}) => {    
     let obj = {
         img: undefined,        
         target_id: props.activeObj.category_id, // (分类id)
@@ -619,7 +619,10 @@ const onOperation = (type, record) => {
             datas.item_component_list = copyPointerList
 
             console.log("save", addTagItem.value);
-            editPointFetch(addTagItem.value, 'add')
+            editPointFetch({
+                ...addTagItem.value,
+                target_id: props.activeObj.category_id, // bom_category.id (分类id)
+            }, 'add')
 
         break;
         case 'blur':
