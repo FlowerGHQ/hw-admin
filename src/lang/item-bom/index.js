@@ -46,6 +46,11 @@ export default {
         change: "设变",
         filter_multiple_codes: '筛选多个编码,请使用英文分隔符',
         obj_currently_grouped: '当前分组对象',
+        confirm_delete: '确定要删除吗',
+        // 确定删除该分组吗
+        confirm_delete_content: '确定删除该分组吗',
+        // 确定删除
+        confirm_delete_btn: '确定删除',
     },
     en: {
         title: "BOM Management",
@@ -88,6 +93,8 @@ export default {
         change: "Change",
         filter_multiple_codes: 'To Filter For Multiple Codes, Use English Separators',
         obj_currently_grouped: 'The Object Is Currently Grouped',
-
+        confirm_delete: 'Are you sure you want to delete it?',
+        confirm_delete_content: 'Are you sure you want to delete the group?',
+        confirm_delete_btn: 'Confirm Delete',
     }
 }
