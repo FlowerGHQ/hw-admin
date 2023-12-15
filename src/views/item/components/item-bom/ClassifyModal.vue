@@ -149,7 +149,6 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
-        console.log('props.activeObj',props.activeObj);
         time.value = setTimeout(()=>{
             nextTick(()=>{
                 handleSearch()
@@ -160,7 +159,6 @@ watch(
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        console.log('props.activeObj',props.activeObj);
         categoryId.value = newValue?.category_id;
         bomId.value = newValue?.version_id;
         level.value = newValue?.level;
@@ -187,7 +185,6 @@ const current = ref(1);
 const total = ref(0);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
-    console.log('current, pageSize',current, pageSize);
     pageChange()
 };
  // 页码改变
@@ -244,14 +241,6 @@ const tableColumns = computed(() => {
     return result
 })
 
-// 获取search组件对象
-/* const getSearchFrom = (data) =>  {
-    console.log('data---getSearchFrom',data);
-    for(let key in data){
-        searchForm.value[key] = data[key];
-    }
-    // this.handleSearch();
-} */
 
 onMounted(() => {
     // getTableDataFetch()
@@ -263,20 +252,15 @@ const handleSearchReset = ( ) => {
       // 重置搜索
       codeStr.value = ''
       Object.assign(searchForm.value, initialObject);
-      console.log('searchForm.value---handleSearchReset',searchForm.value);
       getTableDataFetch()
 }
 const handleSearch = () => {
-    console.log('codeStr.value---handleSearch',codeStr.value);
     //更换数组形式传参,字符串逗号分隔输入--编码
     let arr = codeStr?.value?.trim().split(',');
     arr = arr?.map(item => item?.trim());
     searchForm.value.codeList = arr?.filter(item => item !== ""); 
     getTableDataFetch()
     
-}
-const handleSelectItem = (ids, items) => {
-    console.log('handleSelectItem',ids,items);
 }
 
 const handleCancle = () => {
@@ -303,7 +287,6 @@ const toBindCategory = () => {
         bom_category_id:categoryId.value
     };
     Core.Api.ITEM_BOM.bindCategory(obj).then(res => {
-        console.log('toBindCategory',res);
         proxy.$message.success('选择成功');
         emits('refresh')
     }).catch(err => {
@@ -326,7 +309,6 @@ const getTableDataFetch = (parmas = {}) => {
     }
 
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
-        console.log('getTableDataFetch',res);
         total.value = res.count;
         tableData.value = res.list;
 
@@ -360,7 +342,6 @@ const getDefaultChecked = ()=> {
     }
     
     selectIdList.value = Core.Util.deepCopy(defaultChecked.value);
-    console.log('defaultChecked.value',codeStr.value,level.value,defaultChecked.value);
 
 }
 

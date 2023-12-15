@@ -88,7 +88,6 @@ watch(
 const componentProps = ref()
 const componentName = computed(() => {
   componentProps.value = activeObj.value;
-  console.log('componentProps.value',componentProps.value);
   if (activeObj.value.level === 1) {
     return fittings;
   } else if (activeObj.value.level === 2) {

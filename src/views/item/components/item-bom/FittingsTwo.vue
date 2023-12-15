@@ -139,7 +139,6 @@ const props = defineProps({
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        console.log('uuuuuuuuu',newValue);
         bomId.value = newValue?.version_id;
         flagNew.value = newValue?.flag_new;
         refresh()
@@ -273,7 +272,6 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    console.log("销毁");
     isSearch.value = false
 })
 // 获取设变列表
@@ -310,7 +308,9 @@ const getChangeCount = () => {
                 objCount.updateNum = element.amount;
                 objCount.allNum += element.amount;
             }
+
         });
+
     }).catch(err=>{
         console.log('getChangeCount----err',err);
     })
