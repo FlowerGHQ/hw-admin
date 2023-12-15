@@ -71,7 +71,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, getCurrentInstance, computed,watch } from "vue";
+import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
 import { useI18n } from "vue-i18n";
 const $i18n = useI18n();
@@ -84,6 +84,10 @@ const props = defineProps({
         type: Object,
         default: () => {},
     },
+    isReset: {
+        type: Boolean,
+        default: false,
+    },
 });
 const parmas = computed(() => {
     return {
@@ -92,9 +96,6 @@ const parmas = computed(() => {
         code_list: props.searchParams.code_list,
     };
 });
-
-
-
 const { proxy } = getCurrentInstance();
 const loading = ref(false);
 
@@ -200,8 +201,8 @@ onMounted(() => {
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
-        page: 1,
-        page_size: 20,
+        page: channelPagination.value.current,
+        page_size: channelPagination.value.pageSize,
         ...parmas,
     };
 
@@ -221,29 +222,25 @@ const getTableDataFetch = (parmas = {}) => {
 /* methods start*/
 // 分页事件
 const handleTableChange = (pagination, filters, sorter) => {
-    const pager = { ...channelPagination.value };
-    pager.current = pagination.current;
-    if (pagination.pageSize !== channelPagination.value.pageSize) {
-        pager.current = 1;
-        pager.pageSize = pagination.pageSize;
-    }
-    channelPagination.value = pager;
-    getTableDataFetch({
-        page_size: channelPagination.value.pageSize,
-        page: channelPagination.value.current,
-    });
+    channelPagination.value.current = pagination.current;
+    channelPagination.value.pageSize = pagination.pageSize;
+    getTableDataFetch();
 };
 /* methods end*/
 
-
+// 监听搜索参数
 watch(
-    () => parmas.value,
-    (val) => {
-        console.log("parmas", val);
-        getTableDataFetch(val);
+    [() => parmas.value,()=>props.isReset],
+    (val,reset) => {
+        console.log("val",val,reset)
+        if(reset){
+            channelPagination.value.current = 1;
+            channelPagination.value.pageSize = 20;
+        }
+        getTableDataFetch(val[0]);
     },
     {
-        deep:true,
+        deep: true,
         immediate: true,
     }
 );
