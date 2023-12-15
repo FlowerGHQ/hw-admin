@@ -42,6 +42,13 @@ import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类
 const titleRefs = ref(null);
 const titleHeight = ref(0);
 // 选择层级对象
+/**
+ * {
+ *    level：1 | 2 | 3，传递层级
+ *    id: 1, //level为1时，id为商品item_id level为2时，id为版本列表的id (注释为bomid)  level为3时，id为分类列表id（注释为bomid）
+ *    name: "一级分类", 名字
+ * }
+ * */ 
 const activeObj = ref({});
 const searchOptions = ref([
     {
