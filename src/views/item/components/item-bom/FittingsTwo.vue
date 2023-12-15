@@ -2,7 +2,7 @@
     <!-- code编码-二级页面 -->
     <div class="fittings-two">
         <!-- 设变 -->
-        <div class="change" @click="expandOrSollapse">
+        <div class="change" @click="expandOrSollapse" v-if="flagNew === 1">
             <div class="change-top">
                 <div class="left">
                     <img  class="left-img" src="@/assets/images/bom/frame.png" alt="">  
@@ -64,7 +64,7 @@
                                 {{ text || '-' }}
                                 <span
                                     class="new-version title-right"
-                                    v-if="record.bom.flag_new">
+                                    v-if="record.bom.flag_new && flagNew === 1">
                                     {{ $t("item-bom.change") }}
                                 </span>
                             </div>
@@ -114,29 +114,51 @@
 
 <script setup>
 
-import { onMounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
+import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
 const classifyShowModal = inject('classifyShowModal');
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
+const flagNew = ref()
+
+const isSearch = ref(false)
 const props = defineProps({  
     // v-model 绑定值  
     activeObj: {
         type: Object,
         default: () => {} 
     }, 
+    
+    searchParams: {
+        type: Object,
+        default: () => {}
+    }
 })
 // 监听弹窗关闭-更改父组件prop弹窗显隐值
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
+        console.log('uuuuuuuuu',newValue);
         bomId.value = newValue?.version_id;
+        flagNew.value = newValue?.flag_new;
         refresh()
     },
     { deep:true }  
 )
 
+watch(
+    () => props.searchParams,
+	(newVal) => {
+        
+        channelPagination.value.current = 1
+        channelPagination.value.pageSize = 20
+        getTableDataFetch()
+	},
+	{
+		deep: true,
+	}
+)
 const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
@@ -250,6 +272,10 @@ onMounted(() => {
     refresh()
 })
 
+onUnmounted(() => {
+    console.log("销毁");
+    isSearch.value = false
+})
 // 获取设变列表
 const getChangeList = () => {
     Core.Api.ITEM_BOM.changeBomList({
@@ -263,7 +289,7 @@ const getChangeList = () => {
 const refresh = () => {
     
     getTableDataFetch()
-    getChangeList()
+    if(flagNew.value === 1) getChangeList();
     getChangeCount();
 }
 // 获取设变数值type
@@ -299,7 +325,9 @@ const getTableDataFetch = (parmas = {}) => {
         bom_id: bomId.value,
         page: channelPagination.value.current,
         page_size: channelPagination.value.pageSize,
-        ...parmas
+        ...parmas,
+        ...props.searchParams,
+
     }
 
     Core.Api.ITEM_BOM.partsList(obj).then(res => {

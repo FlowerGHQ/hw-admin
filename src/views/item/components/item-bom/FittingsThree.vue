@@ -433,9 +433,9 @@ watch(
         console.log("监听 searchParams", newVal, Object.keys(newVal).length);
         if (Object.keys(newVal).length === 0) {
             // 重置操作
-            isSearch.value = false
+            isSearch.value = false;
         } else {
-            isSearch.value = true
+            isSearch.value = true;
         }
         channelPagination.value.current = 1
         channelPagination.value.pageSize = 20
