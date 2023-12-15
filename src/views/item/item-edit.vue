@@ -548,7 +548,7 @@
                                 </div>
                                 <div class="name">
                                     <div class="popover-button">
-                                        <a-popover title="" placement="bottom">
+                                        <!-- <a-popover title="" placement="bottom">
                                             <template #content v-if="item.option.length > 0">
                                                 <div class="popover">
                                                     <p class="popover-title">{{ $t("n.all_total") }} {{ item.option.length }} {{ $t("i.value_t") }}</p>
@@ -573,9 +573,20 @@
                                                         {{ optionItem[$i18n.locale] }}
                                                     </span>
                                                 </span>
-                                                <!-- <p class="num-tag">{{ item.option.length }}</p> -->
                                             </a-button>
-                                        </a-popover>
+                                        </a-popover> -->
+                                        <a-button type="primary" ghost @click="openConfigSet(index, item)" v-if="item.option?.length === 0">
+                                            <span style="padding-right: 0;">
+                                                {{ `${$t("i.addition")}${ $i18n.locale === 'en' ? ` ${item.key} ` : item.name}${$t("i.value")}` }}
+                                            </span>
+                                        </a-button>
+                                        <a-button class="tag-button" type="primary" ghost @click="openConfigSet(index, item)" v-else>
+                                            <span key="tag-body" class="tag-body">
+                                                <span v-for="(optionItem, optionIndex) of item.option" class="tag-value">
+                                                    {{ optionItem[$i18n.locale] }}
+                                                </span>
+                                            </span>
+                                        </a-button>
                                     </div>
                                 </div>
                                 <div class="button" v-if="isShowDelete.indexOf(item.key) === -1" @click="handleRemoveSpec(item, index)">
@@ -2779,10 +2790,14 @@ export default {
         align-items: flex-start;
         > .key {
             line-height: 32px;
+            flex-shrink: 0;
         }
         > .value {
             // width: calc(~'100% - 200px');
-            max-width: calc(~"100% - 200px");
+            // max-width: calc(~"100% - 86px");
+            min-width: 1035px;
+            width: 1035px;
+            flex-shrink: 0;
             .value-price {
                 margin-right: 5px;
                 width: 60px;
@@ -2960,6 +2975,7 @@ export default {
     }
     .specific-table {
         margin-bottom: 16px;
+        margin-right: 20px;
         th {
             background-color: #fff;
             height: 60px;
@@ -3121,6 +3137,9 @@ export default {
 .config-list {
     .config-item {
         margin-bottom: 16px;
+        &:nth-last-child(2) {
+            margin-bottom: 0;
+        }
         .config-item-title {
             display: flex;
             justify-content: space-between;
@@ -3262,4 +3281,9 @@ export default {
     margin-top: 4px;
 }
 
+.ant-input-group-wrapper {
+    :deep(.ant-input-group-addon) {
+        border-color: #EAECF2;
+    }
+}
 </style>
