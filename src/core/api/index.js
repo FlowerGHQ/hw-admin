@@ -933,6 +933,8 @@ const apiList = {
         
         changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
         changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
+        bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类
+
     }
 }; 
 

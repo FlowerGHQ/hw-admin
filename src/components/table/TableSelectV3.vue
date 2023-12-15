@@ -58,6 +58,7 @@
                 </span>
             </template>
     </a-table>
+
 </template>
 
 <script setup>
@@ -65,6 +66,7 @@
 import { Table } from 'ant-design-vue';
 import Core from "@/core";
 import { onMounted, ref, getCurrentInstance, computed, watch , unref } from 'vue';
+const $emit = defineEmits(["submit"])
 
 const { proxy } = getCurrentInstance();
 
@@ -114,6 +116,7 @@ const props = defineProps({
         default: () => { return [] }
     },
 })
+const selectedRowKeys = ref([]); // Check here to configure the default column
 
 // 监听弹窗关闭-更改父组件prop -- tableData
 watch(
@@ -123,18 +126,26 @@ watch(
         // emits("update:dataSource", newValue)
     }    
 )
-const onSelectChange = changableRowKeys => {
-      console.log('selectedRowKeys changed: ', changableRowKeys);
-      selectedRowKeys.value = changableRowKeys;
-    };
-const selectedRowKeys = ref([]); // Check here to configure the default column
 
+watch(
+    () => props.defaultChecked,
+    (newValue, oldValue) => {
+        // emits("update:dataSource", newValue)
+        selectedRowKeys.value = Core.Util.deepCopy(newValue)
+    }   
+)
+
+const onSelectChange = changableRowKeys => {
+      selectedRowKeys.value = changableRowKeys;
+      $emit('submit', selectedRowKeys.value)
+
+    };
 
 const rowSelection = computed(() => {
-      return {
+      /* return {
         selectedRowKeys: unref(selectedRowKeys),
         onChange: onSelectChange,
-        hideDefaultSelections: true,
+        // hideDefaultSelections: true,
         selections: [Table.SELECTION_ALL, Table.SELECTION_INVERT, Table.SELECTION_NONE, {
           key: 'odd',
           text: 'Select Odd Row',
@@ -162,7 +173,11 @@ const rowSelection = computed(() => {
             selectedRowKeys.value = newSelectedRowKeys;
           },
         }],
-      };
+      }; */
+      return {
+        selectedRowKeys: unref(selectedRowKeys),
+        onChange: onSelectChange,
+      }
     });
 </script>
 

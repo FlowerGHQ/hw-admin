@@ -112,23 +112,25 @@
 import { onMounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
 const classifyShowModal = inject('classifyShowModal');
-const bomId = ref(6);
+const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const props = defineProps({  
     // v-model 绑定值  
-    id:{
-        type: Number,
-        default: 0        
+    activeObj: {
+        type: Object,
+        default: () => {} 
     }, 
 })
 // 监听弹窗关闭-更改父组件prop弹窗显隐值
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
+        console.log('{deep:true}111',newValue);
         bomId.value = newValue?.version_id;
         fresh()
-    }    
+    },
+    { deep:true }  
 )
 
 const isShow = ref(true)
@@ -290,11 +292,9 @@ const getTableDataFetch = (parmas = {}) => {
     loading.value = true
     let obj = {
         // name:'主撑弹簧',
-        bom_id: 6,
-        code_list: [],
-        sync_id: "TLA3-Y2-0003", //同步编号
-        page: 1,
-        page_size: 20,
+        bom_id: bomId.value,
+        page: channelPagination.value.current,
+        page_size: channelPagination.value.pageSize,
         ...parmas
     }
 
