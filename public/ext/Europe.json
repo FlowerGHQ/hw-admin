@@ -1,0 +1,5428 @@
+[
+    {
+        "value": "18",
+        "key": "country",
+        "label": "奥地利",
+        "label_en": "Austria",
+        "code": "AUT",
+        "children": [
+            {
+                "value": "137",
+                "key": "city",
+                "code": "AUT000BUR",
+                "label": "布尔根兰",
+                "label_en": "Burgenland"
+            },
+            {
+                "value": "138",
+                "key": "city",
+                "code": "AUT000CAT",
+                "label": "克恩顿",
+                "label_en": "Carinthia"
+            },
+            {
+                "value": "139",
+                "key": "city",
+                "code": "AUT000LAU",
+                "label": "下奥地利",
+                "label_en": "Lower Austria"
+            },
+            {
+                "value": "140",
+                "key": "city",
+                "code": "AUT000STY",
+                "label": "施蒂利亚",
+                "label_en": "Styria"
+            },
+            {
+                "value": "141",
+                "key": "city",
+                "code": "AUT000SZG",
+                "label": "萨尔茨堡",
+                "label_en": "Salzburg"
+            },
+            {
+                "value": "142",
+                "key": "city",
+                "code": "AUT000TYR",
+                "label": "蒂罗尔",
+                "label_en": "Tyrol"
+            },
+            {
+                "value": "143",
+                "key": "city",
+                "code": "AUT000UAU",
+                "label": "上奥地利",
+                "label_en": "Upper Austria"
+            },
+            {
+                "value": "144",
+                "key": "city",
+                "code": "AUT000VDD",
+                "label": "维也纳",
+                "label_en": "Vienna"
+            },
+            {
+                "value": "145",
+                "key": "city",
+                "code": "AUT000VOR",
+                "label": "福拉尔贝格",
+                "label_en": "Vorarlberg"
+            },
+            {
+                "value": "10001",
+                "key": "city",
+                "code": "OTHER10001",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "21",
+        "key": "country",
+        "label": "比利时",
+        "label_en": "Belgium",
+        "code": "BEL",
+        "children": [
+            {
+                "value": "177",
+                "key": "city",
+                "code": "BEL000BRU",
+                "label": "布鲁塞尔",
+                "label_en": "Brussels"
+            },
+            {
+                "value": "178",
+                "key": "city",
+                "code": "BEL000VAN",
+                "label": "安特卫普",
+                "label_en": "Antwerpen"
+            },
+            {
+                "value": "179",
+                "key": "city",
+                "code": "BEL000VBR",
+                "label": "佛兰芒-布拉班特",
+                "label_en": "Vlaams-Brabant"
+            },
+            {
+                "value": "180",
+                "key": "city",
+                "code": "BEL000VLI",
+                "label": "林堡",
+                "label_en": "Limburg"
+            },
+            {
+                "value": "181",
+                "key": "city",
+                "code": "BEL000VOV",
+                "label": "东佛兰德",
+                "label_en": "Oost-Vlaanderen"
+            },
+            {
+                "value": "182",
+                "key": "city",
+                "code": "BEL000VWV",
+                "label": "西佛兰德",
+                "label_en": "West-Vlaanderen"
+            },
+            {
+                "value": "183",
+                "key": "city",
+                "code": "BEL000WBR",
+                "label": "布拉班特-瓦隆",
+                "label_en": "Brabant-Wallone"
+            },
+            {
+                "value": "184",
+                "key": "city",
+                "code": "BEL000WHT",
+                "label": "埃诺",
+                "label_en": "Hainaut"
+            },
+            {
+                "value": "185",
+                "key": "city",
+                "code": "BEL000WLG",
+                "label": "列日",
+                "label_en": "Liege"
+            },
+            {
+                "value": "186",
+                "key": "city",
+                "code": "BEL000WLX",
+                "label": "卢森堡",
+                "label_en": "Luxembourg"
+            },
+            {
+                "value": "187",
+                "key": "city",
+                "code": "BEL000WNA",
+                "label": "那慕尔",
+                "label_en": "Namur"
+            },
+            {
+                "value": "10002",
+                "key": "city",
+                "code": "OTHER10002",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "62",
+        "key": "country",
+        "label": "丹麦",
+        "label_en": "Denmark",
+        "code": "DNK",
+        "children": [
+            {
+                "value": "1090",
+                "key": "city",
+                "code": "DNK0000AR",
+                "label": "奥胡斯",
+                "label_en": "Aarhus"
+            },
+            {
+                "value": "1091",
+                "key": "city",
+                "code": "DNK0000BO",
+                "label": "博恩霍尔姆",
+                "label_en": "Bornholm"
+            },
+            {
+                "value": "1092",
+                "key": "city",
+                "code": "DNK0000FY",
+                "label": "菲茵",
+                "label_en": "Fyn"
+            },
+            {
+                "value": "1093",
+                "key": "city",
+                "code": "DNK0000ST",
+                "label": "斯多斯特姆",
+                "label_en": "Storstroem"
+            },
+            {
+                "value": "1094",
+                "key": "city",
+                "code": "DNK0000VS",
+                "label": "西希兰",
+                "label_en": "Vestsjaelland"
+            },
+            {
+                "value": "1095",
+                "key": "city",
+                "code": "DNK000CPH",
+                "label": "哥本哈根",
+                "label_en": "Copenhagen"
+            },
+            {
+                "value": "1096",
+                "key": "city",
+                "code": "DNK000FRE",
+                "label": "菲特烈堡",
+                "label_en": "Frederiksborg"
+            },
+            {
+                "value": "1097",
+                "key": "city",
+                "code": "DNK000RIB",
+                "label": "里伯",
+                "label_en": "Ribe"
+            },
+            {
+                "value": "1098",
+                "key": "city",
+                "code": "DNK000RKE",
+                "label": "罗斯基勒",
+                "label_en": "Roskilde"
+            },
+            {
+                "value": "1099",
+                "key": "city",
+                "code": "DNK000RKG",
+                "label": "灵克宾",
+                "label_en": "Ringkoebing"
+            },
+            {
+                "value": "1100",
+                "key": "city",
+                "code": "DNK000VBI",
+                "label": "南日德兰",
+                "label_en": "Soenderjylland"
+            },
+            {
+                "value": "1101",
+                "key": "city",
+                "code": "DNK000VEJ",
+                "label": "维厄勒",
+                "label_en": "Vejle"
+            },
+            {
+                "value": "1102",
+                "key": "city",
+                "code": "DNK000VIB",
+                "label": "维堡",
+                "label_en": "Viborg"
+            },
+            {
+                "value": "1103",
+                "key": "city",
+                "code": "DNK000VSV",
+                "label": "北日德兰",
+                "label_en": "Nordjylland"
+            },
+            {
+                "value": "10003",
+                "key": "city",
+                "code": "OTHER10003",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "71",
+        "key": "country",
+        "label": "芬兰",
+        "label_en": "Finland",
+        "code": "FIN",
+        "children": [
+            {
+                "value": "1260",
+                "key": "city",
+                "code": "FIN000ESP",
+                "label": "埃斯波",
+                "label_en": "Espoo"
+            },
+            {
+                "value": "1261",
+                "key": "city",
+                "code": "FIN000HEL",
+                "label": "赫尔辛基",
+                "label_en": "Helsinki"
+            },
+            {
+                "value": "1262",
+                "key": "city",
+                "code": "FIN000HMY",
+                "label": "海门林纳",
+                "label_en": "Hameenlinna"
+            },
+            {
+                "value": "1263",
+                "key": "city",
+                "code": "FIN000JOE",
+                "label": "约恩苏",
+                "label_en": "Joensuu"
+            },
+            {
+                "value": "1264",
+                "key": "city",
+                "code": "FIN000KAJ",
+                "label": "卡亚尼",
+                "label_en": "Kajaani"
+            },
+            {
+                "value": "1265",
+                "key": "city",
+                "code": "FIN000KOK",
+                "label": "科科拉",
+                "label_en": "Kokkola"
+            },
+            {
+                "value": "1266",
+                "key": "city",
+                "code": "FIN000KTK",
+                "label": "科特卡",
+                "label_en": "Kotka"
+            },
+            {
+                "value": "1267",
+                "key": "city",
+                "code": "FIN000KUO",
+                "label": "库奥皮奥",
+                "label_en": "Kuopio"
+            },
+            {
+                "value": "1268",
+                "key": "city",
+                "code": "FIN000LHI",
+                "label": "拉赫蒂",
+                "label_en": "Lahti"
+            },
+            {
+                "value": "1269",
+                "key": "city",
+                "code": "FIN000LPP",
+                "label": "拉彭兰塔",
+                "label_en": "Lappeenranta"
+            },
+            {
+                "value": "1270",
+                "key": "city",
+                "code": "FIN000MHQ",
+                "label": "玛丽港",
+                "label_en": "Mariehamn"
+            },
+            {
+                "value": "1271",
+                "key": "city",
+                "code": "FIN000MIK",
+                "label": "米凯利",
+                "label_en": "Mikkeli"
+            },
+            {
+                "value": "1272",
+                "key": "city",
+                "code": "FIN000OLU",
+                "label": "奥卢",
+                "label_en": "Oulu"
+            },
+            {
+                "value": "1273",
+                "key": "city",
+                "code": "FIN000POR",
+                "label": "波里",
+                "label_en": "Pori"
+            },
+            {
+                "value": "1274",
+                "key": "city",
+                "code": "FIN000PRV",
+                "label": "博尔沃",
+                "label_en": "Porvoo"
+            },
+            {
+                "value": "1275",
+                "key": "city",
+                "code": "FIN000RVN",
+                "label": "罗瓦涅米",
+                "label_en": "Rovaniemi"
+            },
+            {
+                "value": "1276",
+                "key": "city",
+                "code": "FIN000TKU",
+                "label": "图尔库",
+                "label_en": "Turku"
+            },
+            {
+                "value": "1277",
+                "key": "city",
+                "code": "FIN000TMP",
+                "label": "坦佩雷",
+                "label_en": "Tampere"
+            },
+            {
+                "value": "1278",
+                "key": "city",
+                "code": "FIN000VAA",
+                "label": "瓦萨",
+                "label_en": "Vaasa"
+            },
+            {
+                "value": "1279",
+                "key": "city",
+                "code": "FIN000VAT",
+                "label": "万塔",
+                "label_en": "Vantaa"
+            },
+            {
+                "value": "10004",
+                "key": "city",
+                "code": "OTHER10004",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "74",
+        "key": "country",
+        "label": "法国",
+        "label_en": "France",
+        "code": "FRA",
+        "children": [
+            {
+                "value": "1280",
+                "key": "city",
+                "code": "FRA000AJA",
+                "label": "阿雅克修",
+                "label_en": "Ajaccio"
+            },
+            {
+                "value": "1281",
+                "key": "city",
+                "code": "FRA000AMI",
+                "label": "亚眠",
+                "label_en": "Amiens"
+            },
+            {
+                "value": "1282",
+                "key": "city",
+                "code": "FRA000ARL",
+                "label": "阿尔勒",
+                "label_en": "Arles"
+            },
+            {
+                "value": "1283",
+                "key": "city",
+                "code": "FRA000BSN",
+                "label": "贝桑松",
+                "label_en": "Besancon"
+            },
+            {
+                "value": "1284",
+                "key": "city",
+                "code": "FRA000CFR",
+                "label": "卡昂",
+                "label_en": "Caen"
+            },
+            {
+                "value": "1285",
+                "key": "city",
+                "code": "FRA000CSM",
+                "label": "沙隆",
+                "label_en": "Chalons-en-Champagne"
+            },
+            {
+                "value": "1286",
+                "key": "city",
+                "code": "FRA000DIJ",
+                "label": "第戎",
+                "label_en": "Dijon"
+            },
+            {
+                "value": "1287",
+                "key": "city",
+                "code": "FRA000FRJ",
+                "label": "弗雷瑞斯",
+                "label_en": "Frejus"
+            },
+            {
+                "value": "1288",
+                "key": "city",
+                "code": "FRA000LIG",
+                "label": "利摩日",
+                "label_en": "Limoges"
+            },
+            {
+                "value": "1289",
+                "key": "city",
+                "code": "FRA000LIO",
+                "label": "里昂",
+                "label_en": "Lyon"
+            },
+            {
+                "value": "1290",
+                "key": "city",
+                "code": "FRA000LLE",
+                "label": "里尔",
+                "label_en": "Lille"
+            },
+            {
+                "value": "1291",
+                "key": "city",
+                "code": "FRA000MPL",
+                "label": "蒙彼利埃",
+                "label_en": "Montpellier"
+            },
+            {
+                "value": "1292",
+                "key": "city",
+                "code": "FRA000MRS",
+                "label": "马赛",
+                "label_en": "Marseille"
+            },
+            {
+                "value": "1293",
+                "key": "city",
+                "code": "FRA000MZM",
+                "label": "梅斯",
+                "label_en": "Metz"
+            },
+            {
+                "value": "1294",
+                "key": "city",
+                "code": "FRA000NCE",
+                "label": "尼斯",
+                "label_en": "Nice"
+            },
+            {
+                "value": "1295",
+                "key": "city",
+                "code": "FRA000NTE",
+                "label": "南特",
+                "label_en": "Nantes"
+            },
+            {
+                "value": "1296",
+                "key": "city",
+                "code": "FRA000ORR",
+                "label": "奥尔良",
+                "label_en": "Orleans"
+            },
+            {
+                "value": "1297",
+                "key": "city",
+                "code": "FRA000PAR",
+                "label": "巴黎",
+                "label_en": "Paris"
+            },
+            {
+                "value": "1298",
+                "key": "city",
+                "code": "FRA000QXB",
+                "label": "艾克斯",
+                "label_en": "Aix-en-Provence"
+            },
+            {
+                "value": "1299",
+                "key": "city",
+                "code": "FRA000RNS",
+                "label": "雷恩",
+                "label_en": "Rennes"
+            },
+            {
+                "value": "1300",
+                "key": "city",
+                "code": "FRA000TLS",
+                "label": "图卢兹",
+                "label_en": "Toulouse"
+            },
+            {
+                "value": "1301",
+                "key": "city",
+                "code": "FRA000URO",
+                "label": "鲁昂",
+                "label_en": "Rouen"
+            },
+            {
+                "value": "1302",
+                "key": "city",
+                "code": "FRA000VAA",
+                "label": "瓦朗斯",
+                "label_en": "Valence"
+            },
+            {
+                "value": "10005",
+                "key": "city",
+                "code": "OTHER10005",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "59",
+        "key": "country",
+        "label": "德国",
+        "label_en": "Germany",
+        "code": "DEU",
+        "children": [
+            {
+                "value": "1044",
+                "key": "city",
+                "code": "DEU0000BE",
+                "label": "柏林",
+                "label_en": "Berlin"
+            },
+            {
+                "value": "1045",
+                "key": "city",
+                "code": "DEU0000HB",
+                "label": "不来梅",
+                "label_en": "Bremen"
+            },
+            {
+                "value": "1046",
+                "key": "city",
+                "code": "DEU0000HH",
+                "label": "汉堡",
+                "label_en": "Hamburg"
+            },
+            {
+                "value": "1047",
+                "key": "city",
+                "code": "DEU000AGB",
+                "label": "奥格斯堡",
+                "label_en": "Augsburg"
+            },
+            {
+                "value": "1048",
+                "key": "city",
+                "code": "DEU000ANS",
+                "label": "安斯巴格",
+                "label_en": "Ansbach"
+            },
+            {
+                "value": "1049",
+                "key": "city",
+                "code": "DEU000ARN",
+                "label": "阿恩斯贝格",
+                "label_en": "Arnsberg"
+            },
+            {
+                "value": "1050",
+                "key": "city",
+                "code": "DEU000BFE",
+                "label": "比勒费尔德",
+                "label_en": "Bielefeld"
+            },
+            {
+                "value": "1051",
+                "key": "city",
+                "code": "DEU000BOM",
+                "label": "波鸿",
+                "label_en": "Bochum"
+            },
+            {
+                "value": "1052",
+                "key": "city",
+                "code": "DEU000BRW",
+                "label": "不伦瑞克",
+                "label_en": "Brunswick"
+            },
+            {
+                "value": "1053",
+                "key": "city",
+                "code": "DEU000BYU",
+                "label": "拜伊罗特",
+                "label_en": "Bayreuth"
+            },
+            {
+                "value": "1054",
+                "key": "city",
+                "code": "DEU000CGN",
+                "label": "科隆",
+                "label_en": "Cologne"
+            },
+            {
+                "value": "1055",
+                "key": "city",
+                "code": "DEU000CHE",
+                "label": "开姆尼斯",
+                "label_en": "Chemnitz"
+            },
+            {
+                "value": "1056",
+                "key": "city",
+                "code": "DEU000DAR",
+                "label": "达姆施塔特",
+                "label_en": "Darmstadt"
+            },
+            {
+                "value": "1057",
+                "key": "city",
+                "code": "DEU000DES",
+                "label": "德绍",
+                "label_en": "Dessau"
+            },
+            {
+                "value": "1058",
+                "key": "city",
+                "code": "DEU000DET",
+                "label": "代特莫尔特",
+                "label_en": "Detmold"
+            },
+            {
+                "value": "1059",
+                "key": "city",
+                "code": "DEU000DRS",
+                "label": "德累斯顿",
+                "label_en": "Dresden"
+            },
+            {
+                "value": "1060",
+                "key": "city",
+                "code": "DEU000DUS",
+                "label": "杜塞尔多夫",
+                "label_en": "Dusseldorf"
+            },
+            {
+                "value": "1061",
+                "key": "city",
+                "code": "DEU000ERF",
+                "label": "爱尔福特",
+                "label_en": "Erfurt"
+            },
+            {
+                "value": "1062",
+                "key": "city",
+                "code": "DEU000FBG",
+                "label": "弗赖堡",
+                "label_en": "Freiburg"
+            },
+            {
+                "value": "1063",
+                "key": "city",
+                "code": "DEU000FFO",
+                "label": "法兰克福",
+                "label_en": "Frankfurt"
+            },
+            {
+                "value": "1064",
+                "key": "city",
+                "code": "DEU000GBN",
+                "label": "吉森",
+                "label_en": "GieBen"
+            },
+            {
+                "value": "1065",
+                "key": "city",
+                "code": "DEU000HAE",
+                "label": "哈雷",
+                "label_en": "Halle"
+            },
+            {
+                "value": "1066",
+                "key": "city",
+                "code": "DEU000HAJ",
+                "label": "汉诺威",
+                "label_en": "Hannover"
+            },
+            {
+                "value": "1067",
+                "key": "city",
+                "code": "DEU000KAE",
+                "label": "卡尔斯鲁厄",
+                "label_en": "Karlsruhe"
+            },
+            {
+                "value": "1068",
+                "key": "city",
+                "code": "DEU000KAS",
+                "label": "卡塞尔",
+                "label_en": "Kassel"
+            },
+            {
+                "value": "1069",
+                "key": "city",
+                "code": "DEU000KEL",
+                "label": "基尔",
+                "label_en": "Kiel"
+            },
+            {
+                "value": "1070",
+                "key": "city",
+                "code": "DEU000KOB",
+                "label": "科布伦次",
+                "label_en": "Koblenz"
+            },
+            {
+                "value": "1071",
+                "key": "city",
+                "code": "DEU000LBG",
+                "label": "吕讷堡",
+                "label_en": "Luneburg"
+            },
+            {
+                "value": "1072",
+                "key": "city",
+                "code": "DEU000LDH",
+                "label": "兰茨胡特",
+                "label_en": "Landshut"
+            },
+            {
+                "value": "1073",
+                "key": "city",
+                "code": "DEU000LEJ",
+                "label": "莱比锡",
+                "label_en": "Leipzig"
+            },
+            {
+                "value": "1074",
+                "key": "city",
+                "code": "DEU000MAG",
+                "label": "马格德堡",
+                "label_en": "Magdeburg"
+            },
+            {
+                "value": "1075",
+                "key": "city",
+                "code": "DEU000MAI",
+                "label": "美因兹",
+                "label_en": "Mainz"
+            },
+            {
+                "value": "1076",
+                "key": "city",
+                "code": "DEU000MHG",
+                "label": "曼海姆",
+                "label_en": "Mannheim"
+            },
+            {
+                "value": "1077",
+                "key": "city",
+                "code": "DEU000MUC",
+                "label": "慕尼黑",
+                "label_en": "Munich"
+            },
+            {
+                "value": "1078",
+                "key": "city",
+                "code": "DEU000MUN",
+                "label": "明斯特",
+                "label_en": "Muenster"
+            },
+            {
+                "value": "1079",
+                "key": "city",
+                "code": "DEU000NUE",
+                "label": "纽伦堡",
+                "label_en": "Nuremberg"
+            },
+            {
+                "value": "1080",
+                "key": "city",
+                "code": "DEU000POT",
+                "label": "波茨坦",
+                "label_en": "Potsdam"
+            },
+            {
+                "value": "1081",
+                "key": "city",
+                "code": "DEU000STR",
+                "label": "斯图加特",
+                "label_en": "Stuttgart"
+            },
+            {
+                "value": "1082",
+                "key": "city",
+                "code": "DEU000SWH",
+                "label": "什未林",
+                "label_en": "Schwerin"
+            },
+            {
+                "value": "1083",
+                "key": "city",
+                "code": "DEU000TRI",
+                "label": "特里尔",
+                "label_en": "Trier"
+            },
+            {
+                "value": "1084",
+                "key": "city",
+                "code": "DEU000WIB",
+                "label": "威斯巴登",
+                "label_en": "Wiesbaden"
+            },
+            {
+                "value": "1085",
+                "key": "city",
+                "code": "DEU000WUG",
+                "label": "维尔茨堡",
+                "label_en": "Wuerzburg"
+            },
+            {
+                "value": "10005",
+                "key": "city",
+                "code": "OTHER10005",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "87",
+        "key": "country",
+        "label": "希腊",
+        "label_en": "Greece",
+        "code": "GRC",
+        "children": [
+            {
+                "value": "1394",
+                "key": "city",
+                "code": "GRC0000CY",
+                "label": "基克拉迪",
+                "label_en": "Cyclades"
+            },
+            {
+                "value": "1395",
+                "key": "city",
+                "code": "GRC0000DO",
+                "label": "多德卡尼斯",
+                "label_en": "Dodecanese"
+            },
+            {
+                "value": "1396",
+                "key": "city",
+                "code": "GRC000ATH",
+                "label": "雅典",
+                "label_en": "Athens"
+            },
+            {
+                "value": "1397",
+                "key": "city",
+                "code": "GRC000CHQ",
+                "label": "干尼亚",
+                "label_en": "Chanion"
+            },
+            {
+                "value": "1398",
+                "key": "city",
+                "code": "GRC000HER",
+                "label": "伊拉克里翁",
+                "label_en": "Irakleiou"
+            },
+            {
+                "value": "1399",
+                "key": "city",
+                "code": "GRC000LES",
+                "label": "莱斯博斯",
+                "label_en": "Lesbos"
+            },
+            {
+                "value": "1400",
+                "key": "city",
+                "code": "GRC000LST",
+                "label": "拉西锡",
+                "label_en": "Lasithiou"
+            },
+            {
+                "value": "1401",
+                "key": "city",
+                "code": "GRC000PRI",
+                "label": "比雷埃夫斯",
+                "label_en": "Peiraievs"
+            },
+            {
+                "value": "1402",
+                "key": "city",
+                "code": "GRC000RET",
+                "label": "雷西姆农",
+                "label_en": "Rethymnis"
+            },
+            {
+                "value": "1403",
+                "key": "city",
+                "code": "GRC000SMI",
+                "label": "萨摩斯",
+                "label_en": "Samos"
+            },
+            {
+                "value": "10006",
+                "key": "city",
+                "code": "OTHER10006",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "103",
+        "key": "country",
+        "label": "爱尔兰",
+        "label_en": "Ireland",
+        "code": "IRL",
+        "children": [
+            {
+                "value": "1556",
+                "key": "city",
+                "code": "IRL0000CK",
+                "label": "科克",
+                "label_en": "Cork"
+            },
+            {
+                "value": "1557",
+                "key": "city",
+                "code": "IRL0000CL",
+                "label": "克莱尔",
+                "label_en": "Clare"
+            },
+            {
+                "value": "1558",
+                "key": "city",
+                "code": "IRL0000CV",
+                "label": "卡范",
+                "label_en": "Cavan"
+            },
+            {
+                "value": "1559",
+                "key": "city",
+                "code": "IRL0000CW",
+                "label": "卡洛",
+                "label_en": "Carlow"
+            },
+            {
+                "value": "1560",
+                "key": "city",
+                "code": "IRL0000DB",
+                "label": "都柏林",
+                "label_en": "Dublin"
+            },
+            {
+                "value": "1561",
+                "key": "city",
+                "code": "IRL0000DG",
+                "label": "多内加尔",
+                "label_en": "Donegal"
+            },
+            {
+                "value": "1562",
+                "key": "city",
+                "code": "IRL0000GW",
+                "label": "戈尔韦",
+                "label_en": "Galway"
+            },
+            {
+                "value": "1563",
+                "key": "city",
+                "code": "IRL0000KD",
+                "label": "基尔代尔",
+                "label_en": "Kildare"
+            },
+            {
+                "value": "1564",
+                "key": "city",
+                "code": "IRL0000KK",
+                "label": "基尔肯尼",
+                "label_en": "Kilkenny"
+            },
+            {
+                "value": "1565",
+                "key": "city",
+                "code": "IRL0000KR",
+                "label": "凯里",
+                "label_en": "Kerry"
+            },
+            {
+                "value": "1566",
+                "key": "city",
+                "code": "IRL0000LA",
+                "label": "崂斯",
+                "label_en": "Laois"
+            },
+            {
+                "value": "1567",
+                "key": "city",
+                "code": "IRL0000LF",
+                "label": "朗福德",
+                "label_en": "Longford"
+            },
+            {
+                "value": "1568",
+                "key": "city",
+                "code": "IRL0000LM",
+                "label": "利默里克",
+                "label_en": "Limerick"
+            },
+            {
+                "value": "1569",
+                "key": "city",
+                "code": "IRL0000LR",
+                "label": "利特里姆",
+                "label_en": "Leitrim"
+            },
+            {
+                "value": "1570",
+                "key": "city",
+                "code": "IRL0000LT",
+                "label": "劳斯",
+                "label_en": "Louth"
+            },
+            {
+                "value": "1571",
+                "key": "city",
+                "code": "IRL0000MG",
+                "label": "莫内根",
+                "label_en": "Monaghan"
+            },
+            {
+                "value": "1572",
+                "key": "city",
+                "code": "IRL0000MT",
+                "label": "米斯",
+                "label_en": "Meath"
+            },
+            {
+                "value": "1573",
+                "key": "city",
+                "code": "IRL0000MY",
+                "label": "梅奥",
+                "label_en": "Mayo"
+            },
+            {
+                "value": "1574",
+                "key": "city",
+                "code": "IRL0000OF",
+                "label": "奥法利",
+                "label_en": "Offaly"
+            },
+            {
+                "value": "1575",
+                "key": "city",
+                "code": "IRL0000RC",
+                "label": "罗斯康芒",
+                "label_en": "Roscommon"
+            },
+            {
+                "value": "1576",
+                "key": "city",
+                "code": "IRL0000SL",
+                "label": "斯莱戈",
+                "label_en": "Sligo"
+            },
+            {
+                "value": "1577",
+                "key": "city",
+                "code": "IRL0000TP",
+                "label": "蒂珀雷里",
+                "label_en": "Tipperary"
+            },
+            {
+                "value": "1578",
+                "key": "city",
+                "code": "IRL0000WF",
+                "label": "沃特福德",
+                "label_en": "Waterford"
+            },
+            {
+                "value": "1579",
+                "key": "city",
+                "code": "IRL0000WK",
+                "label": "威克洛",
+                "label_en": "Wicklow"
+            },
+            {
+                "value": "1580",
+                "key": "city",
+                "code": "IRL0000WM",
+                "label": "西米斯",
+                "label_en": "Westmeath"
+            },
+            {
+                "value": "1581",
+                "key": "city",
+                "code": "IRL0000WX",
+                "label": "韦克斯福德",
+                "label_en": "Wexford"
+            },
+            {
+                "value": "10007",
+                "key": "city",
+                "code": "OTHER10007",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "108",
+        "key": "country",
+        "label": "意大利",
+        "label_en": "Italy",
+        "code": "ITA",
+        "children": [
+            {
+                "value": "1590",
+                "key": "city",
+                "code": "ITA000ALE",
+                "label": "亚历山德里亚",
+                "label_en": "Alessandria"
+            },
+            {
+                "value": "1591",
+                "key": "city",
+                "code": "ITA000AOI",
+                "label": "安科纳",
+                "label_en": "Ancona"
+            },
+            {
+                "value": "1592",
+                "key": "city",
+                "code": "ITA000AOT",
+                "label": "奥斯塔",
+                "label_en": "Aosta"
+            },
+            {
+                "value": "1593",
+                "key": "city",
+                "code": "ITA000ASP",
+                "label": "阿斯科利皮切诺",
+                "label_en": "Ascoli Piceno"
+            },
+            {
+                "value": "1594",
+                "key": "city",
+                "code": "ITA000AST",
+                "label": "阿斯蒂",
+                "label_en": "Asti"
+            },
+            {
+                "value": "1595",
+                "key": "city",
+                "code": "ITA000BDS",
+                "label": "布林迪西",
+                "label_en": "Brindisi"
+            },
+            {
+                "value": "1596",
+                "key": "city",
+                "code": "ITA000BEN",
+                "label": "贝内文托",
+                "label_en": "Benevento"
+            },
+            {
+                "value": "1597",
+                "key": "city",
+                "code": "ITA000BGO",
+                "label": "贝加莫",
+                "label_en": "Bergamo"
+            },
+            {
+                "value": "1598",
+                "key": "city",
+                "code": "ITA000BIE",
+                "label": "布拉",
+                "label_en": "Biella"
+            },
+            {
+                "value": "1599",
+                "key": "city",
+                "code": "ITA000BLQ",
+                "label": "博洛尼亚",
+                "label_en": "Bologna"
+            },
+            {
+                "value": "1600",
+                "key": "city",
+                "code": "ITA000BRC",
+                "label": "布雷西亚",
+                "label_en": "Brescia"
+            },
+            {
+                "value": "1601",
+                "key": "city",
+                "code": "ITA000BRI",
+                "label": "巴里",
+                "label_en": "Barrie"
+            },
+            {
+                "value": "1602",
+                "key": "city",
+                "code": "ITA000CAG",
+                "label": "卡利亚里",
+                "label_en": "Cagliari"
+            },
+            {
+                "value": "1603",
+                "key": "city",
+                "code": "ITA000CAX",
+                "label": "热那亚",
+                "label_en": "Genova"
+            },
+            {
+                "value": "1604",
+                "key": "city",
+                "code": "ITA000CIY",
+                "label": "科摩",
+                "label_en": "Como"
+            },
+            {
+                "value": "1605",
+                "key": "city",
+                "code": "ITA000COB",
+                "label": "坎波巴索",
+                "label_en": "Campobasso"
+            },
+            {
+                "value": "1606",
+                "key": "city",
+                "code": "ITA000CRV",
+                "label": "克罗托内",
+                "label_en": "Crotone"
+            },
+            {
+                "value": "1607",
+                "key": "city",
+                "code": "ITA000CST",
+                "label": "卡塞塔",
+                "label_en": "Caserta"
+            },
+            {
+                "value": "1608",
+                "key": "city",
+                "code": "ITA000CTA",
+                "label": "卡塔尼亚",
+                "label_en": "Catania"
+            },
+            {
+                "value": "1609",
+                "key": "city",
+                "code": "ITA000CUN",
+                "label": "库内奥",
+                "label_en": "Cuneo"
+            },
+            {
+                "value": "1610",
+                "key": "city",
+                "code": "ITA000FLR",
+                "label": "佛罗伦萨",
+                "label_en": "Firenze"
+            },
+            {
+                "value": "1611",
+                "key": "city",
+                "code": "ITA000FOG",
+                "label": "福贾",
+                "label_en": "Foggia"
+            },
+            {
+                "value": "1612",
+                "key": "city",
+                "code": "ITA000FRR",
+                "label": "费拉拉",
+                "label_en": "Ferrara"
+            },
+            {
+                "value": "1613",
+                "key": "city",
+                "code": "ITA000ISE",
+                "label": "伊塞尔尼亚",
+                "label_en": "Isernia"
+            },
+            {
+                "value": "1614",
+                "key": "city",
+                "code": "ITA000LAQ",
+                "label": "拉奎拉",
+                "label_en": "L'Aquila"
+            },
+            {
+                "value": "1615",
+                "key": "city",
+                "code": "ITA000LCC",
+                "label": "莱切",
+                "label_en": "Lecce"
+            },
+            {
+                "value": "1616",
+                "key": "city",
+                "code": "ITA000LCO",
+                "label": "莱科",
+                "label_en": "Lecco"
+            },
+            {
+                "value": "1617",
+                "key": "city",
+                "code": "ITA000LIV",
+                "label": "里窝那",
+                "label_en": "Livorno"
+            },
+            {
+                "value": "1618",
+                "key": "city",
+                "code": "ITA000MCR",
+                "label": "马萨",
+                "label_en": "Massa-Carrara"
+            },
+            {
+                "value": "1619",
+                "key": "city",
+                "code": "ITA000MIL",
+                "label": "米兰",
+                "label_en": "Milano"
+            },
+            {
+                "value": "1620",
+                "key": "city",
+                "code": "ITA000MOD",
+                "label": "摩德纳",
+                "label_en": "Modena"
+            },
+            {
+                "value": "1621",
+                "key": "city",
+                "code": "ITA000MSN",
+                "label": "墨西拿",
+                "label_en": "Messina"
+            },
+            {
+                "value": "1622",
+                "key": "city",
+                "code": "ITA000MTR",
+                "label": "马泰拉",
+                "label_en": "Matera"
+            },
+            {
+                "value": "1623",
+                "key": "city",
+                "code": "ITA000MZA",
+                "label": "蒙扎",
+                "label_en": "Monza e Brianza"
+            },
+            {
+                "value": "1624",
+                "key": "city",
+                "code": "ITA000NAP",
+                "label": "那不勒斯",
+                "label_en": "Naples"
+            },
+            {
+                "value": "1625",
+                "key": "city",
+                "code": "ITA000NVR",
+                "label": "诺瓦拉",
+                "label_en": "Novara"
+            },
+            {
+                "value": "1626",
+                "key": "city",
+                "code": "ITA000OLB",
+                "label": "奥尔比亚",
+                "label_en": "Olbia-Tempio"
+            },
+            {
+                "value": "1627",
+                "key": "city",
+                "code": "ITA000PAV",
+                "label": "帕维亚",
+                "label_en": "Pavia"
+            },
+            {
+                "value": "1628",
+                "key": "city",
+                "code": "ITA000PEG",
+                "label": "佩鲁贾",
+                "label_en": "Perugia"
+            },
+            {
+                "value": "1629",
+                "key": "city",
+                "code": "ITA000PMF",
+                "label": "帕尔马",
+                "label_en": "Parma"
+            },
+            {
+                "value": "1630",
+                "key": "city",
+                "code": "ITA000PMO",
+                "label": "巴勒莫",
+                "label_en": "Palermo"
+            },
+            {
+                "value": "1631",
+                "key": "city",
+                "code": "ITA000PRD",
+                "label": "波代诺内",
+                "label_en": "Pordenone"
+            },
+            {
+                "value": "1632",
+                "key": "city",
+                "code": "ITA000PSA",
+                "label": "比萨",
+                "label_en": "Pisa"
+            },
+            {
+                "value": "1633",
+                "key": "city",
+                "code": "ITA000QCS",
+                "label": "科森扎",
+                "label_en": "Cosenza"
+            },
+            {
+                "value": "1634",
+                "key": "city",
+                "code": "ITA000QCZ",
+                "label": "卡坦扎罗",
+                "label_en": "Catanzaro"
+            },
+            {
+                "value": "1635",
+                "key": "city",
+                "code": "ITA000QNU",
+                "label": "努奥罗",
+                "label_en": "Nuoro"
+            },
+            {
+                "value": "1636",
+                "key": "city",
+                "code": "ITA000QOS",
+                "label": "奥里斯塔诺",
+                "label_en": "Oristano"
+            },
+            {
+                "value": "1637",
+                "key": "city",
+                "code": "ITA000QPO",
+                "label": "波坦察",
+                "label_en": "Potenza"
+            },
+            {
+                "value": "1638",
+                "key": "city",
+                "code": "ITA000QSS",
+                "label": "萨萨里",
+                "label_en": "Sassari"
+            },
+            {
+                "value": "1639",
+                "key": "city",
+                "code": "ITA000REG",
+                "label": "雷焦卡拉布里亚",
+                "label_en": "Reggio Calabria"
+            },
+            {
+                "value": "1640",
+                "key": "city",
+                "code": "ITA000RNE",
+                "label": "雷焦艾米利亚",
+                "label_en": "Reggio Emilia"
+            },
+            {
+                "value": "1641",
+                "key": "city",
+                "code": "ITA000ROM",
+                "label": "罗马",
+                "label_en": "Roma"
+            },
+            {
+                "value": "1642",
+                "key": "city",
+                "code": "ITA000SAL",
+                "label": "萨莱诺",
+                "label_en": "Salerno"
+            },
+            {
+                "value": "1643",
+                "key": "city",
+                "code": "ITA000SNA",
+                "label": "锡耶纳",
+                "label_en": "Siena"
+            },
+            {
+                "value": "1644",
+                "key": "city",
+                "code": "ITA000SPE",
+                "label": "拉斯佩齐亚",
+                "label_en": "La Spezia"
+            },
+            {
+                "value": "1645",
+                "key": "city",
+                "code": "ITA000SVN",
+                "label": "萨沃纳",
+                "label_en": "Savona"
+            },
+            {
+                "value": "1646",
+                "key": "city",
+                "code": "ITA000SYR",
+                "label": "锡拉库扎",
+                "label_en": "Syracuse"
+            },
+            {
+                "value": "1647",
+                "key": "city",
+                "code": "ITA000TAR",
+                "label": "塔兰托",
+                "label_en": "Taranto"
+            },
+            {
+                "value": "1648",
+                "key": "city",
+                "code": "ITA000TPS",
+                "label": "特拉帕尼",
+                "label_en": "Trapani"
+            },
+            {
+                "value": "1649",
+                "key": "city",
+                "code": "ITA000TRN",
+                "label": "都灵",
+                "label_en": "Turin"
+            },
+            {
+                "value": "1650",
+                "key": "city",
+                "code": "ITA000TRS",
+                "label": "的里雅斯特",
+                "label_en": "Trieste"
+            },
+            {
+                "value": "1651",
+                "key": "city",
+                "code": "ITA000TRT",
+                "label": "特伦托",
+                "label_en": "Trento"
+            },
+            {
+                "value": "1652",
+                "key": "city",
+                "code": "ITA000UDN",
+                "label": "乌迪内",
+                "label_en": "Udine"
+            },
+            {
+                "value": "1653",
+                "key": "city",
+                "code": "ITA000VCE",
+                "label": "威尼斯",
+                "label_en": "Venice"
+            },
+            {
+                "value": "1654",
+                "key": "city",
+                "code": "ITA000VIT",
+                "label": "维泰博",
+                "label_en": "Viterbo"
+            },
+            {
+                "value": "1655",
+                "key": "city",
+                "code": "ITA000VRL",
+                "label": "韦尔切利",
+                "label_en": "Vercelli"
+            },
+            {
+                "value": "10008",
+                "key": "city",
+                "code": "OTHER10008",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "160",
+        "key": "country",
+        "label": "荷兰",
+        "label_en": "Netherlands",
+        "code": "NLD",
+        "children": [
+            {
+                "value": "2445",
+                "key": "city",
+                "code": "NLD000AER",
+                "label": "阿尔梅勒",
+                "label_en": "Almere"
+            },
+            {
+                "value": "2446",
+                "key": "city",
+                "code": "NLD000AME",
+                "label": "阿默斯福特",
+                "label_en": "Amersfoort"
+            },
+            {
+                "value": "2447",
+                "key": "city",
+                "code": "NLD000AMS",
+                "label": "阿姆斯特丹",
+                "label_en": "Amsterdam"
+            },
+            {
+                "value": "2448",
+                "key": "city",
+                "code": "NLD000APE",
+                "label": "阿珀尔多伦",
+                "label_en": "Apeldoorn"
+            },
+            {
+                "value": "2449",
+                "key": "city",
+                "code": "NLD000ARN",
+                "label": "阿纳姆",
+                "label_en": "Arnhem"
+            },
+            {
+                "value": "2450",
+                "key": "city",
+                "code": "NLD000ASS",
+                "label": "阿森",
+                "label_en": "Assen"
+            },
+            {
+                "value": "2451",
+                "key": "city",
+                "code": "NLD000BRD",
+                "label": "布雷达",
+                "label_en": "Breda"
+            },
+            {
+                "value": "2452",
+                "key": "city",
+                "code": "NLD000DOR",
+                "label": "多德雷赫特",
+                "label_en": "Dordrecht"
+            },
+            {
+                "value": "2453",
+                "key": "city",
+                "code": "NLD000EDE",
+                "label": "埃德",
+                "label_en": "Ede"
+            },
+            {
+                "value": "2454",
+                "key": "city",
+                "code": "NLD000EIN",
+                "label": "埃因霍芬",
+                "label_en": "Eindhoven"
+            },
+            {
+                "value": "2455",
+                "key": "city",
+                "code": "NLD000EMM",
+                "label": "埃门",
+                "label_en": "Emmen"
+            },
+            {
+                "value": "2456",
+                "key": "city",
+                "code": "NLD000ENS",
+                "label": "恩斯赫德",
+                "label_en": "Enschede"
+            },
+            {
+                "value": "2457",
+                "key": "city",
+                "code": "NLD000GRQ",
+                "label": "格罗宁根",
+                "label_en": "Groningen"
+            },
+            {
+                "value": "2458",
+                "key": "city",
+                "code": "NLD000HAG",
+                "label": "海牙",
+                "label_en": "Hague"
+            },
+            {
+                "value": "2459",
+                "key": "city",
+                "code": "NLD000HFD",
+                "label": "霍夫多尔普",
+                "label_en": "Hoofddorp"
+            },
+            {
+                "value": "2460",
+                "key": "city",
+                "code": "NLD000HRA",
+                "label": "哈勒姆",
+                "label_en": "Haarlem"
+            },
+            {
+                "value": "2461",
+                "key": "city",
+                "code": "NLD000HTB",
+                "label": "斯海尔托亨博思",
+                "label_en": "'s-Hertogenbosch"
+            },
+            {
+                "value": "2462",
+                "key": "city",
+                "code": "NLD000LEY",
+                "label": "莱利斯塔德",
+                "label_en": "Lelystad"
+            },
+            {
+                "value": "2463",
+                "key": "city",
+                "code": "NLD000Lvalue",
+                "label": "莱顿",
+                "label_en": "Levalueen"
+            },
+            {
+                "value": "2464",
+                "key": "city",
+                "code": "NLD000LWR",
+                "label": "吕伐登",
+                "label_en": "Leeuwarden"
+            },
+            {
+                "value": "2465",
+                "key": "city",
+                "code": "NLD000MDL",
+                "label": "米德尔堡",
+                "label_en": "Mvaluedelburg"
+            },
+            {
+                "value": "2466",
+                "key": "city",
+                "code": "NLD000MST",
+                "label": "马斯特里赫特",
+                "label_en": "Maastricht"
+            },
+            {
+                "value": "2467",
+                "key": "city",
+                "code": "NLD000NIJ",
+                "label": "奈梅亨",
+                "label_en": "Nijmegen"
+            },
+            {
+                "value": "2468",
+                "key": "city",
+                "code": "NLD000RTM",
+                "label": "鹿特丹",
+                "label_en": "Rotterdam"
+            },
+            {
+                "value": "2469",
+                "key": "city",
+                "code": "NLD000TLB",
+                "label": "蒂尔堡",
+                "label_en": "Tilburg"
+            },
+            {
+                "value": "2470",
+                "key": "city",
+                "code": "NLD000UTC",
+                "label": "乌得勒支",
+                "label_en": "Utrecht"
+            },
+            {
+                "value": "2471",
+                "key": "city",
+                "code": "NLD000ZTM",
+                "label": "佐特尔梅",
+                "label_en": "Zoetermeer"
+            },
+            {
+                "value": "2472",
+                "key": "city",
+                "code": "NLD000ZWO",
+                "label": "兹沃勒",
+                "label_en": "Zwolle"
+            },
+            {
+                "value": "10009",
+                "key": "city",
+                "code": "OTHER10009",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "161",
+        "key": "country",
+        "label": "挪威",
+        "label_en": "Norway",
+        "code": "NOR",
+        "children": [
+            {
+                "value": "2473",
+                "key": "city",
+                "code": "NOR000001",
+                "label": "东福尔",
+                "label_en": "Ostfold"
+            },
+            {
+                "value": "2474",
+                "key": "city",
+                "code": "NOR000002",
+                "label": "阿克什胡斯",
+                "label_en": "Akershus"
+            },
+            {
+                "value": "2475",
+                "key": "city",
+                "code": "NOR000003",
+                "label": "奥斯陆市",
+                "label_en": "Oslo"
+            },
+            {
+                "value": "2476",
+                "key": "city",
+                "code": "NOR000004",
+                "label": "海德马克",
+                "label_en": "Hedmark"
+            },
+            {
+                "value": "2477",
+                "key": "city",
+                "code": "NOR000005",
+                "label": "奥普兰",
+                "label_en": "Oppland"
+            },
+            {
+                "value": "2478",
+                "key": "city",
+                "code": "NOR000006",
+                "label": "布斯克吕",
+                "label_en": "Buskerud"
+            },
+            {
+                "value": "2479",
+                "key": "city",
+                "code": "NOR000007",
+                "label": "西福尔",
+                "label_en": "Vestfold"
+            },
+            {
+                "value": "2480",
+                "key": "city",
+                "code": "NOR000008",
+                "label": "泰勒马克",
+                "label_en": "Telemark"
+            },
+            {
+                "value": "2481",
+                "key": "city",
+                "code": "NOR000009",
+                "label": "东阿格德尔",
+                "label_en": "Aust-Agder"
+            },
+            {
+                "value": "2482",
+                "key": "city",
+                "code": "NOR000010",
+                "label": "西阿格德尔",
+                "label_en": "Vest-Agder"
+            },
+            {
+                "value": "2483",
+                "key": "city",
+                "code": "NOR000011",
+                "label": "罗加兰",
+                "label_en": "Rogaland"
+            },
+            {
+                "value": "2484",
+                "key": "city",
+                "code": "NOR000012",
+                "label": "霍达兰",
+                "label_en": "Hordaland"
+            },
+            {
+                "value": "2485",
+                "key": "city",
+                "code": "NOR000014",
+                "label": "松恩－菲尤拉讷",
+                "label_en": "Sogn og Fjordane"
+            },
+            {
+                "value": "2486",
+                "key": "city",
+                "code": "NOR000015",
+                "label": "默勒－鲁姆斯达尔",
+                "label_en": "More og Romsdal"
+            },
+            {
+                "value": "2487",
+                "key": "city",
+                "code": "NOR000016",
+                "label": "南特伦德拉格",
+                "label_en": "Sor-Trondelag"
+            },
+            {
+                "value": "2488",
+                "key": "city",
+                "code": "NOR000017",
+                "label": "北特伦德拉格",
+                "label_en": "Nord-Trondelag"
+            },
+            {
+                "value": "2489",
+                "key": "city",
+                "code": "NOR000018",
+                "label": "诺尔兰",
+                "label_en": "Nordland"
+            },
+            {
+                "value": "2490",
+                "key": "city",
+                "code": "NOR000019",
+                "label": "特罗姆斯",
+                "label_en": "Troms"
+            },
+            {
+                "value": "2491",
+                "key": "city",
+                "code": "NOR000020",
+                "label": "芬马克",
+                "label_en": "Finnmark"
+            },
+            {
+                "value": "10010",
+                "key": "city",
+                "code": "OTHER10010",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "176",
+        "key": "country",
+        "label": "葡萄牙",
+        "label_en": "Portugal",
+        "code": "PRT",
+        "children": [
+            {
+                "value": "2674",
+                "key": "city",
+                "code": "PRT000AAT",
+                "label": "上阿连特茹",
+                "label_en": "Alto Alentejo"
+            },
+            {
+                "value": "2675",
+                "key": "city",
+                "code": "PRT000AES",
+                "label": "万福",
+                "label_en": "Ave"
+            },
+            {
+                "value": "2676",
+                "key": "city",
+                "code": "PRT000ALC",
+                "label": "中阿连特茹",
+                "label_en": "Alentejo Central"
+            },
+            {
+                "value": "2677",
+                "key": "city",
+                "code": "PRT000ALL",
+                "label": "滨海阿连特茹",
+                "label_en": "Alentejo Litoral"
+            },
+            {
+                "value": "2678",
+                "key": "city",
+                "code": "PRT000ATM",
+                "label": "上特拉斯山",
+                "label_en": "Alto Tros-os-Montes"
+            },
+            {
+                "value": "2679",
+                "key": "city",
+                "code": "PRT000BAL",
+                "label": "下阿连特茹",
+                "label_en": "Baixo Alentejo"
+            },
+            {
+                "value": "2680",
+                "key": "city",
+                "code": "PRT000BIN",
+                "label": "内贝拉北",
+                "label_en": "Beira Interior Norte"
+            },
+            {
+                "value": "2681",
+                "key": "city",
+                "code": "PRT000BIS",
+                "label": "内贝拉南",
+                "label_en": "Beira Interior Sul"
+            },
+            {
+                "value": "2682",
+                "key": "city",
+                "code": "PRT000BMO",
+                "label": "下蒙德古",
+                "label_en": "Baixo Mondego"
+            },
+            {
+                "value": "2683",
+                "key": "city",
+                "code": "PRT000BVO",
+                "label": "下伏日",
+                "label_en": "Baixo Vouga"
+            },
+            {
+                "value": "2684",
+                "key": "city",
+                "code": "PRT000CAV",
+                "label": "卡瓦多",
+                "label_en": "Cavado"
+            },
+            {
+                "value": "2685",
+                "key": "city",
+                "code": "PRT000CLB",
+                "label": "科瓦贝拉",
+                "label_en": "Cova da Beira"
+            },
+            {
+                "value": "2686",
+                "key": "city",
+                "code": "PRT000EDV",
+                "label": "恩特拉杜罗伏日",
+                "label_en": "Entre Douro e Vouga"
+            },
+            {
+                "value": "2687",
+                "key": "city",
+                "code": "PRT000FAO",
+                "label": "法鲁",
+                "label_en": "Faro"
+            },
+            {
+                "value": "2688",
+                "key": "city",
+                "code": "PRT000FUN",
+                "label": "丰沙尔",
+                "label_en": "Funchal"
+            },
+            {
+                "value": "2689",
+                "key": "city",
+                "code": "PRT000LIS",
+                "label": "里斯本",
+                "label_en": "Lisboa"
+            },
+            {
+                "value": "2690",
+                "key": "city",
+                "code": "PRT000LTE",
+                "label": "利巴特茹",
+                "label_en": "Leziria do Tejo"
+            },
+            {
+                "value": "2691",
+                "key": "city",
+                "code": "PRT000MDR",
+                "label": "杜罗",
+                "label_en": "Douro"
+            },
+            {
+                "value": "2692",
+                "key": "city",
+                "code": "PRT000MLI",
+                "label": "米尼奥-利马",
+                "label_en": "Minho-Lima"
+            },
+            {
+                "value": "2693",
+                "key": "city",
+                "code": "PRT000MTE",
+                "label": "梅地奥特茹",
+                "label_en": "Medio Tejo"
+            },
+            {
+                "value": "2694",
+                "key": "city",
+                "code": "PRT000OES",
+                "label": "西部",
+                "label_en": "Western"
+            },
+            {
+                "value": "2695",
+                "key": "city",
+                "code": "PRT000PDL",
+                "label": "蓬塔德尔加达",
+                "label_en": "Ponta Delgada"
+            },
+            {
+                "value": "2696",
+                "key": "city",
+                "code": "PRT000PIN",
+                "label": "内皮尼亚尔北",
+                "label_en": "Pinhal Interior Norte"
+            },
+            {
+                "value": "2697",
+                "key": "city",
+                "code": "PRT000PIS",
+                "label": "内皮尼亚尔南",
+                "label_en": "Pinhal Interior Sul"
+            },
+            {
+                "value": "2698",
+                "key": "city",
+                "code": "PRT000PLT",
+                "label": "滨海皮尼亚尔",
+                "label_en": "Pinhal Litoral"
+            },
+            {
+                "value": "2699",
+                "key": "city",
+                "code": "PRT000PSE",
+                "label": "塞图巴尔半岛",
+                "label_en": "Peninsula de Setubal"
+            },
+            {
+                "value": "2700",
+                "key": "city",
+                "code": "PRT000SES",
+                "label": "山后",
+                "label_en": "Serra da Estrela"
+            },
+            {
+                "value": "2701",
+                "key": "city",
+                "code": "PRT000TAM",
+                "label": "塔梅加",
+                "label_en": "Tamega"
+            },
+            {
+                "value": "2702",
+                "key": "city",
+                "code": "PRT000VDP",
+                "label": "波尔图",
+                "label_en": "Porto"
+            },
+            {
+                "value": "10011",
+                "key": "city",
+                "code": "OTHER10011",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "68",
+        "key": "country",
+        "label": "西班牙",
+        "label_en": "Spain",
+        "code": "ESP",
+        "children": [
+            {
+                "value": "1184",
+                "key": "city",
+                "code": "ESP000AGP",
+                "label": "马拉加",
+                "label_en": "Malaga"
+            },
+            {
+                "value": "1185",
+                "key": "city",
+                "code": "ESP000ALA",
+                "label": "阿拉瓦",
+                "label_en": "Alava"
+            },
+            {
+                "value": "1186",
+                "key": "city",
+                "code": "ESP000ALB",
+                "label": "阿尔瓦塞特",
+                "label_en": "Albacete"
+            },
+            {
+                "value": "1187",
+                "key": "city",
+                "code": "ESP000ALC",
+                "label": "阿利坎特",
+                "label_en": "Alicante"
+            },
+            {
+                "value": "1188",
+                "key": "city",
+                "code": "ESP000ARL",
+                "label": "拉里奥哈",
+                "label_en": "La Rioja"
+            },
+            {
+                "value": "1189",
+                "key": "city",
+                "code": "ESP000AST",
+                "label": "阿斯图利亚斯",
+                "label_en": "Asturias"
+            },
+            {
+                "value": "1190",
+                "key": "city",
+                "code": "ESP000AVI",
+                "label": "阿维拉",
+                "label_en": "Avila"
+            },
+            {
+                "value": "1191",
+                "key": "city",
+                "code": "ESP000BCN",
+                "label": "巴塞罗那",
+                "label_en": "Barcelona"
+            },
+            {
+                "value": "1192",
+                "key": "city",
+                "code": "ESP000BJZ",
+                "label": "巴达霍斯",
+                "label_en": "Badajoz"
+            },
+            {
+                "value": "1193",
+                "key": "city",
+                "code": "ESP000BLR",
+                "label": "巴利阿里",
+                "label_en": "Baleares"
+            },
+            {
+                "value": "1194",
+                "key": "city",
+                "code": "ESP000BUR",
+                "label": "布尔戈斯",
+                "label_en": "Burgos"
+            },
+            {
+                "value": "1195",
+                "key": "city",
+                "code": "ESP000CAD",
+                "label": "加的斯",
+                "label_en": "Cadiz"
+            },
+            {
+                "value": "1196",
+                "key": "city",
+                "code": "ESP000CAS",
+                "label": "卡斯特利翁",
+                "label_en": "Castellon"
+            },
+            {
+                "value": "1197",
+                "key": "city",
+                "code": "ESP000CCS",
+                "label": "卡塞雷斯",
+                "label_en": "Caceres"
+            },
+            {
+                "value": "1198",
+                "key": "city",
+                "code": "ESP000CIR",
+                "label": "卡斯蒂利亚",
+                "label_en": "Cludad Real"
+            },
+            {
+                "value": "1199",
+                "key": "city",
+                "code": "ESP000CUE",
+                "label": "昆卡",
+                "label_en": "Cuenca"
+            },
+            {
+                "value": "1200",
+                "key": "city",
+                "code": "ESP000GRO",
+                "label": "赫罗纳",
+                "label_en": "Gerona"
+            },
+            {
+                "value": "1201",
+                "key": "city",
+                "code": "ESP000GRX",
+                "label": "格拉纳达",
+                "label_en": "Granada"
+            },
+            {
+                "value": "1202",
+                "key": "city",
+                "code": "ESP000GUA",
+                "label": "瓜达拉哈拉",
+                "label_en": "Guadalajara"
+            },
+            {
+                "value": "1203",
+                "key": "city",
+                "code": "ESP000GUI",
+                "label": "吉普斯夸",
+                "label_en": "Guipuzcoa"
+            },
+            {
+                "value": "1204",
+                "key": "city",
+                "code": "ESP000HUC",
+                "label": "韦斯卡",
+                "label_en": "Huesca"
+            },
+            {
+                "value": "1205",
+                "key": "city",
+                "code": "ESP000HUV",
+                "label": "韦尔瓦",
+                "label_en": "Huelva"
+            },
+            {
+                "value": "1206",
+                "key": "city",
+                "code": "ESP000JAE",
+                "label": "哈恩",
+                "label_en": "Jaen"
+            },
+            {
+                "value": "1207",
+                "key": "city",
+                "code": "ESP000LCG",
+                "label": "拉科鲁尼亚",
+                "label_en": "La Coruna"
+            },
+            {
+                "value": "1208",
+                "key": "city",
+                "code": "ESP000LEI",
+                "label": "阿尔梅里亚",
+                "label_en": "Almeria"
+            },
+            {
+                "value": "1209",
+                "key": "city",
+                "code": "ESP000LEN",
+                "label": "莱昂",
+                "label_en": "Leon"
+            },
+            {
+                "value": "1210",
+                "key": "city",
+                "code": "ESP000LGO",
+                "label": "卢戈",
+                "label_en": "Provincia de Lugo"
+            },
+            {
+                "value": "1211",
+                "key": "city",
+                "code": "ESP000LLE",
+                "label": "莱里达",
+                "label_en": "Llevaluea"
+            },
+            {
+                "value": "1212",
+                "key": "city",
+                "code": "ESP000LPA",
+                "label": "拉斯帕尔马斯",
+                "label_en": "Las Palmas"
+            },
+            {
+                "value": "1213",
+                "key": "city",
+                "code": "ESP000MAD",
+                "label": "马德里",
+                "label_en": "Madrvalue"
+            },
+            {
+                "value": "1214",
+                "key": "city",
+                "code": "ESP000MJV",
+                "label": "穆尔西亚",
+                "label_en": "Murcia"
+            },
+            {
+                "value": "1215",
+                "key": "city",
+                "code": "ESP000NVV",
+                "label": "纳瓦拉",
+                "label_en": "Navarra"
+            },
+            {
+                "value": "1216",
+                "key": "city",
+                "code": "ESP000ODB",
+                "label": "科尔多瓦",
+                "label_en": "Cordoba"
+            },
+            {
+                "value": "1217",
+                "key": "city",
+                "code": "ESP000ORE",
+                "label": "奥伦塞",
+                "label_en": "Orense"
+            },
+            {
+                "value": "1218",
+                "key": "city",
+                "code": "ESP000PAC",
+                "label": "帕伦西亚",
+                "label_en": "Palencia"
+            },
+            {
+                "value": "1219",
+                "key": "city",
+                "code": "ESP000PEV",
+                "label": "蓬特韦德拉",
+                "label_en": "Provincia de Pontevedra"
+            },
+            {
+                "value": "1220",
+                "key": "city",
+                "code": "ESP000SCT",
+                "label": "圣克鲁斯-德特内里费",
+                "label_en": "Santa Cruz de Tenerife"
+            },
+            {
+                "value": "1221",
+                "key": "city",
+                "code": "ESP000SDR",
+                "label": "桑坦德",
+                "label_en": "Santander"
+            },
+            {
+                "value": "1222",
+                "key": "city",
+                "code": "ESP000SEG",
+                "label": "塞哥维亚",
+                "label_en": "Segovia"
+            },
+            {
+                "value": "1223",
+                "key": "city",
+                "code": "ESP000SLM",
+                "label": "萨拉曼卡",
+                "label_en": "Salamanca"
+            },
+            {
+                "value": "1224",
+                "key": "city",
+                "code": "ESP000SOR",
+                "label": "索里亚",
+                "label_en": "Soria"
+            },
+            {
+                "value": "1225",
+                "key": "city",
+                "code": "ESP000SVQ",
+                "label": "塞维利亚",
+                "label_en": "Sevilla"
+            },
+            {
+                "value": "1226",
+                "key": "city",
+                "code": "ESP000TAR",
+                "label": "塔拉戈纳",
+                "label_en": "Tarragona"
+            },
+            {
+                "value": "1227",
+                "key": "city",
+                "code": "ESP000TER",
+                "label": "特鲁埃尔",
+                "label_en": "Teruel"
+            },
+            {
+                "value": "1228",
+                "key": "city",
+                "code": "ESP000TOL",
+                "label": "托莱多",
+                "label_en": "Toledo"
+            },
+            {
+                "value": "1229",
+                "key": "city",
+                "code": "ESP000VLC",
+                "label": "巴伦西亚",
+                "label_en": "Valencia"
+            },
+            {
+                "value": "1230",
+                "key": "city",
+                "code": "ESP000VLL",
+                "label": "巴利亚多利德",
+                "label_en": "Valladolvalue"
+            },
+            {
+                "value": "1231",
+                "key": "city",
+                "code": "ESP000VSE",
+                "label": "比斯开",
+                "label_en": "Vizcaya"
+            },
+            {
+                "value": "1232",
+                "key": "city",
+                "code": "ESP000ZAZ",
+                "label": "萨拉戈萨",
+                "label_en": "Zaragoza"
+            },
+            {
+                "value": "1233",
+                "key": "city",
+                "code": "ESP000ZMR",
+                "label": "萨莫拉",
+                "label_en": "Zamora"
+            },
+            {
+                "value": "10012",
+                "key": "city",
+                "code": "OTHER10012",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "203",
+        "key": "country",
+        "label": "瑞典",
+        "label_en": "Sweden",
+        "code": "SWE",
+        "children": [
+            {
+                "value": "2991",
+                "key": "city",
+                "code": "SWE00000C",
+                "label": "乌普萨拉",
+                "label_en": "Uppsala"
+            },
+            {
+                "value": "2992",
+                "key": "city",
+                "code": "SWE00000D",
+                "label": "南曼兰",
+                "label_en": "Sodermanlands"
+            },
+            {
+                "value": "2993",
+                "key": "city",
+                "code": "SWE00000F",
+                "label": "延雪平",
+                "label_en": "Jonkopings"
+            },
+            {
+                "value": "2994",
+                "key": "city",
+                "code": "SWE00000G",
+                "label": "克鲁努贝里",
+                "label_en": "Kronobergs"
+            },
+            {
+                "value": "2995",
+                "key": "city",
+                "code": "SWE00000H",
+                "label": "卡尔马",
+                "label_en": "Kalmar"
+            },
+            {
+                "value": "2996",
+                "key": "city",
+                "code": "SWE00000I",
+                "label": "哥得兰",
+                "label_en": "Gotlands"
+            },
+            {
+                "value": "2997",
+                "key": "city",
+                "code": "SWE00000K",
+                "label": "布莱金厄",
+                "label_en": "Blekinge"
+            },
+            {
+                "value": "2998",
+                "key": "city",
+                "code": "SWE00000M",
+                "label": "斯科耐",
+                "label_en": "Skane"
+            },
+            {
+                "value": "2999",
+                "key": "city",
+                "code": "SWE00000N",
+                "label": "哈兰",
+                "label_en": "Hallands"
+            },
+            {
+                "value": "3000",
+                "key": "city",
+                "code": "SWE00000O",
+                "label": "西约特兰",
+                "label_en": "Vastra Gotalands"
+            },
+            {
+                "value": "3001",
+                "key": "city",
+                "code": "SWE00000S",
+                "label": "韦姆兰",
+                "label_en": "Varmlands"
+            },
+            {
+                "value": "3002",
+                "key": "city",
+                "code": "SWE00000T",
+                "label": "厄勒布鲁",
+                "label_en": "Orebro"
+            },
+            {
+                "value": "3003",
+                "key": "city",
+                "code": "SWE00000U",
+                "label": "西曼兰",
+                "label_en": "Vastmanlands"
+            },
+            {
+                "value": "3004",
+                "key": "city",
+                "code": "SWE00000X",
+                "label": "耶夫勒堡",
+                "label_en": "Gavleborgs"
+            },
+            {
+                "value": "3005",
+                "key": "city",
+                "code": "SWE00000Y",
+                "label": "西诺尔兰",
+                "label_en": "Vasternorrlands"
+            },
+            {
+                "value": "3006",
+                "key": "city",
+                "code": "SWE00000Z",
+                "label": "耶姆特兰",
+                "label_en": "Jamtlands"
+            },
+            {
+                "value": "3007",
+                "key": "city",
+                "code": "SWE0000AB",
+                "label": "斯德哥尔摩",
+                "label_en": "Stockholms"
+            },
+            {
+                "value": "3008",
+                "key": "city",
+                "code": "SWE0000AC",
+                "label": "西博滕",
+                "label_en": "Vasterbottens"
+            },
+            {
+                "value": "3009",
+                "key": "city",
+                "code": "SWE0000BD",
+                "label": "北博滕",
+                "label_en": "Norrbottens"
+            },
+            {
+                "value": "3010",
+                "key": "city",
+                "code": "SWE000DLN",
+                "label": "达拉纳",
+                "label_en": "Dalarnas"
+            },
+            {
+                "value": "3011",
+                "key": "city",
+                "code": "SWE000UGL",
+                "label": "东约特兰",
+                "label_en": "Ustergotland"
+            },
+            {
+                "value": "10013",
+                "key": "city",
+                "code": "OTHER10013",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "78",
+        "key": "country",
+        "label": "英国",
+        "label_en": "United Kingdom",
+        "code": "GBR",
+        "children": [
+            {
+                "value": "90",
+                "key": "province",
+                "code": "GBRENG",
+                "label": "英格兰",
+                "label_en": "England",
+                "children": [
+                    {
+                        "value": "1312",
+                        "key": "city",
+                        "code": "GBRENGBAS",
+                        "label": "巴斯",
+                        "label_en": "Bath"
+                    },
+                    {
+                        "value": "1313",
+                        "key": "city",
+                        "code": "GBRENGBIR",
+                        "label": "伯明翰",
+                        "label_en": "Birmingham"
+                    },
+                    {
+                        "value": "1314",
+                        "key": "city",
+                        "code": "GBRENGBNH",
+                        "label": "布莱顿与赫福",
+                        "label_en": "Brighton & Hove"
+                    },
+                    {
+                        "value": "1315",
+                        "key": "city",
+                        "code": "GBRENGBRD",
+                        "label": "布拉德福德",
+                        "label_en": "Bradford"
+                    },
+                    {
+                        "value": "1316",
+                        "key": "city",
+                        "code": "GBRENGBST",
+                        "label": "布里斯托尔",
+                        "label_en": "Bristol"
+                    },
+                    {
+                        "value": "1317",
+                        "key": "city",
+                        "code": "GBRENGCAM",
+                        "label": "剑桥",
+                        "label_en": "Cambrvaluege"
+                    },
+                    {
+                        "value": "1318",
+                        "key": "city",
+                        "code": "GBRENGCAX",
+                        "label": "卡莱尔",
+                        "label_en": "Carlisle"
+                    },
+                    {
+                        "value": "1319",
+                        "key": "city",
+                        "code": "GBRENGCEG",
+                        "label": "切斯特",
+                        "label_en": "Chester"
+                    },
+                    {
+                        "value": "1320",
+                        "key": "city",
+                        "code": "GBRENGCNG",
+                        "label": "坎特伯雷",
+                        "label_en": "Canterbury"
+                    },
+                    {
+                        "value": "1321",
+                        "key": "city",
+                        "code": "GBRENGCOV",
+                        "label": "考文垂",
+                        "label_en": "Coventry"
+                    },
+                    {
+                        "value": "1322",
+                        "key": "city",
+                        "code": "GBRENGCST",
+                        "label": "奇切斯特",
+                        "label_en": "Chichester"
+                    },
+                    {
+                        "value": "1323",
+                        "key": "city",
+                        "code": "GBRENGDER",
+                        "label": "德比",
+                        "label_en": "Derby"
+                    },
+                    {
+                        "value": "1324",
+                        "key": "city",
+                        "code": "GBRENGDUR",
+                        "label": "德罕",
+                        "label_en": "Durham"
+                    },
+                    {
+                        "value": "1325",
+                        "key": "city",
+                        "code": "GBRENGELY",
+                        "label": "伊利",
+                        "label_en": "Ely"
+                    },
+                    {
+                        "value": "1326",
+                        "key": "city",
+                        "code": "GBRENGEXE",
+                        "label": "埃克塞特",
+                        "label_en": "Exeter"
+                    },
+                    {
+                        "value": "1327",
+                        "key": "city",
+                        "code": "GBRENGGLO",
+                        "label": "格洛斯特",
+                        "label_en": "Gloucester"
+                    },
+                    {
+                        "value": "1328",
+                        "key": "city",
+                        "code": "GBRENGHAF",
+                        "label": "赫里福德",
+                        "label_en": "Hereford"
+                    },
+                    {
+                        "value": "1329",
+                        "key": "city",
+                        "code": "GBRENGKUH",
+                        "label": "赫尔河畔京斯敦",
+                        "label_en": "Kingston upon Hull"
+                    },
+                    {
+                        "value": "1330",
+                        "key": "city",
+                        "code": "GBRENGLAN",
+                        "label": "兰开斯特",
+                        "label_en": "Lancaster"
+                    },
+                    {
+                        "value": "1331",
+                        "key": "city",
+                        "code": "GBRENGLCE",
+                        "label": "列斯特",
+                        "label_en": "Leicester"
+                    },
+                    {
+                        "value": "1332",
+                        "key": "city",
+                        "code": "GBRENGLCN",
+                        "label": "林肯",
+                        "label_en": "Lincoln"
+                    },
+                    {
+                        "value": "1333",
+                        "key": "city",
+                        "code": "GBRENGLDS",
+                        "label": "利茲",
+                        "label_en": "Leeds"
+                    },
+                    {
+                        "value": "1334",
+                        "key": "city",
+                        "code": "GBRENGLHF",
+                        "label": "利奇菲尔德",
+                        "label_en": "Lichfield"
+                    },
+                    {
+                        "value": "1335",
+                        "key": "city",
+                        "code": "GBRENGLIV",
+                        "label": "利物浦",
+                        "label_en": "Liverpool"
+                    },
+                    {
+                        "value": "1336",
+                        "key": "city",
+                        "code": "GBRENGLND",
+                        "label": "伦敦",
+                        "label_en": "London"
+                    },
+                    {
+                        "value": "1337",
+                        "key": "city",
+                        "code": "GBRENGMAN",
+                        "label": "曼彻斯特",
+                        "label_en": "Manchester"
+                    },
+                    {
+                        "value": "1338",
+                        "key": "city",
+                        "code": "GBRENGNCL",
+                        "label": "纽卡斯尔",
+                        "label_en": "Newcastle"
+                    },
+                    {
+                        "value": "1339",
+                        "key": "city",
+                        "code": "GBRENGNGM",
+                        "label": "诺丁汉",
+                        "label_en": "Nottingham"
+                    },
+                    {
+                        "value": "1340",
+                        "key": "city",
+                        "code": "GBRENGNRW",
+                        "label": "诺里奇",
+                        "label_en": "Norwich"
+                    },
+                    {
+                        "value": "1341",
+                        "key": "city",
+                        "code": "GBRENGOXF",
+                        "label": "牛津",
+                        "label_en": "Oxford"
+                    },
+                    {
+                        "value": "1342",
+                        "key": "city",
+                        "code": "GBRENGPLY",
+                        "label": "普利茅斯",
+                        "label_en": "Plymouth"
+                    },
+                    {
+                        "value": "1343",
+                        "key": "city",
+                        "code": "GBRENGPOR",
+                        "label": "朴茨茅斯",
+                        "label_en": "Portsmouth"
+                    },
+                    {
+                        "value": "1344",
+                        "key": "city",
+                        "code": "GBRENGPRE",
+                        "label": "普雷斯顿",
+                        "label_en": "Preston"
+                    },
+                    {
+                        "value": "1345",
+                        "key": "city",
+                        "code": "GBRENGPTE",
+                        "label": "彼得伯勒",
+                        "label_en": "Peterborough"
+                    },
+                    {
+                        "value": "1346",
+                        "key": "city",
+                        "code": "GBRENGRIP",
+                        "label": "里彭",
+                        "label_en": "Ripon"
+                    },
+                    {
+                        "value": "1347",
+                        "key": "city",
+                        "code": "GBRENGSHE",
+                        "label": "谢菲尔德",
+                        "label_en": "Sheffield"
+                    },
+                    {
+                        "value": "1348",
+                        "key": "city",
+                        "code": "GBRENGSLF",
+                        "label": "索福特",
+                        "label_en": "Salford"
+                    },
+                    {
+                        "value": "1349",
+                        "key": "city",
+                        "code": "GBRENGSLS",
+                        "label": "索尔斯堡",
+                        "label_en": "Salisbury"
+                    },
+                    {
+                        "value": "1350",
+                        "key": "city",
+                        "code": "GBRENGSOT",
+                        "label": "特伦特河畔斯多克",
+                        "label_en": "Stoke-on-Trent"
+                    },
+                    {
+                        "value": "1351",
+                        "key": "city",
+                        "code": "GBRENGSTH",
+                        "label": "南安普敦",
+                        "label_en": "Southampton"
+                    },
+                    {
+                        "value": "1352",
+                        "key": "city",
+                        "code": "GBRENGSUN",
+                        "label": "桑德兰",
+                        "label_en": "Sunderland"
+                    },
+                    {
+                        "value": "1353",
+                        "key": "city",
+                        "code": "GBRENGTBL",
+                        "label": "圣阿本斯",
+                        "label_en": "Saint Albans"
+                    },
+                    {
+                        "value": "1354",
+                        "key": "city",
+                        "code": "GBRENGTRU",
+                        "label": "特鲁罗",
+                        "label_en": "Truro"
+                    },
+                    {
+                        "value": "1355",
+                        "key": "city",
+                        "code": "GBRENGWKF",
+                        "label": "韦克菲尔德",
+                        "label_en": "Wakefield"
+                    },
+                    {
+                        "value": "1356",
+                        "key": "city",
+                        "code": "GBRENGWLS",
+                        "label": "威尔斯",
+                        "label_en": "Wells"
+                    },
+                    {
+                        "value": "1357",
+                        "key": "city",
+                        "code": "GBRENGWNE",
+                        "label": "温彻斯特",
+                        "label_en": "Winchester"
+                    },
+                    {
+                        "value": "1358",
+                        "key": "city",
+                        "code": "GBRENGWOR",
+                        "label": "伍斯特",
+                        "label_en": "Worcester"
+                    },
+                    {
+                        "value": "1359",
+                        "key": "city",
+                        "code": "GBRENGWOV",
+                        "label": "伍尔弗汉普顿",
+                        "label_en": "Wolverhampton"
+                    },
+                    {
+                        "value": "1360",
+                        "key": "city",
+                        "code": "GBRENGYOR",
+                        "label": "约克",
+                        "label_en": "York"
+                    },
+                    {
+                        "value": "10015",
+                        "key": "city",
+                        "code": "OTHER10015",
+                        "label": "其他",
+                        "label_en": "Others"
+                    }
+                ]
+            },
+            {
+                "value": "91",
+                "key": "province",
+                "code": "GBRNIR",
+                "label": "北爱尔兰",
+                "label_en": "Northern Ireland",
+                "children": [
+                    {
+                        "value": "1361",
+                        "key": "city",
+                        "code": "GBRNIRBFS",
+                        "label": "贝尔法斯特",
+                        "label_en": "Belfast"
+                    },
+                    {
+                        "value": "1362",
+                        "key": "city",
+                        "code": "GBRNIRDRY",
+                        "label": "德里",
+                        "label_en": "Derry"
+                    },
+                    {
+                        "value": "1363",
+                        "key": "city",
+                        "code": "GBRNIRLSB",
+                        "label": "利斯本",
+                        "label_en": "Lisburn"
+                    },
+                    {
+                        "value": "1364",
+                        "key": "city",
+                        "code": "GBRNIRNYM",
+                        "label": "纽里",
+                        "label_en": "Newry"
+                    },
+                    {
+                        "value": "10016",
+                        "key": "city",
+                        "code": "OTHER10016",
+                        "label": "其他",
+                        "label_en": "Others"
+                    }
+                ]
+            },
+            {
+                "value": "92",
+                "key": "province",
+                "code": "GBRSCT",
+                "label": "苏格兰",
+                "label_en": "Scotland",
+                "children": [
+                    {
+                        "value": "1365",
+                        "key": "city",
+                        "code": "GBRSCTABD",
+                        "label": "阿伯丁",
+                        "label_en": "Aberdeen"
+                    },
+                    {
+                        "value": "1366",
+                        "key": "city",
+                        "code": "GBRSCTDND",
+                        "label": "丹迪",
+                        "label_en": "Dundee"
+                    },
+                    {
+                        "value": "1367",
+                        "key": "city",
+                        "code": "GBRSCTEDH",
+                        "label": "爱丁堡",
+                        "label_en": "Edinburgh"
+                    },
+                    {
+                        "value": "1368",
+                        "key": "city",
+                        "code": "GBRSCTGLG",
+                        "label": "格拉斯哥",
+                        "label_en": "Glasgow"
+                    },
+                    {
+                        "value": "1369",
+                        "key": "city",
+                        "code": "GBRSCTINV",
+                        "label": "因弗内斯",
+                        "label_en": "Inverness"
+                    },
+                    {
+                        "value": "1370",
+                        "key": "city",
+                        "code": "GBRSCTSTG",
+                        "label": "斯特灵",
+                        "label_en": "Stirling"
+                    },
+                    {
+                        "value": "10017",
+                        "key": "city",
+                        "code": "OTHER10017",
+                        "label": "其他",
+                        "label_en": "Others"
+                    }
+                ]
+            },
+            {
+                "value": "93",
+                "key": "province",
+                "code": "GBRWLS",
+                "label": "威尔士",
+                "label_en": "Wales",
+                "children": [
+                    {
+                        "value": "1371",
+                        "key": "city",
+                        "code": "GBRWLSBAN",
+                        "label": "班戈",
+                        "label_en": "Bangor"
+                    },
+                    {
+                        "value": "1372",
+                        "key": "city",
+                        "code": "GBRWLSCDF",
+                        "label": "卡迪夫",
+                        "label_en": "Cardiff"
+                    },
+                    {
+                        "value": "1373",
+                        "key": "city",
+                        "code": "GBRWLSNWP",
+                        "label": "纽波特",
+                        "label_en": "Newport"
+                    },
+                    {
+                        "value": "1374",
+                        "key": "city",
+                        "code": "GBRWLSSWA",
+                        "label": "斯旺西",
+                        "label_en": "Swansea"
+                    },
+                    {
+                        "value": "10018",
+                        "key": "city",
+                        "code": "OTHER10018",
+                        "label": "其他",
+                        "label_en": "Others"
+                    }
+                ]
+            },
+            {
+                "value": "10014",
+                "key": "province",
+                "code": "OTHER10014",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "182",
+        "key": "country",
+        "label": "罗马尼亚",
+        "label_en": "Romania",
+        "code": "ROU",
+        "children": [
+            {
+                "value": "2732",
+                "key": "city",
+                "code": "ROU0000AD",
+                "label": "亚厉山德里亚",
+                "label_en": "Alexandria"
+            },
+            {
+                "value": "2733",
+                "key": "city",
+                "code": "ROU0000AL",
+                "label": "阿尔巴尤利亚",
+                "label_en": "Alba Iulia"
+            },
+            {
+                "value": "2734",
+                "key": "city",
+                "code": "ROU0000AR",
+                "label": "阿拉德",
+                "label_en": "Arad"
+            },
+            {
+                "value": "2735",
+                "key": "city",
+                "code": "ROU0000BA",
+                "label": "巴克乌",
+                "label_en": "Bacau"
+            },
+            {
+                "value": "2736",
+                "key": "city",
+                "code": "ROU0000BC",
+                "label": "布加勒斯特",
+                "label_en": "Bucuresti"
+            },
+            {
+                "value": "2737",
+                "key": "city",
+                "code": "ROU0000BL",
+                "label": "布勒伊拉",
+                "label_en": "Braila"
+            },
+            {
+                "value": "2738",
+                "key": "city",
+                "code": "ROU0000BM",
+                "label": "巴亚马雷",
+                "label_en": "Baia Mare"
+            },
+            {
+                "value": "2739",
+                "key": "city",
+                "code": "ROU0000BN",
+                "label": "比斯特里察",
+                "label_en": "Bistrita"
+            },
+            {
+                "value": "2740",
+                "key": "city",
+                "code": "ROU0000BO",
+                "label": "博托沙尼",
+                "label_en": "Botosani"
+            },
+            {
+                "value": "2741",
+                "key": "city",
+                "code": "ROU0000BS",
+                "label": "布拉索夫",
+                "label_en": "Brasov"
+            },
+            {
+                "value": "2742",
+                "key": "city",
+                "code": "ROU0000BZ",
+                "label": "布泽乌",
+                "label_en": "Buzau"
+            },
+            {
+                "value": "2743",
+                "key": "city",
+                "code": "ROU0000CN",
+                "label": "克卢日纳波卡",
+                "label_en": "Cluj-Napoca"
+            },
+            {
+                "value": "2744",
+                "key": "city",
+                "code": "ROU0000CR",
+                "label": "克勒拉希",
+                "label_en": "Calarasi"
+            },
+            {
+                "value": "2745",
+                "key": "city",
+                "code": "ROU0000CT",
+                "label": "康斯坦察",
+                "label_en": "Constanta"
+            },
+            {
+                "value": "2746",
+                "key": "city",
+                "code": "ROU0000DE",
+                "label": "德瓦",
+                "label_en": "Deva"
+            },
+            {
+                "value": "2747",
+                "key": "city",
+                "code": "ROU0000DO",
+                "label": "克拉约瓦",
+                "label_en": "Craiova"
+            },
+            {
+                "value": "2748",
+                "key": "city",
+                "code": "ROU0000DT",
+                "label": "德罗贝塔-塞维林堡",
+                "label_en": "Drobeta-Turnu Severin"
+            },
+            {
+                "value": "2749",
+                "key": "city",
+                "code": "ROU0000FO",
+                "label": "福克沙尼",
+                "label_en": "Focsani"
+            },
+            {
+                "value": "2750",
+                "key": "city",
+                "code": "ROU0000GG",
+                "label": "久尔久",
+                "label_en": "Giurgiu"
+            },
+            {
+                "value": "2751",
+                "key": "city",
+                "code": "ROU0000GL",
+                "label": "加拉茨",
+                "label_en": "Galati"
+            },
+            {
+                "value": "2752",
+                "key": "city",
+                "code": "ROU0000IS",
+                "label": "雅西",
+                "label_en": "Iasi"
+            },
+            {
+                "value": "2753",
+                "key": "city",
+                "code": "ROU0000MC",
+                "label": "梅尔库里亚丘克",
+                "label_en": "Miercurea-Ciuc"
+            },
+            {
+                "value": "2754",
+                "key": "city",
+                "code": "ROU0000OR",
+                "label": "奥拉迪亚",
+                "label_en": "Oradea"
+            },
+            {
+                "value": "2755",
+                "key": "city",
+                "code": "ROU0000PI",
+                "label": "皮特什蒂",
+                "label_en": "Pitesti"
+            },
+            {
+                "value": "2756",
+                "key": "city",
+                "code": "ROU0000PL",
+                "label": "普洛耶什蒂",
+                "label_en": "Ploiesti"
+            },
+            {
+                "value": "2757",
+                "key": "city",
+                "code": "ROU0000PN",
+                "label": "皮亚特拉尼亚姆茨",
+                "label_en": "Piatra Neamt"
+            },
+            {
+                "value": "2758",
+                "key": "city",
+                "code": "ROU0000RE",
+                "label": "雷希察",
+                "label_en": "Resita"
+            },
+            {
+                "value": "2759",
+                "key": "city",
+                "code": "ROU0000SB",
+                "label": "斯洛博齐亚",
+                "label_en": "Slobozia"
+            },
+            {
+                "value": "2760",
+                "key": "city",
+                "code": "ROU0000SG",
+                "label": "圣格奥尔基",
+                "label_en": "Sfantu-Gheorghe"
+            },
+            {
+                "value": "2761",
+                "key": "city",
+                "code": "ROU0000SM",
+                "label": "萨图·马雷",
+                "label_en": "Satu Mare"
+            },
+            {
+                "value": "2762",
+                "key": "city",
+                "code": "ROU0000SO",
+                "label": "锡比乌",
+                "label_en": "Sibiu"
+            },
+            {
+                "value": "2763",
+                "key": "city",
+                "code": "ROU0000ST",
+                "label": "斯拉蒂纳",
+                "label_en": "Slatina"
+            },
+            {
+                "value": "2764",
+                "key": "city",
+                "code": "ROU0000SU",
+                "label": "苏恰瓦",
+                "label_en": "Suceava"
+            },
+            {
+                "value": "2765",
+                "key": "city",
+                "code": "ROU0000TA",
+                "label": "特尔戈维什泰",
+                "label_en": "Targovişte"
+            },
+            {
+                "value": "2766",
+                "key": "city",
+                "code": "ROU0000TI",
+                "label": "蒂米什瓦拉",
+                "label_en": "Timisoara"
+            },
+            {
+                "value": "2767",
+                "key": "city",
+                "code": "ROU0000TJ",
+                "label": "特尔古日乌",
+                "label_en": "Tirgu-Jiu"
+            },
+            {
+                "value": "2768",
+                "key": "city",
+                "code": "ROU0000TM",
+                "label": "特尔古穆列什",
+                "label_en": "Tirgu Mures"
+            },
+            {
+                "value": "2769",
+                "key": "city",
+                "code": "ROU0000TU",
+                "label": "图尔恰",
+                "label_en": "Tulcea"
+            },
+            {
+                "value": "2770",
+                "key": "city",
+                "code": "ROU0000VA",
+                "label": "瓦斯卢伊",
+                "label_en": "Vaslui"
+            },
+            {
+                "value": "2771",
+                "key": "city",
+                "code": "ROU0000VI",
+                "label": "勒姆尼库沃尔恰",
+                "label_en": "XRimnicu Vilcea"
+            },
+            {
+                "value": "2772",
+                "key": "city",
+                "code": "ROU0000ZA",
+                "label": "扎勒乌",
+                "label_en": "Zalau"
+            },
+            {
+                "value": "10020",
+                "key": "city",
+                "code": "OTHER10020",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "58",
+        "key": "country",
+        "label": "捷克",
+        "label_en": "Czech",
+        "code": "CZE",
+        "children": [
+            {
+                "value": "1031",
+                "key": "city",
+                "code": "CZE0000JC",
+                "label": "南摩拉维亚",
+                "label_en": "Jihomoravsky"
+            },
+            {
+                "value": "1032",
+                "key": "city",
+                "code": "CZE0000KA",
+                "label": "卡罗维发利",
+                "label_en": "Karlovarsky"
+            },
+            {
+                "value": "1033",
+                "key": "city",
+                "code": "CZE0000KR",
+                "label": "赫拉德茨-克拉洛韦",
+                "label_en": "Kralovehradecky"
+            },
+            {
+                "value": "1034",
+                "key": "city",
+                "code": "CZE0000LI",
+                "label": "利贝雷克",
+                "label_en": "Liberecky"
+            },
+            {
+                "value": "1035",
+                "key": "city",
+                "code": "CZE0000MO",
+                "label": "摩拉维亚-西里西亚",
+                "label_en": "Moravskoslezsky"
+            },
+            {
+                "value": "1036",
+                "key": "city",
+                "code": "CZE0000OL",
+                "label": "奥洛穆茨",
+                "label_en": "Olomoucky"
+            },
+            {
+                "value": "1037",
+                "key": "city",
+                "code": "CZE0000PA",
+                "label": "帕尔杜比采",
+                "label_en": "Pardubicky"
+            },
+            {
+                "value": "1038",
+                "key": "city",
+                "code": "CZE0000PL",
+                "label": "比尔森",
+                "label_en": "Plzensky"
+            },
+            {
+                "value": "1039",
+                "key": "city",
+                "code": "CZE0000PR",
+                "label": "布拉格直辖市",
+                "label_en": "Prague"
+            },
+            {
+                "value": "1040",
+                "key": "city",
+                "code": "CZE0000ST",
+                "label": "中捷克",
+                "label_en": "Stredocesky"
+            },
+            {
+                "value": "1041",
+                "key": "city",
+                "code": "CZE0000US",
+                "label": "乌斯季",
+                "label_en": "Ustecky"
+            },
+            {
+                "value": "1042",
+                "key": "city",
+                "code": "CZE0000VY",
+                "label": "维索基纳",
+                "label_en": "Vysocina"
+            },
+            {
+                "value": "1043",
+                "key": "city",
+                "code": "CZE0000ZL",
+                "label": "兹林",
+                "label_en": "Zlinsky"
+            },
+            {
+                "value": "10021",
+                "key": "city",
+                "code": "OTHER10021",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "202",
+        "key": "country",
+        "label": "斯洛文尼亚",
+        "label_en": "Slovenia",
+        "code": "SVN",
+        "children": [
+            {
+                "value": "2979",
+                "key": "city",
+                "code": "SVN000DLJ",
+                "label": "多雷尼",
+                "label_en": "Dolenjska"
+            },
+            {
+                "value": "2980",
+                "key": "city",
+                "code": "SVN000GSK",
+                "label": "戈里",
+                "label_en": "Goriska"
+            },
+            {
+                "value": "2981",
+                "key": "city",
+                "code": "SVN000GSZ",
+                "label": "戈雷尼",
+                "label_en": "Gorenjska"
+            },
+            {
+                "value": "2982",
+                "key": "city",
+                "code": "SVN000KOR",
+                "label": "科洛",
+                "label_en": "Koroska"
+            },
+            {
+                "value": "2983",
+                "key": "city",
+                "code": "SVN000NKR",
+                "label": "诺特拉尼",
+                "label_en": "Notranjsko-kraska"
+            },
+            {
+                "value": "2984",
+                "key": "city",
+                "code": "SVN000OKR",
+                "label": "奥巴尔诺-克拉",
+                "label_en": "Obalno-kraska"
+            },
+            {
+                "value": "2985",
+                "key": "city",
+                "code": "SVN000OSR",
+                "label": "奥斯雷德涅斯洛文",
+                "label_en": "Osrednjeslovenska"
+            },
+            {
+                "value": "2986",
+                "key": "city",
+                "code": "SVN000POD",
+                "label": "波德拉夫",
+                "label_en": "Podravska"
+            },
+            {
+                "value": "2987",
+                "key": "city",
+                "code": "SVN000POM",
+                "label": "波穆尔",
+                "label_en": "Pomurska"
+            },
+            {
+                "value": "2988",
+                "key": "city",
+                "code": "SVN000SAV",
+                "label": "萨维尼",
+                "label_en": "Savinjska"
+            },
+            {
+                "value": "2989",
+                "key": "city",
+                "code": "SVN000SPO",
+                "label": "斯波德涅波萨夫",
+                "label_en": "Spodnjeposavska"
+            },
+            {
+                "value": "2990",
+                "key": "city",
+                "code": "SVN000ZAS",
+                "label": "扎萨夫",
+                "label_en": "Zasavska"
+            },
+            {
+                "value": "10022",
+                "key": "city",
+                "code": "OTHER10022",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "106",
+        "key": "country",
+        "label": "冰岛",
+        "label_en": "Iceland",
+        "code": "ISL"
+    },
+    {
+        "value": "42",
+        "key": "country",
+        "label": "瑞士",
+        "label_en": "Switzerland",
+        "code": "CHE",
+        "children": [
+            {
+                "value": "381",
+                "key": "city",
+                "code": "CHE0000AG",
+                "label": "阿尔高",
+                "label_en": "Aargau"
+            },
+            {
+                "value": "382",
+                "key": "city",
+                "code": "CHE0000AI",
+                "label": "内阿彭策尔",
+                "label_en": "Appenzell Innerrhodn"
+            },
+            {
+                "value": "383",
+                "key": "city",
+                "code": "CHE0000AR",
+                "label": "外阿彭策尔",
+                "label_en": "Appenzell Ausserrhon"
+            },
+            {
+                "value": "384",
+                "key": "city",
+                "code": "CHE0000BE",
+                "label": "伯尔尼",
+                "label_en": "Bern"
+            },
+            {
+                "value": "385",
+                "key": "city",
+                "code": "CHE0000BL",
+                "label": "巴塞尔乡村",
+                "label_en": "Basel Landschaft"
+            },
+            {
+                "value": "386",
+                "key": "city",
+                "code": "CHE0000BS",
+                "label": "巴塞尔城市",
+                "label_en": "Basel－Sstadt"
+            },
+            {
+                "value": "387",
+                "key": "city",
+                "code": "CHE0000FR",
+                "label": "弗里堡",
+                "label_en": "Freiburg"
+            },
+            {
+                "value": "388",
+                "key": "city",
+                "code": "CHE0000GE",
+                "label": "日内瓦",
+                "label_en": "Geneve"
+            },
+            {
+                "value": "389",
+                "key": "city",
+                "code": "CHE0000GL",
+                "label": "格拉鲁斯",
+                "label_en": "Glarus"
+            },
+            {
+                "value": "390",
+                "key": "city",
+                "code": "CHE0000GR",
+                "label": "格劳宾登",
+                "label_en": "Graubünden"
+            },
+            {
+                "value": "391",
+                "key": "city",
+                "code": "CHE0000JU",
+                "label": "汝拉",
+                "label_en": "Jura"
+            },
+            {
+                "value": "392",
+                "key": "city",
+                "code": "CHE0000LA",
+                "label": "洛桑",
+                "label_en": "Lausanne"
+            },
+            {
+                "value": "393",
+                "key": "city",
+                "code": "CHE0000LU",
+                "label": "卢塞恩",
+                "label_en": "Luzern"
+            },
+            {
+                "value": "394",
+                "key": "city",
+                "code": "CHE0000NE",
+                "label": "纳沙泰尔",
+                "label_en": "Neuchatel"
+            },
+            {
+                "value": "395",
+                "key": "city",
+                "code": "CHE0000NW",
+                "label": "下瓦尔登",
+                "label_en": "Nvaluewalden"
+            },
+            {
+                "value": "396",
+                "key": "city",
+                "code": "CHE0000OW",
+                "label": "上瓦尔登",
+                "label_en": "Obwalden"
+            },
+            {
+                "value": "397",
+                "key": "city",
+                "code": "CHE0000SG",
+                "label": "圣加仑",
+                "label_en": "St.Gallen"
+            },
+            {
+                "value": "398",
+                "key": "city",
+                "code": "CHE0000SH",
+                "label": "沙夫豪森",
+                "label_en": "Schaffhausen"
+            },
+            {
+                "value": "399",
+                "key": "city",
+                "code": "CHE0000SO",
+                "label": "索洛图恩",
+                "label_en": "Solothurn"
+            },
+            {
+                "value": "400",
+                "key": "city",
+                "code": "CHE0000SZ",
+                "label": "施维茨",
+                "label_en": "Schwyz"
+            },
+            {
+                "value": "401",
+                "key": "city",
+                "code": "CHE0000TG",
+                "label": "图尔高",
+                "label_en": "Thurgau"
+            },
+            {
+                "value": "402",
+                "key": "city",
+                "code": "CHE0000TI",
+                "label": "提契诺",
+                "label_en": "Ticino"
+            },
+            {
+                "value": "403",
+                "key": "city",
+                "code": "CHE0000UR",
+                "label": "乌里",
+                "label_en": "Uri"
+            },
+            {
+                "value": "404",
+                "key": "city",
+                "code": "CHE0000VD",
+                "label": "沃",
+                "label_en": "Vaud"
+            },
+            {
+                "value": "405",
+                "key": "city",
+                "code": "CHE0000VS",
+                "label": "瓦莱",
+                "label_en": "Wallis"
+            },
+            {
+                "value": "406",
+                "key": "city",
+                "code": "CHE0000ZG",
+                "label": "楚格",
+                "label_en": "Zug"
+            },
+            {
+                "value": "407",
+                "key": "city",
+                "code": "CHE0000ZH",
+                "label": "苏黎世",
+                "label_en": "Zurich"
+            },
+            {
+                "value": "10023",
+                "key": "city",
+                "code": "OTHER10023",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "130",
+        "key": "country",
+        "label": "卢森堡",
+        "label_en": "Luxembourg",
+        "code": "LUX",
+        "children": [
+            {
+                "value": "2103",
+                "key": "city",
+                "code": "LUX0000DD",
+                "label": "迪基希",
+                "label_en": "Diekirch"
+            },
+            {
+                "value": "2104",
+                "key": "city",
+                "code": "LUX0000GG",
+                "label": "格雷文马赫",
+                "label_en": "Grevenmacher"
+            },
+            {
+                "value": "2105",
+                "key": "city",
+                "code": "LUX0000LL",
+                "label": "卢森堡",
+                "label_en": "Luxembourg"
+            },
+            {
+                "value": "10024",
+                "key": "city",
+                "code": "OTHER10024",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "219",
+        "key": "country",
+        "label": "土耳其",
+        "label_en": "Turkey",
+        "code": "TUR",
+        "children": [
+            {
+                "value": "3171",
+                "key": "city",
+                "code": "TUR000ADA",
+                "label": "阿达纳",
+                "label_en": "Adana"
+            },
+            {
+                "value": "3172",
+                "key": "city",
+                "code": "TUR000ADI",
+                "label": "阿德亚曼",
+                "label_en": "Adiyaman"
+            },
+            {
+                "value": "3173",
+                "key": "city",
+                "code": "TUR000AFY",
+                "label": "阿菲永",
+                "label_en": "Afyon"
+            },
+            {
+                "value": "3174",
+                "key": "city",
+                "code": "TUR000AGR",
+                "label": "阿勒",
+                "label_en": "Agri"
+            },
+            {
+                "value": "3175",
+                "key": "city",
+                "code": "TUR000AKS",
+                "label": "阿克萨赖",
+                "label_en": "Aksaray"
+            },
+            {
+                "value": "3176",
+                "key": "city",
+                "code": "TUR000AMA",
+                "label": "阿马西亚",
+                "label_en": "Amasya"
+            },
+            {
+                "value": "3177",
+                "key": "city",
+                "code": "TUR000ANK",
+                "label": "安卡拉",
+                "label_en": "Ankara"
+            },
+            {
+                "value": "3178",
+                "key": "city",
+                "code": "TUR000ANT",
+                "label": "安塔利亚",
+                "label_en": "Antalya"
+            },
+            {
+                "value": "3179",
+                "key": "city",
+                "code": "TUR000ARD",
+                "label": "阿尔达罕",
+                "label_en": "Ardahan"
+            },
+            {
+                "value": "3180",
+                "key": "city",
+                "code": "TUR000ART",
+                "label": "阿尔特温",
+                "label_en": "Artvin"
+            },
+            {
+                "value": "3181",
+                "key": "city",
+                "code": "TUR000AYI",
+                "label": "艾登",
+                "label_en": "Aydin"
+            },
+            {
+                "value": "3182",
+                "key": "city",
+                "code": "TUR000BAL",
+                "label": "巴勒克埃西尔",
+                "label_en": "Balikesir"
+            },
+            {
+                "value": "3183",
+                "key": "city",
+                "code": "TUR000BAR",
+                "label": "巴尔腾",
+                "label_en": "Bartin"
+            },
+            {
+                "value": "3184",
+                "key": "city",
+                "code": "TUR000BAT",
+                "label": "巴特曼",
+                "label_en": "Batman"
+            },
+            {
+                "value": "3185",
+                "key": "city",
+                "code": "TUR000BAY",
+                "label": "巴伊布尔特",
+                "label_en": "Bayburt"
+            },
+            {
+                "value": "3186",
+                "key": "city",
+                "code": "TUR000BIL",
+                "label": "比莱吉克",
+                "label_en": "Bilecik"
+            },
+            {
+                "value": "3187",
+                "key": "city",
+                "code": "TUR000BIN",
+                "label": "宾格尔",
+                "label_en": "Bingol"
+            },
+            {
+                "value": "3188",
+                "key": "city",
+                "code": "TUR000BIT",
+                "label": "比特利斯",
+                "label_en": "Bitlis"
+            },
+            {
+                "value": "3189",
+                "key": "city",
+                "code": "TUR000BOL",
+                "label": "博卢",
+                "label_en": "Bolu"
+            },
+            {
+                "value": "3190",
+                "key": "city",
+                "code": "TUR000BRD",
+                "label": "布尔杜尔",
+                "label_en": "Burdur"
+            },
+            {
+                "value": "3191",
+                "key": "city",
+                "code": "TUR000BRS",
+                "label": "布尔萨",
+                "label_en": "Bursa"
+            },
+            {
+                "value": "3192",
+                "key": "city",
+                "code": "TUR000CKL",
+                "label": "恰纳卡莱",
+                "label_en": "Canakkale"
+            },
+            {
+                "value": "3193",
+                "key": "city",
+                "code": "TUR000CKR",
+                "label": "昌克勒",
+                "label_en": "Cankiri"
+            },
+            {
+                "value": "3194",
+                "key": "city",
+                "code": "TUR000COR",
+                "label": "乔鲁姆",
+                "label_en": "Corum"
+            },
+            {
+                "value": "3195",
+                "key": "city",
+                "code": "TUR000DEN",
+                "label": "代尼兹利",
+                "label_en": "Denizli"
+            },
+            {
+                "value": "3196",
+                "key": "city",
+                "code": "TUR000DIY",
+                "label": "迪亚巴克尔",
+                "label_en": "Diyarbakir"
+            },
+            {
+                "value": "3197",
+                "key": "city",
+                "code": "TUR000EDI",
+                "label": "埃迪尔内",
+                "label_en": "Edirne"
+            },
+            {
+                "value": "3198",
+                "key": "city",
+                "code": "TUR000ELA",
+                "label": "埃拉泽",
+                "label_en": "Elazig"
+            },
+            {
+                "value": "3199",
+                "key": "city",
+                "code": "TUR000ESK",
+                "label": "埃斯基谢希尔",
+                "label_en": "Eskisehir"
+            },
+            {
+                "value": "3200",
+                "key": "city",
+                "code": "TUR000EZC",
+                "label": "埃尔津詹",
+                "label_en": "Erzincan"
+            },
+            {
+                "value": "3201",
+                "key": "city",
+                "code": "TUR000EZR",
+                "label": "埃尔祖鲁姆",
+                "label_en": "Erzurum"
+            },
+            {
+                "value": "3202",
+                "key": "city",
+                "code": "TUR000GAZ",
+                "label": "加济安泰普",
+                "label_en": "Gaziantep"
+            },
+            {
+                "value": "3203",
+                "key": "city",
+                "code": "TUR000GIR",
+                "label": "吉雷松",
+                "label_en": "Giresun"
+            },
+            {
+                "value": "3204",
+                "key": "city",
+                "code": "TUR000GMS",
+                "label": "居米什哈内",
+                "label_en": "Gumushane"
+            },
+            {
+                "value": "3205",
+                "key": "city",
+                "code": "TUR000HKR",
+                "label": "哈卡里",
+                "label_en": "Hakkari"
+            },
+            {
+                "value": "3206",
+                "key": "city",
+                "code": "TUR000HTY",
+                "label": "哈塔伊",
+                "label_en": "Hatay"
+            },
+            {
+                "value": "3207",
+                "key": "city",
+                "code": "TUR000ICE",
+                "label": "伊切尔",
+                "label_en": "Icel"
+            },
+            {
+                "value": "3208",
+                "key": "city",
+                "code": "TUR000IGD",
+                "label": "伊迪尔",
+                "label_en": "Igdir"
+            },
+            {
+                "value": "3209",
+                "key": "city",
+                "code": "TUR000ISP",
+                "label": "伊斯帕尔塔",
+                "label_en": "Isparta"
+            },
+            {
+                "value": "3210",
+                "key": "city",
+                "code": "TUR000IST",
+                "label": "伊斯坦布尔",
+                "label_en": "Istanbul"
+            },
+            {
+                "value": "3211",
+                "key": "city",
+                "code": "TUR000IZM",
+                "label": "伊兹密尔",
+                "label_en": "Izmir"
+            },
+            {
+                "value": "3212",
+                "key": "city",
+                "code": "TUR000KAH",
+                "label": "卡赫拉曼马拉什",
+                "label_en": "Kahraman Maras"
+            },
+            {
+                "value": "3213",
+                "key": "city",
+                "code": "TUR000KAS",
+                "label": "卡斯塔莫努",
+                "label_en": "Kastamonu"
+            },
+            {
+                "value": "3214",
+                "key": "city",
+                "code": "TUR000KAY",
+                "label": "开塞利",
+                "label_en": "Kayseri"
+            },
+            {
+                "value": "3215",
+                "key": "city",
+                "code": "TUR000KLR",
+                "label": "柯克拉雷利",
+                "label_en": "Kirklareli"
+            },
+            {
+                "value": "3216",
+                "key": "city",
+                "code": "TUR000KLS",
+                "label": "基利斯",
+                "label_en": "Kilis"
+            },
+            {
+                "value": "3217",
+                "key": "city",
+                "code": "TUR000KOC",
+                "label": "科贾埃利",
+                "label_en": "Kocaeli"
+            },
+            {
+                "value": "3218",
+                "key": "city",
+                "code": "TUR000KON",
+                "label": "科尼亚",
+                "label_en": "Konya"
+            },
+            {
+                "value": "3219",
+                "key": "city",
+                "code": "TUR000KRB",
+                "label": "卡拉比克",
+                "label_en": "Karabuk"
+            },
+            {
+                "value": "3220",
+                "key": "city",
+                "code": "TUR000KRH",
+                "label": "克尔谢希尔",
+                "label_en": "Kirsehir"
+            },
+            {
+                "value": "3221",
+                "key": "city",
+                "code": "TUR000KRK",
+                "label": "克勒克卡莱",
+                "label_en": "Kirikkale"
+            },
+            {
+                "value": "3222",
+                "key": "city",
+                "code": "TUR000KRM",
+                "label": "卡拉曼",
+                "label_en": "Karaman"
+            },
+            {
+                "value": "3223",
+                "key": "city",
+                "code": "TUR000KRS",
+                "label": "卡尔斯",
+                "label_en": "Kars"
+            },
+            {
+                "value": "3224",
+                "key": "city",
+                "code": "TUR000KUT",
+                "label": "屈塔希亚",
+                "label_en": "Kutahya"
+            },
+            {
+                "value": "3225",
+                "key": "city",
+                "code": "TUR000MAL",
+                "label": "马拉蒂亚",
+                "label_en": "Malatya"
+            },
+            {
+                "value": "3226",
+                "key": "city",
+                "code": "TUR000MAN",
+                "label": "马尼萨",
+                "label_en": "Manisa"
+            },
+            {
+                "value": "3227",
+                "key": "city",
+                "code": "TUR000MAR",
+                "label": "马尔丁",
+                "label_en": "Mardin"
+            },
+            {
+                "value": "3228",
+                "key": "city",
+                "code": "TUR000MUG",
+                "label": "穆拉",
+                "label_en": "Mugla"
+            },
+            {
+                "value": "3229",
+                "key": "city",
+                "code": "TUR000MUS",
+                "label": "穆什",
+                "label_en": "Mus"
+            },
+            {
+                "value": "3230",
+                "key": "city",
+                "code": "TUR000NEV",
+                "label": "内夫谢希尔",
+                "label_en": "Nevsehir"
+            },
+            {
+                "value": "3231",
+                "key": "city",
+                "code": "TUR000NIG",
+                "label": "尼代",
+                "label_en": "Nigde"
+            },
+            {
+                "value": "3232",
+                "key": "city",
+                "code": "TUR000ORD",
+                "label": "奥尔杜",
+                "label_en": "Ordu"
+            },
+            {
+                "value": "3233",
+                "key": "city",
+                "code": "TUR000RIZ",
+                "label": "里泽",
+                "label_en": "Rize"
+            },
+            {
+                "value": "3234",
+                "key": "city",
+                "code": "TUR000SAK",
+                "label": "萨卡里亚",
+                "label_en": "Sakarya"
+            },
+            {
+                "value": "3235",
+                "key": "city",
+                "code": "TUR000SAM",
+                "label": "萨姆松",
+                "label_en": "Samsun"
+            },
+            {
+                "value": "3236",
+                "key": "city",
+                "code": "TUR000SII",
+                "label": "锡尔特",
+                "label_en": "Siirt"
+            },
+            {
+                "value": "3237",
+                "key": "city",
+                "code": "TUR000SIN",
+                "label": "锡诺普",
+                "label_en": "Sinop"
+            },
+            {
+                "value": "3238",
+                "key": "city",
+                "code": "TUR000SIR",
+                "label": "锡尔纳克",
+                "label_en": "Sirnak"
+            },
+            {
+                "value": "3239",
+                "key": "city",
+                "code": "TUR000SIV",
+                "label": "锡瓦斯",
+                "label_en": "Sivas"
+            },
+            {
+                "value": "3240",
+                "key": "city",
+                "code": "TUR000TEL",
+                "label": "泰基尔达",
+                "label_en": "Tekirdag"
+            },
+            {
+                "value": "3241",
+                "key": "city",
+                "code": "TUR000TOK",
+                "label": "托卡特",
+                "label_en": "Tokat"
+            },
+            {
+                "value": "3242",
+                "key": "city",
+                "code": "TUR000TRA",
+                "label": "特拉布宗",
+                "label_en": "Trabzon"
+            },
+            {
+                "value": "3243",
+                "key": "city",
+                "code": "TUR000TUN",
+                "label": "通杰利",
+                "label_en": "Tunceli"
+            },
+            {
+                "value": "3244",
+                "key": "city",
+                "code": "TUR000URF",
+                "label": "拉飞",
+                "label_en": "Urfa"
+            },
+            {
+                "value": "3245",
+                "key": "city",
+                "code": "TUR000USK",
+                "label": "乌萨克",
+                "label_en": "Usak"
+            },
+            {
+                "value": "3246",
+                "key": "city",
+                "code": "TUR000VAN",
+                "label": "凡",
+                "label_en": "Van"
+            },
+            {
+                "value": "3247",
+                "key": "city",
+                "code": "TUR000YOZ",
+                "label": "约兹加特",
+                "label_en": "Yozgat"
+            },
+            {
+                "value": "3248",
+                "key": "city",
+                "code": "TUR000ZON",
+                "label": "宗古尔达克",
+                "label_en": "Zonguldak"
+            },
+            {
+                "value": "10025",
+                "key": "city",
+                "code": "OTHER10025",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "96",
+        "key": "country",
+        "label": "克罗地亚",
+        "label_en": "Croatia",
+        "code": "HRV",
+        "children": [
+            {
+                "value": "1457",
+                "key": "city",
+                "code": "HRV000001",
+                "label": "萨格勒布",
+                "label_en": "Zagrebacka"
+            },
+            {
+                "value": "1458",
+                "key": "city",
+                "code": "HRV000002",
+                "label": "克拉皮纳-扎戈列",
+                "label_en": "Krapinsko-Zagorska"
+            },
+            {
+                "value": "1459",
+                "key": "city",
+                "code": "HRV000003",
+                "label": "锡萨克-莫斯拉维纳",
+                "label_en": "Sisacko-Moslavacka"
+            },
+            {
+                "value": "1460",
+                "key": "city",
+                "code": "HRV000004",
+                "label": "卡尔洛瓦茨",
+                "label_en": "Karlovacka"
+            },
+            {
+                "value": "1461",
+                "key": "city",
+                "code": "HRV000005",
+                "label": "瓦拉日丁",
+                "label_en": "Varazdinska"
+            },
+            {
+                "value": "1462",
+                "key": "city",
+                "code": "HRV000006",
+                "label": "科普里夫尼察-克里热夫齐",
+                "label_en": "Koprivnicko-Krizevacka"
+            },
+            {
+                "value": "1463",
+                "key": "city",
+                "code": "HRV000007",
+                "label": "别洛瓦尔-比洛戈拉",
+                "label_en": "Bjelovarsko-Bilogorska"
+            },
+            {
+                "value": "1464",
+                "key": "city",
+                "code": "HRV000008",
+                "label": "滨海和山区",
+                "label_en": "Primorsko-Goranska"
+            },
+            {
+                "value": "1465",
+                "key": "city",
+                "code": "HRV000009",
+                "label": "利卡-塞尼",
+                "label_en": "Licko-Senjska"
+            },
+            {
+                "value": "1466",
+                "key": "city",
+                "code": "HRV000010",
+                "label": "维罗维蒂察-波德拉维纳",
+                "label_en": "Viroviticko-Podravska"
+            },
+            {
+                "value": "1467",
+                "key": "city",
+                "code": "HRV000011",
+                "label": "波热加-斯拉沃尼亚",
+                "label_en": "Pozega-Slavonia"
+            },
+            {
+                "value": "1468",
+                "key": "city",
+                "code": "HRV000012",
+                "label": "布罗德-波萨维纳",
+                "label_en": "Brodsko-Posavska"
+            },
+            {
+                "value": "1469",
+                "key": "city",
+                "code": "HRV000013",
+                "label": "扎达尔",
+                "label_en": "Zadarska"
+            },
+            {
+                "value": "1470",
+                "key": "city",
+                "code": "HRV000014",
+                "label": "奥西耶克-巴拉尼亚",
+                "label_en": "Osjecko-Baranjska"
+            },
+            {
+                "value": "1471",
+                "key": "city",
+                "code": "HRV000015",
+                "label": "希贝尼克-克宁",
+                "label_en": "Sibensko-Kninska"
+            },
+            {
+                "value": "1472",
+                "key": "city",
+                "code": "HRV000016",
+                "label": "武科瓦尔-斯里耶姆",
+                "label_en": "Vukovarsko-Srijemska"
+            },
+            {
+                "value": "1473",
+                "key": "city",
+                "code": "HRV000017",
+                "label": "斯普利特-达尔马提亚",
+                "label_en": "Splitsko-Dalmatinska"
+            },
+            {
+                "value": "1474",
+                "key": "city",
+                "code": "HRV000018",
+                "label": "伊斯特拉",
+                "label_en": "Istarska"
+            },
+            {
+                "value": "1475",
+                "key": "city",
+                "code": "HRV000019",
+                "label": "杜布罗夫斯克-内雷特瓦",
+                "label_en": "Dubrovacko-Neretvanska"
+            },
+            {
+                "value": "1476",
+                "key": "city",
+                "code": "HRV000020",
+                "label": "梅吉穆列",
+                "label_en": "Medimurska"
+            },
+            {
+                "value": "1477",
+                "key": "city",
+                "code": "HRV000021",
+                "label": "萨格勒布市",
+                "label_en": "Grad Zagreb"
+            },
+            {
+                "value": "10026",
+                "key": "city",
+                "code": "OTHER10026",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "173",
+        "key": "country",
+        "label": "波兰",
+        "label_en": "Poland",
+        "code": "POL",
+        "children": [
+            {
+                "value": "2599",
+                "key": "city",
+                "code": "POL000BAP",
+                "label": "比亚瓦波德拉斯卡",
+                "label_en": "Biała Podlaska"
+            },
+            {
+                "value": "2600",
+                "key": "city",
+                "code": "POL000BIA",
+                "label": "比亚维斯托克",
+                "label_en": "Białystok"
+            },
+            {
+                "value": "2601",
+                "key": "city",
+                "code": "POL000BYT",
+                "label": "比托姆",
+                "label_en": "Bytom"
+            },
+            {
+                "value": "2602",
+                "key": "city",
+                "code": "POL000BZG",
+                "label": "比得哥什",
+                "label_en": "Bydgoszcz"
+            },
+            {
+                "value": "2603",
+                "key": "city",
+                "code": "POL000CHO",
+                "label": "海乌姆",
+                "label_en": "Chełm"
+            },
+            {
+                "value": "2604",
+                "key": "city",
+                "code": "POL000CHZ",
+                "label": "霍茹夫",
+                "label_en": "Chorzow"
+            },
+            {
+                "value": "2605",
+                "key": "city",
+                "code": "POL000CIE",
+                "label": "切哈努夫",
+                "label_en": "Ciechanow"
+            },
+            {
+                "value": "2606",
+                "key": "city",
+                "code": "POL000DAB",
+                "label": "达布罗瓦戈尼察",
+                "label_en": "Dabrowa Gornicza"
+            },
+            {
+                "value": "2607",
+                "key": "city",
+                "code": "POL000ELB",
+                "label": "埃尔布隆格",
+                "label_en": "Elbląg"
+            },
+            {
+                "value": "2608",
+                "key": "city",
+                "code": "POL000GDN",
+                "label": "格但斯克",
+                "label_en": "Gdansk"
+            },
+            {
+                "value": "2609",
+                "key": "city",
+                "code": "POL000GDY",
+                "label": "格丁尼亚",
+                "label_en": "Gdynia"
+            },
+            {
+                "value": "2610",
+                "key": "city",
+                "code": "POL000GOW",
+                "label": "大波兰地区戈茹夫",
+                "label_en": "Gorzow Wlkp"
+            },
+            {
+                "value": "2611",
+                "key": "city",
+                "code": "POL000GRU",
+                "label": "格鲁琼兹",
+                "label_en": "Grudziadz"
+            },
+            {
+                "value": "2612",
+                "key": "city",
+                "code": "POL000GWC",
+                "label": "格利维采",
+                "label_en": "Gliwice"
+            },
+            {
+                "value": "2613",
+                "key": "city",
+                "code": "POL000IEG",
+                "label": "绿山城",
+                "label_en": "Zielona Gora"
+            },
+            {
+                "value": "2614",
+                "key": "city",
+                "code": "POL000JAW",
+                "label": "雅沃兹诺",
+                "label_en": "Jaworzno"
+            },
+            {
+                "value": "2615",
+                "key": "city",
+                "code": "POL000JEG",
+                "label": "耶莱尼亚古拉",
+                "label_en": "Jelenia Gora"
+            },
+            {
+                "value": "2616",
+                "key": "city",
+                "code": "POL000KAL",
+                "label": "卡利什",
+                "label_en": "Kalisz"
+            },
+            {
+                "value": "2617",
+                "key": "city",
+                "code": "POL000KLC",
+                "label": "凯尔采",
+                "label_en": "Kielce"
+            },
+            {
+                "value": "2618",
+                "key": "city",
+                "code": "POL000KON",
+                "label": "科宁",
+                "label_en": "Konin"
+            },
+            {
+                "value": "2619",
+                "key": "city",
+                "code": "POL000KRK",
+                "label": "克拉科夫",
+                "label_en": "Krakow"
+            },
+            {
+                "value": "2620",
+                "key": "city",
+                "code": "POL000KRO",
+                "label": "克罗斯诺",
+                "label_en": "Krosno"
+            },
+            {
+                "value": "2621",
+                "key": "city",
+                "code": "POL000KTW",
+                "label": "卡托维兹",
+                "label_en": "Katowice"
+            },
+            {
+                "value": "2622",
+                "key": "city",
+                "code": "POL000LEG",
+                "label": "莱格尼察",
+                "label_en": "Legnica"
+            },
+            {
+                "value": "2623",
+                "key": "city",
+                "code": "POL000LEZ",
+                "label": "莱什诺",
+                "label_en": "Leszno"
+            },
+            {
+                "value": "2624",
+                "key": "city",
+                "code": "POL000LOD",
+                "label": "罗兹",
+                "label_en": "Lodz"
+            },
+            {
+                "value": "2625",
+                "key": "city",
+                "code": "POL000LUL",
+                "label": "卢布林",
+                "label_en": "Lublin"
+            },
+            {
+                "value": "2626",
+                "key": "city",
+                "code": "POL000MYL",
+                "label": "米什洛维采",
+                "label_en": "Mysłowice"
+            },
+            {
+                "value": "2627",
+                "key": "city",
+                "code": "POL000NOW",
+                "label": "新松奇",
+                "label_en": "Nowy Sacz"
+            },
+            {
+                "value": "2628",
+                "key": "city",
+                "code": "POL000OLS",
+                "label": "奥尔什丁",
+                "label_en": "Olsztyn"
+            },
+            {
+                "value": "2629",
+                "key": "city",
+                "code": "POL000OPO",
+                "label": "波莱",
+                "label_en": "Opole"
+            },
+            {
+                "value": "2630",
+                "key": "city",
+                "code": "POL000OSS",
+                "label": "奥斯特罗文卡",
+                "label_en": "Ostrołeka"
+            },
+            {
+                "value": "2631",
+                "key": "city",
+                "code": "POL000OSZ",
+                "label": "科沙林",
+                "label_en": "Koszalin"
+            },
+            {
+                "value": "2632",
+                "key": "city",
+                "code": "POL000PIL",
+                "label": "皮瓦",
+                "label_en": "Piła"
+            },
+            {
+                "value": "2633",
+                "key": "city",
+                "code": "POL000PIO",
+                "label": "彼得库夫",
+                "label_en": "Piotrkow"
+            },
+            {
+                "value": "2634",
+                "key": "city",
+                "code": "POL000PLO",
+                "label": "普沃茨克",
+                "label_en": "Plock"
+            },
+            {
+                "value": "2635",
+                "key": "city",
+                "code": "POL000POZ",
+                "label": "波兹南",
+                "label_en": "Poznan"
+            },
+            {
+                "value": "2636",
+                "key": "city",
+                "code": "POL000PRZ",
+                "label": "普热梅希尔",
+                "label_en": "Przemysl"
+            },
+            {
+                "value": "2637",
+                "key": "city",
+                "code": "POL000QEP",
+                "label": "塔尔诺布热格",
+                "label_en": "Tarnobrzeg"
+            },
+            {
+                "value": "2638",
+                "key": "city",
+                "code": "POL000QOY",
+                "label": "沃姆扎",
+                "label_en": "Lomza"
+            },
+            {
+                "value": "2639",
+                "key": "city",
+                "code": "POL000RDM",
+                "label": "拉多姆",
+                "label_en": "Radom"
+            },
+            {
+                "value": "2640",
+                "key": "city",
+                "code": "POL000RDS",
+                "label": "鲁达",
+                "label_en": "Ruda Sl"
+            },
+            {
+                "value": "2641",
+                "key": "city",
+                "code": "POL000RZE",
+                "label": "热舒夫",
+                "label_en": "Rzeszow"
+            },
+            {
+                "value": "2642",
+                "key": "city",
+                "code": "POL000SDC",
+                "label": "谢德尔采",
+                "label_en": "Siedlce"
+            },
+            {
+                "value": "2643",
+                "key": "city",
+                "code": "POL000SIR",
+                "label": "谢拉兹",
+                "label_en": "Sieradz"
+            },
+            {
+                "value": "2644",
+                "key": "city",
+                "code": "POL000SKI",
+                "label": "斯凯尔涅维采",
+                "label_en": "Skierniewice"
+            },
+            {
+                "value": "2645",
+                "key": "city",
+                "code": "POL000SLP",
+                "label": "斯武普斯克",
+                "label_en": "Slupsk"
+            },
+            {
+                "value": "2646",
+                "key": "city",
+                "code": "POL000SOP",
+                "label": "索波特",
+                "label_en": "Sopot"
+            },
+            {
+                "value": "2647",
+                "key": "city",
+                "code": "POL000SOW",
+                "label": "希米亚诺维采",
+                "label_en": "Siemianowice Sl"
+            },
+            {
+                "value": "2648",
+                "key": "city",
+                "code": "POL000SWC",
+                "label": "索斯诺维茨",
+                "label_en": "Sosnowiec"
+            },
+            {
+                "value": "2649",
+                "key": "city",
+                "code": "POL000SWI",
+                "label": "希维诺乌伊希切",
+                "label_en": "Swinoujscie"
+            },
+            {
+                "value": "2650",
+                "key": "city",
+                "code": "POL000SWL",
+                "label": "苏瓦乌基",
+                "label_en": "Suwałki"
+            },
+            {
+                "value": "2651",
+                "key": "city",
+                "code": "POL000SWT",
+                "label": "希维托赫洛维采",
+                "label_en": "Swietochłowice"
+            },
+            {
+                "value": "2652",
+                "key": "city",
+                "code": "POL000SZZ",
+                "label": "什切青",
+                "label_en": "Szczecin"
+            },
+            {
+                "value": "2653",
+                "key": "city",
+                "code": "POL000TAR",
+                "label": "塔尔努夫",
+                "label_en": "Tarnow"
+            },
+            {
+                "value": "2654",
+                "key": "city",
+                "code": "POL000TOR",
+                "label": "托伦",
+                "label_en": "Torun"
+            },
+            {
+                "value": "2655",
+                "key": "city",
+                "code": "POL000TYY",
+                "label": "特切",
+                "label_en": "Tychy"
+            },
+            {
+                "value": "2656",
+                "key": "city",
+                "code": "POL000WAW",
+                "label": "华沙",
+                "label_en": "Warszawa"
+            },
+            {
+                "value": "2657",
+                "key": "city",
+                "code": "POL000WLO",
+                "label": "弗沃茨瓦韦克",
+                "label_en": "Wlocławek"
+            },
+            {
+                "value": "2658",
+                "key": "city",
+                "code": "POL000WRO",
+                "label": "弗罗茨瓦夫",
+                "label_en": "Wroclaw"
+            },
+            {
+                "value": "2659",
+                "key": "city",
+                "code": "POL000WZH",
+                "label": "瓦乌布日赫",
+                "label_en": "Walbrzych"
+            },
+            {
+                "value": "2660",
+                "key": "city",
+                "code": "POL000ZAB",
+                "label": "扎布热",
+                "label_en": "Zabrze"
+            },
+            {
+                "value": "2661",
+                "key": "city",
+                "code": "POL000ZAM",
+                "label": "扎莫希奇",
+                "label_en": "Zamosc"
+            },
+            {
+                "value": "10027",
+                "key": "city",
+                "code": "OTHER10027",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "98",
+        "key": "country",
+        "label": "匈牙利",
+        "label_en": "Hungary",
+        "code": "HUN",
+        "children": [
+            {
+                "value": "1478",
+                "key": "city",
+                "code": "HUN0000BA",
+                "label": "巴兰尼亚",
+                "label_en": "Baranya"
+            },
+            {
+                "value": "1479",
+                "key": "city",
+                "code": "HUN0000BE",
+                "label": "贝凯什",
+                "label_en": "Bekes"
+            },
+            {
+                "value": "1480",
+                "key": "city",
+                "code": "HUN0000BK",
+                "label": "巴奇-基什孔",
+                "label_en": "Bacs-Kiskun"
+            },
+            {
+                "value": "1481",
+                "key": "city",
+                "code": "HUN0000BU",
+                "label": "布达佩斯",
+                "label_en": "Budapest"
+            },
+            {
+                "value": "1482",
+                "key": "city",
+                "code": "HUN0000BZ",
+                "label": "包尔绍德-奥包乌伊-曾普伦",
+                "label_en": "Borsod-Abauj-Zemplen"
+            },
+            {
+                "value": "1483",
+                "key": "city",
+                "code": "HUN0000CS",
+                "label": "琼格拉德",
+                "label_en": "Csongrad"
+            },
+            {
+                "value": "1484",
+                "key": "city",
+                "code": "HUN0000FE",
+                "label": "费耶尔",
+                "label_en": "Fejer"
+            },
+            {
+                "value": "1485",
+                "key": "city",
+                "code": "HUN0000GS",
+                "label": "杰尔-莫松-肖普朗",
+                "label_en": "Gyor-Moson-Sopron"
+            },
+            {
+                "value": "1486",
+                "key": "city",
+                "code": "HUN0000HB",
+                "label": "豪伊杜-比豪尔",
+                "label_en": "Hajdu-Bihar"
+            },
+            {
+                "value": "1487",
+                "key": "city",
+                "code": "HUN0000HE",
+                "label": "赫维什",
+                "label_en": "Heves"
+            },
+            {
+                "value": "1488",
+                "key": "city",
+                "code": "HUN0000JN",
+                "label": "加兹-纳杰孔-索尔诺克",
+                "label_en": "Jasz-Nagykun-Szolnok"
+            },
+            {
+                "value": "1489",
+                "key": "city",
+                "code": "HUN0000KE",
+                "label": "科马罗姆",
+                "label_en": "Komarom-Esztergom"
+            },
+            {
+                "value": "1490",
+                "key": "city",
+                "code": "HUN0000NO",
+                "label": "诺格拉德",
+                "label_en": "Nograd"
+            },
+            {
+                "value": "1491",
+                "key": "city",
+                "code": "HUN0000PE",
+                "label": "佩斯",
+                "label_en": "Pest"
+            },
+            {
+                "value": "1492",
+                "key": "city",
+                "code": "HUN0000SO",
+                "label": "绍莫吉",
+                "label_en": "Somogy"
+            },
+            {
+                "value": "1493",
+                "key": "city",
+                "code": "HUN0000SZ",
+                "label": "索博尔奇-索特马尔-贝拉格",
+                "label_en": "Szabolcs-Szatmar-Bereg"
+            },
+            {
+                "value": "1494",
+                "key": "city",
+                "code": "HUN0000TO",
+                "label": "托尔瑙",
+                "label_en": "Tolna"
+            },
+            {
+                "value": "1495",
+                "key": "city",
+                "code": "HUN0000VA",
+                "label": "沃什",
+                "label_en": "Vas"
+            },
+            {
+                "value": "1496",
+                "key": "city",
+                "code": "HUN0000VE",
+                "label": "维斯普雷姆",
+                "label_en": "Veszprem"
+            },
+            {
+                "value": "1497",
+                "key": "city",
+                "code": "HUN0000ZA",
+                "label": "佐洛",
+                "label_en": "Zala"
+            },
+            {
+                "value": "10028",
+                "key": "city",
+                "code": "OTHER10028",
+                "label": "其他",
+                "label_en": "Others"
+            }
+        ]
+    },
+    {
+        "value": "10000",
+        "key": "country",
+        "label": "其它",
+        "label_en": "Others",
+        "code": "OTHER",
+        "children": []
+    }
+]

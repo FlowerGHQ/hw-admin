@@ -59,6 +59,7 @@
                   :options="CRM_ORDER_SOURCE_TYPE"
                   :placeholder="$t('def.select')"
                   @change="onCascaderChange"
+                  :field-names="fieldNames"
               />
             </div>
           </a-col>
@@ -450,7 +451,6 @@ import addressCascader from "@/components/common/AddressCascader.vue";
 import { take } from "lodash";
 const modules = import.meta.globEager("../../assets/images/car/*");
 import axios from 'axios';
-
 export default {
   name: "OrderList",
   components: {
@@ -558,6 +558,7 @@ export default {
         county: "",
       }, // 地址选择
       areaOptions: [], // 区域列表
+      fieldNames: {}, // 自定义级联选择器字段
     };
   },
   watch: {
@@ -585,6 +586,18 @@ export default {
           this.pageSize = 20;
         }
       },
+    },
+    '$i18n.locale': {
+        deep: true,
+        immediate: true,
+        handler(n) {
+            console.log('$i18n.locale', n)
+            let fieldNames = { label: 'label_en', value: 'value', children: 'children', }
+            switch (n) {
+                case 'zh': fieldNames.label = 'label'; break;
+            }
+            this.fieldNames = fieldNames
+        }
     },
   },
   computed: {
