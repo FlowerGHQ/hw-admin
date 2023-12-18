@@ -118,7 +118,7 @@
                                     </span>
                                 </template>
                                 <template v-for="i of item.children">
-                                    <template 
+                                    <template
                                         v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
                                         /*判断子children meta.admin_module admin中四大模块*/"
                                     >
@@ -214,7 +214,7 @@ export default {
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
                 let newShowList = []                
-                SIDER.ADMIN.forEach(item => {       
+                SIDER.ADMIN.forEach(item => {
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
@@ -258,11 +258,11 @@ export default {
                 let path = n.path.split('/').slice(1)
                 
                 if (n.meta.parent) {
-                    this.selectedKeys = [n.meta.parent]
+                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)]
                 } else if (not_sub_menu) {
-                    this.selectedKeys = ['/' + path[0]]
+                    this.selectedKeys = [this.getPathNoQuery('/' + path[0])]
                 } else {
-                    this.selectedKeys = [n.fullPath]  // 例如 '/distributor/purchase-order-list'
+                    this.selectedKeys = [this.getPathNoQuery(n.fullPath)]  // 例如 '/distributor/purchase-order-list'
                 }
 
                 this.openKeys = [`/${path[0]}`]
@@ -404,17 +404,35 @@ export default {
             Core.Data.setTabPosition(this.tabPosition)
             console.log("tabPosition", this.tabPosition)
 
-            if (this.tabPosition === this.ROUTER_TYPE.CRM) {
-                this.$router.replace('/crm-dashboard');
-            } else {
-                if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                    this.$router.replace({ path: '/dashboard', query: { from: 'login' } })
-                } else {
-                    this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
-                }
+            switch (this.tabPosition) {
+                case this.ROUTER_TYPE.SALES:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor', query: { from: 'login' } })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
+                    }
+                    break;
+                case this.ROUTER_TYPE.AFTER:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.PRODUCTION:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/entity' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.CRM:
+                    this.$router.replace('/crm-dashboard');
+                    break;
+
+                default:
+                    break;
             }
-
-
         },
 
         // 监听窗口变化
@@ -437,6 +455,10 @@ export default {
             const Arr = arr || []
             const result = Arr.includes(value)
             return result  // true为显示 false 为不显示
+        },
+        // 获取无参数路径
+        getPathNoQuery(path) {
+            return path.split('?')[0]
         }
     }
 };
