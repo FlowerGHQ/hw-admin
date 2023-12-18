@@ -245,7 +245,6 @@ watch(
         color: #1d2129;
         font-family: PingFang SC;
         font-size: 16px;
-        font-weight: 600;
         margin-bottom: 10px;
     }
     .table-title {
