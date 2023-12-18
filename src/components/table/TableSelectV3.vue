@@ -129,9 +129,12 @@ watch(
 watch(
     () => props.defaultChecked,
     (newValue, oldValue) => {
-        // emits("update:dataSource", newValue)
         selectedRowKeys.value = Core.Util.deepCopy(newValue)
-    }   
+
+    },{
+        deep:true,
+        immediate:true
+    } 
 )
 
 const onSelectChange = changableRowKeys => {
