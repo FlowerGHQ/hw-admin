@@ -254,11 +254,11 @@ export default {
                 let path = n.path.split('/').slice(1)
                 
                 if (n.meta.parent) {
-                    this.selectedKeys = [n.meta.parent]
+                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)]
                 } else if (not_sub_menu) {
-                    this.selectedKeys = ['/' + path[0]]
+                    this.selectedKeys = [this.getPathNoQuery('/' + path[0])]
                 } else {
-                    this.selectedKeys = [n.fullPath]  // 例如 '/distributor/purchase-order-list'
+                    this.selectedKeys = [this.getPathNoQuery(n.fullPath)]  // 例如 '/distributor/purchase-order-list'
                 }
 
                 this.openKeys = [`/${path[0]}`]
@@ -400,17 +400,35 @@ export default {
             Core.Data.setTabPosition(this.tabPosition)
             console.log("tabPosition", this.tabPosition)
 
-            if (this.tabPosition === this.ROUTER_TYPE.CRM) {
-                this.$router.replace('/crm-dashboard');
-            } else {
-                if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                    this.$router.replace({ path: '/dashboard', query: { from: 'login' } })
-                } else {
-                    this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
-                }
+            switch (this.tabPosition) {
+                case this.ROUTER_TYPE.SALES:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor', query: { from: 'login' } })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
+                    }
+                    break;
+                case this.ROUTER_TYPE.AFTER:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.PRODUCTION:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/entity' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.CRM:
+                    this.$router.replace('/crm-dashboard');
+                    break;
+            
+                default:
+                    break;
             }
-
-
         },
 
         // 监听窗口变化
@@ -425,6 +443,10 @@ export default {
             this.tabPosition = tabPosition
             this.selectedKeys = selectedKeys
             Core.Data.setTabPosition(this.tabPosition)
+        },
+        // 获取无参数路径
+        getPathNoQuery(path) {
+            return path.split('?')[0]
         }
     }
 };

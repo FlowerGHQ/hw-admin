@@ -1,5 +1,6 @@
 import Const from "../core/const"
 import Util from "../core/utils"
+import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
 
@@ -7,7 +8,26 @@ const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
+const NOW_LOGIN_TYPE = Data.getLoginType()
+let indexPath = ''
+switch (NOW_LOGIN_TYPE) {
+    case LOGIN_TYPE.ADMIN:
+        indexPath = '/distributor'
+        break;
+    case LOGIN_TYPE.DISTRIBUTOR:
+        indexPath = '/dashboard/index'
+        break;
+    case LOGIN_TYPE.AGENT:
+        indexPath = '/dashboard/index'
+        break;
+    case LOGIN_TYPE.STORE:
+        indexPath = '/dashboard/index'
+        break;
 
+    default:
+        break;
+}
+console.log(indexPath)
 /** 
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限
 * @params roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
@@ -20,10 +40,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
-        meta: {
-            hidden: true
-        }
+        redirect: indexPath,
     },
     { // 飞书跳转
         path: '/login-redirect',
@@ -51,7 +68,8 @@ const routes = [
         meta: {
             title: '数据看板',
             title_en: 'Data Board',
-            icon: 'i_s_dashboard',            
+            icon: 'i_s_dashboard', 
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],  
         },
         children: [
             {
@@ -71,6 +89,7 @@ const routes = [
                 meta: {
                     title: '时效看板',
                     title_en: 'RTDB',
+                    hidden: true
                 },
             },
 
@@ -547,7 +566,7 @@ const routes = [
     { // 实例管理
         path: '/entity',
         component: Layout,
-        redirect: '/entity/entity-list',
+        redirect: '/entity/vehicle-list',
         name: 'EntityManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
@@ -1668,7 +1687,7 @@ const routes = [
     { // 数据
         path: '/crm-dashboard',
         component: Layout,
-        redirect: '/crm-dashboard/dashboard',
+        redirect: '/crm-dashboard/vote-dashboard',
         name: 'crm-dashboard',
         type: [ROUTER_TYPE.CRM],
         meta: {
@@ -1683,6 +1702,7 @@ const routes = [
 				name: 'CrmDashboard',
 				component: () => import('@/views/crm-dashboard/dashboard.vue'),
 				meta: {
+                    hidden: true,
 					title: '数据看板',
 					title_en: 'Dashboard',
 					auth: ["crm-label.list"],
