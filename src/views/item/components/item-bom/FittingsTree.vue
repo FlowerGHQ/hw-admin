@@ -708,7 +708,6 @@ onMounted(() => {
                         }
                         .group {
                             width: 32px;
-                            height: 32px;
                             margin-left: 10px;
                             img {
                                 width: 32px;
