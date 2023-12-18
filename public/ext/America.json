@@ -1,0 +1,373 @@
+[
+    {
+        "value": "4001",
+        "key": "province",
+        "code": "",
+        "label": "阿肯色",
+        "label_en": "Arkansas"
+    },
+    {
+        "value": "4002",
+        "key": "province",
+        "code": "",
+        "label": "阿拉巴马",
+        "label_en": "Alabama"
+    },
+    {
+        "value": "4003",
+        "key": "province",
+        "code": "",
+        "label": "亚利桑那",
+        "label_en": "Arizona"
+    },
+    {
+        "value": "4004",
+        "key": "province",
+        "code": "",
+        "label": "阿拉斯加",
+        "label_en": "Alaska"
+    },
+    {
+        "value": "4005",
+        "key": "province",
+        "code": "",
+        "label": "康涅狄格",
+        "label_en": "Connecticut"
+    },
+    {
+        "value": "4006",
+        "key": "province",
+        "code": "",
+        "label": "加利福尼亚",
+        "label_en": "California"
+    },
+    {
+        "value": "4007",
+        "key": "province",
+        "code": "",
+        "label": "科罗拉多",
+        "label_en": "Colorado"
+    },
+    {
+        "value": "4008",
+        "key": "province",
+        "code": "",
+        "label": "哥伦比亚",
+        "label_en": "District of Columbia"
+    },
+    {
+        "value": "4009",
+        "key": "province",
+        "code": "",
+        "label": "特拉华州",
+        "label_en": "Delaware"
+    },
+    {
+        "value": "4010",
+        "key": "province",
+        "code": "",
+        "label": "弗罗里达",
+        "label_en": "Florvaluea"
+    },
+    {
+        "value": "4011",
+        "key": "province",
+        "code": "",
+        "label": "格鲁吉亚",
+        "label_en": "Georgia"
+    },
+    {
+        "value": "4012",
+        "key": "province",
+        "code": "",
+        "label": "关岛",
+        "label_en": "Guam"
+    },
+    {
+        "value": "4013",
+        "key": "province",
+        "code": "",
+        "label": "夏威夷",
+        "label_en": "Hawaii"
+    },
+    {
+        "value": "4014",
+        "key": "province",
+        "code": "",
+        "label": "爱荷华",
+        "label_en": "Iowa"
+    },
+    {
+        "value": "4015",
+        "key": "province",
+        "code": "",
+        "label": "伊利诺斯",
+        "label_en": "Illinois"
+    },
+    {
+        "value": "4016",
+        "key": "province",
+        "code": "",
+        "label": "印第安纳",
+        "label_en": "Indiana"
+    },
+    {
+        "value": "4017",
+        "key": "province",
+        "code": "",
+        "label": "爱达荷",
+        "label_en": "valueaho"
+    },
+    {
+        "value": "4018",
+        "key": "province",
+        "code": "",
+        "label": "堪萨斯",
+        "label_en": "Kansas"
+    },
+    {
+        "value": "4019",
+        "key": "province",
+        "code": "",
+        "label": "肯塔基",
+        "label_en": "Kentucky"
+    },
+    {
+        "value": "4020",
+        "key": "province",
+        "code": "",
+        "label": "路易斯安那",
+        "label_en": "Louisiana"
+    },
+    {
+        "value": "4021",
+        "key": "province",
+        "code": "",
+        "label": "马里兰",
+        "label_en": "Maryland"
+    },
+    {
+        "value": "4022",
+        "key": "province",
+        "code": "",
+        "label": "密苏里",
+        "label_en": "Missour"
+    },
+    {
+        "value": "4023",
+        "key": "province",
+        "code": "",
+        "label": "密西西比",
+        "label_en": "Mississippi"
+    },
+    {
+        "value": "4024",
+        "key": "province",
+        "code": "",
+        "label": "缅因",
+        "label_en": "Maine"
+    },
+    {
+        "value": "4025",
+        "key": "province",
+        "code": "",
+        "label": "密西根",
+        "label_en": "Michigan"
+    },
+    {
+        "value": "4026",
+        "key": "province",
+        "code": "",
+        "label": "明尼苏达",
+        "label_en": "Minnesota"
+    },
+    {
+        "value": "4027",
+        "key": "province",
+        "code": "",
+        "label": "蒙大拿",
+        "label_en": "Montana"
+    },
+    {
+        "value": "4028",
+        "key": "province",
+        "code": "",
+        "label": "马萨诸塞",
+        "label_en": "Massachusetts"
+    },
+    {
+        "value": "4029",
+        "key": "province",
+        "code": "",
+        "label": "北卡罗来纳",
+        "label_en": "North Carolina"
+    },
+    {
+        "value": "4030",
+        "key": "province",
+        "code": "",
+        "label": "内布拉斯加",
+        "label_en": "Nebraska"
+    },
+    {
+        "value": "4031",
+        "key": "province",
+        "code": "",
+        "label": "新罕布什尔",
+        "label_en": "New Hampshire"
+    },
+    {
+        "value": "4032",
+        "key": "province",
+        "code": "",
+        "label": "新泽西",
+        "label_en": "New Jersey"
+    },
+    {
+        "value": "4033",
+        "key": "province",
+        "code": "",
+        "label": "纽约",
+        "label_en": "New York"
+    },
+    {
+        "value": "4034",
+        "key": "province",
+        "code": "",
+        "label": "新墨西哥",
+        "label_en": "New Mexico"
+    },
+    {
+        "value": "4035",
+        "key": "province",
+        "code": "",
+        "label": "内华达",
+        "label_en": "Nevada"
+    },
+    {
+        "value": "4036",
+        "key": "province",
+        "code": "",
+        "label": "北达科他",
+        "label_en": "North Dakota"
+    },
+    {
+        "value": "4037",
+        "key": "province",
+        "code": "",
+        "label": "俄克拉荷马",
+        "label_en": "Oklahoma"
+    },
+    {
+        "value": "4038",
+        "key": "province",
+        "code": "",
+        "label": "俄亥俄",
+        "label_en": "Ohio"
+    },
+    {
+        "value": "4039",
+        "key": "province",
+        "code": "",
+        "label": "俄勒冈",
+        "label_en": "Oregon"
+    },
+    {
+        "value": "4040",
+        "key": "province",
+        "code": "",
+        "label": "波多黎各",
+        "label_en": "Puerto Rico"
+    },
+    {
+        "value": "4041",
+        "key": "province",
+        "code": "",
+        "label": "宾夕法尼亚",
+        "label_en": "Pennsylvania"
+    },
+    {
+        "value": "4042",
+        "key": "province",
+        "code": "",
+        "label": "罗德岛",
+        "label_en": "Rhode Island"
+    },
+    {
+        "value": "4043",
+        "key": "province",
+        "code": "",
+        "label": "南卡罗来纳",
+        "label_en": "South Carolina"
+    },
+    {
+        "value": "4044",
+        "key": "province",
+        "code": "",
+        "label": "南达科他",
+        "label_en": "South Dakota"
+    },
+    {
+        "value": "4045",
+        "key": "province",
+        "code": "",
+        "label": "田纳西",
+        "label_en": "Tennessee"
+    },
+    {
+        "value": "4046",
+        "key": "province",
+        "code": "",
+        "label": "得克萨斯",
+        "label_en": "Texas"
+    },
+    {
+        "value": "4047",
+        "key": "province",
+        "code": "",
+        "label": "犹他",
+        "label_en": "Utah"
+    },
+    {
+        "value": "4048",
+        "key": "province",
+        "code": "",
+        "label": "佛蒙特",
+        "label_en": "Vermont"
+    },
+    {
+        "value": "4049",
+        "key": "province",
+        "code": "",
+        "label": "维吉尼亚",
+        "label_en": "Virginia"
+    },
+    {
+        "value": "4050",
+        "key": "province",
+        "code": "",
+        "label": "西维吉尼亚",
+        "label_en": "West Virginia"
+    },
+    {
+        "value": "4051",
+        "key": "province",
+        "code": "",
+        "label": "威斯康星",
+        "label_en": "Wisconsin"
+    },
+    {
+        "value": "4052",
+        "key": "province",
+        "code": "",
+        "label": "华盛顿",
+        "label_en": "Washington"
+    },
+    {
+        "value": "4053",
+        "key": "province",
+        "code": "",
+        "label": "怀俄明",
+        "label_en": "Wyoming"
+    }
+]

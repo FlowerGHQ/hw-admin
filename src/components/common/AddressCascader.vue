@@ -22,6 +22,7 @@ export default {
     props: {
         defArea: Object,
         value: Object,
+        areaType: String,
     },
     emits: ['select', 'update:value'],
     data() {
@@ -56,6 +57,13 @@ export default {
                     this.selectCode = selectCode.filter(item => item)
                 }
             }
+        },
+        areaType: {
+            deep: true,
+            immediate: true,
+            handler(n) {
+                this.getCountryOptions();
+            }
         }
     },
     computed: {},
@@ -66,7 +74,17 @@ export default {
     methods: {
         // 获取 地址选择列表
         getCountryOptions() {
-            axios.get('/ext/address-cascader.json').then(response => {
+            let data = 'address-cascader'
+            if(this.areaType === 'us') {
+                data = 'AmericaCity'
+            }
+            if(this.areaType === 'eur') {
+                data = 'EuropeCity'
+            }
+            if(!this.areaType) {
+                data = 'address-cascader'
+            }
+            axios.get(`/ext/${data}.json`).then(response => {
                 this.countryOptions = response.data;
                 for (let i = 0; i < this.countryOptions.length; i++) {
                     const element = this.countryOptions[i];
