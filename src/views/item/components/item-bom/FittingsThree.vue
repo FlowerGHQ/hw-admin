@@ -111,18 +111,10 @@
 									{{item.index || 0}}
                                     <div class="component" @mousedown.stop="">
                                         <div class="component-contain">
-                                            <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
-                                            <div class="contain-name">
-                                                <i class="icon i_skew-bg" />
-                                                <span class="icon-name">{{ $t('n.name') }}</span>
-                                                {{ (item.item || {}).name }}
-                                            </div>
-                                            <div class="contain-type">
-                                                <div class="type-left">
-                                                    {{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}
-                                                </div>
-                                                <div class="edit-btn">{{ $t('def.edit') }}</div>
-                                            </div>
+                                            <div class="contain-name">                                                
+                                                <span class="icon-name">{{ $t('item-bom.product_name') }}:</span>
+                                                {{ item.sync_name || '-' }}
+                                            </div>                                           
                                         </div>
                                     </div>
 								</div>
@@ -488,7 +480,7 @@ onUnmounted(() => {
     isSearch.value = false
 })
 /* Fetch start*/
-// 获取表格list
+// 获取表格list(依靠爆炸图数据在执行这里)
 const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
@@ -513,9 +505,17 @@ const getTableDataFetch = (parmas = {}) => {
                 tableData.value.forEach($2 => {
                     if (Number($1.target_id) === Number($2.id)) {
                         $2.index = $1.index
+                        $1['sync_name'] = $2.sync_name
+
+                        // 给pointerList回显数据
+                        pointerList.value.find(el => el.target_id === $1.target_id).sync_name = $2.sync_name
                     }
                 })
             });
+
+            // 为了回显名称数据
+           console.log("输出", addTagItem.value.item_component_set_list[0]?.item_component_list);
+            
         })
         .catch((err) => {
             console.log("getTableDataFetchError", err);
@@ -646,6 +646,7 @@ const onOperation = (type, record) => {
                 item.end_point = JSON.stringify(item.end)
                 item.start_point = JSON.stringify(item.start)
                 // 删除字段
+                Reflect.deleteProperty(item, 'sync_name');
                 Reflect.deleteProperty(item, 'end');
                 Reflect.deleteProperty(item, 'start');
             })
@@ -660,19 +661,21 @@ const onOperation = (type, record) => {
 
         break;
         case 'blur':
-            // console.log("失去焦点", record);
-            // console.log("爆炸图数据", explosionImgItem.value);
+            console.log("失去焦点", record);
+            console.log("addPointItem", addTagItem.value);
+            console.log("爆炸图数据", explosionImgItem.value);
             
             addTagItem.value.item_component_set_list = [{
                 ...explosionImgItem.value,
             }]
 
             const data = addTagItem.value.item_component_set_list[0]?.item_component_list
-
+            
             // 找到添加是否是对应的数据不是push是删除了在push
             const findIndex = data.findIndex(el => el.target_id == record.id)            
                                     
             let addPointItem = {
+                sync_name: record.sync_name,
                 index: record.index,
                 set_id: explosionImgItem.value.id, // 爆炸图id
                 target_id: record.id, // 配件id
@@ -685,7 +688,7 @@ const onOperation = (type, record) => {
             } else {
                 data.push(addPointItem)
             }
-            console.log("失去焦点结果", addTagItem.value);
+            console.log("失去焦点结果", data);
                   
             pointerList.value = data
             initLine(pointerList.value)
@@ -888,24 +891,22 @@ const handleTableChange = (pagination, filters, sorter) => {
 							color: #fff;
 
                             .component {
+                                display: none;
                                 position: relative;
-                                display: inline-block;
-                                width: 150px;
-                                height: 100px;
-                                text-align: left;
+                                top: 2px;
+
                                 .component-contain {
                                     position: absolute;
                                     display: flex;
                                     flex-wrap: wrap;
-                                    z-index: 2;
-                                    padding-bottom: 12px;
+                                    padding: 5px 0;                                    
                                     top: 4px;
                                     left: -26px;
-                                    width: 250px;
                                     border-radius: 2px;
                                     background-color: @BG_LP;
                                     border: 1px solid @BG_LP;
                                     font-size: 0;
+
                                     &:before, &:after {
                                         content: "";
                                         display: block;
@@ -917,24 +918,7 @@ const handleTableChange = (pagination, filters, sorter) => {
                                         border-color: transparent transparent @BG_LP  transparent;
                                         font-size: 0;
                                         line-height: 0;
-                                    }
-                                    &:after {
-                                        top: -9px;
-                                        left: 30px;
-                                        border-color: transparent transparent @BG_LP transparent;
-                                    }
-                                    .contain-header {
-                                        padding-top: 4px;
-                                        padding-right: 6px;
-                                        width: 100%;
-                                        height: 16px;
-                                        text-align: right;
-                                        .i_close {
-                                            float: right;
-                                            color: @TC_L;
-                                            font-size: 12px;
-                                        }
-                                    }
+                                    }                                    
                                     .contain-name {
                                         position: relative;
                                         padding: 0 16px;
@@ -946,51 +930,21 @@ const handleTableChange = (pagination, filters, sorter) => {
                                         text-align: left;
                                         overflow: hidden; //超出的文本隐藏
                                         text-overflow: ellipsis; //溢出用省略号显示
-                                        white-space: nowrap;
-                                        .i_skew-bg {
-                                            font-size: 16px;
-                                            color: @TC_L;
-                                        }
+                                        white-space: nowrap;                           
                                         .icon-name {
-                                            position: absolute;
-                                            top: 0;
-                                            left: 16px;
-                                            font-style: italic;
-                                            font-size: 12px;
-                                            font-weight: bold;
-                                            color: @TC_LP;
-                                            transform-origin: 50% 50%;
-                                            transform: scale(0.9, 0.9);
+                                            color: #FFF;                                            
+                                            font-size: 14px;
+                                            font-weight: 500;
                                         }
-                                    }
-                                    .contain-type {
-                                        display: flex;
-                                        margin-top: 22px;
-                                        padding: 0 16px;
-                                        width: 100%;
-                                    }
-                                    .type-left {
-                                        padding-right: 6px;
-                                        width: calc(100% - 48px);
-                                        color: @TC_L;
-                                        font-size: 16px;
-                                        overflow: hidden; //超出的文本隐藏
-                                        text-overflow: ellipsis; //溢出用省略号显示
-                                        white-space: nowrap;
-                                    }
-                                    .edit-btn {
-                                        width: 48px;
-                                        height: 34px;
-                                        line-height: 34px;
-                                        border-radius: 2px;
-                                        font-size: 14px;
-                                        text-align: center;
-                                        color: @BG_LP;
-                                        background-color: @BG_panel;
-                                        border: 1px solid @BG_LP;
                                     }
                                 }
                             }
+
+                            &:hover {
+                                .component {
+                                    display: block;
+                                }
+							}
 						}
 					}
 				}
