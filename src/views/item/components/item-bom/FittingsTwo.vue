@@ -72,12 +72,12 @@
                     </span>
                     <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title><!-- {{ getSalesAreaStr(text) || '-' }} --></template>
+                            <template #title>{{ $Util.getSalesAreaStr(text,lang) || '-' }}</template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                <!-- {{ getSalesAreaStr(text) || '-' }} -->
+                                {{ $Util.getSalesAreaStr(text,lang) || '-' }}
                             </div>
                         </a-tooltip>
                     </span>           
@@ -185,8 +185,8 @@ const changeTableColumn = computed(()=>{
     return arr;
 })
 
-const lang = computed(()=>{
-    return proxy.$store.state.lang==='zh'?'country':'country_en'
+const lang = computed(()=>{ // ==='zh'?'country':'country_en'
+    return proxy.$store.state.lang
 })
 const tableColumns = computed(() => {
     const result = [
@@ -223,7 +223,7 @@ const tableColumns = computed(() => {
         { 
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "sync_time", 
+            dataIndex: "effective_time", 
             key: "sync_time"
         },
         {
@@ -251,14 +251,14 @@ const expandOrSollapse = () => {
     isShow.value = !isShow.value;
 }
 
-const getSalesAreaStr = (arr) => {
+/* const getSalesAreaStr = (arr) => {
     let str = '';
     if(!(arr instanceof Array)) return '-'
     arr?.forEach((item)=>{
         str += (str?',':'')+item[lang.value]
     })
     return str || '-'
-}
+} */
 
 // 设变数字对象
 const objCount = reactive({

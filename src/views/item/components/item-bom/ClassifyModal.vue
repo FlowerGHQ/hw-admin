@@ -228,7 +228,7 @@ const tableColumns = computed(() => {
         { 
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "sync_time", 
+            dataIndex: "effective_time", 
             key: "sync_time"
         },
         /* {
