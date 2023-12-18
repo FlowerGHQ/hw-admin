@@ -4,7 +4,8 @@ import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
 import constModules from './modules/const/index'
-
+import EuropeData from '../../public/ext/Europe.json'
+import AmericaData from '../../public/ext/America.json'
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
 let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
@@ -1799,29 +1800,35 @@ let Const = {
             '200': { value: 200,  text: '美国' },
         },
         CRM_ORDER_SOURCE_TYPE: [ // 级联订单来源
-            { value: 1, label: '微信小程序' },
-            { value: 2, label: 'CRM' },
-            { value: 3, label: 'shopify' },
+            { value: 1, label: '微信小程序', label_en: 'WeChat Mini Program' },
+            { value: 2, label: 'CRM', label_en: 'CRM' },
+            { value: 3, label: 'shopify', label_en: 'Shopify' },
             {
                 value: 4,
                 label: '国外官网',
+                label_en: 'Official Website For Overseas Markets',
                 children: [
                     // 100 欧洲 200 美国
                     {
                         value: 0,
-                        label: "全部"
+                        label: "全部",
+                        label_en: 'All',
                     },
                     {
                         value: 100,
-                        label: "欧洲"
+                        label: "欧洲",
+                        label_en: 'Europe',
+                        children: EuropeData,
                     },
                     {
                         value: 200,
-                        label: "美国"
+                        label: "美国",
+                        label_en: 'United States',
+                        children: AmericaData,
                     },
                 ]
             },
-            { value: 5, label: '飞书小程序' },
+            { value: 5, label: '飞书小程序', label_en: 'Feishu Mini Program' },
         ],
         // 支付方式
         PAYMENT_TYPE: {
