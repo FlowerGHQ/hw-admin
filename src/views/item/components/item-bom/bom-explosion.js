@@ -1,5 +1,6 @@
 import { computed, ref } from "vue";
 var ctx = null; // canvas 2d实例
+var exploreImgInit = false
 
 const exploreCanvas = ref(null); // canvas ref
 const exploreImg = ref(null); // 照片 ref 之所以不直接画在canvas中是为了后面移动要清除整个画布
@@ -63,12 +64,18 @@ const pointerListFilter = (arr) => {
 };
 // 初始化
 const init = (arr) => {
+    if (exploreImgInit) {
+        // 再次执行, onload不会在次执行所以执行这里的东西
+        initLine(arr)
+        return
+    }
     ctx = exploreCanvas.value.getContext("2d");
-        
+
     // 等图片加载完
     exploreImg.value.onload = () => {
         console.log("图片加载完成");
         setCanvasAttr(exploreImg.value.width, exploreImg.value.height);        
+        exploreImgInit = true
         initLine(arr)
     };
     exploreImg.value.onerror = () => {
@@ -163,10 +170,13 @@ const onSilderCopy = (item, index) => {
     const obj = item;
 
     item.start.forEach((el, i) => {
-        obj.start[i + 1] = {
-            x: obj.start[i].x + 20,
-            y: obj.start[i].y,
-        };
+        // 让新增的一条是上一条的增加数据
+        if ((i + 1) === item.start.length) {
+            obj.start[i + 1] = {
+                x: obj.start[i].x + 20,
+                y: obj.start[i].y + 10,
+            };
+        }
     });
     sidebarData.value.push(obj);
 
