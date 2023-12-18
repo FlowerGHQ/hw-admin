@@ -11,7 +11,9 @@
         </a-input-search>
         <div class="tree-select-main">
             <div class="tree-circle">
-                <a-spin :spinning="loading1" :delay="500">
+                <a-spin :spinning="loading1" :delay="500" 
+                    v-if="realData.length > 0"
+                >
                     <div
                         v-for="item in realData"
                         :key="generateId(item)"
@@ -55,6 +57,7 @@
                                                 handleEditName(item)
                                             " />
                                     </div>
+                                    
                                     <div
                                         class="title-right"
                                         v-if="item.flag_new">
@@ -207,6 +210,7 @@
                         </div>
                     </div>
                 </a-spin>
+                <a-empty  :description="$t('item-bom.description_empty')"  v-else class="empty"/>
             </div>
         </div>
     </div>
@@ -877,6 +881,17 @@ onMounted(() => {
                     }
                 }
             }
+        }
+        .empty{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+                :deep(.ant-empty-description){
+                    color: #8090A6 !important;
+                    font-size: 14px;
+                }
         }
     }
     .pointer {
