@@ -2805,9 +2805,9 @@ export default {
         }
         > .value {
             // width: calc(~'100% - 200px');
-            // max-width: calc(~"100% - 86px");
-            min-width: 1040px;
-            width: 1035px;
+            // min-width: calc(~"100% - 86px");
+            min-width: 1035px;
+            max-width: none;
             flex-shrink: 0;
             .value-price {
                 margin-right: 5px;

@@ -27,7 +27,6 @@ switch (NOW_LOGIN_TYPE) {
     default:
         break;
 }
-console.log(indexPath)
 /**
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限 整个模块
 * @params meta.roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
@@ -67,7 +66,7 @@ const routes = [
         name:'Dashboard',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
-            title: '数据看板',
+            title: '商城',
             title_en: 'Data Board',
             icon: 'i_s_dashboard',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],
@@ -134,7 +133,7 @@ const routes = [
     { // 分销管理 - 平台端
         path: '/distributor',
         component: Layout,
-        redirect: '/distributor/distributor-list',
+        redirect: '/distributor/purchase-order-list',
         name: 'DistributorManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
