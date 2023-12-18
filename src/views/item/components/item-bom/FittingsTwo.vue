@@ -64,7 +64,7 @@
                                 {{ text || '-' }}
                                 
                             <span
-                                class="new-version title-right">
+                                class="new-version title-right" v-if="record.flag_new === 1">
                                 {{ $t("item-bom.change") }}
                             </span>
                             </div>
@@ -91,8 +91,11 @@
                                 {{ text?.name }}
                             </div>
                         </a-tooltip>
-                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text">
+                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text && record.sync_id">
                             {{ $t('item-bom.classify') }}
+                        </span>
+                        <span v-else-if="!text?.name">
+                            -
                         </span>
                     </span>
                     <span v-else-if="column.key === 'sync_time'/*创建时间*/">
