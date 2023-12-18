@@ -265,7 +265,8 @@ const getChangeList = () => {
 const refresh = () => {
     
     getTableDataFetch()
-    if(flagNew.value === 1) getChangeList(),isShow.value = true;
+    getChangeList()
+    if(flagNew.value === 1) isShow.value = true;
     getChangeCount(); 
 }
 // 获取设变数值type
