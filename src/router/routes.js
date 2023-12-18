@@ -544,6 +544,7 @@ const routes = [
                     title: 'BOM管理',
                     title_en: 'BOM Management',
                     admin_module: [ROUTER_TYPE.AFTER],
+                    auth: ['aftermarket-bom.list']
                 }
             },
         ]
