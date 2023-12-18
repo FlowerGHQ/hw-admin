@@ -137,29 +137,7 @@ const props = defineProps({
         default: () => {}
     }
 })
-// 监听弹窗关闭-更改父组件prop弹窗显隐值
-watch(
-    () => props.activeObj,
-    (newValue, oldValue) => {
-        bomId.value = newValue?.version_id;
-        flagNew.value = newValue?.flag_new;
-        refresh()
-    },
-    { deep:true }  
-)
 
-watch(
-    () => props.searchParams,
-	(newVal) => {
-        
-        channelPagination.value.current = 1
-        channelPagination.value.pageSize = 20
-        getTableDataFetch()
-	},
-	{
-		deep: true,
-	}
-)
 const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
@@ -367,7 +345,31 @@ const handleTableChange = (pagination, filters, sorter) => {
 const toClassify = (sync_id) => {
     classifyShowModal(sync_id);
 }
+// 监听弹窗关闭-更改父组件prop弹窗显隐值
+watch(
+    () => props.activeObj,
+    (newValue, oldValue) => {
+        bomId.value = newValue?.version_id;
+        flagNew.value = newValue?.flag_new;
+        if(newValue && Object.keys(newValue)){
+            refresh();
+        }
+    },
+    { deep:true, immediate:true }  
+)
 
+watch(
+    () => props.searchParams,
+	(newVal) => {
+        
+        channelPagination.value.current = 1
+        channelPagination.value.pageSize = 20
+        getTableDataFetch()
+	},
+	{
+		deep: true,
+	}
+)
 defineExpose({
     refresh
 })
