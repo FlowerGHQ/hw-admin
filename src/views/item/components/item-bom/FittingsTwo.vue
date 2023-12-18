@@ -2,7 +2,7 @@
     <!-- code编码-二级页面 -->
     <div class="fittings-two">
         <!-- 设变 -->
-        <div class="change" @click="expandOrSollapse" v-if="flagNew === 1">
+        <div class="change" @click="expandOrSollapse">
             <div class="change-top">
                 <div class="left">
                     <img  class="left-img" src="@/assets/images/bom/frame.png" alt="">  
@@ -16,7 +16,7 @@
                 <img class="right" src="@/assets/images/bom/up.png" v-if="isShow" />
                 <img class="right" src="@/assets/images/bom/down.png" v-else />
             </div>
-            <div class="change-table" v-if="isShow && objCount.allNum">
+            <div class="change-table" v-if="isShow">
                 <table class="my-table">
                     <thead class="my-th">
                         <tr>
@@ -62,22 +62,22 @@
                                 :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
                             >
                                 {{ text || '-' }}
-                                <span
-                                    class="new-version title-right"
-                                    v-if="record.bom.flag_new && flagNew === 1">
-                                    {{ $t("item-bom.change") }}
-                                </span>
+                                
+                            <span
+                                class="new-version title-right" v-if="record.flag_new === 1">
+                                {{ $t("item-bom.change") }}
+                            </span>
                             </div>
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title><!-- {{ getSalesAreaStr(text) || '-' }} --></template>
+                            <template #title>{{ $Util.getSalesAreaStr( text, lang) || '-' }}</template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                <!-- {{ getSalesAreaStr(text) || '-' }} -->
+                                {{ $Util.getSalesAreaStr( text, lang) || '-' }}
                             </div>
                         </a-tooltip>
                     </span>           
@@ -91,8 +91,11 @@
                                 {{ text?.name }}
                             </div>
                         </a-tooltip>
-                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text">
+                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text && record.sync_id">
                             {{ $t('item-bom.classify') }}
+                        </span>
+                        <span v-else-if="!text?.name">
+                            -
                         </span>
                     </span>
                     <span v-else-if="column.key === 'sync_time'/*创建时间*/">
@@ -134,29 +137,7 @@ const props = defineProps({
         default: () => {}
     }
 })
-// 监听弹窗关闭-更改父组件prop弹窗显隐值
-watch(
-    () => props.activeObj,
-    (newValue, oldValue) => {
-        bomId.value = newValue?.version_id;
-        flagNew.value = newValue?.flag_new;
-        refresh()
-    },
-    { deep:true }  
-)
 
-watch(
-    () => props.searchParams,
-	(newVal) => {
-        
-        channelPagination.value.current = 1
-        channelPagination.value.pageSize = 20
-        getTableDataFetch()
-	},
-	{
-		deep: true,
-	}
-)
 const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
@@ -185,8 +166,8 @@ const changeTableColumn = computed(()=>{
     return arr;
 })
 
-const lang = computed(()=>{
-    return proxy.$store.state.lang==='zh'?'country':'country_en'
+const lang = computed(()=>{ // ==='zh'?'country':'country_en'
+    return proxy.$store.state.lang
 })
 const tableColumns = computed(() => {
     const result = [
@@ -194,7 +175,8 @@ const tableColumns = computed(() => {
             // 商品名称
             title: proxy.$t('item-bom.product_name'), 
             dataIndex: "sync_name", 
-            key: "sync_name"
+            key: "sync_name",
+            width:'160px'
         },
         { 
             // 商品编码
@@ -223,7 +205,7 @@ const tableColumns = computed(() => {
         { 
             // 创建时间
             title: proxy.$t('item-bom.create_time'), 
-            dataIndex: "sync_time", 
+            dataIndex: "effective_time", 
             key: "sync_time"
         },
         {
@@ -251,14 +233,14 @@ const expandOrSollapse = () => {
     isShow.value = !isShow.value;
 }
 
-const getSalesAreaStr = (arr) => {
+/* const getSalesAreaStr = (arr) => {
     let str = '';
     if(!(arr instanceof Array)) return '-'
     arr?.forEach((item)=>{
         str += (str?',':'')+item[lang.value]
     })
     return str || '-'
-}
+} */
 
 // 设变数字对象
 const objCount = reactive({
@@ -268,7 +250,6 @@ const objCount = reactive({
     allNum:0,
 })
 onMounted(() => {
-    refresh()
 })
 
 // 获取设变列表
@@ -284,8 +265,8 @@ const getChangeList = () => {
 const refresh = () => {
     
     getTableDataFetch()
-    if(flagNew.value === 1) getChangeList();
-    getChangeCount();
+    if(flagNew.value === 1) getChangeList(),isShow.value = true;
+    getChangeCount(); 
 }
 // 获取设变数值type
 const getChangeCount = () => {
@@ -294,6 +275,11 @@ const getChangeCount = () => {
         bom_id: bomId.value
     }).then(res=>{
         objCount.allNum = 0;
+        if(!res.type_list.length) {
+
+            Object.assign(objCount, { updateNum: 0, addNum: 0, deleteNum: 0, allNum:0, });
+            return;
+        }
         res.type_list.forEach(element => {
             if(element.type === 1){
                 objCount.addNum = element.amount;
@@ -359,7 +345,31 @@ const handleTableChange = (pagination, filters, sorter) => {
 const toClassify = (sync_id) => {
     classifyShowModal(sync_id);
 }
+// 监听弹窗关闭-更改父组件prop弹窗显隐值
+watch(
+    () => props.activeObj,
+    (newValue, oldValue) => {
+        bomId.value = newValue?.version_id;
+        flagNew.value = newValue?.flag_new;
+        if(newValue && Object.keys(newValue)){
+            refresh();
+        }
+    },
+    { deep:true, immediate:true }  
+)
 
+watch(
+    () => props.searchParams,
+	(newVal) => {
+        
+        channelPagination.value.current = 1
+        channelPagination.value.pageSize = 20
+        getTableDataFetch()
+	},
+	{
+		deep: true,
+	}
+)
 defineExpose({
     refresh
 })
@@ -463,5 +473,8 @@ defineExpose({
     background-color: rgba(38, 171, 84, 0.1);
     padding: 4px;
     border-radius: 0px 10px 10px 10px;
+    display: inline-block;
+    position: absolute;
+    right:  20px;
 }
 </style>
