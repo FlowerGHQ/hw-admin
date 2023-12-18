@@ -179,7 +179,9 @@
                 ref="addressRef"
                 v-model:value="areaMap"
                 :def-area="showArea"
-                @select="addressSelect" />
+                :areaType="areaType"
+                @select="addressSelect"
+                />
             </div>
           </a-col>
           <a-col
@@ -559,6 +561,7 @@ export default {
       }, // 地址选择
       areaOptions: [], // 区域列表
       fieldNames: {}, // 自定义级联选择器字段
+      areaType: '',
     };
   },
   watch: {
@@ -972,6 +975,8 @@ export default {
     },
 
     handleSearchReset() {
+      this.areaType = 0
+      this.cascaderValue = 0
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearchOrder?.handleReset();
@@ -1171,11 +1176,27 @@ export default {
           if(value[0] === 4) {
             this.searchForm.source_type = 4
             this.searchForm.channel_country = value[1]
+            if(this.searchForm.channel_country === 100) {
+              this.areaType = 'eur'
+            }
+            if(this.searchForm.channel_country === 200) {
+              this.areaType = 'us'
+            }
+            if(!this.searchForm.channel_country) {
+              this.areaType = ''
+            }
           } else {
             this.searchForm.source_type = value[0]
             this.searchForm.channel_country = undefined
           }
+          if(value.length === 3) {
+            this.searchForm.to_country = selectedOptions[2].label_en
+          }
+          if(!this.searchForm.channel_country) {
+            this.searchForm.to_country = ''
+          }
         } else {
+          this.searchForm.to_country = undefined
           this.searchForm.source_type = undefined
           this.searchForm.channel_country = undefined
         }
