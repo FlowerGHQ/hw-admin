@@ -1311,7 +1311,7 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
+        <a-modal :maskClosable="false" destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
                     <div class="config-item-title" :style="{ color: uniqueArr.indexOf(i) !== -1 ? 'red' : '' }">
@@ -1367,8 +1367,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="add-config-btn" @click="addConfig">
-                    {{ $t("i.addition") }}{{ $t("i.value") }}
+                <div class="fix-bottom">
+                    <div class="add-config-btn" @click="addConfig">
+                        {{ $t("i.addition") }}{{ $t("i.value") }}
+                    </div>
                 </div>
             </div>
         </a-modal>
@@ -2557,7 +2559,7 @@ export default {
                         value: value,
                         value_en: value_en,
                     };
-                    Core.Api.AttrDef.save(_item);
+                    // Core.Api.AttrDef.save(_item);
                 }
             };
             if (
@@ -2727,7 +2729,16 @@ export default {
         addConfig() {
             let item = Core.Util.deepCopy({ key: "", zh: "", en: "", validate: false });
             this.specific.list[this.configIndex].option.push(item);
+            this.$nextTick(() => {
+                this.configScroll()
+            })
         },
+        // 滚动到底部
+        configScroll() {
+            const dom = document.querySelector('.config-list')
+            const scrollHeight = dom.scrollHeight
+            dom.scrollTo(0, scrollHeight)
+        }
     },
 };
 </script>
@@ -2795,7 +2806,7 @@ export default {
         > .value {
             // width: calc(~'100% - 200px');
             // max-width: calc(~"100% - 86px");
-            min-width: 1035px;
+            min-width: 1040px;
             width: 1035px;
             flex-shrink: 0;
             .value-price {
@@ -3135,6 +3146,9 @@ export default {
     align-items: initial;
 }
 .config-list {
+    padding: 24px;
+    height: 60vh;
+    overflow-y: auto;
     .config-item {
         margin-bottom: 16px;
         &:nth-last-child(2) {
@@ -3172,27 +3186,28 @@ export default {
             }
         }
     }
-    .add-config-btn {
-        color: #0061FF;
-        border-radius: 4px;
-        border: 1px dashed #0061FF;
-        padding: 6px 10px;
-        font-size: 14px;
-        width: 100%;
-        text-align: center;
-        cursor: pointer;
-        &:hover {
-            opacity: 0.85;
+    .fix-bottom {
+        padding: 16px 0;
+        position: sticky;
+        bottom: -24px;
+        background-color: #FFF;
+        .add-config-btn {
+            color: #0061FF;
+            border-radius: 4px;
+            border: 1px dashed #0061FF;
+            padding: 6px 10px;
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            &:hover {
+                opacity: 0.85;
+            }
         }
     }
 }
 .i_delete {
     color: #0061FF;
-}
-.config-modal {
-    .ant-modal-footer {
-        text-align: center;
-    }
 }
 .popover {
   min-width: 344px;
@@ -3284,6 +3299,16 @@ export default {
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
         border-color: #EAECF2;
+    }
+}
+</style>
+<style lang="less">
+.config-modal {
+    .ant-modal-body {
+        padding: 0;
+    }
+    .ant-modal-footer {
+        text-align: center;
     }
 }
 </style>
