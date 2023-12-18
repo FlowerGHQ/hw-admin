@@ -937,6 +937,7 @@ let Const = {
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'aftermarket-bom', name: 'BOM管理' },
         { list: [], select: [], key: 'item-category', name: '商品分类' },
         { list: [], select: [], key: 'entity', name: '商品实例' },
         { list: [], select: [], key: 'after-sales-order', name: '售后订单' },

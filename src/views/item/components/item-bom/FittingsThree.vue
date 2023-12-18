@@ -109,6 +109,22 @@
 									@mousemove.stop=""
 								>
 									{{item.index || 0}}
+                                    <div class="component" @mousedown.stop="">
+                                        <div class="component-contain">
+                                            <div class="contain-header"><i class="icon i_close" style="color: #fff" @click.stop="clickDeletePoint(index)"/></div>
+                                            <div class="contain-name">
+                                                <i class="icon i_skew-bg" />
+                                                <span class="icon-name">{{ $t('n.name') }}</span>
+                                                {{ (item.item || {}).name }}
+                                            </div>
+                                            <div class="contain-type">
+                                                <div class="type-left">
+                                                    {{ $t('def.model') }}:&nbsp;{{ (item.item || {}).model}}
+                                                </div>
+                                                <div class="edit-btn">{{ $t('def.edit') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
 								</div>
 							</template>
 						</div>
@@ -191,14 +207,32 @@
                     </span>
                     <span v-if="column.key === 'sales_area_list' /*销售区域*/">
                         <a-tooltip placement="topLeft">
-                            <template #title>{{ text }}</template>
+                            <template #title>
+                                <template v-if="record.sales_area_list?.length !== 0">
+                                    <span v-for="(item, index) in record.sales_area_list">
+                                        {{  $i18n.locale === 'en' ? item.country_en : item.country }}
+                                        {{ (index + 1) !== record.sales_area_list?.length ? ',' : ''}}
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
+                            </template>
                             <div
                                 class="one-spils cursor"
                                 :style="{
                                     width: text?.length > 5 ? 6 * 12 + 'px' : '',
                                 }"
                             >
-                                {{ text }}
+                                <template v-if="record.sales_area_list?.length !== 0">
+                                    <span v-for="(item, index) in record.sales_area_list">
+                                        {{  $i18n.locale === 'en' ? item.country_en : item.country }}
+                                        {{ (index + 1) !== record.sales_area_list?.length ? ',' : ''}}
+                                    </span>
+                                </template>
+                                <template v-else>
+                                    -
+                                </template>
                             </div>
                         </a-tooltip>
                     </span>
@@ -291,8 +325,8 @@ const tableColumns = computed(() => {
         {
             // 版本号
             title: proxy.$t("item-bom.version_number"),
-            dataIndex: "version_num",
-            key: "version_num",
+            dataIndex: ['bom', 'version'],
+            key: "version",
         },
         {
             // 用量
@@ -303,7 +337,7 @@ const tableColumns = computed(() => {
         {
             // 销售区域
             title: proxy.$t("item-bom.sales_area"),
-            dataIndex: "sales_area_list1",
+            dataIndex: "sales_area_list",
             key: "sales_area_list",
         },
         {
@@ -677,7 +711,6 @@ const handleTableChange = (pagination, filters, sorter) => {
 .fittings-three {
 	font-family: PingFang SC;
     .explosion-diagram {
-        min-width: 900px;
         min-height: 158px;
         border: 1px solid #e2e2e2;
         padding: 20px 20px 40px 20px;
@@ -853,6 +886,111 @@ const handleTableChange = (pagination, filters, sorter) => {
 							text-align: center;
 							background-color: @BG_LP;
 							color: #fff;
+
+                            .component {
+                                position: relative;
+                                display: inline-block;
+                                width: 150px;
+                                height: 100px;
+                                text-align: left;
+                                .component-contain {
+                                    position: absolute;
+                                    display: flex;
+                                    flex-wrap: wrap;
+                                    z-index: 2;
+                                    padding-bottom: 12px;
+                                    top: 4px;
+                                    left: -26px;
+                                    width: 250px;
+                                    border-radius: 2px;
+                                    background-color: @BG_LP;
+                                    border: 1px solid @BG_LP;
+                                    font-size: 0;
+                                    &:before, &:after {
+                                        content: "";
+                                        display: block;
+                                        border-width: 5px;
+                                        position: absolute;
+                                        top: -10px;
+                                        left: 30px;
+                                        border-style: solid dashed dashed;
+                                        border-color: transparent transparent @BG_LP  transparent;
+                                        font-size: 0;
+                                        line-height: 0;
+                                    }
+                                    &:after {
+                                        top: -9px;
+                                        left: 30px;
+                                        border-color: transparent transparent @BG_LP transparent;
+                                    }
+                                    .contain-header {
+                                        padding-top: 4px;
+                                        padding-right: 6px;
+                                        width: 100%;
+                                        height: 16px;
+                                        text-align: right;
+                                        .i_close {
+                                            float: right;
+                                            color: @TC_L;
+                                            font-size: 12px;
+                                        }
+                                    }
+                                    .contain-name {
+                                        position: relative;
+                                        padding: 0 16px;
+                                        width: 100%;
+                                        height: 20px;
+                                        line-height: 20px;
+                                        font-size: 16px;
+                                        color: @TC_L;
+                                        text-align: left;
+                                        overflow: hidden; //超出的文本隐藏
+                                        text-overflow: ellipsis; //溢出用省略号显示
+                                        white-space: nowrap;
+                                        .i_skew-bg {
+                                            font-size: 16px;
+                                            color: @TC_L;
+                                        }
+                                        .icon-name {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 16px;
+                                            font-style: italic;
+                                            font-size: 12px;
+                                            font-weight: bold;
+                                            color: @TC_LP;
+                                            transform-origin: 50% 50%;
+                                            transform: scale(0.9, 0.9);
+                                        }
+                                    }
+                                    .contain-type {
+                                        display: flex;
+                                        margin-top: 22px;
+                                        padding: 0 16px;
+                                        width: 100%;
+                                    }
+                                    .type-left {
+                                        padding-right: 6px;
+                                        width: calc(100% - 48px);
+                                        color: @TC_L;
+                                        font-size: 16px;
+                                        overflow: hidden; //超出的文本隐藏
+                                        text-overflow: ellipsis; //溢出用省略号显示
+                                        white-space: nowrap;
+                                    }
+                                    .edit-btn {
+                                        width: 48px;
+                                        height: 34px;
+                                        line-height: 34px;
+                                        border-radius: 2px;
+                                        font-size: 14px;
+                                        text-align: center;
+                                        color: @BG_LP;
+                                        background-color: @BG_panel;
+                                        border: 1px solid @BG_LP;
+                                    }
+                                }
+                            }
 						}
 					}
 				}
@@ -902,8 +1040,7 @@ const handleTableChange = (pagination, filters, sorter) => {
             }
         }
     }
-    .fittings-table-container {
-        min-width: 900px;
+    .fittings-table-container {        
         margin-top: 20px;
 
         .fittings-all {
