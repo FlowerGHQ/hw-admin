@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" @cancle="handleCancle">
+    <a-modal v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" @cancel="handleCancle">
         <!-- 搜索固定数据 :closable="false" -->
         <div class="search-container-new top-box">
             <div  class="item-box">
