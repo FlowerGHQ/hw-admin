@@ -169,7 +169,6 @@ const refresh = () => {
         .title-area {
           color: #1d2129;
           font-size: 16px;
-          font-weight: 600;
           line-height: 22px;
         }
         .tree-content {

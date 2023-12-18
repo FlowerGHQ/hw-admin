@@ -92,13 +92,10 @@
                                                             : 'up-arrow'
                                                     "
                                                     class="arrow" />
-                                                <MySvgIcon
-                                                    :icon-class="
-                                                        item1.flag_new
-                                                            ? 'new-dom'
-                                                            : 'old-dom'
-                                                    " />
-                                                <span class="common-title"
+                                                <span :class="{
+                                                    'common-title':item1.count <= 0,
+                                                    'common-title2':item1.count > 0,
+                                                }"
                                                     >{{ item1.name }} ({{
                                                         item1.version
                                                     }}版本)</span
@@ -300,6 +297,11 @@ const selectKey = (parentItem = {}, item) => {
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
+            // 所有的页面收起来
+            realData.value.forEach((item1) => {
+                item1.expand = false;
+                item1.select = false;
+            });
             // 选择一级
             item.select = true;
             // 二级展开
@@ -777,6 +779,10 @@ onMounted(() => {
                                     .common-title {
                                         margin-left: 10px;
                                         font-size: 14px;
+                                        margin-left: 24px;
+                                    }
+                                    .common-title2{
+                                        margin-left: 0 !important;
                                     }
                                     .green-title {
                                         color: #26ab54;
