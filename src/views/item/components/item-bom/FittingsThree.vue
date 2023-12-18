@@ -646,6 +646,7 @@ const onOperation = (type, record) => {
                 item.end_point = JSON.stringify(item.end)
                 item.start_point = JSON.stringify(item.start)
                 // 删除字段
+                Reflect.deleteProperty(item, 'sync_name');
                 Reflect.deleteProperty(item, 'end');
                 Reflect.deleteProperty(item, 'start');
             })
