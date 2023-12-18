@@ -46,6 +46,7 @@
                                         <a-input
                                             v-else
                                             v-model:value="item.name"
+                                            id="input1"
                                             :placeholder="
                                                 $t('item-bom.title_the_ph')
                                             "
@@ -61,7 +62,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="edit" @click.stop="handleEdit(item)">
+                            <div class="edit" @click.stop="handleEdit(item,$event)">
                                 <MySvgIcon icon-class="edit" />
                             </div>
                         </div>
@@ -295,6 +296,13 @@ const selectKey = (parentItem = {}, item) => {
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
+            // 选择一级
+            item.select = true;
+            // 二级展开
+            item.expand = true;
+            // 请求二级
+            getVersion(item);
+            // 展开二级
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: "",
@@ -356,8 +364,16 @@ const expand = (item) => {
     }
 };
 // 编辑
-const handleEdit = (item) => {
+const handleEdit = (item,e) => {
     item.edit = true;
+    // 当前元素的兄弟元素下》title》title-left》a-input
+    setTimeout(() => {
+        const inputDom = e.target.parentNode.parentNode.querySelector('.title-left>.ant-input')
+        console.log(inputDom)
+        // 聚焦
+        inputDom&&inputDom.focus()
+    },200);
+    
 };
 // 编辑名称后的entry和blur事件
 const handleEditName = (item) => {
