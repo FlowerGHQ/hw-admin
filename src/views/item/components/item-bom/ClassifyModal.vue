@@ -1,6 +1,6 @@
 <template>
-    <a-modal v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" >
-        <!-- 搜索固定数据 -->
+    <a-modal v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" @cancle="handleCancle">
+        <!-- 搜索固定数据 :closable="false" -->
         <div class="search-container-new top-box">
             <div  class="item-box">
                 <div class="key-box">
@@ -286,9 +286,21 @@ const toBindCategory = () => {
         bom_item_id_list: selectIdList.value,
         bom_category_id:categoryId.value
     };
+    if(level.value === 2) {
+        Core.Api.ITEM_BOM.addBindCategory(obj).then(res => {
+
+            proxy.$message.success('选择成功');
+            emits('refresh');
+        }).catch(err => {
+            console.log("toBindCategory", err);
+        }).finally(()=>{
+            emits("update:visibility", false);
+        })
+        return;
+    }
     Core.Api.ITEM_BOM.bindCategory(obj).then(res => {
         proxy.$message.success('选择成功');
-        emits('refresh')
+        emits('refresh');
     }).catch(err => {
         console.log("toBindCategory", err);
     }).finally(()=>{

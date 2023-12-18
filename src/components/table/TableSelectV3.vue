@@ -22,12 +22,12 @@
                 </span>
                 <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                     <a-tooltip>
-                        <template #title>{{ $Util.getSalesAreaStr(text,lang) || '-' }}</template>
+                        <template #title>{{ $Util.getSalesAreaStr( text, lang) || '-' }}</template>
                         <div 
                             class="one-spils cursor" 
                             :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                         >
-                            {{ $Util.getSalesAreaStr(text,lang) || '-' }}
+                            {{ $Util.getSalesAreaStr( text, lang) || '-' }}
                         </div>
                     </a-tooltip>
                 </span>
@@ -41,7 +41,7 @@
                             {{ text?.name }}
                         </div>
                     </a-tooltip>
-                    <span class="to-classify" v-if="!text">
+                    <span class="to-none-classify" v-if="!text">
                         暂无
                     </span>
                 </span>
@@ -186,5 +186,12 @@ const rowSelection = computed(() => {
 <style lang="less" scoped>
 :deep(.ant-table) {
     min-height: 200px;
+}
+
+.to-none-classify {
+    color:  #BFBFBF;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
 }
 </style>

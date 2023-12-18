@@ -2,7 +2,7 @@
     <!-- code编码-二级页面 -->
     <div class="fittings-two">
         <!-- 设变 -->
-        <div class="change" @click="expandOrSollapse" v-if="flagNew === 1">
+        <div class="change" @click="expandOrSollapse">
             <div class="change-top">
                 <div class="left">
                     <img  class="left-img" src="@/assets/images/bom/frame.png" alt="">  
@@ -16,7 +16,7 @@
                 <img class="right" src="@/assets/images/bom/up.png" v-if="isShow" />
                 <img class="right" src="@/assets/images/bom/down.png" v-else />
             </div>
-            <div class="change-table" v-if="isShow && objCount.allNum">
+            <div class="change-table" v-if="isShow">
                 <table class="my-table">
                     <thead class="my-th">
                         <tr>
@@ -62,22 +62,22 @@
                                 :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
                             >
                                 {{ text || '-' }}
-                                <span
-                                    class="new-version title-right"
-                                    v-if="record.bom.flag_new && flagNew === 1">
-                                    {{ $t("item-bom.change") }}
-                                </span>
+                                
+                            <span
+                                class="new-version title-right">
+                                {{ $t("item-bom.change") }}
+                            </span>
                             </div>
                         </a-tooltip>
                     </span>
                     <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                         <a-tooltip>
-                            <template #title>{{ $Util.getSalesAreaStr(text,lang) || '-' }}</template>
+                            <template #title>{{ $Util.getSalesAreaStr( text, lang) || '-' }}</template>
                             <div 
                                 class="one-spils cursor" 
                                 :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                             >
-                                {{ $Util.getSalesAreaStr(text,lang) || '-' }}
+                                {{ $Util.getSalesAreaStr( text, lang) || '-' }}
                             </div>
                         </a-tooltip>
                     </span>           
@@ -194,7 +194,8 @@ const tableColumns = computed(() => {
             // 商品名称
             title: proxy.$t('item-bom.product_name'), 
             dataIndex: "sync_name", 
-            key: "sync_name"
+            key: "sync_name",
+            width:'160px'
         },
         { 
             // 商品编码
@@ -268,7 +269,6 @@ const objCount = reactive({
     allNum:0,
 })
 onMounted(() => {
-    refresh()
 })
 
 // 获取设变列表
@@ -284,8 +284,8 @@ const getChangeList = () => {
 const refresh = () => {
     
     getTableDataFetch()
-    if(flagNew.value === 1) getChangeList();
-    getChangeCount();
+    if(flagNew.value === 1) getChangeList(),isShow.value = true;
+    getChangeCount(); 
 }
 // 获取设变数值type
 const getChangeCount = () => {
@@ -294,6 +294,11 @@ const getChangeCount = () => {
         bom_id: bomId.value
     }).then(res=>{
         objCount.allNum = 0;
+        if(!res.type_list.length) {
+
+            Object.assign(objCount, { updateNum: 0, addNum: 0, deleteNum: 0, allNum:0, });
+            return;
+        }
         res.type_list.forEach(element => {
             if(element.type === 1){
                 objCount.addNum = element.amount;
@@ -463,5 +468,8 @@ defineExpose({
     background-color: rgba(38, 171, 84, 0.1);
     padding: 4px;
     border-radius: 0px 10px 10px 10px;
+    display: inline-block;
+    position: absolute;
+    right:  20px;
 }
 </style>
