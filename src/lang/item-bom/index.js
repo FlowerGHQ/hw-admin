@@ -51,6 +51,7 @@ export default {
         confirm_delete_btn: '确定删除',
         // 取消
         cancel: '取消',
+        description_empty:'暂无数据'
     },
     en: {
         title: "BOM Management",
@@ -97,5 +98,6 @@ export default {
         confirm_delete_content: 'Are you sure you want to delete the group?',
         confirm_delete_btn: 'Confirm Delete',
         cancel: 'Cancel',
+        description_empty:'No Data'
     }
 }
