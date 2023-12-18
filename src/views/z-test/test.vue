@@ -9,9 +9,16 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue'
     import useNumber from '@/hooks/useNumber'
-    const {number,addNumber,resetNumber} = useNumber()
+    const props = defineProps({
+        // ...
+        type: {
+            type: String,
+            default: 'item'
+        },
+    })
+    const {number,addNumber,resetNumber,type} = useNumber(props) //vue2中的minxins
+    console.log(type)
 </script>
 
 <style lang="less">
