@@ -1181,6 +1181,7 @@ export default {
             }
             if(this.searchForm.channel_country === 200) {
               this.areaType = 'us'
+              this.searchForm.to_country = 'United States'
             }
             if(!this.searchForm.channel_country) {
               this.areaType = ''
