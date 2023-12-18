@@ -87,8 +87,8 @@
 					</div>
 					<div class="content-right /*爆炸图*/">
 						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
-							<img ref="exploreImg" :src="explosionImgItem.img" alt="">
-							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
+                            <!-- init中有创建了一个img在这 -->
+							<canvas class="explore-canvas" id="exploreCanvas" ref="exploreCanvas"></canvas>
 
 							<template v-for="(item, itemIndex) in pointerList">            
 								<div      
@@ -267,7 +267,6 @@ import {
     pointerList,
     sidebarData,
     exploreCanvas,
-    exploreImg,
     init,
     mousemoveHandler,
     mouseUpHandler,
@@ -580,7 +579,7 @@ const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始
                 explosionImgItem.value = res.list.list[0]
                 
                 nextTick(() => {
-                    init(res.list.list[0]?.item_component_list, initBool)
+                    init(res.list.list[0]?.item_component_list, explosionImgItem.value)
                 })
             } else {
                 isExplosionImg.value = false

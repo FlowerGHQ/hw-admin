@@ -2,7 +2,6 @@ import { computed, ref } from "vue";
 var ctx = null; // canvas 2d实例
 
 const exploreCanvas = ref(null); // canvas ref
-const exploreImg = ref(null); // 照片 ref 之所以不直接画在canvas中是为了后面移动要清除整个画布
 const sidebarData = ref([
     // { id: 1, index: 1 },
     // { id: 1, index: 1 },
@@ -62,25 +61,32 @@ const pointerListFilter = (arr) => {
     return result;
 };
 // 初始化
-const init = (arr, initBool) => {
+const init = (arr, explosionImgItem) => {
     ctx = exploreCanvas.value.getContext("2d");
 
-    if (initBool) {
-        // 第一次进来 初始化
-        exploreImg.value.onload = () => {
-            console.log("图片加载完成");
-            setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
-            initLine(arr)
-        };
-        exploreImg.value.onerror = () => {
-            console.log("图片加载失败");
-        };
-    } else {
-        // 之后更新
-        // console.log("销毁没", exploreImg.value, ctx);
-        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
-        initLine(arr)
+    const isImg = document.querySelector('#cavnasImg')
+    const pointContain = document.querySelector('.point-contain')
+    const Canvas = document.querySelector('#exploreCanvas')
+
+    if (isImg) {
+        // 删除上一个Img
+        pointContain.removeChild(isImg)
     }
+
+    const img = document.createElement('img')
+    img.src = explosionImgItem.img
+    img.setAttribute('id', 'cavnasImg')
+    pointContain.insertBefore(img, Canvas)
+
+    // 第一次进来 初始化
+    img.onload = () => {
+        console.log("图片加载完成");
+        setCanvasAttr(img.width, img.height);
+        initLine(arr)
+    };
+    img.onerror = () => {
+        console.log("图片加载失败");
+    };
 };
 // 容器内鼠标移动
 const mousemoveHandler = (e) => {
@@ -260,7 +266,6 @@ export {
     pointerList,
     sidebarData,
     exploreCanvas,
-    exploreImg,
     init,
     mousemoveHandler,
     mouseUpHandler,
