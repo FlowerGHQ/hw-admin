@@ -227,14 +227,7 @@ const initLine = (arr) => {
     console.log("初始化数据和画线", arr);    
     pointerList.value = arr;
     sidebarData.value = []
-    // pointerList.value.push({
-    //     end_point: '{"x":0,"y":100}', // 结束点只有一个
-    //     start_point: '[{"x":0,"y":0}]', // 开始点有多个
-    //     // end: undefined,
-    //     // start: undefined,
-    //     id: 1335,
-    //     index: 1,
-    // });
+       
     pointerList.value = pointerListFilter(pointerList.value);
     canvasLine(ctx);
 
