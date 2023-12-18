@@ -16,10 +16,10 @@
         </div>
         <!-- 右边 -->
         <div class="item-tree-right">
-          <div class="search-content">
+          <div class="search-content" :style="{ 'min-width': minWidthCount + 'px' }">
             <SearchAll ref="searAllRef" :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component style="min-width: 900px;" ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
+          <component :style="{ 'min-width': minWidthCount + 'px' }" ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
         </div>
       </div>
     </div>
@@ -36,7 +36,9 @@ import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
 import FittingsTree from "./components/item-bom/FittingsTree.vue";
 import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类弹窗组件
-// const componentName = shallowRef(fittings)
+
+const minWidthCount = 900
+
 // 标题高度
 const titleRefs = ref(null);
 const titleHeight = ref(0);
@@ -180,8 +182,7 @@ const refresh = () => {
         flex: 1;
         overflow-y: auto;
         padding: 0 17px;
-        .search-content {      
-            min-width: 900px;
+        .search-content {
             margin-bottom: 24px;    
         }
       }
