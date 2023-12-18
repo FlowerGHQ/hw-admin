@@ -932,7 +932,8 @@ const apiList = {
         deleteCategory: ['PostJson', 'bom-category/delete'], // 删除分类
         changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
         changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
-        bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类
+        bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类 （覆盖）
+        addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
 
     }
 }; 
