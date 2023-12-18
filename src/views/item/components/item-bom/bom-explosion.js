@@ -1,6 +1,5 @@
 import { computed, ref } from "vue";
 var ctx = null; // canvas 2d实例
-var exploreImgInit = false
 
 const exploreCanvas = ref(null); // canvas ref
 const exploreImg = ref(null); // 照片 ref 之所以不直接画在canvas中是为了后面移动要清除整个画布
@@ -63,24 +62,25 @@ const pointerListFilter = (arr) => {
     return result;
 };
 // 初始化
-const init = (arr) => {
-    if (exploreImgInit) {
-        // 再次执行, onload不会在次执行所以执行这里的东西
-        initLine(arr)
-        return
-    }
+const init = (arr, initBool) => {
     ctx = exploreCanvas.value.getContext("2d");
 
-    // 等图片加载完
-    exploreImg.value.onload = () => {
-        console.log("图片加载完成");
-        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);        
-        exploreImgInit = true
+    if (initBool) {
+        // 第一次进来 初始化
+        exploreImg.value.onload = () => {
+            console.log("图片加载完成");
+            setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
+            initLine(arr)
+        };
+        exploreImg.value.onerror = () => {
+            console.log("图片加载失败");
+        };
+    } else {
+        // 之后更新
+        // console.log("销毁没", exploreImg.value, ctx);
+        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);
         initLine(arr)
-    };
-    exploreImg.value.onerror = () => {
-        console.log("加载失败");
-    };
+    }
 };
 // 容器内鼠标移动
 const mousemoveHandler = (e) => {

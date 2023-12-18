@@ -472,7 +472,7 @@ watch(
 	}
 )
 onMounted(() => {    
-    getExplosionImgFetch({ target_id: props.activeObj.category_id })    
+    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true)    
 });
 
 onUnmounted(() => {
@@ -565,7 +565,7 @@ const editPointFetch = (parmas = {}, type) => {
         });
 }
 // 获取爆炸图list Fetch
-const getExplosionImgFetch = (parmas = {}) => {
+const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始化*/) => {
     let obj = {
         target_id: props.activeObj.category_id, // bom_category.id(分类id)
         target_type: 3, //  bom分类(固定死这里)
@@ -573,14 +573,14 @@ const getExplosionImgFetch = (parmas = {}) => {
     }
     Core.Api.ITEM_BOM.getExplosionImg(obj)
         .then((res) => {
-            console.log("获取爆炸图信息", res);
             if (res.list.list[0]?.img) {
+                console.log("获取爆炸图信息", res);
                 addTagItem.value.item_component_set_list = [res.list.list[0]] // 回显
                 isExplosionImg.value = true
                 explosionImgItem.value = res.list.list[0]
                 
                 nextTick(() => {
-                    init(res.list.list[0]?.item_component_list)
+                    init(res.list.list[0]?.item_component_list, initBool)
                 })
             } else {
                 isExplosionImg.value = false
