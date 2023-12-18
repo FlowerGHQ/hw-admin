@@ -11,7 +11,9 @@
         </a-input-search>
         <div class="tree-select-main">
             <div class="tree-circle">
-                <a-spin :spinning="loading1" :delay="500">
+                <a-spin :spinning="loading1" :delay="500" 
+                    v-if="realData.length > 0"
+                >
                     <div
                         v-for="item in realData"
                         :key="generateId(item)"
@@ -46,6 +48,7 @@
                                         <a-input
                                             v-else
                                             v-model:value="item.name"
+                                            id="input1"
                                             :placeholder="
                                                 $t('item-bom.title_the_ph')
                                             "
@@ -54,6 +57,7 @@
                                                 handleEditName(item)
                                             " />
                                     </div>
+                                    
                                     <div
                                         class="title-right"
                                         v-if="item.flag_new">
@@ -61,7 +65,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="edit" @click.stop="handleEdit(item)">
+                            <div class="edit" @click.stop="handleEdit(item,$event)">
                                 <MySvgIcon icon-class="edit" />
                             </div>
                         </div>
@@ -206,6 +210,7 @@
                         </div>
                     </div>
                 </a-spin>
+                <a-empty  :description="$t('item-bom.description_empty')"  v-else class="empty"/>
             </div>
         </div>
     </div>
@@ -295,6 +300,13 @@ const selectKey = (parentItem = {}, item) => {
     switch (item.level) {
         case 1:
             activeKey.value = String(item.item_id) + String(item.level);
+            // 选择一级
+            item.select = true;
+            // 二级展开
+            item.expand = true;
+            // 请求二级
+            getVersion(item);
+            // 展开二级
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: "",
@@ -356,8 +368,16 @@ const expand = (item) => {
     }
 };
 // 编辑
-const handleEdit = (item) => {
+const handleEdit = (item,e) => {
     item.edit = true;
+    // 当前元素的兄弟元素下》title》title-left》a-input
+    setTimeout(() => {
+        const inputDom = e.target.parentNode.parentNode.querySelector('.title-left>.ant-input')
+        console.log(inputDom)
+        // 聚焦
+        inputDom&&inputDom.focus()
+    },200);
+    
 };
 // 编辑名称后的entry和blur事件
 const handleEditName = (item) => {
@@ -861,6 +881,17 @@ onMounted(() => {
                     }
                 }
             }
+        }
+        .empty{
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+                :deep(.ant-empty-description){
+                    color: #8090A6 !important;
+                    font-size: 14px;
+                }
         }
     }
     .pointer {
