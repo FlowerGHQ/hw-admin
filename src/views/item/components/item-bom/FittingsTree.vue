@@ -776,13 +776,14 @@ onMounted(() => {
                                     }
                                     .green-title,
                                     .common-title {
-                                        margin-left: 10px;
                                         font-size: 14px;
                                         margin-left: 24px;
                                     }
                                     .common-title2{
                                         margin-left: 0 !important;
+                                        font-size: 14px;
                                     }
+                                    
                                     .green-title {
                                         color: #26ab54;
                                     }
