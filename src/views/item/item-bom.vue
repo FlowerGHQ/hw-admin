@@ -19,7 +19,7 @@
           <div class="search-content">
             <SearchAll ref="searAllRef" :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
           </div>
-          <component ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
+          <component style="min-width: 900px;" ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
         </div>
       </div>
     </div>

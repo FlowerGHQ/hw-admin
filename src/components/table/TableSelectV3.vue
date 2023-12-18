@@ -20,32 +20,32 @@
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-else-if="column.key === 'sales_area'/*销售区域*/">
+                <span v-else-if="column.key === 'sales_area_list'/*销售区域*/">
                     <a-tooltip>
-                        <template #title>{{ text }}</template>
+                        <template #title>{{ $Util.getSalesAreaStr( text, lang) || '-' }}</template>
                         <div 
                             class="one-spils cursor" 
                             :style="{ width: text?.length > 5 ? 6 * 12 + 'px' : '' }"
                         >
-                            {{ text }}
+                            {{ $Util.getSalesAreaStr( text, lang) || '-' }}
                         </div>
                     </a-tooltip>
                 </span>
-                <span v-else-if="column.key === 'classify'/*分类*/">
-                    <!-- <a-tooltip>
-                        <template #title>{{ text }}</template>
+                <span v-else-if="column.key === 'bom_category'/*分类*/">
+                    <a-tooltip>
+                        <template #title>{{ text?.name }}</template>
                         <div 
                             class="one-spils cursor" 
                             :style="{ width: text?.length > 6 ? 7 * 12 + 'px' : '' }"
                         >
-                            {{ text }}
+                            {{ text?.name }}
                         </div>
-                    </a-tooltip> -->
-                    <span class="to-classify" @click="toClassify">
-                        {{ $t('item-bom.classify') }}
+                    </a-tooltip>
+                    <span class="to-none-classify" v-if="!text">
+                        暂无
                     </span>
                 </span>
-                <span v-else-if="column.key === 'create_time'/*创建时间*/">
+                <span v-else-if="column.key === 'sync_time'/*创建时间*/">
                     {{ $Util.timeFilter(text) }}
                 </span>
                 <span v-else-if="column.key === 'remark'/*备注*/">
@@ -140,6 +140,9 @@ const onSelectChange = changableRowKeys => {
 
     };
 
+const lang = computed(()=>{ // ==='zh'?'country':'country_en'
+    return proxy.$store.state.lang
+})
 const rowSelection = computed(() => {
       /* return {
         selectedRowKeys: unref(selectedRowKeys),
@@ -183,5 +186,12 @@ const rowSelection = computed(() => {
 <style lang="less" scoped>
 :deep(.ant-table) {
     min-height: 200px;
+}
+
+.to-none-classify {
+    color:  #BFBFBF;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
 }
 </style>

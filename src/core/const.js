@@ -37,11 +37,11 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.10.12.65:8889'  // tingan
-        // URL_POINT = 'http://10.10.12.75:8889'  // haiquan
+        URL_POINT = 'http://10.10.12.75:8889'  // haiquan
 
 
         break;
@@ -937,6 +937,7 @@ let Const = {
         { list: [], select: [], key: 'purchase-order', name: '采购订单' },
         { list: [], select: [], key: 'sales-area', name: '销售区域' },
         { list: [], select: [], key: 'item', name: '商品管理' },
+        { list: [], select: [], key: 'aftermarket-bom', name: 'BOM管理' },
         { list: [], select: [], key: 'item-category', name: '商品分类' },
         { list: [], select: [], key: 'entity', name: '商品实例' },
         { list: [], select: [], key: 'after-sales-order', name: '售后订单' },

@@ -1639,6 +1639,16 @@ const Util = {
     isExternal(path) {
       return /^(https?:|mailto:|tel:)/.test(path) //匹配是否是外部链接
     },
+    // 商品售后-销售区域-方法
+    getSalesAreaStr(arr,lang = 'zh') {
+      
+      let str = '';
+      if(!(arr instanceof Array)) return '-'
+      arr?.forEach((item)=>{
+          str += (str?',':'')+item[lang==='zh'?'country':'country_en']
+      })
+      return str || '-'
+  }
 }
 
 export default Util
