@@ -160,7 +160,7 @@ watch(
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        categoryId.value = newValue?.category_id;
+        categoryId.value = !(newValue?.category_id)?undefined:(newValue?.category_id);
         bomId.value = newValue?.version_id;
         level.value = newValue?.level;
         // 分类列表
