@@ -1,9 +1,42 @@
 
 export default {
     zh: {
-
+        email_content: "邮件内容",
+        email_link: "邮件链接",
+        other_information: "其他信息",
+        timed_transmission: "定时发送",
+        select_template: "选择模板",
+        recipients: "收件人",
+        main_title: "主标题",
+        initial_address: "开头称呼",
+        main_content: "正文内容",
+        link: "链接",
+        link_description_text: "链接描述文字",
+        poster: "海报",
+        qr_code: "二维码",
+        timed_transmission: "定时发送",
+        timed_transmission_time: "定时发送时间",
+        please_enter:"请输入",
+        qrcode_introduction:"请输入二维码介绍",
     },
     en: {
-		
+        email_content: "Email Content",
+        email_link: "Email Link",
+        other_information: "Other Information",
+        timed_transmission: "Timed Transmission",
+		select_template: "Select Template",
+        recipients: "Recipients",
+        main_title: "Main Title",
+        initial_address: "Initial Address",
+        main_content: "Main Content",
+        link: "Link",
+        link_description_text: "Link Description Text",
+        poster: "Poster",
+        qr_code: "QR Code",
+        timed_transmission: "Timed Transmission",
+        timed_transmission_time: "Timed Transmission Time",
+        please_enter:"please enter",
+        qrcode_introduction:"Please enter the QR code introduction",
     }
 }
+
