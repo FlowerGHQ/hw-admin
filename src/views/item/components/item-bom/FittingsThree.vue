@@ -762,9 +762,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 				margin-top: 31px;
 				display: flex;
 				.content-left {
-					min-width: 206px;
-					max-width: 206px;
+                    white-space: nowrap;
 					.left-list {
+                        width: 160px;
 						border: 1px solid #EEE;
 						border-radius: 4px;
 						.left-list-header {

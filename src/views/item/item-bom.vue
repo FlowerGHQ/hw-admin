@@ -183,6 +183,11 @@ const setValue = (val) => {
           height: calc(100% - 38px);
         }
       }
+      @media (max-width:1440px) {
+        .item-tree-left {
+            min-width: 354px;
+        }
+    }
       .item-tree-right {
         flex: 1;
         overflow-y: auto;
