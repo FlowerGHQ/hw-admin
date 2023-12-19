@@ -169,7 +169,8 @@ const salesArea = (arr, locale) => {
             result.push(item.country_en);
         }
     });
-    return result.join(" , ") || "-";
+    console.log("result", result);
+    return result.length > 0 ? result.join(",") : "-";
 };
 
 onMounted(() => {
