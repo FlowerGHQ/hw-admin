@@ -255,6 +255,7 @@ const handleSearchReset = ( ) => {
       getTableDataFetch()
 }
 const handleSearch = () => {
+    current.value = 1;
     //更换数组形式传参,字符串逗号分隔输入--编码
     let arr = codeStr?.value?.trim().split(',');
     arr = arr?.map(item => item?.trim());
@@ -319,7 +320,6 @@ const getTableDataFetch = (parmas = {}) => {
         page_size: pageSize.value,
         ...parmas
     }
-
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
         total.value = res.count;
         tableData.value = res.list;
