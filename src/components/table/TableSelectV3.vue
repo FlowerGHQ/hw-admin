@@ -46,7 +46,7 @@
                     </span>
                 </span>
                 <span v-else-if="column.key === 'sync_time'/*创建时间*/">
-                    {{ $Util.timeFilter(text) }}
+                    {{ $Util.timeFilter(text,3) }}
                 </span>
                 <span v-else-if="column.key === 'remark'/*备注*/">
                     <a-tooltip>
