@@ -206,19 +206,20 @@
                                                         " />
                                                 </div>
                                             </div>
-                                            <a-input
-                                                v-if="item1.add"
-                                                v-model:value="addValue"
-                                                style="width: 228px"
-                                                class="add-category-select"
-                                                @blur.stop="
-                                                    handleAddCategory(item1)
-                                                "
-                                                :placeholder="
-                                                    $t(
-                                                        'item-bom.add_category_ph'
-                                                    )
-                                                " />
+                                            <div class="add-category-select">
+                                                <a-input
+                                                    v-if="item1.add"
+                                                    v-model:value="addValue"
+                                                    style="width: 228px"
+                                                    @blur.stop="
+                                                        handleAddCategory(item1)
+                                                    "
+                                                    :placeholder="
+                                                        $t(
+                                                            'item-bom.add_category_ph'
+                                                        )
+                                                    " />
+                                            </div>
                                         </a-spin>
                                     </div>
                                 </div>
@@ -282,6 +283,11 @@ let visible = ref(false);
 // 删除的item及其父级item
 let deleteItem = ref(null);
 let deleteParentItem = ref(null);
+// 定时器
+let timer1 = ref(null);
+let timer2 = ref(null);
+let timer3 = ref(null);
+let timer4 = ref(null);
 
 // 接受activeObj
 const props = defineProps({
@@ -402,7 +408,7 @@ const expand = (item) => {
 const handleEdit = (item, e) => {
     item.edit = true;
     // 当前元素的兄弟元素下》title》title-left》a-input
-    setTimeout(() => {
+    timer4.value = setTimeout(() => {
         const inputDom =
             e.target.parentNode.parentNode.parentNode.querySelector(
                 ".title-left>.title-left-top>.ant-input"
@@ -501,25 +507,17 @@ const editGoodsName = (item) => {
     Core.Api.ITEM_BOM.updateName({
         name: item.name,
         sync_id: item.sync_id,
-    })
-        .then((res) => {
-            // console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    }).catch((err) => {
+        console.log(err);
+    });
 };
 // 修改分类名称
 const editCategoryName = (item) => {
     Core.Api.ITEM_BOM.saveCategoryName({
         ...item,
-    })
-        .then((res) => {
-            // console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    }).catch((err) => {
+        console.log(err);
+    });
 };
 // 添加分类
 const addCategory = (parentItem, item) => {
@@ -530,24 +528,14 @@ const addCategory = (parentItem, item) => {
     });
     item.add = true;
     item.expand = true;
-    // 请求分类列表
-    Core.Api.ITEM_BOM.listCategory({
-        bom_id: item.id,
-    })
-        .then((res) => {
-            item.children = res.list;
-            item.children.forEach((item1) => {
-                item1.select = false;
-                item1.expand = false;
-                item1.children = [];
-                item1.edit = false;
-                item1.add = false;
-                item1.level = 3;
-            });
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+    timer1.value = setTimeout(() => {
+        // 请求分类列表
+        getCategory(item);
+        const inputDom = document.querySelector(
+            ".add-category-select>.ant-input"
+        );
+        inputDom && inputDom.focus();
+    }, 200);
 };
 // 添加分类
 const handleAddCategory = (item) => {
@@ -558,13 +546,11 @@ const handleAddCategory = (item) => {
         type: 2,
     })
         .then((res) => {
-            // 重新请求分类列表
-            getCategory(item);
             item.add = false;
-            item.expand = true;
-            addValue.value = null;
-            console.log(realData.value);
-            setTimeout(() => {
+            addValue.value = "新增";
+            getCategory(item);
+            timer2.value = setTimeout(() => {
+                // 请求当前分类列表
                 // 找到商品列表中的这个item
                 let parentItemIndex = realData.value.findIndex(
                     (item1) => item1.sync_id === item.sync_id
@@ -581,7 +567,7 @@ const handleAddCategory = (item) => {
                     : (realData.value[parentItemIndex].children[
                           index
                       ].count = 1);
-            });
+            },200);
         })
         .catch((err) => {
             console.log(err);
@@ -598,7 +584,7 @@ const handleOk = () => {
     })
         .then((res) => {
             getCategory(deleteParentItem.value);
-            setTimeout(() => {
+            timer3.value = setTimeout(() => {
                 // 找出商品裂变中的item
                 let rootIndex = realData.value.findIndex(
                     (item1) => item1.sync_id === deleteParentItem.value.sync_id
@@ -614,6 +600,15 @@ const handleOk = () => {
                 realData.value[rootIndex].children[index].count
                     ? realData.value[rootIndex].children[index].count--
                     : (realData.value[rootIndex].children[index].count = 0);
+                // 传递参数
+                $emit("update:activeObj", {
+                    level: 2,
+                    version_id: deleteParentItem.value.id,
+                    shop_id: deleteParentItem.value.item_id,
+                    category_id: "",
+                    name: deleteParentItem.value.name,
+                    sync_id: "",
+                });
             });
         })
         .catch((err) => {
@@ -658,6 +653,12 @@ onMounted(() => {
             loading1.value = false;
             console.log(err);
         });
+});
+onBeforeUnmount(() => {
+    clearTimeout(timer1.value);
+    clearTimeout(timer2.value);
+    clearTimeout(timer3.value);
+    clearTimeout(timer4.value);
 });
 </script>
 
@@ -783,7 +784,7 @@ onMounted(() => {
                             padding: 0 4px;
                             margin-right: 10px;
                         }
-                        .svg-icon{
+                        .svg-icon {
                             font-size: 16px;
                             line-height: 16px;
                         }
@@ -895,9 +896,10 @@ onMounted(() => {
                                 }
                             }
                             .add-category-select {
-                                margin-left: 68px;
+                                padding-left: 68px;
                                 margin-top: 5px;
                                 margin-bottom: 5px;
+                                width: 100%;
                             }
                             .active-item-two {
                                 background-color: #f2f3f5;

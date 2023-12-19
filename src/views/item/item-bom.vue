@@ -113,7 +113,6 @@ const searAllRef = ref(null)   // searAll refs
 
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
-  console.log("高度", titleHeight.val,activeObj.value);
 });
 
 /* fetch start */
