@@ -18,6 +18,9 @@ export default {
         timed_transmission_time: "定时发送时间",
         please_enter:"请输入",
         qrcode_introduction:"请输入二维码介绍",
+        size_tips: "图片尺寸992X480，大小2M内",
+        upload_tips: "最多上传2张，支持PNG、JPG、JPEG",
+        time_tips: "请选择定时发送时间",
     },
     en: {
         email_content: "Email Content",
@@ -37,6 +40,9 @@ export default {
         timed_transmission_time: "Timed Transmission Time",
         please_enter:"please enter",
         qrcode_introduction:"Please enter the QR code introduction",
+        size_tips: "Image size 992X480, within 2M in size",
+        upload_tips: "Upload up to 2 images, supporting PNG, JPG, JPEG",
+        time_tips: "Please select a scheduled sending time",
     }
 }
 

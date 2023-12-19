@@ -117,7 +117,7 @@
                                 <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
                             </div>
                         </a-upload>	
-                        <div class="upload_tips">图片尺寸992X480，大小2M内</div>
+                        <div class="upload_tips">{{ $t('mail-management.size_tips') }}</div>
                     </div>
                 </a-col>
                 <a-col class="search-col m-t-40">
@@ -126,7 +126,7 @@
                         {{ $t('mail-management.qr_code')}}
                     </div>
                     <div class="value m-l-8">
-                        <div class="upload_tips">最多上传2张，支持PNG、JPG、JPEG</div>
+                        <div class="upload_tips">{{ $t('mail-management.upload_tips') }}</div>
                         <div class="qr-code1 m-t-10">
                             <a-upload
                                 class="m-r-10"
@@ -185,6 +185,7 @@
                     </div>
                     <div class="value m-l-8">
                         <a-radio-group v-model:value="value">
+                            <!-- <template v-for="item in istext" :key=""></template> -->
                             <a-radio :value="1">是</a-radio>
                             <a-radio :value="2">否</a-radio>                            
                         </a-radio-group>
@@ -199,7 +200,7 @@
                         <a-date-picker 
                             style="width: 100%;"
                             show-time 
-                            placeholder="Select Time" 
+                            :placeholder="$t('mail-management.time_tips')" 
                             @change="onChange" 
                             @ok="onOk" 
                         />
@@ -226,9 +227,25 @@ const uploadOptions = ref({
     },
 })
 
+
+// 字段名称
 const formData = ref({
 
 })
+
+// 是否文本
+const istext = ref([
+    {
+        key: 1,
+        zh: "是",
+        en: "Yes",
+    }, 
+    {
+        key: 0,
+        zh: "否",
+        en: "No",
+    }
+])
 
 </script>
 
