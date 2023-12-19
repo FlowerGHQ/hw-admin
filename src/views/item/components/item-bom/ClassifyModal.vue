@@ -109,7 +109,7 @@ const searchForm = ref({
     codeList: []
 })
 const bomId = ref('');      // 版本id、bomId
-const categoryId = ref(''); // 分类id
+const categoryId = ref(undefined); // 分类id
 const level = ref(0)
 // 默认勾选
 const defaultChecked = ref([])
@@ -142,7 +142,7 @@ watch(
         if(!newValue) {
             codeStr.value = '';
             time.value=null;
-            if(level.value === 2) categoryId.value = '';
+            if(level.value === 2) categoryId.value = undefined;
             return;
         }
     }
@@ -160,7 +160,7 @@ watch(
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        categoryId.value = newValue?.category_id;
+        categoryId.value = !(newValue?.category_id)?undefined:(newValue?.category_id);
         bomId.value = newValue?.version_id;
         level.value = newValue?.level;
         // 分类列表
