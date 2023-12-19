@@ -719,7 +719,6 @@ const handleTableChange = (pagination, filters, sorter) => {
 
 <style lang="less" scoped>
 .fittings-three {
-	font-family: PingFang SC;
     .explosion-diagram {
         min-height: 158px;
         border: 1px solid #e2e2e2;
