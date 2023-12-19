@@ -164,13 +164,13 @@ const channelPagination = ref({
 const salesArea = (arr) => {
     let result = [];
     arr.forEach((item) => {
-        if (locale === "zh") {
+        if (locale.value === "zh") {
             result.push(item.country);
-        } else if (locale === "en") {
+        } else if (locale.value === "en") {
             result.push(item.country_en);
         }
     });
-    console.log("locale", locale);
+    console.log("locale", locale.value);
     console.log("arr", arr);
     console.log("result", result);
     return result.length > 0 ? result.join(",") : "-";
