@@ -87,8 +87,8 @@
 					</div>
 					<div class="content-right /*爆炸图*/">
 						<div class="point-contain" @mouseup="mouseUpHandler" @mousemove="mousemoveHandler">
-							<img ref="exploreImg" :src="explosionImgItem.img" alt="">
-							<canvas class="explore-canvas" ref="exploreCanvas"></canvas>
+                            <!-- init中有创建了一个img在这 -->
+							<canvas class="explore-canvas" id="exploreCanvas" ref="exploreCanvas"></canvas>
 
 							<template v-for="(item, itemIndex) in pointerList">            
 								<div      
@@ -267,7 +267,6 @@ import {
     pointerList,
     sidebarData,
     exploreCanvas,
-    exploreImg,
     init,
     mousemoveHandler,
     mouseUpHandler,
@@ -472,7 +471,7 @@ watch(
 	}
 )
 onMounted(() => {    
-    getExplosionImgFetch({ target_id: props.activeObj.category_id })    
+    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true)    
 });
 
 onUnmounted(() => {
@@ -508,14 +507,13 @@ const getTableDataFetch = (parmas = {}) => {
                         $1['sync_name'] = $2.sync_name
 
                         // 给pointerList回显数据
-                        pointerList.value.find(el => el.target_id === $1.target_id).sync_name = $2.sync_name
+                        const item = pointerList.value.find(el => el.target_id === $1.target_id)
+                        if (item) {
+                            item.sync_name = $2.sync_name
+                        }
                     }
                 })
             });
-
-            // 为了回显名称数据
-           console.log("输出", addTagItem.value.item_component_set_list[0]?.item_component_list);
-            
         })
         .catch((err) => {
             console.log("getTableDataFetchError", err);
@@ -566,7 +564,7 @@ const editPointFetch = (parmas = {}, type) => {
         });
 }
 // 获取爆炸图list Fetch
-const getExplosionImgFetch = (parmas = {}) => {
+const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始化*/) => {
     let obj = {
         target_id: props.activeObj.category_id, // bom_category.id(分类id)
         target_type: 3, //  bom分类(固定死这里)
@@ -574,14 +572,14 @@ const getExplosionImgFetch = (parmas = {}) => {
     }
     Core.Api.ITEM_BOM.getExplosionImg(obj)
         .then((res) => {
-            console.log("获取爆炸图信息", res);
             if (res.list.list[0]?.img) {
+                console.log("获取爆炸图信息", res);
                 addTagItem.value.item_component_set_list = [res.list.list[0]] // 回显
                 isExplosionImg.value = true
                 explosionImgItem.value = res.list.list[0]
                 
-                nextTick(() => {              
-                    init(res.list.list[0]?.item_component_list)
+                nextTick(() => {
+                    init(res.list.list[0]?.item_component_list, explosionImgItem.value)
                 })
             } else {
                 isExplosionImg.value = false
@@ -670,6 +668,17 @@ const onOperation = (type, record) => {
             }]
 
             const data = addTagItem.value.item_component_set_list[0]?.item_component_list
+
+
+            // 先把数据和pointerList.value对比过滤一下，防止pointerList.value 已经移动点了没更新
+            data.forEach(el => {
+                const findItem = pointerList.value.find((item) => item.target_id === el.target_id)
+                if (findItem) {                    
+                    el.end_point = JSON.stringify(findItem.end)
+                    el.start_point = JSON.stringify(findItem.start)                 
+                }
+            })
+            
             
             // 找到添加是否是对应的数据不是push是删除了在push
             const findIndex = data.findIndex(el => el.target_id == record.id)            
@@ -688,8 +697,6 @@ const onOperation = (type, record) => {
             } else {
                 data.push(addPointItem)
             }
-            console.log("失去焦点结果", data);
-                  
             pointerList.value = data
             initLine(pointerList.value)
         break;
