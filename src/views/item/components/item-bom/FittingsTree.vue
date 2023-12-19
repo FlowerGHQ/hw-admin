@@ -110,7 +110,7 @@
                                                 <span class="time">
                                                     {{
                                                         Util.timeFilter(
-                                                            item1.effective_time
+                                                            item1.effective_time,3
                                                         )
                                                     }}</span
                                                 >

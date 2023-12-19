@@ -34,17 +34,7 @@
                                 salesArea(record.sales_area_list, $i18n.locale)
                             }}
                         </template>
-                        <div
-                            class="one-spils cursor"
-                            :style="{
-                                width:
-                                    salesArea(
-                                        record.sales_area_list,
-                                        $i18n.locale
-                                    )?.length > 5
-                                        ? 6 * 12 + 'px'
-                                        : '',
-                            }">
+                        <div class="one-spils cursor">
                             {{
                                 salesArea(record.sales_area_list, $i18n.locale)
                             }}
@@ -55,7 +45,7 @@
                     {{ record.bom.version || "-" }}
                 </span>
                 <span v-if="column.key === 'effective_time' /*创建时间*/">
-                    {{ $Util.timeFilter(text) }}
+                    {{ $Util.timeFilter(text,3) }}
                 </span>
                 <span v-if="column.key === 'comment' /*备注*/">
                     <a-tooltip>
