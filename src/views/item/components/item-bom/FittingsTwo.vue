@@ -16,7 +16,7 @@
                 <img class="right" src="@/assets/images/bom/up.png" v-if="isShow" />
                 <img class="right" src="@/assets/images/bom/down.png" v-else />
             </div>
-            <div class="change-table" v-if="isShow">
+            <div class="change-table" v-show = "isShow">
                 <table class="my-table">
                     <thead class="my-th">
                         <tr>
@@ -26,7 +26,7 @@
                     <tr v-for="(tr,indtr) in tableDataChange" :key="tr.id">
                         <td v-for="td in changeTableColumn">
                             <template v-if="td.key === 'order_number'">
-                                {{ indtr+1 }}
+                                {{ indtr + 1 }}
                             </template>
                             <template v-else-if="td.key === 'content'">
                                 {{ tr?.[td.dataIndex] || (tr?.['type']===1?'新增': tr?.['type']===2?'删除':'修改') }}
@@ -85,21 +85,23 @@
                         </a-tooltip>
                     </span>           
                     <span v-else-if="column.key === 'bom_category'/*分类*/">
-                        <a-tooltip>
-                            <template #title>{{ text?.name }}</template>
-                            <div 
-                                class="one-spils cursor" 
-                                :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
-                            >
-                                {{ text?.name }}
-                            </div>
-                        </a-tooltip>
-                        <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="!text && record.sync_id">
-                            {{ $t('item-bom.classify') }}
-                        </span>
-                        <span v-else-if="!text?.name">
+                        <div class="classify-box">
+                            <a-tooltip v-if="text" class="left-text">
+                                <template #title>{{ text?.name }}</template>
+                                <div 
+                                    class="one-spils cursor" 
+                                    :style="{ width: text?.name?.length > 6 ? 7 * 12 + 'px' : '' }"
+                                >
+                                    {{ !(text?.name) ? '-' : text?.name }}
+                                </div>
+                            </a-tooltip>
+                            <span class="to-classify" @click="toClassify(record.sync_id)"  v-if="record.sync_id">
+                                {{ !text ? $t('item-bom.classify') : $t('item-bom.classify_update') }}
+                            </span>
+                        </div>
+                        <!-- <span v-else-if="!text?.name">
                             -
-                        </span>
+                        </span> -->
                     </span>
                     <span v-else-if="column.key === 'sync_time'/*创建时间*/">
                         {{ $Util.timeFilter(text,3) }}
@@ -269,7 +271,7 @@ const refresh = () => {
     
     getTableDataFetch()
     getChangeList()
-    if(flagNew.value === 1) isShow.value = true;
+    // if(flagNew.value === 1) isShow.value = true;
     getChangeCount(); 
 }
 // 获取设变数值type
@@ -444,10 +446,11 @@ defineExpose({
         background: #FFF;
         width: 100%;
         tr > td , th {
-            padding: 10px 16px;
+            padding: 0px 16px;
             border: 1px solid #E2E2E2;
             text-align: left;
-
+            height: 32px;
+            box-sizing: border-box;
         }
 
         tr > td {
@@ -487,5 +490,12 @@ defineExpose({
     font-family: PingFang SC;
     font-size: 14px;
     font-weight: 500;
+}
+
+.classify-box {
+    display: flex;
+    .left-text {
+        margin-right: 10px;
+    }
 }
 </style>
