@@ -11,9 +11,10 @@
         </a-input-search>
         <div class="tree-select-main">
             <div class="tree-circle">
-                <a-spin :spinning="loading1" :delay="500" 
-                    v-if="realData.length > 0"
-                >
+                <a-spin
+                    :spinning="loading1"
+                    :delay="500"
+                    v-if="realData.length > 0">
                     <div
                         v-for="item in realData"
                         :key="generateId(item)"
@@ -42,30 +43,36 @@
                                     v-else />
                                 <div class="title">
                                     <div class="title-left">
-                                        <span v-if="!item.edit">{{
-                                            item.name
-                                        }}</span>
-                                        <a-input
-                                            v-else
-                                            v-model:value="item.name"
-                                            id="input1"
-                                            :placeholder="
-                                                $t('item-bom.title_the_ph')
-                                            "
-                                            @blur.stop="handleEditName(item)"
-                                            @pressEnter.stop="
-                                                handleEditName(item)
-                                            " />
-                                    </div>
-                                    
-                                    <div
-                                        class="title-right"
-                                        v-if="item.flag_new">
-                                        {{ $t("item-bom.change_new_version") }}
+                                        <div class="title-left-top">
+                                            <span v-if="!item.edit">{{
+                                                item.name
+                                            }}</span>
+                                            <a-input
+                                                v-else
+                                                v-model:value="item.name"
+                                                id="input1"
+                                                :placeholder="
+                                                    $t('item-bom.title_the_ph')
+                                                "
+                                                @blur.stop="
+                                                    handleEditName(item)
+                                                "
+                                                @pressEnter.stop="
+                                                    handleEditName(item)
+                                                " />
+                                        </div>
+                                        <div class="title-left-bottom">
+                                            {{ item.sync_id }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="edit" @click.stop="handleEdit(item,$event)">
+                            <div
+                                class="edit"
+                                @click.stop="handleEdit(item, $event)">
+                                <div class="new_version" v-if="item.flag_new">
+                                    {{ $t("item-bom.change_new_version") }}
+                                </div>
                                 <MySvgIcon icon-class="edit" />
                             </div>
                         </div>
@@ -92,10 +99,13 @@
                                                             : 'up-arrow'
                                                     "
                                                     class="arrow" />
-                                                <span :class="{
-                                                    'common-title':item1.count <= 0,
-                                                    'common-title2':item1.count > 0,
-                                                }"
+                                                <span
+                                                    :class="{
+                                                        'common-title':
+                                                            item1.count <= 0,
+                                                        'common-title2':
+                                                            item1.count > 0,
+                                                    }"
                                                     >{{
                                                         item1.version
                                                     }}版本</span
@@ -106,11 +116,18 @@
                                                     {{ $t("item-bom.change") }}
                                                 </span>
                                             </div>
-                                            <div :class="{'bottom-area':item1.count > 0,'bottom-area2':item1.count <= 0}">
+                                            <div
+                                                :class="{
+                                                    'bottom-area':
+                                                        item1.count > 0,
+                                                    'bottom-area2':
+                                                        item1.count <= 0,
+                                                }">
                                                 <span class="time">
                                                     {{
                                                         Util.timeFilter(
-                                                            item1.effective_time,3
+                                                            item1.effective_time,
+                                                            3
                                                         )
                                                     }}</span
                                                 >
@@ -118,7 +135,9 @@
                                         </div>
                                         <div
                                             class="add"
-                                            @click.stop="addCategory(item,item1)">
+                                            @click.stop="
+                                                addCategory(item, item1)
+                                            ">
                                             <MySvgIcon icon-class="add" />
                                             <span>{{
                                                 $t("item-bom.add_category")
@@ -207,11 +226,14 @@
                         </div>
                     </div>
                 </a-spin>
-                <a-empty  :description="$t('item-bom.description_empty')"  v-else class="empty"/>
+                <a-empty
+                    :description="$t('item-bom.description_empty')"
+                    v-else
+                    class="empty" />
             </div>
         </div>
     </div>
-    <div ref="wrap"> 
+    <div ref="wrap">
         <a-modal
             v-model:visible="visible"
             :title="$t('item-bom.confirm_delete')"
@@ -222,8 +244,7 @@
             :closable="false"
             class="delete-modal"
             :getContainer="() => wrap"
-            @cancel="visible = false"
-        >
+            @cancel="visible = false">
             <p class="content">{{ $t("item-bom.confirm_delete_content") }}</p>
         </a-modal>
     </div>
@@ -256,7 +277,7 @@ let activeKey = ref("");
 let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
-let addValue = ref('新增')
+let addValue = ref("新增");
 let visible = ref(false);
 // 删除的item及其父级item
 let deleteItem = ref(null);
@@ -323,7 +344,7 @@ const selectKey = (parentItem = {}, item) => {
             parentItem.children.forEach((item1) => {
                 item1.expand = false;
                 item1.select = false;
-            }); 
+            });
             // 展开三级
             item.expand = true;
             item.select = true;
@@ -336,7 +357,7 @@ const selectKey = (parentItem = {}, item) => {
                 category_id: "",
                 name: item.name,
                 sync_id: "",
-                flag_new:item.flag_new
+                flag_new: item.flag_new,
             });
             break;
         case 3:
@@ -378,16 +399,17 @@ const expand = (item) => {
     }
 };
 // 编辑
-const handleEdit = (item,e) => {
+const handleEdit = (item, e) => {
     item.edit = true;
     // 当前元素的兄弟元素下》title》title-left》a-input
     setTimeout(() => {
-        const inputDom = e.target.parentNode.parentNode.querySelector('.title-left>.ant-input')
-        console.log(inputDom)
+        const inputDom =
+            e.target.parentNode.parentNode.parentNode.querySelector(
+                ".title-left>.title-left-top>.ant-input"
+            );
         // 聚焦
-        inputDom&&inputDom.focus()
-    },200);
-    
+        inputDom && inputDom.focus();
+    }, 200);
 };
 // 编辑名称后的entry和blur事件
 const handleEditName = (item) => {
@@ -500,7 +522,7 @@ const editCategoryName = (item) => {
         });
 };
 // 添加分类
-const addCategory = (parentItem,item) => {
+const addCategory = (parentItem, item) => {
     // 所有的二级收起，add为false
     parentItem.children.forEach((item1) => {
         item1.expand = false;
@@ -579,8 +601,7 @@ const handleOk = () => {
             setTimeout(() => {
                 // 找出商品裂变中的item
                 let rootIndex = realData.value.findIndex(
-                    (item1) =>
-                        item1.sync_id === deleteParentItem.value.sync_id
+                    (item1) => item1.sync_id === deleteParentItem.value.sync_id
                 );
                 // 找出版本列中的item
                 let index = realData.value[rootIndex].children.findIndex(
@@ -727,35 +748,45 @@ onMounted(() => {
                             }
                         }
                         .title {
-                            margin-left: 10px;
+                            margin-left: 16px;
                             display: flex;
                             align-items: center;
                             .title-left {
                                 display: flex;
-                                align-items: center;
-                                .title-input {
-                                    width: 100px;
-                                    margin-left: 10px;
+                                align-items: flex-start;
+                                flex-direction: column;
+                                .title-left-top {
+                                    display: flex;
+                                    align-items: center;
+                                    .title-input {
+                                        width: 100px;
+                                        margin-left: 10px;
+                                    }
                                 }
-                            }
-                            .title-right {
-                                min-width: 78px;
-                                height: 24px;
-                                text-align: center;
-                                margin-left: 10px;
-                                border-radius: 4px;
-                                background-color: rgba(38, 171, 84, 0.1);
-                                color: #26ab54;
-                                font-size: 14px;
-                                padding: 0 4px;
                             }
                         }
                     }
                     .edit {
-                        width: 16px;
-                        height: 16px;
                         line-height: 1;
                         font-size: 16px;
+                        display: flex;
+                        align-items: center;
+                        .new_version {
+                            min-width: 78px;
+                            height: 24px;
+                            line-height: 24px;
+                            text-align: center;
+                            border-radius: 4px;
+                            background-color: rgba(38, 171, 84, 0.1);
+                            color: #26ab54;
+                            font-size: 14px;
+                            padding: 0 4px;
+                            margin-right: 10px;
+                        }
+                        .svg-icon{
+                            font-size: 16px;
+                            line-height: 16px;
+                        }
                     }
                 }
                 .expand-area {
@@ -791,11 +822,11 @@ onMounted(() => {
                                         font-size: 14px;
                                         margin-left: 20px;
                                     }
-                                    .common-title2{
+                                    .common-title2 {
                                         margin-left: 0 !important;
                                         font-size: 14px;
                                     }
-                                    
+
                                     .green-title {
                                         color: #26ab54;
                                     }
@@ -814,14 +845,15 @@ onMounted(() => {
                                         border-radius: 4px;
                                     }
                                 }
-                                .bottom-area,.bottom-area2 {
+                                .bottom-area,
+                                .bottom-area2 {
                                     margin-top: 4px;
                                     color: #666;
                                     font-size: 12px;
                                     text-align: left;
                                     padding-left: 24px;
                                 }
-                                .bottom-area2{
+                                .bottom-area2 {
                                     padding-left: 20px !important;
                                 }
                             }
@@ -903,16 +935,16 @@ onMounted(() => {
                 }
             }
         }
-        .empty{
+        .empty {
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-                :deep(.ant-empty-description){
-                    color: #8090A6 !important;
-                    font-size: 14px;
-                }
+            :deep(.ant-empty-description) {
+                color: #8090a6 !important;
+                font-size: 14px;
+            }
         }
     }
     .pointer {
@@ -927,52 +959,50 @@ onMounted(() => {
 :deep(.delete-modal) {
     min-width: 320px !important;
     width: auto !important;
-    .ant-modal-content{
+    .ant-modal-content {
         border-radius: 4px;
-        .ant-modal-header{
+        .ant-modal-header {
             border: none !important;
             padding-top: 24px !important;
             padding-bottom: 0 !important;
             height: auto !important;
             padding: 24px 80px 0;
-            .ant-modal-title{
+            .ant-modal-title {
                 height: auto !important;
                 text-align: center !important;
-                color: #1D2129;
+                color: #1d2129;
                 font-size: 18px;
                 font-weight: 600;
             }
         }
-        .ant-modal-body{
+        .ant-modal-body {
             padding: 34px 24px 34px;
-            .content{
+            .content {
                 text-align: center;
-                
             }
         }
-        .ant-modal-footer{
+        .ant-modal-footer {
             text-align: center;
             padding-top: 18px;
             padding-bottom: 18px;
             height: auto !important;
-            border-color:#F2F3F5 !important ;
-            .ant-btn{
+            border-color: #f2f3f5 !important ;
+            .ant-btn {
                 height: 32px;
                 padding: 6px 16px;
                 justify-content: center;
                 align-items: center;
-                color:#1D2129;
+                color: #1d2129;
                 border-radius: 4px;
-                border: 1px solid #E5E6EB;
-                &:hover{
-                    border: 1px solid #E5E6EB;
+                border: 1px solid #e5e6eb;
+                &:hover {
+                    border: 1px solid #e5e6eb;
                 }
             }
-            .ant-btn-primary{
+            .ant-btn-primary {
                 color: #fff;
             }
         }
     }
 }
-
 </style>
