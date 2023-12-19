@@ -11,6 +11,27 @@
             </div>
         </div>
         <ItemHeader :detail="detail" v-if="indep_flag" :show-spec="true" />
+        <!-- 规格 -->
+        <div class="form-block">
+            <div class="form-title">
+                <div class="title">{{ $t("i.mode") }}</div>
+            </div>
+            <div class="form-content">
+                <div class="form-item">
+                    <div class="key">{{ $t("i.mode") }}</div>
+                    <div class="value">
+                        <a-radio-group
+                            v-model:value="specific.mode"
+                            @change="handleSpecificModeChange"
+                        >
+                            <a-radio :value="1">{{ $t("i.single") }}</a-radio>
+                            <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
+                        </a-radio-group>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-block">
             <!-- 基本信息 -->
             <div class="form-title">
@@ -72,7 +93,7 @@
                     </div>
                 </div>
                 <!-- 实例编码 -->
-                <div class="form-item required" v-if="!indep_flag">
+                <div class="form-item required" v-if="!indep_flag && false">
                     <div class="key">
                         {{ $t('n.flag_entity') }}
                         <a-tooltip :title="$t('item-edit.flag_entity_keyword')">
@@ -89,7 +110,7 @@
                     </div>
                 </div>
                 <!-- 商品品号 -->
-                <div class="form-item required" v-if="!indep_flag">
+                <div class="form-item required" v-if="!indep_flag && false">
                     <div
                         class="key"
                         :class="form.model === '' && isValidate ? 'error' : ''"
@@ -109,7 +130,7 @@
                         />
                     </div>
                 </div>
-                <!-- 商品编码 -->
+                <!-- 商品编码 改为  SKU编码-->
                 <div
                     class="form-item required"
                     v-if="specific.mode === 1 || indep_flag"
@@ -199,7 +220,7 @@
                     </div>
                 </div> -->
                     <!-- 图面代号 -->
-                    <div class="form-item required">
+                    <div class="form-item required" v-if="false">
                         <div
                             class="key"
                             :class="
@@ -332,7 +353,7 @@
                 <div class="title">{{ $t("i.image") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item img-upload">
+                <div class="form-item required img-upload">
                     <div class="key">{{ $t("i.cover") }}</div>
                     <div class="value">
                         <a-upload
@@ -364,7 +385,7 @@
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
-                <div class="form-item img-upload">
+                <div class="form-item required img-upload">
                     <div class="key">{{ $t("i.picture") }}</div>
                     <div class="value">
                         <a-upload
@@ -481,12 +502,12 @@
             </div>
         </div>
         <!-- 规格信息 -->
-        <div class="form-block" v-if="!indep_flag">
+        <div class="form-block" v-if="!indep_flag && specific.mode === 2">
             <div class="form-title">
                 <div class="title">{{ $t("i.information") }}</div>
             </div>
             <div class="form-content" style="overflow-x: auto;">
-                <div class="form-item">
+                <!-- <div class="form-item">
                     <div class="key">{{ $t("i.mode") }}</div>
                     <div class="value">
                         <a-radio-group
@@ -497,7 +518,7 @@
                             <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
                         </a-radio-group>
                     </div>
-                </div>
+                </div> -->
                 <template v-if="specific.mode === 2">
                     <div class="form-item specific-config">
                         <div class="key" :class="{ 'form-dispaly-key': $i18n.locale === 'en' }">
@@ -1225,8 +1246,8 @@
                 </template>
             </div>
         </div>
-        <!-- 单规格时的 价格信息 -->
-        <div class="form-block" v-if="specific.mode === 1 || indep_flag">
+        <!-- 单规格时的 价格信息 specific.mode === 1 || indep_flag-->
+        <div class="form-block" v-if="false">
             <div class="form-title">
                 <div class="title">{{ $t("i.price_information") }}</div>
             </div>
@@ -1918,8 +1939,8 @@ export default {
 
             if (this.specific.mode === 2) {
                 this.form.code = this.specific.data[0].code;
-                this.form.name = this.specific.data[0].name;
-                this.form.name_en = this.specific.data[0].name_en;
+                // this.form.name = this.specific.data[0].name;
+                // this.form.name_en = this.specific.data[0].name_en;
                 this.form.price = this.specific.data[0].price;
                 this.form.fob_eur = this.specific.data[0].fob_eur;
                 this.form.fob_usd = this.specific.data[0].fob_usd;
@@ -2061,16 +2082,16 @@ export default {
                     `${this.$t("def.enter")}(${this.$t("n.type")})`
                 );
             }
-            // // 实例编码 否 0 是 1
+            /* // // 实例编码 否 0 是 1
             if (form.flag_entity != 0 && form.flag_entity != 1) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
-            }
-            // 商品品号
+            } */
+           /*  // 商品品号
             if (!form.model) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("i.number")})`
                 );
-            }
+            } */
             // 商品编码
             if (!form.code) {
                 return this.$message.warning(
@@ -2095,12 +2116,12 @@ export default {
             }
             // 1 整车 2 ...其他的
             if (form.type == 1) {
-                // 图面代号
+                /* // 图面代号
                 if (!form.drawing_code) {
                     return this.$message.warning(
                         `${this.$t("def.enter")}(${this.$t("d.drawing_code")})`
                     );
-                }
+                } */
                 // // (临时存的定金支付)定金支付
                 // // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
                 // if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
@@ -2321,8 +2342,8 @@ export default {
                 ];
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code;
-                this.form.name = this.specific.data[0].name;
-                this.form.name_en = this.specific.data[0].name_en;
+                // this.form.name = this.specific.data[0].name;
+                // this.form.name_en = this.specific.data[0].name_en;
                 this.form.price = this.specific.data[0].price;
                 this.form.fob_eur = this.specific.data[0].fob_eur;
                 this.form.fob_usd = this.specific.data[0].fob_usd;
