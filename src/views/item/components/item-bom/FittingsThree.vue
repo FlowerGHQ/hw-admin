@@ -229,7 +229,7 @@
                         </a-tooltip>
                     </span>
                     <span v-if="column.key === 'effective_time' /*创建时间*/">
-                        {{ $Util.timeFilter(text) }}
+                        {{ $Util.timeFilter(text, 3) }}
                     </span>
                     <span v-if="column.key === 'comment' /*备注*/">
                         <a-tooltip>
@@ -762,9 +762,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 				margin-top: 31px;
 				display: flex;
 				.content-left {
-					min-width: 206px;
-					max-width: 206px;
+                    white-space: nowrap;
 					.left-list {
+                        width: 160px;
 						border: 1px solid #EEE;
 						border-radius: 4px;
 						.left-list-header {
@@ -783,6 +783,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 							text-align: center;							
 							font-size: 14px;
 							font-weight: 400;
+                            white-space: pre-wrap;
 						}
                         .sidebar-points {
                             padding: 0 10px;
