@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @refresh="refresh" @update:visibility='val=>{ classifyModalShow = val }'></ClassifyModal>
+    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @refresh="refresh" @update:visibility="setValue"></ClassifyModal>
   </div>
 </template>
 
@@ -139,6 +139,12 @@ const refresh = () => {
     return;
   }
   allComRef.value.getTableDataFetch();
+}
+
+const setValue = (val) => {
+
+    classifyModalShow.value = val;
+    if(!val) { level2CodeStr.value = '' };
 }
 </script>
 

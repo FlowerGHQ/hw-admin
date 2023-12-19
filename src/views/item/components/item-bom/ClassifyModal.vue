@@ -142,6 +142,7 @@ watch(
         if(!newValue) {
             codeStr.value = '';
             time.value=null;
+            if(level.value === 2) categoryId.value = '';
             return;
         }
     }
@@ -149,11 +150,11 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
-        time.value = setTimeout(()=>{
-            nextTick(()=>{
+        /* time.value = setTimeout(()=>{
+            nextTick(()=>{ */
                 handleSearch()
-            })
-        },200)
+        /*     })
+        },200) */
     })
 
 watch(
@@ -170,11 +171,11 @@ watch(
     () => props.code,
     (newValue, oldValue) => {
         codeStr.value = newValue;
-        time.value = setTimeout(()=>{
-            nextTick(()=>{
+        /* time.value = setTimeout(()=>{
+            nextTick(()=>{ */
                 handleSearch()
-            })
-        },200)
+         /*    })
+        },200) */
     }    
         
 )
