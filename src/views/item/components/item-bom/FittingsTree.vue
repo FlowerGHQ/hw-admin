@@ -96,9 +96,9 @@
                                                     'common-title':item1.count <= 0,
                                                     'common-title2':item1.count > 0,
                                                 }"
-                                                    >{{ item1.name }} ({{
+                                                    >{{
                                                         item1.version
-                                                    }}版本)</span
+                                                    }}版本</span
                                                 >
                                                 <span
                                                     class="new-version"
@@ -106,7 +106,7 @@
                                                     {{ $t("item-bom.change") }}
                                                 </span>
                                             </div>
-                                            <div class="bottom-area">
+                                            <div :class="{'bottom-area':item1.count > 0,'bottom-area2':item1.count <= 0}">
                                                 <span class="time">
                                                     {{
                                                         Util.timeFilter(
@@ -118,7 +118,7 @@
                                         </div>
                                         <div
                                             class="add"
-                                            @click.stop="addCategory(item1)">
+                                            @click.stop="addCategory(item,item1)">
                                             <MySvgIcon icon-class="add" />
                                             <span>{{
                                                 $t("item-bom.add_category")
@@ -256,8 +256,7 @@ let activeKey = ref("");
 let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
-let addValue = ref(null);
-// 弹框的显示
+let addValue = ref('新增')
 let visible = ref(false);
 // 删除的item及其父级item
 let deleteItem = ref(null);
@@ -320,7 +319,16 @@ const selectKey = (parentItem = {}, item) => {
             break;
         case 2:
             activeKey.value = String(item.id) + String(item.level);
-            console.log(item)
+            // 所有的二级收起来
+            parentItem.children.forEach((item1) => {
+                item1.expand = false;
+                item1.select = false;
+            }); 
+            // 展开三级
+            item.expand = true;
+            item.select = true;
+            // 请求三级
+            getCategory(item);
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: item.id,
@@ -445,6 +453,7 @@ const getVersion = (item) => {
 // 请求版本下的分类
 const getCategory = (item) => {
     loading3.value = true;
+
     Core.Api.ITEM_BOM.listCategory({
         bom_id: item.id,
     })
@@ -491,7 +500,12 @@ const editCategoryName = (item) => {
         });
 };
 // 添加分类
-const addCategory = (item) => {
+const addCategory = (parentItem,item) => {
+    // 所有的二级收起，add为false
+    parentItem.children.forEach((item1) => {
+        item1.expand = false;
+        item1.add = false;
+    });
     item.add = true;
     item.expand = true;
     // 请求分类列表
@@ -527,9 +541,7 @@ const handleAddCategory = (item) => {
             item.add = false;
             item.expand = true;
             addValue.value = null;
-
             console.log(realData.value);
-
             setTimeout(() => {
                 // 找到商品列表中的这个item
                 let parentItemIndex = realData.value.findIndex(
@@ -777,7 +789,7 @@ onMounted(() => {
                                     .green-title,
                                     .common-title {
                                         font-size: 14px;
-                                        margin-left: 24px;
+                                        margin-left: 20px;
                                     }
                                     .common-title2{
                                         margin-left: 0 !important;
@@ -802,12 +814,15 @@ onMounted(() => {
                                         border-radius: 4px;
                                     }
                                 }
-                                .bottom-area {
+                                .bottom-area,.bottom-area2 {
                                     margin-top: 4px;
                                     color: #666;
                                     font-size: 12px;
                                     text-align: left;
-                                    padding-left: 54px;
+                                    padding-left: 24px;
+                                }
+                                .bottom-area2{
+                                    padding-left: 20px !important;
                                 }
                             }
                             .add {

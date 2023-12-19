@@ -11,15 +11,15 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
       port: 8088
     },
-    // build: {
-    //   minify: 'terser', // 混淆器，terser构建后文件体积更小
-    //   terserOptions: {
-    //     compress: {
-    //       drop_console: true,
-    //       drop_debugger: true
-    //     }
-    //   }
-    // },
+    build: {
+      minify: 'terser', // 混淆器，terser构建后文件体积更小
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true
+        }
+      }
+    },
     plugins: [
       vue(),
       createSvgIconsPlugin({
