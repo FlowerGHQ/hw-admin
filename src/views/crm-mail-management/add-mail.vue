@@ -19,7 +19,13 @@
                         {{ $t('mail-management.recipients') }}
                     </div>
                     <div class="value m-l-8">
-                        <a-radio v-model:checked="checked">所有欧洲订阅用户</a-radio>
+                        <a-select
+                            style="width: 100%;"
+                            :showArrow="false"
+                            ref="select"
+                        >
+                            <a-select-option value="1">所有欧洲订阅用户</a-select-option>
+                        </a-select>
                     </div>
                 </a-col>
                 <a-col class="search-col">
@@ -185,9 +191,9 @@
                     </div>
                     <div class="value m-l-8">
                         <a-radio-group v-model:value="value">
-                            <!-- <template v-for="item in istext" :key=""></template> -->
-                            <a-radio :value="1">是</a-radio>
-                            <a-radio :value="2">否</a-radio>                            
+                            <template v-for="(item, index) in istext" :key="index">                            
+                                <a-radio :value="item.value">{{ item[$i18n.locale] }}</a-radio>
+                            </template>                                                      
                         </a-radio-group>
                     </div>
                 </a-col>
@@ -236,12 +242,12 @@ const formData = ref({
 // 是否文本
 const istext = ref([
     {
-        key: 1,
+        value: 1,
         zh: "是",
         en: "Yes",
     }, 
     {
-        key: 0,
+        value: 0,
         zh: "否",
         en: "No",
     }
