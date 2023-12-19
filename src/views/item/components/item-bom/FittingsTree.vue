@@ -135,6 +135,7 @@
                                         </div>
                                         <div
                                             class="add"
+                                            v-if="generateId(item1) === activeKey"
                                             @click.stop="
                                                 addCategory(item, item1)
                                             ">
@@ -306,6 +307,17 @@ const props = defineProps({
 const onSearch = (value) => {
     getGoodsList();
 };
+const setChildRen = (arr,level) => {
+    arr.forEach((item) => {
+        item.children = [];
+        item.select = false;
+        item.expand = false;
+        item.edit = false;
+        item.add = false;
+        item.level = level;
+    });
+    return arr;
+};
 // 生成id 组成为唯一标识+level
 const generateId = (item) => {
     switch (item.level) {
@@ -441,14 +453,7 @@ const getGoodsList = () => {
     })
         .then((res) => {
             realData.value = res.list;
-            realData.value.forEach((item) => {
-                item.select = false;
-                item.expand = false;
-                item.children = [];
-                item.edit = false;
-                item.add = false;
-                item.level = 1;
-            });
+            realData.value = setChildRen(realData.value,1)
             loading1.value = false;
         })
         .catch((err) => {
@@ -464,14 +469,7 @@ const getVersion = (item) => {
     })
         .then((res) => {
             item.children = res.list;
-            item.children.forEach((item1) => {
-                item1.select = false;
-                item1.expand = false;
-                item1.children = [];
-                item1.edit = false;
-                item1.add = false;
-                item1.level = 2;
-            });
+            item.children = setChildRen(item.children,2)
             loading2.value = false;
         })
         .catch((err) => {
@@ -487,14 +485,7 @@ const getCategory = (item) => {
     })
         .then((res) => {
             item.children = res.list;
-            item.children.forEach((item1) => {
-                item1.select = false;
-                item1.expand = false;
-                item1.children = [];
-                item1.edit = false;
-                item1.add = false;
-                item1.level = 3;
-            });
+            item.children = setChildRen(item.children,3)
             loading3.value = false;
         })
         .catch((err) => {
@@ -520,7 +511,7 @@ const editCategoryName = (item) => {
     });
 };
 // 添加分类
-const addCategory = (parentItem, item) => {
+const addCategory = async (parentItem, item) => {
     // 所有的二级收起，add为false
     parentItem.children.forEach((item1) => {
         item1.expand = false;
@@ -528,14 +519,14 @@ const addCategory = (parentItem, item) => {
     });
     item.add = true;
     item.expand = true;
+    await getCategory(item);
     timer1.value = setTimeout(() => {
         // 请求分类列表
-        getCategory(item);
         const inputDom = document.querySelector(
             ".add-category-select>.ant-input"
         );
         inputDom && inputDom.focus();
-    }, 200);
+    });
 };
 // 添加分类
 const handleAddCategory = (item) => {
@@ -549,7 +540,7 @@ const handleAddCategory = (item) => {
             addValue.value = "新增";
             // 请求分类列表
             await getCategory(item);
-            timer5.value =   setTimeout(() => {
+            timer5.value = setTimeout(() => {
                 // 找出商品裂变中的item
                 let rootIndex = realData.value.findIndex(
                     (item1) => item1.sync_id === item.sync_id
@@ -566,6 +557,7 @@ const handleAddCategory = (item) => {
                 realData.value[rootIndex].children[index].count
                     ? realData.value[rootIndex].children[index].count++
                     : (realData.value[rootIndex].children[index].count = 1);
+                    // 传递参数促进二级页面的刷新渲染
                     $emit("update:activeObj", {
                         level: 2,
                         version_id: item.id,
@@ -574,7 +566,7 @@ const handleAddCategory = (item) => {
                         name: item.name,
                         sync_id: "",
                     });
-            }, 200);
+            },200);
         })
         .catch((err) => {
             console.log(err);
@@ -589,8 +581,8 @@ const handleOk = () => {
     Core.Api.ITEM_BOM.deleteCategory({
         id: deleteItem.value.id,
     })
-        .then((res) => {
-            getCategory(deleteParentItem.value);
+        .then(async (res) => {
+            await getCategory(deleteParentItem.value);
             timer3.value = setTimeout(() => {
                 // 找出商品裂变中的item
                 let rootIndex = realData.value.findIndex(
@@ -874,6 +866,7 @@ onBeforeUnmount(() => {
                                 .svg-icon {
                                     font-size: 16px;
                                     margin-right: 4px;
+                                    margin-top: 2px;
                                 }
                             }
                         }
