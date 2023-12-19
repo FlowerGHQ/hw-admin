@@ -22,9 +22,15 @@
                         <a-select
                             style="width: 100%;"
                             :showArrow="false"
+                            :disabled="true"
+                            value="1"
                             ref="select"
                         >
-                            <a-select-option value="1">所有欧洲订阅用户</a-select-option>
+                            <template v-for="(item, index) in selectTemplate" :key="index">                            
+                                <a-select-option :value="item.value">
+                                    {{ item[$i18n.locale] }}
+                                </a-select-option>
+                            </template>
                         </a-select>
                     </div>
                 </a-col>
@@ -253,11 +259,19 @@ const istext = ref([
     }
 ])
 
+const selectTemplate = ref([
+    {
+        value: "1",
+        zh: "所有欧洲订阅用户",
+        en: "All European subscribers",
+    }
+])
+
+
 </script>
 
 <style lang="less" scoped>
-.add-mail {
-    font-family: PingFang SC;
+.add-mail {    
     padding: 26px 20px;
     box-sizing: border-box;
     .form-module {
@@ -343,5 +357,11 @@ const istext = ref([
 
 .w-100 {
     width: 100px;
+}
+
+:deep(.ant-select-selection-item) {
+    color: #1D2129;
+    font-size: 14px;
+    font-weight: 400;
 }
 </style>
