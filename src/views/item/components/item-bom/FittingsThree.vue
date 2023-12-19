@@ -229,7 +229,7 @@
                         </a-tooltip>
                     </span>
                     <span v-if="column.key === 'effective_time' /*创建时间*/">
-                        {{ $Util.timeFilter(text) }}
+                        {{ $Util.timeFilter(text, 3) }}
                     </span>
                     <span v-if="column.key === 'comment' /*备注*/">
                         <a-tooltip>
@@ -783,6 +783,7 @@ const handleTableChange = (pagination, filters, sorter) => {
 							text-align: center;							
 							font-size: 14px;
 							font-weight: 400;
+                            white-space: pre-wrap;
 						}
                         .sidebar-points {
                             padding: 0 10px;
