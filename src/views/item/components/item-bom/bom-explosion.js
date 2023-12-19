@@ -2,7 +2,6 @@ import { computed, ref } from "vue";
 var ctx = null; // canvas 2d实例
 
 const exploreCanvas = ref(null); // canvas ref
-const exploreImg = ref(null); // 照片 ref 之所以不直接画在canvas中是为了后面移动要清除整个画布
 const sidebarData = ref([
     // { id: 1, index: 1 },
     // { id: 1, index: 1 },
@@ -62,17 +61,31 @@ const pointerListFilter = (arr) => {
     return result;
 };
 // 初始化
-const init = (arr) => {
+const init = (arr, explosionImgItem) => {
     ctx = exploreCanvas.value.getContext("2d");
-        
-    // 等图片加载完
-    exploreImg.value.onload = () => {
+
+    const isImg = document.querySelector('#cavnasImg')
+    const pointContain = document.querySelector('.point-contain')
+    const Canvas = document.querySelector('#exploreCanvas')
+
+    if (isImg) {
+        // 删除上一个Img
+        pointContain.removeChild(isImg)
+    }
+
+    const img = document.createElement('img')
+    img.src = explosionImgItem.img
+    img.setAttribute('id', 'cavnasImg')
+    pointContain.insertBefore(img, Canvas)
+
+    // 第一次进来 初始化
+    img.onload = () => {
         console.log("图片加载完成");
-        setCanvasAttr(exploreImg.value.width, exploreImg.value.height);        
+        setCanvasAttr(img.width, img.height);
         initLine(arr)
     };
-    exploreImg.value.onerror = () => {
-        console.log("加载失败");
+    img.onerror = () => {
+        console.log("图片加载失败");
     };
 };
 // 容器内鼠标移动
@@ -163,10 +176,13 @@ const onSilderCopy = (item, index) => {
     const obj = item;
 
     item.start.forEach((el, i) => {
-        obj.start[i + 1] = {
-            x: obj.start[i].x + 20,
-            y: obj.start[i].y,
-        };
+        // 让新增的一条是上一条的增加数据
+        if ((i + 1) === item.start.length) {
+            obj.start[i + 1] = {
+                x: obj.start[i].x + 20,
+                y: obj.start[i].y + 10,
+            };
+        }
     });
     sidebarData.value.push(obj);
 
@@ -250,7 +266,6 @@ export {
     pointerList,
     sidebarData,
     exploreCanvas,
-    exploreImg,
     init,
     mousemoveHandler,
     mouseUpHandler,
