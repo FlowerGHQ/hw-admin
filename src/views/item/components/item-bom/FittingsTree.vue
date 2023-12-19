@@ -67,13 +67,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                class="edit"
-                                @click.stop="handleEdit(item, $event)">
+                            <div class="edit">
                                 <div class="new_version" v-if="item.flag_new">
                                     {{ $t("item-bom.change_new_version") }}
                                 </div>
-                                <MySvgIcon icon-class="edit" />
+                                <MySvgIcon
+                                    icon-class="edit"
+                                    @click.stop="handleEdit(item, $event)" />
                             </div>
                         </div>
                         <div class="expand-area" v-if="item.expand">
@@ -288,6 +288,7 @@ let timer1 = ref(null);
 let timer2 = ref(null);
 let timer3 = ref(null);
 let timer4 = ref(null);
+let timer5 = ref(null);
 
 // 接受activeObj
 const props = defineProps({
@@ -481,7 +482,6 @@ const getVersion = (item) => {
 // 请求版本下的分类
 const getCategory = (item) => {
     loading3.value = true;
-
     Core.Api.ITEM_BOM.listCategory({
         bom_id: item.id,
     })
@@ -545,29 +545,36 @@ const handleAddCategory = (item) => {
         bom_id: item.id,
         type: 2,
     })
-        .then((res) => {
-            item.add = false;
+        .then(async (res) => {
             addValue.value = "新增";
-            getCategory(item);
-            timer2.value = setTimeout(() => {
-                // 请求当前分类列表
-                // 找到商品列表中的这个item
-                let parentItemIndex = realData.value.findIndex(
+            // 请求分类列表
+            await getCategory(item);
+            timer5.value =   setTimeout(() => {
+                // 找出商品裂变中的item
+                let rootIndex = realData.value.findIndex(
                     (item1) => item1.sync_id === item.sync_id
                 );
-                let index = realData.value[parentItemIndex].children.findIndex(
+                // 找出版本列中的item
+                let index = realData.value[rootIndex].children.findIndex(
                     (item1) => item1.id === item.id
                 );
                 // 商品列展开
-                realData.value[parentItemIndex].expand = true;
+                realData.value[rootIndex].expand = true;
                 // 版本列展开
-                realData.value[parentItemIndex].children[index].expand = true;
-                realData.value[parentItemIndex].children[index].count
-                    ? realData.value[parentItemIndex].children[index].count++
-                    : (realData.value[parentItemIndex].children[
-                          index
-                      ].count = 1);
-            },200);
+                realData.value[rootIndex].children[index].expand = true;
+                realData.value[rootIndex].children[index].add = false;
+                realData.value[rootIndex].children[index].count
+                    ? realData.value[rootIndex].children[index].count++
+                    : (realData.value[rootIndex].children[index].count = 1);
+                    $emit("update:activeObj", {
+                        level: 2,
+                        version_id: item.id,
+                        shop_id: item.item_id,
+                        category_id: "",
+                        name: item.name,
+                        sync_id: "",
+                    });
+            }, 200);
         })
         .catch((err) => {
             console.log(err);
@@ -659,6 +666,7 @@ onBeforeUnmount(() => {
     clearTimeout(timer2.value);
     clearTimeout(timer3.value);
     clearTimeout(timer4.value);
+    clearTimeout(timer5.value);
 });
 </script>
 
