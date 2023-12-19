@@ -31,12 +31,12 @@
                     <a-tooltip>
                         <template #title>
                             {{
-                                salesArea(record.sales_area_list, $i18n.locale)
+                                salesArea(record.sales_area_list)
                             }}
                         </template>
                         <div class="one-spils cursor">
                             {{
-                                salesArea(record.sales_area_list, $i18n.locale)
+                                salesArea(record.sales_area_list)
                             }}
                         </div>
                     </a-tooltip>
@@ -65,6 +65,7 @@ import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
 import { useI18n } from "vue-i18n";
 const $i18n = useI18n();
+const locale = $i18n.locale;
 const props = defineProps({
     searchParams: {
         type: Object,
@@ -160,7 +161,7 @@ const channelPagination = ref({
         `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
 // 销售区域
-const salesArea = (arr, locale) => {
+const salesArea = (arr) => {
     let result = [];
     arr.forEach((item) => {
         if (locale === "zh") {
@@ -169,6 +170,7 @@ const salesArea = (arr, locale) => {
             result.push(item.country_en);
         }
     });
+    console.log("locale", locale);
     console.log("arr", arr);
     console.log("result", result);
     return result.length > 0 ? result.join(",") : "-";
