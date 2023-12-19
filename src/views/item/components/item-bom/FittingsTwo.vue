@@ -53,6 +53,9 @@
                 :loading="loading"
                 @change="handleTableChange"
             >
+                <template #headerCell="{ title, column }">
+                    <div class="table-title">{{ title }}</div>
+                </template>
                 <template #bodyCell="{ column, text, record }">            
                     <span v-if="column.key === 'sync_name'/*商品名称*/">
                         <a-tooltip>
@@ -477,5 +480,12 @@ defineExpose({
     display: inline-block;
     position: absolute;
     right:  20px;
+}
+
+.table-title {
+    color: #1d2129;
+    font-family: PingFang SC;
+    font-size: 14px;
+    font-weight: 500;
 }
 </style>

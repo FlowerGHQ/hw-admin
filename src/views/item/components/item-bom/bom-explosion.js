@@ -76,6 +76,8 @@ const init = (arr, explosionImgItem) => {
     const img = document.createElement('img')
     img.src = explosionImgItem.img
     img.setAttribute('id', 'cavnasImg')
+    img.setAttribute('width', '544px')
+    img.setAttribute('height', '377px')
     pointContain.insertBefore(img, Canvas)
 
     // 第一次进来 初始化
@@ -128,11 +130,13 @@ const pointMousedown = (index, type, itemStartIndex) => {
 // 设置canvas的大小
 const setCanvasAttr = (width, height) => {
     if (width > 800 || height > 800) {
-        let rate = width / height;
-        console.log("rate", rate);
+        // let rate = width / height;
+        // console.log("rate", rate);
 
-        exploreCanvas.value.width = rate >= 1 ? 800 : (width / height) * 800;
-        exploreCanvas.value.height = rate >= 1 ? 800 : (height / width) * 800;
+        // exploreCanvas.value.width = rate >= 1 ? 800 : (width / height) * 800;
+        // exploreCanvas.value.height = rate >= 1 ? 800 : (height / width) * 800;
+        exploreCanvas.value.width = width;
+        exploreCanvas.value.height = height;
     } else {
         exploreCanvas.value.width = width;
         exploreCanvas.value.height = height;
