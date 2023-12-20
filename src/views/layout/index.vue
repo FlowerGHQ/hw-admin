@@ -618,11 +618,11 @@ export default {
             .ant-menu-title-content {
                 font-size: 12px;
                 font-weight: 400;
-                color: #8090A6;
+                // color: #8090A6;
 
                 i.icon {
                     font-size: 14px;
-                    color: #B9C6DD;
+                    // color: #B9C6DD;
                     margin-right: 10px;
                 }
             }
@@ -638,19 +638,19 @@ export default {
                 }
 
                 &:hover {
-                    background-color: #F2F8FF;
+                    background-color: rgba(0, 0, 0, 0.06);
                 }
 
                 &.ant-menu-item-selected {
-                    background-color: @BG_P;
+                    background-color: #e6f7ff;
 
-                    .ant-menu-title-content {
-                        color: @TC_InP;
+                    // .ant-menu-title-content {
+                    //     color: @TC_InP;
 
-                        i.icon {
-                            color: @TC_InP;
-                        }
-                    }
+                    //     i.icon {
+                    //         color: @TC_InP;
+                    //     }
+                    // }
                 }
             }
 
@@ -668,10 +668,10 @@ export default {
                     }
 
                     .ant-menu-submenu-arrow {
-                        color: #6E7C94;
+                        // color: #6E7C94;
                         font-size: 12px;
                         right: 8px;
-                        transform: translateY(3px);
+                        // transform: translateY(3px);
 
                         &::after,
                         &::before {
@@ -687,14 +687,9 @@ export default {
                         padding-left: 16px;
                     }
                 }
-
-                &.ant-menu-submenu-open {
-                    background-color: #F3F6F8;
-
-                    .ant-menu-submenu-arrow {
-                        transform: translateY(-1px);
-                    }
-                }
+            }
+            .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+                color: #1890ff;
             }
         }
 
