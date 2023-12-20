@@ -919,6 +919,14 @@ const apiList = {
     EMAIL_SUBSCRIPTION: {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
+
+    // 邮件模板接口
+    MAIL_MANAGEMENT: {
+        add: ['PostJson', 'email-task/save'],
+        detail: ['PostJson', 'email-task/detail'],
+        list: ['PostJson', 'email-task/list'],
+        delete: ['PostJson', 'email-task/delete'],
+    }
 }; 
 
 export default new Api(baseUrl, apiList);

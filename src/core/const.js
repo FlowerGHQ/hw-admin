@@ -6,7 +6,7 @@ import defult_file from '@images/defult_file.png'
 import constModules from './modules/const/index'
 
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
-let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' //
+let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com/' //
 let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
 // let URL_POINT = 'http://10.0.0.100'  // zy
 let DISABLELOG = false

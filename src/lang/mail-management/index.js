@@ -21,6 +21,8 @@ export default {
         size_tips: "图片尺寸992X480，大小2M内",
         upload_tips: "最多上传2张，支持PNG、JPG、JPEG",
         time_tips: "请选择定时发送时间",
+        cancel: "取消",
+        confirm: "确认创建",
     },
     en: {
         email_content: "Email Content",
@@ -43,6 +45,8 @@ export default {
         size_tips: "Image size 992X480, within 2M in size",
         upload_tips: "Upload up to 2 images, supporting PNG, JPG, JPEG",
         time_tips: "Please select a scheduled sending time",
+        cancel: "Cancel",
+        confirm: "Confirm creation",
     }
 }
 
