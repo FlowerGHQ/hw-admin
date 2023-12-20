@@ -1,10 +1,102 @@
 export const mailTemplates = {
     1: `
-    <p id="title_template" style="color: #333;font-family: Montserrat;font-size: 48px;font-style: normal;font-weight: 700;line-height: 150%;margin-bottom: 16px;"></p>
-    <p id="subtitle_template" style="color: #333;font-family: Montserrat;font-size: 32px;font-style: normal;font-weight: 400;line-height: 150%;margin-bottom: 40px;"></p>
-    <div style="width: 100%;height: 1px;background: #DFDFDF;margin-bottom: 40px;"></div>
-    <p id="address_template" style="color: #333;font-family: Montserrat;font-size: 28px;font-style: normal;font-weight: 500;line-height: 150%;margin-bottom: 16px;"></p>
-    <article id="email_content_template" style="color: #666;font-family: Montserrat;font-size: 28px;font-style: normal;font-weight: 400;line-height: 150%;margin-bottom: 40px;"></article>
-    <img id="poster_template" style="width: 100%;height: auto;">
-    `
-}
+    <div style=" width: 1200px; background: rgba(82, 82, 82, 0.05); padding: 112px 64px 48px 64px; box-sizing: border-box">
+            <img
+                src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/a9f84b8fe331d34c9ae1d5a9bec2fce43698a7b06a49ebc04719f480abf60f71.png"
+                style="width: 142px; height: 24px; margin-bottom: 24px"
+            />
+
+            <div style="background-color: #fff; padding: 40px; box-sizing: border-box">
+
+                <div id="title_template" style="color: #333; font-family: Montserrat; font-size: 48px; font-weight: 700; line-height: 150%">
+                    🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁
+                </div>
+                <div style="width: 100%; height: 1px; background: #dfdfdf; margin: 40px 0px"></div>
+                <div
+                    id="address_template"
+                    style="color: #333; font-family: Montserrat; font-size: 28px; font-weight: 500; margin-bottom: 16px"
+                >
+                    Dear XXX
+                </div>
+                <article
+                    id="email_content_template"
+                    style="
+                        color: #666;
+                        font-family: Montserrat;
+                        font-size: 28px;
+                        font-weight: 400;
+                        line-height: 150%;
+                        margin-bottom: 40px;
+                    "
+                >
+                    As the joyful season approaches, we want to take a moment to express our sincere gratitude for the
+                    incredible partnership we've built together throughout 2023. Your dedication and commitment have
+                    been instrumental in the success of HORWIN, and for that, we are truly thankful.🎉Looking Forward to
+                    2024:In the spirit of shared success, we're excited to outline our expectations for the upcoming
+                    year:🤝Your Feedback Matters:Your insights have always been invaluable to us. We invite you to share
+                    your feedback, suggestions, or any thoughts you might have. Your input will continue to shape the
+                    future of HORWIN, ensuring that we grow together.🫧Connect with Us on Social Media:Stay in the loop
+                    with exclusive updates, behind-the-scenes glimpses, and exciting announcements by following us on
+                    our social media channels.Wishing You a Merry Christmas and Prosperous New Year! Cheers to a
+                    Scootacular Christmas and@RWIN Horwinning New Year!
+                </article>
+
+                <div id="url_template" style="width: 100%; margin-top: 84px;">
+                        <a href="https://www.runoob.com/cssref/func-linear-gradient.html"                        
+                            style="
+                                display: block;
+                                text-decoration: none;
+                                height: 88px;
+                                line-height: 88px;
+                                text-align: center;
+                                background: linear-gradient(100deg, #c6f 0%, #66f 100%);
+                            "
+                        >
+                            <span
+                                id="url_content_template"
+                                style="
+                                    color: #fff;
+                                    text-align: center;
+                                    font-family: Montserrat;
+                                    font-size: 32px;
+                                    font-weight: 400;                                    
+                                "
+                                >
+                                Join Us Now
+                            </span>
+                        </a>
+                </div>
+                <img
+                    id="poster_template"
+                    style="width: 100%; height: auto; margin-top: 30px"
+                    src="https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5"
+                />
+                <div
+                    id="qrcode_template"
+                    style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px;"
+                >
+                    
+                </div>
+            </div>
+
+            <div
+                style="
+                    margin-top: 48px;
+                    color: #666;
+                    font-family: Urbanist;
+                    font-size: 20px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 24px; /* 120% */
+                "
+            >
+                <div style="letter-spacing: 2px">© 2023 | HORWIN Europe GmbH</div>
+                <div style="margin-top: 8px">
+                    <span>If you no longer wish to receive these emails, you may</span>
+                    <a style="color: #c6f; text-decoration: none;" href="#">unsubscribe</a>
+                    <span>at any time.</span>
+                </div>
+            </div>
+        </div>
+    `,
+};

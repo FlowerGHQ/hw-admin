@@ -119,14 +119,14 @@ export default {
             },
             // 表格
             tableData: [],
-            mailShow: true,
+            mailShow: false,
             mailMes: {},
             mailData: {
-                'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',
-                'subtitle': '🎉Subtitle content area.',
+                'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',                
                 'address': 'Dear XXX',
                 'email_content': "As the joyful season approaches, we want to take a moment to express our sincere gratitude for the incredible partnership we've built together throughout 2023. Your dedication and commitment have been instrumental in the success of HORWIN, and for that, we are truly thankful.🎉Looking Forward to 2024:In the spirit of shared success, we're excited to outline our expectations for the upcoming year:🤝Your Feedback Matters:Your insights have always been invaluable to us. We invite you to share your feedback, suggestions, or any thoughts you might have. Your input will continue to shape the future of HORWIN, ensuring that we grow together.🫧Connect with Us on Social Media:Stay in the loop with exclusive updates, behind-the-scenes glimpses, and exciting announcements by following us on our social media channels.Wishing You a Merry Christmas and Prosperous New Year! Cheers to a Scootacular Christmas and@RWIN Horwinning New Year!",
-                'poster': 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+                'poster': 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
+                'qrcode': '',
             }
         };
     },

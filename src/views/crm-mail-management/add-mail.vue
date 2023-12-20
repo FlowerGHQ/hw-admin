@@ -5,7 +5,7 @@
             <div class="form-module">
                 <div class="module-header">
                     <div class="module-title">{{ $t('mail-management.email_content') /*邮件内容*/}}</div>
-                    <div class="preview-btn">
+                    <div class="preview-btn" @click="onPreviewBtn">
                         <a-button>{{  $t('mail-management.preview') }}</a-button>
                     </div>
                 </div>            
@@ -44,7 +44,7 @@
                             </a-select>
                         </div>
                     </a-col>
-                    <a-col class="search-col">
+                    <a-col class="search-col required">
                         <div class="key w-100 t-aligin-r">
                             <!-- 主标题 -->
                             {{ $t('mail-management.main_title') }}
@@ -57,7 +57,7 @@
                             />
                         </div>
                     </a-col>
-                    <a-col class="search-col">
+                    <a-col class="search-col required">
                         <div class="key w-100 t-aligin-r">
                             <!-- 开头称呼 -->
                             {{ $t('mail-management.initial_address') }}
@@ -239,6 +239,17 @@
         <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
             <img alt="" style="width: 100%" :src="previewImage" />
         </a-modal>
+
+        <!-- 预览模板按钮 -->
+        <a-modal 
+            v-model:visible="mailShow" 
+            width="1248px"             
+            :title="$t('crm_b.preview')" 
+            :footer="null" 
+            @cancel='mailShow = false'
+        >
+            <mailTemplete :mailData="mailData"></mailTemplete>
+        </a-modal>
     </div>
 </template>
 
@@ -247,6 +258,7 @@ import { getCurrentInstance, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import Core from '@/core'
+import mailTemplete from './components/mail-templete.vue';
 
 const { proxy } = getCurrentInstance()
 
@@ -317,6 +329,26 @@ const selectTemplate = ref([
 
 const previewVisible = ref(false) // 预览链接
 const previewImage = ref(null) // 预览链接
+
+const mailData = ref({
+    'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',    
+    'address': 'Dear XXX',
+    'email_content': "你好啊",
+    'url': "",
+    'url_content': "你好啊",
+    'poster': '',
+    'qrcode': [
+        // { 
+        //     img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
+        //     introduce: "你好啊",
+        // }, 
+        // {
+        //     img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
+        //     introduce: "你好啊",
+        // }
+    ],
+})
+const mailShow = ref(false) // 预览显示框
 
 onMounted(() => {
     if (route.query?.id) {
@@ -513,11 +545,22 @@ const onSubmit = () => {
 
 // 检查并填写是否填写
 const isRequired = (form) => {
-    if (!form.receiver_type) {
+    if (!form.receiver_type /*收件人*/) {
         return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.recipients')}`)
+    }
+    if (!form.title /*主标题*/) {
+        return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.main_title')}`)
+    }
+    if (!form.address /*开头称呼*/) {
+        return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.initial_address')}`)
     }
 
     return false
+}
+
+// 预览按钮
+const onPreviewBtn = () => {
+    mailShow.value = true
 }
 
 
