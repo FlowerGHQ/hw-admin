@@ -21,10 +21,10 @@ switch (window.location.hostname) {
         break;
     case 'eos-dev.horwincloud.com':
         URL_POINT = 'https://eos-dev-api.horwincloud.com' // 新测试服
-        break;     
+        break;
     case "10.0.0.213":
         URL_POINT = 'https://10.0.0.213:8889'
-        // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     case 'eos.hw.innotick.com':
@@ -285,8 +285,22 @@ let Const = {
             { zh: '维修', en: 'repair', value: 1 },
             // { zh: '换车', en: 'replace car', value: 2 },
             { zh: '开箱损', en: 'unpacking damage', value: 3 },
-            { zh: '电池维修', en: 'battery', value: 4 },
+            // { zh: '电池维修', en: 'battery', value: 4 },
         ],
+        // 维修单类别
+        CATEGORY_LIST_MAP: {
+            '1': { zh: '维修', en: 'repair', value: 1 },
+            // { zh: '换车', en: 'replace car', value: 2 },
+            '3': { zh: '开箱损', en: 'unpacking damage', value: 3 },
+            // { zh: '电池维修', en: 'battery', value: 4 },
+        },
+        LOG_MAP: {
+            '201': { zh: '创建', en: 'Create', value: 201 },
+            '212': { zh: '审核', en: 'Audit Success', value: 212 },
+            '211': { zh: '审核不通过', en: 'Audit Fail', value: 211 },
+            '205': { zh: '取消', en: 'Cancel', value: 205 },
+            '206': { zh: '作废', en: 'Voided', value: 206 },
+        },
         // 维修单类别
         PARTS_LIST: [
             { zh: '质保', en: 'quality guarantee', value: 5 },
@@ -297,14 +311,30 @@ let Const = {
         SERVICE_TYPE: {
             IN_REPAIR_TIME: 1,
             OUT_REPAIR_TIME: 2,
+            SPECIAL_REPAIR_TIME: 3,
         },
         SERVICE_TYPE_LIST: [
             { zh: '保内', en: 'under warranty', value: 1 },
             { zh: '保外', en: 'out of warranty', value: 2 },
         ],
         SERVICE_TYPE_MAP: {
-            '1': { zh: '保内', en: 'Under warranty' },
-            '2': { zh: '保外', en: 'Out of warranty' },
+            '0' : { zh: '特殊', en: 'Special', color: 'yellow'},
+            '1' : { zh: '保内', en: 'Under warranty', color: 'green'},
+            '2' : { zh: '保外', en: 'Out of warranty', color: 'red'},
+            '3' : { zh: '特殊', en: 'Special', color: 'yellow'},
+        },
+        // 赔付方式
+        PAYMETHOD_TYPE_MAP: {
+            '1' : { zh: '赔付配件', en: 'Pay The Spare Parts'},
+            '2' : { zh: '赔付至账户', en: 'Pay The Claim To The Account'},
+        },
+        // 工单类型
+        CATEGORY_TYPE_MAP: {
+            '1' : { zh: '维修', en: 'Repair'},
+            '2' : { zh: '换车', en: 'Transfer'},
+            '3' : { zh: '开箱损', en: 'Unpacking Damage'},
+            '2' : { zh: '电池维修', en: 'Battery Maintenance'},
+            '2' : { zh: '质保', en: 'Quality Guarantee'},
         },
         // 维修方式
         CHANNEL_LIST: [
@@ -359,6 +389,8 @@ let Const = {
             CLOSE: -10, // 订单取消
             AUDIT_FAIL: -30, // 审核未通过
             FAULT_ENTITY_AUDIT_FAIL: -40, // 故障件审核未通过
+            STATUS_VOIDED: -50, // 已作废 不可再次编辑
+            STATUS_TIMEOUT_CLOSE: -60, // 已关闭 审核不通过后超时未处理的工单的状态
         },
         STATUS_MAP: {
             '30': { key: 30, color: 'yellow', zh: '待检测', en: 'Waiting detect' },
@@ -375,6 +407,24 @@ let Const = {
             '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled' },
             '-30': { key: -30, color: 'red', zh: '工单审核未通过', en: 'Failed audit' },
             '-40': { key: -40, color: 'red', zh: '故障件审核未通过' },
+        },
+        NEW_STATUS_MAP: {
+            '30': { key: 30, color: 'yellow', zh: '待审核', en: 'Awaiting Audit'},
+            '40': { key: 40, color: 'blue', zh: '维修中', en: 'Under repair'},
+	        '45': { key: 40, color: 'blue', zh: '待结算', en: 'Waiting settlement'},
+            '60': { key: 60, color: 'orange', zh: '已结算待审核', en: 'Settled accounts and awaiting audit'},
+            '70': { key: 70, color: 'orange', zh: '已结算待审核',en: 'Settled accounts and awaiting audit'},
+            '80': { key: 80, color: 'purple', zh: '分销商审核通过', en: 'Passed audit'},
+            '90': { key: 90, color: 'green', zh: '通过', en: 'Passed'},
+            '100': { key: 100, color: 'blue', zh: '已完成', en: 'Finished settle accounts'},
+            '105': { key: 105, color: 'blue', zh: '故障件审核通过',en: ''},
+            '110': { key: 110, color: 'green', zh: '平台方已入库'},
+            '-10': { key: -10, color: 'gray', zh: '已取消', en: 'Cancelled'},
+	        '-30': { key: -30, color: 'red', zh: '不通过', en: 'Rejected'},
+            '-40': { key: -40, color: 'red', zh: '故障件审核未通过', en: 'The faulty component fails to pass the audit'},
+            '-100': { key: -100, color: 'gray', zh: '已取消', en: 'Cancelled'},
+            '-50': { key: -50, color: 'red', zh: '已作废', en: 'Have been voided'},
+            '-60': { key: -60, color: 'gray', zh: '超时不通过', en: 'Timeout fail'},
         },
         // 故障类型 - 放弃使用
         FAULT_OPTIONS_MAP: {
@@ -923,7 +973,7 @@ let Const = {
         },
     },
 
-    AUTH_LIST_TEMP: [ 
+    AUTH_LIST_TEMP: [
         /**
          * list是渲染列表
          * select表示之前被选择过了
@@ -1227,6 +1277,16 @@ let Const = {
             '20': { key: 20, zh: '采购单', en: 'Purchase order' },
             '50': { key: 50, zh: '维修单', en: 'Repair order' },
         }
+    },
+    WARRANTY: {
+        STATUS_MAP: {
+            '0': { value: 0, zh: '已上架', en: 'Already Listed', color: 'green' },
+            '-1': { value: -1, zh: '已下架', en: 'No Longer Available', color: 'red' },
+        },
+        STATUS_COLOR_MAP: {
+            '0': 'green',
+            '1': 'red',
+        },
     },
     FAULT_ENTITY: { //故障件
         STATUS: { // 故障件审核状态

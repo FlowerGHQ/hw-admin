@@ -619,7 +619,42 @@ const routes = [
             },
         ]
     },
-
+    { // 三包管理 - 平台端
+        path: '/warranty',
+        component: Layout,
+        redirect: '/warranty/time-config',
+        name: 'Warranty',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
+        meta: {
+            title: '三包管理',
+            title_en: 'Warranty Management',
+            icon: 'i_s_temp',
+            roles: [LOGIN_TYPE.ADMIN],
+            // auth: ['warranty.time-config','warranty.list'],
+        },
+        children: [
+            {
+                path: 'warranty-time-config',
+                name: 'warrantyConfig',
+                component: () => import('@/views/warranty/time-config.vue'),
+                meta: {
+                    title: '生效时间',
+                    title_en: 'Effective Time',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+            {
+                path: 'warranty-list',
+                name: 'WarrantyList',
+                component: () => import('@/views/warranty/warranty-list.vue'),
+                meta: {
+                    title: '三包时长',
+                    title_en: 'Warranty Duration',
+                    roles: [LOGIN_TYPE.ADMIN],
+                }
+            },
+        ]
+    },
     // { // 售后管理 - 平台 && 分销
     //     path: '/aftersales-supply',
     //     component: Layout,
@@ -795,6 +830,7 @@ const routes = [
                 name: 'RepairAuditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -807,6 +843,7 @@ const routes = [
                 name: 'RepairReditList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待改工单',
                     title_en: 'Pending warranty claim',
                     roles: [LOGIN_TYPE.DISTRIBUTOR, LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE],
@@ -819,6 +856,7 @@ const routes = [
                 name: 'RepairInvoiceList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待审核故障件',
                     title_en: 'Pending defective parts',
                     roles: [LOGIN_TYPE.ADMIN],
@@ -831,6 +869,7 @@ const routes = [
                 name: 'RepairFaultList',
                 component: () => import('@/views/repair/repair-list.vue'),
                 meta: {
+                    hidden: true,
                     title: '待入库故障件',
                     title_en: 'Wait recall parts',
                     roles: [LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
@@ -844,14 +883,15 @@ const routes = [
                 component: () => import('@/views/repair/repair-edit.vue'),
                 meta: {
                     hidden: true,
-                    title: '维修单编辑',
+                    title: '新增工单',
+                    title_en: 'New Work Order',
                     parent: '/repair/repair-list',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['repair-order.save'],
                 }
             },
             {
-                path: 'repair-detail',
+                path: 'repair-detail-fix',
                 name: 'RepairDetail',
                 component: () => import('@/views/repair/repair-detail.vue'),
                 meta: {
@@ -881,6 +921,17 @@ const routes = [
                     title_en: 'Fault management',
                     roles: [LOGIN_TYPE.STORE, LOGIN_TYPE.AGENT, LOGIN_TYPE.DISTRIBUTOR],
                     auth: ['fault.list'],
+                }
+            },
+            {
+                path: 'repair-detail',
+                name: 'RepairDetailFix',
+                component: () => import('@/views/repair/repair-detail-fix.vue'),
+                meta: {
+                    hidden: true,
+                    title: '维修单详情',
+                    parent: '/repair/repair-list',
+                    auth: ['repair-order.detail'],
                 }
             },
         ]
