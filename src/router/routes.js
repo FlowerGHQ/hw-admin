@@ -2167,6 +2167,16 @@ const routes = [
 					title_en: 'Add New Mail',
 				}
 			},
+			{
+				path: 'mail-send-situation',
+				name: 'MailSendSituation',
+				component: () => import('@/views/crm-mail-management/mail-send-situation.vue'),
+				meta: {
+					title: '邮件发送及统计',
+					title_en: 'Mail sending and statistics',
+                    hidden: true
+				}
+			},
 		]
 	},
 	{ // 商机管理
