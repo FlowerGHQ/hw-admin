@@ -52,10 +52,10 @@
                             </template>
                         </template>
                         <template v-if="column.key === 'send_success_count'">
-                            {{ text ? `${text}（${record.send_count ? (text / record.send_count).toFixed(2) : 100}%）` : '-' }}
+                            {{ text ? `${text}（${record.send_count ? parseFloat((text / record.send_count * 100).toFixed(2)) : 100}%）` : '-' }}
                         </template>
                         <template v-if="column.key === 'click_count'">
-                            {{ text ? `${text}（${record.send_count ? (text / record.send_count).toFixed(2) : 100}%）` : '-' }}
+                            {{ text ? `${text}（${record.send_count ? parseFloat((text / record.send_count * 100).toFixed(2)) : 100}%）` : '-' }}
                         </template>
 
                         <template v-if="column.key === 'operation'">
@@ -109,6 +109,7 @@ export default {
         return {
             // 加载
             loading: false,
+            loadingSend: false,
             // 分页
             currPage: 1,
             pageSize: 20,
@@ -120,7 +121,6 @@ export default {
             // 表格
             tableData: [],
             mailShow: false,
-            mailMes: {},
             mailData: {
                 'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',                
                 'address': 'Dear XXX',
@@ -202,12 +202,16 @@ export default {
         },
         // 发送邮件
         sendMail(id) {
-            // Core.Api.MAIL_MANAGEMENT.send({ id }).then(res => {
-            //     this.$message.success(this.$t('crm_b.send_success'))
-            //     this.getTableData();
-            // }).catch(err => {
-            //     this.$message.success(this.$t('crm_b.send_error'))
-            // })
+            if (this.loadingSend) return;
+            this.loadingSend = true
+            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ id }).then(res => {
+                this.$message.success(this.$t('crm_b.send_success'))
+                this.getTableData();
+            }).catch(err => {
+                this.$message.success(this.$t('crm_b.send_error'))
+            }).finally(() => {
+                this.loadingSend = false;
+            });
         },
         /* 接口 end */
         routerChange(type, item = {}) {
@@ -252,7 +256,7 @@ export default {
         handleMailSubmit() {},
         // 预览邮件
         viewMail(record) {
-            this.mailMes = record;
+            this.mailData = JSON.parse(record.template_param);
             this.mailShow = true;
         },
     }
