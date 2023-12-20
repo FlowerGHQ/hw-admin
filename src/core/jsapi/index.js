@@ -55,7 +55,7 @@ export default {
                             Core.Data.setAuthority(authorityMap)
                             if (loginType === Core.Const.USER.TYPE.ADMIN){
                                 setTimeout(() => {
-                                    router.replace({ path: '/dashboard', query: {from: 'login'} })
+                                    router.replace({ path: '/distributor', query: {from: 'login'} })
                                 }, 1000)
                             } else {
                                 setTimeout(() => {

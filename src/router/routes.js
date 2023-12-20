@@ -1,5 +1,6 @@
 import Const from "../core/const"
 import Util from "../core/utils"
+import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
 
@@ -7,7 +8,25 @@ const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
+const NOW_LOGIN_TYPE = Data.getLoginType()
+let indexPath = ''
+switch (NOW_LOGIN_TYPE) {
+    case LOGIN_TYPE.ADMIN:
+        indexPath = '/distributor'
+        break;
+    case LOGIN_TYPE.DISTRIBUTOR:
+        indexPath = '/dashboard/index'
+        break;
+    case LOGIN_TYPE.AGENT:
+        indexPath = '/dashboard/index'
+        break;
+    case LOGIN_TYPE.STORE:
+        indexPath = '/dashboard/index'
+        break;
 
+    default:
+        break;
+}
 /** 
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限
 * @params roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
@@ -20,10 +39,7 @@ const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const routes = [
     {
         path: '/',
-        redirect: '/dashboard',
-        meta: {
-            hidden: true
-        }
+        redirect: indexPath,
     },
     { // 飞书跳转
         path: '/login-redirect',
@@ -49,9 +65,10 @@ const routes = [
         name:'Dashboard',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
-            title: '数据看板',
-            title_en: 'Data Board',
-            icon: 'i_s_dashboard',            
+            title: '商城',
+            title_en: 'Store',
+            icon: 'i_s_dashboard', 
+            roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.DISTRIBUTOR],  
         },
         children: [
             {
@@ -71,6 +88,7 @@ const routes = [
                 meta: {
                     title: '时效看板',
                     title_en: 'RTDB',
+                    hidden: true
                 },
             },
 
@@ -114,7 +132,7 @@ const routes = [
     { // 分销管理 - 平台端
         path: '/distributor',
         component: Layout,
-        redirect: '/distributor/distributor-list',
+        redirect: '/distributor/purchase-order-list',
         name: 'DistributorManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER],
         meta: {
@@ -458,7 +476,7 @@ const routes = [
         meta: {
             title: '商品管理',
             title_en: 'Product',
-            icon: 'i_s_item',
+            icon: 'i_menu_shangpingguanli',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['item.list','item-category.list'],
         },
@@ -547,13 +565,13 @@ const routes = [
     { // 实例管理
         path: '/entity',
         component: Layout,
-        redirect: '/entity/entity-list',
+        redirect: '/entity/vehicle-list',
         name: 'EntityManagement',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '实例管理',
             title_en: 'Instance',
-            icon: 'i_s_item',
+            icon: 'i_menu_shiliguanli',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['entity.list'],
         },
@@ -656,7 +674,7 @@ const routes = [
         meta: {
             title: '售后管理',
             title_en: 'After-sales',
-            icon: 'i_s_temp',
+            icon: 'i_menu_shouhouguanli',
             auth: ["after-sales-order.list"],
         },
         children: [
@@ -753,7 +771,7 @@ const routes = [
         meta: {
             title: '工单管理',
             title_en: 'Maintenance',
-            icon: 'i_s_repair',
+            icon: 'i_menu_gongdanguanli',
             auth: ['repair-order.list'],
         },
         children: [
@@ -871,7 +889,7 @@ const routes = [
 		meta: {
 			title: '反馈管理',
 			title_en: 'Feedback',
-			icon: 'i_s_repair',
+			icon: 'i_menu_fankuguanli',
 			auth: ['quality-feedback.list'],
 		},
 		children: [
@@ -1020,7 +1038,7 @@ const routes = [
         meta: {
             title: '供应管理',
 	        title_en: 'Suppliers',
-            icon: 'i_s_item',
+            icon: 'i_menu_gongyingguajli',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['production-order.list', 'supplier.list', 'material-purchase-order.list', 'material.list'],
         },
@@ -1189,7 +1207,7 @@ const routes = [
 		meta: {
 			title: '生产管理',
 			title_en: 'Production',
-			icon: 'i_s_warehouse',
+			icon: 'i_menu_shegnchanguanli',
 			roles: [LOGIN_TYPE.ADMIN],
             auth: ['production-order.list', 'bom.list'],
 		},
@@ -1311,7 +1329,7 @@ const routes = [
         meta: {
             title: '库存管理',
             title_en: 'Inventories',
-            icon: 'i_s_warehouse',
+            icon: 'i_menu_kucunguanli',
             roles: [LOGIN_TYPE.AGENT, LOGIN_TYPE.STORE, LOGIN_TYPE.ADMIN, LOGIN_TYPE.DISTRIBUTOR],
             auth: ['warehouse.list', 'warehouse-transfer-order.list', 'invoice.list', 'stock.list'],
         },
@@ -1505,7 +1523,7 @@ const routes = [
         meta: {
             title: '存货管理',
             title_en: 'Stock Control',
-            icon: 'i_s_warehouse',
+            icon: 'i_menu_cunhuoguanli',
             roles: [LOGIN_TYPE.ADMIN],
             auth: ['inventory.list'],
         },
@@ -1627,7 +1645,7 @@ const routes = [
         meta: {
             title: "COC证书管理",
             title_en: 'COC Certificate Management',
-            icon: 'i_s_customer',
+            icon: 'i_menu_COC',
         },
         children: [
             {
@@ -1668,7 +1686,7 @@ const routes = [
     { // 数据
         path: '/crm-dashboard',
         component: Layout,
-        redirect: '/crm-dashboard/dashboard',
+        redirect: '/crm-dashboard/vote-dashboard',
         name: 'crm-dashboard',
         type: [ROUTER_TYPE.CRM],
         meta: {
@@ -1683,6 +1701,7 @@ const routes = [
 				name: 'CrmDashboard',
 				component: () => import('@/views/crm-dashboard/dashboard.vue'),
 				meta: {
+                    hidden: true,
 					title: '数据看板',
 					title_en: 'Dashboard',
 					auth: ["crm-label.list"],
@@ -1763,7 +1782,7 @@ const routes = [
         meta: {
             title: '用户中心',
             title_en: 'User Center',
-            icon: 'i_s_customer',
+            icon: 'i_menu_yonghuzhognxin',
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
@@ -1888,7 +1907,7 @@ const routes = [
         meta: {
             title: '人员管理',
             title_en: 'Personnel Management',
-            icon: 'i_renyuan-',
+            icon: 'i_menu_renyuanguanli',
             // auth: ['crm-user.list'], // 人员列表有这个就可以出现了
             roles: [LOGIN_TYPE.ADMIN],
         },
@@ -1981,7 +2000,7 @@ const routes = [
         meta: {
             title: '分配规则',
             title_en: 'Allocation rules',
-            icon: 'i_renyuan-',
+            icon: 'i_menu_fenpeiguize',
             roles: [LOGIN_TYPE.ADMIN],
         }, 
         children: [
@@ -2005,7 +2024,7 @@ const routes = [
         meta: {
             title: '好物订单',
             title_en: 'Good Items Order',
-            icon: 'i_s_customer',
+            icon: 'i_menu_haowudingdan',
             roles: [LOGIN_TYPE.ADMIN],
         },
         children: [
@@ -2044,7 +2063,7 @@ const routes = [
 		meta: {
 			title: '客户',
 			title_en: 'Customers',
-			icon: 'i_s_customer',
+			icon: 'i_menu_kehu',
 			auth: ["crm-customer.list"],
 		},
 		children: [
@@ -2135,7 +2154,7 @@ const routes = [
 		meta: {
 			title: '邮箱订阅状态',
 			title_en: 'Mailbox subscription status',
-			icon: 'i_s_customer',
+			icon: 'i_menu_youxiangdingyue',
             roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
@@ -2159,7 +2178,7 @@ const routes = [
 		meta: {
 			title: '商机',
 			title_en: 'Business Opportunity',
-			icon: 'i_crm_bo',
+			icon: 'i_menu_shangji',
 			auth: ["crm-bo.list"],
 
 		},
@@ -2383,7 +2402,7 @@ const routes = [
         meta: {
             title: '智能标签',
             title_en: 'Smart Label',
-            icon: 'i_crm_label',
+            icon: 'i_menu_zhinengbiaoqian',
             auth: ["crm-label.list"],
 
         },
