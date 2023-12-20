@@ -9,7 +9,16 @@
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
                         <a-input-group compact>
                             <a-button>{{ $t('wb.receiver') }}</a-button>
-                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.receiver" @keydown.enter='handleSearch'/>
+                            <a-input :placeholder="$t('def.input')" v-model:value="searchForm.receiver_name" @keydown.enter='handleSearch'/>
+                        </a-input-group>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <a-input-group compact>
+                            <a-button>{{ $t('crm_b.send_status') }}</a-button>
+                            <a-select v-model:value="searchForm.send_status" style="width: 148px" :placeholder="$t('n.choose')" @change="handleChange">
+                                <a-select-option :value="-1">{{ $t('crm_b.fail') }}</a-select-option>
+                                <a-select-option :value="1">{{ $t('crm_b.success') }}</a-select-option>
+                            </a-select>
                         </a-input-group>
                     </a-col>
                 </a-row>
@@ -27,7 +36,7 @@
                         <!-- <template v-if="column.key === 'xh'">
                             {{ index + (currPage - 1) * pageSize + 1 }}
                         </template> -->
-                        <template v-if="column.key === 'receiver'">
+                        <template v-if="column.key === 'receiver_name'">
                             <p class="ell" style="width: 200px;" :title="text">{{ text || '-' }}</p>
                         </template>
                         <template v-if="column.key === 'receiver_email'">
@@ -37,9 +46,10 @@
                             {{ $Util.timeFilter(text) }}
                         </template>
                         <template v-if="column.key === 'send_status'">
-                            <span :style="{ color: text === 0 ? '#F53F3F' : '' }">-</span>
+                            <span v-if="text === -1" :style="{ color: '#F53F3F' }">{{ $t('crm_b.fail') }}</span>
+                            <span v-else-if="text === 1" :style="{ color: '#26AB54' }">{{ $t('crm_b.success') }}</span>
                         </template>
-                        <template v-if="column.key === 'reason'">
+                        <template v-if="column.key === 'fail_reason'">
                             {{ text || '-' }}
                         </template>
                     </template>
@@ -80,10 +90,12 @@ export default {
             total: 0,
             // 搜索
             searchForm: {
-                receiver: '',
+                receiver_name: '',
+                send_status: ''
             },
             // 表格
             tableData: [],
+            email_task_id: ''
         };
     },
     watch: {
@@ -101,11 +113,11 @@ export default {
         tableColumns() {
             let columns = [
                 // {title: 'n.index', dataIndex: 'xh', key:'xh'},
-                {title: 'wb.receiver', dataIndex: 'receiver', key:'receiver'},
-                {title: 'd.create_time', dataIndex: 'receiver_email', key: 'receiver_email'},
-                {title: 'crm_b.schedule_time', dataIndex: 'send_time', key: 'time'},
-                {title: 'crm_b.push', dataIndex: 'send_status', key: 'send_status'},
-                {title: 'crm_b.click_mail', dataIndex: 'reason', key: 'reason'},
+                {title: 'wb.receiver', dataIndex: 'receiver_name', key:'receiver_name'},
+                {title: 'crm_b.receiver_email', dataIndex: 'receiver_email', key: 'receiver_email'},
+                {title: 'crm_b.send_time', dataIndex: 'create_time', key: 'time'},
+                {title: 'crm_b.send_status', dataIndex: 'send_status', key: 'send_status'},
+                {title: 'crm_b.fail_reason', dataIndex: 'fail_reason', key: 'fail_reason'},
             ]
             return columns
         },
@@ -114,17 +126,17 @@ export default {
         },
     },
     mounted() {
+        this.email_task_id = this.$route.query?.id ? parseInt(this.$route.query?.id) : '';
         this.getTableData();
     },
     methods: {
         /* 接口 start */
         // 获取 表格 数据
-        getTableData() {
+        getTableData(id) {
             this.loading = true;
-            Core.Api.MAIL_MANAGEMENT.list({
-                ...this.searchForm,
-                page: this.currPage,
-                page_size: this.pageSize
+            Core.Api.MAIL_MANAGEMENT.memberList({
+                email_task_id: this.email_task_id,
+                ...this.searchForm
             }).then(res => {
                 console.log("getTableData res:", res)
                 this.total = res.count;
@@ -158,6 +170,9 @@ export default {
             Object.assign(this.searchForm, this.$options.data().searchForm)
             this.pageChange(1);
         },
+        handleChange() {
+            this.getTableData();
+        }
     }
 };
 </script>

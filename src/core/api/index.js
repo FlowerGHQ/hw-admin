@@ -926,6 +926,8 @@ const apiList = {
         detail: ['PostJson', 'email-task/detail'],
         list: ['PostJson', 'email-task/list'],
         delete: ['PostJson', 'email-task/delete'],
+        scheduleEmail: ['PostJson', 'email/schedule-email'],
+        memberList: ['PostJson', 'email/member-list'],
     }
 }; 
 
