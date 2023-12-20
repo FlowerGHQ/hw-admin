@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "38641372",
+      "name": "menu_zhinengbiaoqian",
+      "font_class": "menu_zhinengbiaoqian",
+      "unicode": "e858",
+      "unicode_decimal": 59480
+    },
+    {
+      "icon_id": "38641373",
+      "name": "menu_kehu",
+      "font_class": "menu_kehu",
+      "unicode": "e859",
+      "unicode_decimal": 59481
+    },
+    {
+      "icon_id": "38600705",
+      "name": "menu_shiliguanli",
+      "font_class": "menu_shiliguanli",
+      "unicode": "e857",
+      "unicode_decimal": 59479
+    },
+    {
       "icon_id": "38580443",
       "name": "menu_shangji",
       "font_class": "menu_shangji",

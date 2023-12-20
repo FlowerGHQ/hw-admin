@@ -2864,6 +2864,7 @@ export default {
                 .tag-button {
                     height: auto;
                     padding: 2px 8px;
+                    border-color: #E2E2E2;
                 }
                 > .ant-btn {
                     width: 336px;
@@ -2896,9 +2897,9 @@ export default {
             .tag-value {
                 padding: 2px 10px;
                 border-radius: 4px;
-                background: rgba(0, 97, 255, 0.10);
+                background: #F2F3F5;
                 font-size: 12px;
-                color: #0061FF;
+                color: #666666;
                 margin: 2px 2px 2px 0;
                 &:last-child {
                     margin-right: 0;

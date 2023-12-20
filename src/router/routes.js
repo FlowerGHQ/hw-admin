@@ -2402,7 +2402,7 @@ const routes = [
         meta: {
             title: '智能标签',
             title_en: 'Smart Label',
-            icon: 'i_crm_label',
+            icon: 'i_menu_zhinengbiaoqian',
             auth: ["crm-label.list"],
 
         },
