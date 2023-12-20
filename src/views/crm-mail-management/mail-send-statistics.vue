@@ -121,7 +121,6 @@ export default {
             // 表格
             tableData: [],
             mailShow: false,
-            mailMes: {},
             mailData: {
                 'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',
                 'subtitle': '🎉Subtitle content area.',
@@ -257,7 +256,7 @@ export default {
         handleMailSubmit() {},
         // 预览邮件
         viewMail(record) {
-            this.mailMes = record;
+            this.mailData = JSON.parse(record.template_param);
             this.mailShow = true;
         },
     }
