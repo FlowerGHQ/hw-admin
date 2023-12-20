@@ -269,7 +269,15 @@ const uploadOptions = ref({
 
 // 字段名称
 const formData = ref({
-
+    // id: 2,
+    // templat": 1, //模板
+    // title: "", //邮件主题
+    // subtitle: "", //副标题
+    // "address": "测试开头称呼", //开头称呼
+    // "email_content": "邮件内容", //邮件内容
+    // "receiver_type": 1, //收件人类型
+    // "template_param": "{\"uri_content\":\"链接内容\",\"uri\":\"链接地址\",\"poster\":\"海报图片\",\"qr_code\":\"图片\"}", //模板填充值{"uri_content":"链接内容","uri":"链接地址","poster":"海报图片","qr_code":"图片"}
+    // "schedule_time": 1000 //定时发送时间
 })
 
 // 是否文本
@@ -296,6 +304,22 @@ const selectTemplate = ref([
 
 const previewVisible = ref(false) // 预览链接
 const previewImage = ref(null) // 预览链接
+
+
+/* fetch */
+// 保存邮件
+const saveMail = (parmas = {}) => {    
+    let obj = {     
+        ...parmas
+    }
+    Core.Api.MAIL_MANAGEMENT.add(obj)
+        .then((res) => {
+            
+        })
+        .catch((err) => {
+            console.log("saveImgeFetchError", err);
+        });
+}
 
 
 /* methods */
