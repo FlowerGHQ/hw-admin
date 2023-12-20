@@ -147,7 +147,7 @@
                                     class="qr-code m-r-10"
                                     name="file"                              
                                     accept='image/png, image/jpeg, image/jpg'
-                                    :file-list="uploadOptions.qrCode1List"
+                                    :file-list="uploadOptions.qrCodeList1"
                                     :action="uploadOptions.action"
                                     :headers="uploadOptions.headers"
                                     :data='uploadOptions.data'
@@ -156,7 +156,7 @@
                                     @change="(event) => onUploadExplosion(event, 'qrcode1')"
                                     @preview="handlePreview"                                    
                                 >
-                                    <div class="upload-border" v-if="uploadOptions.qrCode1List.length < 1">
+                                    <div class="upload-border" v-if="uploadOptions.qrCodeList1.length < 1">
                                         <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
                                     </div>
                                 </a-upload>
@@ -172,7 +172,7 @@
                                     class="qr-code m-r-10"
                                     name="file"                              
                                     accept='image/png, image/jpeg, image/jpg'
-                                    :file-list="uploadOptions.qrCode2List"
+                                    :file-list="uploadOptions.qrCodeList2"
                                     :action="uploadOptions.action"
                                     :headers="uploadOptions.headers"
                                     :data='uploadOptions.data'
@@ -181,7 +181,7 @@
                                     @change="(event) => onUploadExplosion(event, 'qrcode2')"
                                     @preview="handlePreview"                                    
                                 >
-                                    <div class="upload-border" v-if="uploadOptions.qrCode2List.length < 1">
+                                    <div class="upload-border" v-if="uploadOptions.qrCodeList2.length < 1">
                                         <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
                                     </div>
                                 </a-upload>	
@@ -243,14 +243,15 @@
 </template>
 
 <script setup>
-import { getCurrentInstance, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { getCurrentInstance, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import Core from '@/core'
 
 const { proxy } = getCurrentInstance()
 
 const router  = useRouter()
+const route  = useRoute()
 
 const uploadOptions = ref({
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -264,8 +265,8 @@ const uploadOptions = ref({
     },
 
     posterList: [],
-    qrCode1List: [],
-    qrCode2List: [],
+    qrCodeList1: [],
+    qrCodeList2: [],
 })
 
 
@@ -317,6 +318,11 @@ const selectTemplate = ref([
 const previewVisible = ref(false) // 预览链接
 const previewImage = ref(null) // 预览链接
 
+onMounted(() => {
+    if (route.query?.id) {
+        getMailDetail({ id: route.query.id })
+    }
+})
 
 /* fetch */
 // 保存邮件
@@ -326,7 +332,8 @@ const saveMail = (parmas = {}) => {
     }
     Core.Api.MAIL_MANAGEMENT.add(obj)
         .then((res) => {
-            proxy.$message.success($t('mail-management.created_successfully'))
+            proxy.$message.success(proxy.$t('mail-management.created_successfully'))
+            router.push('/mail-management/mail-send-statistics')
         })
         .catch((err) => {
             console.log("saveImgeFetchError", err);
@@ -337,9 +344,77 @@ const getMailDetail = (parmas = {}) => {
     let obj = {
         ...parmas
     }
-    Core.Api.MAIL_MANAGEMENT.add(obj)
+    Core.Api.MAIL_MANAGEMENT.detail(obj)
         .then((res) => {
-            
+            console.log("详情接口", res);
+
+            // 回显数据
+            for (const key in formData.value) {
+
+
+                switch(key) {
+                    case 'receiver_type':
+                        formData.value[key] = String(res.detail[key])
+                        break;
+                    case 'template_param':
+                        formData.value[key] = JSON.parse(res.detail[key])
+                        
+                        // 海报上传回显
+                        uploadOptions.value.posterList[0] = {
+                            name: 'poster',
+                            percent: 100,
+                            status: 'done',
+                            thumbUrl: formData.value[key].poster,
+                            url: formData.value[key].poster,
+                            response: {
+                                data: {
+                                    filename: formData.value[key].poster
+                                }
+                            }
+                        }
+
+                        // 二维码图片
+                        formData.value[key].qr_code.forEach((el, index) => {
+                            if (!el?.img) {
+                                return
+                            }
+                            uploadOptions.value[`qrCodeList${ index + 1 }`][0] = {
+                                name: `qrcode${ index + 1 }`,
+                                percent: 100,
+                                status: 'done',                                
+                                url: el.img,
+                                response: {
+                                    data: {
+                                        filename: el.img
+                                    }
+                                }
+                            }                            
+                        })
+                    break;
+                    case 'schedule_time':                                                
+                        formData.value[key] = dayjs.unix(res.detail[key])
+                    break;
+                    case 'is_schedule_time':
+                        formData.value[key] = res.detail['schedule_time'] > 0 ? 1 : 0
+                    break;
+                    case 'qr_code1_introduce':                                            
+                    case 'qr_code2_introduce':
+                        formData.value['template_param'].qr_code.forEach((el, index) => {
+                            if (index === 0) {
+                                formData.value.qr_code1_introduce = el.introduce
+                            } else if (index === 1) {
+                                formData.value.qr_code2_introduce = el.introduce
+                            }
+                        })
+                    break;                    
+                    default: 
+                        formData.value[key] = res.detail[key] 
+                    break;
+                    
+                }                 
+            }                    
+
+            console.log("formData", formData.value);
         })
         .catch((err) => {
             console.log("saveImgeFetchError", err);
@@ -356,17 +431,17 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             console.log('poster', uploadOptions.value.posterList);
             uploadOptions.value.posterList = fileList
             if (file.status === 'done') {
-                formData.value.template_param.poster = file?.response.data.filename
+                formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
             } else if (file.status === "removed") {
                 formData.value.template_param.poster = undefined
             }
         break;
         case 'qrcode1':
-            console.log('qrcode1', uploadOptions.value.qrCode1List);
-            uploadOptions.value.qrCode1List = fileList
+            console.log('qrcode1', uploadOptions.value.qrCodeList1);
+            uploadOptions.value.qrCodeList1 = fileList
             if (file.status === 'done') {
                 formData.value.template_param.qr_code[0] = {
-                    img: file?.response.data.filename,
+                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
                 }
             } else if (file.status === "removed") {
                 formData.value.template_param.qr_code[0] = {
@@ -375,12 +450,12 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             }
         break;
         case 'qrcode2':
-            console.log('qrcode2', uploadOptions.value.qrCode2List);
-            uploadOptions.value.qrCode2List = fileList
+            console.log('qrcode2', uploadOptions.value.qrCodeList2);
+            uploadOptions.value.qrCodeList2 = fileList
 
             if (file.status === 'done') {
                 formData.value.template_param.qr_code[1] = {
-                    img: file?.response.data.filename,
+                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
                 }
             } else if (file.status === "removed") {
                 formData.value.template_param.qr_code[1] = {
@@ -392,8 +467,9 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 }
 // upload预览事件
 const handlePreview = (file) => {
+    console.log("预览文件", file);
     previewVisible.value = true
-    previewImage.value = Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
+    previewImage.value = file.response.data.filename
 }
 
 // 预览 model 取消事件
@@ -424,6 +500,9 @@ const onSubmit = () => {
             el.introduce = _formData.qr_code2_introduce
         }
     });
+
+    // JSON化
+    _formData.template_param = JSON.stringify(_formData.template_param)
     
     // 删除多余的参数
     Core.Util.deleteParamsFilter(_formData, ['is_schedule_time','qr_code1_introduce','qr_code2_introduce'])
