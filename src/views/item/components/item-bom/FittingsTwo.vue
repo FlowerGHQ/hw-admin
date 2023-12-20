@@ -67,7 +67,7 @@
                                 {{ text || '-' }}
                                 
                             <span
-                                class="new-version title-right" v-if="record.flag_new === 1">
+                                class="new-version title-right" v-if="record.flag_new === 1 && flagNew === 1">
                                 {{ $t("item-bom.change") }}
                             </span>
                             </div>
