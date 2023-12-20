@@ -91,24 +91,19 @@
             </div>
         </div>
         <a-modal v-model:visible="mailShow" width="1248px" :title="$t('crm_b.preview')" :footer="null" :after-close='handleMailClose'>
-            <div>
-                邮箱内容
-            </div>
-            <!-- <template #footer>
-                <div class="btns">
-                    <a-button @click="handleMailClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="handleMailSubmit" type="primary">{{ $t('retail.confirm') }}</a-button>
-                </div>
-            </template> -->
+            <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
+import mailTemplete from './components/mail-templete.vue';
 export default {
     name: 'mailSendStatistics',
-    components: {},
+    components: {
+        mailTemplete
+    },
     props: {},
     data() {
         return {
@@ -124,8 +119,15 @@ export default {
             },
             // 表格
             tableData: [],
-            mailShow: false,
+            mailShow: true,
             mailMes: {},
+            mailData: {
+                'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',
+                'subtitle': '🎉Subtitle content area.',
+                'address': 'Dear XXX',
+                'email_content': "As the joyful season approaches, we want to take a moment to express our sincere gratitude for the incredible partnership we've built together throughout 2023. Your dedication and commitment have been instrumental in the success of HORWIN, and for that, we are truly thankful.🎉Looking Forward to 2024:In the spirit of shared success, we're excited to outline our expectations for the upcoming year:🤝Your Feedback Matters:Your insights have always been invaluable to us. We invite you to share your feedback, suggestions, or any thoughts you might have. Your input will continue to shape the future of HORWIN, ensuring that we grow together.🫧Connect with Us on Social Media:Stay in the loop with exclusive updates, behind-the-scenes glimpses, and exciting announcements by following us on our social media channels.Wishing You a Merry Christmas and Prosperous New Year! Cheers to a Scootacular Christmas and@RWIN Horwinning New Year!",
+                'poster': 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png'
+            }
         };
     },
     watch: {
