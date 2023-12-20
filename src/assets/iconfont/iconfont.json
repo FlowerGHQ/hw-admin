@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "38649445",
+      "name": "menu_xitongguanli",
+      "font_class": "menu_xitongguanli",
+      "unicode": "e85a",
+      "unicode_decimal": 59482
+    },
+    {
       "icon_id": "38641372",
       "name": "menu_zhinengbiaoqian",
       "font_class": "menu_zhinengbiaoqian",
