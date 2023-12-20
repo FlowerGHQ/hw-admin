@@ -2564,7 +2564,7 @@ const routes = [
         meta: {
             title: '系统管理',
             title_en: 'System Management',
-            icon: 'i_setting',
+            icon: 'i_menu_xitongguanli',
             auth: ['MANAGER'], // 管理员
         },
         children: [
