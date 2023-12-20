@@ -2,8 +2,6 @@
 export default {
     zh: {
         email_content: "邮件内容",
-        email_link: "邮件链接",
-        other_information: "其他信息",
         timed_transmission: "定时发送",
         select_template: "选择模板",
         recipients: "收件人",
@@ -23,11 +21,12 @@ export default {
         time_tips: "请选择定时发送时间",
         cancel: "取消",
         confirm: "确认创建",
+        preview: "预览",
+        sales_template: "销售模板",
+        created_successfully: "创建成功",
     },
     en: {
         email_content: "Email Content",
-        email_link: "Email Link",
-        other_information: "Other Information",
         timed_transmission: "Timed Transmission",
 		select_template: "Select Template",
         recipients: "Recipients",
@@ -47,6 +46,9 @@ export default {
         time_tips: "Please select a scheduled sending time",
         cancel: "Cancel",
         confirm: "Confirm creation",
+        preview: "preview",
+        sales_template: "Sales Template",
+        created_successfully: "Created successfully",
     }
 }
 

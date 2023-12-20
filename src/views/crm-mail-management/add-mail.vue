@@ -3,7 +3,12 @@
 
         <div class="form-content">
             <div class="form-module">
-                <div class="module-title">{{ $t('mail-management.email_content') /*邮件内容*/}}</div>            
+                <div class="module-header">
+                    <div class="module-title">{{ $t('mail-management.email_content') /*邮件内容*/}}</div>
+                    <div class="preview-btn">
+                        <a-button>{{  $t('mail-management.preview') }}</a-button>
+                    </div>
+                </div>            
                 <a-row class="horizontal-search-row module-content">
                     <a-col class="search-col">
                         <div class="key w-100 t-aligin-r align-s-start">
@@ -12,7 +17,9 @@
                         </div>
                         <div class="value m-l-8">
                             <div class="bg-template">
-                                <span class="template-text">销售模板</span>
+                                <span class="template-text">
+                                    {{  $t('mail-management.sales_template') }}
+                                </span>
                             </div>
                         </div>
                     </a-col>
@@ -26,7 +33,7 @@
                                 style="width: 100%;"
                                 :showArrow="false"
                                 :disabled="true"
-                                value="1"
+                                v-model:value="formData.receiver_type"
                                 ref="select"
                             >
                                 <template v-for="(item, index) in selectTemplate" :key="index">                            
@@ -44,7 +51,7 @@
                         </div>
                         <div class="value m-l-8">
                             <a-input
-                                v-model:value="value" 
+                                v-model:value="formData.title" 
                                 :placeholder="$t('mail-management.please_enter')" 
                                 allow-clear
                             />
@@ -57,7 +64,7 @@
                         </div>
                         <div class="value m-l-8">
                             <a-input
-                                v-model:value="value" 
+                                v-model:value="formData.address" 
                                 :placeholder="$t('mail-management.please_enter')" 
                                 allow-clear
                             />
@@ -70,17 +77,12 @@
                         </div>
                         <div class="value m-l-8">
                             <a-textarea 
-                                v-model:value="value2" 
+                                v-model:value="formData.email_content" 
                                 :placeholder="$t('mail-management.please_enter')"
                                 allow-clear 
                                 />
                         </div>
                     </a-col>
-                </a-row>
-            </div>
-            <div class="form-module m-t-20">
-                <div class="module-title">{{ $t('mail-management.email_link') /*邮件链接*/}}</div>            
-                <a-row class="horizontal-search-row module-content">     
                     <a-col class="search-col">
                         <div class="key w-100 t-aligin-r">
                             <!-- 链接 -->
@@ -88,7 +90,7 @@
                         </div>
                         <div class="value m-l-8">
                             <a-input
-                                v-model:value="value" 
+                                v-model:value="formData.template_param.uri" 
                                 :placeholder="$t('mail-management.please_enter')" 
                                 allow-clear
                             />
@@ -101,17 +103,12 @@
                         </div>
                         <div class="value m-l-8">
                             <a-input
-                                v-model:value="value" 
+                                v-model:value="formData.template_param.uri_content" 
                                 :placeholder="$t('mail-management.please_enter')" 
                                 allow-clear
                             />
                         </div>
-                    </a-col>           
-                </a-row>
-            </div>
-            <div class="form-module m-t-20">
-                <div class="module-title">{{ $t('mail-management.other_information') /*其他信息*/}}</div>            
-                <a-row class="horizontal-search-row module-content">
+                    </a-col>
                     <a-col class="search-col">
                         <div class="key w-100 t-aligin-r align-s-start">
                             <!-- 海报 -->
@@ -129,7 +126,7 @@
                                 :maxCount="1"
                                 list-type="picture-card"
                                 @change="(event) => onUploadExplosion(event, 'poster')"
-                                @preview="handlePreview"
+                                @preview="handlePreview"                                
                             >
                                 <div class="upload-border" v-if="uploadOptions.posterList.length < 1">
                                     <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
@@ -157,7 +154,7 @@
                                     :maxCount="1"                                    
                                     list-type="picture-card"
                                     @change="(event) => onUploadExplosion(event, 'qrcode1')"
-                                    @preview="handlePreview"
+                                    @preview="handlePreview"                                    
                                 >
                                     <div class="upload-border" v-if="uploadOptions.qrCode1List.length < 1">
                                         <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
@@ -165,7 +162,7 @@
                                 </a-upload>
                                 <a-input
                                     class="qr-code-input"
-                                    v-model:value="value" 
+                                    v-model:value="formData.qr_code1_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
                                 />
@@ -182,7 +179,7 @@
                                     :maxCount="1"                                    
                                     list-type="picture-card"
                                     @change="(event) => onUploadExplosion(event, 'qrcode2')"
-                                    @preview="handlePreview"
+                                    @preview="handlePreview"                                    
                                 >
                                     <div class="upload-border" v-if="uploadOptions.qrCode2List.length < 1">
                                         <img class="upload-img" src="../../assets/images/crm-mail-management/add.png" alt="">
@@ -190,15 +187,15 @@
                                 </a-upload>	
                                 <a-input
                                     class="qr-code-input"
-                                    v-model:value="value" 
+                                    v-model:value="formData.qr_code2_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
                                 />
                             </div>
                         </div>
-                    </a-col>          
+                    </a-col>   
                 </a-row>
-            </div>
+            </div>            
             <div class="form-module m-t-20">
                 <div class="module-title">{{ $t('mail-management.timed_transmission') /*定时发送*/}}</div>            
                 <a-row class="horizontal-search-row module-content">     
@@ -208,14 +205,14 @@
                             {{ $t('mail-management.timed_transmission')}}
                         </div>
                         <div class="value m-l-8">
-                            <a-radio-group v-model:value="value">
+                            <a-radio-group v-model:value="formData.is_schedule_time">
                                 <template v-for="(item, index) in istext" :key="index">                            
                                     <a-radio :value="item.value">{{ item[$i18n.locale] }}</a-radio>
                                 </template>                                                      
                             </a-radio-group>
                         </div>
                     </a-col>
-                    <a-col class="search-col">
+                    <a-col class="search-col" v-if="Number(formData.is_schedule_time) !== 0">
                         <div class="key w-100 t-aligin-r">
                             <!-- 定时发送时间 -->
                             {{ $t('mail-management.timed_transmission_time')}}
@@ -223,10 +220,9 @@
                         <div class="value m-l-8">
                             <a-date-picker 
                                 style="width: 100%;"
-                                show-time 
-                                :placeholder="$t('mail-management.time_tips')" 
-                                @change="onChange" 
-                                @ok="onOk" 
+                                show-time                                 
+                                v-model:value="formData.schedule_time"
+                                :placeholder="$t('mail-management.time_tips')"                            
                             />
                         </div>
                     </a-col>                 
@@ -236,8 +232,8 @@
 
 
         <div class="operation-btn">
-            <a-button a-button>{{  $t('mail-management.cancel') }}</a-button>
-            <a-button type="primary">{{ $t('mail-management.confirm')}}</a-button>
+            <a-button @click="onCancel">{{  $t('mail-management.cancel') }}</a-button>
+            <a-button type="primary" @click="onSubmit">{{ $t('mail-management.confirm')}}</a-button>
         </div>
 
         <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
@@ -247,8 +243,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { getCurrentInstance, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import dayjs from 'dayjs'
 import Core from '@/core'
+
+const { proxy } = getCurrentInstance()
+
+const router  = useRouter()
 
 const uploadOptions = ref({
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -269,15 +271,25 @@ const uploadOptions = ref({
 
 // 字段名称
 const formData = ref({
-    // id: 2,
-    // templat": 1, //模板
-    // title: "", //邮件主题
-    // subtitle: "", //副标题
-    // "address": "测试开头称呼", //开头称呼
-    // "email_content": "邮件内容", //邮件内容
-    // "receiver_type": 1, //收件人类型
-    // "template_param": "{\"uri_content\":\"链接内容\",\"uri\":\"链接地址\",\"poster\":\"海报图片\",\"qr_code\":\"图片\"}", //模板填充值{"uri_content":"链接内容","uri":"链接地址","poster":"海报图片","qr_code":"图片"}
-    // "schedule_time": 1000 //定时发送时间
+    id: undefined,
+    templat: "1", // 模板(目前默认写死为1)
+    receiver_type: "1", // 收件人类型(目前默认写死)
+    title: "", // 邮件主题
+    address: "", // 开头称呼
+    email_content: "", // 邮件内容
+    template_param: {
+        uri_content:"",
+        uri:"",
+        poster: undefined,
+        qr_code: [], // "qr_code": [{"img":"地址","introduce":"介绍"}]
+    },
+    // 模板填充值{"uri_content":"链接内容","uri":"链接地址","poster":"海报图片","qr_code":"图片"}
+    schedule_time: undefined, // 时间判断
+
+    // 上面字段是传给后端的 下面这些字段自己用来判断的
+    is_schedule_time: 0,
+    qr_code1_introduce: undefined,
+    qr_code2_introduce: undefined,
 })
 
 // 是否文本
@@ -308,8 +320,21 @@ const previewImage = ref(null) // 预览链接
 
 /* fetch */
 // 保存邮件
-const saveMail = (parmas = {}) => {    
-    let obj = {     
+const saveMail = (parmas = {}) => {
+    let obj = {
+        ...parmas
+    }
+    Core.Api.MAIL_MANAGEMENT.add(obj)
+        .then((res) => {
+            proxy.$message.success($t('mail-management.created_successfully'))
+        })
+        .catch((err) => {
+            console.log("saveImgeFetchError", err);
+        });
+}
+// 详情接口
+const getMailDetail = (parmas = {}) => {
+    let obj = {
         ...parmas
     }
     Core.Api.MAIL_MANAGEMENT.add(obj)
@@ -323,24 +348,49 @@ const saveMail = (parmas = {}) => {
 
 
 /* methods */
-// 上传事件
+// upload上传事件
 const onUploadExplosion = ({ file, fileList }, type) => {
+
     switch(type) {
         case 'poster':
-            uploadOptions.value.posterList = fileList
             console.log('poster', uploadOptions.value.posterList);
+            uploadOptions.value.posterList = fileList
+            if (file.status === 'done') {
+                formData.value.template_param.poster = file?.response.data.filename
+            } else if (file.status === "removed") {
+                formData.value.template_param.poster = undefined
+            }
         break;
         case 'qrcode1':
+            console.log('qrcode1', uploadOptions.value.qrCode1List);
             uploadOptions.value.qrCode1List = fileList
-            console.log('qrcode1', file);
+            if (file.status === 'done') {
+                formData.value.template_param.qr_code[0] = {
+                    img: file?.response.data.filename,
+                }
+            } else if (file.status === "removed") {
+                formData.value.template_param.qr_code[0] = {
+                    img: undefined,
+                }
+            }
         break;
         case 'qrcode2':
-            uploadOptions.value.qrCode2List = fileList
             console.log('qrcode2', uploadOptions.value.qrCode2List);
+            uploadOptions.value.qrCode2List = fileList
+
+            if (file.status === 'done') {
+                formData.value.template_param.qr_code[1] = {
+                    img: file?.response.data.filename,
+                }
+            } else if (file.status === "removed") {
+                formData.value.template_param.qr_code[1] = {
+                    img: undefined,
+                }
+            }
         break;
     }
 }
-// 预览事件
+// upload预览事件
 const handlePreview = (file) => {
     previewVisible.value = true
     previewImage.value = Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
@@ -350,6 +400,45 @@ const handlePreview = (file) => {
 const handleCancel = () => {
     previewVisible.value = false
     previewImage.value = null
+}
+
+// 取消按钮
+const onCancel = () => {
+    router.push('/mail-management/mail-send-statistics')
+}
+// 确定创建
+const onSubmit = () => {
+    const _formData = Core.Util.deepCopy(formData.value)
+
+    // 判断必填项
+    if (isRequired(_formData)) {
+        return
+    }
+        
+    _formData.schedule_time = dayjs(formData.value.schedule_time).unix()
+
+    _formData.template_param.qr_code.forEach((el, index) => {
+        if (index === 0) {
+            el.introduce = _formData.qr_code1_introduce
+        } else if (index === 1) {
+            el.introduce = _formData.qr_code2_introduce
+        }
+    });
+    
+    // 删除多余的参数
+    Core.Util.deleteParamsFilter(_formData, ['is_schedule_time','qr_code1_introduce','qr_code2_introduce'])
+    
+    saveMail(_formData)
+    console.log("最后的结果", _formData);
+}
+
+// 检查并填写是否填写
+const isRequired = (form) => {
+    if (!form.receiver_type) {
+        return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.recipients')}`)
+    }
+
+    return false
 }
 
 
@@ -369,6 +458,10 @@ const handleCancel = () => {
             padding: 20px;
             box-sizing: border-box;
             background-color: #F8FAFC;
+            .module-header {
+                display: flex;
+                justify-content: space-between;
+            }
             .module-title {
                 color: #1D2129;
                 font-size: 18px;
