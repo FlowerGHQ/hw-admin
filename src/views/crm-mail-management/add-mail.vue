@@ -399,15 +399,17 @@ const getMailDetail = (parmas = {}) => {
                         formData.value[key] = JSON.parse(res.detail[key])
                         
                         // 海报上传回显
-                        uploadOptions.value.posterList[0] = {
-                            name: 'poster',
-                            percent: 100,
-                            status: 'done',
-                            thumbUrl: formData.value[key].poster,
-                            url: formData.value[key].poster,
-                            response: {
-                                data: {
-                                    filename: formData.value[key].poster
+                        if (formData.value[key].poster) {
+                            uploadOptions.value.posterList[0] = {
+                                name: 'poster',
+                                percent: 100,
+                                status: 'done',
+                                thumbUrl: formData.value[key].poster,
+                                url: formData.value[key].poster,
+                                response: {
+                                    data: {
+                                        filename: formData.value[key].poster
+                                    }
                                 }
                             }
                         }
@@ -619,6 +621,7 @@ const onPreviewBtn = (type) => {
     switch(type) {
         case 'content_template':
             mailData.value = {
+                poster: undefined, // 回显的时候JSON没有默认
                 ...formData.value,
                 ...formData.value.template_param
             }
