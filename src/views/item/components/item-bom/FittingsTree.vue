@@ -9,7 +9,7 @@
                 <MySvgIcon icon-class="search" />
             </template>
         </a-input-search>
-        <div class="tree-select-main">
+        <div class="tree-select-main" v-if="!isCollapse">
             <div class="tree-circle">
                 <a-spin
                     :spinning="loading1"
@@ -234,6 +234,244 @@
                     class="empty" />
             </div>
         </div>
+        <div class="tree-select-main" v-else>
+            
+            <div class="tree-circle">
+                <a-spin
+                    :spinning="loading1"
+                    :delay="500"
+                    v-if="realData.length > 0">
+                    <div
+                        v-for="item in realData"
+                        :key="generateId(item)"
+                        class="item pointer op-box"
+                        @click.stop="selectKey(null, item)"
+                        :class="{
+                            'active-item': generateId(item) == activeKey || item.item_id === shopId,
+                        }">
+                        <div class="tree-item-main">
+                            <div class="content align-item-start" >
+                               <!--  <img
+                                    class="group"
+                                    src="@/assets/images/bom/group-active.png"
+                                    alt=""
+                                    v-if="generateId(item) === activeKey" />
+                                <img
+                                    class="group"
+                                    src="@/assets/images/bom/group-common.png"
+                                    alt=""
+                                    v-else /> -->
+                                <div class="title margin-left-0">
+                                    
+                                    <div class="title-left">
+                                        <div class="title-left-top" >
+                                            <MySvgIcon
+                                                @click.stop="expand(item)"
+                                                :icon-class="
+                                                    item.expand ? 'down-arrow' : 'up-arrow'
+                                                "
+                                                class="arrow" />
+                                            <!-- v-if="!item.edit" -->
+                                            <span class="span-iscollapse-title  margin-left-3">{{
+                                                item.name
+                                            }}</span>
+                                            <!-- <a-input
+                                                v-else
+                                                v-model:value="item.name"
+                                                id="input1"
+                                                :placeholder="
+                                                    $t('item-bom.title_the_ph')
+                                                "
+                                                @blur.stop="
+                                                    handleEditName(item)
+                                                "
+                                                @pressEnter.stop="
+                                                    handleEditName(item)
+                                                " /> -->
+                                            <div class="new-version-iscollapse" v-if="item.flag_new"></div>
+
+                                        </div>
+                                        <div class="title-left-bottom  margin-left-19">
+                                            {{ item.sync_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- <div class="edit">
+                                <div class="new_version" v-if="item.flag_new">
+                                    {{ $t("item-bom.change_new_version") }}
+                                </div>
+                                <MySvgIcon
+                                    icon-class="edit"
+                                    @click.stop="handleEdit(item, $event)" />
+                            </div> -->
+                        </div>
+                        
+                    <a-popover trigger="click"  placement="rightTop"  overlayClassName="pop-fittings-tree">
+                        <template #content>
+                        <div class="expand-area" v-if="item.expand">
+                            <a-spin :spinning="loading2" :delay="500">
+                                <div
+                                    class="tree-item-main-child-one"
+                                    v-for="(item1, index) in item.children"
+                                    :key="generateId(item1)"
+                                    :class="{
+                                        'active-item-one':
+                                            generateId(item1) === activeKey,
+                                    }"
+                                    @click.stop="selectKey(item, item1)">
+                                    <div class="item-child-one">
+                                        <div class="left-area">
+                                            <div class="top-area">
+                                                <MySvgIcon
+                                                    @click.stop="expand(item1)"
+                                                    v-if="item1.count > 0"
+                                                    :icon-class="
+                                                        item1.expand
+                                                            ? 'down-arrow'
+                                                            : 'up-arrow'
+                                                    "
+                                                    class="arrow" />
+                                                <span
+                                                    :class="{
+                                                        'common-title':
+                                                            item1.count <= 0,
+                                                        'common-title2':
+                                                            item1.count > 0,
+                                                    }"
+                                                    >{{
+                                                        item1.version
+                                                    }}版本</span
+                                                >
+                                                <span
+                                                    class="new-version"
+                                                    v-if="item1.flag_new">
+                                                    {{ $t("item-bom.change") }}
+                                                </span>
+                                            </div>
+                                            <div
+                                                :class="{
+                                                    'bottom-area':
+                                                        item1.count > 0,
+                                                    'bottom-area2':
+                                                        item1.count <= 0,
+                                                }">
+                                                <span class="time">
+                                                    {{
+                                                        Util.timeFilter(
+                                                            item1.effective_time,
+                                                            3
+                                                        )
+                                                    }}</span
+                                                >
+                                            </div>
+                                        </div>
+                                        <!-- <div
+                                            class="add"
+                                            v-if="generateId(item1) === activeKey"
+                                            @click.stop="
+                                                addCategory(item, item1)
+                                            ">
+                                            <MySvgIcon icon-class="add" />
+                                            <span>{{
+                                                $t("item-bom.add_category")
+                                            }}</span>
+                                        </div> -->
+                                    </div>
+                                    <div
+                                        class="expend-area-two"
+                                        v-if="item1.expand">
+                                        <a-spin
+                                            :spinning="loading3"
+                                            :delay="500">
+                                            <div
+                                                class="tree-item-main-child-two"
+                                                v-for="(
+                                                    item2, index
+                                                ) in item1.children"
+                                                :key="generateId(item2)"
+                                                :class="{
+                                                    'active-item-two':
+                                                        generateId(item2) ==
+                                                        activeKey,
+                                                }"
+                                                @click.stop="
+                                                    selectKey(item1, item2)
+                                                ">
+                                                <div class="title">
+                                                    <div class="title-area">
+                                                        <span
+                                                            v-if="!item2.edit"
+                                                            >{{
+                                                                item2.name
+                                                            }}</span
+                                                        >
+                                                        <a-input
+                                                            v-else
+                                                            v-model:value="
+                                                                item2.name
+                                                            "
+                                                            :placeholder="
+                                                                $t(
+                                                                    'item-bom.title_the_ph'
+                                                                )
+                                                            "
+                                                            @blur.stop="
+                                                                handleEditName(
+                                                                    item2
+                                                                )
+                                                            " />
+                                                    </div>
+                                                </div>
+
+                                                <!-- <div class="right-icon">
+                                                    <MySvgIcon
+                                                        icon-class="edit"
+                                                        @click.stop="
+                                                            handleEdit(item2)
+                                                        " />
+                                                    <MySvgIcon
+                                                        icon-class="delete"
+                                                        @click.stop="
+                                                            handleDelete(
+                                                                item1,
+                                                                item2
+                                                            )
+                                                        " />
+                                                </div> -->
+                                            </div>
+                                            <div class="add-category-select">
+                                                <a-input
+                                                    v-if="item1.add"
+                                                    v-model:value="addValue"
+                                                    style="width: 228px"
+                                                    @blur.stop="
+                                                        handleAddCategory(item1)
+                                                    "
+                                                    :placeholder="
+                                                        $t(
+                                                            'item-bom.add_category_ph'
+                                                        )
+                                                    " />
+                                            </div>
+                                        </a-spin>
+                                    </div>
+                                </div>
+                            </a-spin>
+                        </div>
+                        </template>
+                        <a-button @click.stop="selectKey(null, item)" class="opcity-btn">11
+                        </a-button>
+                    </a-popover>
+                    </div>
+                </a-spin>
+                <a-empty
+                    :description="$t('item-bom.description_empty')"
+                    v-else
+                    class="empty" />
+            </div>
+        </div>
     </div>
     <div ref="wrap">
         <a-modal
@@ -291,6 +529,9 @@ let timer3 = ref(null);
 let timer4 = ref(null);
 let timer5 = ref(null);
 
+// 当前父级shop_id
+const shopId = ref(null)
+
 // 接受activeObj
 const props = defineProps({
     activeObj: {
@@ -300,6 +541,11 @@ const props = defineProps({
     cancelIds: {
         type: [Number, String],
     },
+    isCollapse: { //是否收起
+        type: Boolean,
+        default: false
+
+    }
 });
 
 // -----------------定义方法--------------------------
@@ -347,6 +593,8 @@ const selectKey = (parentItem = {}, item) => {
             item.expand = true;
             // 请求二级
             getVersion(item);
+            // 收起状态 一级选中颜色控制
+            shopId.value = item.item_id;
             // 展开二级
             $emit("update:activeObj", {
                 level: item.level,
@@ -739,6 +987,7 @@ onBeforeUnmount(() => {
                         }
                         svg {
                             font-size: 16px;
+                            flex-shrink: 0;
                         }
                         .group {
                             width: 32px;
@@ -759,9 +1008,20 @@ onBeforeUnmount(() => {
                                 .title-left-top {
                                     display: flex;
                                     align-items: center;
+                                    font-weight: 500;
+                                    position: relative;
                                     .title-input {
                                         width: 100px;
                                         margin-left: 10px;
+                                    }
+
+                                    .span-iscollapse-title {
+                                        width: 107px;
+                                        font-weight: 500;
+                                        overflow: hidden;
+                                        text-overflow:ellipsis;
+                                        white-space: nowrap;
+
                                     }
                                 }
                             }
@@ -918,6 +1178,10 @@ onBeforeUnmount(() => {
                         }
                     }
                     .active-item-one {
+                        .top-area {
+                                color: #0061ff;
+                                font-weight: 500;
+                        }
                         .item-child-one {
                             background-color: #f2f3f5;
                             .common-title {
@@ -936,6 +1200,13 @@ onBeforeUnmount(() => {
                         }
                     }
                 }
+            }
+
+            
+            .title-left-bottom {
+                color: #666;
+                font-size: 14px;
+                font-weight: 400;
             }
         }
         .empty {
@@ -1006,6 +1277,180 @@ onBeforeUnmount(() => {
                 color: #fff;
             }
         }
+    }
+}
+.op-box {
+    position: relative;
+}
+.opcity-btn {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+}
+
+/* :deep(.ant-popover-arrow-content) {
+    display: none;
+} */
+
+.new-version-iscollapse {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #26AB54;
+    position: absolute;
+    right: -8px;
+}
+
+.margin-left-3 {
+    margin-left: 3px !important;
+}
+.margin-left-19 {
+    margin-left: 19px;
+}
+.align-item-start {
+    align-items: flex-start !important;
+}
+
+.margin-left-0 {
+    margin-left: 0px !important;
+}
+</style>
+<style>
+
+.pop-fittings-tree {
+    .ant-popover-inner-content {
+        padding: 20px 20px 10px;
+        .expand-area {
+                    width: 100%;
+                    background-color: #fff;
+                    /* padding-bottom: 16px; */
+                    .tree-item-main-child-one {
+                        /* border: 1px solid transparent; */
+                        /* &:first-child { 
+                             border-top: 1px solid #e2e2e2; 
+                         } */
+                        .item-child-one {
+                            /* padding: 16px; */
+                            /* padding-left: 24px; */
+                            padding-bottom: 10px;
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: space-between;
+                            .left-area {
+                                .top-area {
+                                    display: flex;
+                                    align-items: center;
+                                    .svg-icon {
+                                        font-size: 24px;
+                                    }
+                                    .arrow {
+                                        font-size: 16px;
+                                        margin-right: 4px;
+                                    }
+                                    .green-title,
+                                    .common-title {
+                                        font-size: 14px;
+                                        margin-left: 20px;
+                                    }
+                                    .common-title2 {
+                                        margin-left: 0 !important;
+                                        font-size: 14px;
+                                    }
+
+                                    .green-title {
+                                        color: #26ab54;
+                                    }
+                                    .new-version {
+                                        margin-left: 4px;
+                                        min-width: 32px;
+                                        padding: 0 4px;
+                                        height: 20px;
+                                        background-color: rgba(
+                                            rgba(38, 171, 84, 0.1)
+                                        );
+                                        color: #26ab54;
+                                        font-size: 12px;
+                                        line-height: 20px; /* 100% */
+                                        text-align: center;
+                                        border-radius: 0px 4px 4px 4px;
+                                        background-color: #EAF7EE;
+                                    }
+                                }
+                                .bottom-area,
+                                .bottom-area2 {
+                                    margin-top: 4px;
+                                    color: #666;
+                                    font-size: 12px;
+                                    text-align: left;
+                                    padding-left: 24px;
+                                }
+                                .bottom-area2 {
+                                    padding-left: 20px !important;
+                                }
+                            }
+                        }
+                        .expend-area-two {
+                            .tree-item-main-child-two {
+                                padding: 10px 0px;
+                                line-height: 22px; /* 157.143% */
+                                display: flex;
+                                align-items: center;
+                                justify-content: space-between;
+                                /* &:first-child {
+                                    margin-top: 0;
+                                } */
+                                .right-icon {
+                                    font-size: 16px;
+                                    .svg-icon {
+                                        margin-left: 16px;
+                                    }
+                                }
+                                .title {
+                                    padding: 0px 26px;
+                                    display: flex;
+                                    align-items: center;
+                                    font-size: 14px;
+                                    font-weight: 500;
+                                    cursor: pointer;
+                                }
+                            }
+                            .add-category-select {
+                                padding-left: 68px;
+                                margin-top: 5px;
+                                margin-bottom: 5px;
+                                width: 100%;
+                            }
+                            .active-item-two {
+                                background-color: #f2f3f5;
+                                .title-area {
+                                    color: #0061ff;
+                                }
+                            }
+                            :deep(.ant-select-selector) {
+                                border: 1px solid #e2e2e2 !important;
+                                box-shadow: none !important;
+                                &:hover {
+                                    border: 1px solid #e2e2e2 !important;
+                                }
+                            }
+                        }
+                    }
+                    .active-item-one {
+                        .item-child-one {
+                            /* background-color: #f2f3f5; */
+                            color: #0061ff;
+                            .top-area {
+                                font-weight: 500;
+                            }
+                            .common-title {
+                                color: #0061ff;
+                            }
+                        }
+                    }
+                }  
     }
 }
 </style>

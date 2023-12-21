@@ -9,7 +9,18 @@
         :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
         <!-- 左边 -->
         <div class="item-tree-left" :class="{'collapse-true' : isCollapse, 'collapse-false': !isCollapse}">
-          <div class="title-area">{{ $t("item-bom.bom_list") }}</div>
+          <div class="title-area">{{ $t("item-bom.bom_list") }}
+            <div class="icon-collapse" @click="isCollapse = !isCollapse">
+                <MySvgIcon
+                  icon-class="collapse"
+                  v-if="!isCollapse"
+              />
+                <MySvgIcon
+                  icon-class="undold"
+                  v-else
+              />
+              </div>
+            </div>
           <div class="tree-content">
             <FittingsTree v-model:activeObj="activeObj" :cancelIds="cancelId" :isCollapse="isCollapse"/>
           </div>
@@ -37,6 +48,7 @@ import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
 import FittingsTree from "./components/item-bom/FittingsTree.vue";
 import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类弹窗组件
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 // const router = useRouter()
 const minWidthCount = 900
 
@@ -181,9 +193,9 @@ const setValue = (val) => {
       box-sizing: border-box;
       padding-bottom: 20px;
       .item-tree-left {
-        min-width: 454px;
+        // min-width: 454px;
         // width: 204px;
-        // width: 454px;
+        width: 454px;
         height: 100%;
         background-color: #f8fafc;
         font-size: 48px;
@@ -194,6 +206,13 @@ const setValue = (val) => {
           color: #1d2129;
           font-size: 16px;
           line-height: 22px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .icon-collapse {
+            cursor: pointer;
+          }
         }
         .tree-content {
           margin-top: 16px;
@@ -204,16 +223,16 @@ const setValue = (val) => {
 
       
 
-      /* .collapse-true {
+      .collapse-true {
           width: 204px;
         }
 
         .collapse-false {
           width: 454px;
-        } */
+        }
       @media (max-width:1440px) {
         .item-tree-left {
-            min-width: 354px;
+            // min-width: 354px;
             width: 354px;
             // width: 204px;
         }
