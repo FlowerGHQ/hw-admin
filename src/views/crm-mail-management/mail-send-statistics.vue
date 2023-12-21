@@ -256,7 +256,7 @@ export default {
         handleMailSubmit() {},
         // 预览邮件
         viewMail(record) {
-            this.mailData = record;
+            this.mailData = Object.assign(record, JSON.parse(record.template_param))
             this.mailShow = true;
         },
     }
