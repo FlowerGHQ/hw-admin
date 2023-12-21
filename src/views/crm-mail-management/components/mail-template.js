@@ -1,6 +1,6 @@
 export const mailTemplates = {
     1: `
-    <div style=" width: 1200px; background: rgba(82, 82, 82, 0.05); padding: 112px 64px 48px 64px; box-sizing: border-box">
+    <div style=" width: 1200px; background: rgba(82, 82, 82, 0.05); padding: 64px 64px 48px 64px; box-sizing: border-box">
             <img
                 src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/a9f84b8fe331d34c9ae1d5a9bec2fce43698a7b06a49ebc04719f480abf60f71.png"
                 style="width: 142px; height: 24px; margin-bottom: 24px"
