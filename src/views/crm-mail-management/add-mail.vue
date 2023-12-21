@@ -430,8 +430,8 @@ const getMailDetail = (parmas = {}) => {
                             }                            
                         })
                     break;
-                    case 'schedule_time':                                                
-                        formData.value[key] = dayjs.unix(res.detail[key])
+                    case 'schedule_time':
+                        formData.value[key] = res.detail[key] > 0 ? dayjs.unix(res.detail[key]) : undefined
                     break;
                     case 'is_schedule_time':
                         formData.value[key] = res.detail['schedule_time'] > 0 ? 1 : 0
@@ -467,7 +467,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 
     switch(type) {
         case 'poster':
-            console.log('poster', uploadOptions.value.posterList);
+            // console.log('poster', uploadOptions.value.posterList);
             uploadOptions.value.posterList = fileList
             if (file.status === 'done') {
                 formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
@@ -476,31 +476,34 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             }
         break;
         case 'qrcode1':
-            console.log('qrcode1', uploadOptions.value.qrCodeList1);
+            // console.log('qrcode1', uploadOptions.value.qrCodeList1);
             uploadOptions.value.qrCodeList1 = fileList
-            if (file.status === 'done') {
-                formData.value.template_param.qr_code[0] = {
-                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
-                }
-            } else if (file.status === "removed") {
-                formData.value.template_param.qr_code[0] = {
-                    img: undefined,
-                }
+
+            const obj1 =  {
+                ...formData.value.template_param.qr_code[0],
             }
+            if (file.status === 'done') {
+                obj1['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+
+            } else if (file.status === "removed") {
+                Reflect.deleteProperty(obj1, 'img')
+            }
+            formData.value.template_param.qr_code[0] = obj1
         break;
         case 'qrcode2':
-            console.log('qrcode2', uploadOptions.value.qrCodeList2);
+            // console.log('qrcode2', uploadOptions.value.qrCodeList2);
             uploadOptions.value.qrCodeList2 = fileList
 
-            if (file.status === 'done') {
-                formData.value.template_param.qr_code[1] = {
-                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
-                }
-            } else if (file.status === "removed") {
-                formData.value.template_param.qr_code[1] = {
-                    img: undefined,
-                }
+            const obj2 =  {
+                ...formData.value.template_param.qr_code[0],
             }
+
+            if (file.status === 'done') {
+                obj2['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+            } else if (file.status === "removed") {
+                Reflect.deleteProperty(obj2, 'img')
+            }
+            formData.value.template_param.qr_code[1] = obj2
         break;
     }
 }
@@ -542,6 +545,7 @@ const onCancel = () => {
 }
 // 确定创建
 const onSubmit = () => {
+    console.log("最后的结果1", formData.value);
     const _formData = Core.Util.deepCopy(formData.value)
 
     // 判断必填项
@@ -549,7 +553,7 @@ const onSubmit = () => {
         return
     }
         
-    _formData.schedule_time = dayjs(formData.value.schedule_time).unix()
+    _formData.schedule_time = _formData.is_schedule_time > 0 ? dayjs(formData.value.schedule_time).unix() : 0 
 
     // JSON化
     _formData.template_param = JSON.stringify(_formData.template_param)
@@ -580,16 +584,29 @@ const isRequired = (form) => {
 const onQrcodeInput = (e, type) => {
     switch(type) {
         case 'qrcode1':
-            formData.value.template_param.qr_code[0] = {
+            const obj1 = {
                 ...formData.value.template_param.qr_code[0],
-                introduce: formData.value.qr_code1_introduce
             }
+            
+            if (!e.target.value) {
+                Reflect.deleteProperty(obj1, 'introduce')
+            } else {
+                obj1['introduce'] = formData.value.qr_code1_introduce
+            }
+            formData.value.template_param.qr_code[0] = obj1
         break;
         case 'qrcode2':
-            formData.value.template_param.qr_code[1] = {
+            const obj2 =  {
                 ...formData.value.template_param.qr_code[1],
-                introduce: formData.value.qr_code2_introduce
             }
+
+            if (!e.target.value) {
+                Reflect.deleteProperty(obj2, 'introduce')
+            } else {
+                obj2['introduce'] = formData.value.qr_code2_introduce
+            }
+
+            formData.value.template_param.qr_code[1] = obj2
         break;
     }   
 }
