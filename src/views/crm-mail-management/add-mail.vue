@@ -57,7 +57,7 @@
                             />
                         </div>
                     </a-col>
-                    <a-col class="search-col required">
+                    <a-col class="search-col">
                         <div class="key w-100 t-aligin-r">
                             <!-- 开头称呼 -->
                             {{ $t('mail-management.initial_address') }}
@@ -516,7 +516,7 @@ const handlePreview = (file) => {
     
     const url = Core.Const.NET.FILE_URL_PREFIX
     const reg = new RegExp(`^${ url }`);
-        
+    // console.log("正则结果", reg.test(file.response.data.filename));
     if (reg.test(file.response.data.filename)) {
         previewImage.value = file.response.data.filename
     } else {
@@ -574,9 +574,6 @@ const isRequired = (form) => {
     }
     if (!form.title /*主标题*/) {
         return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.main_title')}`)
-    }
-    if (!form.address /*开头称呼*/) {
-        return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.initial_address')}`)
     }
 
     return false
