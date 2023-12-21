@@ -256,7 +256,7 @@ export default {
         handleMailSubmit() {},
         // 预览邮件
         viewMail(record) {
-            this.mailData = JSON.parse(record.template_param);
+            this.mailData = record;
             this.mailShow = true;
         },
     }
