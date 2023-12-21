@@ -11,6 +11,7 @@ export default {
     name: 'mailTemplete',
     components: {},
     props: {
+        // 数据 key 值和html模板 id 对应关系为：id = key_template
         mailData: {
             type: Object,
         },
@@ -67,7 +68,7 @@ export default {
             } else if (type === 3) {
                 dom.querySelector('a').href = data
             } else if (type === 4) {                
-                if (data.length === 0) {
+                if (data.length === 0 || !(data instanceof Array)) {
                     dom.style.display = 'none'
                     return
                 }
