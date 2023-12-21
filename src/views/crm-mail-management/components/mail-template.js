@@ -41,8 +41,8 @@ export const mailTemplates = {
                     Scootacular Christmas and@RWIN Horwinning New Year!
                 </article>
 
-                <div id="url_template" style="width: 100%; margin-top: 84px;">
-                        <a href="https://www.runoob.com/cssref/func-linear-gradient.html"                        
+                <div id="uri_template" style="width: 100%;">
+                        <a href="https://www.horwin.com/#/index"                        
                             style="
                                 display: block;
                                 text-decoration: none;
@@ -53,7 +53,7 @@ export const mailTemplates = {
                             "
                         >
                             <span
-                                id="url_content_template"
+                                id="uri_content_template"
                                 style="
                                     color: #fff;
                                     text-align: center;
@@ -69,13 +69,31 @@ export const mailTemplates = {
                 <img
                     id="poster_template"
                     style="width: 100%; height: auto; margin-top: 30px"
-                    src="https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5"
+                    src="https://static.horwincloud.com/ow-202311/page1.png"
                 />
                 <div
-                    id="qrcode_template"
+                    id="qr_code_template"
                     style="display: flex; justify-content: space-around; flex-wrap: wrap; margin-top: 30px;"
                 >
-                    
+                    <div style="text-align: center; width: 368px;">
+                        <img
+                            style="width: 170px; height: 170px"
+                            src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
+                            alt=""
+                        />
+                        <div
+                            style="
+                                color: #333;
+                                text-align: center;
+                                font-family: Montserrat;
+                                font-size: 28px; 
+                                font-weight: 400;
+                                line-height: 150%; /* 42px */
+                            "
+                        >
+                            二维码介绍
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -93,7 +111,7 @@ export const mailTemplates = {
                 <div style="letter-spacing: 2px">© 2023 | HORWIN Europe GmbH</div>
                 <div style="margin-top: 8px">
                     <span>If you no longer wish to receive these emails, you may</span>
-                    <a style="color: #c6f; text-decoration: none;" href="#">unsubscribe</a>
+                    <a style="color: #c6f; text-decoration: none;" href="https://www.horwin.com/#/index">unsubscribe</a>
                     <span>at any time.</span>
                 </div>
             </div>

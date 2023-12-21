@@ -6,6 +6,7 @@
 
 <script>
 import { mailTemplates } from './mail-template.js';
+import Core from '@/core'
 export default {
     name: 'mailTemplete',
     components: {},
@@ -31,12 +32,15 @@ export default {
     },
     methods: {
         setTemplate () {
+            // 删除多余的参数            
+            this.filterData(this.mailData)
+
             for(let key in this.mailData) {
                 if (key === 'poster') {
                     this.setTemplateData(key, this.mailData[key], 2)
-                } else if (key === 'url') {
+                } else if (key === 'uri') {
                     this.setTemplateData(key, this.mailData[key], 3)
-                } else if (key === 'qrcode') {
+                } else if (key === 'qr_code') {
                     this.setTemplateData(key, this.mailData[key], 4)
                 } else {
                     this.setTemplateData(key, this.mailData[key])
@@ -47,17 +51,22 @@ export default {
         setTemplateData(key, data, type = 1 /* type: 1.文本内容  2.图片  3.链接  4.自定义*/) {
             const domName = `${key}_template`
             let dom = document.getElementById(domName)
+            // console.log("dom", dom);
+
+            if (!dom) return
+
             if(!data) {
                 dom.style.display = 'none'
                 return
             }
+
             if (type === 1) {
                 dom.innerHTML = data
             } else if (type === 2) {
                 dom.src = data
             } else if (type === 3) {
                 dom.querySelector('a').href = data
-            } else if (type === 4) {          
+            } else if (type === 4) {                
                 if (data.length === 0) {
                     dom.style.display = 'none'
                     return
@@ -89,6 +98,12 @@ export default {
                 dom.innerHTML = result
                 
             }
+        },
+        filterData(data) {
+            // 删除不需要的参数
+            Core.Util.deleteParamsFilter(data, ['is_schedule_time','qr_code1_introduce','qr_code2_introduce','template_param', 'id', 'receiver_type','templat', 'schedule_time'])
+
+            // console.log("删除不需要的参数", data);
         }
     }
 };
@@ -96,11 +111,6 @@ export default {
 
 <style lang="less" scoped>
 .mail-template {
-    // padding: 64px;
-    // background-color: #F6F6F6;
-    .mail-content {
-        // background-color: #FFF;
-        // padding: 40px;
-    }
+ 
 }
 </style>

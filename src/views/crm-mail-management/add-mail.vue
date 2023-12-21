@@ -5,7 +5,7 @@
             <div class="form-module">
                 <div class="module-header">
                     <div class="module-title">{{ $t('mail-management.email_content') /*邮件内容*/}}</div>
-                    <div class="preview-btn" @click="onPreviewBtn">
+                    <div class="preview-btn" @click="onPreviewBtn('content_template')">
                         <a-button>{{  $t('mail-management.preview') }}</a-button>
                     </div>
                 </div>            
@@ -16,8 +16,8 @@
                             {{ $t('mail-management.select_template') }}
                         </div>
                         <div class="value m-l-8">
-                            <div class="bg-template">
-                                <span class="template-text">
+                            <div class="bg-template cursor">
+                                <span class="template-text" @click="onPreviewBtn('default_template')">
                                     {{  $t('mail-management.sales_template') }}
                                 </span>
                             </div>
@@ -165,6 +165,7 @@
                                     v-model:value="formData.qr_code1_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
+                                    @change="onQrcodeInput"
                                 />
                             </div>
                             <div class="qr-code2 m-t-10">
@@ -190,6 +191,7 @@
                                     v-model:value="formData.qr_code2_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
+                                    @change="onQrcodeInput"
                                 />
                             </div>
                         </div>
@@ -246,7 +248,9 @@
             width="1248px"             
             :title="$t('crm_b.preview')" 
             :footer="null" 
+            destroy-on-close
             @cancel='mailShow = false'
+            
         >
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
@@ -331,23 +335,23 @@ const previewVisible = ref(false) // 预览链接
 const previewImage = ref(null) // 预览链接
 
 const mailData = ref({
-    'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',    
-    'address': 'Dear XXX',
-    'email_content': "你好啊",
-    'url': "",
-    'url_content': "你好啊",
-    'poster': '',
-    'qrcode': [
-        // { 
-        //     img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
-        //     introduce: "你好啊",
-        // }, 
-        // {
-        //     img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
-        //     introduce: "你好啊",
-        // }
-    ],
-})
+    // 'title': '',    
+    // 'address': '',
+    // 'email_content': "",
+    // 'uri': "",
+    // 'uri_content': "",
+    // 'poster': '',
+    // 'qr_code': [
+    //     { 
+    //         img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
+    //         introduce: "你好啊",
+    //     }, 
+    //     {
+    //         img: "https://img0.baidu.com/it/u=1397203767,4231030802&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703178000&t=527dac1e9969d86e267a03f72185e8c5",
+    //         introduce: "你好啊",
+    //     }
+    // ],
+}) // 预览数据
 const mailShow = ref(false) // 预览显示框
 
 onMounted(() => {
@@ -525,22 +529,14 @@ const onSubmit = () => {
         
     _formData.schedule_time = dayjs(formData.value.schedule_time).unix()
 
-    _formData.template_param.qr_code.forEach((el, index) => {
-        if (index === 0) {
-            el.introduce = _formData.qr_code1_introduce
-        } else if (index === 1) {
-            el.introduce = _formData.qr_code2_introduce
-        }
-    });
-
     // JSON化
     _formData.template_param = JSON.stringify(_formData.template_param)
     
     // 删除多余的参数
     Core.Util.deleteParamsFilter(_formData, ['is_schedule_time','qr_code1_introduce','qr_code2_introduce'])
     
-    saveMail(_formData)
     console.log("最后的结果", _formData);
+    saveMail(_formData)
 }
 
 // 检查并填写是否填写
@@ -558,9 +554,38 @@ const isRequired = (form) => {
     return false
 }
 
+// 二维码输入框
+const onQrcodeInput = () => {
+    // 必须先上传照片在填写文本
+    formData.value.template_param.qr_code.forEach((el, index) => {
+        if (index === 0) {
+            el.introduce = formData.value.qr_code1_introduce
+        } else if (index === 1) {
+            el.introduce = formData.value.qr_code2_introduce
+        }
+    });    
+}
+
 // 预览按钮
-const onPreviewBtn = () => {
+const onPreviewBtn = (type) => {
+
     mailShow.value = true
+    
+    switch(type) {
+        case 'content_template':
+            mailData.value = {
+                ...formData.value,
+                ...formData.value.template_param
+            }
+
+            console.log("赋值的数据", mailData.value);
+        break;
+        case 'default_template':
+            // 默认模板查看
+            mailData.value = {}
+        break;
+    }
+
 }
 
 
