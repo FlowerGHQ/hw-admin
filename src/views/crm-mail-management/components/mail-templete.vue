@@ -90,7 +90,7 @@ export default {
                                     line-height: 150%; /* 42px */
                                 "
                             >
-                                ${ el.introduce }
+                                ${ el.introduce || '' }
                             </div>
                         </div>
                         `

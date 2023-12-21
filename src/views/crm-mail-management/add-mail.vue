@@ -125,6 +125,7 @@
                                 :data='uploadOptions.data'
                                 :maxCount="1"
                                 list-type="picture-card"
+                                :before-upload="handleCheck"
                                 @change="(event) => onUploadExplosion(event, 'poster')"
                                 @preview="handlePreview"                                
                             >
@@ -165,7 +166,7 @@
                                     v-model:value="formData.qr_code1_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
-                                    @change="onQrcodeInput"
+                                    @change="(event) => onQrcodeInput(event,'qrcode1')"
                                 />
                             </div>
                             <div class="qr-code2 m-t-10">
@@ -191,7 +192,7 @@
                                     v-model:value="formData.qr_code2_introduce" 
                                     :placeholder="$t('mail-management.qrcode_introduction')" 
                                     allow-clear
-                                    @change="onQrcodeInput"
+                                    @change="(event) => onQrcodeInput(event,'qrcode2')"
                                 />
                             </div>
                         </div>
@@ -263,6 +264,7 @@ import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import Core from '@/core'
 import mailTemplete from './components/mail-templete.vue';
+import { Upload } from 'ant-design-vue';
 
 const { proxy } = getCurrentInstance()
 
@@ -353,6 +355,7 @@ const mailData = ref({
     // ],
 }) // 预览数据
 const mailShow = ref(false) // 预览显示框
+const sizeLimit = ref(2)  // 上传大小限制
 
 onMounted(() => {
     if (route.query?.id) {
@@ -505,7 +508,26 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 const handlePreview = (file) => {
     console.log("预览文件", file);
     previewVisible.value = true
-    previewImage.value = file.response.data.filename
+    
+    const url = Core.Const.NET.FILE_URL_PREFIX
+    const reg = new RegExp(`^${ url }`);
+        
+    if (reg.test(file.response.data.filename)) {
+        previewImage.value = file.response.data.filename
+    } else {
+        previewImage.value = url + file.response.data.filename        
+    }
+}
+// upload检查超过2M提示
+const handleCheck = (file) => {
+    console.log("file", file);
+    const inSize = file.size / 1024 / 1024 < sizeLimit.value;
+
+    if (!inSize) {
+        proxy.$message.warn(`请上传小于${ sizeLimit.value }MB的${ file.type === "image/*" ? "图片" : "视频" }`)       
+        return false || Upload.LIST_IGNORE;
+    }
+
 }
 
 // 预览 model 取消事件
@@ -555,15 +577,21 @@ const isRequired = (form) => {
 }
 
 // 二维码输入框
-const onQrcodeInput = () => {
-    // 必须先上传照片在填写文本
-    formData.value.template_param.qr_code.forEach((el, index) => {
-        if (index === 0) {
-            el.introduce = formData.value.qr_code1_introduce
-        } else if (index === 1) {
-            el.introduce = formData.value.qr_code2_introduce
-        }
-    });    
+const onQrcodeInput = (e, type) => {
+    switch(type) {
+        case 'qrcode1':
+            formData.value.template_param.qr_code[0] = {
+                ...formData.value.template_param.qr_code[0],
+                introduce: formData.value.qr_code1_introduce
+            }
+        break;
+        case 'qrcode2':
+            formData.value.template_param.qr_code[1] = {
+                ...formData.value.template_param.qr_code[1],
+                introduce: formData.value.qr_code2_introduce
+            }
+        break;
+    }   
 }
 
 // 预览按钮
