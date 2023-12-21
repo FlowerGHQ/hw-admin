@@ -74,27 +74,29 @@ export default {
                 }
                 let result = ""
                 data.forEach(el => {
-                    result += `
-                        <div style="text-align: center; width: 368px;">
-                            <img
-                                style="width: 170px; height: 170px"
-                                src="${ el.img }"
-                                alt=""
-                            />
-                            <div
-                                style="
-                                    color: #333;
-                                    text-align: center;
-                                    font-family: Montserrat;
-                                    font-size: 28px; 
-                                    font-weight: 400;
-                                    line-height: 150%; /* 42px */
-                                "
-                            >
-                                ${ el.introduce || '' }
+                    if (el.img) {
+                        result += `
+                            <div style="text-align: center; width: 368px;">
+                                <img
+                                    style="width: 170px; height: 170px"
+                                    src="${ el.img }"
+                                    alt=""
+                                />
+                                <div
+                                    style="
+                                        color: #333;
+                                        text-align: center;
+                                        font-family: Montserrat;
+                                        font-size: 28px; 
+                                        font-weight: 400;
+                                        line-height: 150%; /* 42px */
+                                    "
+                                >
+                                    ${ el.introduce || '' }
+                                </div>
                             </div>
-                        </div>
-                        `
+                            `
+                    }
                 })
                 dom.innerHTML = result
                 
