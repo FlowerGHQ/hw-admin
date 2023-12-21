@@ -636,6 +636,7 @@ const messages = {
             upload_pic_tip: '上传爆炸图，以配置点位',
             add_pic_diagram: '为爆炸图添加配件',
             add_diagram: '添加配件',
+            spec_drawing: '规格图',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3322,6 +3323,7 @@ const messages = {
             upload_pic_tip: 'Upload the explosion diagram to configure the points',
             add_pic_diagram: 'Add accessories to the explosion diagram',
             add_diagram: 'Add Accessories',
+            spec_drawing: 'Specification Drawing',
         },
         fe: {
             feedback: 'Feedback',

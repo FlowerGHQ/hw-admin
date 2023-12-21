@@ -345,29 +345,29 @@ export default {
           // filteredValue: filteredInfo.status || [0],
         },
         { title: this.$t("n.type"), dataIndex: ["type"], key: "type" },
-        {
-          title: this.$t("n.flag_entity"),
-          dataIndex: "flag_entity",
-          key: "flag_entity",
-        },
+        // {
+        //   title: this.$t("n.flag_entity"),
+        //   dataIndex: "flag_entity",
+        //   key: "flag_entity",
+        // },
         {
           title: this.$t("i.categories"),
           dataIndex: "category_list",
           key: "category_list",
         },
-        { title: this.$t("i.number"), dataIndex: "model", key: "item" },
-        {
-          title: "FOB(EUR)",
-          dataIndex: "fob_eur",
-          key: "fob_money",
-          unit: "€",
-        },
-        {
-          title: "FOB(USD)",
-          dataIndex: "fob_usd",
-          key: "fob_money",
-          unit: "$",
-        },
+        // { title: this.$t("i.number"), dataIndex: "model", key: "item" },
+        // {
+        //   title: "FOB(EUR)",
+        //   dataIndex: "fob_eur",
+        //   key: "fob_money",
+        //   unit: "€",
+        // },
+        // {
+        //   title: "FOB(USD)",
+        //   dataIndex: "fob_usd",
+        //   key: "fob_money",
+        //   unit: "$",
+        // },
         // { title: this.$t("i.hours"), dataIndex: "man_hour", key: "man_hour" },
         {
           title: this.$t("d.create_time"),

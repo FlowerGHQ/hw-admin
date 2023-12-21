@@ -200,8 +200,8 @@ export default {
             )
             column.push(
                 { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
-                { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
-                { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
+                // { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
+                // { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
                 { title: this.$t('def.operate'), key: 'operation' },
             )
             return column
