@@ -160,7 +160,7 @@ export default {
             switch (type) {
                 case 'purchase':  // 详情
                     routeUrl = this.$router.resolve({
-                        path: this.$auth('ADMIN') ? '/distributor/purchase-order-list' : '/purchase/purchase-order-self',
+                        path: this.$auth('ADMIN') ? '/dashboard' : '/purchase/purchase-order-self',
                     })
                     window.open(routeUrl.href, '_self')
                     break;

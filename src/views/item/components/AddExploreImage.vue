@@ -38,12 +38,27 @@
 <script>
 import { get } from 'lodash';
 import Core from '../../../core';
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0,
+            v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 export default {
     props: {
         modalShow: {
             type: Boolean,
             default: false,
-        }
+        },
+        isUploadEdit: {
+            type: Boolean,
+            default: false,
+        },
+        uploadForm: {
+            type: Object,
+            default: {},
+        },
     },
     data() {
         return {
@@ -63,12 +78,31 @@ export default {
             },
         }
     },
+    watch: {
+        modalShow: {
+            handler(val) {
+                if(!this.isUploadEdit) {
+                    this.form = {}
+                    this.upload.coverList = []
+                } else {
+                    this.form = this.uploadForm
+                    this.upload.coverList[0] = {
+                        uid: uuid(),
+                        url: Core.Util.imageFilter(this.uploadForm.img),
+                        status: 'done',
+                        percent: 100,
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
+        },
+    },
     methods: {
         closeModal () {
             this.$emit("closeModal", false);
         },
         handleModalSubmit() {
-            // this.$emit("addExplore", this.form);
             let msg = "";
             if(!this.form.name) {
                 msg = this.$t('i.explosion_diagram')
@@ -94,8 +128,6 @@ export default {
                 this.$message.warning(this.$t('n.picture_smaller'));
             }
 
-            // this.loadImage(TEST_IMAGE);
-            // return false;
             return isCanUpType && isLt10M;
         },
         // 上传图片
@@ -107,7 +139,6 @@ export default {
                 this.shortPath = get(fileList,'[0].response.data.filename', null);
                 if(this.shortPath) {
                     this.form.img = this.shortPath;
-                    // this.loadImage(this.detailImageUrl);
                 }
             }
             this.upload.coverList = fileList;

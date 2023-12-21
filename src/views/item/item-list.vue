@@ -756,7 +756,7 @@ export default {
       border-radius: 6px;
       // 滚动条的样式
       &::-webkit-scrollbar {
-        width: 6px;
+        width: 0px;
         height: 6px;
         &-thumb {
                 border-radius: 3px;
