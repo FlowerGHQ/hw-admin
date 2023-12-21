@@ -21,7 +21,7 @@
                         class="item pointer"
                         @click.stop="selectKey(null, item)"
                         :class="{
-                            'active-item': generateId(item) == activeKey,
+                            'active-item': generateId(item) == activeKey || item.item_id === shopId,
                         }">
                         <div class="tree-item-main">
                             <div class="content">
@@ -35,7 +35,7 @@
                                     class="group"
                                     src="@/assets/images/bom/group-active.png"
                                     alt=""
-                                    v-if="generateId(item) === activeKey" />
+                                    v-if="generateId(item) === activeKey || item.item_id === shopId" />
                                 <img
                                     class="group"
                                     src="@/assets/images/bom/group-common.png"
