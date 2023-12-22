@@ -107,6 +107,8 @@
 									:style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
 									@mousedown="pointMousedown(itemIndex, 'end')"
 									@mousemove.stop=""
+                                    @mouseenter.stop="onPointerEnd(item, 'enter')"
+                                    @mouseleave.stop="onPointerEnd(item, 'leave')"
 								>
 									{{item.index || 0}}
                                     <div class="component" @mousedown.stop="">
@@ -171,6 +173,7 @@
                 :scroll="{ x: true }"
                 :pagination="channelPagination"
                 :loading="loading"
+                :row-class-name="onRowClassName"
                 @change="handleTableChange"
             >
                 <template #headerCell="{ title, column }">
@@ -411,6 +414,7 @@ const tableData = ref([
 ]);
 const isExplosionImg = ref(false) // 是否有爆炸图
 const explosionImgItem = ref({ img: "", }) // 爆炸图照片 https://horwin.oss-cn-hangzhou.aliyuncs.com/img/33f7c35baa7bbc83466ff2dd7d2006d063b28740b783e81cb5bc227f63541194.png
+const pointEndTargetId = ref(null) // 移入的点位id是多少用于判断table的样式样式
 
 const uploadOptions = ref({
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
@@ -713,6 +717,24 @@ const handleTableChange = (pagination, filters, sorter) => {
     channelPagination.value.pageSize = pagination.pageSize;
     getTableDataFetch();
 };
+// table的样式
+const onRowClassName = (recode, index) => {
+    // console.log("输出", recode, index);
+    return recode.id === pointEndTargetId.value ? 'row-style' : ''
+}
+// 结束点移入事件
+const onPointerEnd = (item, type) => {
+    // console.log("itme", item, "type", type);
+    switch(type) {
+        case 'enter':
+            pointEndTargetId.value = item.target_id
+            break;
+            case 'leave':
+            pointEndTargetId.value = null
+        break;
+    }
+}
+
 
 /* methods end*/
 </script>
@@ -1087,5 +1109,9 @@ const handleTableChange = (pagination, filters, sorter) => {
 }
 .m-r-10 {
     margin-right: 10px;
+}
+
+:deep(.row-style) {
+    background: rgba(0, 97, 255, 0.10);
 }
 </style>
