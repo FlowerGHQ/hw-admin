@@ -637,6 +637,9 @@ const messages = {
             add_pic_diagram: '为爆炸图添加配件',
             add_diagram: '添加配件',
             spec_drawing: '规格图',
+            in_all: '共有',
+            spec_of_goods: '款规格商品',
+            sku_code: 'SKU编码',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3324,6 +3327,9 @@ const messages = {
             add_pic_diagram: 'Add accessories to the explosion diagram',
             add_diagram: 'Add Accessories',
             spec_drawing: 'Specification Drawing',
+            in_all: 'In All',
+            spec_of_goods: 'specifications of goods',
+            sku_code: 'SKU Code',
         },
         fe: {
             feedback: 'Feedback',

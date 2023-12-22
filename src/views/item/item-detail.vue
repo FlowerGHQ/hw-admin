@@ -5,12 +5,12 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.detail') }}</div>
                 <div class="btns-area">
-                    <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                    <!-- <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
                         <template v-if="detail.status === -1"><i class="icon i_putaway" />{{ $t('i.active_a') }}
                         </template>
                         <template v-if="detail.status === 0"><i class="icon i_downaway" />{{ $t('i.inactive_a') }}
                         </template>
-                    </a-button>
+                    </a-button> -->
                 </div>
             </div>
             <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false' />
@@ -112,7 +112,7 @@
                             <ExplosionImage :detailId="id" :id="currentSpecId" />
                         </template>
                         <template v-else-if="tabKey === 3">
-                            <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                            <ItemAccessory :item_id='currentSpecId' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                 @submit="getItemDetail" ref="AttachmentFile" />
                         </template>
                     </div>
@@ -199,7 +199,7 @@ export default {
                 { title: this.$t('r.item_name'), key: 'input', dataIndex: 'code', fixed: 'left' },
             )
             column.push(
-                { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
+                // { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
                 // { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
                 // { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
                 { title: this.$t('def.operate'), key: 'operation' },
