@@ -80,6 +80,16 @@
               :indentSize="0"
               :row-selection="rowSelection"
               >
+              <template #headerCell="{ column }">
+                <template v-if="column.dataIndex === 'code'">
+                  <div class="table-block">
+                    {{ $t("i.code") }}/ {{ $t(/*SKU编码*/"i.sku_code") }}
+                    <a-tooltip placement="top" title='商品编码：多规格商品的父规格对应商品编码；SKU编码：单规格、多规格商品的子规格对应SKU编码'>
+                      <info-circle-outlined />
+                    </a-tooltip>
+                  </div>
+                </template>
+              </template>
               <template #bodyCell="{ column, text, record }">
                 <!-- 名称 -->
                 <template v-if="column.key === 'detail'">
@@ -109,9 +119,14 @@
                           </div>
                         </a-button>
                         <div
-                          v-if="record.attr_list && record.attr_list.length"
+                          v-if="!record.children && record.attr_list && record.attr_list.length"
                           class="sub-info">
                           {{ $Util.itemSpecFilter(record.attr_list) }}
+                        </div>
+                        <div
+                          v-if="record.children_number"
+                          class="sub-info">
+                          {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
                         </div>
                       </a-tooltip>
                       <!-- 来源 -->
@@ -187,6 +202,7 @@
                     >
                   </template>
                   <a-button
+                    v-if="!record.children"
                     type="link"
                     @click="handleStatusChange(record)"
                     :class="record.status === 0 ? 'danger' : ''">
@@ -260,20 +276,20 @@
 
 <script>
 import Core from "../../core";
-
+import { InfoCircleOutlined } from '@ant-design/icons-vue';
 import SearchAll from "@/components/common/SearchAll.vue"
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
 const ITEM = Core.Const.ITEM;
-import loadsh from "lodash";
 export default {
   name: "ItemList",
   components: {
     TimeSearch,
     CategoryTree,
     CategoryTreeSelect,
-    SearchAll
+    SearchAll,
+    InfoCircleOutlined
   },
   props: {},
   data() {
@@ -355,19 +371,19 @@ export default {
           dataIndex: "category_list",
           key: "category_list",
         },
-        // { title: this.$t("i.number"), dataIndex: "model", key: "item" },
-        // {
-        //   title: "FOB(EUR)",
-        //   dataIndex: "fob_eur",
-        //   key: "fob_money",
-        //   unit: "€",
-        // },
-        // {
-        //   title: "FOB(USD)",
-        //   dataIndex: "fob_usd",
-        //   key: "fob_money",
-        //   unit: "$",
-        // },
+        { title: this.$t("i.number"), dataIndex: "model", key: "item" },
+        {
+          title: "FOB(EUR)",
+          dataIndex: "fob_eur",
+          key: "fob_money",
+          unit: "€",
+        },
+        {
+          title: "FOB(USD)",
+          dataIndex: "fob_usd",
+          key: "fob_money",
+          unit: "$",
+        },
         // { title: this.$t("i.hours"), dataIndex: "man_hour", key: "man_hour" },
         {
           title: this.$t("d.create_time"),
@@ -560,16 +576,15 @@ export default {
       })
         .then((res) => {
           this.total = res.count;
-          // this.tableData = res.list; 
+          this.tableData = res.list; 
 
           // 如果同时查询名称和编码  加号去掉
           // if(this.isShowAdd) {
-            const targetTableData = this.removeChildrenFromData(res.list)
-            this.tableData = targetTableData; 
+            // const targetTableData = this.removeChildrenFromData(res.list)
+            // this.tableData = targetTableData; 
           // } else {
             // this.tableData = res.list; 
           // }
-
           
         })
         .catch((err) => {
@@ -738,7 +753,6 @@ export default {
   },
 };
 </script>
-
 <style lang="less" scoped>
 #ItemList {
   .content-area_main{
