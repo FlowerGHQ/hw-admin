@@ -228,7 +228,7 @@ export default {
             if (this.loadingSend) return;
             let _this = this;
             this.loadingSend = true
-            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ id }).then(res => {
+            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ email_task_id: id }).then(res => {
                 this.$message.success({
                     content: () => _this.$t('crm_b.send_success'),
                     class: 'mail-success-class',
