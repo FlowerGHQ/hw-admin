@@ -106,7 +106,7 @@
             <template #footer>
                 <div class="btns">
                     <a-button @click="handleSendMailClose">{{ $t('def.cancel') }}</a-button>
-                    <a-button @click="sendMail(sendMailData.id)" type="primary">{{ $t('crm_b.confirm_send') }}</a-button>
+                    <a-button @click="sendMail(sendId)" type="primary">{{ $t('crm_b.confirm_send') }}</a-button>
                 </div>
             </template>
         </a-modal>
@@ -144,7 +144,8 @@ export default {
             mailShow: false,
             sendMailShow: false,
             mailData: {},
-            sendMailData: {}
+            sendMailData: {},
+            sendId: ''
         };
     },
     watch: {
@@ -227,7 +228,7 @@ export default {
             if (this.loadingSend) return;
             let _this = this;
             this.loadingSend = true
-            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ id }).then(res => {
+            Core.Api.MAIL_MANAGEMENT.scheduleEmail({ email_task_id: id }).then(res => {
                 this.$message.success({
                     content: () => _this.$t('crm_b.send_success'),
                     class: 'mail-success-class',
@@ -296,6 +297,7 @@ export default {
         },
         // 预览邮件
         openSendMail(record) {
+            this.sendId = record.id
             const data = Core.Util.deepCopy(record)
             this.sendMailData = Object.assign(data, JSON.parse(data.template_param))
             this.sendMailShow = true;
