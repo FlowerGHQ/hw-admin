@@ -2145,26 +2145,55 @@ const routes = [
 			// },
 		]
 	},
-	{ // 邮箱订阅状态
-		path: '/crm-email-subscription',
+	{ // 邮件管理
+		path: '/mail-management',
 		component: Layout,
-		redirect: '/crm-email-subscription/subscription-list',
-		name: 'CRMEmailSubscription',
+		redirect: '/mail-management/subscription-list',
+		name: 'MailManagement',
         type: [ROUTER_TYPE.CRM],
 		meta: {
-			title: '邮箱订阅状态',
-			title_en: 'Mailbox subscription status',
-			icon: 'i_menu_youxiangdingyue',
+			title: '邮件管理',
+			title_en: 'Mail Management',
+			icon: 'i_s_customer',
             roles: [LOGIN_TYPE.ADMIN],
 		},
 		children: [
 			{
 				path: 'subscription-list',
 				name: 'SubscriptionList',
-				component: () => import('@/views/crm-email-subscription/subscription-list.vue'),
+				component: () => import('@/views/crm-mail-management/subscription-list.vue'),
 				meta: {
 					title: '邮箱订阅状态列表',
 					title_en: 'List of email subscription status',
+				}
+			},
+			{
+				path: 'mail-send-statistics',
+				name: 'MailSendStatistics',
+				component: () => import('@/views/crm-mail-management/mail-send-statistics.vue'),
+				meta: {
+					title: '邮件发送及统计',
+					title_en: 'Mail sending and statistics',
+				}
+			},
+			{
+				path: 'add-mail',
+				name: 'AddMail',
+				component: () => import('@/views/crm-mail-management/add-mail.vue'),
+				meta: {
+                    hidden: true,
+					title: '新增邮件',
+					title_en: 'Add New Mail',
+				}
+			},
+			{
+				path: 'mail-send-situation',
+				name: 'MailSendSituation',
+				component: () => import('@/views/crm-mail-management/mail-send-situation.vue'),
+				meta: {
+					title: '邮件发送及统计',
+					title_en: 'Mail sending and statistics',
+                    hidden: true
 				}
 			},
 		]
