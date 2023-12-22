@@ -78,7 +78,7 @@ export default {
                         result += `
                             <div style="text-align: center; width: 368px;">
                                 <img
-                                    style="width: 170px; height: 170px"
+                                    style="width: 170px; height: 170px; border: 1px solid #E2E2E2; padding: 5px;"
                                     src="${ el.img }"
                                     alt=""
                                 />
@@ -87,7 +87,7 @@ export default {
                                         color: #333;
                                         text-align: center;
                                         font-family: Montserrat;
-                                        font-size: 28px; 
+                                        font-size: 28px;
                                         font-weight: 400;
                                         line-height: 150%; /* 42px */
                                     "

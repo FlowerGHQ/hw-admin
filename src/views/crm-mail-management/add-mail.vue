@@ -57,7 +57,7 @@
                             />
                         </div>
                     </a-col>
-                    <a-col class="search-col required">
+                    <a-col class="search-col">
                         <div class="key w-100 t-aligin-r">
                             <!-- 开头称呼 -->
                             {{ $t('mail-management.initial_address') }}
@@ -297,7 +297,7 @@ const formData = ref({
     address: "", // 开头称呼
     email_content: "", // 邮件内容
     template_param: {
-        uri_content:"",
+        uri_content:"Click For More Information",
         uri:"",
         poster: undefined,
         qr_code: [], // "qr_code": [{"img":"地址","introduce":"介绍"}]
@@ -399,15 +399,17 @@ const getMailDetail = (parmas = {}) => {
                         formData.value[key] = JSON.parse(res.detail[key])
                         
                         // 海报上传回显
-                        uploadOptions.value.posterList[0] = {
-                            name: 'poster',
-                            percent: 100,
-                            status: 'done',
-                            thumbUrl: formData.value[key].poster,
-                            url: formData.value[key].poster,
-                            response: {
-                                data: {
-                                    filename: formData.value[key].poster
+                        if (formData.value[key].poster) {
+                            uploadOptions.value.posterList[0] = {
+                                name: 'poster',
+                                percent: 100,
+                                status: 'done',
+                                thumbUrl: formData.value[key].poster,
+                                url: formData.value[key].poster,
+                                response: {
+                                    data: {
+                                        filename: formData.value[key].poster
+                                    }
                                 }
                             }
                         }
@@ -430,8 +432,8 @@ const getMailDetail = (parmas = {}) => {
                             }                            
                         })
                     break;
-                    case 'schedule_time':                                                
-                        formData.value[key] = dayjs.unix(res.detail[key])
+                    case 'schedule_time':
+                        formData.value[key] = res.detail[key] > 0 ? dayjs.unix(res.detail[key]) : undefined
                     break;
                     case 'is_schedule_time':
                         formData.value[key] = res.detail['schedule_time'] > 0 ? 1 : 0
@@ -467,7 +469,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 
     switch(type) {
         case 'poster':
-            console.log('poster', uploadOptions.value.posterList);
+            // console.log('poster', uploadOptions.value.posterList);
             uploadOptions.value.posterList = fileList
             if (file.status === 'done') {
                 formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
@@ -476,31 +478,34 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             }
         break;
         case 'qrcode1':
-            console.log('qrcode1', uploadOptions.value.qrCodeList1);
+            // console.log('qrcode1', uploadOptions.value.qrCodeList1);
             uploadOptions.value.qrCodeList1 = fileList
-            if (file.status === 'done') {
-                formData.value.template_param.qr_code[0] = {
-                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
-                }
-            } else if (file.status === "removed") {
-                formData.value.template_param.qr_code[0] = {
-                    img: undefined,
-                }
+
+            const obj1 =  {
+                ...formData.value.template_param.qr_code[0],
             }
+            if (file.status === 'done') {
+                obj1['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+
+            } else if (file.status === "removed") {
+                Reflect.deleteProperty(obj1, 'img')
+            }
+            formData.value.template_param.qr_code[0] = obj1
         break;
         case 'qrcode2':
-            console.log('qrcode2', uploadOptions.value.qrCodeList2);
+            // console.log('qrcode2', uploadOptions.value.qrCodeList2);
             uploadOptions.value.qrCodeList2 = fileList
 
-            if (file.status === 'done') {
-                formData.value.template_param.qr_code[1] = {
-                    img: Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename,
-                }
-            } else if (file.status === "removed") {
-                formData.value.template_param.qr_code[1] = {
-                    img: undefined,
-                }
+            const obj2 =  {
+                ...formData.value.template_param.qr_code[0],
             }
+
+            if (file.status === 'done') {
+                obj2['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+            } else if (file.status === "removed") {
+                Reflect.deleteProperty(obj2, 'img')
+            }
+            formData.value.template_param.qr_code[1] = obj2
         break;
     }
 }
@@ -511,7 +516,7 @@ const handlePreview = (file) => {
     
     const url = Core.Const.NET.FILE_URL_PREFIX
     const reg = new RegExp(`^${ url }`);
-        
+    // console.log("正则结果", reg.test(file.response.data.filename));
     if (reg.test(file.response.data.filename)) {
         previewImage.value = file.response.data.filename
     } else {
@@ -541,7 +546,7 @@ const onCancel = () => {
     router.push('/mail-management/mail-send-statistics')
 }
 // 确定创建
-const onSubmit = () => {
+const onSubmit = () => {    
     const _formData = Core.Util.deepCopy(formData.value)
 
     // 判断必填项
@@ -549,7 +554,14 @@ const onSubmit = () => {
         return
     }
         
-    _formData.schedule_time = dayjs(formData.value.schedule_time).unix()
+    _formData.schedule_time = _formData.is_schedule_time > 0 ? dayjs(formData.value.schedule_time).unix() : 0 
+
+    _formData.template_param.qr_code.forEach((el, index) => {
+        // 去除空数组里面的 [{}] 空对象
+        if (Object.keys(el).length === 0) {
+            _formData.template_param.qr_code.splice(index, 1)
+        }     
+    })      
 
     // JSON化
     _formData.template_param = JSON.stringify(_formData.template_param)
@@ -569,9 +581,6 @@ const isRequired = (form) => {
     if (!form.title /*主标题*/) {
         return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.main_title')}`)
     }
-    if (!form.address /*开头称呼*/) {
-        return proxy.$message.error(`${proxy.$t('mail-management.please_enter')}${proxy.$t('mail-management.initial_address')}`)
-    }
 
     return false
 }
@@ -580,16 +589,29 @@ const isRequired = (form) => {
 const onQrcodeInput = (e, type) => {
     switch(type) {
         case 'qrcode1':
-            formData.value.template_param.qr_code[0] = {
+            const obj1 = {
                 ...formData.value.template_param.qr_code[0],
-                introduce: formData.value.qr_code1_introduce
             }
+            
+            if (!e.target.value) {
+                Reflect.deleteProperty(obj1, 'introduce')
+            } else {
+                obj1['introduce'] = formData.value.qr_code1_introduce
+            }
+            formData.value.template_param.qr_code[0] = obj1
         break;
         case 'qrcode2':
-            formData.value.template_param.qr_code[1] = {
+            const obj2 =  {
                 ...formData.value.template_param.qr_code[1],
-                introduce: formData.value.qr_code2_introduce
             }
+
+            if (!e.target.value) {
+                Reflect.deleteProperty(obj2, 'introduce')
+            } else {
+                obj2['introduce'] = formData.value.qr_code2_introduce
+            }
+
+            formData.value.template_param.qr_code[1] = obj2
         break;
     }   
 }
@@ -602,6 +624,7 @@ const onPreviewBtn = (type) => {
     switch(type) {
         case 'content_template':
             mailData.value = {
+                poster: undefined, // 回显的时候JSON没有默认
                 ...formData.value,
                 ...formData.value.template_param
             }

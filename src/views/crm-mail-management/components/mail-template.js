@@ -77,7 +77,7 @@ export const mailTemplates = {
                 >
                     <div style="text-align: center; width: 368px;">
                         <img
-                            style="width: 170px; height: 170px"
+                            style="width: 170px; height: 170px; border: 1px solid #E2E2E2; padding: 5px;"
                             src="https://horwin.oss-cn-hangzhou.aliyuncs.com/img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
                             alt=""
                         />
@@ -111,7 +111,7 @@ export const mailTemplates = {
                 <div style="letter-spacing: 2px">© 2023 | HORWIN Europe GmbH</div>
                 <div style="margin-top: 8px">
                     <span>If you no longer wish to receive these emails, you may</span>
-                    <a style="color: #c6f; text-decoration: none;" href="https://www.horwin.com/#/index">unsubscribe</a>
+                    <a style="color: #c6f; text-decoration: none;" href="https://www.horwin.com/#/bos-mail-unsubscribe">unsubscribe</a>
                     <span>at any time.</span>
                 </div>
             </div>
