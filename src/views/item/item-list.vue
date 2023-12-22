@@ -781,7 +781,6 @@ export default {
         box-sizing: border-box;
         margin-left: 20px;
         background-color: #ffffff;
-        // background-color: red;
         
         .top-box {
           width: calc(100% + 40px) !important;
@@ -800,7 +799,8 @@ export default {
 
           .top-back {
             background-color: #FFFFFF;
-            padding: 0 20px;width: 100%;
+            padding: 0 20px;
+            width: 100%;
             height: 100%;
             border-radius: 6px 6px 0 0;
             box-sizing: border-box;
