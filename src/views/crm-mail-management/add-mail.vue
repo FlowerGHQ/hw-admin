@@ -302,7 +302,7 @@ const formData = ref({
     template_param: {
         uri_content:"Click For More Information",
         uri:"",
-        poster: undefined,
+        poster: "",
         qr_code: [], // "qr_code": [{"img":"地址","introduce":"介绍"}]
     },
     // 模板填充值{"uri_content":"链接内容","uri":"链接地址","poster":"海报图片","qr_code":"图片"}
@@ -477,7 +477,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             if (file.status === 'done') {
                 formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
             } else if (file.status === "removed") {
-                formData.value.template_param.poster = undefined
+                formData.value.template_param.poster = ""
             }
         break;
         case 'qrcode1':
@@ -549,7 +549,8 @@ const onCancel = () => {
     router.push('/mail-management/mail-send-statistics')
 }
 // 确定创建
-const onSubmit = () => {    
+const onSubmit = () => { 
+    // console.log("数据", formData.value);
     const _formData = Core.Util.deepCopy(formData.value)
 
     // 判断必填项
@@ -563,8 +564,8 @@ const onSubmit = () => {
         // 去除空数组里面的 [{}] 空对象
         if (Object.keys(el).length === 0) {
             _formData.template_param.qr_code.splice(index, 1)
-        }     
-    })      
+        }
+    })
 
     // JSON化
     _formData.template_param = JSON.stringify(_formData.template_param)
@@ -627,7 +628,6 @@ const onPreviewBtn = (type) => {
     switch(type) {
         case 'content_template':
             mailData.value = {
-                poster: undefined, // 回显的时候JSON没有默认
                 ...formData.value,
                 ...formData.value.template_param
             }
