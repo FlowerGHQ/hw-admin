@@ -1,5 +1,5 @@
 <template>
-    <div id="ItemEdit" class="edit-container">
+    <div id="ItemEdit" class="edit-container" ref="bigBox">
         <a-spin
             :spinning="loading"
             class="loading-incontent"
@@ -1313,14 +1313,22 @@
             </div>
         </div>
         <!-- 按钮 -->
-        <div class="form-btns">
-            <a-button type="primary" @click="handleSubmit">{{
-                $t("def.sure")
-            }}</a-button>
-            <a-button type="primary" ghost @click="routerChange('back')">{{
+        <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
+            <!--  type="primary" ghost -->
+            <a-button @click="routerChange('back')">{{
                 $t("def.cancel")
             }}</a-button>
+
+            <a-button type="primary" @click="handleSubmit">{{
+                $t("def.sure_create")
+            }}</a-button>
+
+            <!-- 底部障眼法-盒子 -->
+            <div class="bottom-box" >
+            </div>
         </div>
+        
+        <div :style="{height: fixedHeight}"></div>
         <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
@@ -1548,7 +1556,11 @@ export default {
             configSetMes: {},
             oldConfigSetMes: {},
             configIndex: 0,
-            uniqueArr: []
+            uniqueArr: [],
+            // 固定盒子宽度
+            fixedWidth: 'auto',
+            // 固定盒子高度
+            fixedHeight: 'auto',
         };
     },
     watch: {},
@@ -1627,9 +1639,29 @@ export default {
         }
         this.getSalesAreaList();
     },
-    mounted() {},
-    methods: {
+    mounted() {
+        window.addEventListener('resize', this.handleResize);
+        
+        this.$nextTick(()=>{
+            this.handleResize()
+        })
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleResize)
+        // this.observer.disconnect();    //取消监听
 
+    },
+    methods: {
+        /* 监听 */
+        handleResize() {
+            const width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
+            const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
+            this.fixedWidth = width + 'px';
+            this.fixedHeight = height + 'px'; 
+            // 在这里处理宽高变化的逻辑
+
+            console.log('this.fixedWidth1111',this.fixedWidth,this.fixedHeight);
+        },
         handlePreview(file) {
             console.log(file)
             this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : file?.url? file.url: ''
@@ -2757,6 +2789,7 @@ export default {
 
 <style lang="less" scoped>
 #ItemEdit {
+    width: 100%;
     .image-preview{
         position: fixed;
         width:100vw;
@@ -3295,4 +3328,29 @@ export default {
     margin-top: 4px;
 }
 
+.fixed-btns {
+        position: fixed;
+        bottom: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #FFF;
+        padding: 20px 0px;
+        display: flex;
+        justify-content: center;
+        
+        .ant-btn {
+            width: auto;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .bottom-box {
+            background-color: #F0F2F5;
+            width: 100%;
+            height: 16px;
+            position: absolute;
+            bottom: -16px;
+        }
+
+}
 </style>

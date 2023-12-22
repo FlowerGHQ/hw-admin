@@ -1198,7 +1198,7 @@ const messages = {
             more_operations: '更多操作',
             unfold: '展开',
             stow: '收起',
-
+            sure_create: '确定创建',
         },
         search: {
             repair_sn: '工单编号',
@@ -3878,6 +3878,7 @@ const messages = {
             more_operations: 'More Operations',
             unfold: 'Unfold',
             stow: 'Stow',
+            sure_create: 'Sure Create',
         },
         search: {
             repair_sn: 'Warranty Claim Number',
