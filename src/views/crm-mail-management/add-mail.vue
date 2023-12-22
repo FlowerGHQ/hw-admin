@@ -245,14 +245,17 @@
 
         <!-- 预览模板按钮 -->
         <a-modal 
+            class="custom-ant-modal"
             v-model:visible="mailShow" 
-            width="1248px"             
-            :title="$t('crm_b.preview')" 
-            :footer="null" 
+            width="1248px"
+            :footer="null"
             destroy-on-close
             @cancel='mailShow = false'
             
         >
+            <template #title>
+                <span class="model-title">{{ $t('crm_b.preview') }}</span>
+            </template>
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
     </div>
@@ -790,6 +793,12 @@ const onPreviewBtn = (type) => {
     color: #1D2129;
     font-size: 14px;
     font-weight: 400;
+}
+
+.model-title {
+    color: #1D2129;
+    font-size: 18px;
+    font-weight: 600;
 }
 </style>
 

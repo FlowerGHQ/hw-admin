@@ -90,10 +90,17 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="mailShow" width="1248px" destroyOnClose :title="$t('crm_b.preview')" :after-close='handleMailClose'>
+        <a-modal class="custom-ant-modal" v-model:visible="mailShow" width="1248px" destroyOnClose :footer="null" :after-close='handleMailClose'>
+            <template #title>
+                <span class="model-title">{{ $t('crm_b.preview') }}</span>
+            </template>
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
-        <a-modal v-model:visible="sendMailShow" width="1248px" destroyOnClose :title="$t('crm_b.send_mail')" :after-close='handleSendMailClose'>
+        
+        <a-modal class="custom-ant-modal" v-model:visible="sendMailShow" width="1248px" destroyOnClose :after-close='handleSendMailClose'>
+            <template #title>
+                <span class="model-title">{{ $t('crm_b.send_mail') }}</span>
+            </template>
             <mailTemplete :mailData="sendMailData"></mailTemplete>
 
             <template #footer>
@@ -338,6 +345,12 @@ export default {
 }
 .ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
     font-size: 14px;
+}
+
+.model-title {
+    color: #1D2129;
+    font-size: 18px;
+    font-weight: 600;
 }
 </style>
 <style lang="less">
