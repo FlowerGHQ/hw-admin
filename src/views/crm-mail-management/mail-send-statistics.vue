@@ -93,7 +93,7 @@
         <a-modal v-model:visible="mailShow" width="1248px" destroyOnClose :title="$t('crm_b.preview')" :after-close='handleMailClose'>
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
-        <a-modal v-model:visible="sendMailShow" width="1248px" destroyOnClose :title="$t('crm_b.preview')" :after-close='handleSendMailClose'>
+        <a-modal v-model:visible="sendMailShow" width="1248px" destroyOnClose :title="$t('crm_b.send_mail')" :after-close='handleSendMailClose'>
             <mailTemplete :mailData="sendMailData"></mailTemplete>
 
             <template #footer>
