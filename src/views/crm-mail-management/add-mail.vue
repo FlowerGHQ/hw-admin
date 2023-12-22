@@ -546,8 +546,7 @@ const onCancel = () => {
     router.push('/mail-management/mail-send-statistics')
 }
 // 确定创建
-const onSubmit = () => {
-    console.log("最后的结果1", formData.value);
+const onSubmit = () => {    
     const _formData = Core.Util.deepCopy(formData.value)
 
     // 判断必填项
@@ -556,6 +555,13 @@ const onSubmit = () => {
     }
         
     _formData.schedule_time = _formData.is_schedule_time > 0 ? dayjs(formData.value.schedule_time).unix() : 0 
+
+    _formData.template_param.qr_code.forEach((el, index) => {
+        // 去除空数组里面的 [{}] 空对象
+        if (Object.keys(el).length === 0) {
+            _formData.template_param.qr_code.splice(index, 1)
+        }     
+    })      
 
     // JSON化
     _formData.template_param = JSON.stringify(_formData.template_param)
