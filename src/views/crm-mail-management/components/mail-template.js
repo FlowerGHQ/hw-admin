@@ -111,7 +111,7 @@ export const mailTemplates = {
                 <div style="letter-spacing: 2px">© 2023 | HORWIN Europe GmbH</div>
                 <div style="margin-top: 8px">
                     <span>If you no longer wish to receive these emails, you may</span>
-                    <a style="color: #c6f; text-decoration: none;" href="#">unsubscribe</a>
+                    <a style="color: #c6f; text-decoration: none;" href="https://www.horwin.com/#/bos-mail-unsubscribe">unsubscribe</a>
                     <span>at any time.</span>
                 </div>
             </div>
