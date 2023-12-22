@@ -101,7 +101,7 @@
                         </div>
                         <!-- 展示图 -->
                         <template v-if="tabKey === 0">
-                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList" />
+                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList" :specImageList="specImageList" />
                         </template>
                         <template v-else-if="tabKey === 1">
                             <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
@@ -169,6 +169,7 @@ export default {
             tabKey: 0,
             coverImageList: [],
             detailImageList: [],
+            specImageList: [],
             currentSpecId: 0,
             nameList: [
                 { key: '1', value: 'aa' },
@@ -370,8 +371,27 @@ export default {
                     this.initHeight()
                 })
                 console.log('getSpecList this.specific.data:', data)
+                this.getSpecImg();
             }).catch(err => {
                 console.log('getSpecList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 获取规格图
+        getSpecImg() {
+            this.loading = true;
+            Core.Api.Item.listBySet({
+                set_id: this.detail.set_id,
+                id: this.currentSpecId,
+                flag_default: 0,
+            }).then(res => {
+                console.log('getSpecImg res', res);
+                if(res.list.length) {
+                    this.specImageList = res.list[0].imgs.split(',');
+                }
+            }).catch(err => {
+                console.log('getSpecImg err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -446,6 +466,7 @@ export default {
                     onClick: item.id === id
                 };
             });
+            this.getSpecImg();
         },
         handleTabChange(next) {
             if (typeof (next) === 'function') {

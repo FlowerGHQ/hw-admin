@@ -13,10 +13,10 @@
             <a-image v-for="(img, index) in detailImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
         </div>
         <div class="title">
-            {{ $t(/*规格图*/'i.spec_drawing') }} ({{ detailImageList.length }})
+            {{ $t(/*规格图*/'i.spec_drawing') }} ({{ specImageList.length }})
         </div>
         <div class="img-list">
-            <a-image v-for="(img, index) in detailImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
+            <a-image v-for="(img, index) in specImageList" :key="index" :width="138" :height="136" :src="$Util.imageFilter(img)" :fallback="$t('def.none')"/>
         </div>
     </div>
 </template>
@@ -34,7 +34,11 @@ export default {
         detailImageList: {
             type: Array,
             default: []
-        }
+        },
+        specImageList: {
+            type: Array,
+            default: []
+        },
     },
     data() {
         return {
