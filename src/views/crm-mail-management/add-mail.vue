@@ -247,7 +247,7 @@
         <a-modal 
             class="custom-ant-modal"
             v-model:visible="mailShow" 
-            width="1248px"
+            width="648px"
             :footer="null"
             destroy-on-close
             @cancel='mailShow = false'
