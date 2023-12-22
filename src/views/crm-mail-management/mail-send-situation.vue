@@ -91,7 +91,7 @@ export default {
             // 搜索
             searchForm: {
                 receiver_name: '',
-                send_status: ''
+                send_status: undefined
             },
             // 表格
             tableData: [],
