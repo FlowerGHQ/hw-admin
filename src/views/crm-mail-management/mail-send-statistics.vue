@@ -90,14 +90,14 @@
                 />
             </div>
         </div>
-        <a-modal class="custom-ant-modal" v-model:visible="mailShow" width="1248px" destroyOnClose :footer="null" :after-close='handleMailClose'>
+        <a-modal class="custom-ant-modal" v-model:visible="mailShow" width="648px" destroyOnClose :footer="null" :after-close='handleMailClose'>
             <template #title>
                 <span class="model-title">{{ $t('crm_b.preview') }}</span>
             </template>
             <mailTemplete :mailData="mailData"></mailTemplete>
         </a-modal>
         
-        <a-modal class="custom-ant-modal" v-model:visible="sendMailShow" width="1248px" destroyOnClose :after-close='handleSendMailClose'>
+        <a-modal class="custom-ant-modal" v-model:visible="sendMailShow" width="648px" destroyOnClose :after-close='handleSendMailClose'>
             <template #title>
                 <span class="model-title">{{ $t('crm_b.send_mail') }}</span>
             </template>

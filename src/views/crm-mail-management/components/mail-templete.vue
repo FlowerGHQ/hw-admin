@@ -76,7 +76,7 @@ export default {
                 data.forEach(el => {
                     if (el.img) {
                         result += `
-                            <div style="text-align: center; width: 368px;">
+                            <div style="text-align: center; width: 170px;">
                                 <img
                                     style="width: 170px; height: 170px; border: 1px solid #E2E2E2; padding: 5px;"
                                     src="${ el.img }"
