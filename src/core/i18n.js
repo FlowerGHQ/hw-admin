@@ -1514,6 +1514,7 @@ const messages = {
             fail_reason: '失败原因',
             success: '成功',
             fail: '失败',
+            confirm_send: '确认发送',
         },
         crm_group: {
             name: '区域',
@@ -4191,6 +4192,7 @@ const messages = {
             fail_reason: 'Fail Reason',
             success: 'Success',
             fail: 'Fail',
+            confirm_send: 'Confirm Send',
         },
         crm_group: {
             name: 'Area',
