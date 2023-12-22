@@ -254,11 +254,11 @@ export default {
                 let path = n.path.split('/').slice(1)
                 
                 if (n.meta.parent) {
-                    this.selectedKeys = [n.meta.parent]
+                    this.selectedKeys = [this.getPathNoQuery(n.meta.parent)]
                 } else if (not_sub_menu) {
-                    this.selectedKeys = ['/' + path[0]]
+                    this.selectedKeys = [this.getPathNoQuery('/' + path[0])]
                 } else {
-                    this.selectedKeys = [n.fullPath]  // 例如 '/distributor/purchase-order-list'
+                    this.selectedKeys = [this.getPathNoQuery(n.fullPath)]  // 例如 '/distributor/purchase-order-list'
                 }
 
                 this.openKeys = [`/${path[0]}`]
@@ -400,17 +400,35 @@ export default {
             Core.Data.setTabPosition(this.tabPosition)
             console.log("tabPosition", this.tabPosition)
 
-            if (this.tabPosition === this.ROUTER_TYPE.CRM) {
-                this.$router.replace('/crm-dashboard');
-            } else {
-                if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
-                    this.$router.replace({ path: '/dashboard', query: { from: 'login' } })
-                } else {
-                    this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
-                }
+            switch (this.tabPosition) {
+                case this.ROUTER_TYPE.SALES:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor', query: { from: 'login' } })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index', query: { from: 'login' } })
+                    }
+                    break;
+                case this.ROUTER_TYPE.AFTER:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/distributor' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.PRODUCTION:
+                    if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+                        this.$router.replace({ path: '/entity' })
+                    } else {
+                        this.$router.replace({ path: '/dashboard/index' })
+                    }
+                    break;
+                case this.ROUTER_TYPE.CRM:
+                    this.$router.replace('/crm-dashboard');
+                    break;
+            
+                default:
+                    break;
             }
-
-
         },
 
         // 监听窗口变化
@@ -425,6 +443,10 @@ export default {
             this.tabPosition = tabPosition
             this.selectedKeys = selectedKeys
             Core.Data.setTabPosition(this.tabPosition)
+        },
+        // 获取无参数路径
+        getPathNoQuery(path) {
+            return path.split('?')[0]
         }
     }
 };
@@ -596,11 +618,11 @@ export default {
             .ant-menu-title-content {
                 font-size: 12px;
                 font-weight: 400;
-                color: #8090A6;
+                // color: #8090A6;
 
                 i.icon {
                     font-size: 14px;
-                    color: #B9C6DD;
+                    // color: #B9C6DD;
                     margin-right: 10px;
                 }
             }
@@ -616,19 +638,19 @@ export default {
                 }
 
                 &:hover {
-                    background-color: #F2F8FF;
+                    background-color: rgba(0, 0, 0, 0.06);
                 }
 
                 &.ant-menu-item-selected {
-                    background-color: @BG_P;
+                    background-color: #e6f7ff;
 
-                    .ant-menu-title-content {
-                        color: @TC_InP;
+                    // .ant-menu-title-content {
+                    //     color: @TC_InP;
 
-                        i.icon {
-                            color: @TC_InP;
-                        }
-                    }
+                    //     i.icon {
+                    //         color: @TC_InP;
+                    //     }
+                    // }
                 }
             }
 
@@ -646,10 +668,10 @@ export default {
                     }
 
                     .ant-menu-submenu-arrow {
-                        color: #6E7C94;
+                        // color: #6E7C94;
                         font-size: 12px;
                         right: 8px;
-                        transform: translateY(3px);
+                        // transform: translateY(3px);
 
                         &::after,
                         &::before {
@@ -665,14 +687,9 @@ export default {
                         padding-left: 16px;
                     }
                 }
-
-                &.ant-menu-submenu-open {
-                    background-color: #F3F6F8;
-
-                    .ant-menu-submenu-arrow {
-                        transform: translateY(-1px);
-                    }
-                }
+            }
+            .ant-menu-submenu-selected .ant-menu-submenu-title .ant-menu-submenu-arrow {
+                color: #1890ff;
             }
         }
 

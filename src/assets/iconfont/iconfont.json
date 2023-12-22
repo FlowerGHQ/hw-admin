@@ -6,6 +6,167 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "38649445",
+      "name": "menu_xitongguanli",
+      "font_class": "menu_xitongguanli",
+      "unicode": "e85a",
+      "unicode_decimal": 59482
+    },
+    {
+      "icon_id": "38641372",
+      "name": "menu_zhinengbiaoqian",
+      "font_class": "menu_zhinengbiaoqian",
+      "unicode": "e858",
+      "unicode_decimal": 59480
+    },
+    {
+      "icon_id": "38641373",
+      "name": "menu_kehu",
+      "font_class": "menu_kehu",
+      "unicode": "e859",
+      "unicode_decimal": 59481
+    },
+    {
+      "icon_id": "38600705",
+      "name": "menu_shiliguanli",
+      "font_class": "menu_shiliguanli",
+      "unicode": "e857",
+      "unicode_decimal": 59479
+    },
+    {
+      "icon_id": "38580443",
+      "name": "menu_shangji",
+      "font_class": "menu_shangji",
+      "unicode": "e855",
+      "unicode_decimal": 59477
+    },
+    {
+      "icon_id": "38580432",
+      "name": "menu_renyuanguanli",
+      "font_class": "menu_renyuanguanli",
+      "unicode": "e856",
+      "unicode_decimal": 59478
+    },
+    {
+      "icon_id": "38579607",
+      "name": "menu_yonghuzhongxin",
+      "font_class": "menu_yonghuzhognxin",
+      "unicode": "e851",
+      "unicode_decimal": 59473
+    },
+    {
+      "icon_id": "38579608",
+      "name": "menu_haowudingdan",
+      "font_class": "menu_haowudingdan",
+      "unicode": "e852",
+      "unicode_decimal": 59474
+    },
+    {
+      "icon_id": "38579609",
+      "name": "menu_fenpeiguize",
+      "font_class": "menu_fenpeiguize",
+      "unicode": "e853",
+      "unicode_decimal": 59475
+    },
+    {
+      "icon_id": "38579613",
+      "name": "menu_youxiangdingyue",
+      "font_class": "menu_youxiangdingyue",
+      "unicode": "e854",
+      "unicode_decimal": 59476
+    },
+    {
+      "icon_id": "38579564",
+      "name": "menu_shangpingguanli",
+      "font_class": "menu_shangpingguanli",
+      "unicode": "e84d",
+      "unicode_decimal": 59469
+    },
+    {
+      "icon_id": "38579561",
+      "name": "menu_gongdanguanli",
+      "font_class": "menu_gongdanguanli",
+      "unicode": "e84e",
+      "unicode_decimal": 59470
+    },
+    {
+      "icon_id": "38579563",
+      "name": "menu_fankuiguanli",
+      "font_class": "menu_fankuguanli",
+      "unicode": "e84f",
+      "unicode_decimal": 59471
+    },
+    {
+      "icon_id": "38579562",
+      "name": "menu_shouhouguanli",
+      "font_class": "menu_shouhouguanli",
+      "unicode": "e850",
+      "unicode_decimal": 59472
+    },
+    {
+      "icon_id": "38579574",
+      "name": "menu_shengchanguanli",
+      "font_class": "menu_shegnchanguanli",
+      "unicode": "e84b",
+      "unicode_decimal": 59467
+    },
+    {
+      "icon_id": "38579573",
+      "name": "menu_gongyingguajli",
+      "font_class": "menu_gongyingguajli",
+      "unicode": "e84c",
+      "unicode_decimal": 59468
+    },
+    {
+      "icon_id": "38579528",
+      "name": "menu_cunhuoguanli",
+      "font_class": "menu_cunhuoguanli",
+      "unicode": "e847",
+      "unicode_decimal": 59463
+    },
+    {
+      "icon_id": "38579529",
+      "name": "menu_kucunguanli",
+      "font_class": "menu_kucunguanli",
+      "unicode": "e848",
+      "unicode_decimal": 59464
+    },
+    {
+      "icon_id": "38579530",
+      "name": "menu_COC",
+      "font_class": "menu_COC",
+      "unicode": "e849",
+      "unicode_decimal": 59465
+    },
+    {
+      "icon_id": "38579531",
+      "name": "menu_shezhi",
+      "font_class": "menu_shezhi",
+      "unicode": "e84a",
+      "unicode_decimal": 59466
+    },
+    {
+      "icon_id": "38117513",
+      "name": "邮箱",
+      "font_class": "youxiang",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "37434559",
+      "name": "02",
+      "font_class": "a-02",
+      "unicode": "e60d",
+      "unicode_decimal": 58893
+    },
+    {
+      "icon_id": "37426245",
+      "name": "order",
+      "font_class": "order1",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
       "icon_id": "36859325",
       "name": "探索",
       "font_class": "tansuo",
