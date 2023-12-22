@@ -297,7 +297,7 @@ const formData = ref({
     address: "", // 开头称呼
     email_content: "", // 邮件内容
     template_param: {
-        uri_content:"",
+        uri_content:"Click For More Information",
         uri:"",
         poster: undefined,
         qr_code: [], // "qr_code": [{"img":"地址","introduce":"介绍"}]
