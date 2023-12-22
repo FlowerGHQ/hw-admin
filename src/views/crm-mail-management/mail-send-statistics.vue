@@ -64,7 +64,7 @@
                                 <a-button type="link" @click="routerChange('add-mail', { id: record.id })"><img class="operation-icon" src="@images/crm-mail-management/write.svg">{{ $t('n.edit') }}</a-button>
                             </template>
                             <template v-else-if="record.send_status === 0 && !record.schedule_time">
-                                <a-button type="link" @click="sendMail(record.id)"><img class="operation-icon" src="@images/crm-mail-management/send.svg">{{ $t('crm_b.send') }}</a-button>
+                                <a-button type="link" @click="openSendMail(record)"><img class="operation-icon" src="@images/crm-mail-management/send.svg">{{ $t('crm_b.send') }}</a-button>
                                 <a-button type="link" @click="routerChange('add-mail', { id: record.id })"><img class="operation-icon" src="@images/crm-mail-management/write.svg">{{ $t('n.edit') }}</a-button>
                             </template>
                             <template v-else-if="record.send_status === 1">
@@ -90,15 +90,29 @@
                 />
             </div>
         </div>
-        <a-modal v-model:visible="mailShow" width="1248px" :title="$t('crm_b.preview')" :footer="null" :after-close='handleMailClose'>
+        <a-modal v-model:visible="mailShow" width="1248px" destroyOnClose :title="$t('crm_b.preview')" :after-close='handleMailClose'>
             <mailTemplete :mailData="mailData"></mailTemplete>
+        </a-modal>
+        <a-modal v-model:visible="sendMailShow" width="1248px" destroyOnClose :title="$t('crm_b.preview')" :after-close='handleSendMailClose'>
+            <mailTemplete :mailData="sendMailData"></mailTemplete>
+
+            <template #footer>
+                <div class="btns">
+                    <a-button @click="handleSendMailClose">{{ $t('def.cancel') }}</a-button>
+                    <a-button @click="sendMail(sendMailData.id)" type="primary">{{ $t('crm_b.confirm_send') }}</a-button>
+                </div>
+            </template>
         </a-modal>
     </div>
 </template>
 
 <script>
 import Core from '../../core';
+import { h } from 'vue'
 import mailTemplete from './components/mail-templete.vue';
+
+const modules = import.meta.globEager("../../assets/images/crm-mail-management/*")
+
 export default {
     name: 'mailSendStatistics',
     components: {
@@ -121,13 +135,9 @@ export default {
             // 表格
             tableData: [],
             mailShow: false,
-            mailData: {
-                'title': '🎄Scooting Into a Joyful Christmas with HORWIN: A Grateful Thank You🎁',                
-                'address': 'Dear XXX',
-                'email_content': "As the joyful season approaches, we want to take a moment to express our sincere gratitude for the incredible partnership we've built together throughout 2023. Your dedication and commitment have been instrumental in the success of HORWIN, and for that, we are truly thankful.🎉Looking Forward to 2024:In the spirit of shared success, we're excited to outline our expectations for the upcoming year:🤝Your Feedback Matters:Your insights have always been invaluable to us. We invite you to share your feedback, suggestions, or any thoughts you might have. Your input will continue to shape the future of HORWIN, ensuring that we grow together.🫧Connect with Us on Social Media:Stay in the loop with exclusive updates, behind-the-scenes glimpses, and exciting announcements by following us on our social media channels.Wishing You a Merry Christmas and Prosperous New Year! Cheers to a Scootacular Christmas and@RWIN Horwinning New Year!",
-                'poster': 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-                'qrcode': '',
-            }
+            sendMailShow: false,
+            mailData: {},
+            sendMailData: {}
         };
     },
     watch: {
@@ -164,6 +174,11 @@ export default {
         this.getTableData();
     },
     methods: {
+        // 获取照片
+        getSrcImg(name, type = 'png') {
+            const path = `../../assets/images/crm-mail-management/${name}.${type}`;
+            return modules[path]?.default;
+        },
         /* 接口 start */
         // 获取 表格 数据
         getTableData() {
@@ -195,7 +210,7 @@ export default {
                         _this.$message.success(_this.$t('crm_b.delete_success'))
                         _this.getTableData();
                     }).catch(err => {
-                        _this.$message.success(_this.$t('crm_b.delete_error'))
+                        _this.$message.error(_this.$t('crm_b.delete_error'))
                     })
                 },
             });
@@ -203,12 +218,22 @@ export default {
         // 发送邮件
         sendMail(id) {
             if (this.loadingSend) return;
+            let _this = this;
             this.loadingSend = true
             Core.Api.MAIL_MANAGEMENT.scheduleEmail({ id }).then(res => {
-                this.$message.success(this.$t('crm_b.send_success'))
+                this.$message.success({
+                    content: () => _this.$t('crm_b.send_success'),
+                    class: 'mail-success-class',
+                    icon: () =>
+                    h("img", {
+                        src: _this.getSrcImg('send-mail', 'svg')
+                    }),
+                    top: 90,
+                });
                 this.getTableData();
+                this.sendMailShow = false;
             }).catch(err => {
-                this.$message.success(this.$t('crm_b.send_error'))
+                this.$message.error(this.$t('crm_b.send_error'))
             }).finally(() => {
                 this.loadingSend = false;
             });
@@ -253,11 +278,20 @@ export default {
         handleMailClose() {
             this.mailShow = false;
         },
-        handleMailSubmit() {},
+        handleSendMailClose() {
+            this.sendMailShow = false;
+        },
         // 预览邮件
         viewMail(record) {
-            this.mailData = Object.assign(record, JSON.parse(record.template_param))
+            const data = Core.Util.deepCopy(record)
+            this.mailData = Object.assign(data, JSON.parse(data.template_param))
             this.mailShow = true;
+        },
+        // 预览邮件
+        openSendMail(record) {
+            const data = Core.Util.deepCopy(record)
+            this.sendMailData = Object.assign(data, JSON.parse(data.template_param))
+            this.sendMailShow = true;
         },
     }
 };
@@ -304,5 +338,19 @@ export default {
 }
 .ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody tr.ant-table-row td.ant-table-cell .ant-btn {
     font-size: 14px;
+}
+</style>
+<style lang="less">
+.mail-success-class {
+    margin-top: 55px;
+    .ant-message-notice-content {
+        top: 90px;
+        color: rgba(38, 171, 84, 1);
+        background-color: rgba(38, 171, 84, .1);
+        box-shadow: 0px 6px 15px 0px rgba(0, 0, 0, 0.25);
+        img {
+            margin-right: 9px;
+        }
+    }
 }
 </style>
