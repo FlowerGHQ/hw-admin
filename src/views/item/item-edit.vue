@@ -38,8 +38,8 @@
                 <div class="title">{{ $t("n.information") }}</div>
             </div>
             <div class="form-content">
-                <!-- 名称 -->
-                <div class="form-item required" v-if="this.specific.mode === 1">
+                <!-- 名称  v-if="this.specific.mode === 1"-->
+                <div class="form-item required">
                     <div
                         class="key"
                         :class="form.name === '' && isValidate ? 'error' : ''"
@@ -54,8 +54,8 @@
                         />
                     </div>
                 </div>
-                <!-- 英文名 -->
-                <div class="form-item required" v-if="this.specific.mode === 1">
+                <!-- 英文名 v-if="this.specific.mode === 1" -->
+                <div class="form-item required">
                     <div
                         class="key"
                         :class="
@@ -1246,8 +1246,8 @@
                 </template>
             </div>
         </div>
-        <!-- 单规格时的 价格信息 specific.mode === 1 || indep_flag-->
-        <div class="form-block" v-if="false">
+        <!-- 单规格时的 价格信息 -->
+        <div class="form-block" v-if="specific.mode === 1 || indep_flag">
             <div class="form-title">
                 <div class="title">{{ $t("i.price_information") }}</div>
             </div>
@@ -2131,6 +2131,19 @@ export default {
                 //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
                 // }
             }
+            // 封面图片
+            if (!this.upload.coverList || this.upload.coverList&&this.upload.coverList.length===0) {
+                return this.$message.warning(
+                    `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
+                );
+            }
+            // 详情图片
+            if (!this.upload.detailList || this.upload.detailList&&this.upload.detailList.length===0) {
+                return this.$message.warning(
+                    `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
+                );
+            }
+
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 if (!form.fob_eur) {

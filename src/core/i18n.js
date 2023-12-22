@@ -227,7 +227,8 @@ const messages = {
             production: '生产',
             select_country: '国家/地区',
             store_pic: '门店形象照片',
-
+            cover_pic: '请上传封面',
+            detail_pic: '请上传详情图',
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
@@ -2918,7 +2919,8 @@ const messages = {
             production: "Production",
             select_country: 'Country/Region',
             store_pic: 'Store Image Photos',
-
+            cover_pic: 'Please Upload A Cover Image',
+            detail_pic: 'Please Upload A Detailed Image',
             size_prompt_cover: 'The Cover Size Is Recommended To Be 800X800, And Up To 9 Photos Can Be Transmitted.',
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
             file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
