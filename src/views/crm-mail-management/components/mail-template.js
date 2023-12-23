@@ -36,6 +36,7 @@ export const mailTemplates = {
                         font-weight: 400;
                         line-height: 150%;
                         margin-bottom: 30px;
+                        white-space: pre-line;
                     "
                 >
                     As the joyful season approaches, we want to take a moment to express our sincere gratitude for the
