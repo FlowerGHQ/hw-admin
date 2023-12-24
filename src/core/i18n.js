@@ -503,6 +503,7 @@ const messages = {
             value_en: '规格值(英文)',
             keyword: '商品具备的规格，如颜色、尺寸、型号等',
             definition: '添加规格',
+            definition_more_num: '最多可添加三个规格',
             addition: '添加',
             specs: '商品',
             settings: '批量设置',
@@ -641,6 +642,7 @@ const messages = {
             in_all: '共有',
             spec_of_goods: '款规格商品',
             sku_code: 'SKU编码',
+            spec_pic: '图片',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3195,6 +3197,7 @@ const messages = {
             value_en: 'Specification Value (English)',
             keyword: 'The specifications of the goods, such as color, size, model, etc.',
             definition: 'Add Specification Definition',
+            definition_more_num: 'You Can Add Up To Three Specifications',
             addition: 'Add',
             specs: 'Commodity',
             settings: 'Batch Settings',
@@ -3332,6 +3335,8 @@ const messages = {
             in_all: 'In All',
             spec_of_goods: 'specifications of goods',
             sku_code: 'SKU Code',
+            spec_pic: 'picture',
+
         },
         fe: {
             feedback: 'Feedback',

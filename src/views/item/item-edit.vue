@@ -130,16 +130,15 @@
                         />
                     </div>
                 </div>
-                <!-- 商品编码 改为  SKU编码-->
+                <!-- 商品编码 改为  SKU编码 v-if="specific.mode === 1 || indep_flag"-->
                 <div
                     class="form-item required"
-                    v-if="specific.mode === 1 || indep_flag"
                 >
                     <div
                         class="key"
                         :class="form.code === '' && isValidate ? 'error' : ''"
                     >
-                        {{ $t("i.code") }}
+                        {{ specific.mode === 1 ? $t("i.sku_code") : $t("i.code") }}
                     </div>
                     <div class="value">
                         <a-input
@@ -599,7 +598,8 @@
                                         </a-popover>
                                     </div>
                                 </div>
-                                <div class="button" v-if="isShowDelete.indexOf(item.key) === -1" @click="handleRemoveSpec(item, index)">
+                                <!--  v-if="isShowDelete.indexOf(item.key) === -1" -->
+                                <div class="button" @click="handleRemoveSpec(item, index)">
                                     <i class="icon i_delete" />
                                 </div>
                                 <!-- <div class="option">
@@ -764,8 +764,12 @@
                                 type="primary"
                                 ghost
                                 @click="handleAddSpec"
+                                :disabled = "specific?.list?.length>2"
                                 >{{ $t("i.definition") }}</a-button
                             >
+                            <span class="spec-text">
+                                {{ $t("i.definition_more_num") }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-item specific-items">
@@ -1040,6 +1044,32 @@
                                     </template>
                                 </template>
                                 <template #bodyCell="{ column, record }">
+                                    
+                                    <template
+                                        v-if="column.dataIndex === 'imgs'"
+                                    >
+                                        <!--  list-type="picture-card" -->
+                                        <div>
+                                            <a-upload
+                                                name="file"
+                                                accept="image/*"
+                                                v-model:file-list="record.imgsList"
+                                                :action="upload.action"
+                                                :headers="upload.headers"
+                                                :data="upload.data"
+                                                :before-upload="handleImgCheck"
+                                                @change="handleNewChildChange"
+                                                @preview="handlePreview"
+                                            >
+                                                <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>上传图片</a-button>
+                                            </a-upload>
+                                            <div class="imgList-box" v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
+                                                <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" alt="">
+                                                <img class="close-pic" @click="record.imgsList = []" src="../../assets/images/upload/close_table.png" alt="">
+                                            </div>
+                                            
+                                        </div>
+                                    </template>
                                     <template
                                         v-if="column.dataIndex === 'code'"
                                     >
@@ -1315,9 +1345,7 @@
         <!-- 按钮 -->
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
             <!--  type="primary" ghost -->
-            <a-button @click="routerChange('back')">{{
-                $t("def.cancel")
-            }}</a-button>
+            <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
 
             <a-button type="primary" @click="handleSubmit">{{
                 $t("def.sure_create")
@@ -1344,7 +1372,7 @@
                                 <span :style="{ color: (option.validate && !option.zh) ? 'red' : '' }">
                                     {{ $t("i.value_zh") }}
                                 </span>
-                                <span class="content-length">
+                                <span class="content-length" v-if="option.zhFocus">
                                     {{
                                         option.zh.length
                                     }}/50
@@ -1359,6 +1387,8 @@
                                     $t('i.value_zh')
                                 "
                                 :max-length="50"
+                                @focus="option.zhFocus = true"
+                                @blur="option.zhFocus = false"
                             />
                         </div>
                         <div class="config-item-en">
@@ -1366,7 +1396,7 @@
                                 <span :style="{ color: (option.validate && !option.en) ? 'red' : '' }">
                                     {{ $t("i.value_en") }}
                                 </span>
-                                <span class="content-length">
+                                <span class="content-length" v-if="option.enFocus">
                                     {{
                                         option.en.length
                                     }}/50
@@ -1380,6 +1410,8 @@
                                     $t('def.input') +
                                     $t('i.value_en')
                                 "
+                                @focus="option.enFocus = true"
+                                @blur="option.enFocus = false"
                                 :max-length="50"
                             />
                         </div>
@@ -1438,6 +1470,7 @@ export default {
             loading: false,
             itemTypeMap: Core.Const.ITEM.TYPE_MAP,
             flagEntityMap: Core.Const.ITEM.FLAG_ENTITY_MAP,
+            // 是否为编辑（是否为创建）
             indep_flag: 0,
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             set_id: "",
@@ -1483,7 +1516,6 @@ export default {
             // 商品分类
             item_category: {},
             configTemp: [],
-
             specific: {
                 // 规格
                 mode: 1, // 1 是单规格 2 是多规格
@@ -1561,6 +1593,10 @@ export default {
             fixedWidth: 'auto',
             // 固定盒子高度
             fixedHeight: 'auto',
+
+            newChild: {
+                imgs: []
+            }
         };
     },
     watch: {},
@@ -1578,7 +1614,8 @@ export default {
             }));
             column = column.filter((item) => item.title && item.dataIndex);
             column.push(
-                { title: this.$t("i.code"), key: "input", dataIndex: "code" }, // , fixed: 'left'
+                { title: this.$t("i.spec_pic"), key: "img", dataIndex: "imgs" }, // 规格图片
+                { title: this.$t("i.sku_code"), key: "input", dataIndex: "code" }, // , fixed: 'left'
                 { title: this.$t("n.name"), key: "input", dataIndex: "name" },
                 {
                     title: this.$t("n.name_en"),
@@ -1613,22 +1650,22 @@ export default {
                 } // , fixed: 'right'
             );
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
-            if (this.specific.data.length === 1) {
+            /* if (this.specific.data.length === 1) {
                 column.pop();
-            }
+            } */
             return column;
         },
         configSetTitle() {
             return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name)}${this.$t("i.value")}`;
         },
         // 是否展示规格定义
-        isShowDelete() {
+       /*  isShowDelete() {
             const arr = []
             for(let key in this.specific.data[0]) {
                 arr.push(key)
             }
             return arr
-        }
+        } */
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1660,7 +1697,6 @@ export default {
             this.fixedHeight = height + 'px'; 
             // 在这里处理宽高变化的逻辑
 
-            console.log('this.fixedWidth1111',this.fixedWidth,this.fixedHeight);
         },
         handlePreview(file) {
             console.log(file)
@@ -1670,7 +1706,7 @@ export default {
         changeOption(option, i) {
             option.disabled = false;
         },
-        confirmValue(option, i, index) {
+        /* confirmValue(option, i, index) {
             option.disabled = true;
             let target = this.specific.list[index];
             let value = "";
@@ -1696,7 +1732,7 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
+        }, */
         routerChange(type, item) {
             let routeUrl;
             switch (type) {
@@ -1877,6 +1913,8 @@ export default {
                     },
                     addVisible: false,
                 }));
+                itemList.shift();
+
                 let data = itemList.map((item) => {
                     let params = {};
                     for (const attr of list) {
@@ -1894,6 +1932,15 @@ export default {
                             };
                         }
                     }
+                    let logos = !item.imgs ? [] : item.imgs.split(",");
+                    item.imgsList = logos.map((imgItem, index) => ({
+                        uid: index + 1,
+                        name: imgItem,
+                        filename: imgItem,
+                        url: Core.Const.NET.FILE_URL_PREFIX + imgItem,
+                        short_path: imgItem,
+                        status: "done",
+                    }));
                     return {
                         ...params,
                         code: item.code,
@@ -1908,12 +1955,16 @@ export default {
                         ),
                         target_id: item.id,
                         attr_list: item.attr_list,
+                        imgsList: item.imgsList,
+                        imgs: item.imgs,
                     };
                 });
                 // 商品规格属性列表
                 this.specific.list = list;
                 // 多规格商品列表
                 this.specific.data = data;
+
+                console.log('999this.specific.data',this.specific.data);
             });
         },
         handleDelete(record) {
@@ -1969,7 +2020,7 @@ export default {
         // 保存、新建 商品
         handleSubmit() {
 
-            if (this.specific.mode === 2) {
+            /* if (this.specific.mode === 2) {
                 this.form.code = this.specific.data[0].code;
                 // this.form.name = this.specific.data[0].name;
                 // this.form.name_en = this.specific.data[0].name_en;
@@ -1977,10 +2028,13 @@ export default {
                 this.form.fob_eur = this.specific.data[0].fob_eur;
                 this.form.fob_usd = this.specific.data[0].fob_usd;
                 this.form.original_price = this.specific.data[0].original_price;
-            }
+            } */
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+            console.log('form-handleSubmit111',form);
+            console.log('specData-handleSubmit111',specData);
+            console.log('attrDef-handleSubmit111',attrDef);
 
             // 校验检查
             this.isValidate = true;
@@ -2082,6 +2136,7 @@ export default {
                                 target_type: 1,
                             };
                         }),
+                        imgs: (data.imgsList.map(item=> item?.filename)).join(",")
                     };
                 });
             }
@@ -2092,7 +2147,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log("handleSubmit err:", err);
-                });
+            });
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
@@ -2127,7 +2182,7 @@ export default {
             // 商品编码
             if (!form.code) {
                 return this.$message.warning(
-                    `${this.$t("def.enter")}(${this.$t("i.code")})`
+                    `${this.$t("def.enter")}(${this.$t(this.specific.mode===1 ? "i.sku_code" : "i.code")})`
                 );
             }
             // 商品分类
@@ -2164,13 +2219,13 @@ export default {
                 // }
             }
             // 封面图片
-            if (!this.upload.coverList || this.upload.coverList&&this.upload.coverList.length===0) {
+            if (!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
                 );
             }
             // 详情图片
-            if (!this.upload.detailList || this.upload.detailList&&this.upload.detailList.length===0) {
+            if (!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
                 );
@@ -2338,7 +2393,25 @@ export default {
             });
             this.upload.detailList = fileList;
         },
+        // 规格列表-上传图片检查
+        handleNewChildChange({ file, fileList }) {
+            if(fileList.length > 1){
 
+                fileList = fileList.slice(0,1)
+            } 
+            if (file.status == "done") {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(file.response.message);
+                }
+            }
+            fileList.forEach((item) => {
+                if (item.response) {
+                    item.url = Core.Const.NET.FILE_URL_PREFIX + item.response.data.filename;
+                    item.filename = item.response.data.filename;
+                }
+            });
+
+        },
         // 商品分类选择
         handleCategorySelect(val, node) {
             this.form.category_ids = val;
@@ -2369,7 +2442,7 @@ export default {
         },
         // 商品规格模式改变
         handleSpecificModeChange() {
-            if (this.specific.mode === 2) {
+           /*  if (this.specific.mode === 2) {
                 this.specific.data = [
                     {
                         id: 1,
@@ -2393,11 +2466,29 @@ export default {
                 this.form.fob_eur = this.specific.data[0].fob_eur;
                 this.form.fob_usd = this.specific.data[0].fob_usd;
                 this.form.original_price = this.specific.data[0].original_price;
+            } */
+            if (this.specific.mode === 2 && this.specific.data && this.specific.data.length === 0){
+                
+                this.specific.data = [
+                    {
+                        id: 1,
+                        code: "",
+                        name: "",
+                        name_en: "",
+                        price: "",
+                        fob_eur: "",
+                        fob_usd: "",
+                        original_price: "",
+                        original_price_currency: this.form.original_price_currency,
+                    }
+                ];
             }
+
         },
         // 规格定义
         // 规格名
         handleAddSpec() {
+            if( this.specific.list.length > 2 ) return this.$message.warning(this.$t('definition_more_num'))
             // 添加规格定义
             this.specific.list.push({
                 id: "",
@@ -2407,6 +2498,9 @@ export default {
                 addVisible: false,
                 addValue: { key: "", zh: "", en: "" },
             });
+
+            if( this.specific.list.length >= 2 ) return this.$message.warning(this.$t('definition_more_num'))
+
         },
         handleRemoveSpec(item, index) {
             // 删除规格定义
@@ -3024,6 +3118,12 @@ export default {
         background: #ffffff;
         font-size: 12px;
     }
+    .spec-text {
+        color: #969799;
+        font-size: 12px;
+        font-weight: 400;
+        margin-left: 10px;
+    }
     .specific-table {
         margin-bottom: 16px;
         th {
@@ -3056,6 +3156,35 @@ export default {
                     /*滚动条内部轨道*/
                     background: #f8fafc;
                 }
+            }
+        }
+
+        .spce-add-pic {
+            width: auto !important;
+            padding: 7px;
+            border-radius: 4px;
+        }
+ 
+        :deep(.ant-upload-list) {
+            display: none;
+        }
+
+        .imgList-box {
+            
+            .img-pic {
+                width: 36px;
+                height: 36px;
+                border-radius: 4px;
+                cursor: pointer;
+
+            }
+ 
+            .close-pic {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+                cursor: pointer;
+                margin-left: 8px;
             }
         }
     }
@@ -3337,6 +3466,7 @@ export default {
         padding: 20px 0px;
         display: flex;
         justify-content: center;
+        z-index: 52;
         
         .ant-btn {
             width: auto;

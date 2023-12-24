@@ -65,7 +65,7 @@
                                 </template>
 
                                 <template v-if="column.key === 'operation'">
-                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i
+                                    <a-button type="link" @click="routerChange('edit', record)"><i
                                             class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
                                 </template>
