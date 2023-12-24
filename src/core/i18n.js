@@ -227,6 +227,9 @@ const messages = {
             production: '生产',
             select_country: '国家/地区',
             store_pic: '门店形象照片',
+            cover_pic: '请上传封面',
+            detail_pic: '请上传详情图',
+            upload_pic: '上传图片',
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
@@ -541,6 +544,7 @@ const messages = {
             value_en: '规格值(英文)',
             keyword: '商品具备的规格，如颜色、尺寸、型号等',
             definition: '添加规格',
+            definition_more_num: '最多可添加三个规格',
             addition: '添加',
             specs: '商品',
             settings: '批量设置',
@@ -677,6 +681,11 @@ const messages = {
             upload_pic_tip: '上传爆炸图，以配置点位',
             add_pic_diagram: '为爆炸图添加配件',
             add_diagram: '添加配件',
+            spec_drawing: '规格图',
+            in_all: '共有',
+            spec_of_goods: '款规格商品',
+            sku_code: 'SKU编码',
+            spec_pic: '图片',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -1234,7 +1243,7 @@ const messages = {
             more_operations: '更多操作',
             unfold: '展开',
             stow: '收起',
-
+            sure_create: '确定创建',
         },
         search: {
             repair_sn: '工单编号',
@@ -3002,7 +3011,9 @@ const messages = {
             production: "Production",
             select_country: 'Country/Region',
             store_pic: 'Store Image Photos',
-
+            cover_pic: 'Please Upload A Cover Image',
+            detail_pic: 'Please Upload A Detailed Image',
+            upload_pic: 'Upload An Image',
             size_prompt_cover: 'The Cover Size Is Recommended To Be 800X800, And Up To 9 Photos Can Be Transmitted.',
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
             file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
@@ -3317,6 +3328,7 @@ const messages = {
             value_en: 'Specification Value (English)',
             keyword: 'The specifications of the goods, such as color, size, model, etc.',
             definition: 'Add Specification Definition',
+            definition_more_num: 'You Can Add Up To Three Specifications',
             addition: 'Add',
             specs: 'Commodity',
             settings: 'Batch Settings',
@@ -3452,6 +3464,12 @@ const messages = {
             upload_pic_tip: 'Upload the explosion diagram to configure the points',
             add_pic_diagram: 'Add accessories to the explosion diagram',
             add_diagram: 'Add Accessories',
+            spec_drawing: 'Specification Drawing',
+            in_all: 'In All',
+            spec_of_goods: 'specifications of goods',
+            sku_code: 'SKU Code',
+            spec_pic: 'picture',
+
         },
         fe: {
             feedback: 'Feedback',
@@ -3998,6 +4016,7 @@ const messages = {
             more_operations: 'More Operations',
             unfold: 'Unfold',
             stow: 'Stow',
+            sure_create: 'Sure Create',
         },
         search: {
             repair_sn: 'Warranty Claim Number',
