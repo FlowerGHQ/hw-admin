@@ -2924,7 +2924,7 @@ const messages = {
             store_pic: 'Store Image Photos',
             cover_pic: 'Please Upload A Cover Image',
             detail_pic: 'Please Upload A Detailed Image',
-            upload_pic: 'Upload An Picture',
+            upload_pic: 'Upload An Image',
             size_prompt_cover: 'The Cover Size Is Recommended To Be 800X800, And Up To 9 Photos Can Be Transmitted.',
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
             file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
