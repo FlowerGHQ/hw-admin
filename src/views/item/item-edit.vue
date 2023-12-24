@@ -1072,11 +1072,7 @@
                                                 @change="handleNewChildChange"
                                                 @preview="handlePreview"
                                             >
-<<<<<<< HEAD
-                                                <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>{{ $t('i.upload_pic') }}</a-button>
-=======
                                                 <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>{{ $t('n.upload_pic') }}</a-button>
->>>>>>> feat_1219_edit
                                             </a-upload>
                                             <div class="imgList-box" v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
                                                 <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" alt="">
