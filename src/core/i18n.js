@@ -230,6 +230,7 @@ const messages = {
             cover_pic: '请上传封面',
             detail_pic: '请上传详情图',
             upload_pic: '上传图片',
+            upload_pic: '上传图片',
             size_prompt_cover: '封面尺寸建议800X800,最多可传9张',
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
