@@ -1061,7 +1061,7 @@
                                                 @change="handleNewChildChange"
                                                 @preview="handlePreview"
                                             >
-                                                <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>上传图片</a-button>
+                                                <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>{{ $t('n.upload_pic') }}</a-button>
                                             </a-upload>
                                             <div class="imgList-box" v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
                                                 <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" alt="">
@@ -2480,6 +2480,7 @@ export default {
                         fob_usd: "",
                         original_price: "",
                         original_price_currency: this.form.original_price_currency,
+                        imgsList: []
                     }
                 ];
             }
@@ -2756,6 +2757,7 @@ export default {
                 fob_usd: "",
                 original_price: "",
                 original_price_currency: this.form.original_price_currency,
+                imgsList: [],
             });
         },
 
