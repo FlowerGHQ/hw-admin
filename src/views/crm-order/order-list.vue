@@ -624,6 +624,12 @@ export default {
         },
         { title: "p.order_status", dataIndex: "status", key: "status" },
         {
+          title: "crm_o.order_time",
+          dataIndex: "order_time",
+          key: "time",
+          sorter: true,
+        },
+        {
           title: "crm_o.order_name",
           dataIndex: "customer_id",
           key: "customer_name",
@@ -639,14 +645,19 @@ export default {
           key: "customer_phone",
         },
         {
-          title: "crm_o.own_user_name",
-          dataIndex: "own_user_id",
-          key: "own_user_name",
+          title: "crm_o.country_city",
+          dataIndex: "to_country",
+          key: "country",
         },
         {
           title: "crm_o.pay_car_type",
           dataIndex: "item_name",
           key: "item_name",
+        },
+        {
+          title: "crm_o.own_user_name",
+          dataIndex: "own_user_id",
+          key: "own_user_name",
         },
         {
           title: "crm_o.pay_progress",
@@ -677,12 +688,6 @@ export default {
         }, //待付款
         { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
         // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-
-        {
-          title: "crm_o.country_city",
-          dataIndex: "to_country",
-          key: "country",
-        },
         { title: "crm_o.address", dataIndex: "to_address", key: "address" },
         /*  {
                    title: "crm_o.create_user",
@@ -708,12 +713,6 @@ export default {
                     key: "time",
                     sorter: true,
                 }, */
-        {
-          title: "crm_o.order_time",
-          dataIndex: "order_time",
-          key: "time",
-          sorter: true,
-        },
         {
           title: "crm_o.pay_time",
           dataIndex: "payment_time",
