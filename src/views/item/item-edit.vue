@@ -194,11 +194,13 @@
                             v-model:value="form.sales_area_ids"
                             mode="multiple"
                             :placeholder="$t('def.select')"
+                            optionFilterProp="label"
                         >
                             <a-select-option
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
+                                :label="$i18n.locale === 'zh' ? val.name : val.name_en"
                                 >{{ $i18n.locale === 'zh' ? val.name : val.name_en }}</a-select-option
                             >
                         </a-select>
