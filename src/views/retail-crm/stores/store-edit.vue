@@ -552,8 +552,8 @@ export default {
           afternoon: { begin: "", end: "" },
         },
       };
-      time.time.morning.begin = form.business_time[0];
-      time.time.afternoon.end = form.business_time[1];
+      time.time.morning.begin = form.business_time?.[0];
+      time.time.afternoon.end = form.business_time?.[1];
       form.business_time = JSON.stringify(time);
       form.localtion = JSON.stringify(form.localtion);
 
