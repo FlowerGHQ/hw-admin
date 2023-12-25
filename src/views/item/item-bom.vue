@@ -110,7 +110,7 @@ import FittingsTree from "./components/item-bom/FittingsTree.vue";
 import ClassifyModal from "./components/item-bom/ClassifyModal.vue"; // 分类弹窗组件
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 // const router = useRouter()
-const minWidthCount = 900;
+const minWidthCount = 890;
 
 // 标题高度
 const titleRefs = ref(null);
