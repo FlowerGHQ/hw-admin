@@ -2,23 +2,38 @@
     <div id="naireList">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">问卷列表</div>
+                <div class="title-area">问卷详情</div>
+                <div class="btns-area">
+                    <a-button type="primary">导出问卷</a-button>
+                </div>
             </div>
             <div class="search-container">
                 <a-row class="search-area">
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">问卷标题：</div>
+                        <div class="key">姓名：</div>
                         <div class="value">
-                            <a-input placeholder="快捷搜索" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                            <a-input placeholder="请输入" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
                         </div>
                     </a-col>
                     <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
-                        <div class="key">问卷状态：</div>
+                        <div class="key">体验官：</div>
+                        <div class="value">
+                            <a-input placeholder="请输入" v-model:value="searchForm.name" @keydown.enter='handleSearch'/>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">门店：</div>
                         <div class="value">
                             <a-select v-model:value="searchForm.type" :placeholder="$t('def.select')"
                                 @change="handleSearch">
-                                <a-select-option v-for="item of Core.Const.QUE_NAIRE_LIST.STATUS_MAP" :key="item.key" :value="item.value">{{ item.text }}</a-select-option>
+                                <a-select-option v-for="item of storeList" :key="item.key" :value="item.value">{{ item.name }}</a-select-option>
                             </a-select>
+                        </div>
+                    </a-col>
+                    <a-col :xs='24' :sm='24' :xl="8" :xxl='6' class="search-item">
+                        <div class="key">门店：</div>
+                        <div class="value">
+                            <TimeSearch @search="handleOtherSearch" ref='TimeSearch'/>
                         </div>
                     </a-col>
                 </a-row>
@@ -27,10 +42,13 @@
                     <a-button @click="handleSearchReset">{{ $t('def.reset') }}</a-button>
                 </div>
             </div>
-            <div class="operate-container">
-                <a-button type="primary">
-                    创建问卷
-                </a-button>
+            <div class="info-container">
+                <div class="naire-title">
+                    标题: 标题
+                </div>
+                <div class="naire-remark">
+                    备注：副标题用户试驾体验调查副标题用户车辆试驾体验调查
+                </div>
             </div>
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }" :row-key="record => record.id" :pagination='false' @change="getTableDataSorter">
@@ -38,17 +56,18 @@
                         <template v-if="column.key === 'item'">
                             {{ text || '-' }}
                         </template>
+                        <template v-if="column.key === 'tooltip'">
+                            <a-tooltip placement="top" :title='text'>
+                                <div class="ell" style="max-width: 150px">{{ text || '-' }}</div>
+                            </a-tooltip>
+                        </template>
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(record.begin_time) }} ~ {{ $Util.timeFilter(record.end_time) }}
                         </template>
-                        <template v-if="column.key === 'status'">
-                            <div class="status status-bg status-tag" :class="$Util.naireStatusColorFilter(text, 'color')">
-                                {{ $Util.naireStatusColorFilter(text) }}
-                            </div>
-                        </template>
                         <template v-if="column.key === 'operation'">
                             <a-button type="link" @click="routerChange('edit',record)">查看提交</a-button>
-                            <a-switch class="switch" v-model:checked="record.status" checked-children="启用" un-checked-children="停用" @click="handleChangeStatus(record)"/>
+                            <a-button type="link" @click="handleChangeStatus(record.id, 'use')" v-if="record.status === Core.Const.QUE_NAIRE_LIST.STATUS.STOPPED">启用</a-button>
+                            <a-button type="link" @click="handleChangeStatus(record.id, 'no_use')" v-if="record.status === Core.Const.QUE_NAIRE_LIST.STATUS.IN_USE">停用</a-button>
                             <a-button type="link" @click="handleDelete(record.id)" class="danger">删除</a-button>
                         </template>
                     </template>
@@ -75,11 +94,12 @@
 
 <script>
 import Core from '../../../core';
+import TimeSearch from '@/components/common/TimeSearch.vue'
 
 export default {
     name: 'naireList',
     components: {
-
+        TimeSearch
     },
     props: {},
     data() {
@@ -100,24 +120,22 @@ export default {
             },
             // 表格
             tableData: [],
+            storeList: []
         };
     },
     watch: {},
     computed: {
         tableColumns() {
             return [
-                {title: '问卷ID', dataIndex: 'name', key: 'item'},
-                {title: '问卷用途', dataIndex: 'phone', key: 'item'},
-                {title: '问卷标题', dataIndex: 'email', key: 'item'},
-                {title: '备注', dataIndex: 'continent', key: 'item'},
-                {title: '题目数', dataIndex: 'country', key: 'item'},
-                {title: '问卷有效期', dataIndex: 'address', key: 'time'},
-                {title: '问卷状态', dataIndex: 'address', key: 'status'},
-                {title: '发送人数', dataIndex: 'address', key: 'item'},
-                {title: '触达人数', dataIndex: 'address', key: 'item'},
-                {title: '提交人数', dataIndex: 'address', key: 'item'},
-                {title: '填写率', dataIndex: 'create_time', key: 'rate'},
-                {title: '操作', key: 'operation', fixed: 'right'},
+                {title: '姓名', dataIndex: 'name', key: 'item'},
+                {title: '提交时间', dataIndex: 'phone', key: 'time'},
+                {title: '试驾车型', dataIndex: 'email', key: 'item'},
+                {title: '问题（单选）', dataIndex: 'continent', key: 'item'},
+                {title: '问题（多选）', dataIndex: 'country', key: 'tooltip'},
+                {title: '问题（问答）', dataIndex: 'address', key: 'time'},
+                {title: '问卷（评分）', dataIndex: 'address', key: 'item'},
+                {title: '门店', dataIndex: 'address', key: 'item'},
+                {title: '体验官', dataIndex: 'address', key: 'item'},
             ]
         },
     },
@@ -204,7 +222,7 @@ export default {
             });
         },
         // 启用停用
-        handleChangeStatus(record) {
+        handleChangeStatus(id, type) {
 
         },
     }
@@ -213,8 +231,20 @@ export default {
 
 <style lang="less" scoped>
  #naireList {
-     .switch {
-         margin: 0 10px;
+     .info-container {
+         display: flex;
+         padding-left: 20px;
+     }
+     .naire-title {
+         color: #1D2129;
+         font-size: 14px;
+         font-weight: 600;
+         margin-right: 40px;
+     }
+     .naire-remark {
+         color: #1D2129;
+         font-size: 14px;
+         font-weight: 400;
      }
  }
 </style>

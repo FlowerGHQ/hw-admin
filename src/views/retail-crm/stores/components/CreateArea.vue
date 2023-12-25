@@ -48,7 +48,7 @@
       <div class="danger-text" v-if="messageText.length">
         {{ messageText }}
       </div>
-      <div class="region-tree form-item required">
+      <div class="region-tree form-item">
         <div class="key" style="height: 32px; line-height: 32px">
           {{ $t("crm_region.city") }}
         </div>
@@ -286,9 +286,9 @@ export default {
     },
     // 保存区域编辑
     saveRegional() {
-      if (!this.checkedKeys.length) {
+      /* if (!this.checkedKeys.length) {
         return this.$message.warning(this.$t("def.enter"));
-      }
+      } */
       if (!this.regionalName) {
         return this.$message.warning(this.$t("def.enter"));
       }
