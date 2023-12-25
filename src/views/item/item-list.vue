@@ -177,9 +177,13 @@
                 </template> -->
                 <template v-if="column.dataIndex === 'status'">
                   <div
+                    v-if="!record.children"
                     class="status status-bg status-tag"
                     :class="text === 0 ? 'green' : 'red'">
                     {{ text === 0 ? $t("i.active") : $t("i.inactive") }}
+                  </div>
+                  <div v-else>
+                    
                   </div>
                 </template>
 
