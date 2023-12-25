@@ -1,5 +1,12 @@
 [
     {
+        "value": "0",
+        "key": "country",
+        "label": "全部",
+        "label_en": "All",
+        "code": "ALL"
+    },
+    {
         "value": "18",
         "key": "country",
         "label": "奥地利",
