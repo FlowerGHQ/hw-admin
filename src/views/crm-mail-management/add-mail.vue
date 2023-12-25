@@ -266,7 +266,6 @@ import { useRouter, useRoute } from 'vue-router'
 import dayjs from 'dayjs'
 import Core from '@/core'
 import mailTemplete from './components/mail-templete.vue';
-import { Upload } from 'ant-design-vue';
 
 const { proxy } = getCurrentInstance()
 
@@ -474,7 +473,8 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             // console.log('poster', uploadOptions.value.posterList);
             uploadOptions.value.posterList = fileList
             if (file.status === 'done') {
-                formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+                formData.value.template_param.poster = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename               
+                loadImages(formData.value.template_param.poster)
             } else if (file.status === "removed") {
                 formData.value.template_param.poster = ""
             }
@@ -488,7 +488,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
             }
             if (file.status === 'done') {
                 obj1['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
-
+                loadImages(obj1['img'])
             } else if (file.status === "removed") {
                 Reflect.deleteProperty(obj1, 'img')
             }
@@ -504,6 +504,7 @@ const onUploadExplosion = ({ file, fileList }, type) => {
 
             if (file.status === 'done') {
                 obj2['img'] = Core.Const.NET.FILE_URL_PREFIX + file?.response.data.filename
+                loadImages(obj2['img'])
             } else if (file.status === "removed") {
                 Reflect.deleteProperty(obj2, 'img')
             }
@@ -629,6 +630,21 @@ const onPreviewBtn = (type) => {
         break;
     }
 
+}
+
+// 加载图片
+const loadImages = (url) => {
+    const images = new Image()
+    images.src = url
+
+    images.onload = () => {
+        console.log("图片加载成功");
+    }
+
+    images.onerror = () => {
+        console.log("图片加载失败");
+        loadImages(url)
+    }
 }
 
 
