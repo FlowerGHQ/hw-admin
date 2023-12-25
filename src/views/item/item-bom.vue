@@ -8,12 +8,21 @@
         class="item-tree"
         :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
         <!-- 左边 -->
-        <!-- :class="{'collapse-true' : isCollapse, 'collapse-false': !isCollapse}" -->
-        <div class="item-tree-left">
-          <div class="title-area">{{ $t("item-bom.bom_list") }}</div>
+        <div class="item-tree-left" :class="{'collapse-true' : isCollapse, 'collapse-false': !isCollapse}">
+          <div class="title-area">{{ $t("item-bom.bom_list") }}
+            <div class="icon-collapse" @click="isCollapse = !isCollapse">
+                <MySvgIcon
+                  icon-class="collapse"
+                  v-if="!isCollapse"
+              />
+                <MySvgIcon
+                  icon-class="undold"
+                  v-else
+              />
+              </div>
+            </div>
           <div class="tree-content">
-            <!-- :isCollapse="isCollapse" -->
-            <FittingsTree v-model:activeObj="activeObj" :cancelIds="cancelId"/>
+            <FittingsTree v-model:activeObj="activeObj" :cancelIds="cancelId" :isCollapse="isCollapse"/>
           </div>
         </div>
         <!-- 右边 -->
@@ -39,6 +48,7 @@ import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
 import FittingsTree from "./components/item-bom/FittingsTree.vue";
 import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类弹窗组件
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 // const router = useRouter()
 const minWidthCount = 900
 
@@ -57,7 +67,7 @@ const { proxy } = getCurrentInstance();
  * }
  * */ 
  // 注释-侧边栏           
-// const isCollapse = ref(false);    //菜单Dom-是否收起
+const isCollapse = ref(false);    //菜单Dom-是否收起
 const activeObj = ref({});
 const level2CodeStr = ref('')
 const searchOptions = ref([
@@ -116,20 +126,16 @@ const handleReset = ()=>{
 const allComRef = ref(null)   // component refs
 const searAllRef = ref(null)   // searAll refs
 // 注释-侧边栏
-// const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
+const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
 onMounted(() => {
   titleHeight.value = titleRefs.value.offsetHeight + "px";
   /* 计算适配宽度 */
-  /* handleResize();
-  window.addEventListener('resize',()=>{
-    handleResize();
-  }); */
+  handleResize();
+  window.addEventListener('resize',handleResize);
 });
 
  onBeforeUnmount(() => {
-  /*window.removeEventListener('resize', ()=>{
-    handleResize();
-  })*/
+  window.removeEventListener('resize',handleResize)
 }) 
 
 
@@ -144,7 +150,7 @@ const showClassModal = (data) => {
   level2CodeStr.value = data;
   classifyModalShow.value = true;
 }
-/* const handleResize = () => {
+const handleResize = () => {
   console.log('999999999',window.innerWidth);
   screenWidth.value = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
   if(window.innerWidth < 1550) {
@@ -152,7 +158,7 @@ const showClassModal = (data) => {
   }else {
     isCollapse.value = false;
   }
-} */
+}
 provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
 provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
 const refresh = () => {
@@ -187,9 +193,9 @@ const setValue = (val) => {
       box-sizing: border-box;
       padding-bottom: 20px;
       .item-tree-left {
-        min-width: 454px;
+        // min-width: 454px;
         // width: 204px;
-        // width: 454px;
+        width: 454px;
         height: 100%;
         background-color: #f8fafc;
         font-size: 48px;
@@ -200,6 +206,13 @@ const setValue = (val) => {
           color: #1d2129;
           font-size: 16px;
           line-height: 22px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .icon-collapse {
+            cursor: pointer;
+          }
         }
         .tree-content {
           margin-top: 16px;
@@ -210,29 +223,29 @@ const setValue = (val) => {
 
       
 
-      /* .collapse-true {
+      .collapse-true {
           width: 204px;
         }
 
         .collapse-false {
           width: 454px;
-        } */
+        }
       @media (max-width:1440px) {
         .item-tree-left {
-            min-width: 354px;
+            // min-width: 354px;
             width: 354px;
             // width: 204px;
         }
         // 注释-侧边栏
-        /* .collapse-true {
+        .collapse-true {
           width: 204px;
         }
 
         .collapse-false {
           width: 354px;
-        } */
+        }
     }
-     /* @media (max-width:1550px) {
+     @media (max-width:1550px) {
         .item-tree-left {
             width: 354px;
             // width: 204px;
@@ -246,7 +259,7 @@ const setValue = (val) => {
         .collapse-false {
           width: 354px;
         } 
-    }*/
+    }
       .item-tree-right {
         flex: 1;
         overflow-y: auto;
