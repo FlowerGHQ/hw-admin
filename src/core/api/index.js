@@ -56,6 +56,7 @@ const apiList = {
         listGroup: ['PostJson', 'user/list-group'],
         setPlatformAdmin: ['PostJson', 'user/set-platform-admin'],
         checkAdmin: ['PostJson', 'user/check-admin'], // 检查用户是否是超级管理员
+
     },
     Account: {
         list: ['PostJson', 'account/list'], // 账户列表
@@ -788,6 +789,7 @@ const apiList = {
         carTotalStatistics: ['PostJson', 'crm-dashboard/car-total-statistics'],// 个人 - 销售简报
         customerTotalStatistics: ['PostJson', 'crm-dashboard/customer-total-statistics'],// 个人 - 销售简报
         transformationStatistics: ['PostJson', 'crm-dashboard/transformation-statistics'],// 转化分析
+
         employeesSalesStatistics: ['PostJson', 'crm-dashboard/employees-sales-statistics'],// 个人 - 销售简报
     },
 
@@ -828,20 +830,20 @@ const apiList = {
     RETAIL: {
         // 门店管理接口
         storeList: ['PostJson', 'store/list'],              // 门店-门店列表
-        editStore: ['PostJson', 'store/save'],               // 编辑-创建门店
-        deleteStore: ['PostJson', 'store/delete'],            // 删除-门店
-        storeDetail: ['Get', 'store/detail'],                 // 门店-详情
-        storeUserList: ['PostJson', 'store/user/list'],       // 门店-人员（获取）
-        addStoreUser: ['PostJson', 'store/user/add'],         // 门店-添加人员
-        deleteStoreUser: ['PostJson', 'store/user/delete'],   // 门店-添加人员
+        editStore:['PostJson', 'store/save'],               // 编辑-创建门店
+        deleteStore:['PostJson','store/delete'],            // 删除-门店
+        storeDetail:['Get','store/detail'],                 // 门店-详情
+        storeUserList:['PostJson','store/user/list'],       // 门店-人员（获取）
+        addStoreUser:['PostJson','store/user/add'],         // 门店-添加人员
+        deleteStoreUser:['PostJson','store/user/delete'],   // 门店-添加人员
         // 区域管理接口          
         regionsList: ['PostJson', 'group/city/list'],       // 门店-区域列表/crm/1/store/list
-        deleteRegion: ['PostJson', 'group/city/delete'],     // 删除区域
-        detailRegion: ['Get', 'group/city/detail'],          // 区域-详情
-        saveRegion: ['PostJson', 'group/city/save'],         // 区域-更新
+        deleteRegion:['PostJson', 'group/city/delete'],     // 删除区域
+        detailRegion:['Get', 'group/city/detail'],          // 区域-详情
+        saveRegion:['PostJson', 'group/city/save'],         // 区域-更新
         // 人员管理接口
-        personList: ['PostJson', 'user/list'],               // 人员列表（添加店长可用）
-        deletePersonList: ['PostJson', 'user/delete'],       // 删除人员
+        personList:['PostJson', 'user/list'],               // 人员列表（添加店长可用）
+        deletePersonList:['PostJson', 'user/delete'],       // 删除人员
         externalList: ['PostJson', 'out/user/list'],        // 人员列表(外部【飞书】)
         addPerson: ['PostJson', 'out/user/save'],           // 添加人员(外部【飞书】)
         personDetail: ['Get', 'store/user/detail'],         // 人员信息详情

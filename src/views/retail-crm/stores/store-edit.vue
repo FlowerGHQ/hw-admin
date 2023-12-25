@@ -150,7 +150,7 @@
           </div>
 
           <!-- 详细地址 -->
-          <div class="form-item">
+          <div class="form-item required">
             <div class="key">{{ $t("crm_c.address") }}：</div>
             <div class="value">
               <a-input
@@ -184,6 +184,9 @@
             <div class="value">
               <a-date-picker
                 v-model:value="form.open_time"
+                :show-time="{
+                  hideDisabledOptions: true,
+                }"
                 valueFormat="YYYY-MM-DD"
               />
             </div>
@@ -225,8 +228,8 @@
       </div>
 
       <!-- 门店配置 -->
-      <div class="form-block">
-        <div class="form-title">
+      <div class="form-block ">
+        <div class="form-title ">
           <div class="title-colorful">{{ $t("s.sto_con") }}</div>
         </div>
         <div class="form-content">
@@ -549,8 +552,8 @@ export default {
           afternoon: { begin: "", end: "" },
         },
       };
-      time.time.morning.begin = form.business_time[0];
-      time.time.afternoon.end = form.business_time[1];
+      time.time.morning.begin = form.business_time?.[0];
+      time.time.afternoon.end = form.business_time?.[1];
       form.business_time = JSON.stringify(time);
       form.localtion = JSON.stringify(form.localtion);
 
@@ -567,20 +570,16 @@ export default {
       console.log("保存form", form);
       if (!form.name) {
         return this.$message.warning(this.$t("def.enter"));
-      }
-      if (!form.type) {
+      } else if (!form.type) {
         return this.$message.warning(this.$t("def.enter"));
-      }
-
-      if (!form.level) {
+      } else if (!form.level) {
         return this.$message.warning(this.$t("def.enter"));
-      }
-      if (!form.group_id) {
+      } else if (!form.group_id) {
         return this.$message.warning(this.$t("def.enter"));
-      }
-
-      if (!form.city && !form.address) {
+      } else if (!form.city && !form.address) {
         return this.$message.warning(this.$t("def.enter"));
+      }else if(!form.square){
+        form.square = 0;
       }
 
       if (!form.status) {

@@ -201,9 +201,9 @@ export default {
     manList: {
       deep: true,
       immediate: true,
-      handler(value) {
-        if (value) {
-          this.$emit("userid", value[0]?.user_id || "");
+      handler(newValue, oldValue) {
+        if (newValue.length > 0) {
+          this.$emit("userid", newValue[0]?.id || "");
         } else {
           this.$emit("userid", "");
         }

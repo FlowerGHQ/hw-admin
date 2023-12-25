@@ -96,6 +96,7 @@
               </a-tooltip>
             </div>
           </div>
+          <test1 />
         </div>
       </div>
     </div>
@@ -110,6 +111,7 @@
 
 <script>
 import addDirectory from "./components/add-directory.vue"
+import test1 from './components/test1.vue'
 export default {
   name: "StoreList",
   data() {
@@ -232,7 +234,8 @@ export default {
     },
   },
   components:{
-    addDirectory
+    addDirectory,
+    test1
   },
   mounted() {},
   methods: {
