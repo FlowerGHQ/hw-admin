@@ -194,11 +194,13 @@
                             v-model:value="form.sales_area_ids"
                             mode="multiple"
                             :placeholder="$t('def.select')"
+                            optionFilterProp="label"
                         >
                             <a-select-option
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
+                                :label="$i18n.locale === 'zh' ? val.name : val.name_en"
                                 >{{ $i18n.locale === 'zh' ? val.name : val.name_en }}</a-select-option
                             >
                         </a-select>
@@ -1977,7 +1979,6 @@ export default {
                 // 多规格商品列表
                 this.specific.data = data;
 
-                console.log('999this.specific.data',this.specific.data);
             });
         },
         handleDelete(record) {
@@ -2024,8 +2025,6 @@ export default {
                         if (index !== -1) {
                             _this.specific.data.splice(index, 1);
                         }
-                        console.log("record 新增", record);
-                        console.log("record data", _this.specific.data);
                     }
                 },
             });
@@ -2033,15 +2032,6 @@ export default {
         // 保存、新建 商品
         handleSubmit() {
 
-            /* if (this.specific.mode === 2) {
-                this.form.code = this.specific.data[0].code;
-                // this.form.name = this.specific.data[0].name;
-                // this.form.name_en = this.specific.data[0].name_en;
-                this.form.price = this.specific.data[0].price;
-                this.form.fob_eur = this.specific.data[0].fob_eur;
-                this.form.fob_usd = this.specific.data[0].fob_usd;
-                this.form.original_price = this.specific.data[0].original_price;
-            } */
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
@@ -2282,6 +2272,11 @@ export default {
                 let attrs = [];
                 for (let i = 0; i < specData.length; i++) {
                     const item = specData[i];
+                    if (!item.imgsList?.[0]?.filename) {
+                        return this.$message.warning(
+                            `${this.$t("n.spec_pic")}`
+                        );
+                    }
                     if (!item.code) {
                         return this.$message.warning(
                             `${this.$t("def.enter")}(${this.$t("i.code")})`
@@ -2504,7 +2499,7 @@ export default {
         // 规格定义
         // 规格名
         handleAddSpec() {
-            if( this.specific.list.length > 2 ) return this.$message.warning(this.$t('definition_more_num'))
+            if( this.specific.list.length > 2 ) return this.$message.warning(this.$t('i.definition_more_num'))
             // 添加规格定义
             this.specific.list.push({
                 id: "",
@@ -2514,8 +2509,6 @@ export default {
                 addVisible: false,
                 addValue: { key: "", zh: "", en: "" },
             });
-
-            if( this.specific.list.length >= 2 ) return this.$message.warning(this.$t('definition_more_num'))
 
         },
         handleRemoveSpec(item, index) {
@@ -2840,6 +2833,9 @@ export default {
         validateConfig(specData) {
             for (let i = 0; i < specData.length; i++) {
                 const item = specData[i];
+                if (!item.imgsList?.[0]?.filename) {
+                    return (this.validateConfigFlag = false);
+                }
                 if (!item.code) {
                     return (this.validateConfigFlag = false);
                 }
@@ -3209,6 +3205,7 @@ export default {
                 height: 36px;
                 border-radius: 4px;
                 cursor: pointer;
+                object-fit:cover;
 
             }
  

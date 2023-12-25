@@ -235,6 +235,7 @@ const messages = {
             size_prompt_detail: '详情图尺寸建议宽度为800，单张图片大小2M内，最多上传10张',
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
             delete: '删除',
+            spec_pic: '请上传规格商品图片',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -3019,6 +3020,7 @@ const messages = {
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
             file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
             delete: 'Delete',
+            spec_pic: 'Please Upload An Image Of The Product With Specifications',
         },
         a: {
             new_retailer: 'Create A New Retailer',
