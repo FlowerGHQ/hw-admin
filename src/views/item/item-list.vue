@@ -375,7 +375,7 @@ export default {
           dataIndex: "category_list",
           key: "category_list",
         },
-        { title: this.$t("i.number"), dataIndex: "model", key: "item" },
+        // { title: this.$t("i.number"), dataIndex: "model", key: "item" },
         {
           title: "FOB(EUR)",
           dataIndex: "fob_eur",
