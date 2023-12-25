@@ -1,56 +1,116 @@
 <template>
-  <div class="item-bom">
-    <div class="list-container item-container">
-      <div class="title-container" ref="titleRefs">
-        <div class="title-area">{{ $t("item-bom.title") }}</div>
-      </div>
-      <div
-        class="item-tree"
-        :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
-        <!-- 左边 -->
-        <div class="item-tree-left" :class="{'collapse-true' : isCollapse, 'collapse-false': !isCollapse}">
-          <div class="title-area">{{ $t("item-bom.bom_list") }}
-            <div class="icon-collapse" @click="isCollapse = !isCollapse">
-                <MySvgIcon
-                  icon-class="collapse"
-                  v-if="!isCollapse"
-              />
-                <MySvgIcon
-                  icon-class="undold"
-                  v-else
-              />
-              </div>
+    <div class="item-bom">
+        <div class="list-container item-container">
+            <div class="title-container" ref="titleRefs">
+                <div class="title-area">{{ $t("item-bom.title") }}</div>
             </div>
-          <div class="tree-content">
-            <FittingsTree v-model:activeObj="activeObj" :cancelIds="cancelId" :isCollapse="isCollapse"/>
-          </div>
+            <div
+                class="item-tree"
+                :style="{ height: 'calc(100% - ' + titleHeight + ')' }">
+                <!-- 左边 -->
+                <div
+                    class="item-tree-left"
+                    :class="{
+                        'collapse-true': isCollapse,
+                        'collapse-false': !isCollapse,
+                    }">
+                    <div class="title-area">
+                        {{ $t("item-bom.bom_list") }}
+                        <div
+                            class="icon-collapse"
+                            @click="isCollapse = !isCollapse">
+                            <MySvgIcon
+                                icon-class="collapse"
+                                v-if="!isCollapse" />
+                            <MySvgIcon icon-class="undold" v-else />
+                        </div>
+                    </div>
+                    <div class="tree-content">
+                        <FittingsTree
+                            v-model:activeObj="activeObj"
+                            :cancelIds="cancelId"
+                            :isCollapse="isCollapse" />
+                    </div>
+                </div>
+                <!-- 右边 -->
+                <div class="item-tree-right">
+                    <div
+                        class="search-content"
+                        :style="{ 'min-width': minWidthCount + 'px' }">
+                        <SearchAll
+                            ref="searAllRef"
+                            :isShowMore="false"
+                            :options="searchOptions"
+                            @search="handleSearch"
+                            @reset="handleReset">
+                            <template #pre_btn>
+                                <div
+                                    class="more-btn"
+                                    v-if="activeObj.level === 2">
+                                    <div class="download-template">
+                                        <!-- 模板下载 -->
+                                        <a-button
+                                            type="link"
+                                            @click="showClassModal('download')"
+                                            :disabled="disabled">
+                                            {{
+                                                $t("item-bom.download_template")
+                                            }}
+                                        </a-button>
+                                    </div>
+                                    <div class="bulk-import">
+                                        <!-- 批量导入 -->
+                                        <a-button
+                                            type="primary"
+                                            @click="showClassModal('import')"
+                                            :disabled="disabled">
+                                            {{ $t("item-bom.bulk_import") }}
+                                        </a-button>
+                                    </div>
+                                </div>
+                            </template>
+                        </SearchAll>
+                    </div>
+                    <component
+                        :style="{ 'min-width': minWidthCount + 'px' }"
+                        ref="allComRef"
+                        :is="componentName"
+                        :activeObj="activeObj"
+                        :searchParams="searchParams"></component>
+                </div>
+            </div>
         </div>
-        <!-- 右边 -->
-        <div class="item-tree-right">
-          <div class="search-content" :style="{ 'min-width': minWidthCount + 'px' }">
-            <SearchAll ref="searAllRef" :isShowMore="false" :options="searchOptions" @search="handleSearch" @reset="handleReset"></SearchAll>
-          </div>
-          <component :style="{ 'min-width': minWidthCount + 'px' }" ref="allComRef" :is="componentName" :activeObj="activeObj" :searchParams="searchParams" ></component>
-        </div>
-      </div>
-    </div>
 
-    <ClassifyModal v-model:visibility="classifyModalShow" :activeObj="activeObj" :code="level2CodeStr" @refresh="refresh" @update:visibility="setValue"></ClassifyModal>
-  </div>
+        <ClassifyModal
+            v-model:visibility="classifyModalShow"
+            :activeObj="activeObj"
+            :code="level2CodeStr"
+            @refresh="refresh"
+            @update:visibility="setValue"></ClassifyModal>
+    </div>
 </template>
 
 <script setup>
 // import { useRouter,onBeforeRouteUpdate } from 'vue-router';
-import { ref, shallowRef, onMounted, computed ,watch, provide, onBeforeUnmount, getCurrentInstance} from "vue";
-import SearchAll from '../../components/common/SearchAll.vue';
+import {
+    ref,
+    shallowRef,
+    onMounted,
+    computed,
+    watch,
+    provide,
+    onBeforeUnmount,
+    getCurrentInstance,
+} from "vue";
+import SearchAll from "../../components/common/SearchAll.vue";
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";
 import FittingsTree from "./components/item-bom/FittingsTree.vue";
-import ClassifyModal from "./components/item-bom/ClassifyModal.vue";   // 分类弹窗组件
+import ClassifyModal from "./components/item-bom/ClassifyModal.vue"; // 分类弹窗组件
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 // const router = useRouter()
-const minWidthCount = 900
+const minWidthCount = 900;
 
 // 标题高度
 const titleRefs = ref(null);
@@ -65,79 +125,84 @@ const { proxy } = getCurrentInstance();
  *    id: 1, //level为1时，id为商品item_id level为2时，id为版本列表的id (注释为bomid)  level为3时，id为分类列表id（注释为bomid）
  *    name: "一级分类", 名字
  * }
- * */ 
- // 注释-侧边栏           
-const isCollapse = ref(false);    //菜单Dom-是否收起
+ * */
+// 注释-侧边栏
+const isCollapse = ref(false); //菜单Dom-是否收起
 const activeObj = ref({});
-const level2CodeStr = ref('')
+const level2CodeStr = ref("");
 const searchOptions = ref([
     {
         id: 1,
         type: "input",
-        key: 'item-bom.product_name',
+        key: "item-bom.product_name",
         value: undefined,
-        searchParmas: "name",                    
+        searchParmas: "name",
         placeholder: "item-bom.please_enter",
     },
     {
         id: 2,
         type: "input",
-        key: 'item-bom.commodity_code',
+        key: "item-bom.commodity_code",
         value: undefined,
-        searchParmas: "code_list",                    
+        searchParmas: "code_list",
         placeholder: "item-bom.commodity_code_tips",
     },
-]) // 搜索options
-const searchParams = ref({}) // 搜索参数
+]); // 搜索options
+const searchParams = ref({}); // 搜索参数
 
 // 显示分类弹窗组件-变量
-const classifyModalShow = ref(false)
+const classifyModalShow = ref(false);
 
 watch(
     activeObj,
-    (newVal)=>{
-        searAllRef.value.handleSearchReset()
+    (newVal) => {
+        searAllRef.value.handleSearchReset();
     },
     {
-        deep:true
+        deep: true,
     }
-)
-const componentProps = ref()
+);
+const componentProps = ref();
 const componentName = computed(() => {
-  componentProps.value = activeObj.value;
-  if (activeObj.value.level === 1) {
-    return fittings;
-  } else if (activeObj.value.level === 2) {
-    return FittingsTwo;
-  } else if (activeObj.value.level === 3) {
-    return FittingsThree;
-  } else {
-    return fittings;
-  }
+    componentProps.value = activeObj.value;
+    if (activeObj.value.level === 1) {
+        return fittings;
+    } else if (activeObj.value.level === 2) {
+        return FittingsTwo;
+    } else if (activeObj.value.level === 3) {
+        return FittingsThree;
+    } else {
+        return fittings;
+    }
 });
 
-const handleSearch = (data)=>{
-  searchParams.value = data
-  searchParams.value.code_list = data.code_list ? data.code_list.split(',') : []
-}
-const handleReset = ()=>{
-  searchParams.value = {}
-}
-const allComRef = ref(null)   // component refs
-const searAllRef = ref(null)   // searAll refs
+const handleSearch = (data) => {
+    searchParams.value = data;
+    searchParams.value.code_list = data.code_list
+        ? data.code_list.split(",")
+        : [];
+};
+const handleReset = () => {
+    searchParams.value = {};
+};
+const allComRef = ref(null); // component refs
+const searAllRef = ref(null); // searAll refs
 // 注释-侧边栏
-const screenWidth = ref(window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth)
+const screenWidth = ref(
+    window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth
+);
 onMounted(() => {
-  titleHeight.value = titleRefs.value.offsetHeight + "px";
-  /* 计算适配宽度 */
-  handleResize();
-  window.addEventListener('resize',handleResize);
+    titleHeight.value = titleRefs.value.offsetHeight + "px";
+    /* 计算适配宽度 */
+    handleResize();
+    window.addEventListener("resize", handleResize);
 });
 
- onBeforeUnmount(() => {
-  window.removeEventListener('resize',handleResize)
-}) 
-
+onBeforeUnmount(() => {
+    window.removeEventListener("resize", handleResize);
+});
 
 /* fetch start */
 /* fetch end */
@@ -147,128 +212,141 @@ onMounted(() => {
 
 // 分类弹窗打开
 const showClassModal = (data) => {
-  level2CodeStr.value = data;
-  classifyModalShow.value = true;
-}
+    level2CodeStr.value = data;
+    classifyModalShow.value = true;
+};
 const handleResize = () => {
-  console.log('999999999',window.innerWidth);
-  screenWidth.value = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth
-  if(window.innerWidth < 1550) {
-    isCollapse.value = true;
-  }else {
-    isCollapse.value = false;
-  }
-}
-provide('classifyShowModal', showClassModal); // 提供分类弹窗打开方法
-provide('bomId', activeObj.value.id); // 提供分类弹窗打开方法
+    console.log("999999999", window.innerWidth);
+    screenWidth.value =
+        window.innerWidth ||
+        document.documentElement.clientWidth ||
+        document.body.clientWidth;
+    if (window.innerWidth < 1550) {
+        isCollapse.value = true;
+    } else {
+        isCollapse.value = false;
+    }
+};
+provide("classifyShowModal", showClassModal); // 提供分类弹窗打开方法
+provide("bomId", activeObj.value.id); // 提供分类弹窗打开方法
 const refresh = () => {
-  if(activeObj.value.level===2){
-    allComRef.value.refresh();
-    return;
-  }
-  allComRef.value.getTableDataFetch();
-}
+    if (activeObj.value.level === 2) {
+        allComRef.value.refresh();
+        return;
+    }
+    allComRef.value.getTableDataFetch();
+};
 
 const setValue = (val) => {
-
     classifyModalShow.value = val;
-    if(!val) { level2CodeStr.value = '' };
-}
+    if (!val) {
+        level2CodeStr.value = "";
+    }
+};
 </script>
 
 <style lang="less" scoped>
 .item-bom {
-  width: 100%;
-  height: 100%;
-  .item-container {
+    width: 100%;
     height: 100%;
-    padding: 20px;
-    .title-container {
-      padding: 0;
-      margin-bottom: 16px;
-    }
-    .item-tree {
-      width: 100%;
-      display: flex;
-      box-sizing: border-box;
-      padding-bottom: 20px;
-      .item-tree-left {
-        // min-width: 454px;
-        // width: 204px;
-        width: 454px;
+    .item-container {
         height: 100%;
-        background-color: #f8fafc;
-        font-size: 48px;
-        padding: 24px 20px 16px 20px;
-        display: flex;
-        flex-direction: column;
-        .title-area {
-          color: #1d2129;
-          font-size: 16px;
-          line-height: 22px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        padding: 20px;
+        .title-container {
+            padding: 0;
+            margin-bottom: 16px;
+        }
+        .item-tree {
+            width: 100%;
+            display: flex;
+            box-sizing: border-box;
+            padding-bottom: 20px;
+            .item-tree-left {
+                // min-width: 454px;
+                // width: 204px;
+                width: 454px;
+                height: 100%;
+                background-color: #f8fafc;
+                font-size: 48px;
+                padding: 24px 20px 16px 20px;
+                display: flex;
+                flex-direction: column;
+                .title-area {
+                    color: #1d2129;
+                    font-size: 16px;
+                    line-height: 22px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
 
-          .icon-collapse {
-            cursor: pointer;
-          }
-        }
-        .tree-content {
-          margin-top: 16px;
-          flex: 1;
-          height: calc(100% - 38px);
-        }
-      }
+                    .icon-collapse {
+                        cursor: pointer;
+                    }
+                }
+                .tree-content {
+                    margin-top: 16px;
+                    flex: 1;
+                    height: calc(100% - 38px);
+                }
+            }
 
-      
+            .collapse-true {
+                width: 204px;
+            }
 
-      .collapse-true {
-          width: 204px;
-        }
+            .collapse-false {
+                width: 454px;
+            }
+            @media (max-width: 1440px) {
+                .item-tree-left {
+                    // min-width: 354px;
+                    width: 354px;
+                    // width: 204px;
+                }
+                // 注释-侧边栏
+                .collapse-true {
+                    width: 204px;
+                }
 
-        .collapse-false {
-          width: 454px;
-        }
-      @media (max-width:1440px) {
-        .item-tree-left {
-            // min-width: 354px;
-            width: 354px;
-            // width: 204px;
-        }
-        // 注释-侧边栏
-        .collapse-true {
-          width: 204px;
-        }
+                .collapse-false {
+                    width: 354px;
+                }
+            }
+            @media (max-width: 1550px) {
+                .item-tree-left {
+                    width: 354px;
+                    // width: 204px;
+                }
 
-        .collapse-false {
-          width: 354px;
+                // 注释-侧边栏
+                .collapse-true {
+                    width: 204px;
+                }
+
+                .collapse-false {
+                    width: 354px;
+                }
+            }
+            .item-tree-right {
+                flex: 1;
+                overflow-y: auto;
+                padding: 0 17px;
+                .search-content {
+                    margin-bottom: 24px;
+                    .search-all {
+                        .btn-area-box {
+                            .more-btn {
+                                display: flex;
+                                .download-template,
+                                .bulk-import {
+                                    margin-right: 8px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
-     @media (max-width:1550px) {
-        .item-tree-left {
-            width: 354px;
-            // width: 204px;
-        }
-
-        // 注释-侧边栏
-         .collapse-true {
-          width: 204px;
-        }
-
-        .collapse-false {
-          width: 354px;
-        } 
-    }
-      .item-tree-right {
-        flex: 1;
-        overflow-y: auto;
-        padding: 0 17px;
-        .search-content {
-            margin-bottom: 24px;    
-        }
-      }
-    }
-  }
 }
 </style>

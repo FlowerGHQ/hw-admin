@@ -52,7 +52,9 @@ export default {
         confirm_delete_btn: '确定删除',
         // 取消
         cancel: '取消',
-        description_empty:'暂无数据'
+        description_empty:'暂无数据',
+        download_template:'模板下载',
+        bulk_import:'批量导入',
     },
     en: {
         title: "BOM Management",
@@ -100,6 +102,8 @@ export default {
         confirm_delete_content: 'Are you sure you want to delete the group?',
         confirm_delete_btn: 'Confirm Delete',
         cancel: 'Cancel',
-        description_empty:'No Data'
+        description_empty:'No Data',
+        download_template:'Template Download',
+        bulk_import:'Bulk Import',
     }
 }

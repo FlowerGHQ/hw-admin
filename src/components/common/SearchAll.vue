@@ -111,6 +111,7 @@
         </a-row>
         <div class="btn-area-box">
 
+            <slot name="pre_btn"></slot>
             <a-button @click="handleSearchReset" :disabled="disabled" v-if="isShowButton">{{ $t("def.reset") }}</a-button>
             <a-button @click="handleSearch" :disabled="disabled" type="primary" v-if="isShowButton">
                 {{  $t("def.search") }}
@@ -124,6 +125,7 @@
                 <i class="icon i_shouqijiantouxiao m-l-5" v-else ></i>
 
             </a-button>
+            <slot name="after_btn"></slot>
         </div>
 
     </div>
