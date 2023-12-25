@@ -1172,6 +1172,8 @@ export default {
       this.handleSearchReset();
     },
     onCascaderChange(value, selectedOptions) {
+        console.log('value', value);
+        console.log('selectedOptions', selectedOptions);
         if(value.length) {
           if(value[0] === 4) {
             this.searchForm.source_type = 4
@@ -1191,7 +1193,11 @@ export default {
             this.searchForm.channel_country = undefined
           }
           if(value.length === 3) {
-            this.searchForm.to_country = selectedOptions[2].label_en
+            if(value[2] === '0') {
+              this.searchForm.to_country = ''
+            } else {
+              this.searchForm.to_country = selectedOptions[2].label_en
+            }
           }
           if(!this.searchForm.channel_country) {
             this.searchForm.to_country = ''
