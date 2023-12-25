@@ -255,7 +255,7 @@ const initLine = (arr) => {
     pointerList.value.forEach(($1) => {
         $1.start.forEach(el => {
             sidebarData.value.push({
-                id: count++, // 标识
+                id: count++, // 标识 用于删除 复制判断
                 index: $1.index,
                 end: $1.end,
                 start: $1.start,
