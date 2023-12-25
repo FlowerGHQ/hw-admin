@@ -125,7 +125,6 @@
                                 :data='uploadOptions.data'
                                 :maxCount="1"
                                 list-type="picture-card"
-                                :before-upload="handleCheck"
                                 @change="(event) => onUploadExplosion(event, 'poster')"
                                 @preview="handlePreview"                                
                             >
@@ -239,7 +238,7 @@
             <a-button type="primary" @click="onSubmit">{{ $t('mail-management.confirm')}}</a-button>
         </div>
 
-        <a-modal :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
+        <a-modal width="800px" :visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
             <img alt="" style="width: 100%" :src="previewImage" />
         </a-modal>
 
@@ -526,17 +525,7 @@ const handlePreview = (file) => {
         previewImage.value = url + file.response.data.filename        
     }
 }
-// upload检查超过2M提示
-const handleCheck = (file) => {
-    console.log("file", file);
-    const inSize = file.size / 1024 / 1024 < sizeLimit.value;
 
-    if (!inSize) {
-        proxy.$message.warn(`请上传小于${ sizeLimit.value }MB的${ file.type === "image/*" ? "图片" : "视频" }`)       
-        return false || Upload.LIST_IGNORE;
-    }
-
-}
 
 // 预览 model 取消事件
 const handleCancel = () => {
