@@ -300,10 +300,10 @@ export default {
         // 点击切换爆炸图
         clickChangTab(key) {
             this.currentTab = key
-            if (this.isChangedPoint === true) {
-                this.changeTabConfirm(key);
-                return;
-            }
+            // if (this.isChangedPoint === true) {
+            //     this.changeTabConfirm(key);
+            //     return;
+            // }
             if (!this.tabsArray[key].item_component_list) {
                 this.tabsArray[key]['item_component_list'] = [];
             }

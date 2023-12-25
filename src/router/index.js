@@ -52,6 +52,7 @@ router.beforeEach((to, from, next) => {
         const roles = to.meta.roles;
         // next();
         if (roles) {
+            console.log(roles, loginType, to)
             // 如果进入的路由meta中有roles规则
             if (roles.includes(loginType)) {
                 // 如果当前usertType在roles arr中有
@@ -59,7 +60,7 @@ router.beforeEach((to, from, next) => {
             } else {
                 // 表前userType禁止访问
                 message.warning('当前身份无法访问');
-                next('/dashboard');
+                next('/');
                 NProgress.done();
             }
         } else {

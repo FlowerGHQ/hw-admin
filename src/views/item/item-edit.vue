@@ -548,7 +548,7 @@
                                 </div>
                                 <div class="name">
                                     <div class="popover-button">
-                                        <a-popover title="" placement="bottom">
+                                        <!-- <a-popover title="" placement="bottom">
                                             <template #content v-if="item.option.length > 0">
                                                 <div class="popover">
                                                     <p class="popover-title">{{ $t("n.all_total") }} {{ item.option.length }} {{ $t("i.value_t") }}</p>
@@ -568,14 +568,25 @@
                                                 </span>
                                             </a-button>
                                             <a-button class="tag-button" type="primary" ghost @click="openConfigSet(index, item)" v-else>
-                                                <span class="tag-body">
+                                                <span key="tag-body" class="tag-body">
                                                     <span v-for="(optionItem, optionIndex) of item.option" class="tag-value">
                                                         {{ optionItem[$i18n.locale] }}
                                                     </span>
                                                 </span>
-                                                <!-- <p class="num-tag">{{ item.option.length }}</p> -->
                                             </a-button>
-                                        </a-popover>
+                                        </a-popover> -->
+                                        <a-button type="primary" ghost @click="openConfigSet(index, item)" v-if="item.option?.length === 0">
+                                            <span style="padding-right: 0;">
+                                                {{ `${$t("i.addition")}${ $i18n.locale === 'en' ? ` ${item.key} ` : item.name}${$t("i.value")}` }}
+                                            </span>
+                                        </a-button>
+                                        <a-button class="tag-button" type="primary" ghost @click="openConfigSet(index, item)" v-else>
+                                            <span key="tag-body" class="tag-body">
+                                                <span v-for="(optionItem, optionIndex) of item.option" class="tag-value">
+                                                    {{ optionItem[$i18n.locale] }}
+                                                </span>
+                                            </span>
+                                        </a-button>
                                     </div>
                                 </div>
                                 <div class="button" v-if="isShowDelete.indexOf(item.key) === -1" @click="handleRemoveSpec(item, index)">
@@ -1300,7 +1311,7 @@
                 $t("def.cancel")
             }}</a-button>
         </div>
-        <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
+        <a-modal :maskClosable="false" destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
                     <div class="config-item-title" :style="{ color: uniqueArr.indexOf(i) !== -1 ? 'red' : '' }">
@@ -1356,8 +1367,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="add-config-btn" @click="addConfig">
-                    {{ $t("i.addition") }}{{ $t("i.value") }}
+                <div class="fix-bottom">
+                    <div class="add-config-btn" @click="addConfig">
+                        {{ $t("i.addition") }}{{ $t("i.value") }}
+                    </div>
                 </div>
             </div>
         </a-modal>
@@ -2546,7 +2559,7 @@ export default {
                         value: value,
                         value_en: value_en,
                     };
-                    Core.Api.AttrDef.save(_item);
+                    // Core.Api.AttrDef.save(_item);
                 }
             };
             if (
@@ -2716,7 +2729,16 @@ export default {
         addConfig() {
             let item = Core.Util.deepCopy({ key: "", zh: "", en: "", validate: false });
             this.specific.list[this.configIndex].option.push(item);
+            this.$nextTick(() => {
+                this.configScroll()
+            })
         },
+        // 滚动到底部
+        configScroll() {
+            const dom = document.querySelector('.config-list')
+            const scrollHeight = dom.scrollHeight
+            dom.scrollTo(0, scrollHeight)
+        }
     },
 };
 </script>
@@ -2779,10 +2801,14 @@ export default {
         align-items: flex-start;
         > .key {
             line-height: 32px;
+            flex-shrink: 0;
         }
         > .value {
             // width: calc(~'100% - 200px');
-            max-width: calc(~"100% - 200px");
+            // min-width: calc(~"100% - 86px");
+            min-width: 1035px;
+            max-width: none;
+            flex-shrink: 0;
             .value-price {
                 margin-right: 5px;
                 width: 60px;
@@ -2838,6 +2864,7 @@ export default {
                 .tag-button {
                     height: auto;
                     padding: 2px 8px;
+                    border-color: #E2E2E2;
                 }
                 > .ant-btn {
                     width: 336px;
@@ -2865,13 +2892,14 @@ export default {
             .tag-body {
                 display: flex;
                 flex-wrap: wrap;
+                width: 100%;
             }
             .tag-value {
                 padding: 2px 10px;
                 border-radius: 4px;
-                background: rgba(0, 97, 255, 0.10);
+                background: #F2F3F5;
                 font-size: 12px;
-                color: #0061FF;
+                color: #666666;
                 margin: 2px 2px 2px 0;
                 &:last-child {
                     margin-right: 0;
@@ -2959,6 +2987,7 @@ export default {
     }
     .specific-table {
         margin-bottom: 16px;
+        margin-right: 20px;
         th {
             background-color: #fff;
             height: 60px;
@@ -3118,8 +3147,14 @@ export default {
     align-items: initial;
 }
 .config-list {
+    padding: 24px;
+    height: 60vh;
+    overflow-y: auto;
     .config-item {
         margin-bottom: 16px;
+        &:nth-last-child(2) {
+            margin-bottom: 0;
+        }
         .config-item-title {
             display: flex;
             justify-content: space-between;
@@ -3152,27 +3187,28 @@ export default {
             }
         }
     }
-    .add-config-btn {
-        color: #0061FF;
-        border-radius: 4px;
-        border: 1px dashed #0061FF;
-        padding: 6px 10px;
-        font-size: 14px;
-        width: 100%;
-        text-align: center;
-        cursor: pointer;
-        &:hover {
-            opacity: 0.85;
+    .fix-bottom {
+        padding: 16px 0;
+        position: sticky;
+        bottom: -24px;
+        background-color: #FFF;
+        .add-config-btn {
+            color: #0061FF;
+            border-radius: 4px;
+            border: 1px dashed #0061FF;
+            padding: 6px 10px;
+            font-size: 14px;
+            width: 100%;
+            text-align: center;
+            cursor: pointer;
+            &:hover {
+                opacity: 0.85;
+            }
         }
     }
 }
 .i_delete {
     color: #0061FF;
-}
-.config-modal {
-    .ant-modal-footer {
-        text-align: center;
-    }
 }
 .popover {
   min-width: 344px;
@@ -3261,4 +3297,19 @@ export default {
     margin-top: 4px;
 }
 
+.ant-input-group-wrapper {
+    :deep(.ant-input-group-addon) {
+        border-color: #EAECF2;
+    }
+}
+</style>
+<style lang="less">
+.config-modal {
+    .ant-modal-body {
+        padding: 0;
+    }
+    .ant-modal-footer {
+        text-align: center;
+    }
+}
 </style>
