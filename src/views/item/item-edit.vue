@@ -813,7 +813,7 @@
                                         </a-tooltip>
                                         <span>{{title}}</span>
                                     </template>
-                                    <template
+                                    <!-- <template
                                         v-if="column.dataIndex === 'original_price'"
                                     >
                                         <div class="title-row">
@@ -892,7 +892,7 @@
                                                 }}</a>
                                             </a-popover>
                                         </div>
-                                    </template>
+                                    </template> -->
                                     <template
                                         v-if="column.dataIndex === 'fob_eur'"
                                     >
@@ -1135,7 +1135,7 @@
                                             @change="inputValidateConfig"
                                         />
                                     </template>
-                                    <div
+                                    <!-- <div
                                         class="input-number-unit"
                                         v-if="
                                             column.dataIndex ===
@@ -1179,7 +1179,7 @@
                                                 >{{ val }}</a-select-option
                                             >
                                         </a-select>
-                                    </div>
+                                    </div> -->
                                     <template
                                         v-if="column.dataIndex === 'fob_eur'"
                                     >
@@ -1293,7 +1293,7 @@
                 <div class="title">{{ $t("i.price_information") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item">
+                <!-- <div class="form-item" v-if="false">
                     <div class="key">{{ $t("i.cost_price") }}</div>
                     <div class="value input-number-unit">
                         <a-input-number
@@ -1312,7 +1312,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-item required">
                     <div
                         class="key"
@@ -1500,8 +1500,8 @@ export default {
                 flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
-                original_price_currency: "CNY", // 默认
-                original_price: undefined,
+                // original_price_currency: "CNY", // 默认
+                // original_price: undefined,
                 config: "",
                 // man_hour: '',
                 sales_area_ids: [],
@@ -1540,8 +1540,8 @@ export default {
                 priceVisible: false,
                 price: "",
 
-                originalVisible: false,
-                original_price: "",
+                // originalVisible: false,
+                // original_price: "",
 
                 fobEurVisible: false,
                 fob_eur: "",
@@ -1635,12 +1635,12 @@ export default {
                     key: "input",
                     dataIndex: "name_en",
                 },
-                {
+                /* {
                     title: this.$t("i.cost_price"),
                     key: "money",
                     dataIndex: "original_price",
                     width: 160,
-                },
+                }, */
                 {
                     title: "FOB(EUR)",
                     key: "money",
@@ -1844,9 +1844,9 @@ export default {
             this.form.category_ids = this.detail.category_list
                 ? this.detail.category_list.map((i) => i.category_id)
                 : [];
-            this.form.original_price = Core.Util.countFilter(
+            /* this.form.original_price = Core.Util.countFilter(
                 res.original_price
-            );
+            ); */
             this.form.sales_area_ids = this.detail.sales_area_list
                 ? this.detail.sales_area_list.map((i) => i.id)
                 : [];
@@ -1962,10 +1962,10 @@ export default {
                         price: Core.Util.countFilter(item.price),
                         fob_eur: Core.Util.countFilter(item.fob_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
-                        original_price_currency: item.original_price_currency,
-                        original_price: Core.Util.countFilter(
+                        // original_price_currency: item.original_price_currency,
+                        /* original_price: Core.Util.countFilter(
                             item.original_price
-                        ),
+                        ), */
                         target_id: item.id,
                         attr_list: item.attr_list,
                         imgsList: item.imgsList,
@@ -2106,7 +2106,8 @@ export default {
                 form.price = Math.round(form.price * 100);
                 form.fob_eur = Math.round(form.fob_eur * 100);
                 form.fob_usd = Math.round(form.fob_usd * 100);
-                form.original_price = Math.round(form.original_price * 100);
+                // 隐藏成本价格
+                // form.original_price = Math.round(form.original_price * 100);
             } else {
                 // 多规格
                 apiName = "batchSave";
@@ -2120,8 +2121,9 @@ export default {
                         price: Math.round(data.price * 100),
                         fob_eur: Math.round(data.fob_eur * 100),
                         fob_usd: Math.round(data.fob_usd * 100),
-                        original_price: Math.round(data.original_price * 100),
-                        original_price_currency: data.original_price_currency,
+                        // 隐藏成本价格
+                        /* original_price: Math.round(data.original_price * 100),
+                        original_price_currency: data.original_price_currency, */
                         attr_params: attrDef.map((attr, index) => {
                             let id = "";
                             if (data.attr_list && data.attr_list.length) {
@@ -2491,8 +2493,8 @@ export default {
                         price: "",
                         fob_eur: "",
                         fob_usd: "",
-                        original_price: "",
-                        original_price_currency: this.form.original_price_currency,
+                        /* original_price: "",
+                        original_price_currency: this.form.original_price_currency, */
                         imgsList: []
                     }
                 ];
@@ -2768,8 +2770,8 @@ export default {
                 price: "",
                 fob_eur: "",
                 fob_usd: "",
-                original_price: "",
-                original_price_currency: this.form.original_price_currency,
+                /* original_price: "",
+                original_price_currency: this.form.original_price_currency, */
                 imgsList: [],
             });
         },
@@ -2779,8 +2781,8 @@ export default {
             this.batchSet = {
                 priceVisible: false,
                 price: "",
-                originalVisible: false,
-                original_price: "",
+                /* originalVisible: false,
+                original_price: "", */
                 fobEurVisible: false,
                 fob_eur: "",
                 fobUsdVisible: false,
