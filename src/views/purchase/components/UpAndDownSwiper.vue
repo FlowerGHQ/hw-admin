@@ -74,14 +74,14 @@ export default {
   computed: {
     imgsArr() {
       let activeObj = {}
-      activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
-      console.log("imgsArr:", activeObj?.logo?.split(","));
+      // activeObj = this.type === 1 ? this.imgs : this.imgs.find((item) => item.id === this.item_id);
+      activeObj =  this.type === 1 ? this.imgs : this.imgs[0];
       return activeObj?.logo?.split(",") || [];
     },
   },
   methods: {
     getImgUrl() {
-      console.log("getImgUrl:", this.imgsArr[this.imgIndex]);
+      console.log("getImgUrl:", this.imgsArr);
       return this.$Util.imageFilter(this.imgsArr[this.imgIndex]);
     },
     imgPreview(type) {

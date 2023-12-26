@@ -43,7 +43,7 @@
         @click="hanldeAddToShopCart(detail.id)"
         >{{ $t("i.cart") }}</a-button
       >
-      <div class="price-list">
+      <!-- <div class="price-list">
         <div class="retail-price">
           <span
             class="price-right"
@@ -54,7 +54,7 @@
             >${{ $Util.countFilter(detail[priceKey + "usd"]) }}</span
           >
         </div>
-      </div>
+      </div> -->
       <div
         class="stars"
         @click="hanldeAddToFavorite"
@@ -272,7 +272,8 @@ export default {
         ...params,
       })
         .then((res) => {
-          this.specList = res.list;
+          this.specList = res.list.filter((i) => i.flag_default !== 1);
+          console.log("specList", this.specList);
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
             item_id: res.list[this.mountingIndex].id,
