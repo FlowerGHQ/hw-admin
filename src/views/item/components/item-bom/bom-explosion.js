@@ -15,7 +15,8 @@ const moveParams = ref({
     isMove: false, // 是否可以移动了
     moveIndex: undefined, // 移动第几个索引
     moveType: undefined, // 移动是移动哪个类型
-    itemStartIndex: undefined,
+    itemIndex: undefined,
+    childNodeIndex: undefined,  // 子节点的index
 });
 const pointerList = ref([
     // {
@@ -46,22 +47,8 @@ const pointerList = ref([
     // }
 ]); // 点位列表
 
-const pointerListFilter = (arr) => {
-    console.log("pointerListFilter-arr", arr);
-    const result = arr.map((el) => {
-        const obj = {
-            ...el,
-            end: !el.end_point ? "" : JSON.parse(el.end_point),
-        }
-
-        obj.start = Array.isArray(JSON.parse(el?.start_point || "")) ? JSON.parse(el.start_point) : []
-        
-        return obj
-    });
-    return result;
-};
 // 初始化
-const init = (arr, explosionImgItem) => {
+const init = (arr, urlImg) => {
     ctx = exploreCanvas.value.getContext("2d");
 
     const isImg = document.querySelector('#cavnasImg')
@@ -74,7 +61,7 @@ const init = (arr, explosionImgItem) => {
     }
 
     const img = document.createElement('img')
-    img.src = explosionImgItem.img
+    img.src = urlImg
     img.setAttribute('id', 'cavnasImg')
     img.setAttribute('width', '544px')
     img.setAttribute('height', '377px')
@@ -94,18 +81,23 @@ const init = (arr, explosionImgItem) => {
 const mousemoveHandler = (e) => {
     if (!moveParams.value.isMove) return;
 
-    if (moveParams.value.moveType === "start") {
-        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemStartIndex].x =
+    if (moveParams.value.moveType === "start_point") {
+        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemIndex].x =
             e.offsetX;
-        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemStartIndex].y =
+        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemIndex].y =
             e.offsetY;
-        console.log("结果 start", pointerList.value);
-    } else if (moveParams.value.moveType === "end") {
-        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType].x = e.offsetX;
-        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType].y = e.offsetY;
-        console.log("结果 end", pointerList.value);
+        console.log("结果 start_point", pointerList.value);
+    } else if (moveParams.value.moveType === "end_point") {
+        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemIndex].x = e.offsetX;
+        pointerList.value[moveParams.value.moveIndex][moveParams.value.moveType][moveParams.value.itemIndex].y = e.offsetY;
+        console.log("结果 end_point", pointerList.value);
+    } else if (moveParams.value.moveType === 'child_node') {        
+        // 子节点
+        pointerList.value[moveParams.value.moveIndex]['start_point'][moveParams.value.itemIndex][moveParams.value.moveType][moveParams.value.childNodeIndex].x = e.offsetX;
+        pointerList.value[moveParams.value.moveIndex]['start_point'][moveParams.value.itemIndex][moveParams.value.moveType][moveParams.value.childNodeIndex].y = e.offsetY;
     }
 
+    console.log("mousemoveHandler", pointerList.value);
     window.requestAnimationFrame(() => {
         canvasLine(ctx);
     });
@@ -116,15 +108,16 @@ const mouseUpHandler = () => {
     moveParams.value.isMove = false;
     moveParams.value.moveIndex = undefined;
     moveParams.value.moveType = undefined;
-    moveParams.value.itemStartIndex = undefined;
+    moveParams.value.itemIndex = undefined;
 };
 // points 鼠标按下
-const pointMousedown = (index, type, itemStartIndex) => {
-    console.log("按下", index, type, itemStartIndex);
+const pointMousedown = (index, type, itemIndex, childNodeIndex) => {
+    console.log("按下", index, type, itemIndex);
     moveParams.value.isMove = true;
     moveParams.value.moveIndex = index;
     moveParams.value.moveType = type;
-    moveParams.value.itemStartIndex = itemStartIndex;
+    moveParams.value.itemIndex = itemIndex;
+    moveParams.value.childNodeIndex = childNodeIndex;
     console.log("moveParams", moveParams.value);
 };
 // 设置canvas的大小
@@ -146,25 +139,29 @@ const setCanvasAttr = (width, height) => {
 // 画线
 const canvasLine = (ctx) => {
     clearCanvas(ctx);
-
+    
     ctx.beginPath();
     ctx.lineWidth = 1;
     ctx.strokeStyle = "#1890ff";
+    console.log("canvasLine", pointerList.value);
     pointerList.value.forEach(($1) => {
-        var start = $1.start;
-        var end = $1.end;
+        let start = $1.start_point;
+        let end = $1.end_point;
 
-        if (start.length > 1) {
-            start.forEach(($2) => {
-                ctx.moveTo($2.x, $2.y);
-                ctx.lineTo(end.x, end.y);
-                ctx.stroke();
-            });
-        } else if (start.length === 1) {
-            ctx.moveTo(start[0].x, start[0].y);
-            ctx.lineTo(end.x, end.y);
-            ctx.stroke();
-        }
+        start.forEach(($2, i2) => {
+            ctx.moveTo($2.x, $2.y);
+            ctx.lineTo(end[i2].x, end[i2].y);
+            ctx.stroke();                
+
+            if ($2?.child_node?.length) {                
+                // 有子节点的时候也渲染
+                $2.child_node.forEach((node) => {
+                    ctx.moveTo(node.x, node.y);
+                    ctx.lineTo(end[i2].x, end[i2].y);
+                    ctx.stroke();
+                })
+            }
+        });
     });
 };
 
@@ -173,51 +170,6 @@ const clearCanvas = (ctx) => {
     ctx.clearRect(0, 0, exploreCanvas.value.width, exploreCanvas.value.height);
 };
 
-// 复制silder
-const onSilderCopy = (item, index) => {
-    console.log("item", item, "index", index);
-
-    const obj = item;
-
-    item.start.forEach((el, i) => {
-        // 让新增的一条是上一条的增加数据
-        if ((i + 1) === item.start.length) {
-            obj.start[i + 1] = {
-                x: obj.start[i].x + 20,
-                y: obj.start[i].y + 10,
-            };
-        }
-    });
-    sidebarData.value.push(obj);
-
-    const data = pointerList.value.find((el) => el.index === item.index);
-    data.start = sidebarData.value[sidebarData.value.length - 1].start; // 替换掉start让其为 sidebarData底下 的start
-
-    canvasLine(ctx);
-};
-// 删除silder
-const onSilderDelete = (item, index) => {
-    console.log("item", item, "index", index);
-
-    item.start.splice(index, 1); // 删除sidebarData每个对应的start中的数据操作    
-
-    // console.log("onSilderDelete-sidebarData", sidebarData.value);
-    
-    const silderCategory = sidebarData.value.filter((el) => el.index === item.index); // 找出当前点击的所属类别    
-    const pointerListIndex = pointerList.value.findIndex((el) => el.index === item.index);
-    
-    if (silderCategory.length === 1) {
-        console.log("pointerListIndex", pointerListIndex);
-        pointerList.value.splice(pointerListIndex, 1)
-    }
-    
-    canvasLine(ctx);
-    
-    const sidebarIndex =  sidebarData.value.findIndex(el => el.id === item.id)
-    sidebarData.value.splice(sidebarIndex, 1) // 删除页面的效果
-    
-    console.log("onSilderDelete-pointerList", pointerList.value);
-};
 // 将侧边栏过滤成组的形势
 const sidebarDataGroup = computed(() => {
     // console.log("将侧边栏过滤成组的形势 sidebarData", sidebarData.value); // [ [], [], []]
@@ -241,30 +193,142 @@ const sidebarDataGroup = computed(() => {
     console.log("将侧边栏过滤成组的形势", filteredData); // [ [], [], []]
     return filteredData.length > 0 ? filteredData : [];
 });
+// 复制silder
+const onSilderCopy = (item, index, type) => {
+    console.log("item", item, "index", index);
+    
+    console.log("sidebarData", sidebarData.value);
 
+    console.log("pointerList", pointerList.value);
+
+    switch(type) {
+        case 'node':
+            // 画图数据
+            const pointerDatas = pointerList.value.find((el) => el.index === item.index);            
+            pointerDatas.start_point.push({
+                x: 0,
+                y: 100,
+            })
+            pointerDatas.end_point.push(
+                {
+                    x: 0,
+                    y: 0,
+                }
+            )
+
+            // 侧边栏数据
+            sidebarData.value.push({
+                index: item.index,
+                x: item.x + 10,
+                y: item.y + 10,
+                child_node: []
+            })
+        break;
+        case 'child_node':
+            // 需改的是侧边栏里面的
+            const lg = item['child_node']?.length || 0
+            // 防止数据里面的child_node为空
+            item.child_node = item.child_node?.length ? item.child_node : []
+            item['child_node'].push({
+                x: item['child_node'][lg - 1]?.x + 20 || item.x + 20,
+                y: item['child_node'][lg - 1]?.y + 20 || item.y + 20,
+            })            
+
+            // 数据修改重新画线
+            const pointerDatasChild = pointerList.value.find((el) => el.index === item.index);            
+            pointerDatasChild.start_point[index].child_node = item.child_node
+            break;
+        }
+            
+    canvasLine(ctx);
+};
+// 删除silder
+const onSilderDelete = (item, index, type, childIndex) => {
+    console.log("item", item, "index", index, childIndex);
+
+    console.log("sidebarData", sidebarData.value);
+    console.log("pointerList", pointerList.value);
+
+    switch(type) {
+        case 'node':
+            // 侧边栏删除数据
+            let count = 0
+            sidebarData.value.forEach((el, i) => {
+                if (el.index === item.index) {
+                    count++                    
+                    if (count === (index + 1)) {
+                        // 因为展示的时候和数据的位置不一样，需要判断相同的 item.index 中在哪个位置
+                        sidebarData.value.splice(i, 1)
+                    }
+                }
+            })                 
+                    
+            // 画图数据(删除数据)
+            const pointerDatas = pointerList.value.find((el) => el.index === item.index);
+            pointerDatas.start_point.splice(index, 1)
+            pointerDatas.end_point.splice(index, 1)
+
+            break;
+        case 'child_node':
+            // 侧边栏数据 || 画图数据(联动的)
+            let count_node = 0
+            sidebarData.value.forEach((el, i) => {                
+                if (el.index === item.index) {
+                    count_node++                    
+                    if (count_node === (index + 1)) {
+                        // console.log("k", childIndex, el);
+                        el.child_node.splice(childIndex, 1)
+                    }
+                }
+            })            
+            break;
+    }   
+    canvasLine(ctx);
+};
 // 初始化数据和画线
-const initLine = (arr) => {
-    console.log("初始化数据和画线", arr);    
-    pointerList.value = arr;
+const initLine = (data) => {
+    console.log("初始化数据和画线", data);    
+    pointerList.value = data
+    // [
+    //     {
+    //         index: 4,
+    //         start_point: [ { x: 0, y: 0, child_node: [{ x: 100, y: 10 }] }, { x: 0, y: 300 }],
+    //         end_point: [ { x: 0, y: 100, },{ x: 100, y: 100, },]
+    //     },
+    //     // {
+    //     //     index: 5,
+    //     //     start_point: [ { x: 0, y: 0, child_node: [{ x: 100, y: 10 }] }, { x: 0, y: 300 }],
+    //     //     end_point: [ { x: 0, y: 100, },{ x: 100, y: 100, },]
+    //     // },
+    // ]
     sidebarData.value = []
-       
-    pointerList.value = pointerListFilter(pointerList.value);
+             
     canvasLine(ctx);
 
-    let count = 1
-    pointerList.value.forEach(($1) => {
-        $1.start.forEach(el => {
-            sidebarData.value.push({
-                id: count++, // 标识 用于删除 复制判断
-                index: $1.index,
-                end: $1.end,
-                start: $1.start,
-            });
-        })
-    });
+   
+    // 侧边栏数据
+    sidebarData.value = sidebarDataFilter(pointerList.value)
 
     console.log("sidebarData", sidebarData.value);
 };
+// 过滤silder数据
+const sidebarDataFilter = (arr) => {
+    const result = []
+    let count = 1
+    arr.forEach(($1) => {        
+        $1.start_point.forEach(($2) => {                     
+            result.push({
+                id: count++, // 标识 点击侧边栏
+                index: $1.index,
+                x: $2.x,
+                y: $2.y,
+                child_node: $2.child_node?.length ? $2.child_node : []
+            });       
+        })        
+    });
+
+    return result
+}
 
 export {
     pointerList,
@@ -279,3 +343,11 @@ export {
     initLine,
     sidebarDataGroup,
 };
+
+// 最后的结构
+// [
+//     {
+//         start_point: [ { x: 0, y: 0, child_node: [] }],
+//         end_point: [ { x: 0, y: 0 }]
+//     }
+// ]

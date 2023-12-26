@@ -57,6 +57,10 @@ export default {
         description_empty:'暂无数据',
         download_template:'模板下载',
         bulk_import:'批量导入',
+        branch_point: "分支点位",
+        copy_point_location: "复制点位",
+        deelete_points: "删除点位",
+        copy_Branch: "复制分支",
         // 导入分类数据
         import_category_data:'导入分类数据',
         // 分类
@@ -130,6 +134,10 @@ export default {
         description_empty:'No Data',
         download_template:'Template Download',
         bulk_import:'Bulk Import',
+        branch_point: "Branch Position",
+        copy_point_location: "Copy Point Location",
+        deelete_points: "Delete Points",
+        copy_Branch: "Copy Branch",
         import_category_data:'Import Category Data',
         category:'Category',
         parsing_success_number:'Parsing Success Number',
