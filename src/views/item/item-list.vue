@@ -877,9 +877,8 @@ export default {
       }
     }
 
-    
     :deep(.ant-table-row-level-1) {
-      background-color: #F9FBFF;
+      background-color: #FAFAFA;
       
       .ant-table-selection-column {
         text-align: right;
@@ -896,6 +895,10 @@ export default {
       .ant-table-cell-with-append  {
         padding-left: 66px;
       }
+    }
+
+    :deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
+      background-color: #F9FBFF;
     }
   }
 }
