@@ -54,33 +54,76 @@
                                     v-for="(item, itemIndex) in sidebarDataGroup" 
                                     :key="itemIndex"
                                     class="sidebar"
-                                    :class="{ 'silder-bottom-10': (i + 1) !== item.length }"
                                     >
-                                    <div 
+                                    <template 
                                         v-for="(ground, i) in item" 
                                         :key="i" 
-                                        class="sidebar-item"
-                                        :class="{ 'silder-bottom-border': (i + 1) !== ground.length }"
                                     >
-                                        <div class="silder-index-left">                                            
-                                            <div class="silder-index-text">
-                                                {{ $t('item-bom.point') }}
-                                                {{ ground.index }}
-                                            </div>                                    
-                                        </div>
-                                    
-                                        <div 
-                                            class="silder-operate"
-                                            :style="{ visibility: i === 0 ? 'visible' : 'hidden' }"    
+                                        <!-- 父节点 -->
+                                        <div
+                                            class="sidebar-item"
+                                            :class="{ 'sidebar-item-change' : siderBarItemId === ground.id }"
+                                            @click="onSidebarItem('parent-node',ground)"
                                         >
-                                            <div class="silder-copy" @click="onSilderCopy(ground, i)">
-                                                <MySvgIcon icon-class="copy" class="f-s-16"/>
+                                            <div class="silder-index-left">
+                                                <div
+                                                    class="silder-index-text"
+                                                    :class="{ 'silder-index-text-change' : siderBarItemId === ground.id }"
+                                                >
+                                                    {{ $t('item-bom.point') }}
+                                                    {{ ground.index }}
+                                                </div>
                                             </div>
-                                            <div class="silder-delete" @click="onSilderDelete(ground, i)">
-                                                <MySvgIcon icon-class="delete" class="f-s-16"/>
-                                            </div>                
+                                        
+                                            <div 
+                                                class="silder-operate"
+                                            >
+                                                <div class="silder-copy" @click="onSilderCopy(ground, i, 'node')">
+                                                    <a-tooltip>
+                                                        <template #title> {{ $t('item-bom.copy_point_location') }}</template>                                                        
+                                                        <MySvgIcon icon-class="copy" class="f-s-16"/>
+                                                    </a-tooltip>
+                                                </div>
+                                                <div class="silder-delete" @click="onSilderDelete(ground, i, 'node')">
+                                                    <a-tooltip>
+                                                        <template #title> {{ $t('item-bom.deelete_points') }}</template>
+                                                        <MySvgIcon icon-class="delete" class="f-s-16"/>
+                                                    </a-tooltip>
+                                                </div>
+                                                <div class="silder-node" @click="onSilderCopy(ground, i, 'child_node')">
+                                                    <a-tooltip>
+                                                        <template #title> {{ $t('item-bom.copy_Branch') }}</template>                                                        
+                                                        <img class="node-img" src="../../../../assets/images/bom/childe-node.png" alt="">
+                                                    </a-tooltip>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                        <!-- 子节点 -->
+                                        <div class="child-node">
+                                            <div 
+                                                class="vertical-line" 
+                                                :style="{ 
+                                                    height: ground.child_node?.length <= 1 ? 21 * (ground.child_node?.length) + 'px' : 46 * (ground.child_node?.length - 1) + 21 + 'px' /*计算高度 数据height是42*/ }"
+                                            >
+                                            </div>
+                                            <template v-for="(item, childIndex) in ground.child_node" :key="childIndex">                                                
+                                                <div class="child-node-item">
+                                                    <div class="line-item">
+                                                        <div class="line"></div>
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="child-node-text">
+                                                        <span>
+                                                            {{ $t('item-bom.branch_point') }}{{ childIndex + 1 }}
+                                                        </span>
+                                                        <div class="child-delete" @click="onSilderDelete(ground, i, 'child_node', childIndex)">
+                                                            <MySvgIcon icon-class="delete" class="f-s-16"/>
+                                                        </div>
+                                                    </div>
+                                                </div>                                           
+                                            </template>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
 						</div>
@@ -90,26 +133,38 @@
                             <!-- init中有创建了一个img在这 -->
 							<canvas class="explore-canvas" id="exploreCanvas" ref="exploreCanvas"></canvas>
 
-							<template v-for="(item, itemIndex) in pointerList">            
-								<div      
-									v-for="(itemStart, itemStartIndex) in item.start" :key="index"     
-									class="pointer-start" 
-									:style="{'left': `${itemStart?.x}px`, 'top': `${itemStart?.y }px`}"
-									@mousedown="pointMousedown(itemIndex, 'start', itemStartIndex)"
-									@mousemove.stop=""
-								>
-								</div>
+							<template v-for="(item, itemIndex) in pointerList">
+                                <template v-for="(itemStart, itemStartIndex) in item.start_point" :key="itemStartIndex">
+                                    <div      									     
+                                        class="pointer-start" 
+                                        :style="{'left': `${itemStart?.x}px`, 'top': `${itemStart?.y }px`}"
+                                        @mousedown="pointMousedown(itemIndex, 'start_point', itemStartIndex)"
+                                        @mousemove.stop=""
+                                    >
+                                    </div>
+                                    <!-- 子节点 -->
+                                    <template v-if="itemStart.child_node?.length">                                    
+                                        <div
+                                            v-for="(child_node, childNodeIndex) in itemStart.child_node" :key="childNodeIndex"                                
+                                            class="pointer-start" 
+                                            :style="{'left': `${child_node?.x}px`, 'top': `${child_node?.y }px`}"
+                                            @mousedown="pointMousedown(itemIndex, 'child_node', itemStartIndex, childNodeIndex)"
+                                            @mousemove.stop=""
+                                            >
+                                        </div>                                    
+                                    </template>
+                                </template>         
 							</template>
 							<template v-for="(item, itemIndex) in pointerList" :key="itemIndex">            
-								<div    
-									v-if="item?.end"
+								<div  
+                                    v-for="(itemEnd, itemEndIndex) in item.end_point" :key="itemEndIndex"  									
 									class="pointer-end"
-									:style="{'left': `${item?.end?.x}px`, 'top': `${item?.end?.y }px`}"
-									@mousedown="pointMousedown(itemIndex, 'end')"
+									:style="{'left': `${itemEnd?.x}px`, 'top': `${itemEnd?.y }px`}"
+									@mousedown="pointMousedown(itemIndex, 'end_point', itemEndIndex)"
 									@mousemove.stop=""
                                     @mouseenter.stop="onPointerEnd(item, 'enter')"
                                     @mouseleave.stop="onPointerEnd(item, 'leave')"
-								>
+                                    >
 									{{item.index || 0}}
                                     <div class="component" @mousedown.stop="">
                                         <div class="component-contain">
@@ -446,6 +501,8 @@ const channelPagination = ref({
     showTotal: (total) => `${proxy.$t("n.all_total")} ${total} ${proxy.$t("in.total")}`,
 });
 const isSearch = ref(false)
+const childNodeItemHeight = ref(0)  // 子节点的高度
+
 watch(
     () => props.activeObj,
 	(newVal) => {
@@ -475,7 +532,7 @@ watch(
 	}
 )
 onMounted(() => {    
-    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true)    
+    getExplosionImgFetch({ target_id: props.activeObj.category_id }, true)
 });
 
 onUnmounted(() => {
@@ -509,12 +566,6 @@ const getTableDataFetch = (parmas = {}) => {
                     if (Number($1.target_id) === Number($2.id)) {
                         $2.index = $1.index
                         $1['sync_name'] = $2.sync_name
-
-                        // 给pointerList回显数据
-                        const item = pointerList.value.find(el => el.target_id === $1.target_id)
-                        if (item) {
-                            item.sync_name = $2.sync_name
-                        }
                     }
                 })
             });
@@ -576,14 +627,21 @@ const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始
     }
     Core.Api.ITEM_BOM.getExplosionImg(obj)
         .then((res) => {
-            if (res.list.list[0]?.img) {
+            const first_data = res.list.list[0]
+            // 过滤数据
+            first_data.item_component_list.forEach(el => {
+                el.start_point = !el.start_point ? "" : JSON.parse(el.start_point)
+                el.end_point = !el.end_point ? "" : JSON.parse(el.end_point)
+            })
+
+            if (first_data?.img) {
                 console.log("获取爆炸图信息", res);
-                addTagItem.value.item_component_set_list = [res.list.list[0]] // 回显
+                addTagItem.value.item_component_set_list = [first_data] // 回显
                 isExplosionImg.value = true
-                explosionImgItem.value = res.list.list[0]
-                
+                explosionImgItem.value = first_data
+                                
                 nextTick(() => {
-                    init(res.list.list[0]?.item_component_list, explosionImgItem.value)
+                    init(first_data?.item_component_list, first_data.img)
                 })
             } else {
                 isExplosionImg.value = false
@@ -642,16 +700,18 @@ const onOperation = (type, record) => {
             const datas = addTagItem.value.item_component_set_list[0]
 
 
-            const copyPointerList = Core.Util.deepCopy(pointerList.value)
+            const copyPointerList = Core.Util.deepCopy(pointerList.value).filter(el => {
+                // 过滤有点位数据
+                return el.start_point?.length && el.end_point?.length
+            })
 
             copyPointerList.forEach(item => {
-                item.end_point = JSON.stringify(item.end)
-                item.start_point = JSON.stringify(item.start)
                 // 删除字段
                 Reflect.deleteProperty(item, 'sync_name');
-                Reflect.deleteProperty(item, 'end');
-                Reflect.deleteProperty(item, 'start');
-            })
+                
+                item.end_point = JSON.stringify(item.end_point)
+                item.start_point = JSON.stringify(item.start_point)
+            })            
 
             datas.item_component_list = copyPointerList
 
@@ -665,43 +725,42 @@ const onOperation = (type, record) => {
         case 'blur':
             console.log("失去焦点", record);
             console.log("addPointItem", addTagItem.value);
-            console.log("爆炸图数据", explosionImgItem.value);
-            
-            addTagItem.value.item_component_set_list = [{
-                ...explosionImgItem.value,
-            }]
+            console.log("pointerList", pointerList.value);
 
-            const data = addTagItem.value.item_component_set_list[0]?.item_component_list
+            const pointData = addTagItem.value.item_component_set_list[0]?.item_component_list  // 这个是点位Array
 
 
             // 先把数据和pointerList.value对比过滤一下，防止pointerList.value 已经移动点了没更新
-            data.forEach(el => {
-                const findItem = pointerList.value.find((item) => item.target_id === el.target_id)
-                if (findItem) {                    
-                    el.end_point = JSON.stringify(findItem.end)
-                    el.start_point = JSON.stringify(findItem.start)                 
-                }
-            })
+            // pointData.forEach(el => {
+            //     const findItem = pointerList.value.find((item) => item.target_id === el.target_id)
+            //     if (findItem) {                    
+            //         el.end_point = findItem.end_point
+            //         el.start_point = findItem.start_point
+            //     }
+            // })
             
             
             // 找到添加是否是对应的数据不是push是删除了在push
-            const findIndex = data.findIndex(el => el.target_id == record.id)            
+            const findIndex = pointData.findIndex(el => el.target_id == record.id)
                                     
             let addPointItem = {
                 sync_name: record.sync_name,
                 index: record.index,
                 set_id: explosionImgItem.value.id, // 爆炸图id
                 target_id: record.id, // 配件id
-                start_point: JSON.stringify([{ x: 0, y: 100 }]),
-                end_point: JSON.stringify({ x: 0, y: 0 }),
+                start_point: [{ x: 0, y: 100 }],
+                end_point: [{ x: 0, y: 0 }],
             }
 
+            // 判断之前有替换 | 添加
             if (findIndex !== -1) {
-                data.splice(findIndex, 1, addPointItem)
+                pointData.splice(findIndex, 1, addPointItem)
             } else {
-                data.push(addPointItem)
+                pointData.push(addPointItem)
             }
-            pointerList.value = data
+
+            console.log("pointData", pointData);
+            pointerList.value = pointData
             initLine(pointerList.value)
         break;
     }
@@ -731,6 +790,18 @@ const onPointerEnd = (item, type) => {
             break;
             case 'leave':
             pointEndTargetId.value = null
+        break;
+    }
+}
+// 点击父节点事件
+
+const siderBarItemId = ref(null)
+const onSidebarItem = (type, ground) => {
+    switch(type) {
+        case 'parent-node':
+            // siderBarItemId.value = ground.id
+        break;
+        case 'child-node':
         break;
     }
 }
@@ -785,7 +856,7 @@ const onPointerEnd = (item, type) => {
 				.content-left {
                     white-space: nowrap;
 					.left-list {
-                        width: 160px;
+                        width: 206px;
 						border: 1px solid #EEE;
 						border-radius: 4px;
 						.left-list-header {
@@ -811,25 +882,18 @@ const onPointerEnd = (item, type) => {
                             box-sizing: border-box;
                             .sidebar {
                                 width: 100%;
-                                margin-top: 10px;
-                                padding: 0 10px;
-                                box-sizing: border-box;
-                                border-radius: 4px;
-                                background-color: #F8F8F8;    
-                                
-                                &.silder-bottom-10 {
-                                    margin-bottom: 10px;
-                                }
+                                margin: 10px 0;
+                                                                             
                                 .sidebar-item {
-                                    padding: 10px 0;
+                                    margin-top: 10px;
+                                    padding: 10px;
                                     box-sizing: border-box;
                                     display: flex;
                                     align-items: center;
                                     justify-content: space-between;
-                                    
-                                    &.silder-bottom-border {
-                                        border-bottom: 1px solid #E2E2E2;                
-                                    }
+                                    border-radius: 4px;
+                                    background-color: #F8F8F8; 
+                                    cursor: pointer;                                   
     
                                     .silder-index-left {
                                         display: flex;
@@ -845,28 +909,92 @@ const onPointerEnd = (item, type) => {
                                             color: #666;                                    
                                             font-size: 12px;
                                             font-weight: 500;
+                                            
         
                                         }
                                         .silder-index-text {                                            
                                             color: #1D2129;
                                             font-size: 14px;
                                             font-weight: 400;
+
+                                            &.silder-index-text-change {
+                                                color: #0061FF;
+                                            }
                                         }
                                     }
-                                    .silder-operate {
-                                        visibility: hidden;
+                                    .silder-operate {                                        
                                         display: flex;
                                         .silder-copy {
                                             margin-right: 10px;
                                         }
                                         .silder-delete {
-                            
+                                            margin-right: 10px;
+                                        }
+                                        .silder-node {
+                                            display: flex;
+                                            align-items: center;
+                                            .node-img {
+                                                width: 16px;
+                                                height: 16px;
+                                            }
                                         }
 
                                     }
-                                    &:hover .silder-operate {
-                                        visibility: visible !important;
+                                    
+                                    &.sidebar-item-change {
+                                        background: rgba(0, 97, 255, 0.10);
                                     }
+                                }
+
+                                .child-node {
+                                    position: relative;                                    
+                                    .child-node-item {
+                                        display: flex;
+                                        margin: 4px 0;
+                                        .line-item {
+                                            align-self: center;
+                                            display: flex;
+                                            align-items: center;
+                                            .line {
+                                                width: 8px;
+                                                height: 1.5px;
+                                                background-color: #DADADA;
+                                            }
+                                            .circle {                                                
+                                                width: 5px;
+                                                height: 5px;
+                                                border-radius: 50%;
+                                                background-color: #DADADA;
+                                            }
+                                        }
+                                        .child-node-text {
+                                            width: 100%;
+                                            height: 42px;
+                                            line-height: 42px;
+                                            padding: 0px 10px;
+                                            box-sizing: border-box;                                            
+                                            margin-left: 4px;
+                                            border-radius: 4px;
+                                            background-color: #F8F8F8;
+                                            display: flex;
+                                            justify-content: space-between;
+
+                                            .child-delete {
+                                                width: 16px;
+                                                height: 16px;
+                                                visibility: hidden;
+                                            }
+                                            &:hover .child-delete{
+                                                visibility: visible;
+                                            }
+                                        }                               
+                                    }
+                                    .vertical-line {
+                                        display: inline-block;
+                                        position: absolute;
+                                        left: 0;                                        
+                                        border-left: 1.5px solid #DADADA;
+                                    }                            
                                 }
                             }
                         }
