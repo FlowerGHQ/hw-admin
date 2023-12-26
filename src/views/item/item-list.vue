@@ -887,6 +887,15 @@ export default {
         margin-top: 5px;
       }
     }
+
+    
+    :deep(.ant-table-row-level-1) {
+
+      .ant-table-cell-with-append {
+        padding-left: 100px;
+      }
+    }
   }
 }
+
 </style>
