@@ -16,7 +16,7 @@
                     }">
                     <div class="title-area">
                         {{ $t("item-bom.bom_list") }}
-                        <div                                                                         
+                        <div
                             class="icon-collapse"
                             @click="isCollapse = !isCollapse">
                             <MySvgIcon
@@ -43,32 +43,6 @@
                             :options="searchOptions"
                             @search="handleSearch"
                             @reset="handleReset">
-                            <template #pre_btn>
-                                <div
-                                    class="more-btn"
-                                    v-if="activeObj.level === 2">
-                                    <div class="download-template">
-                                        <!-- 模板下载 -->
-                                        <a-button
-                                            type="link"
-                                            @click="showClassModal('download')"
-                                            :disabled="disabled">
-                                            {{
-                                                $t("item-bom.download_template")
-                                            }}
-                                        </a-button>
-                                    </div>
-                                    <div class="bulk-import">
-                                        <!-- 批量导入 -->
-                                        <a-button
-                                            type="primary"
-                                            @click="showClassModal('import')"
-                                            :disabled="disabled">
-                                            {{ $t("item-bom.bulk_import") }}
-                                        </a-button>
-                                    </div>
-                                </div>
-                            </template>
                         </SearchAll>
                     </div>
                     <component

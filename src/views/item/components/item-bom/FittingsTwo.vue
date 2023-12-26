@@ -42,7 +42,15 @@
         <!-- 配件列表 -->
         <div class="fittings-list">
             <div class="title">
-                {{ $t('item-bom.accessories_list') }}
+               <span> {{ $t('item-bom.accessories_list') }}</span>
+               <div class="btn">
+                    <a-button class="download-template">
+                        {{ $t('item-bom.download_template') }}
+                    </a-button>
+                    <a-button class="bulk-import">
+                        {{ $t('item-bom.bulk_import') }}
+                    </a-button>
+               </div>
             </div>
             <a-table
                 :row-key="(record) => record.id"
@@ -436,9 +444,17 @@ defineExpose({
 
         .title {
             margin:24px auto 10px;
-            color:  #1D2129;
             font-size: 16px;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .btn {
+                display: flex;
+                .download-template {
+                    margin-right: 10px;
+                }
+            }
         }
     }
     .my-table {
