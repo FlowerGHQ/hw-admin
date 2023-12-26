@@ -9,11 +9,14 @@
                       <a-button @click="handleMaterialFormwork" v-if="activeKey===Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" type="link" >下载模板</a-button>
                     
                       <a-upload name="file" class="file-uploader"
-                              :file-list="upload.fileList" :action="upload.action"
+                              :file-list="upload.fileList" 
+                              :action="upload.action"
                               :show-upload-list='false'
-                              :headers="upload.headers" :data='upload.data'
+                              :headers="upload.headers" 
+                              :data='upload.data'
                               accept=".xlsx,.xls"
-                              @change="handleMatterChange">
+                              @change="handleMatterChange"
+                        >
                        <a-button class="but-right" v-if="activeKey===Core.Const.GOODITEMORDER.Order_Status_Map['2'].value" >批量发货</a-button>
                     </a-upload>
                 </div>
@@ -109,7 +112,7 @@ const handleMaterialFormwork = () => { // 下载模板
             let exportUrl = Core.Api.Export.downloadItem()
             console.log("handleMaterialFormwork 6666 exportUrl", exportUrl)
             window.open(exportUrl, '_blank')
-        }
+}
 
         
 // 上传文件(批量导入)

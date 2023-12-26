@@ -44,10 +44,10 @@
             <div class="title">
                <span> {{ $t('item-bom.accessories_list') }}</span>
                <div class="btn">
-                    <a-button class="download-template">
+                    <a-button class="download-template" @click="downUploadTemplate" >
                         {{ $t('item-bom.download_template') }}
                     </a-button>
-                    <a-button class="bulk-import">
+                    <a-button class="bulk-import" @click="importTemplate" >
                         {{ $t('item-bom.bulk_import') }}
                     </a-button>
                </div>
@@ -125,7 +125,10 @@
                 </template>
             </a-table>
         </div>
-        <ExportModal />
+        <ExportModal 
+            v-model:visibility = "exportVisibility"
+            @setCancleShow = "exportVisibility = false"
+            />
     </div>
 </template>
 
@@ -139,7 +142,8 @@ const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const flagNew = ref()
-
+// 解析导入 --  二次弹窗
+const exportVisibility = ref(false);
 
 const props = defineProps({  
     // v-model 绑定值  
@@ -268,6 +272,18 @@ const objCount = reactive({
 onMounted(() => {
 })
 
+// 下载模板
+const downUploadTemplate = () => {
+    
+    let exportUrl = Core.Api.Export.downloadTemplate()
+    window.open(exportUrl, '_blank')
+}
+
+// 导入模板
+const importTemplate = () => {
+    exportVisibility.value = true;
+
+}
 // 获取设变列表
 const getChangeList = () => {
     Core.Api.ITEM_BOM.changeBomList({
