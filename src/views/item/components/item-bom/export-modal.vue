@@ -1,7 +1,7 @@
 <template>
     <div ref="wrap">
         <a-modal
-            v-model:visible="visible"
+            v-model:visible="visibility"
             :title="$t('item-bom.import_category_data')"
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
@@ -9,7 +9,7 @@
             centered
             :closable="false"
             class="export-modal"
-            @cancel="visible = false"
+            @cancel="handCancle"
             :getContainer="() => wrap">
             <div class="main">
                 <span class="title">{{$t('item-bom.change_version_number')}}：0002</span>
@@ -47,8 +47,22 @@
 import { ref ,computed} from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
-const visible = ref(true);
+// const visible = ref(false);
 const wrap = ref(null);
+
+
+const emits = defineEmits(['update:visibility','refresh']) 
+const props = defineProps({  
+    tableList: {
+        type: Array,
+        default: () => []
+    },
+    visibility:{
+        type: Boolean,
+        default: false        
+    },
+    
+})
 const tableColumns = computed(()=>{
 	const result = [
         { 
@@ -105,6 +119,11 @@ const tableData = ref([
 		parsing_failure_number:0
 	}
 ])
+
+const handCancle = () => {
+	
+    emits("update:visibility", false);
+}
 
 </script>
 

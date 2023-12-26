@@ -190,7 +190,6 @@ const showClassModal = (data) => {
     classifyModalShow.value = true;
 };
 const handleResize = () => {
-    console.log("999999999", window.innerWidth);
     screenWidth.value =
         window.innerWidth ||
         document.documentElement.clientWidth ||
