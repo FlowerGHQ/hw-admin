@@ -140,11 +140,11 @@
                     >
                         {{ specific.mode === 1 ? $t("i.sku_code") : $t("i.code") }}
                     </div>
+                     <!-- :disabled="$route.query?.edit" -->
                     <div class="value">
                         <a-input
                             v-model:value="form.code"
                             :placeholder="$t('def.input')"
-                            :disabled="$route.query?.edit"
                         />
                     </div>
                 </div>
