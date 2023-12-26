@@ -1066,8 +1066,8 @@
                                                 <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>{{ $t('n.upload_pic') }}</a-button>
                                             </a-upload>
                                             <div class="imgList-box" v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
-                                                <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" alt="">
-                                                <img class="close-pic" @click="record.imgsList = []" src="../../assets/images/upload/close_table.png" alt="">
+                                                <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" v-if="record.imgsList?.[0]?.url" alt="">
+                                                <img class="close-pic" @click="record.imgsList = []"  v-if="record.imgsList?.[0]?.url" src="../../assets/images/upload/close_table.png" alt="">
                                             </div>
                                             
                                         </div>
