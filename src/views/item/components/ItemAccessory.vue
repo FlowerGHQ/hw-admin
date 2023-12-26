@@ -142,6 +142,15 @@ export default {
             return true
         },
     },
+    watch: {
+        item_id: {
+            handler(val) {
+                this.getTableData();
+            },
+            immediate: true,
+            deep: true
+        }
+    },
     mounted() {
         this.getTableData();
     },
@@ -227,7 +236,7 @@ export default {
             console.log('handleSelectItem ids, items:', ids, items)            
             // 多选操作
             let params = {
-                item_id: this.detail.id,
+                item_id: this.item_id,
                 target_list: [],
             }
             

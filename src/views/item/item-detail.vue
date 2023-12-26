@@ -5,12 +5,12 @@
             <div class="title-container">
                 <div class="title-area">{{ $t('i.detail') }}</div>
                 <div class="btns-area">
-                    <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
+                    <!-- <a-button :type="detail.status === 0 ? 'danger' : 'primary'" ghost @click="handleStatusChange()">
                         <template v-if="detail.status === -1"><i class="icon i_putaway" />{{ $t('i.active_a') }}
                         </template>
                         <template v-if="detail.status === 0"><i class="icon i_downaway" />{{ $t('i.inactive_a') }}
                         </template>
-                    </a-button>
+                    </a-button> -->
                 </div>
             </div>
             <ItemHeader :detail='detail' :showSpec='indep_flag ? true : false' />
@@ -65,7 +65,7 @@
                                 </template>
 
                                 <template v-if="column.key === 'operation'">
-                                    <a-button type="link" @click="routerChange('edit-indep', record)"><i
+                                    <a-button type="link" @click="routerChange('edit', record)"><i
                                             class="icon i_edit" />{{ $t('def.edit') }}
                                     </a-button>
                                 </template>
@@ -101,7 +101,7 @@
                         </div>
                         <!-- 展示图 -->
                         <template v-if="tabKey === 0">
-                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList" />
+                            <DisplayImage :coverImageList="coverImageList" :detailImageList="detailImageList" :specImageList="specImageList" />
                         </template>
                         <template v-else-if="tabKey === 1">
                             <AttachmentFile :target_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
@@ -112,7 +112,7 @@
                             <ExplosionImage :detailId="id" :id="currentSpecId" />
                         </template>
                         <template v-else-if="tabKey === 3">
-                            <ItemAccessory :item_id='id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                            <ItemAccessory :item_id='currentSpecId' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                 @submit="getItemDetail" ref="AttachmentFile" />
                         </template>
                     </div>
@@ -169,6 +169,7 @@ export default {
             tabKey: 0,
             coverImageList: [],
             detailImageList: [],
+            specImageList: [],
             currentSpecId: 0,
             nameList: [
                 { key: '1', value: 'aa' },
@@ -199,9 +200,9 @@ export default {
                 { title: this.$t('r.item_name'), key: 'input', dataIndex: 'code', fixed: 'left' },
             )
             column.push(
-                { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
-                { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
-                { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
+                // { title: this.$t('i.cost_price'), key: 'money', dataIndex: 'original_price' },
+                // { title: this.$t('i.custom'), dataIndex: 'flag_independent_info' },
+                // { title: this.$t('i.default_display'), dataIndex: 'flag_default' },
                 { title: this.$t('def.operate'), key: 'operation' },
             )
             return column
@@ -319,7 +320,6 @@ export default {
                     name_en: item.key
                 }))
                 this.specific.list = list
-                console.log('getAttrDef this.specific.list:', list)
                 this.getSpecList();
             })
         },
@@ -360,7 +360,7 @@ export default {
                         flag_default: item.flag_default ? true : false,
                     }
                 })
-                this.specific.data = data
+                this.specific.data = data.filter(item=>!item.flag_default )
                 if (this.specific.data.length) {
                     this.specific.data[0].onClick = true
                     this.currentSpecId = Number(this.specific.data[0].id)
@@ -370,8 +370,27 @@ export default {
                     this.initHeight()
                 })
                 console.log('getSpecList this.specific.data:', data)
+                this.getSpecImg();
             }).catch(err => {
                 console.log('getSpecList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+        // 获取规格图
+        getSpecImg() {
+            this.loading = true;
+            Core.Api.Item.listBySet({
+                set_id: this.detail.set_id,
+                id: this.currentSpecId,
+                flag_default: 0,
+            }).then(res => {
+                console.log('getSpecImg res', res);
+                if(res.list.length) {
+                    this.specImageList = res.list[0].imgs.split(',');
+                }
+            }).catch(err => {
+                console.log('getSpecImg err', err)
             }).finally(() => {
                 this.loading = false;
             });
@@ -446,6 +465,7 @@ export default {
                     onClick: item.id === id
                 };
             });
+            this.getSpecImg();
         },
         handleTabChange(next) {
             if (typeof (next) === 'function') {

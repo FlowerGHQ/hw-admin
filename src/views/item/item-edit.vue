@@ -1,5 +1,5 @@
 <template>
-    <div id="ItemEdit" class="edit-container">
+    <div id="ItemEdit" class="edit-container" ref="bigBox">
         <a-spin
             :spinning="loading"
             class="loading-incontent"
@@ -11,14 +11,35 @@
             </div>
         </div>
         <ItemHeader :detail="detail" v-if="indep_flag" :show-spec="true" />
+        <!-- 规格 -->
+        <div class="form-block">
+            <div class="form-title">
+                <div class="title">{{ $t("i.mode") }}</div>
+            </div>
+            <div class="form-content">
+                <div class="form-item">
+                    <div class="key">{{ $t("i.mode") }}</div>
+                    <div class="value">
+                        <a-radio-group
+                            v-model:value="specific.mode"
+                            @change="handleSpecificModeChange"
+                        >
+                            <a-radio :value="1">{{ $t("i.single") }}</a-radio>
+                            <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
+                        </a-radio-group>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-block">
             <!-- 基本信息 -->
             <div class="form-title">
                 <div class="title">{{ $t("n.information") }}</div>
             </div>
             <div class="form-content">
-                <!-- 名称 -->
-                <div class="form-item required" v-if="this.specific.mode === 1">
+                <!-- 名称  v-if="this.specific.mode === 1"-->
+                <div class="form-item required">
                     <div
                         class="key"
                         :class="form.name === '' && isValidate ? 'error' : ''"
@@ -33,8 +54,8 @@
                         />
                     </div>
                 </div>
-                <!-- 英文名 -->
-                <div class="form-item required" v-if="this.specific.mode === 1">
+                <!-- 英文名 v-if="this.specific.mode === 1" -->
+                <div class="form-item required">
                     <div
                         class="key"
                         :class="
@@ -72,7 +93,7 @@
                     </div>
                 </div>
                 <!-- 实例编码 -->
-                <div class="form-item required" v-if="!indep_flag">
+                <div class="form-item required" v-if="!indep_flag && false">
                     <div class="key">
                         {{ $t('n.flag_entity') }}
                         <a-tooltip :title="$t('item-edit.flag_entity_keyword')">
@@ -89,7 +110,7 @@
                     </div>
                 </div>
                 <!-- 商品品号 -->
-                <div class="form-item required" v-if="!indep_flag">
+                <div class="form-item required" v-if="!indep_flag && false">
                     <div
                         class="key"
                         :class="form.model === '' && isValidate ? 'error' : ''"
@@ -109,22 +130,21 @@
                         />
                     </div>
                 </div>
-                <!-- 商品编码 -->
+                <!-- 商品编码 改为  SKU编码 v-if="specific.mode === 1 || indep_flag"-->
                 <div
                     class="form-item required"
-                    v-if="specific.mode === 1 || indep_flag"
                 >
                     <div
                         class="key"
                         :class="form.code === '' && isValidate ? 'error' : ''"
                     >
-                        {{ $t("i.code") }}
+                        {{ specific.mode === 1 ? $t("i.sku_code") : $t("i.code") }}
                     </div>
+                     <!-- :disabled="$route.query?.edit" -->
                     <div class="value">
                         <a-input
                             v-model:value="form.code"
                             :placeholder="$t('def.input')"
-                            :disabled="$route.query?.edit"
                         />
                     </div>
                 </div>
@@ -174,11 +194,13 @@
                             v-model:value="form.sales_area_ids"
                             mode="multiple"
                             :placeholder="$t('def.select')"
+                            optionFilterProp="label"
                         >
                             <a-select-option
                                 v-for="(val, key) in salesList"
                                 :key="key"
                                 :value="val.id"
+                                :label="$i18n.locale === 'zh' ? val.name : val.name_en"
                                 >{{ $i18n.locale === 'zh' ? val.name : val.name_en }}</a-select-option
                             >
                         </a-select>
@@ -199,7 +221,7 @@
                     </div>
                 </div> -->
                     <!-- 图面代号 -->
-                    <div class="form-item required">
+                    <div class="form-item required" v-if="false">
                         <div
                             class="key"
                             :class="
@@ -332,7 +354,7 @@
                 <div class="title">{{ $t("i.image") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item img-upload">
+                <div class="form-item required img-upload">
                     <div class="key">{{ $t("i.cover") }}</div>
                     <div class="value">
                         <a-upload
@@ -364,7 +386,7 @@
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
-                <div class="form-item img-upload">
+                <div class="form-item required img-upload">
                     <div class="key">{{ $t("i.picture") }}</div>
                     <div class="value">
                         <a-upload
@@ -481,12 +503,12 @@
             </div>
         </div>
         <!-- 规格信息 -->
-        <div class="form-block" v-if="!indep_flag">
+        <div class="form-block" v-if="!indep_flag && specific.mode === 2">
             <div class="form-title">
                 <div class="title">{{ $t("i.information") }}</div>
             </div>
             <div class="form-content" style="overflow-x: auto;">
-                <div class="form-item">
+                <!-- <div class="form-item">
                     <div class="key">{{ $t("i.mode") }}</div>
                     <div class="value">
                         <a-radio-group
@@ -497,7 +519,7 @@
                             <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
                         </a-radio-group>
                     </div>
-                </div>
+                </div> -->
                 <template v-if="specific.mode === 2">
                     <div class="form-item specific-config">
                         <div class="key" :class="{ 'form-dispaly-key': $i18n.locale === 'en' }">
@@ -589,7 +611,8 @@
                                         </a-button>
                                     </div>
                                 </div>
-                                <div class="button" v-if="isShowDelete.indexOf(item.key) === -1" @click="handleRemoveSpec(item, index)">
+                                <!--  v-if="isShowDelete.indexOf(item.key) === -1" -->
+                                <div class="button" @click="handleRemoveSpec(item, index)">
                                     <i class="icon i_delete" />
                                 </div>
                                 <!-- <div class="option">
@@ -754,8 +777,12 @@
                                 type="primary"
                                 ghost
                                 @click="handleAddSpec"
+                                :disabled = "specific?.list?.length>2"
                                 >{{ $t("i.definition") }}</a-button
                             >
+                            <span class="spec-text">
+                                {{ $t("i.definition_more_num") }}
+                            </span>
                         </div>
                     </div>
                     <div class="form-item specific-items">
@@ -788,7 +815,7 @@
                                         </a-tooltip>
                                         <span>{{title}}</span>
                                     </template>
-                                    <template
+                                    <!-- <template
                                         v-if="column.dataIndex === 'original_price'"
                                     >
                                         <div class="title-row">
@@ -867,7 +894,7 @@
                                                 }}</a>
                                             </a-popover>
                                         </div>
-                                    </template>
+                                    </template> -->
                                     <template
                                         v-if="column.dataIndex === 'fob_eur'"
                                     >
@@ -1030,6 +1057,32 @@
                                     </template>
                                 </template>
                                 <template #bodyCell="{ column, record }">
+                                    
+                                    <template
+                                        v-if="column.dataIndex === 'imgs'"
+                                    >
+                                        <!--  list-type="picture-card" -->
+                                        <div>
+                                            <a-upload
+                                                name="file"
+                                                accept="image/*"
+                                                v-model:file-list="record.imgsList"
+                                                :action="upload.action"
+                                                :headers="upload.headers"
+                                                :data="upload.data"
+                                                :before-upload="handleImgCheck"
+                                                @change="handleNewChildChange"
+                                                @preview="handlePreview"
+                                            >
+                                                <a-button v-if="record.imgsList && !record.imgsList?.length" class="spce-add-pic" type="primary" ghost>{{ $t('n.upload_pic') }}</a-button>
+                                            </a-upload>
+                                            <div class="imgList-box" v-if="record.imgsList && record.imgsList.length > 0 ? true : false">
+                                                <img class="img-pic" @click="handlePreview(record.imgsList?.[0])" :src="record.imgsList?.[0]?.url" v-if="record.imgsList?.[0]?.url" alt="">
+                                                <img class="close-pic" @click="record.imgsList = []"  v-if="record.imgsList?.[0]?.url" src="../../assets/images/upload/close_table.png" alt="">
+                                            </div>
+                                            
+                                        </div>
+                                    </template>
                                     <template
                                         v-if="column.dataIndex === 'code'"
                                     >
@@ -1084,7 +1137,7 @@
                                             @change="inputValidateConfig"
                                         />
                                     </template>
-                                    <div
+                                    <!-- <div
                                         class="input-number-unit"
                                         v-if="
                                             column.dataIndex ===
@@ -1128,7 +1181,7 @@
                                                 >{{ val }}</a-select-option
                                             >
                                         </a-select>
-                                    </div>
+                                    </div> -->
                                     <template
                                         v-if="column.dataIndex === 'fob_eur'"
                                     >
@@ -1242,7 +1295,7 @@
                 <div class="title">{{ $t("i.price_information") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item">
+                <!-- <div class="form-item" v-if="false">
                     <div class="key">{{ $t("i.cost_price") }}</div>
                     <div class="value input-number-unit">
                         <a-input-number
@@ -1261,7 +1314,7 @@
                             </a-select-option>
                         </a-select>
                     </div>
-                </div>
+                </div> -->
                 <div class="form-item required">
                     <div
                         class="key"
@@ -1303,15 +1356,21 @@
             </div>
         </div>
         <!-- 按钮 -->
-        <div class="form-btns">
+        <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
+            <!--  type="primary" ghost -->
+            <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
+
             <a-button type="primary" @click="handleSubmit">{{
-                $t("def.sure")
+                $t("def.sure_create")
             }}</a-button>
-            <a-button type="primary" ghost @click="routerChange('back')">{{
-                $t("def.cancel")
-            }}</a-button>
+
+            <!-- 底部障眼法-盒子 -->
+            <div class="bottom-box" >
+            </div>
         </div>
-        <a-modal :maskClosable="false" destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
+        
+        <div :style="{height: fixedHeight}"></div>
+        <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
                     <div class="config-item-title" :style="{ color: uniqueArr.indexOf(i) !== -1 ? 'red' : '' }">
@@ -1326,7 +1385,7 @@
                                 <span :style="{ color: (option.validate && !option.zh) ? 'red' : '' }">
                                     {{ $t("i.value_zh") }}
                                 </span>
-                                <span class="content-length">
+                                <span class="content-length" v-if="option.zhFocus">
                                     {{
                                         option.zh.length
                                     }}/50
@@ -1341,6 +1400,8 @@
                                     $t('i.value_zh')
                                 "
                                 :max-length="50"
+                                @focus="option.zhFocus = true"
+                                @blur="option.zhFocus = false"
                             />
                         </div>
                         <div class="config-item-en">
@@ -1348,7 +1409,7 @@
                                 <span :style="{ color: (option.validate && !option.en) ? 'red' : '' }">
                                     {{ $t("i.value_en") }}
                                 </span>
-                                <span class="content-length">
+                                <span class="content-length" v-if="option.enFocus">
                                     {{
                                         option.en.length
                                     }}/50
@@ -1362,6 +1423,8 @@
                                     $t('def.input') +
                                     $t('i.value_en')
                                 "
+                                @focus="option.enFocus = true"
+                                @blur="option.enFocus = false"
                                 :max-length="50"
                             />
                         </div>
@@ -1422,6 +1485,7 @@ export default {
             loading: false,
             itemTypeMap: Core.Const.ITEM.TYPE_MAP,
             flagEntityMap: Core.Const.ITEM.FLAG_ENTITY_MAP,
+            // 是否为编辑（是否为创建）
             indep_flag: 0,
             monetaryList: Core.Const.ITEM.MONETARY_TYPE_MAP,
             set_id: "",
@@ -1438,8 +1502,8 @@ export default {
                 flag_entity: undefined,
                 category_ids: [],
                 price: undefined,
-                original_price_currency: "CNY", // 默认
-                original_price: undefined,
+                // original_price_currency: "CNY", // 默认
+                // original_price: undefined,
                 config: "",
                 // man_hour: '',
                 sales_area_ids: [],
@@ -1467,7 +1531,6 @@ export default {
             // 商品分类
             item_category: {},
             configTemp: [],
-
             specific: {
                 // 规格
                 mode: 1, // 1 是单规格 2 是多规格
@@ -1479,8 +1542,8 @@ export default {
                 priceVisible: false,
                 price: "",
 
-                originalVisible: false,
-                original_price: "",
+                // originalVisible: false,
+                // original_price: "",
 
                 fobEurVisible: false,
                 fob_eur: "",
@@ -1540,7 +1603,15 @@ export default {
             configSetMes: {},
             oldConfigSetMes: {},
             configIndex: 0,
-            uniqueArr: []
+            uniqueArr: [],
+            // 固定盒子宽度
+            fixedWidth: 'auto',
+            // 固定盒子高度
+            fixedHeight: 'auto',
+
+            newChild: {
+                imgs: []
+            }
         };
     },
     watch: {},
@@ -1558,19 +1629,20 @@ export default {
             }));
             column = column.filter((item) => item.title && item.dataIndex);
             column.push(
-                { title: this.$t("i.code"), key: "input", dataIndex: "code" }, // , fixed: 'left'
+                { title: this.$t("i.spec_pic"), key: "img", dataIndex: "imgs" }, // 规格图片
+                { title: this.$t("i.sku_code"), key: "input", dataIndex: "code" }, // , fixed: 'left'
                 { title: this.$t("n.name"), key: "input", dataIndex: "name" },
                 {
                     title: this.$t("n.name_en"),
                     key: "input",
                     dataIndex: "name_en",
                 },
-                {
+                /* {
                     title: this.$t("i.cost_price"),
                     key: "money",
                     dataIndex: "original_price",
                     width: 160,
-                },
+                }, */
                 {
                     title: "FOB(EUR)",
                     key: "money",
@@ -1593,22 +1665,22 @@ export default {
                 } // , fixed: 'right'
             );
             // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
-            if (this.specific.data.length === 1) {
+            /* if (this.specific.data.length === 1) {
                 column.pop();
-            }
+            } */
             return column;
         },
         configSetTitle() {
             return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name)}${this.$t("i.value")}`;
         },
         // 是否展示规格定义
-        isShowDelete() {
+       /*  isShowDelete() {
             const arr = []
             for(let key in this.specific.data[0]) {
                 arr.push(key)
             }
             return arr
-        }
+        } */
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1619,9 +1691,28 @@ export default {
         }
         this.getSalesAreaList();
     },
-    mounted() {},
-    methods: {
+    mounted() {
+        window.addEventListener('resize', this.handleResize);
+        
+        this.$nextTick(()=>{
+            this.handleResize()
+        })
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleResize)
+        // this.observer.disconnect();    //取消监听
 
+    },
+    methods: {
+        /* 监听 */
+        handleResize() {
+            const width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
+            const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
+            this.fixedWidth = width + 'px';
+            this.fixedHeight = height + 'px'; 
+            // 在这里处理宽高变化的逻辑
+
+        },
         handlePreview(file) {
             console.log(file)
             this.previewImage = file?.response?.data?.filename ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename : file?.url? file.url: ''
@@ -1630,7 +1721,7 @@ export default {
         changeOption(option, i) {
             option.disabled = false;
         },
-        confirmValue(option, i, index) {
+        /* confirmValue(option, i, index) {
             option.disabled = true;
             let target = this.specific.list[index];
             let value = "";
@@ -1656,7 +1747,7 @@ export default {
                 .catch((err) => {
                     console.log(err);
                 });
-        },
+        }, */
         routerChange(type, item) {
             let routeUrl;
             switch (type) {
@@ -1755,9 +1846,9 @@ export default {
             this.form.category_ids = this.detail.category_list
                 ? this.detail.category_list.map((i) => i.category_id)
                 : [];
-            this.form.original_price = Core.Util.countFilter(
+            /* this.form.original_price = Core.Util.countFilter(
                 res.original_price
-            );
+            ); */
             this.form.sales_area_ids = this.detail.sales_area_list
                 ? this.detail.sales_area_list.map((i) => i.id)
                 : [];
@@ -1837,6 +1928,8 @@ export default {
                     },
                     addVisible: false,
                 }));
+                itemList.shift();
+
                 let data = itemList.map((item) => {
                     let params = {};
                     for (const attr of list) {
@@ -1854,6 +1947,15 @@ export default {
                             };
                         }
                     }
+                    let logos = !item.imgs ? [] : item.imgs.split(",");
+                    item.imgsList = logos.map((imgItem, index) => ({
+                        uid: index + 1,
+                        name: imgItem,
+                        filename: imgItem,
+                        url: Core.Const.NET.FILE_URL_PREFIX + imgItem,
+                        short_path: imgItem,
+                        status: "done",
+                    }));
                     return {
                         ...params,
                         code: item.code,
@@ -1862,18 +1964,21 @@ export default {
                         price: Core.Util.countFilter(item.price),
                         fob_eur: Core.Util.countFilter(item.fob_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
-                        original_price_currency: item.original_price_currency,
-                        original_price: Core.Util.countFilter(
+                        // original_price_currency: item.original_price_currency,
+                        /* original_price: Core.Util.countFilter(
                             item.original_price
-                        ),
+                        ), */
                         target_id: item.id,
                         attr_list: item.attr_list,
+                        imgsList: item.imgsList,
+                        imgs: item.imgs,
                     };
                 });
                 // 商品规格属性列表
                 this.specific.list = list;
                 // 多规格商品列表
                 this.specific.data = data;
+
             });
         },
         handleDelete(record) {
@@ -1920,8 +2025,6 @@ export default {
                         if (index !== -1) {
                             _this.specific.data.splice(index, 1);
                         }
-                        console.log("record 新增", record);
-                        console.log("record data", _this.specific.data);
                     }
                 },
             });
@@ -1929,18 +2032,12 @@ export default {
         // 保存、新建 商品
         handleSubmit() {
 
-            if (this.specific.mode === 2) {
-                this.form.code = this.specific.data[0].code;
-                this.form.name = this.specific.data[0].name;
-                this.form.name_en = this.specific.data[0].name_en;
-                this.form.price = this.specific.data[0].price;
-                this.form.fob_eur = this.specific.data[0].fob_eur;
-                this.form.fob_usd = this.specific.data[0].fob_usd;
-                this.form.original_price = this.specific.data[0].original_price;
-            }
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+            console.log('form-handleSubmit111',form);
+            console.log('specData-handleSubmit111',specData);
+            console.log('attrDef-handleSubmit111',attrDef);
 
             // 校验检查
             this.isValidate = true;
@@ -1999,7 +2096,8 @@ export default {
                 form.price = Math.round(form.price * 100);
                 form.fob_eur = Math.round(form.fob_eur * 100);
                 form.fob_usd = Math.round(form.fob_usd * 100);
-                form.original_price = Math.round(form.original_price * 100);
+                // 隐藏成本价格
+                // form.original_price = Math.round(form.original_price * 100);
             } else {
                 // 多规格
                 apiName = "batchSave";
@@ -2013,8 +2111,9 @@ export default {
                         price: Math.round(data.price * 100),
                         fob_eur: Math.round(data.fob_eur * 100),
                         fob_usd: Math.round(data.fob_usd * 100),
-                        original_price: Math.round(data.original_price * 100),
-                        original_price_currency: data.original_price_currency,
+                        // 隐藏成本价格
+                        /* original_price: Math.round(data.original_price * 100),
+                        original_price_currency: data.original_price_currency, */
                         attr_params: attrDef.map((attr, index) => {
                             let id = "";
                             if (data.attr_list && data.attr_list.length) {
@@ -2042,6 +2141,7 @@ export default {
                                 target_type: 1,
                             };
                         }),
+                        imgs: (data.imgsList.map(item=> item?.filename)).join(",")
                     };
                 });
             }
@@ -2052,7 +2152,7 @@ export default {
                 })
                 .catch((err) => {
                     console.log("handleSubmit err:", err);
-                });
+            });
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
@@ -2074,20 +2174,20 @@ export default {
                     `${this.$t("def.enter")}(${this.$t("n.type")})`
                 );
             }
-            // // 实例编码 否 0 是 1
+            /* // // 实例编码 否 0 是 1
             if (form.flag_entity != 0 && form.flag_entity != 1) {
                 return this.$message.warning(`${this.$t('def.enter')}(${this.$t('n.flag_entity')})`)
-            }
-            // 商品品号
+            } */
+           /*  // 商品品号
             if (!form.model) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("i.number")})`
                 );
-            }
+            } */
             // 商品编码
             if (!form.code) {
                 return this.$message.warning(
-                    `${this.$t("def.enter")}(${this.$t("i.code")})`
+                    `${this.$t("def.enter")}(${this.$t(this.specific.mode===1 ? "i.sku_code" : "i.code")})`
                 );
             }
             // 商品分类
@@ -2108,12 +2208,12 @@ export default {
             }
             // 1 整车 2 ...其他的
             if (form.type == 1) {
-                // 图面代号
+                /* // 图面代号
                 if (!form.drawing_code) {
                     return this.$message.warning(
                         `${this.$t("def.enter")}(${this.$t("d.drawing_code")})`
                     );
-                }
+                } */
                 // // (临时存的定金支付)定金支付
                 // // console.log("定金支付", this.temporarily_deposit, Number(form.deposit));
                 // if (this.temporarily_deposit && (!form.deposit || !Number(form.deposit))) {
@@ -2123,6 +2223,19 @@ export default {
                 //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
                 // }
             }
+            // 封面图片
+            if (!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) {
+                return this.$message.warning(
+                    `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
+                );
+            }
+            // 详情图片
+            if (!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) {
+                return this.$message.warning(
+                    `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
+                );
+            }
+
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 if (!form.fob_eur) {
@@ -2159,6 +2272,11 @@ export default {
                 let attrs = [];
                 for (let i = 0; i < specData.length; i++) {
                     const item = specData[i];
+                    if (!item.imgsList?.[0]?.filename) {
+                        return this.$message.warning(
+                            `${this.$t("n.spec_pic")}`
+                        );
+                    }
                     if (!item.code) {
                         return this.$message.warning(
                             `${this.$t("def.enter")}(${this.$t("i.code")})`
@@ -2285,7 +2403,25 @@ export default {
             });
             this.upload.detailList = fileList;
         },
+        // 规格列表-上传图片检查
+        handleNewChildChange({ file, fileList }) {
+            if(fileList.length > 1){
 
+                fileList = fileList.slice(0,1)
+            } 
+            if (file.status == "done") {
+                if (file.response && file.response.code > 0) {
+                    return this.$message.error(file.response.message);
+                }
+            }
+            fileList.forEach((item) => {
+                if (item.response) {
+                    item.url = Core.Const.NET.FILE_URL_PREFIX + item.response.data.filename;
+                    item.filename = item.response.data.filename;
+                }
+            });
+
+        },
         // 商品分类选择
         handleCategorySelect(val, node) {
             this.form.category_ids = val;
@@ -2316,7 +2452,7 @@ export default {
         },
         // 商品规格模式改变
         handleSpecificModeChange() {
-            if (this.specific.mode === 2) {
+           /*  if (this.specific.mode === 2) {
                 this.specific.data = [
                     {
                         id: 1,
@@ -2334,17 +2470,36 @@ export default {
                 ];
             } else if (this.specific.mode === 1) {
                 this.form.code = this.specific.data[0].code;
-                this.form.name = this.specific.data[0].name;
-                this.form.name_en = this.specific.data[0].name_en;
+                // this.form.name = this.specific.data[0].name;
+                // this.form.name_en = this.specific.data[0].name_en;
                 this.form.price = this.specific.data[0].price;
                 this.form.fob_eur = this.specific.data[0].fob_eur;
                 this.form.fob_usd = this.specific.data[0].fob_usd;
                 this.form.original_price = this.specific.data[0].original_price;
+            } */
+            if (this.specific.mode === 2 && this.specific.data && this.specific.data.length === 0){
+                
+                this.specific.data = [
+                    {
+                        id: 1,
+                        code: "",
+                        name: "",
+                        name_en: "",
+                        price: "",
+                        fob_eur: "",
+                        fob_usd: "",
+                        /* original_price: "",
+                        original_price_currency: this.form.original_price_currency, */
+                        imgsList: []
+                    }
+                ];
             }
+
         },
         // 规格定义
         // 规格名
         handleAddSpec() {
+            if( this.specific.list.length > 2 ) return this.$message.warning(this.$t('i.definition_more_num'))
             // 添加规格定义
             this.specific.list.push({
                 id: "",
@@ -2354,6 +2509,7 @@ export default {
                 addVisible: false,
                 addValue: { key: "", zh: "", en: "" },
             });
+
         },
         handleRemoveSpec(item, index) {
             // 删除规格定义
@@ -2607,8 +2763,9 @@ export default {
                 price: "",
                 fob_eur: "",
                 fob_usd: "",
-                original_price: "",
-                original_price_currency: this.form.original_price_currency,
+                /* original_price: "",
+                original_price_currency: this.form.original_price_currency, */
+                imgsList: [],
             });
         },
 
@@ -2617,8 +2774,8 @@ export default {
             this.batchSet = {
                 priceVisible: false,
                 price: "",
-                originalVisible: false,
-                original_price: "",
+                /* originalVisible: false,
+                original_price: "", */
                 fobEurVisible: false,
                 fob_eur: "",
                 fobUsdVisible: false,
@@ -2676,6 +2833,9 @@ export default {
         validateConfig(specData) {
             for (let i = 0; i < specData.length; i++) {
                 const item = specData[i];
+                if (!item.imgsList?.[0]?.filename) {
+                    return (this.validateConfigFlag = false);
+                }
                 if (!item.code) {
                     return (this.validateConfigFlag = false);
                 }
@@ -2745,6 +2905,7 @@ export default {
 
 <style lang="less" scoped>
 #ItemEdit {
+    width: 100%;
     .image-preview{
         position: fixed;
         width:100vw;
@@ -2985,6 +3146,12 @@ export default {
         background: #ffffff;
         font-size: 12px;
     }
+    .spec-text {
+        color: #969799;
+        font-size: 12px;
+        font-weight: 400;
+        margin-left: 10px;
+    }
     .specific-table {
         margin-bottom: 16px;
         margin-right: 20px;
@@ -3018,6 +3185,36 @@ export default {
                     /*滚动条内部轨道*/
                     background: #f8fafc;
                 }
+            }
+        }
+
+        .spce-add-pic {
+            width: auto !important;
+            padding: 7px;
+            border-radius: 4px;
+        }
+ 
+        :deep(.ant-upload-list) {
+            display: none;
+        }
+
+        .imgList-box {
+            
+            .img-pic {
+                width: 36px;
+                height: 36px;
+                border-radius: 4px;
+                cursor: pointer;
+                object-fit:cover;
+
+            }
+ 
+            .close-pic {
+                width: 14px;
+                height: 14px;
+                flex-shrink: 0;
+                cursor: pointer;
+                margin-left: 8px;
             }
         }
     }
@@ -3298,10 +3495,39 @@ export default {
 }
 
 .ant-input-group-wrapper {
+
     :deep(.ant-input-group-addon) {
         border-color: #EAECF2;
     }
 }
+
+.fixed-btns {
+
+        position: fixed;
+        bottom: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        background-color: #FFF;
+        padding: 20px 0px;
+        display: flex;
+        justify-content: center;
+        z-index: 52;
+        
+        .ant-btn {
+            width: auto;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .bottom-box {
+            background-color: #F0F2F5;
+            width: 100%;
+            height: 16px;
+            position: absolute;
+            bottom: -16px;
+        }
+    }
+    
 </style>
 <style lang="less">
 .config-modal {
