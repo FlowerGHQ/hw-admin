@@ -85,7 +85,15 @@
                 <template v-if="column.dataIndex === 'code'">
                   <div class="table-block">
                     {{ $t("i.code") }}/ {{ $t(/*SKU编码*/"i.sku_code") }}
-                    <a-tooltip placement="top" title='商品编码：多规格商品的父规格对应商品编码；SKU编码：单规格、多规格商品的子规格对应SKU编码'>
+                    <a-tooltip placement="top">
+                      <template #title>
+                        <p>
+                          {{ $t(/*商品编码: 多规格商品的父规格对应商品编码; */'i.item_code_tip') }}
+                        </p>
+                        <p>
+                          {{ $t(/*SKU编码: 单规格、多规格商品的子规格对应SKU编码; */'i.sku_code_tip') }}
+                        </p>
+                      </template>
                       <info-circle-outlined />
                     </a-tooltip>
                   </div>
@@ -94,7 +102,7 @@
               <template #bodyCell="{ column, text, record }">
                 <!-- 名称 -->
                 <template v-if="column.key === 'detail'">
-                  <div class="table-img afs">
+                  <div style="width: 200px;" class="table-img afs">
                     <a-image
                       class="image"
                       :width="55"
@@ -374,7 +382,7 @@ export default {
       let { filteredInfo } = this;
       filteredInfo = filteredInfo || {};
       let tableColumns = [
-        { title: this.$t("n.name"), dataIndex: "name", key: "detail" },
+        { title: this.$t("n.name"), dataIndex: "name", key: "detail", width: '100px' },
         { title: this.$t("i.code"), dataIndex: "code", key: "item" },
         {
           title: this.$t("i.status"),
@@ -861,7 +869,7 @@ export default {
       flex-direction: column;
 
       .sub-info {
-        width: 20em;
+        // width: 20em;
         overflow: hidden; /*超出长度的文字隐藏*/
         text-overflow: ellipsis; /*文字隐藏以后添加省略号*/
         white-space: nowrap; /*强制不换行*/
