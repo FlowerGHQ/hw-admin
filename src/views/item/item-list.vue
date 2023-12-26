@@ -432,10 +432,7 @@ export default {
           // 表格 选择 改变
           this.selectedRowKeys = selectedRowKeys;
           this.selectedRowItems = selectedRows;
-          console.log(
-            "rowSelection onChange this.selectedRowKeys",
-            this.selectedRowKeys
-          );
+        
         },
       };
     },
@@ -482,7 +479,6 @@ export default {
     },
 
     handleCategoryChange(val) {
-      console.log("handleCategoryChange val:", val);
       this.searchForm.category_id = val;
       this.pageChange(1);
     },
@@ -495,7 +491,6 @@ export default {
         // 在这里处理宽高变化的逻辑
     },
     routerChange(type, item = {}) {
-      console.log("routerChange item:", item);
       let routeUrl = "";
       switch (type) {
         case "detail": // 商品详情
@@ -533,8 +528,6 @@ export default {
       this.getTableData();
     },
     pageSizeChange(current, size) {
-      // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
       this.getTableData();
     },
@@ -561,8 +554,6 @@ export default {
       this.pageChange(1);
     },
     handleTableChange(page, filters, sorter) {
-      // 表格筛选
-      console.log("handleTableChange filters:", filters);
       this.filteredInfo = filters;
       for (const key in filters) {
         this.searchForm[key] = filters[key] ? filters[key][0] : "";
@@ -574,7 +565,6 @@ export default {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearch && this.$refs.TimeSearch?.handleReset();
-      console.log(this.$refs.CategoryTree)
       this.$refs.CategoryTree && this.$refs.CategoryTree?.handleReset();
       this.$refs.CategoryTree && this.$refs.CategoryTree?.handleCollapseAll();
       this.pageChange(1);
@@ -668,8 +658,10 @@ export default {
         } else {
           Core.Api.Item.listBySet({ set_id: record.set_id })
             .then((res) => {
-              console.log("handleTableExpand res:", res);
               let list = res.list.filter((i) => i.flag_default !== 1);
+              list.forEach(item=>{
+                item.logo = item.imgs
+              })
               record.children = list;
             })
             .finally(() => {
@@ -684,7 +676,6 @@ export default {
 
     // 上传文件
     handleMatterChange({ file, fileList }) {
-      console.log("handleMatterChange status:", file.status, "file:", file);
       if (file.status == "done") {
         if (file.response && file.response.code > 0) {
           return this.$message.error(this.$t(file.response.code + ""));
@@ -746,12 +737,10 @@ export default {
       for (const key in form) {
         form[key] = form[key] || "";
       }
-      // console.log('form',form)
       let exportUrl = Core.Api.Export.exportItemPrice({
         ...form,
         language: this.$i18n.locale === "en" ? 1 : 0,
       });
-      console.log("handleRepairExport exportUrl", exportUrl);
       window.open(exportUrl, "_self");
       this.exportDisabled = false;
     },
