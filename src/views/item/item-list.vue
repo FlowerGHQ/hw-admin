@@ -80,10 +80,28 @@
               :indentSize="0"
               :row-selection="rowSelection"
               >
+              <template #headerCell="{ column }">
+                <template v-if="column.dataIndex === 'code'">
+                  <div class="table-block">
+                    {{ $t("i.code") }}/ {{ $t(/*SKU编码*/"i.sku_code") }}
+                    <a-tooltip placement="top">
+                      <template #title>
+                        <p>
+                          {{ $t(/*商品编码: 多规格商品的父规格对应商品编码; */'i.item_code_tip') }}
+                        </p>
+                        <p>
+                          {{ $t(/*SKU编码: 单规格、多规格商品的子规格对应SKU编码; */'i.sku_code_tip') }}
+                        </p>
+                      </template>
+                      <info-circle-outlined />
+                    </a-tooltip>
+                  </div>
+                </template>
+              </template>
               <template #bodyCell="{ column, text, record }">
                 <!-- 名称 -->
                 <template v-if="column.key === 'detail'">
-                  <div class="table-img afs">
+                  <div style="width: 200px;" class="table-img afs">
                     <a-image
                       class="image"
                       :width="55"
@@ -109,9 +127,14 @@
                           </div>
                         </a-button>
                         <div
-                          v-if="record.attr_list && record.attr_list.length"
+                          v-if="!record.children && record.attr_list && record.attr_list.length"
                           class="sub-info">
                           {{ $Util.itemSpecFilter(record.attr_list) }}
+                        </div>
+                        <div
+                          v-if="record.children_number"
+                          class="sub-info">
+                          {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
                         </div>
                       </a-tooltip>
                       <!-- 来源 -->
@@ -161,9 +184,13 @@
                 </template> -->
                 <template v-if="column.dataIndex === 'status'">
                   <div
+                    v-if="!record.children"
                     class="status status-bg status-tag"
                     :class="text === 0 ? 'green' : 'red'">
                     {{ text === 0 ? $t("i.active") : $t("i.inactive") }}
+                  </div>
+                  <div v-else>
+                    
                   </div>
                 </template>
 
@@ -187,6 +214,7 @@
                     >
                   </template>
                   <a-button
+                    v-if="!record.children"
                     type="link"
                     @click="handleStatusChange(record)"
                     :class="record.status === 0 ? 'danger' : ''">
@@ -260,20 +288,20 @@
 
 <script>
 import Core from "../../core";
-
+import { InfoCircleOutlined } from '@ant-design/icons-vue';
 import SearchAll from "@/components/common/SearchAll.vue"
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
 const ITEM = Core.Const.ITEM;
-import loadsh from "lodash";
 export default {
   name: "ItemList",
   components: {
     TimeSearch,
     CategoryTree,
     CategoryTreeSelect,
-    SearchAll
+    SearchAll,
+    InfoCircleOutlined
   },
   props: {},
   data() {
@@ -332,7 +360,7 @@ export default {
       let { filteredInfo } = this;
       filteredInfo = filteredInfo || {};
       let tableColumns = [
-        { title: this.$t("n.name"), dataIndex: "name", key: "detail" },
+        { title: this.$t("n.name"), dataIndex: "name", key: "detail", width: '100px' },
         { title: this.$t("i.code"), dataIndex: "code", key: "item" },
         {
           title: this.$t("i.status"),
@@ -345,17 +373,17 @@ export default {
           // filteredValue: filteredInfo.status || [0],
         },
         { title: this.$t("n.type"), dataIndex: ["type"], key: "type" },
-        {
-          title: this.$t("n.flag_entity"),
-          dataIndex: "flag_entity",
-          key: "flag_entity",
-        },
+        // {
+        //   title: this.$t("n.flag_entity"),
+        //   dataIndex: "flag_entity",
+        //   key: "flag_entity",
+        // },
         {
           title: this.$t("i.categories"),
           dataIndex: "category_list",
           key: "category_list",
         },
-        { title: this.$t("i.number"), dataIndex: "model", key: "item" },
+        // { title: this.$t("i.number"), dataIndex: "model", key: "item" },
         {
           title: "FOB(EUR)",
           dataIndex: "fob_eur",
@@ -390,10 +418,7 @@ export default {
           // 表格 选择 改变
           this.selectedRowKeys = selectedRowKeys;
           this.selectedRowItems = selectedRows;
-          console.log(
-            "rowSelection onChange this.selectedRowKeys",
-            this.selectedRowKeys
-          );
+        
         },
       };
     },
@@ -451,7 +476,6 @@ export default {
     },
 
     handleCategoryChange(val) {
-      console.log("handleCategoryChange val:", val);
       this.searchForm.category_id = val;
       this.pageChange(1);
     },
@@ -464,7 +488,6 @@ export default {
         // 在这里处理宽高变化的逻辑
     },
     routerChange(type, item = {}) {
-      console.log("routerChange item:", item);
       let routeUrl = "";
       switch (type) {
         case "detail": // 商品详情
@@ -502,8 +525,6 @@ export default {
       this.getTableData();
     },
     pageSizeChange(current, size) {
-      // 页码尺寸改变
-      console.log("pageSizeChange size:", size);
       this.pageSize = size;
       this.getTableData();
     },
@@ -530,8 +551,6 @@ export default {
       this.pageChange(1);
     },
     handleTableChange(page, filters, sorter) {
-      // 表格筛选
-      console.log("handleTableChange filters:", filters);
       this.filteredInfo = filters;
       for (const key in filters) {
         this.searchForm[key] = filters[key] ? filters[key][0] : "";
@@ -543,7 +562,6 @@ export default {
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearch && this.$refs.TimeSearch?.handleReset();
-      console.log(this.$refs.CategoryTree)
       this.$refs.CategoryTree && this.$refs.CategoryTree?.handleReset();
       this.$refs.CategoryTree && this.$refs.CategoryTree?.handleCollapseAll();
       this.pageChange(1);
@@ -560,16 +578,15 @@ export default {
       })
         .then((res) => {
           this.total = res.count;
-          // this.tableData = res.list; 
+          this.tableData = res.list; 
 
           // 如果同时查询名称和编码  加号去掉
           // if(this.isShowAdd) {
-            const targetTableData = this.removeChildrenFromData(res.list)
-            this.tableData = targetTableData; 
+            // const targetTableData = this.removeChildrenFromData(res.list)
+            // this.tableData = targetTableData; 
           // } else {
             // this.tableData = res.list; 
           // }
-
           
         })
         .catch((err) => {
@@ -638,8 +655,10 @@ export default {
         } else {
           Core.Api.Item.listBySet({ set_id: record.set_id })
             .then((res) => {
-              console.log("handleTableExpand res:", res);
               let list = res.list.filter((i) => i.flag_default !== 1);
+              list.forEach(item=>{
+                item.logo = item.imgs
+              })
               record.children = list;
             })
             .finally(() => {
@@ -654,7 +673,6 @@ export default {
 
     // 上传文件
     handleMatterChange({ file, fileList }) {
-      console.log("handleMatterChange status:", file.status, "file:", file);
       if (file.status == "done") {
         if (file.response && file.response.code > 0) {
           return this.$message.error(this.$t(file.response.code + ""));
@@ -716,12 +734,10 @@ export default {
       for (const key in form) {
         form[key] = form[key] || "";
       }
-      // console.log('form',form)
       let exportUrl = Core.Api.Export.exportItemPrice({
         ...form,
         language: this.$i18n.locale === "en" ? 1 : 0,
       });
-      console.log("handleRepairExport exportUrl", exportUrl);
       window.open(exportUrl, "_self");
       this.exportDisabled = false;
     },
@@ -738,7 +754,6 @@ export default {
   },
 };
 </script>
-
 <style lang="less" scoped>
 #ItemList {
   .content-area_main{
@@ -781,7 +796,6 @@ export default {
         box-sizing: border-box;
         margin-left: 20px;
         background-color: #ffffff;
-        // background-color: red;
         
         .top-box {
           width: calc(100% + 40px) !important;
@@ -800,7 +814,8 @@ export default {
 
           .top-back {
             background-color: #FFFFFF;
-            padding: 0 20px;width: 100%;
+            padding: 0 20px;
+            width: 100%;
             height: 100%;
             border-radius: 6px 6px 0 0;
             box-sizing: border-box;
@@ -843,7 +858,7 @@ export default {
       flex-direction: column;
 
       .sub-info {
-        width: 20em;
+        // width: 20em;
         overflow: hidden; /*超出长度的文字隐藏*/
         text-overflow: ellipsis; /*文字隐藏以后添加省略号*/
         white-space: nowrap; /*强制不换行*/
@@ -861,6 +876,39 @@ export default {
         margin-top: 5px;
       }
     }
+
+    :deep(.ant-table-row-level-1) {
+      background-color: #FAFAFA;
+      
+      .ant-table-selection-column {
+        text-align: right;
+        position: relative;
+        .ant-checkbox-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 85px;
+          z-index: 200;
+          transform: translate(-50%, -50%);
+        }
+      
+      }
+      .ant-table-cell-with-append  {
+        padding-left: 66px;
+      }
+      .ant-table-cell-fix-right-first {
+        background-color: #FAFAFA;
+      }
+    }
+    :deep(.ant-table-row-selected) {
+      .ant-table-cell-fix-right-first {
+        background-color: #E6F7FF;
+      }
+    }
+
+    :deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
+      background-color: #F9FBFF;
+    }
   }
 }
+
 </style>

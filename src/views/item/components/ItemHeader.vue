@@ -7,7 +7,7 @@
                 <p>                
                     {{$i18n.locale =='zh' ? detail.name: detail.name_en}}
                 </p>
-                <p>{{ $t('i.number') }}：{{detail.model}}</p>
+                <!-- <p>{{ $t('i.number') }}：{{detail.model}}</p> -->
                 <!-- <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" class="source-erp">
                     {{ SOURCE_STOCK_TYPE[detail?.sync_type].value }}
                 </span> -->
@@ -29,10 +29,10 @@
                         </span>
                     </div>
                 </div>
-                <div class="info-item">
+                <!-- <div class="info-item">
                     <span class="info-key">{{ $t('n.flag_entity') }}</span>
                     <span class="info-value">{{ $Util.itemFlagEntityFilter(detail.flag_entity, $i18n.locale) }}</span>
-                </div>
+                </div> -->
             </div>
             <!-- <div class="model">
                 <span v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" style="margin-left: 25px;">
