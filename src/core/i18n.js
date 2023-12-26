@@ -645,6 +645,8 @@ const messages = {
             spec_of_goods: '款规格商品',
             sku_code: 'SKU编码',
             spec_pic: '图片',
+            item_code_tip: '商品编码: 多规格商品的父规格对应商品编码;',
+            sku_code_tip: 'SKU编码: 单规格、多规格商品的子规格对应SKU编码',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -2930,6 +2932,8 @@ const messages = {
             size_prompt_detail: 'The Recommended Size Of The Detail Image Is 800 Pieces, And A Maximum Of 10 Images Can Be Uploaded Within 2 MB.',
             file_prompt_detail: 'The Attachment Supports Uploading Images, Videos, Audio, PDF And Other Formats',
             spec_pic: 'Please Upload An Image Of The Product With Specifications',
+            item_code_tip: 'Commodity code: the parent specification of the multi-specification commodity corresponds to the commodity code;',
+            sku_code_tip: 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
         },
         a: {
             new_retailer: 'Create A New Retailer',
