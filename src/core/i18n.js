@@ -1665,7 +1665,8 @@ const messages = {
             pay_car_type: '购买车型',
             paied_money: '已付金额',
             pending_payment: '待付款',
-            order_name: '下单名称'
+            order_name: '下单名称',
+            customer_phone: '客户手机号',
         },
         crm_oi: {
             list: '回款单列表',
@@ -4418,7 +4419,8 @@ const messages = {
             pay_car_type: 'Purchase Car Model',
             paied_money: 'Amount Paid',
             pending_payment: 'Pending Payment',
-            order_name: 'Order Name'
+            order_name: 'Order Name',
+            customer_phone: 'Customer Phone',
         },
         crm_oi: {
             list: 'Collection Slip List',

@@ -77,12 +77,32 @@
             </div>
           </a-col>
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-            <div class="key">{{ $t("crm_o.order_name") }}：</div>
-            <!-- 客户名称 -->
+            <div class="key">{{ $t("r.email") }}：</div>
+            <!-- 邮箱 -->
             <div class="value">
               <a-input
-                :placeholder="$t('def.email_phone_name')"
-                v-model:value="searchForm.customer_name"
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.customer_email"
+                @keydown.enter="handleSearch" />
+            </div>
+          </a-col>
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("crm_o.customer_phone") }}：</div>
+            <!-- 手机号 -->
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.customer_phone"
+                @keydown.enter="handleSearch" />
+            </div>
+          </a-col>
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("crm_o.order_name") }}：</div>
+            <!-- 下单名称 -->
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.buyer_signatory"
                 @keydown.enter="handleSearch" />
             </div>
           </a-col>
@@ -524,6 +544,9 @@ export default {
         refunded_begin_time: undefined, // （退款开始时间）
         refunded_end_time: undefined, // （退款结束时间）
         channel_country: undefined, // 订单来源 国家
+        customer_email: undefined, // 客户邮箱
+        customer_phone: undefined, // 客户手机号
+        buyer_signatory: undefined, // 下单名称
       },
       ownUserOptions: [], //負責人
       createUserOptions: [], // 创建人列表
