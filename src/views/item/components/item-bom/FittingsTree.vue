@@ -313,7 +313,7 @@
                         <div class="expand-area" v-if="item.expand">
                             <a-spin :spinning="loading2" :delay="500">
                                 <div
-                                    class="tree-item-main-child-one"
+                                    class="tree-item-main-child-one pointer"
                                     v-for="(item1, index) in item.children"
                                     :key="generateId(item1)"
                                     :class="{
@@ -332,7 +332,7 @@
                                                             ? 'down-arrow'
                                                             : 'up-arrow'
                                                     "
-                                                    class="arrow" />
+                                                    class="arrow pointer" />
                                                 <span
                                                     :class="{
                                                         'common-title':
@@ -1221,9 +1221,9 @@ onBeforeUnmount(() => {
             }
         }
     }
-    .pointer {
-        cursor: pointer;
-    }
+}
+.pointer {
+    cursor: pointer;
 }
 :deep(.ant-spin-spinning) {
     width: 100%;
