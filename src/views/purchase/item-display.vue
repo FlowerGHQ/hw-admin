@@ -43,7 +43,7 @@
         @click="hanldeAddToShopCart(detail.id)"
         >{{ $t("i.cart") }}</a-button
       >
-      <!-- <div class="price-list">
+      <div class="price-list" v-if="detail.set_id === 0">
         <div class="retail-price">
           <span
             class="price-right"
@@ -54,7 +54,7 @@
             >${{ $Util.countFilter(detail[priceKey + "usd"]) }}</span
           >
         </div>
-      </div> -->
+      </div>
       <div
         class="stars"
         @click="hanldeAddToFavorite"
