@@ -16,7 +16,7 @@
                     }">
                     <div class="title-area">
                         {{ $t("item-bom.bom_list") }}
-                        <div
+                        <div                                                                         
                             class="icon-collapse"
                             @click="isCollapse = !isCollapse">
                             <MySvgIcon
@@ -271,6 +271,7 @@ const setValue = (val) => {
                 padding: 24px 20px 16px 20px;
                 display: flex;
                 flex-direction: column;
+                transition: width 0.5s;
                 .title-area {
                     color: #1d2129;
                     font-size: 16px;
