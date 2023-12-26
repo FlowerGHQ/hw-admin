@@ -895,6 +895,9 @@ export default {
       .ant-table-cell-with-append  {
         padding-left: 66px;
       }
+      .ant-table-cell-fix-right-first {
+        background-color: #FAFAFA;
+      }
     }
 
     :deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
