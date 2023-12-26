@@ -12,7 +12,7 @@
             @cancel="visible = false"
             :getContainer="() => wrap">
             <div class="main">
-                <div class="title">{{$t('item-bom.change_version_number')}}：0002</div>
+                <span class="title">{{$t('item-bom.change_version_number')}}：0002</span>
                 <div class="success-tips">
                     <div class="success-icon">
 						<img src="../../../../assets/images/bom/完成.png" alt="">
@@ -112,6 +112,7 @@ const tableData = ref([
 :deep(.export-modal) {
     .ant-modal-content {
         border-radius: 4px;
+		width: 540px;
         .ant-modal-header {
             padding: 16px 24px;
             height: auto !important;
@@ -134,14 +135,14 @@ const tableData = ref([
             padding: 24px;
 			.main{
 				.title{
-					width: 146px;
 					height: 32px;
 					padding: 6px 18px 6px 10px;
 					color: #1D2129;
 					font-weight: 500;
 					background-color: #F2F3F5;
 					border-radius: 4px;
-					margin-bottom: 18px;
+					margin-bottom: 18px !important;
+					display: inline-block;
 				}
 				.success-tips{
 					display: flex;
