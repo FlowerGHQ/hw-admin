@@ -320,7 +320,6 @@ export default {
                     name_en: item.key
                 }))
                 this.specific.list = list
-                console.log('getAttrDef this.specific.list:', list)
                 this.getSpecList();
             })
         },
@@ -361,7 +360,7 @@ export default {
                         flag_default: item.flag_default ? true : false,
                     }
                 })
-                this.specific.data = data
+                this.specific.data = data.filter(item=>!item.flag_default )
                 if (this.specific.data.length) {
                     this.specific.data[0].onClick = true
                     this.currentSpecId = Number(this.specific.data[0].id)
