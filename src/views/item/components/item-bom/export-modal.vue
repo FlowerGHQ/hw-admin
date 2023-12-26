@@ -1,7 +1,7 @@
 <template>
     <div ref="wrap">
         <a-modal
-            v-model:visible="visibility"
+            v-model:visible="visible"
             :title="$t('item-bom.import_category_data')"
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
@@ -47,7 +47,7 @@
 import { ref ,computed} from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
-// const visible = ref(false);
+const visible = ref(true);
 const wrap = ref(null);
 
 
