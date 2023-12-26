@@ -125,6 +125,7 @@
                 </template>
             </a-table>
         </div>
+        <ExportModal />
     </div>
 </template>
 
@@ -132,11 +133,13 @@
 
 import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
+import ExportModal from './export-modal.vue';
 const classifyShowModal = inject('classifyShowModal');
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const flagNew = ref()
+
 
 const props = defineProps({  
     // v-model 绑定值  
@@ -514,4 +517,5 @@ defineExpose({
         margin-right: 10px;
     }
 }
+
 </style>

@@ -52,9 +52,33 @@ export default {
         confirm_delete_btn: '确定删除',
         // 取消
         cancel: '取消',
+        // 确定
+        confirm: '确定',
         description_empty:'暂无数据',
         download_template:'模板下载',
         bulk_import:'批量导入',
+        // 导入分类数据
+        import_category_data:'导入分类数据',
+        // 分类
+        category:'分类',
+        // 解析成功数量
+        parsing_success_number:'解析成功数量',
+        // 解析失败数量
+        parsing_failure_number:'解析失败数量',
+        // 设变版本号
+        change_version_number:'设变版本号',
+        // 解析完成
+        parsing_completion:'解析完成',
+        // 本次解析成功
+        parsing_success:'本次解析成功',
+        // 条
+        strip:'条',
+        // 数据
+        data:'数据',
+        // 失败
+        failure:'失败', 
+        // 导入失败的数据可以在设变版本列表处手动分类
+        import_failure_data:'导入失败的数据可以在设变版本列表处手动分类',
     },
     en: {
         title: "BOM Management",
@@ -102,8 +126,26 @@ export default {
         confirm_delete_content: 'Are you sure you want to delete the group?',
         confirm_delete_btn: 'Confirm Delete',
         cancel: 'Cancel',
+        confirm: 'Confirm',
         description_empty:'No Data',
         download_template:'Template Download',
         bulk_import:'Bulk Import',
+        import_category_data:'Import Category Data',
+        category:'Category',
+        parsing_success_number:'Parsing Success Number',
+        parsing_failure_number:'Parsing Failure Number',
+        change_version_number:'Change Version Number',
+        // 解析完成
+        parsing_completion:'Parsing Completion',
+        // 本次解析成功
+        parsing_success:'Parsing Success',
+        // 条
+        strip:'Strip',
+        // 数据
+        data:'Data',
+        // 失败
+        failure:'Failure',
+        // 导入失败的数据可以在设变版本列表处手动分类
+        import_failure_data:'Import Failure Data Can Be Manually Classified In The Device Version List',
     }
 }
