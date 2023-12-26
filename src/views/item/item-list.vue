@@ -879,9 +879,22 @@ export default {
 
     
     :deep(.ant-table-row-level-1) {
-
-      .ant-table-cell-with-append {
-        padding-left: 100px;
+      background-color: #F9FBFF;
+      
+      .ant-table-selection-column {
+        text-align: right;
+        position: relative;
+        .ant-checkbox-wrapper {
+          position: absolute;
+          top: 50%;
+          left: 85px;
+          z-index: 200;
+          transform: translate(-50%, -50%);
+        }
+      
+      }
+      .ant-table-cell-with-append  {
+        padding-left: 66px;
       }
     }
   }
