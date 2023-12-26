@@ -3,7 +3,9 @@
     <div class="list-container">
       <div class="title-container">
         <div class="title-area">{{ $t("retail.order_list") }}</div>
-
+        <div class="btns-area">
+            <a-button :disabled="exportDisabled" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('def.export') }}</a-button>
+        </div>
         <!-- 隐藏导入-导出功能-原本的合同列表 -->
         <div class="btns-area" v-if="false">
           <a-upload
@@ -361,6 +363,13 @@
                 v-if="$auth('crm-order.detail')"
                 ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
               >
+              <a-button
+                type="link"
+                class="danger"
+                @click="handleDelete(record.id)"
+                v-if="$auth('crm-order.delete')"
+                >{{ $t("def.delete") }}</a-button
+              >
             </template>
             <template v-else>
               {{ text || "-" }}
@@ -453,6 +462,7 @@ import addressCascader from "@/components/common/AddressCascader.vue";
 import { take } from "lodash";
 const modules = import.meta.globEager("../../assets/images/car/*");
 import axios from 'axios';
+import dayjs from 'dayjs';
 export default {
   name: "OrderList",
   components: {
@@ -487,33 +497,33 @@ export default {
       searchForm: {
         // name: "",
         source_type: 0, // 订单来源
-        uid: "", // 订单号
-        customer_name: "", // 客户名称
-        own_user_id: undefined, // 负责人
+        uid: undefined, // 订单号
+        customer_name: undefined, // 客户名称
+        own_user_id: '', // 负责人
         // create_user_name: "",
         paid_money_progress: 0, // 支付進度
         // status: 0,              // 訂單狀態
-        begin_time: "",
-        end_time: "",
-        type: "",
+        begin_time: undefined,
+        end_time: undefined,
+        type: undefined,
         // create_user_id:undefined,
         // search_type: 10,
         payment_type: undefined, //支付方式
         group_id: undefined, //区域id
         // 国家城市
-        to_country: "",
-        to_province: "",
-        to_city: "",
+        to_country: undefined,
+        to_province: undefined,
+        to_city: undefined,
         // 下单时间
-        order_begin_time: "", // （下单开始时间）
-        order_end_time: "", // （下单结束时间）
+        order_begin_time: undefined, // （下单开始时间）
+        order_end_time: undefined, // （下单结束时间）
         // 支付时间
-        payment_begin_time: "", // （支付开始时间）
-        payment_end_time: "", // （支付结束时间）
+        payment_begin_time: undefined, // （支付开始时间）
+        payment_end_time: undefined, // （支付结束时间）
         // 退款时间
-        refunded_begin_time: "", // （退款开始时间）
-        refunded_end_time: "", // （退款结束时间）
-        channel_country: "", // 订单来源 国家
+        refunded_begin_time: undefined, // （退款开始时间）
+        refunded_end_time: undefined, // （退款结束时间）
+        channel_country: undefined, // 订单来源 国家
       },
       ownUserOptions: [], //負責人
       createUserOptions: [], // 创建人列表
@@ -562,6 +572,7 @@ export default {
       areaOptions: [], // 区域列表
       fieldNames: {}, // 自定义级联选择器字段
       areaType: '',
+      exportDisabled: false,
     };
   },
   watch: {
@@ -624,6 +635,12 @@ export default {
         },
         { title: "p.order_status", dataIndex: "status", key: "status" },
         {
+          title: "crm_o.order_time",
+          dataIndex: "order_time",
+          key: "time",
+          sorter: true,
+        },
+        {
           title: "crm_o.order_name",
           dataIndex: "customer_id",
           key: "customer_name",
@@ -639,14 +656,19 @@ export default {
           key: "customer_phone",
         },
         {
-          title: "crm_o.own_user_name",
-          dataIndex: "own_user_id",
-          key: "own_user_name",
+          title: "crm_o.country_city",
+          dataIndex: "to_country",
+          key: "country",
         },
         {
           title: "crm_o.pay_car_type",
           dataIndex: "item_name",
           key: "item_name",
+        },
+        {
+          title: "crm_o.own_user_name",
+          dataIndex: "own_user_id",
+          key: "own_user_name",
         },
         {
           title: "crm_o.pay_progress",
@@ -677,12 +699,6 @@ export default {
         }, //待付款
         { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
         // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-
-        {
-          title: "crm_o.country_city",
-          dataIndex: "to_country",
-          key: "country",
-        },
         { title: "crm_o.address", dataIndex: "to_address", key: "address" },
         /*  {
                    title: "crm_o.create_user",
@@ -708,12 +724,6 @@ export default {
                     key: "time",
                     sorter: true,
                 }, */
-        {
-          title: "crm_o.order_time",
-          dataIndex: "order_time",
-          key: "time",
-          sorter: true,
-        },
         {
           title: "crm_o.pay_time",
           dataIndex: "payment_time",
@@ -1058,7 +1068,7 @@ export default {
         okType: "danger",
         cancelText: this.$t("def.cancel"),
         onOk() {
-          Core.Api.Order.delete({ id })
+          Core.Api.CRMOrder.delete({ id })
             .then(() => {
               _this.$message.success(_this.$t("pop_up.delete_success")),
                 _this.getTableData();
@@ -1232,7 +1242,33 @@ export default {
       }
 
       return str;
-    }
+    },
+    handleExportConfirm() { // 确认订单是否导出
+        let _this = this;
+        this.$confirm({
+            title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+            okText: _this.$t('def.sure'),
+            cancelText: _this.$t('def.cancel'),
+            onOk() {
+                _this.handleOrderExport();
+            }
+        })
+    },
+    handleOrderExport() { // 订单导出
+        this.exportDisabled = true;
+        let form = Core.Util.deepCopy(this.searchForm);
+        for (const key in form) {
+            form[key] = form[key] || ''
+        }
+        let exportUrl = Core.Api.Export.orderExport({
+            ...form,
+            order_by_fields: this.orderByFields,
+            status: this.activeKey,
+        })
+        console.log("handleOrderExport exportUrl", exportUrl)
+        window.open(exportUrl, '_blank')
+        this.exportDisabled = false;
+    },
   },
 };
 </script>
