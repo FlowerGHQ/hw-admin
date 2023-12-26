@@ -363,6 +363,13 @@
                 v-if="$auth('crm-order.detail')"
                 ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
               >
+              <a-button
+                type="link"
+                class="danger"
+                @click="handleDelete(record.id)"
+                v-if="$auth('crm-order.delete')"
+                >{{ $t("def.delete") }}</a-button
+              >
             </template>
             <template v-else>
               {{ text || "-" }}
@@ -1061,7 +1068,7 @@ export default {
         okType: "danger",
         cancelText: this.$t("def.cancel"),
         onOk() {
-          Core.Api.Order.delete({ id })
+          Core.Api.CRMOrder.delete({ id })
             .then(() => {
               _this.$message.success(_this.$t("pop_up.delete_success")),
                 _this.getTableData();
