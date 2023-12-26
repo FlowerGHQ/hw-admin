@@ -42,7 +42,15 @@
         <!-- 配件列表 -->
         <div class="fittings-list">
             <div class="title">
-                {{ $t('item-bom.accessories_list') }}
+               <span> {{ $t('item-bom.accessories_list') }}</span>
+               <div class="btn">
+                    <a-button class="download-template" @click="downUploadTemplate" >
+                        {{ $t('item-bom.download_template') }}
+                    </a-button>
+                    <a-button class="bulk-import" @click="importTemplate" >
+                        {{ $t('item-bom.bulk_import') }}
+                    </a-button>
+               </div>
             </div>
             <a-table
                 :row-key="(record) => record.id"
@@ -117,6 +125,10 @@
                 </template>
             </a-table>
         </div>
+        <ExportModal 
+            v-model:visibility = "exportVisibility"
+            @setCancleShow = "exportVisibility = false"
+            />
     </div>
 </template>
 
@@ -124,11 +136,14 @@
 
 import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
+import ExportModal from './export-modal.vue';
 const classifyShowModal = inject('classifyShowModal');
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const flagNew = ref()
+// 解析导入 --  二次弹窗
+const exportVisibility = ref(false);
 
 const props = defineProps({  
     // v-model 绑定值  
@@ -257,6 +272,18 @@ const objCount = reactive({
 onMounted(() => {
 })
 
+// 下载模板
+const downUploadTemplate = () => {
+    
+    let exportUrl = Core.Api.Export.downloadTemplate()
+    window.open(exportUrl, '_blank')
+}
+
+// 导入模板
+const importTemplate = () => {
+    exportVisibility.value = true;
+
+}
 // 获取设变列表
 const getChangeList = () => {
     Core.Api.ITEM_BOM.changeBomList({
@@ -436,9 +463,17 @@ defineExpose({
 
         .title {
             margin:24px auto 10px;
-            color:  #1D2129;
             font-size: 16px;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .btn {
+                display: flex;
+                .download-template {
+                    margin-right: 10px;
+                }
+            }
         }
     }
     .my-table {
@@ -498,4 +533,5 @@ defineExpose({
         margin-right: 10px;
     }
 }
+
 </style>

@@ -43,32 +43,6 @@
                             :options="searchOptions"
                             @search="handleSearch"
                             @reset="handleReset">
-                            <template #pre_btn>
-                                <div
-                                    class="more-btn"
-                                    v-if="activeObj.level === 2">
-                                    <div class="download-template">
-                                        <!-- 模板下载 -->
-                                        <a-button
-                                            type="link"
-                                            @click="showClassModal('download')"
-                                            :disabled="disabled">
-                                            {{
-                                                $t("item-bom.download_template")
-                                            }}
-                                        </a-button>
-                                    </div>
-                                    <div class="bulk-import">
-                                        <!-- 批量导入 -->
-                                        <a-button
-                                            type="primary"
-                                            @click="showClassModal('import')"
-                                            :disabled="disabled">
-                                            {{ $t("item-bom.bulk_import") }}
-                                        </a-button>
-                                    </div>
-                                </div>
-                            </template>
                         </SearchAll>
                     </div>
                     <component
@@ -216,7 +190,6 @@ const showClassModal = (data) => {
     classifyModalShow.value = true;
 };
 const handleResize = () => {
-    console.log("999999999", window.innerWidth);
     screenWidth.value =
         window.innerWidth ||
         document.documentElement.clientWidth ||
@@ -271,6 +244,7 @@ const setValue = (val) => {
                 padding: 24px 20px 16px 20px;
                 display: flex;
                 flex-direction: column;
+                transition: width 0.5s;
                 .title-area {
                     color: #1d2129;
                     font-size: 16px;
