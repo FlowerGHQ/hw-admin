@@ -45,6 +45,7 @@ const apiList = {
         goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
         downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
+        orderExport: ['GetJson', 'crm-order/export'],
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
