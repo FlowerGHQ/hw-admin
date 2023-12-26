@@ -297,7 +297,6 @@
                                     </div>
                                 </div>
                             </div>
-                            
                             <!-- <div class="edit">
                                 <div class="new_version" v-if="item.flag_new">
                                     {{ $t("item-bom.change_new_version") }}
@@ -549,6 +548,7 @@ const props = defineProps({
 });
 
 // -----------------定义方法--------------------------
+
 // 搜索
 const onSearch = (value) => {
     getGoodsList();
@@ -600,6 +600,7 @@ const selectKey = (parentItem = {}, item) => {
                 level: item.level,
                 version_id: "",
                 shop_id: item.item_id,
+                version_name: item.version,
                 category_id: "",
                 name: item.name,
                 sync_id: item.sync_id,
@@ -621,6 +622,7 @@ const selectKey = (parentItem = {}, item) => {
                 level: item.level,
                 version_id: item.id,
                 shop_id: parentItem.item_id,
+                version_name: item.version,
                 category_id: "",
                 name: item.name,
                 sync_id: "",
@@ -632,6 +634,7 @@ const selectKey = (parentItem = {}, item) => {
             $emit("update:activeObj", {
                 level: item.level,
                 version_id: parentItem.id,
+                version_name: item.version,
                 shop_id: "",
                 category_id: item.id,
                 name: item.name,

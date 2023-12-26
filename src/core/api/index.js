@@ -937,6 +937,7 @@ const apiList = {
         bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类 （覆盖）
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
+        importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
 
     }
 }; 

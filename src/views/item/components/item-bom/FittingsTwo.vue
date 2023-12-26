@@ -47,9 +47,28 @@
                     <a-button class="download-template" @click="downUploadTemplate" >
                         {{ $t('item-bom.download_template') }}
                     </a-button>
-                    <a-button class="bulk-import" @click="importTemplate" >
+                    <!-- <a-button class="bulk-import" @click="importTemplate" >
                         {{ $t('item-bom.bulk_import') }}
-                    </a-button>
+                    </a-button> -->
+                    
+                    <a-upload
+                        name="file"
+                        class="file-uploader"
+                        :file-list="uploadFileObj.fileList"
+                        :action="uploadFileObj.action"
+                        :show-upload-list="false"
+                        :headers="uploadFileObj.headers"
+                        :data="{...uploadFileObj.data, bom_version_id: bomId}"
+                        accept=".xlsx,.xls"
+                        @change="importTemplate"
+                        ><!-- 
+                        <a-button type="primary" ghost class="file-upload-btn">
+                        <i class="icon i_add" />{{ $t("i.import") }}
+                        </a-button> -->
+                        <a-button class="bulk-import">
+                        {{ $t('item-bom.bulk_import') }}
+                        </a-button>
+                    </a-upload>
                </div>
             </div>
             <a-table
@@ -128,6 +147,9 @@
         <ExportModal 
             v-model:visibility = "exportVisibility"
             @setCancleShow = "exportVisibility = false"
+            :objData="exportObj"
+            :versionName = "versionName"
+            :bom_version_id = "bomId"
             />
     </div>
 </template>
@@ -144,7 +166,9 @@ const loading = ref(false)
 const flagNew = ref()
 // 解析导入 --  二次弹窗
 const exportVisibility = ref(false);
-
+// 导出对象数据--显示在二次弹窗中
+const exportObj = ref({});
+const versionName = ref('')
 const props = defineProps({  
     // v-model 绑定值  
     activeObj: {
@@ -157,7 +181,18 @@ const props = defineProps({
         default: () => {}
     }
 })
-
+const uploadFileObj = reactive({
+    
+    action: Core.Const.NET.URL_POINT + "/admin/1/aftermarket/bom/parsing-import-file",
+    fileList: [],
+    headers: {
+        ContentType: false,
+    },
+    data: {
+        token: Core.Data.getToken(),
+        type: "xlsx",
+    },
+})
 const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
@@ -280,9 +315,25 @@ const downUploadTemplate = () => {
 }
 
 // 导入模板
-const importTemplate = () => {
-    exportVisibility.value = true;
+const importTemplate = ({ file, fileList }) => {
+    // 
+    
+    console.log("importTemplate111 status:", file.status, "file:", file);
+    if (file.status == 'done') {
+        if (file.response && file.response.code > 0) {
+            return proxy.$message.error(file.response.message)
+        } else {
+            // Atable.value.handleSearchReset();
+            exportVisibility.value = true;
+            exportObj.value = {
+                correctList: file?.response?.data?.correctList || [],
+                statistics: file?.response?.data?.statistics || [],
+            };
+            return proxy.$message.success(proxy.$t('pop_up.uploaded'));
+        }
+    }
 
+    uploadFileObj.fileList = fileList;
 }
 // 获取设变列表
 const getChangeList = () => {
@@ -382,8 +433,10 @@ const toClassify = (sync_id) => {
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
+        console.log('props.activeObj111',props.activeObj);
         bomId.value = newValue?.version_id;
         flagNew.value = newValue?.flag_new;
+        versionName.value = newValue?.version_name;
         if(newValue && Object.keys(newValue)){
             refresh();
         }

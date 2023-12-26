@@ -12,7 +12,7 @@
             @cancel="handCancle"
             :getContainer="() => wrap">
             <div class="main">
-                <span class="title">{{$t('item-bom.change_version_number')}}：0002</span>
+                <span class="title">{{$t('item-bom.change_version_number')}}{{`：${ versionName }`}}</span>
                 <div class="success-tips">
                     <div class="success-icon">
 						<img src="../../../../assets/images/bom/完成.png" alt="">
@@ -20,9 +20,9 @@
                     <div class="success-text">{{ $t('item-bom.parsing_completion') }}</div>
                     <div class="success-or-fail">
                         {{ $t('item-bom.parsing_success') }}
-                        <span class="success-txt">32</span>
+                        <span class="success-txt">{{ successCount }}</span>
                         {{$t('item-bom.strip')}} {{$t('item-bom.data')}}， {{$t('item-bom.failure')}}
-                        <span class="fail-txt">2</span>
+                        <span class="fail-txt">{{ failCount }}</span>
 						{{$t('item-bom.strip')}}
                     </div>
                 </div>
@@ -44,83 +44,106 @@
 </template>
 
 <script setup>
-import { ref ,computed} from "vue";
+import { ref ,computed ,watch } from "vue";
 import { useI18n } from "vue-i18n";
+import Core from "@/core";
+
 const $t = useI18n().t;
 const wrap = ref(null);
+// 成功列表
+const correctList = ref([]);
+// 成功总条数
+const successCount = ref(0);
+// 失败总条数
+const failCount = ref(0);
 
 const emits = defineEmits(['update:visibility','refresh']) 
 const props = defineProps({  
-    tableList: {
-        type: Array,
-        default: () => []
+    objData: {
+        type: Object,
+        default: () => {}
     },
-    visibility:{
+    visibility: {
         type: Boolean,
         default: false        
     },
+	versionName: {
+		type: String,
+		default: ''
+	},
+	bom_version_id: {
+		type: String,
+		default: ''
+	}
     
 })
+
+watch(
+    () => props.objData,
+	(newVal,oldVal) => {
+		let success_count = 0;
+		let fail_count = 0;
+		correctList.value = newVal?.correctList
+		tableData.value = newVal?.statistics;
+		tableData.value.forEach(item => {
+			success_count += Number(item.success_count)
+			fail_count += Number(item.fail_count)
+		})
+		successCount.value = success_count;
+		failCount.value = fail_count;
+		console.log('successCount.value4455',successCount.value);
+		console.log('failCount.value4455',failCount.value);
+
+	},
+	{
+		deep: true,
+	}
+)
 const tableColumns = computed(()=>{
 	const result = [
         { 
             title: $t('item-bom.category'), 
-            dataIndex: "category", 
+            dataIndex: "category_name", 
             key: "category",
 			align:'center',
 			width:160
 		},
         { 
             title: $t('item-bom.parsing_success_number'), 
-            dataIndex: "parsing_success_number", 
+            dataIndex: "success_count", 
             key: "parsing_success_number",
 			align:'center'
         },
         { 
             title: $t('item-bom.parsing_failure_number'), 
-            dataIndex: "parsing_failure_number", 
+            dataIndex: "fail_count", 
             key: "parsing_failure_number",
 			align:'center'
         },
     ]
     return result
 })
-const tableData = ref([
-	{
-		id:0,
-		category:'前叉组',
-		parsing_success_number:14,
-		parsing_failure_number:0
-	},
-	{
-		id:1,
-		category:'电机组',
-		parsing_success_number:13,
-		parsing_failure_number:2
-	},
-	{
-		id:2,
-		category:'其他组二',
-		parsing_success_number:13,
-		parsing_failure_number:0
-	},
-	{
-		id:3,
-		category:'其他组二',
-		parsing_success_number:13,
-		parsing_failure_number:0
-	},
-	{
-		id:4,
-		category:'其他组二',
-		parsing_success_number:14,
-		parsing_failure_number:0
-	}
-])
+
+// 成功失败数据显示列表
+const tableData = ref([])
 
 const handCancle = () => {
 	
     emits("update:visibility", false);
+}
+
+const handleOk = () => {
+	
+    Core.Api.ITEM_BOM.importBindBomItem({
+        bom_version_id: props.bom_version_id,
+		item_list: correctList.value,
+    }).then(res=>{
+		console.log('importBindBomItem',res);
+    }).catch(err=>{
+        console.log('err',err);
+    }).finally(()=>{
+		emits("update:visibility", false);
+	})
 }
 
 </script>
