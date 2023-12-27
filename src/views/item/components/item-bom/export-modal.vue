@@ -15,7 +15,7 @@
                 <span class="title">{{$t('item-bom.change_version_number')}}{{`：${ versionName }`}}</span>
                 <div class="success-tips">
                     <div class="success-icon">
-						<img src="../../../../assets/images/bom/完成.png" alt="">
+						<img src="../../../../assets/images/bom/ok.png" alt="">
                     </div>
                     <div class="success-text">{{ $t('item-bom.parsing_completion') }}</div>
                     <div class="success-or-fail">
@@ -36,6 +36,12 @@
 						bordered
 						:pagination="false"
                         :scroll="{ x: true }">
+						<template #bodyCell="{record, column, text }">
+							<div v-if="column.key === 'parsing_failure_number'">
+								<span class="zero" v-if="record.fail_count == 0">0</span>
+								<span class="fail-number" v-else>{{ text }}</span>
+							</div>
+						</template>
                     </a-table>
                 </div>
             </div>
@@ -133,12 +139,12 @@ const handCancle = () => {
 }
 
 const handleOk = () => {
-	
     Core.Api.ITEM_BOM.importBindBomItem({
         bom_version_id: props.bom_version_id,
 		item_list: correctList.value,
     }).then(res=>{
 		console.log('importBindBomItem',res);
+		emits('refresh')
     }).catch(err=>{
         console.log('err',err);
     }).finally(()=>{
@@ -226,6 +232,15 @@ const handleOk = () => {
 					tr,
 					th {
 						border-color: #e2e2e2 !important;
+					}
+					.ant-table-cell{
+						color: #1D2129 !important;
+					}
+					.zero{
+						color: #BFBFBF;
+					}
+					.fail-number{
+						color: #F53F3F;
 					}
 				}
 			}
