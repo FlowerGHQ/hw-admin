@@ -36,6 +36,12 @@
 						bordered
 						:pagination="false"
                         :scroll="{ x: true }">
+						<template #bodyCell="{record, column, text }">
+							<div v-if="column.key === 'parsing_failure_number'">
+								<span class="zero" v-if="record.fail_count == 0">0</span>
+								<span class="fail-number" v-else>{{ text }}</span>
+							</div>
+						</template>
                     </a-table>
                 </div>
             </div>
@@ -226,6 +232,12 @@ const handleOk = () => {
 					tr,
 					th {
 						border-color: #e2e2e2 !important;
+					}
+					.zero{
+						color: #BFBFBF;
+					}
+					.fail-number{
+						color: #F53F3F;
 					}
 				}
 			}
