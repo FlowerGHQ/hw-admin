@@ -545,7 +545,6 @@ import {
     computed,
     onMounted,
     watch,
-    useAttrs ,
     onBeforeUnmount,
 } from "vue";
 import { useI18n } from "vue-i18n";
@@ -553,9 +552,8 @@ import Core from "@/core";
 const $t = useI18n().t;
 const $emit = defineEmits(["update:activeObj"]);
 import Util from "@/core/utils";
-const wrap = ref(null);
 
-// -----------------定义数据-------------------------------
+// // -----------------定义数据-------------------------------
 
 // 搜索关键字
 let keyWord = ref("");
@@ -565,9 +563,9 @@ let activeKey = ref("");
 let loading1 = ref(false);
 let loading2 = ref(false);
 let loading3 = ref(false);
-let addValue = ref("新增");
+const addValue = ref("新增");
 let visible = ref(false);
-// 删除的item及其父级item
+// // 删除的item及其父级item
 let deleteItem = ref(null);
 let deleteParentItem = ref(null);
 // 定时器
@@ -576,6 +574,7 @@ let timer2 = ref(null);
 let timer3 = ref(null);
 let timer4 = ref(null);
 let timer5 = ref(null);
+let wrap = ref(null);
 
 // 当前父级shop_id
 const shopId = ref(null);
