@@ -233,6 +233,9 @@ const handleOk = () => {
 					th {
 						border-color: #e2e2e2 !important;
 					}
+					.ant-table-cell{
+						color: #1D2129 !important;
+					}
 					.zero{
 						color: #BFBFBF;
 					}

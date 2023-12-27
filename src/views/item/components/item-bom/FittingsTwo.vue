@@ -293,6 +293,7 @@ const expandOrSollapse = () => {
 // 模态框点击确定的时候
 const handleRefresh = () => {
     emits("handleRefresh", props.activeObj);
+    refresh();
 }
 
 /* const getSalesAreaStr = (arr) => {
