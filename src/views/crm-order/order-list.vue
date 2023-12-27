@@ -651,18 +651,12 @@ export default {
             key: "amount",
         },
         {
-          title: "in.order_number",
-          dataIndex: "uid",
-          key: "uid",
-          sorter: true,
-        },
-        { title: "p.order_status", dataIndex: "status", key: "status" },
-        {
           title: "crm_o.order_time",
           dataIndex: "order_time",
           key: "time",
           sorter: true,
         },
+        { title: "p.order_status", dataIndex: "status", key: "status" },
         {
           title: "crm_o.order_name",
           dataIndex: "customer_id",
@@ -677,6 +671,13 @@ export default {
           title: "n.phone",
           dataIndex: "customer_phone",
           key: "customer_phone",
+        },
+        { title: "crm_o.address", dataIndex: "to_address", key: "address" },
+        {
+          title: "in.order_number",
+          dataIndex: "uid",
+          key: "uid",
+          sorter: true,
         },
         {
           title: "crm_o.country_city",
@@ -722,7 +723,6 @@ export default {
         }, //待付款
         { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
         // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-        { title: "crm_o.address", dataIndex: "to_address", key: "address" },
         /*  {
                    title: "crm_o.create_user",
                    dataIndex: "create_user_id",
