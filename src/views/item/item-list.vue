@@ -133,7 +133,7 @@
                         </div>
                         <div
                           v-if="record.children_number"
-                          class="sub-info">
+                          class="sub-info sub-info-farther">
                           {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
                         </div>
                       </a-tooltip>
@@ -863,6 +863,14 @@ export default {
         text-overflow: ellipsis; /*文字隐藏以后添加省略号*/
         white-space: nowrap; /*强制不换行*/
       }
+      .sub-info-farther {
+        
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #0061FF;
+        background-color: #E6F0FF;
+
+      }
       .source-erp {
         width: 36px;
         height: 18px;
@@ -899,14 +907,18 @@ export default {
         background-color: #FAFAFA;
       }
     }
-    :deep(.ant-table-row-selected) {
-      .ant-table-cell-fix-right-first {
-        background-color: #E6F7FF;
-      }
-    }
 
     :deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
       background-color: #F9FBFF;
+    }
+
+    :deep(.ant-table-row-selected) {
+      .ant-table-cell-fix-right-first {
+        background-color: #E6F7FF !important;
+      }
+    }
+    :deep(.ant-table-tbody > tr.ant-table-row-selected:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
+      background-color: #E6F7FF !important;
     }
   }
 }
