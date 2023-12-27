@@ -322,7 +322,9 @@
                         <a-popover
                             trigger="click"
                             placement="rightTop"
-                            overlayClassName="pop-fittings-tree">
+                            overlayClassName="pop-fittings-tree"
+                            :getPopupContainer="() => wrap"    
+                        >
                             <template #content>
                                 <div class="expand-area" v-if="item.expand">
                                     <a-spin :spinning="loading2" :delay="500">
@@ -1115,6 +1117,7 @@ onBeforeUnmount(() => {
                         }
                     }
                 }
+                
                 .expand-area {
                     width: 100%;
                     background-color: #fff;
@@ -1381,8 +1384,8 @@ onBeforeUnmount(() => {
     margin-left: 0px !important;
 }
 </style>
-<style>
-.pop-fittings-tree {
+<style lang="less" scoped>
+  :deep(.pop-fittings-tree) {
     .ant-popover-inner-content {
         padding: 20px 20px 10px;
         .expand-area {
