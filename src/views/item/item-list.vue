@@ -134,7 +134,7 @@
                         </div>
                         <div
                           v-if="record.children_number"
-                          class="sub-info">
+                          class="sub-info sub-info-farther">
                           {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
                         </div>
                       </a-tooltip>
@@ -873,6 +873,14 @@ export default {
         overflow: hidden; /*超出长度的文字隐藏*/
         text-overflow: ellipsis; /*文字隐藏以后添加省略号*/
         white-space: nowrap; /*强制不换行*/
+      }
+      .sub-info-farther {
+        
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #0061FF;
+        background-color: #E6F0FF;
+
       }
       .source-erp {
         width: 36px;

@@ -3494,7 +3494,15 @@ export default {
     margin-top: 4px;
 }
 
+.ant-input-group-wrapper {
+
+    :deep(.ant-input-group-addon) {
+        border-color: #EAECF2;
+    }
+}
+
 .fixed-btns {
+
         position: fixed;
         bottom: 16px;
         width: 100%;
@@ -3520,11 +3528,13 @@ export default {
         }
 
 }
+
 .ant-input-group-wrapper {
     :deep(.ant-input-group-addon) {
         border-color: #EAECF2;
     }
 }
+    
 </style>
 <style lang="less">
 .config-modal {
