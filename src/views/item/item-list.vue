@@ -100,43 +100,54 @@
               </template>
               <template #bodyCell="{ column, text, record }">
                 <!-- 名称 -->
-                <template v-if="column.key === 'detail'">
-                  <div style="width: 200px;" class="table-img afs">
+                <template v-if="column.key === 'detail'" >
+                  <div style="width: 200px;" class="table-img afs" >
                     <a-image
                       class="image"
                       :width="55"
                       :height="55"
                       :src="$Util.imageFilter(record.logo)"
                       :fallback="$t('def.none')" />
-                    <div class="info">
-                      <a-tooltip>
-                        <template #title>{{
-                          $i18n.locale === "zh"
-                            ? record.name
-                            : record.name_en || "-"
-                        }}</template>
-                        <a-button
-                          type="link"
-                          @click="routerChange('detail', record)">
-                          <div class="ell" style="max-width: 150px">
-                            {{
-                              $i18n.locale === "zh"
-                                ? record.name
-                                : record.name_en || "-"
-                            }}
-                          </div>
-                        </a-button>
-                        <div
-                          v-if="!record.children && record.attr_list && record.attr_list.length"
-                          class="sub-info">
-                          {{ $Util.itemSpecFilter(record.attr_list) }}
-                        </div>
-                        <div
-                          v-if="record.children_number"
-                          class="sub-info sub-info-farther">
-                          {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
-                        </div>
-                      </a-tooltip>
+                    <div class="info" >
+                      <div>
+                            <a-tooltip>
+                                <template #title>{{
+                                  $i18n.locale === "zh"
+                                    ? record.name
+                                    : record.name_en || "-"
+                                }}</template>
+                                <a-button
+                                  type="link"
+                                  @click="routerChange('detail', record)">
+                                    <div class="ell" style="max-width: 150px">
+                                      {{
+                                        $i18n.locale === "zh"
+                                          ? record.name
+                                          : record.name_en || "-"
+                                      }}
+                                    </div>
+                                </a-button>
+                          </a-tooltip>
+                          <a-tooltip>
+                              <template #title>{{
+                                /* $i18n.locale === "zh"
+                                  ? record.name
+                                  : record.name_en || "-" */
+                                  (!record.children && record.attr_list && record.attr_list.length) ? $Util.itemSpecFilter(record.attr_list) : `${$t(/*共有*/'i.in_all')}${record.children_number}${$t(/*款规格商品*/'i.spec_of_goods')}`
+                              }}</template>
+                              <div
+                                v-if="!record.children && record.attr_list && record.attr_list.length"
+                                class="sub-info">
+                                {{ $Util.itemSpecFilter(record.attr_list) }}
+                              </div>
+                              <div
+                                v-if="record.children_number"
+                                class="sub-info sub-info-farther">
+                                {{ $t(/*共有*/'i.in_all') }} {{ record.children_number }} {{ $t(/*款规格商品*/'i.spec_of_goods') }}
+                              </div>
+                          </a-tooltip>
+                      </div>
+                      
                       <!-- 来源 -->
                       <div
                         v-if="SOURCE_TYPE[record.source_type]?.value == 'ERP'"
@@ -360,11 +371,12 @@ export default {
       let { filteredInfo } = this;
       filteredInfo = filteredInfo || {};
       let tableColumns = [
-        { title: this.$t("n.name"), dataIndex: "name", key: "detail", width: '100px' },
+        { title: this.$t("n.name"), dataIndex: "name", key: "detail", width: '660px' },
         { title: this.$t("i.code"), dataIndex: "code", key: "item" },
         {
           title: this.$t("i.status"),
           dataIndex: "status",
+          width: '80px'
           // filters: this.$Util.tableFilterFormat(
           //   ITEM.STATUS_LIST,
           //   this.$i18n.locale
@@ -853,6 +865,12 @@ export default {
     .ant-table-wrapper{
       flex: 1;
     }
+    :deep(.ant-table .table-img .ant-image ) {
+      flex-shrink: 0;
+      height: 55px;
+      width: 55px !important;
+      display: inline-block;
+    }
     .info {
       display: inline-flex;
       flex-direction: column;
@@ -862,6 +880,7 @@ export default {
         overflow: hidden; /*超出长度的文字隐藏*/
         text-overflow: ellipsis; /*文字隐藏以后添加省略号*/
         white-space: nowrap; /*强制不换行*/
+        max-width: 180px;
       }
       .sub-info-farther {
         
