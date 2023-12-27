@@ -1370,7 +1370,7 @@
         </div>
         
         <div :style="{height: fixedHeight}"></div>
-        <a-modal destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
+        <a-modal :maskClosable="false" destroyOnClose :visible="showConfigSet" :width="600" :title="configSetTitle" wrapClassName="config-modal" @ok="handleComfirmConfig" @cancel="handleCancelConfig">
             <div class="config-list">
                 <div class="config-item" v-for="(option, i) of configSetMes.option" :key="i">
                     <div class="config-item-title" :style="{ color: uniqueArr.indexOf(i) !== -1 ? 'red' : '' }">
@@ -3527,7 +3527,7 @@ export default {
             bottom: -16px;
         }
     }
-    
+
 </style>
 <style lang="less">
 .config-modal {
