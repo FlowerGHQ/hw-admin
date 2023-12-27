@@ -15,7 +15,7 @@
                 <span class="title">{{$t('item-bom.change_version_number')}}{{`：${ versionName }`}}</span>
                 <div class="success-tips">
                     <div class="success-icon">
-						<img src="../../../../assets/images/bom/完成.png" alt="">
+						<img src="../../../../assets/images/bom/ok.png" alt="">
                     </div>
                     <div class="success-text">{{ $t('item-bom.parsing_completion') }}</div>
                     <div class="success-or-fail">
@@ -133,12 +133,12 @@ const handCancle = () => {
 }
 
 const handleOk = () => {
-	
     Core.Api.ITEM_BOM.importBindBomItem({
         bom_version_id: props.bom_version_id,
 		item_list: correctList.value,
     }).then(res=>{
 		console.log('importBindBomItem',res);
+		emits('refresh')
     }).catch(err=>{
         console.log('err',err);
     }).finally(()=>{

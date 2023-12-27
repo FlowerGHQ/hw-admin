@@ -29,7 +29,9 @@
                         <FittingsTree
                             v-model:activeObj="activeObj"
                             :cancelIds="cancelId"
-                            :isCollapse="isCollapse" />
+                            :isCollapse="isCollapse" 
+                            ref="treeRef"
+                        />
                     </div>
                 </div>
                 <!-- 右边 -->
@@ -50,7 +52,10 @@
                         ref="allComRef"
                         :is="componentName"
                         :activeObj="activeObj"
-                        :searchParams="searchParams"></component>
+                        :searchParams="searchParams"
+                        @handleRefresh="TreeRefresh"
+                    >
+                    </component>
                 </div>
             </div>
         </div>
@@ -85,7 +90,7 @@ import ClassifyModal from "./components/item-bom/ClassifyModal.vue"; // 分类�
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 // const router = useRouter()
 const minWidthCount = 890;
-
+const treeRef = ref(null);
 // 标题高度
 const titleRefs = ref(null);
 const titleHeight = ref(0);
@@ -167,6 +172,14 @@ const screenWidth = ref(
         document.documentElement.clientWidth ||
         document.body.clientWidth
 );
+
+const TreeRefresh = (val) => {
+    console.log(val)
+    if (val) {
+        treeRef.value.getCurrentVersion(val.shop_id,val.version_id);
+    }
+};
+
 onMounted(() => {
     titleHeight.value = titleRefs.value.offsetHeight + "px";
     /* 计算适配宽度 */

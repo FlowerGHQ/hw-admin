@@ -150,6 +150,7 @@
             :objData="exportObj"
             :versionName = "versionName"
             :bom_version_id = "bomId"
+            @refresh="handleRefresh"
             />
     </div>
 </template>
@@ -160,6 +161,7 @@ import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, in
 import Core from "@/core";
 import ExportModal from './export-modal.vue';
 const classifyShowModal = inject('classifyShowModal');
+const emits = defineEmits(['handleRefresh'])
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
@@ -286,6 +288,11 @@ const channelPagination = ref({
 
 const expandOrSollapse = () => {
     isShow.value = !isShow.value;
+}
+
+// 模态框点击确定的时候
+const handleRefresh = () => {
+    emits("handleRefresh", props.activeObj);
 }
 
 /* const getSalesAreaStr = (arr) => {
