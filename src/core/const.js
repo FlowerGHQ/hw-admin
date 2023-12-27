@@ -23,6 +23,11 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-dev-api.horwincloud.com' // 新测试服
         break;     
     case "10.0.0.213":
+        URL_POINT = 'https://10.0.0.65:8889'
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服
+        // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
+        break;
+    case "10.10.12.83":
         URL_POINT = 'https://10.0.0.213:8889'
         // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
