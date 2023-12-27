@@ -907,14 +907,18 @@ export default {
         background-color: #FAFAFA;
       }
     }
-    :deep(.ant-table-row-selected) {
-      .ant-table-cell-fix-right-first {
-        background-color: #E6F7FF;
-      }
-    }
 
     :deep(.ant-table-tbody > tr.ant-table-row:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
       background-color: #F9FBFF;
+    }
+
+    :deep(.ant-table-row-selected) {
+      .ant-table-cell-fix-right-first {
+        background-color: #E6F7FF !important;
+      }
+    }
+    :deep(.ant-table-tbody > tr.ant-table-row-selected:hover > td, .ant-table-tbody > tr > td.ant-table-cell-row-hover) {
+      background-color: #E6F7FF !important;
     }
   }
 }
