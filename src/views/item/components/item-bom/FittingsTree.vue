@@ -863,6 +863,7 @@ const handleAddCategory = (item) => {
                     level: 2,
                     version_id: item.id,
                     shop_id: item.item_id,
+                    version_name: item.version,
                     category_id: "",
                     name: item.name,
                     sync_id: "",
@@ -907,6 +908,7 @@ const handleOk = () => {
                     shop_id: deleteParentItem.value.item_id,
                     category_id: "",
                     name: deleteParentItem.value.name,
+                    version_name: item.version,
                     sync_id: "",
                 });
             });
