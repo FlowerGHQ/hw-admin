@@ -324,9 +324,7 @@ const downUploadTemplate = () => {
 
 // 导入模板
 const importTemplate = ({ file, fileList }) => {
-    // 
     
-    console.log("importTemplate111 status:", file.status, "file:", file);
     if (file.status == 'done') {
         if (file.response && file.response.code > 0) {
             return proxy.$message.error(file.response.message)
@@ -406,7 +404,6 @@ const getTableDataFetch = (parmas = {}) => {
     }
 
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
-        console.log('getTableDataFetch',res);
         channelPagination.value.total = res.count;
         tableData.value = res.list;
     }).catch(err => {
@@ -441,7 +438,6 @@ const toClassify = (sync_id) => {
 watch(
     () => props.activeObj,
     (newValue, oldValue) => {
-        console.log('props.activeObj111',props.activeObj);
         bomId.value = newValue?.version_id;
         flagNew.value = newValue?.flag_new;
         versionName.value = newValue?.version_name;

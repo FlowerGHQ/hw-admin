@@ -97,8 +97,6 @@ watch(
 		})
 		successCount.value = success_count;
 		failCount.value = fail_count;
-		console.log('successCount.value4455',successCount.value);
-		console.log('failCount.value4455',failCount.value);
 
 	},
 	{
