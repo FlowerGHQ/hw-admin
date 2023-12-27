@@ -3530,11 +3530,13 @@ export default {
 }
 
 .ant-input-group-wrapper {
+    
     :deep(.ant-input-group-addon) {
         border-color: #EAECF2;
     }
 }
     
+
 </style>
 <style lang="less">
 .config-modal {
