@@ -84,7 +84,7 @@
                                                         <img class="img-icon" src="../../../../assets/images/bom/copy.png" alt="">
                                                     </a-tooltip>
                                                 </div>
-                                                <div class="silder-delete" @click.stop="onSilderDelete(ground, i, 'node')">
+                                                <div class="silder-delete" @click.stop="onNodeDelete(ground, i, 'node')">
                                                     <a-tooltip>
                                                         <template #title> {{ $t('item-bom.deelete_points') }}</template>
                                                         <img class="img-icon" src="../../../../assets/images/bom/delete.png" alt="">
@@ -640,7 +640,7 @@ const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始
         .then((res) => {
             const first_data = res.list.list[0]
             // 过滤数据
-            first_data.item_component_list.forEach(el => {
+            first_data?.item_component_list.forEach(el => {
                 el.start_point = !el.start_point ? "" : JSON.parse(el.start_point)
                 el.end_point = !el.end_point ? "" : JSON.parse(el.end_point)
             })
@@ -847,6 +847,19 @@ const onSidebarItem = (event, type, ground) => {
             
         break;
     }
+}
+
+// 父节点点击事件
+const onNodeDelete = (ground, i, type) => {
+    onSilderDelete(ground, i, type)
+    
+    // 监听删除之后表格(index)跟着变换
+    addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
+        if ($1.start_point.length === 0 && $1.end_point.length === 0) {
+            const item = tableData.value.find($2 => Number($2.id) === Number($1.target_id))
+            item.index = null           
+        }
+    })
 }
 
 
