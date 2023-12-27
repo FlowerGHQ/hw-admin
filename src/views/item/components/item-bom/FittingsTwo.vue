@@ -335,7 +335,7 @@ const importTemplate = ({ file, fileList }) => {
                 correctList: file?.response?.data?.correctList || [],
                 statistics: file?.response?.data?.statistics || [],
             };
-            return proxy.$message.success(proxy.$t('pop_up.uploaded'));
+            // return proxy.$message.success(proxy.$t('pop_up.uploaded'));
         }
     }
 
