@@ -67,7 +67,7 @@
                                                 " />
                                         </div>
                                         <div class="title-left-bottom">
-                                            {{ item.sync_id }}
+                                            {{ item.item_code }}
                                         </div>
                                     </div>
                                 </div>
