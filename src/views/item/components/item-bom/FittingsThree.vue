@@ -159,6 +159,10 @@
 								<div  
                                     v-for="(itemEnd, itemEndIndex) in item.end_point" :key="itemEndIndex"  									
 									class="pointer-end"
+                                    :class="{
+                                        'opacity-1': siderChildNodeLabel === itemEnd.label
+                                        || siderBarItemLabel === itemEnd.label
+                                    }"
 									:style="{'left': `${itemEnd?.x}px`, 'top': `${itemEnd?.y }px`}"
 									@mousedown="pointMousedown(itemIndex, 'end_point', itemEndIndex)"
 									@mousemove.stop=""
@@ -1123,7 +1127,7 @@ const onSidebarItem = (event, type, ground) => {
                                         top: -10px;
                                         left: 30px;
                                         border-style: solid dashed dashed;
-                                        border-color: transparent transparent @BG_LP  transparent;
+                                        border-color: transparent transparent @BG_LP transparent;
                                         font-size: 0;
                                         line-height: 0;
                                     }                                    
@@ -1296,5 +1300,8 @@ const onSidebarItem = (event, type, ground) => {
 
 :deep(.row-style) {
     background: rgba(0, 97, 255, 0.10);
+}
+.opacity-1 {
+    opacity: 1 !important;
 }
 </style>
