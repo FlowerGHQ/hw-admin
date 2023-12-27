@@ -42,7 +42,7 @@
                     </a-tooltip>
                 </span>
                 <span v-if="column.key === 'version'">
-                    {{ record.bom.version || "-" }}
+                    {{ record?.bom?.version || "-" }}
                 </span>
                 <span v-if="column.key === 'effective_time' /*创建时间*/">
                     {{ $Util.timeFilter(text,3) }}

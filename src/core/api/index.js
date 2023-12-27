@@ -46,6 +46,8 @@ const apiList = {
         downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
         orderExport: ['GetJson', 'crm-order/export'],
+        downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
+
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -952,6 +954,8 @@ const apiList = {
         changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
         bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类 （覆盖）
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类
+        parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
+        importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
 
     },
      // 邮件模板接口

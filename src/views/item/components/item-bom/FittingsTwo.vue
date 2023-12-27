@@ -42,7 +42,34 @@
         <!-- 配件列表 -->
         <div class="fittings-list">
             <div class="title">
-                {{ $t('item-bom.accessories_list') }}
+               <span> {{ $t('item-bom.accessories_list') }}</span>
+               <div class="btn">
+                    <a-button class="download-template" @click="downUploadTemplate" >
+                        {{ $t('item-bom.download_template') }}
+                    </a-button>
+                    <!-- <a-button class="bulk-import" @click="importTemplate" >
+                        {{ $t('item-bom.bulk_import') }}
+                    </a-button> -->
+                    
+                    <a-upload
+                        name="file"
+                        class="file-uploader"
+                        :file-list="uploadFileObj.fileList"
+                        :action="uploadFileObj.action"
+                        :show-upload-list="false"
+                        :headers="uploadFileObj.headers"
+                        :data="{...uploadFileObj.data, bom_version_id: bomId}"
+                        accept=".xlsx,.xls"
+                        @change="importTemplate"
+                        ><!-- 
+                        <a-button type="primary" ghost class="file-upload-btn">
+                        <i class="icon i_add" />{{ $t("i.import") }}
+                        </a-button> -->
+                        <a-button class="bulk-import">
+                        {{ $t('item-bom.bulk_import') }}
+                        </a-button>
+                    </a-upload>
+               </div>
             </div>
             <a-table
                 :row-key="(record) => record.id"
@@ -117,6 +144,14 @@
                 </template>
             </a-table>
         </div>
+        <ExportModal 
+            v-model:visibility = "exportVisibility"
+            @setCancleShow = "exportVisibility = false"
+            :objData="exportObj"
+            :versionName = "versionName"
+            :bom_version_id = "bomId"
+            @refresh="handleRefresh"
+            />
     </div>
 </template>
 
@@ -124,12 +159,18 @@
 
 import { onMounted, onUnmounted, ref, getCurrentInstance, computed, reactive, inject, watch } from 'vue';
 import Core from "@/core";
+import ExportModal from './export-modal.vue';
 const classifyShowModal = inject('classifyShowModal');
+const emits = defineEmits(['handleRefresh'])
 const bomId = ref(0);
 const { proxy } = getCurrentInstance();
 const loading = ref(false)
 const flagNew = ref()
-
+// 解析导入 --  二次弹窗
+const exportVisibility = ref(false);
+// 导出对象数据--显示在二次弹窗中
+const exportObj = ref({});
+const versionName = ref('')
 const props = defineProps({  
     // v-model 绑定值  
     activeObj: {
@@ -142,7 +183,18 @@ const props = defineProps({
         default: () => {}
     }
 })
-
+const uploadFileObj = reactive({
+    
+    action: Core.Const.NET.URL_POINT + "/admin/1/aftermarket/bom/parsing-import-file",
+    fileList: [],
+    headers: {
+        ContentType: false,
+    },
+    data: {
+        token: Core.Data.getToken(),
+        type: "xlsx",
+    },
+})
 const isShow = ref(false)
 const tableDataChange = ref([])
 const changeTableColumn = computed(()=>{
@@ -238,6 +290,12 @@ const expandOrSollapse = () => {
     isShow.value = !isShow.value;
 }
 
+// 模态框点击确定的时候
+const handleRefresh = () => {
+    emits("handleRefresh", props.activeObj);
+    refresh();
+}
+
 /* const getSalesAreaStr = (arr) => {
     let str = '';
     if(!(arr instanceof Array)) return '-'
@@ -257,6 +315,32 @@ const objCount = reactive({
 onMounted(() => {
 })
 
+// 下载模板
+const downUploadTemplate = () => {
+    
+    let exportUrl = Core.Api.Export.downloadTemplate()
+    window.open(exportUrl, '_blank')
+}
+
+// 导入模板
+const importTemplate = ({ file, fileList }) => {
+    
+    if (file.status == 'done') {
+        if (file.response && file.response.code > 0) {
+            return proxy.$message.error(file.response.message)
+        } else {
+            // Atable.value.handleSearchReset();
+            exportVisibility.value = true;
+            exportObj.value = {
+                correctList: file?.response?.data?.correctList || [],
+                statistics: file?.response?.data?.statistics || [],
+            };
+            return proxy.$message.success(proxy.$t('pop_up.uploaded'));
+        }
+    }
+
+    uploadFileObj.fileList = fileList;
+}
 // 获取设变列表
 const getChangeList = () => {
     Core.Api.ITEM_BOM.changeBomList({
@@ -320,7 +404,6 @@ const getTableDataFetch = (parmas = {}) => {
     }
 
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
-        console.log('getTableDataFetch',res);
         channelPagination.value.total = res.count;
         tableData.value = res.list;
     }).catch(err => {
@@ -357,6 +440,7 @@ watch(
     (newValue, oldValue) => {
         bomId.value = newValue?.version_id;
         flagNew.value = newValue?.flag_new;
+        versionName.value = newValue?.version_name;
         if(newValue && Object.keys(newValue)){
             refresh();
         }
@@ -436,9 +520,17 @@ defineExpose({
 
         .title {
             margin:24px auto 10px;
-            color:  #1D2129;
             font-size: 16px;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .btn {
+                display: flex;
+                .download-template {
+                    margin-right: 10px;
+                }
+            }
         }
     }
     .my-table {
@@ -498,4 +590,5 @@ defineExpose({
         margin-right: 10px;
     }
 }
+
 </style>
