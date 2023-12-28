@@ -4,7 +4,7 @@ import defult_org from '@images/defult_org.png'
 import defult_item from '@images/defult_item.png'
 import defult_file from '@images/defult_file.png'
 import constModules from './modules/const/index'
-
+import EuropeData from '../../public/ext/Europe.json'
 // let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com' // 正式
 let OSS_POINT = 'https://horwin.oss-cn-hangzhou.aliyuncs.com/' //
 let URL_POINT = 'http://eos-dev-api.horwincloud.com'  // 测试服
@@ -1789,9 +1789,45 @@ let Const = {
             '1': { key: 1, zh: '微信小程序', en: 'WeChat Mini Program', value: 1 },
             '2': { key: 2, zh: 'CRM', en: 'CRM', value: 2 },
             '3': { key: 3, zh: 'shopify', en: 'shopify', value: 3 },
-            '4': { key: 4, zh: '国外官网2.0', en: 'Official Website Abroad', value: 4 },
+            '4': { key: 4, zh: '国外官网', en: 'Official Website Abroad', value: 4 },
             '5': { key: 5, zh: '飞书小程序', en: 'Feishu Mini Program', value: 5 },
+            '100': { key: 100, zh: '美国', en: 'United States', value: 100 },
+            '200': { key: 200, zh: '欧洲', en: 'Europe', value: 200 },
         },
+        COUNTRY_MAP: {
+            '100': { value: 100,  text: '欧洲' },
+            '200': { value: 200,  text: '美国' },
+        },
+        CRM_ORDER_SOURCE_TYPE: [ // 级联订单来源
+            { value: 1, label: '微信小程序', label_en: 'WeChat Mini Program' },
+            { value: 2, label: 'CRM', label_en: 'CRM' },
+            { value: 3, label: 'shopify', label_en: 'Shopify' },
+            {
+                value: 4,
+                label: '国外官网',
+                label_en: 'Official Website For Overseas Markets',
+                children: [
+                    // 100 欧洲 200 美国
+                    {
+                        value: 0,
+                        label: "全部",
+                        label_en: 'All',
+                    },
+                    {
+                        value: 100,
+                        label: "欧洲",
+                        label_en: 'Europe',
+                        children: EuropeData,
+                    },
+                    {
+                        value: 200,
+                        label: "美国",
+                        label_en: 'United States',
+                    },
+                ]
+            },
+            { value: 5, label: '飞书小程序', label_en: 'Feishu Mini Program' },
+        ],
         // 支付方式
         PAYMENT_TYPE: {
             '10': { key: 10, zh: '现金', en: 'cash', value: 10 },

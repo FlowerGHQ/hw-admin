@@ -3,7 +3,9 @@
     <div class="list-container">
       <div class="title-container">
         <div class="title-area">{{ $t("retail.order_list") }}</div>
-
+        <div class="btns-area">
+            <a-button :disabled="exportDisabled" type="primary" @click="handleExportConfirm"><i class="icon i_download"/>{{ $t('def.export') }}</a-button>
+        </div>
         <!-- 隐藏导入-导出功能-原本的合同列表 -->
         <div class="btns-area" v-if="false">
           <a-upload
@@ -41,14 +43,7 @@
             <div class="key">{{ $t("dis.order_source") }}：</div>
             <!-- 订单来源 -->
             <div class="value">
-              <!-- <a-input
-                                :placeholder="$t('def.input')"
-                                v-model:value="searchForm.name"
-                                @keydown.enter="handleSearch"
-                            />
-                                @change="handleSearch"
-                            -->
-              <a-select
+              <!-- <a-select
                 v-model:value="searchForm.source_type"
                 :placeholder="$t('def.select')">
                 <a-select-option :value="0">
@@ -60,7 +55,14 @@
                   :value="item.value"
                   >{{ lang === "zh" ? item.zh : item.en }}</a-select-option
                 >
-              </a-select>
+              </a-select> -->
+              <a-cascader
+                  v-model:value="cascaderValue"
+                  :options="CRM_ORDER_SOURCE_TYPE"
+                  :placeholder="$t('def.select')"
+                  @change="onCascaderChange"
+                  :field-names="fieldNames"
+              />
             </div>
           </a-col>
 
@@ -75,12 +77,32 @@
             </div>
           </a-col>
           <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
-            <div class="key">{{ $t("crm_o.order_name") }}：</div>
-            <!-- 客户名称 -->
+            <div class="key">{{ $t("r.email") }}：</div>
+            <!-- 邮箱 -->
             <div class="value">
               <a-input
-                :placeholder="$t('def.email_phone_name')"
-                v-model:value="searchForm.customer_name"
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.customer_email"
+                @keydown.enter="handleSearch" />
+            </div>
+          </a-col>
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("crm_o.customer_phone") }}：</div>
+            <!-- 手机号 -->
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.customer_phone"
+                @keydown.enter="handleSearch" />
+            </div>
+          </a-col>
+          <a-col :xs="24" :sm="24" :xl="8" :xxl="6" class="row-item">
+            <div class="key">{{ $t("crm_o.order_name") }}：</div>
+            <!-- 下单名称 -->
+            <div class="value">
+              <a-input
+                :placeholder="$t('def.input')"
+                v-model:value="searchForm.buyer_signatory"
                 @keydown.enter="handleSearch" />
             </div>
           </a-col>
@@ -171,7 +193,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
-            v-if="show">
+          >
             <div class="key">{{ $t("crm_o.country_city") }}：</div>
             <div class="value">
               <!-- 参考 customer -> customer-edit -->
@@ -179,7 +201,9 @@
                 ref="addressRef"
                 v-model:value="areaMap"
                 :def-area="showArea"
-                @select="addressSelect" />
+                :areaType="areaType"
+                @select="addressSelect"
+                />
             </div>
           </a-col>
           <a-col
@@ -188,7 +212,7 @@
             :xl="8"
             :xxl="6"
             class="row-item"
-            v-if="show">
+          >
             <div class="key">{{ $t("crm_group.name") }}：</div>
             <!-- 区域 -->
             <div class="value">
@@ -296,7 +320,9 @@
           </template>
           <template #bodyCell="{ column, text, record }">
             <template v-if="column.key === 'source_type'">
-              {{ $Util.orderSourceType(text, lang) }}
+              {{ $i18n.locale === 'zh' ? SOURCE_TYPE[record.source_type]?.zh : SOURCE_TYPE[record.source_type]?.en }}                           
+              <!-- 订单来源选择国外官网时才有 -->
+              <span v-if="record.source_type === 4"> {{ COUNTRY_MAP[record.channel_country]?.text || ''  }}</span>                            
             </template>
             <template v-else-if="column.key === 'amount'">
                 {{text || "-" }}
@@ -333,7 +359,7 @@
               {{ record.mType }}{{ $Util.countFilter(text) || "-" }}
             </template>
             <template v-else-if="column.key === 'country'">
-              {{ countryCityStr(record) }}
+              {{ $i18n.locale === 'zh' ? zhCountryCityStr(record) : countryCityStr(record) }}
             </template>
             <template v-else-if="column.key === 'own_user_name'">
               {{ record.own_user_name || "-" }}
@@ -348,15 +374,24 @@
               {{ text || "-" }}
             </template>
             <template v-else-if="column.key === 'operation'">
-              <a-button type="link" @click="handleBatch('transfer', record)">{{
-                $t("crm_c.transfer")
-              }}</a-button>
-              <a-button
-                type="link"
-                @click="routerChange('detail', record)"
-                v-if="$auth('crm-order.detail')"
-                ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
-              >
+              <div class="operation-content">
+                <a-button type="link" @click="handleBatch('transfer', record)">{{
+                  $t("crm_c.transfer")
+                }}</a-button>
+                <a-button
+                  type="link"
+                  @click="routerChange('detail', record)"
+                  v-if="$auth('crm-order.detail')"
+                  ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
+                >
+                <a-button
+                  type="link"
+                  class="danger"
+                  @click="handleDelete(record.id)"
+                  v-if="$auth('crm-order.delete')"
+                  >{{ $t("def.delete") }}</a-button
+                >
+              </div>
             </template>
             <template v-else>
               {{ text || "-" }}
@@ -448,7 +483,8 @@ import TimeSearch from "../../components/common/TimeSearch.vue";
 import addressCascader from "@/components/common/AddressCascader.vue";
 import { take } from "lodash";
 const modules = import.meta.globEager("../../assets/images/car/*");
-
+import axios from 'axios';
+import dayjs from 'dayjs';
 export default {
   name: "OrderList",
   components: {
@@ -474,38 +510,45 @@ export default {
       // CRM_CUSTOMER_MAP: Core.Const.CRM_ORDER.CUSTOMER_MAP,  //客户状态
       Order_Status_Map: Core.Const.CRM_ORDER.Order_Status_Map, // 订单切换筛选
       SOURCE_TYPE: Core.Const.CRM_ORDER.SOURCE_TYPE, // 订单来源
+      COUNTRY_MAP: Core.Const.CRM_ORDER.COUNTRY_MAP, // 国家
+      CRM_ORDER_SOURCE_TYPE: Core.Const.CRM_ORDER.CRM_ORDER_SOURCE_TYPE, // 订单来源级联
       total: 0,
       orderByFields: {},
+      cascaderValue: 0,
       // 搜索
       searchForm: {
         // name: "",
         source_type: 0, // 订单来源
-        uid: "", // 订单号
-        customer_name: "", // 客户名称
-        own_user_id: undefined, // 负责人
+        uid: undefined, // 订单号
+        customer_name: undefined, // 客户名称
+        own_user_id: '', // 负责人
         // create_user_name: "",
         paid_money_progress: 0, // 支付進度
         // status: 0,              // 訂單狀態
-        begin_time: "",
-        end_time: "",
-        type: "",
+        begin_time: undefined,
+        end_time: undefined,
+        type: undefined,
         // create_user_id:undefined,
         // search_type: 10,
         payment_type: undefined, //支付方式
         group_id: undefined, //区域id
         // 国家城市
-        to_country: "",
-        to_province: "",
-        to_city: "",
+        to_country: undefined,
+        to_province: undefined,
+        to_city: undefined,
         // 下单时间
-        order_begin_time: "", // （下单开始时间）
-        order_end_time: "", // （下单结束时间）
+        order_begin_time: undefined, // （下单开始时间）
+        order_end_time: undefined, // （下单结束时间）
         // 支付时间
-        payment_begin_time: "", // （支付开始时间）
-        payment_end_time: "", // （支付结束时间）
+        payment_begin_time: undefined, // （支付开始时间）
+        payment_end_time: undefined, // （支付结束时间）
         // 退款时间
-        refunded_begin_time: "", // （退款开始时间）
-        refunded_end_time: "", // （退款结束时间）
+        refunded_begin_time: undefined, // （退款开始时间）
+        refunded_end_time: undefined, // （退款结束时间）
+        channel_country: undefined, // 订单来源 国家
+        customer_email: undefined, // 客户邮箱
+        customer_phone: undefined, // 客户手机号
+        buyer_signatory: undefined, // 下单名称
       },
       ownUserOptions: [], //負責人
       createUserOptions: [], // 创建人列表
@@ -551,6 +594,10 @@ export default {
         city_en: "",
         county: "",
       }, // 地址选择
+      areaOptions: [], // 区域列表
+      fieldNames: {}, // 自定义级联选择器字段
+      areaType: '',
+      exportDisabled: false,
     };
   },
   watch: {
@@ -579,6 +626,18 @@ export default {
         }
       },
     },
+    '$i18n.locale': {
+        deep: true,
+        immediate: true,
+        handler(n) {
+            console.log('$i18n.locale', n)
+            let fieldNames = { label: 'label_en', value: 'value', children: 'children', }
+            switch (n) {
+                case 'zh': fieldNames.label = 'label'; break;
+            }
+            this.fieldNames = fieldNames
+        }
+    },
   },
   computed: {
     tableColumns() {
@@ -594,9 +653,9 @@ export default {
             key: "amount",
         },
         {
-          title: "in.order_number",
-          dataIndex: "uid",
-          key: "uid",
+          title: "crm_o.order_time",
+          dataIndex: "order_time",
+          key: "time",
           sorter: true,
         },
         { title: "p.order_status", dataIndex: "status", key: "status" },
@@ -615,15 +674,27 @@ export default {
           dataIndex: "customer_phone",
           key: "customer_phone",
         },
+        { title: "crm_o.address", dataIndex: "to_address", key: "address" },
         {
-          title: "crm_o.own_user_name",
-          dataIndex: "own_user_id",
-          key: "own_user_name",
+          title: "in.order_number",
+          dataIndex: "uid",
+          key: "uid",
+          sorter: true,
+        },
+        {
+          title: "crm_o.country_city",
+          dataIndex: "to_country",
+          key: "country",
         },
         {
           title: "crm_o.pay_car_type",
           dataIndex: "item_name",
           key: "item_name",
+        },
+        {
+          title: "crm_o.own_user_name",
+          dataIndex: "own_user_id",
+          key: "own_user_name",
         },
         {
           title: "crm_o.pay_progress",
@@ -654,13 +725,6 @@ export default {
         }, //待付款
         { title: "crm_c.group", dataIndex: "group_name", key: "group_name" },
         // {title: 'd.update_time', dataIndex: 'update_time', key: 'time', sorter: true},
-
-        {
-          title: "crm_o.country_city",
-          dataIndex: "to_country",
-          key: "country",
-        },
-        { title: "crm_o.address", dataIndex: "to_address", key: "address" },
         /*  {
                    title: "crm_o.create_user",
                    dataIndex: "create_user_id",
@@ -685,12 +749,6 @@ export default {
                     key: "time",
                     sorter: true,
                 }, */
-        {
-          title: "crm_o.order_time",
-          dataIndex: "order_time",
-          key: "time",
-          sorter: true,
-        },
         {
           title: "crm_o.pay_time",
           dataIndex: "payment_time",
@@ -769,13 +827,17 @@ export default {
   mounted() {
     this.getTableData();
     this.ownUserFetch();
-    // this.createUserFetch()
     this.getRegionsData();
+    this.getAreaOptions();
   },
   methods: {
+    getAreaOptions() {
+        axios.get(`/ext/address-cascader.json`).then(response => {
+            this.areaOptions = response.data;
+        })
+    },
     countryCityStr(record) {
       let str = "";
-      // {{ ==='' ? (record.source_type===1?'中国':undefined):`${record.to_country ? record.to_country + '-' : ''}${record.to_province ? record.to_province + '-' : '' }${record.to_city}` || '-' }}
       if (
         `${record.to_country ? record.to_country + "-" : ""}${
           record.to_province ? record.to_province + "-" : ""
@@ -784,6 +846,21 @@ export default {
         str = `${record.to_country ? record.to_country + "-" : ""}${
           record.to_province ? record.to_province + "-" : ""
         }${record.to_city}`;
+      } else if (record.source_type === 1) {
+        str = "中国";
+      }
+      return str || "-";
+    },
+    zhCountryCityStr(record) {
+      let str = "";
+      if (
+        `${this.convertStringToLanguage(record.to_country || '') ? this.convertStringToLanguage(record.to_country || '') + "-" : ""}${
+          this.convertStringToLanguage(record.to_province || '') ? this.convertStringToLanguage(record.to_province || '') + "-" : ""
+        }${this.convertStringToLanguage(record.to_city || '')}`
+      ) {
+        str = `${this.convertStringToLanguage(record.to_country || '') ? this.convertStringToLanguage(record.to_country || '') + "-" : ""}${
+          this.convertStringToLanguage(record.to_province || '') ? this.convertStringToLanguage(record.to_province || '') + "-" : ""
+        }${this.convertStringToLanguage(record.to_city || '')}`;
       } else if (record.source_type === 1) {
         str = "中国";
       }
@@ -933,6 +1010,8 @@ export default {
     },
 
     handleSearchReset() {
+      this.areaType = 0
+      this.cascaderValue = 0
       // 重置搜索
       Object.assign(this.searchForm, this.$options.data().searchForm);
       this.$refs.TimeSearchOrder?.handleReset();
@@ -1014,7 +1093,7 @@ export default {
         okType: "danger",
         cancelText: this.$t("def.cancel"),
         onOk() {
-          Core.Api.Order.delete({ id })
+          Core.Api.CRMOrder.delete({ id })
             .then(() => {
               _this.$message.success(_this.$t("pop_up.delete_success")),
                 _this.getTableData();
@@ -1127,6 +1206,94 @@ export default {
     tabChange() {
       this.handleSearchReset();
     },
+    onCascaderChange(value, selectedOptions) {
+        console.log('value', value);
+        console.log('selectedOptions', selectedOptions);
+        if(value.length) {
+          if(value[0] === 4) {
+            this.searchForm.source_type = 4
+            this.searchForm.channel_country = value[1]
+            if(this.searchForm.channel_country === 100) {
+              this.areaType = 'eur'
+            }
+            if(this.searchForm.channel_country === 200) {
+              this.areaType = 'us'
+              this.searchForm.to_country = 'United States'
+            }
+            if(!this.searchForm.channel_country) {
+              this.areaType = ''
+            }
+          } else {
+            this.searchForm.source_type = value[0]
+            this.searchForm.channel_country = undefined
+          }
+          if(value.length === 3) {
+            if(value[2] === '0') {
+              this.searchForm.to_country = ''
+            } else {
+              this.searchForm.to_country = selectedOptions[2].label_en
+            }
+          }
+          if(!this.searchForm.channel_country) {
+            this.searchForm.to_country = ''
+          }
+        } else {
+          this.searchForm.to_country = undefined
+          this.searchForm.source_type = undefined
+          this.searchForm.channel_country = undefined
+        }
+        this.handleSearch();
+    },
+    convertStringToLanguage(str) {
+      if(!str) return ''
+      function findItemByName(items, name) {
+        for (const item of items) {
+          if (item.name_en === name) {
+            return item;
+          }
+          if (item.children) {
+            const foundItem = findItemByName(item.children, name);
+            if (foundItem) {
+              return foundItem;
+            }
+          }
+        }
+        return null;
+      }
+
+      const item = findItemByName(this.areaOptions, str);
+      if (item) {
+        return item.name;
+      }
+
+      return str;
+    },
+    handleExportConfirm() { // 确认订单是否导出
+        let _this = this;
+        this.$confirm({
+            title: _this.$t('pop_up.sure') + _this.$t('n.export') + '?',
+            okText: _this.$t('def.sure'),
+            cancelText: _this.$t('def.cancel'),
+            onOk() {
+                _this.handleOrderExport();
+            }
+        })
+    },
+    handleOrderExport() { // 订单导出
+        this.exportDisabled = true;
+        let form = Core.Util.deepCopy(this.searchForm);
+        for (const key in form) {
+            form[key] = form[key] || ''
+        }
+        let exportUrl = Core.Api.Export.orderExport({
+            ...form,
+            // order_by_fields: this.orderByFields,
+            status: this.activeKey,
+        })
+        console.log("handleOrderExport exportUrl", exportUrl)
+        window.open(exportUrl, '_blank')
+        this.exportDisabled = false;
+    },
   },
 };
 </script>
@@ -1200,5 +1367,9 @@ export default {
   border-radius: 50%;
   display: inline-block;
   margin-right: 8px;
+}
+.operation-content {
+  display: flex;
+  align-items: center;
 }
 </style>

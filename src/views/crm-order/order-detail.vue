@@ -90,12 +90,12 @@
                 <span class="value">{{ detail.to_city || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
-                <span class="key">{{ $t("crm_o.address_details") }}：</span>
-                <span class="value">{{ detail.to_address || "-" }}</span>
-              </a-col>
-              <a-col :xs="24" :sm="12" :lg="12" class="detail-item">
                 <span class="key">{{ $t("crm_o.own_user_name") }}：</span>
                 <span class="value">{{ detail.own_user_name || "-" }}</span>
+              </a-col>
+              <a-col :xs="24" :sm="12" :lg="24" class="detail-item">
+                <span class="key">{{ $t("crm_o.address_details") }}：</span>
+                <span class="value">{{ detail.to_address || "-" }}</span>
               </a-col>
               <a-col :xs="24" :sm="24" :lg="24" class="detail-item">
                 <span class="key">{{ $t("sl.show") }}：</span>
@@ -797,9 +797,10 @@ export default {
 }
 .panel-content {
   border-radius: 6px;
-  padding: 20px !important;
+  padding: 24px !important;
   .desc-detail {
     margin-top: 0 !important;
+    padding: 0;
   }
 }
 .OrderDetail {
@@ -852,7 +853,7 @@ export default {
 
 .desc-container .desc-detail .detail-item .key {
   width: auto;
-  min-width: 100px;
+  min-width: 80px;
 }
 .desc-container .desc-detail .detail-item .value {
   width: auto;
