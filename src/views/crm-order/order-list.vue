@@ -1285,7 +1285,7 @@ export default {
         }
         let exportUrl = Core.Api.Export.orderExport({
             ...form,
-            order_by_fields: this.orderByFields,
+            // order_by_fields: this.orderByFields,
             status: this.activeKey,
         })
         console.log("handleOrderExport exportUrl", exportUrl)
