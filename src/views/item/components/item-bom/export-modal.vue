@@ -6,7 +6,7 @@
             :okText="$t('item-bom.confirm')"
             :cancelText="$t('item-bom.cancel')"
             @ok="handleOk"
-			width="540px"
+			width="570px"
             centered
             :closable="false"
             class="export-modal"
@@ -47,6 +47,12 @@
                         :pagination="false"
                         :scroll="{ x: true, y: 282 }">
                         <template #bodyCell="{ record, column, text }">
+							<!-- category_name -->
+							<div v-if="column.key === 'category'">
+								<a-tooltip :title="text">
+									<div class="ell overflow-ell">{{ text }}</div>
+								</a-tooltip>
+							</div>
                             <div v-if="column.key === 'parsing_failure_number'">
                                 <span class="zero" v-if="record.fail_count == 0"
                                     >0</span
@@ -122,21 +128,18 @@ const tableColumns = computed(() => {
             dataIndex: "category_name",
             key: "category",
             align: "center",
-            width: 162,
         },
         {
             title: $t("item-bom.parsing_success_number"),
             dataIndex: "success_count",
             key: "parsing_success_number",
             align: "center",
-            width: 163,
         },
         {
             title: $t("item-bom.parsing_failure_number"),
             dataIndex: "fail_count",
             key: "parsing_failure_number",
             align: "center",
-            width: 165,
         },
     ];
     return result;
@@ -249,7 +252,10 @@ const handleOk = () => {
                     .ant-table-cell {
                         color: #1d2129 !important;
                         height: 32px !important;
-						padding: 0 ;
+						padding: 0;
+						.overflow-ell{
+							padding:0 8px;
+						}
                     }
 					.ant-table-body{
 						width: 100% !important;
