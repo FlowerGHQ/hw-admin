@@ -388,6 +388,12 @@ export default {
     };
   },
   watch: {},
+  beforeRouteLeave(to, from, next) {  
+      window.removeEventListener('resize', this.handleResize)
+      this.observer.disconnect();    //取消监听
+      // 当离开当前路由时执行的操作  
+      next(); 
+  },  
   computed: {
     tableColumns() {
       let { filteredInfo } = this;
@@ -508,6 +514,7 @@ export default {
         const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
         this.fixedWidth = width + 'px';
         this.fixedHeight = height + 'px'; 
+        console.log('hahahahh-----77777',width,height);
         // 在这里处理宽高变化的逻辑
     },
     routerChange(type, item = {}) {
