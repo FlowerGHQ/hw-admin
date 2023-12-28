@@ -146,11 +146,12 @@ watch(
         if(!newValue) {
             codeStr.value = '';
             time.value=null;
-            selectIdList.value = [];
             if(level.value === 2) categoryId.value = undefined;
             if(level.value === 3) categoryId.value =  props?.activeObj?.category_id;
             return;
         }
+        selectIdList.value = [];
+
     }
 )
 watch(
@@ -367,13 +368,18 @@ const getDefaultChecked = async ()=> {
         }
         await Core.Api.ITEM_BOM.partsList(obj).then(res => {
             defaultChecked.value = res.list.map(item=>item.id);
+            console.log('00000000000000000000defaultChecked.value',defaultChecked.value);
         }).catch(err => {
             console.log("defaultChecked", err);
         }).finally(()=>{
             loading.value = false
         })
     }
+    console.log('defaultChecked.value',defaultChecked.value);
+    console.log('selectIdList.value',selectIdList.value);
     selectIdList.value = [...new Set([...selectIdList.value, ...defaultChecked.value])];
+    console.log('defaultChecked.value1111',defaultChecked.value);
+    console.log('selectIdList.value1111',selectIdList.value);
 }
 
 /* 获取版本下分类列表 */
