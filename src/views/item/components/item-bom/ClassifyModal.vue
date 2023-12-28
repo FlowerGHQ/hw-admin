@@ -1,5 +1,5 @@
 <template>
-    <a-modal v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" @cancel="handleCancle">
+    <a-modal destroyOnClose v-model:visible="visibility" :width="860" title="配件分类"  @ok="handleOk" @cancel="handleCancle">
         <!-- 搜索固定数据 :closable="false" -->
         <div class="search-container-new top-box">
             <div  class="item-box">
@@ -139,6 +139,7 @@ watch(
     () => props.visibility,
     (newValue, oldValue) => {
         emits("update:visibility", newValue)
+        if(newValue) handleSearch();
         if(!newValue) {
             codeStr.value = '';
             time.value=null;
@@ -150,11 +151,7 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
-        /* time.value = setTimeout(()=>{
-            nextTick(()=>{ */
-                handleSearch()
-        /*     })
-        },200) */
+        handleSearch()
     })
 
 watch(
@@ -253,7 +250,7 @@ const handleSearchReset = ( ) => {
       // 重置搜索
       codeStr.value = ''
       Object.assign(searchForm.value, initialObject);
-      getTableDataFetch()
+      handleSearch()
 }
 const handleSearch = () => {
     current.value = 1;
