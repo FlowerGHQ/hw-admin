@@ -181,6 +181,12 @@ const lang = computed(()=>{ // ==='zh'?'country':'country_en'
       }; 
       return 
     }); */
+    const showDialog = () => {
+        selectedRowKeys.value = []
+        console.log('selectedRowKeys.value',selectedRowKeys.value);
+    }
+    defineExpose({ showDialog })
+
 </script>
 
 <style lang="less" scoped>

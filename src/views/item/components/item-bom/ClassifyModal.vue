@@ -10,7 +10,9 @@
                 <div class="value-box">
                     <a-select
                         v-model:value="categoryId"
-                        placeholder="请选择">
+                        placeholder="请选择"
+                        @change = "changeSelect"
+                        >
                         <a-select-option
                             v-for="(val, key) in classList"
                             :key="key"
@@ -47,6 +49,7 @@
         <div style="height: 140px;"></div>
         <!-- 表格组件 -->
         <TableSelectV3
+            ref="childRef"
             :columns="tableColumns" 
             :data-source="tableData" 
             :loading='loading'  
@@ -68,6 +71,7 @@
                     <div class="tip">
                         {{ $t('in.selected') + ` ${selectIdList.length} ` + $t('in.total')}}
                     </div>
+                    {{ selectIdList }}
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleCancle">{{ $t('def.cancel') }}</a-button>
@@ -116,7 +120,7 @@ const defaultChecked = ref([])
 
 // 分类列表
 const classList = ref([]);
-
+const childRef = ref(null)//子组件ref
 const emits = defineEmits(['update:visibility','refresh']) 
 // 搜索列表组件
 const options = ref(
@@ -139,11 +143,13 @@ watch(
     () => props.visibility,
     (newValue, oldValue) => {
         emits("update:visibility", newValue)
-        if(newValue) handleSearch();
+        if(newValue && level.value === 3) handleSearch();
         if(!newValue) {
             codeStr.value = '';
             time.value=null;
+            selectIdList.value = [];
             if(level.value === 2) categoryId.value = undefined;
+            if(level.value === 3) categoryId.value =  props?.activeObj?.category_id;
             return;
         }
     }
@@ -151,7 +157,7 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
-        handleSearch()
+        if(level.value === 3) handleSearch()
     })
 
 watch(
@@ -243,7 +249,13 @@ const tableColumns = computed(() => {
 onMounted(() => {
     // getTableDataFetch()
 })
-  
+const changeSelect = async () => {
+    if(level.value===3) {
+        selectIdList.value = []
+        await childRef.value.showDialog();
+        handleSearch();
+    }
+}
 // 重置按钮
 const handleSearchReset = ( ) => {
     
@@ -263,7 +275,6 @@ const handleSearch = () => {
 }
 const handleCancle = () => {
     emits("update:visibility", false)
-    
 }
 const handleOk = () => {
     if(!categoryId.value) {
@@ -332,8 +343,7 @@ const getTableDataFetch = (parmas = {}) => {
 
 
 // 获取默认勾选
-const getDefaultChecked = ()=> {
-
+const getDefaultChecked = async ()=> {
     if(level.value === 2){
         defaultChecked.value = tableData.value.filter(item => {
 
@@ -356,8 +366,7 @@ const getDefaultChecked = ()=> {
             page_size: 1000,
             bom_category_id:categoryId.value,
         }
-        Core.Api.ITEM_BOM.partsList(obj).then(res => {
-            console.log("partsList----res", res);
+        await Core.Api.ITEM_BOM.partsList(obj).then(res => {
             defaultChecked.value = res.list.map(item=>item.id);
         }).catch(err => {
             console.log("defaultChecked", err);
@@ -365,7 +374,6 @@ const getDefaultChecked = ()=> {
             loading.value = false
         })
     }
-    
     selectIdList.value = [...new Set([...selectIdList.value, ...defaultChecked.value])];
 }
 
