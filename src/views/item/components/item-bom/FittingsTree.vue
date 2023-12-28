@@ -304,7 +304,7 @@
                                         </div>
                                         <div
                                             class="title-left-bottom margin-left-19">
-                                            {{ item.sync_id }}
+                                            {{ item.item_code }}
                                         </div>
                                     </div>
                                 </div>
