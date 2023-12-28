@@ -62,13 +62,13 @@
                                         <!-- 父节点 -->
                                         <div
                                             class="sidebar-item"
-                                            :class="{ 'sidebar-item-change' : siderBarItemId === ground.id }"
-                                            @click="onSidebarItem('parent-node',ground)"
+                                            :class="{ 'sidebar-item-change' : siderBarItemLabel === ground.label }"
+                                            @click="(event) => onSidebarItem(event, 'parent-node', ground)"
                                         >
                                             <div class="silder-index-left">
                                                 <div
                                                     class="silder-index-text"
-                                                    :class="{ 'silder-index-text-change' : siderBarItemId === ground.id }"
+                                                    :class="{ 'silder-index-text-change' : siderBarItemLabel === ground.label }"
                                                 >
                                                     {{ $t('item-bom.point') }}
                                                     {{ ground.index }}
@@ -78,22 +78,22 @@
                                             <div 
                                                 class="silder-operate"
                                             >
-                                                <div class="silder-copy" @click="onSilderCopy(ground, i, 'node')">
+                                                <div class="silder-copy" @click.stop="onSilderCopy(ground, i, 'node')">
                                                     <a-tooltip>
                                                         <template #title> {{ $t('item-bom.copy_point_location') }}</template>                                                        
-                                                        <MySvgIcon icon-class="copy" class="f-s-16"/>
+                                                        <img class="img-icon" src="../../../../assets/images/bom/copy.png" alt="">
                                                     </a-tooltip>
                                                 </div>
-                                                <div class="silder-delete" @click="onSilderDelete(ground, i, 'node')">
+                                                <div class="silder-delete" @click.stop="onNodeDelete(ground, i, 'node')">
                                                     <a-tooltip>
                                                         <template #title> {{ $t('item-bom.deelete_points') }}</template>
-                                                        <MySvgIcon icon-class="delete" class="f-s-16"/>
+                                                        <img class="img-icon" src="../../../../assets/images/bom/delete.png" alt="">
                                                     </a-tooltip>
                                                 </div>
-                                                <div class="silder-node" @click="onSilderCopy(ground, i, 'child_node')">
+                                                <div class="silder-node" @click.stop="onSilderCopy(ground, i, 'child_node')">
                                                     <a-tooltip>
                                                         <template #title> {{ $t('item-bom.copy_Branch') }}</template>                                                        
-                                                        <img class="node-img" src="../../../../assets/images/bom/childe-node.png" alt="">
+                                                        <img class="img-icon" src="../../../../assets/images/bom/childe-node.png" alt="">
                                                     </a-tooltip>
                                                 </div>
                                             </div>
@@ -112,11 +112,11 @@
                                                         <div class="line"></div>
                                                         <div class="circle"></div>
                                                     </div>
-                                                    <div class="child-node-text">
-                                                        <span>
+                                                    <div class="child-node-text cursor" @click="(event) => onSidebarItem(event, 'child-node', ground)">
+                                                        <span class="child-node-content /*这里的class上面点击事件要用到*/">
                                                             {{ $t('item-bom.branch_point') }}{{ childIndex + 1 }}
                                                         </span>
-                                                        <div class="child-delete" @click="onSilderDelete(ground, i, 'child_node', childIndex)">
+                                                        <div class="child-delete" @click.stop="onSilderDelete(ground, i, 'child_node', childIndex)">
                                                             <MySvgIcon icon-class="delete" class="f-s-16"/>
                                                         </div>
                                                     </div>
@@ -159,14 +159,25 @@
 								<div  
                                     v-for="(itemEnd, itemEndIndex) in item.end_point" :key="itemEndIndex"  									
 									class="pointer-end"
+                                    :class="{
+                                        'opacity-1': siderChildNodeLabel === itemEnd.label
+                                        || siderBarItemLabel === itemEnd.label
+                                    }"
 									:style="{'left': `${itemEnd?.x}px`, 'top': `${itemEnd?.y }px`}"
 									@mousedown="pointMousedown(itemIndex, 'end_point', itemEndIndex)"
 									@mousemove.stop=""
-                                    @mouseenter.stop="onPointerEnd(item, 'enter')"
-                                    @mouseleave.stop="onPointerEnd(item, 'leave')"
+                                    @mouseenter.stop="onPointerEnd(item, 'enter', itemEnd)"
+                                    @mouseleave.stop="onPointerEnd(item, 'leave', itemEnd)"
                                     >
 									{{item.index || 0}}
-                                    <div class="component" @mousedown.stop="">
+                                    <div 
+                                        class="component"
+                                        :class="{
+                                            'component-change': siderChildNodeLabel === itemEnd.label
+                                            || siderBarItemLabel === itemEnd.label
+                                        }"
+                                        @mousedown.stop=""
+                                    >
                                         <div class="component-contain">
                                             <div class="contain-name">                                                
                                                 <span class="icon-name">{{ $t('item-bom.product_name') }}:</span>
@@ -629,7 +640,7 @@ const getExplosionImgFetch = (parmas = {}, initBool = false /*是否已经初始
         .then((res) => {
             const first_data = res.list.list[0]
             // 过滤数据
-            first_data.item_component_list.forEach(el => {
+            first_data?.item_component_list.forEach(el => {
                 el.start_point = !el.start_point ? "" : JSON.parse(el.start_point)
                 el.end_point = !el.end_point ? "" : JSON.parse(el.end_point)
             })
@@ -703,7 +714,7 @@ const onOperation = (type, record) => {
             const copyPointerList = Core.Util.deepCopy(pointerList.value).filter(el => {
                 // 过滤有点位数据
                 return el.start_point?.length && el.end_point?.length
-            })
+            })            
 
             copyPointerList.forEach(item => {
                 // 删除字段
@@ -726,20 +737,9 @@ const onOperation = (type, record) => {
             console.log("失去焦点", record);
             console.log("addPointItem", addTagItem.value);
             console.log("pointerList", pointerList.value);
-
+            
             const pointData = addTagItem.value.item_component_set_list[0]?.item_component_list  // 这个是点位Array
 
-
-            // 先把数据和pointerList.value对比过滤一下，防止pointerList.value 已经移动点了没更新
-            // pointData.forEach(el => {
-            //     const findItem = pointerList.value.find((item) => item.target_id === el.target_id)
-            //     if (findItem) {                    
-            //         el.end_point = findItem.end_point
-            //         el.start_point = findItem.start_point
-            //     }
-            // })
-            
-            
             // 找到添加是否是对应的数据不是push是删除了在push
             const findIndex = pointData.findIndex(el => el.target_id == record.id)
                                     
@@ -754,7 +754,11 @@ const onOperation = (type, record) => {
 
             // 判断之前有替换 | 添加
             if (findIndex !== -1) {
-                pointData.splice(findIndex, 1, addPointItem)
+                pointData.splice(findIndex, 1, { 
+                    ...addPointItem, 
+                    start_point: pointData[findIndex].start_point, 
+                    end_point: pointData[findIndex].end_point
+                })
             } else {
                 pointData.push(addPointItem)
             }
@@ -778,32 +782,84 @@ const handleTableChange = (pagination, filters, sorter) => {
 };
 // table的样式
 const onRowClassName = (recode, index) => {
-    // console.log("输出", recode, index);
+    // console.log("输出", recode.id);
     return recode.id === pointEndTargetId.value ? 'row-style' : ''
 }
 // 结束点移入事件
-const onPointerEnd = (item, type) => {
-    // console.log("itme", item, "type", type);
+const onPointerEnd = (item, type, itemEnd) => { 
+    
+    // 清除子节点的背景和颜色
+    const childNode = document.querySelectorAll('.child-node-text')            
+    for (var i = 0; i < childNode.length; i++) {
+        childNode[i].style.background = '#F8F8F8'
+        childNode[i].style.color = '#1D2129'
+    }
+
     switch(type) {
         case 'enter':
-            pointEndTargetId.value = item.target_id
+                console.log("itme", item, "type", type, "itemEnd", itemEnd);
+                pointEndTargetId.value = item.target_id
+                siderBarItemLabel.value = itemEnd.label
             break;
             case 'leave':
-            pointEndTargetId.value = null
+                // 清除父节点和子节点的
+                siderBarItemLabel.value = null
+                siderChildNodeLabel.value = null
+                // end
+                pointEndTargetId.value = null
         break;
     }
 }
 // 点击父节点事件
 
-const siderBarItemId = ref(null)
-const onSidebarItem = (type, ground) => {
+const siderBarItemLabel = ref(null) // 父节点表示
+const siderChildNodeLabel = ref(null)  // 子节点表示
+const onSidebarItem = (event, type, ground) => {
+    console.log("ground", ground);
+    pointEndTargetId.value = ground.target_id // 用于显示表格样式显示
+
+    // 清除子节点的背景和颜色
+    const childNode = document.querySelectorAll('.child-node-text')            
+    for (var i = 0; i < childNode.length; i++) {
+        childNode[i].style.background = '#F8F8F8'
+        childNode[i].style.color = '#1D2129'
+    }
+
     switch(type) {
         case 'parent-node':
-            // siderBarItemId.value = ground.id
+            siderChildNodeLabel.value = null
+            siderBarItemLabel.value = ground.label
         break;
         case 'child-node':
+            siderBarItemLabel.value = null
+            siderChildNodeLabel.value = ground.label
+
+            const target = event.target
+            if (target.className === 'child-node-content') {
+                // 判断是否点击到子节点
+                const parentElement = target.parentNode;
+                parentElement.style.background = 'rgba(0, 97, 255, 0.10)'
+                parentElement.style.color = '#0061FF'
+                return
+            }
+            target.style.background = 'rgba(0, 97, 255, 0.10)'
+            target.style.color = '#0061FF'
+            
         break;
     }
+}
+
+// 父节点点击事件
+const onNodeDelete = (ground, i, type) => {
+    onSilderDelete(ground, i, type)
+    
+    // 监听删除之后表格(index)跟着变换
+    addTagItem.value.item_component_set_list[0]?.item_component_list.forEach($1 => {
+        if ($1.start_point.length === 0 && $1.end_point.length === 0) {
+            const item = tableData.value.find($2 => Number($2.id) === Number($1.target_id))
+            item.index = null           
+        }
+    })
 }
 
 
@@ -912,7 +968,7 @@ const onSidebarItem = (type, ground) => {
                                             
         
                                         }
-                                        .silder-index-text {                                            
+                                        .silder-index-text {
                                             color: #1D2129;
                                             font-size: 14px;
                                             font-weight: 400;
@@ -933,16 +989,23 @@ const onSidebarItem = (type, ground) => {
                                         .silder-node {
                                             display: flex;
                                             align-items: center;
-                                            .node-img {
-                                                width: 16px;
-                                                height: 16px;
-                                            }
+                                        }
+                                        .img-icon {
+                                            width: 16px;
+                                            height: 16px;
                                         }
 
                                     }
                                     
                                     &.sidebar-item-change {
                                         background: rgba(0, 97, 255, 0.10);
+                                    }
+
+                                    &:hover {
+                                        background: rgba(0, 97, 255, 0.10);
+                                        .silder-index-text {
+                                            color: #0061FF;
+                                        }
                                     }
                                 }
 
@@ -978,14 +1041,19 @@ const onSidebarItem = (type, ground) => {
                                             background-color: #F8F8F8;
                                             display: flex;
                                             justify-content: space-between;
+                                            color: #1D2129;
 
                                             .child-delete {
                                                 width: 16px;
                                                 height: 16px;
                                                 visibility: hidden;
                                             }
-                                            &:hover .child-delete{
-                                                visibility: visible;
+                                            &:hover {
+                                                background-color: rgba(0, 97, 255, 0.10) !important;
+                                                color: #0061FF !important;
+                                                .child-delete {
+                                                    visibility: visible;
+                                                }
                                             }
                                         }                               
                                     }
@@ -1072,7 +1140,7 @@ const onSidebarItem = (type, ground) => {
                                         top: -10px;
                                         left: 30px;
                                         border-style: solid dashed dashed;
-                                        border-color: transparent transparent @BG_LP  transparent;
+                                        border-color: transparent transparent @BG_LP transparent;
                                         font-size: 0;
                                         line-height: 0;
                                     }                                    
@@ -1094,6 +1162,10 @@ const onSidebarItem = (type, ground) => {
                                             font-weight: 500;
                                         }
                                     }
+                                }
+
+                                &.component-change {
+                                    display: block;
                                 }
                             }
 
@@ -1241,5 +1313,8 @@ const onSidebarItem = (type, ground) => {
 
 :deep(.row-style) {
     background: rgba(0, 97, 255, 0.10);
+}
+.opacity-1 {
+    opacity: 1 !important;
 }
 </style>

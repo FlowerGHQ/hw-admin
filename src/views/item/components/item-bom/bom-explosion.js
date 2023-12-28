@@ -213,26 +213,37 @@ const onSilderCopy = (item, index, type) => {
                 {
                     x: 0,
                     y: 0,
+                    label: sidebarData.value[sidebarData.value.length - 1].label + 1, // 标识 点击侧边栏
                 }
             )
 
             // 侧边栏数据
             sidebarData.value.push({
+                label: sidebarData.value[sidebarData.value.length - 1].label + 1, // 标识 点击侧边栏
+                target_id: item.target_id,
                 index: item.index,
-                x: item.x + 10,
-                y: item.y + 10,
+                x: 0,
+                y: 100,
                 child_node: []
             })
         break;
         case 'child_node':
             // 需改的是侧边栏里面的
-            const lg = item['child_node']?.length || 0
+            const lg = item['child_node']?.length || 0            
             // 防止数据里面的child_node为空
             item.child_node = item.child_node?.length ? item.child_node : []
-            item['child_node'].push({
-                x: item['child_node'][lg - 1]?.x + 20 || item.x + 20,
-                y: item['child_node'][lg - 1]?.y + 20 || item.y + 20,
-            })            
+            if (lg === 0) {
+                // 为空的话
+                item['child_node'].push({
+                    x: item.x + 10,
+                    y: item.y + 10,
+                })            
+            } else {
+                item['child_node'].push({
+                    x: item.child_node[lg - 1]?.x + 10,
+                    y: item.child_node[lg - 1]?.y + 10,
+                }) 
+            }
 
             // 数据修改重新画线
             const pointerDatasChild = pointerList.value.find((el) => el.index === item.index);            
@@ -289,18 +300,6 @@ const onSilderDelete = (item, index, type, childIndex) => {
 const initLine = (data) => {
     console.log("初始化数据和画线", data);    
     pointerList.value = data
-    // [
-    //     {
-    //         index: 4,
-    //         start_point: [ { x: 0, y: 0, child_node: [{ x: 100, y: 10 }] }, { x: 0, y: 300 }],
-    //         end_point: [ { x: 0, y: 100, },{ x: 100, y: 100, },]
-    //     },
-    //     // {
-    //     //     index: 5,
-    //     //     start_point: [ { x: 0, y: 0, child_node: [{ x: 100, y: 10 }] }, { x: 0, y: 300 }],
-    //     //     end_point: [ { x: 0, y: 100, },{ x: 100, y: 100, },]
-    //     // },
-    // ]
     sidebarData.value = []
              
     canvasLine(ctx);
@@ -314,16 +313,22 @@ const initLine = (data) => {
 // 过滤silder数据
 const sidebarDataFilter = (arr) => {
     const result = []
-    let count = 1
-    arr.forEach(($1) => {        
-        $1.start_point.forEach(($2) => {                     
+    let count = 1  // count和count1需要同步的相同后期要用，当然 start_point end_point 对应的个数也是一一对应的
+    let count1 = 1
+    arr.forEach(($1) => {
+        $1.start_point.forEach(($2) => {
             result.push({
-                id: count++, // 标识 点击侧边栏
+                target_id: $1.target_id, // 标识 点击侧边栏
+                label: count++, // 标识 点击侧边栏
                 index: $1.index,
                 x: $2.x,
                 y: $2.y,
                 child_node: $2.child_node?.length ? $2.child_node : []
             });       
+        })
+
+        $1.end_point.forEach(($2) => {                                 
+            $2.label = count1++   // 用来表格标识显示样式
         })        
     });
 
