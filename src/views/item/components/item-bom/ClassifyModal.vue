@@ -354,8 +354,7 @@ const getDefaultChecked = ()=> {
         }).map(item => item.id);
     }
     
-    selectIdList.value = Core.Util.deepCopy(defaultChecked.value);
-
+    selectIdList.value = [...new Set([...selectIdList.value, ...defaultChecked.value])];
 }
 
 /* 获取版本下分类列表 */

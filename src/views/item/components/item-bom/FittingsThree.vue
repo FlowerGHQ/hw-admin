@@ -113,7 +113,8 @@
                                                         <div class="circle"></div>
                                                     </div>
                                                     <div class="child-node-text cursor" @click="(event) => onSidebarItem(event, 'child-node', ground)">
-                                                        <span class="child-node-content /*这里的class上面点击事件要用到*/">
+                                                        <!-- 这里的class上面点击事件要用到 -->
+                                                        <span class="child-node-content">
                                                             {{ $t('item-bom.branch_point') }}{{ childIndex + 1 }}
                                                         </span>
                                                         <div class="child-delete" @click.stop="onSilderDelete(ground, i, 'child_node', childIndex)">
