@@ -1073,6 +1073,7 @@ onBeforeUnmount(() => {
                                 display: flex;
                                 align-items: flex-start;
                                 flex-direction: column;
+                                white-space: nowrap;
                                 .title-left-top {
                                     display: flex;
                                     align-items: center;
