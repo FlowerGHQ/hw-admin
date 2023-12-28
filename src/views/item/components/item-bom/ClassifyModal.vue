@@ -257,11 +257,10 @@ const handleSearch = () => {
     //更换数组形式传参,字符串逗号分隔输入--编码
     let arr = codeStr?.value?.trim().split(',');
     arr = arr?.map(item => item?.trim());
-    searchForm.value.codeList = arr?.filter(item => item !== ""); 
+    searchForm.value.codeList = arr?.filter(item => item !== "");
     getTableDataFetch()
     
 }
-
 const handleCancle = () => {
     emits("update:visibility", false)
     
@@ -343,12 +342,28 @@ const getDefaultChecked = ()=> {
         }).map(item => item.id);
     }else if(level.value === 3){
         // 获取回显项
-        defaultChecked.value = tableData.value.filter(item => {
+         /* tableData.value.filter(item => {
 
             if(!item.bom_category_id) return false;
             return item.bom_category_id === categoryId.value;
 
-        }).map(item => item.id);
+        }).map(item => item.id); */
+        loading.value = true
+        let obj = {
+            bom_id: bomId.value,
+            code_list: searchForm.value.codeList,//同步编号
+            page: 1,
+            page_size: 1000,
+            bom_category_id:categoryId.value,
+        }
+        Core.Api.ITEM_BOM.partsList(obj).then(res => {
+            console.log("partsList----res", res);
+            defaultChecked.value = res.list.map(item=>item.id);
+        }).catch(err => {
+            console.log("defaultChecked", err);
+        }).finally(()=>{
+            loading.value = false
+        })
     }
     
     selectIdList.value = [...new Set([...selectIdList.value, ...defaultChecked.value])];
