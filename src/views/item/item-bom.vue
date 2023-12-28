@@ -61,6 +61,7 @@
         </div>
 
         <ClassifyModal
+            :key="dataKeyPop"
             v-model:visibility="classifyModalShow"
             :activeObj="activeObj"
             :code="level2CodeStr"
@@ -105,6 +106,8 @@ const { proxy } = getCurrentInstance();
  *    name: "一级分类", 名字
  * }
  * */
+// 刷新组件key
+const dataKeyPop = ref(new Date())
 // 注释-侧边栏
 const isCollapse = ref(false); //菜单Dom-是否收起
 const activeObj = ref({});
@@ -227,6 +230,7 @@ const setValue = (val) => {
     classifyModalShow.value = val;
     if (!val) {
         level2CodeStr.value = "";
+        dataKeyPop.value = new Date();
     }
 };
 </script>
