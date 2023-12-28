@@ -45,6 +45,8 @@ const apiList = {
         goodItemExport:['PostJson','app-order/export'],     // 好物订单-导出
         downloadItem:['GetJson','app-order/download-import-template'],     // 好物订单-下载模板
         incomingInspection: ['GetJson', 'material-arrival-quality-inspection-order/export'], // 来料检导出
+        downloadTemplate: ['GetJson', 'aftermarket/bom/download-aftermarket-bom'], // 二级页面下载导入模板
+
     },
     User: { // 用户
         save: ['PostJson', 'user/save'],
@@ -930,6 +932,26 @@ const apiList = {
         delete: ['PostJson', 'email-task/delete'],
         scheduleEmail: ['PostJson', 'email/schedule-email'],
         memberList: ['PostJson', 'email/member-list'],
+    },
+    
+    ITEM_BOM:{
+        listName: ['PostJson', 'aftermarket/bom/list-name'], // 产品名称列表
+        versionList: ['PostJson', 'aftermarket/bom/list-version'], // 版本列表
+        listCategory: ['PostJson', 'aftermarket/bom/list-category'], // 分类列表
+        partsList: ['PostJson', 'aftermarket/bom/list-parts'], // 配件list
+        saveOrEdit: ['PostJson', 'item/item-component-set-save'], // 新增编辑爆炸图
+        getExplosionImg: ['PostJson', 'item/item-component-set-list'], // 爆炸图list
+        editPoint: ['PostJson', 'item/bind-item-component'], // 编辑点位
+        updateName: ['PostJson', 'aftermarket/bom/update-name'], // 编辑Bom商品名称
+        saveCategoryName: ['PostJson', 'bom-category/save'], // 新增编辑分类
+        deleteCategory: ['PostJson', 'bom-category/delete'], // 删除分类
+        changeBomList: ['PostJson', 'bom-log/list'], // bom设变列表
+        changeCount: ['PostJson', 'bom-log/count-by-type'], // bom设变统计
+        bindCategory: ['PostJson', 'aftermarket/bom/bind-category'], // 给Bom商品绑定分类 （覆盖）
+        addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
+        parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
+        importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+
     }
 }; 
 

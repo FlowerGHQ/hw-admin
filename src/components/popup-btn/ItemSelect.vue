@@ -211,13 +211,14 @@ export default {
         getTableData() {
             //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
+                arr = arr.map(item=>item.trim());
+                arr = arr.filter(item => item !== "");  
             if (this.purchaseId) {
                 Core.Api.Purchase.itemList({
                     order_id: this.purchaseId,
                     // item_code: this.searchForm.code,
                     code_list: arr, //更换数组形式传参,字符串逗号分隔输入
                 }).then(res => {
-                    console.log('Purchase.itemList:', res)
                     this.tableData = res.list.map(item => {
                         return {
                             ...item.item,

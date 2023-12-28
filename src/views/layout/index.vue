@@ -118,8 +118,11 @@
                                     </span>
                                 </template>
                                 <template v-for="i of item.children">
-                                    <template v-if="$auth(...i.auth)">
-                                        <a-menu-item 
+                                    <template 
+                                        v-if="$auth(...i.auth) && isExistArr(i.meta?.admin_module, tabPosition)
+                                        /*判断子children meta.admin_module admin中四大模块*/"
+                                    >
+                                        <a-menu-item
                                             :key="item.path + '/' + i.path" 
                                             @click="handleLink(item.path + '/' + i.path)"
                                         >
@@ -132,7 +135,7 @@
                     </a-menu>
                 </a-layout-sider>
                 <a-layout class="layout-main" :class="{ longer: collapsed }">
-                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> -->
+                    <!-- <MyBreadcrumb class="layout-breadcrumb"/> 面包屑没用上-->
                     <a-layout-content class="layout-content">
                         <router-view></router-view>
                     </a-layout-content>
@@ -211,11 +214,12 @@ export default {
             // 选择模块进行路由过滤ADMIN的时候的权限
             if (this.loginType === LOGIN_TYPE.ADMIN) {
                 let newShowList = []                
-                SIDER.ADMIN.forEach(item => {             
+                SIDER.ADMIN.forEach(item => {       
                     if (item.type != undefined ? item.type.indexOf(this.tabPosition) != -1 : true) {
                         newShowList.push(item)
                     }
-                })                
+                })
+
                 showList = newShowList;
                 
                 // 是否只在超级管理员显示，普通平台方不展示
@@ -447,6 +451,14 @@ export default {
         // 获取无参数路径
         getPathNoQuery(path) {
             return path.split('?')[0]
+        },
+        // 判断一个值是否在这个数组中
+        isExistArr(arr, value) {
+            if(!arr) return true  // 默认arr不传 全部显示
+            // 传了arr 数据走下面逻辑
+            const Arr = arr || []
+            const result = Arr.includes(value)
+            return result  // true为显示 false 为不显示
         }
     }
 };

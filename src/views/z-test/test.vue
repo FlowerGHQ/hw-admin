@@ -1,109 +1,98 @@
-<template>
-  <div>
-    <!-- <div id="container" class="chart"></div> -->
-
-    <!-- <a-input v-model:value="testValue" v-focus placeholder="Basic usage" /> -->
-
-    <!-- <a-button @click="btns">点击</a-button> -->
-    <a-textarea
-      v-model:value="frame_uid"
-      placeholder="Basic usage"
-      :rows="10"
-    />
-    <a-button @click="submit">提交</a-button>
-  </div>
+<!-- <template>
+    <div class="test">
+        <div class="number">
+            {{number}}
+        </div>
+        <a-button class="add" @click="addNumber">添加</a-button>
+        <a-button class="reset" @click="resetNumber">重置</a-button>
+    </div>
 </template>
 
 <script setup>
-import { onMounted, ref, defineComponent, reactive, toRefs, watch } from "vue"
-import { Chart } from "@antv/g2"
-
-const chart = ref(null)
-const testValue = ref("")
-const frame_uid = ref(undefined)
-onMounted(() => {
-  // charts()
-})
-
-const submit = () => {
-  const uidList = frame_uid.value
-    .trim()
-    .split("\n")
-    .map((str) => str.trim())
-  console.log("uidList", uidList)
-}
-
-// 试验charts
-const charts = () => {
-  chart.value = new Chart({
-    container: "container",
-    autoFit: true,
-    height: 500,
-  })
-
-  const data = [
-    { country: "Asia", year: "1750", value: 502 },
-    { country: "Asia", year: "1800", value: 635 },
-    { country: "Asia", year: "1850", value: 809 },
-    { country: "Asia", year: "1900", value: 5268 },
-    { country: "Asia", year: "1950", value: 4400 },
-    { country: "Asia", year: "1999", value: 3634 },
-    { country: "Asia", year: "2050", value: 947 },
-
-    { country: "Africa", year: "1750", value: 106 },
-    { country: "Africa", year: "1800", value: 107 },
-    { country: "Africa", year: "1850", value: 111 },
-    { country: "Africa", year: "1900", value: 1766 },
-    { country: "Africa", year: "1950", value: 221 },
-    { country: "Africa", year: "1999", value: 767 },
-    { country: "Africa", year: "2050", value: 133 },
-
-    { country: "Europe", year: "1750", value: 163 },
-    { country: "Europe", year: "1800", value: 203 },
-    { country: "Europe", year: "1850", value: 276 },
-    { country: "Europe", year: "1900", value: 628 },
-    { country: "Europe", year: "1950", value: 547 },
-    { country: "Europe", year: "1999", value: 729 },
-    { country: "Europe", year: "2050", value: 408 },
-
-    { country: "Oceania", year: "1750", value: 200 },
-    { country: "Oceania", year: "1800", value: 200 },
-    { country: "Oceania", year: "1850", value: 200 },
-    { country: "Oceania", year: "1900", value: 460 },
-    { country: "Oceania", year: "1950", value: 230 },
-    { country: "Oceania", year: "1999", value: 300 },
-    { country: "Oceania", year: "2050", value: 300 },
-  ]
-
-  chart.value.data(data)
-
-  chart.value.scale({
-    year: {
-      type: "cat",
-      range: [0.03, 0.92],
-    },
-    value: {
-      nice: true,
-    },
-  })
-
-  chart.value.area().shape("smooth").position("year*value").color("country")
-  chart.value.line().shape("smooth").position("year*value").color("country")
-
-  chart.value.interaction("element-highlight")
-
-  chart.value.render()
-}
-
-const btns = () => {
-  console.log("输出的", testValue.value)
-}
+    import useNumber from '@/hooks/useNumber'
+    const props = defineProps({
+        // ...
+        type: {
+            type: String,
+            default: 'item'
+        },
+    })
+    const {number,addNumber,resetNumber,type} = useNumber(props) //vue2中的minxins
+    console.log(type)
 </script>
 
-<style lang="less" scoped>
-.chart {
-  width: 800px;
-  margin-top: 100px;
-  margin-left: 40px;
-}
-</style>
+<style lang="less">
+    
+</style> -->
+<template>
+    <div>
+      <div style="margin-bottom: 16px">
+        <a-button type="primary" :disabled="!hasSelected" :loading="loading" @click="start">
+          Reload
+        </a-button>
+        <span style="margin-left: 8px">
+          <template v-if="hasSelected">
+            {{ `Selected ${selectedRowKeys.length} items` }}
+          </template>
+        </span>
+      </div>
+      <a-table
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+        :columns="columns"
+        :data-source="data"
+      />
+    </div>
+  </template>
+  <script>
+  import { computed, defineComponent, reactive, toRefs } from 'vue';
+  const columns = [{
+    title: 'Name',
+    dataIndex: 'name',
+  }, {
+    title: 'Age',
+    dataIndex: 'age',
+  }, {
+    title: 'Address',
+    dataIndex: 'address',
+  }];
+  const data = [];
+  for (let i = 0; i < 46; i++) {
+    data.push({
+      key: i,
+      name: `Edward King ${i}`,
+      age: 32,
+      address: `London, Park Lane no. ${i}`,
+    });
+  }
+  export default defineComponent({
+    setup() {
+      const state = reactive({
+        selectedRowKeys: [],
+        // Check here to configure the default column
+        loading: false,
+      });
+      const hasSelected = computed(() => state.selectedRowKeys.length > 0);
+      const start = () => {
+        state.loading = true;
+        // ajax request after empty completing
+        setTimeout(() => {
+          state.loading = false;
+          state.selectedRowKeys = [];
+        }, 1000);
+      };
+      const onSelectChange = selectedRowKeys => {
+        console.log('selectedRowKeys changed: ', selectedRowKeys);
+        state.selectedRowKeys = selectedRowKeys;
+      };
+      return {
+        data,
+        columns,
+        hasSelected,
+        ...toRefs(state),
+        // func
+        start,
+        onSelectChange,
+      };
+    },
+  });
+  </script>
