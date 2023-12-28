@@ -157,7 +157,7 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
-        if(level.value === 3) handleSearch()
+        if(level.value === 3) handleSearch();
     })
 
 watch(
@@ -250,7 +250,8 @@ onMounted(() => {
     // getTableDataFetch()
 })
 const changeSelect = async () => {
-    if(level.value===3) {
+    if(level.value === 2) return;
+    if(level.value === 3) {
         selectIdList.value = []
         await childRef.value.showDialog();
         handleSearch();
