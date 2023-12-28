@@ -374,22 +374,24 @@
               {{ text || "-" }}
             </template>
             <template v-else-if="column.key === 'operation'">
-              <a-button type="link" @click="handleBatch('transfer', record)">{{
-                $t("crm_c.transfer")
-              }}</a-button>
-              <a-button
-                type="link"
-                @click="routerChange('detail', record)"
-                v-if="$auth('crm-order.detail')"
-                ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
-              >
-              <a-button
-                type="link"
-                class="danger"
-                @click="handleDelete(record.id)"
-                v-if="$auth('crm-order.delete')"
-                >{{ $t("def.delete") }}</a-button
-              >
+              <div class="operation-content">
+                <a-button type="link" @click="handleBatch('transfer', record)">{{
+                  $t("crm_c.transfer")
+                }}</a-button>
+                <a-button
+                  type="link"
+                  @click="routerChange('detail', record)"
+                  v-if="$auth('crm-order.detail')"
+                  ><i class="icon i_detail" />{{ $t("def.detail") }}</a-button
+                >
+                <a-button
+                  type="link"
+                  class="danger"
+                  @click="handleDelete(record.id)"
+                  v-if="$auth('crm-order.delete')"
+                  >{{ $t("def.delete") }}</a-button
+                >
+              </div>
             </template>
             <template v-else>
               {{ text || "-" }}
@@ -1365,5 +1367,9 @@ export default {
   border-radius: 50%;
   display: inline-block;
   margin-right: 8px;
+}
+.operation-content {
+  display: flex;
+  align-items: center;
 }
 </style>
