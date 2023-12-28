@@ -157,6 +157,7 @@ watch(
 watch(
     () => categoryId.value,
     (newValue, oldValue) => {
+        if(level.value === 2) return;
         if(level.value === 3) handleSearch();
     })
 
@@ -329,6 +330,7 @@ const getTableDataFetch = (parmas = {}) => {
         page_size: pageSize.value,
         ...parmas
     }
+    console.log('obj000000000000',obj);
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
         total.value = res.count;
         tableData.value = res.list;
