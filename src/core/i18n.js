@@ -1895,7 +1895,8 @@ const messages = {
                 'crm-user': '人员管理',
                 'feishu-data': '飞书管理',
                 // 新加入2023/10/9
-                'coc': 'COC证书管理'
+                'coc': 'COC证书管理',
+                'aftermarket-bom': 'BOM管理'
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2231,6 +2232,9 @@ const messages = {
             },
             'coc': {
                 'template': 'COC模板',                
+            },
+            'aftermarket-bom': {
+                'list': '售后BOM列表'
             }
         },
         error_code: {
@@ -4581,6 +4585,7 @@ const messages = {
                 'crm-user': 'Personnel management',
                 'feishu-data': 'Flying book management',
                 'coc': 'Coc Certificate Management',
+                'aftermarket-bom': 'BOM Management',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4915,6 +4920,9 @@ const messages = {
             },
             'coc': {
                 'template': 'Coc Template',                
+            },
+            'aftermarket-bom': {
+                'list': 'Aftermarket Bom List'
             }
         },
         error_code: {

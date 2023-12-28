@@ -1637,8 +1637,6 @@ const Util = {
       return item[to] || ''
     },
     
-    
-
     // 问卷状态
     naireStatusColorFilter(val, to = 'text') {
         const MAP = Const.QUE_NAIRE_LIST.STATUS_FILTER_MAP
@@ -1649,8 +1647,22 @@ const Util = {
             case 'color':
                 return COLOR_MAP[val + ''] || 'grey'
         }
+        
     },
 
+    isExternal(path) {
+      return /^(https?:|mailto:|tel:)/.test(path) //匹配是否是外部链接
+    },
+    // 商品售后-销售区域-方法
+    getSalesAreaStr(arr,lang = 'zh') {
+      
+      let str = '';
+      if(!(arr instanceof Array)) return '-'
+      arr?.forEach((item)=>{
+          str += (str?',':'')+item[lang==='zh'?'country':'country_en']
+      })
+      return str || '-'
+  }
 }
 
 export default Util
