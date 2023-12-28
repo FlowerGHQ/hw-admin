@@ -71,7 +71,6 @@
                     <div class="tip">
                         {{ $t('in.selected') + ` ${selectIdList.length} ` + $t('in.total')}}
                     </div>
-                    {{ selectIdList }}
                 </div>
                 <div class="btn-area">
                     <a-button @click="handleCancle">{{ $t('def.cancel') }}</a-button>
