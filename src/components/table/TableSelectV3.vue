@@ -6,7 +6,11 @@
             :row-key="record => record.id" 
             :loading='loading' 
             :pagination='false'
-            :row-selection="checkMode ? rowSelection : null"
+            :row-selection="{
+                selectedRowKeys: selectedRowKeys,
+                preserveSelectedRowKeys: true,
+                onChange: onSelectChange,
+            }"
             >
             <template #headerCell="{ title, column }">
                 <div class="table-title">{{ title }}</div>
@@ -101,10 +105,6 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
-    checkMode: { // 是否开启选择模式
-        type: Boolean,
-        default: false
-    },
     radioMode: { // 是否只能选一个商品
         type: Boolean,
         default: false,
@@ -121,35 +121,32 @@ const props = defineProps({
 const selectedRowKeys = ref([]); // Check here to configure the default column
 
 // 监听弹窗关闭-更改父组件prop -- tableData
-watch(
+/* watch(
     () => props.dataSource,
     (newValue, oldValue) => {
         console.log('dataSource',newValue);
         // emits("update:dataSource", newValue)
     }    
-)
+) */
 
 watch(
     () => props.defaultChecked,
     (newValue, oldValue) => {
-        selectedRowKeys.value = Core.Util.deepCopy(newValue)
-
+        selectedRowKeys.value = [...new Set([...newValue, ...selectedRowKeys.value])]
     },{
         deep:true,
         immediate:true
     } 
 )
+const onSelectChange = (changableRowKeys ,selectedRows) => {
+    selectedRowKeys.value = changableRowKeys;
+    $emit('submit', selectedRowKeys.value)
 
-const onSelectChange = changableRowKeys => {
-      selectedRowKeys.value = changableRowKeys;
-      $emit('submit', selectedRowKeys.value)
-
-    };
-
+};
 const lang = computed(()=>{ // ==='zh'?'country':'country_en'
     return proxy.$store.state.lang
 })
-const rowSelection = computed(() => {
+/* const rowSelection = computed(() => {
       /* return {
         selectedRowKeys: unref(selectedRowKeys),
         onChange: onSelectChange,
@@ -181,12 +178,9 @@ const rowSelection = computed(() => {
             selectedRowKeys.value = newSelectedRowKeys;
           },
         }],
-      }; */
-      return {
-        selectedRowKeys: selectedRowKeys.value,
-        onChange: onSelectChange,
-      }
-    });
+      }; 
+      return 
+    }); */
 </script>
 
 <style lang="less" scoped>
