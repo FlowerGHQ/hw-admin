@@ -1702,6 +1702,11 @@ export default {
         window.removeEventListener('resize', this.handleResize)
         // this.observer.disconnect();    //取消监听
 
+    },  
+    beforeRouteLeave(to, from, next) {  
+        window.removeEventListener('resize', this.handleResize)
+        // 当离开当前路由时执行的操作  
+        next(); 
     },
     methods: {
         /* 监听 */
