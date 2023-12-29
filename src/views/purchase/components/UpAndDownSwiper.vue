@@ -13,7 +13,7 @@
           :class="{ active: index === imgIndex }"
           v-for="(item, index) in imgsArr"
           :key="index"
-          :src="$Util.imageFilter(item)"
+          :src="$Util.imageFilter(item ,2)"
           @click="previewImg(index)"
           alt="" />
       </div>
@@ -82,7 +82,7 @@ export default {
   methods: {
     getImgUrl() {
       console.log("getImgUrl:", this.imgsArr);
-      return this.$Util.imageFilter(this.imgsArr[this.imgIndex]);
+      return this.$Util.imageFilter(this.imgsArr[this.imgIndex] ,2);
     },
     imgPreview(type) {
       if (type === 0) {
