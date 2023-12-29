@@ -2152,10 +2152,6 @@ export default {
                 });
             }
 
-            if(!form.logo && this.form.type === this.itemTypeMap['2']?.key) {
-
-                form.logo = 'img/cf1c9624270f2d7b4d5025b889cd0818bdb59dc42f45ca6ec0ba04186deb973e.png';
-            }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));

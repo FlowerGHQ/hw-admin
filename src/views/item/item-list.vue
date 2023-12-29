@@ -107,7 +107,7 @@
                       class="image"
                       :width="55"
                       :height="55"
-                      :src="$Util.imageFilter(record.logo)"
+                      :src="$Util.imageFilter(record.logo, 2)"
                       :fallback="$t('def.none')" />
                     <div class="info" >
                       <div>
@@ -405,19 +405,8 @@ export default {
           title: this.$t("i.status"),
           dataIndex: "status",
           width: '80px'
-          // filters: this.$Util.tableFilterFormat(
-          //   ITEM.STATUS_LIST,
-          //   this.$i18n.locale
-          // ),
-          // filterMultiple: false,
-          // filteredValue: filteredInfo.status || [0],
         },
         { title: this.$t("n.type"), dataIndex: ["type"], key: "type" },
-        // {
-        //   title: this.$t("n.flag_entity"),
-        //   dataIndex: "flag_entity",
-        //   key: "flag_entity",
-        // },
         {
           title: this.$t("i.categories"),
           dataIndex: "category_list",
@@ -514,7 +503,6 @@ export default {
         const height = this.$refs.fixBox && this.$refs.fixBox.offsetHeight;
         this.fixedWidth = width + 'px';
         this.fixedHeight = height + 'px'; 
-        console.log('hahahahh-----77777',width,height);
         // 在这里处理宽高变化的逻辑
     },
     routerChange(type, item = {}) {
