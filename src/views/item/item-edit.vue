@@ -354,7 +354,7 @@
                 <div class="title">{{ $t("i.image") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item required img-upload">
+                <div class="form-item img-upload">
                     <div class="key">{{ $t("i.cover") }}</div>
                     <div class="value">
                         <a-upload
@@ -386,7 +386,7 @@
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
-                <div class="form-item required img-upload">
+                <div class="form-item img-upload">
                     <div class="key">{{ $t("i.picture") }}</div>
                     <div class="value">
                         <a-upload
@@ -2040,9 +2040,9 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-            console.log('form-handleSubmit111',form);
+          /*   console.log('form-handleSubmit111',form);
             console.log('specData-handleSubmit111',specData);
-            console.log('attrDef-handleSubmit111',attrDef);
+            console.log('attrDef-handleSubmit111',attrDef); */
 
             // 校验检查
             this.isValidate = true;
@@ -2228,7 +2228,7 @@ export default {
                 //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
                 // }
             }
-            // 封面图片
+            /* // 封面图片
             if (!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
@@ -2240,7 +2240,7 @@ export default {
                     `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
                 );
             }
-
+ */
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 if (!form.fob_eur) {
