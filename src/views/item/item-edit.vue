@@ -354,7 +354,7 @@
                 <div class="title">{{ $t("i.image") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item img-upload">
+                <div class="form-item img-upload" :class="{'required' : form.type !== itemTypeMap['2']?.key}">
                     <div class="key">{{ $t("i.cover") }}</div>
                     <div class="value">
                         <a-upload
@@ -386,7 +386,7 @@
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
-                <div class="form-item img-upload">
+                <div class="form-item img-upload" :class="{'required' : form.type !== itemTypeMap['2']?.key}">
                     <div class="key">{{ $t("i.picture") }}</div>
                     <div class="value">
                         <a-upload
@@ -2044,6 +2044,7 @@ export default {
             console.log('specData-handleSubmit111',specData);
             console.log('attrDef-handleSubmit111',attrDef); */
 
+
             // 校验检查
             this.isValidate = true;
 
@@ -2065,7 +2066,7 @@ export default {
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
-                    return item.short_path || item.response.data.filename;
+                    return item?.short_path || item?.response?.data?.filename;
                 });
                 // form.logo = coverList[0];
                 form.logo = coverList.join(',');
@@ -2073,7 +2074,7 @@ export default {
             // 详情页面上传
             if (this.upload.detailList.length || this.upload.detailList.length === 0) {
                 let detailList = this.upload.detailList.map((item) => {
-                    return item.short_path || item.response.data.filename;
+                    return item?.short_path || item?.response?.data?.filename;
                 });
                 form.imgs = detailList.join(",");
             }
@@ -2149,6 +2150,11 @@ export default {
                         imgs: (data.imgsList.map(item=> item?.filename)).join(",")
                     };
                 });
+            }
+
+            if(!form.logo && this.form.type === this.itemTypeMap['2']?.key) {
+
+                form.logo = 'img/cf1c9624270f2d7b4d5025b889cd0818bdb59dc42f45ca6ec0ba04186deb973e.png';
             }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
@@ -2228,19 +2234,19 @@ export default {
                 //     return this.$message.warning(`${this.$t('d.deposit_payment')}(${this.$t('d.not_null_and_1')})`)
                 // }
             }
-            /* // 封面图片
-            if (!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) {
+            // 封面图片
+            if ((!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) && (this.form.type !== this.itemTypeMap['2']?.key)) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
                 );
             }
             // 详情图片
-            if (!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) {
+            if ((!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) && (this.form.type !== this.itemTypeMap['2']?.key)) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
                 );
             }
- */
+
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 if (!form.fob_eur) {
