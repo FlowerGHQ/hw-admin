@@ -354,7 +354,7 @@
                 <div class="title">{{ $t("i.image") }}</div>
             </div>
             <div class="form-content">
-                <div class="form-item required img-upload">
+                <div class="form-item img-upload" :class="{'required' : form.type !== itemTypeMap['2']?.key}">
                     <div class="key">{{ $t("i.cover") }}</div>
                     <div class="value">
                         <a-upload
@@ -386,7 +386,7 @@
                         <div class="tip">{{ $t("n.size_prompt_cover") }}</div>
                     </div>
                 </div>
-                <div class="form-item required img-upload">
+                <div class="form-item img-upload" :class="{'required' : form.type !== itemTypeMap['2']?.key}">
                     <div class="key">{{ $t("i.picture") }}</div>
                     <div class="value">
                         <a-upload
@@ -2040,9 +2040,10 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-            console.log('form-handleSubmit111',form);
+          /*   console.log('form-handleSubmit111',form);
             console.log('specData-handleSubmit111',specData);
-            console.log('attrDef-handleSubmit111',attrDef);
+            console.log('attrDef-handleSubmit111',attrDef); */
+
 
             // 校验检查
             this.isValidate = true;
@@ -2065,7 +2066,7 @@ export default {
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
-                    return item.short_path || item.response.data.filename;
+                    return item?.short_path || item?.response?.data?.filename;
                 });
                 // form.logo = coverList[0];
                 form.logo = coverList.join(',');
@@ -2073,7 +2074,7 @@ export default {
             // 详情页面上传
             if (this.upload.detailList.length || this.upload.detailList.length === 0) {
                 let detailList = this.upload.detailList.map((item) => {
-                    return item.short_path || item.response.data.filename;
+                    return item?.short_path || item?.response?.data?.filename;
                 });
                 form.imgs = detailList.join(",");
             }
@@ -2150,6 +2151,7 @@ export default {
                     };
                 });
             }
+
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -2229,13 +2231,13 @@ export default {
                 // }
             }
             // 封面图片
-            if (!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) {
+            if ((!this.upload.coverList || this.upload.coverList && this.upload.coverList.length===0) && (this.form.type !== this.itemTypeMap['2']?.key)) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.cover_pic")})`
                 );
             }
             // 详情图片
-            if (!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) {
+            if ((!this.upload.detailList || this.upload.detailList && this.upload.detailList.length===0) && (this.form.type !== this.itemTypeMap['2']?.key)) {
                 return this.$message.warning(
                     `${this.$t("def.enter")}(${this.$t("n.detail_pic")})`
                 );
