@@ -448,6 +448,10 @@ export default {
             this.selectedKeys = selectedKeys
             Core.Data.setTabPosition(this.tabPosition)
         },
+        // 获取无参数路径
+        getPathNoQuery(path) {
+            return path.split('?')[0]
+        },
         // 判断一个值是否在这个数组中
         isExistArr(arr, value) {
             if(!arr) return true  // 默认arr不传 全部显示
@@ -455,10 +459,6 @@ export default {
             const Arr = arr || []
             const result = Arr.includes(value)
             return result  // true为显示 false 为不显示
-        },
-        // 获取无参数路径
-        getPathNoQuery(path) {
-            return path.split('?')[0]
         }
     }
 };

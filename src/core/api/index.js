@@ -939,6 +939,17 @@ const apiList = {
     EMAIL_SUBSCRIPTION: {
         list: ['PostJson', 'crm-customer/list'] // 列表
     },
+
+    // 邮件模板接口
+    MAIL_MANAGEMENT: {
+        add: ['PostJson', 'email-task/save'],
+        detail: ['PostJson', 'email-task/detail'],
+        list: ['PostJson', 'email-task/list'],
+        delete: ['PostJson', 'email-task/delete'],
+        scheduleEmail: ['PostJson', 'email/schedule-email'],
+        memberList: ['PostJson', 'email/member-list'],
+    },
+    
     ITEM_BOM:{
         listName: ['PostJson', 'aftermarket/bom/list-name'], // 产品名称列表
         versionList: ['PostJson', 'aftermarket/bom/list-version'], // 版本列表
@@ -957,15 +968,6 @@ const apiList = {
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
 
-    },
-     // 邮件模板接口
-     MAIL_MANAGEMENT: {
-        add: ['PostJson', 'email-task/save'],
-        detail: ['PostJson', 'email-task/detail'],
-        list: ['PostJson', 'email-task/list'],
-        delete: ['PostJson', 'email-task/delete'],
-        scheduleEmail: ['PostJson', 'email/schedule-email'],
-        memberList: ['PostJson', 'email/member-list'],
     }
 };
 

@@ -322,6 +322,9 @@ const toBindCategory = () => {
 /* Fetch start*/
 // 获取表格list
 const getTableDataFetch = (parmas = {}) => {
+    if(level.value === 2 && searchForm.value.codeList.length === 0 ) {
+        return;
+    }
     loading.value = true
     let obj = {
         bom_id: bomId.value,
@@ -330,8 +333,8 @@ const getTableDataFetch = (parmas = {}) => {
         page_size: pageSize.value,
         ...parmas
     }
-    console.log('obj000000000000',obj);
     Core.Api.ITEM_BOM.partsList(obj).then(res => {
+        
         total.value = res.count;
         tableData.value = res.list;
 
@@ -340,7 +343,7 @@ const getTableDataFetch = (parmas = {}) => {
     }).catch(err => {
         console.log("getTableDataFetch", err);
     }).finally(()=>{
-        loading.value = false
+        loading.value = false;
     })
 }
 
