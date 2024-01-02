@@ -2860,6 +2860,7 @@ export default {
                 })
             }
             this.specific.data = Core.Util.deepCopy(dataList);
+            console.log('this.specific.data-----1',this.specific.data);
         },
 
         // 批量设置
