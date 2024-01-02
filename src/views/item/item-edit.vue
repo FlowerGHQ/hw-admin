@@ -2558,7 +2558,7 @@ export default {
                     );
                 }
             } else if (type === "words") {
-                let reg = /^[a-z]+$/g;
+                let reg = /^[a-zA-Z]+$/g;
                 if (!item.key) {
                     this.specification.isWords = true;
                     return this.$message.warning(
