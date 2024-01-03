@@ -11,7 +11,7 @@ const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
-const NOW_LOGIN_TYPE = Data.getLoginType()
+const NOW_LOGIN_TYPE =  Data.getLoginType()
 
 // 重定向
 let indexPath = ''
@@ -100,30 +100,6 @@ const routes = [
                 },
             },
 
-        ]
-    },
-    { // 供应链表单
-        path: '/supply-chain',
-        component: Layout,
-        redirect: '/supply-chain/home',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
-        meta: {
-            title: '供应链',
-            title_en: 'Supply Chain',
-            icon: 'i_home',
-            auth: ['MANAGER'], // 管理员
-        },
-        children:[
-            {
-                // 首页
-                path: 'home',
-                name: 'Home',
-                component: () => import('@/views/supply-chain/index.vue'),
-                meta: {
-                    title: '首页',
-                    title_en: 'Home',
-                },
-            }
         ]
     },
     // { // 看板
