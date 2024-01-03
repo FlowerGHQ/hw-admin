@@ -29,7 +29,8 @@
 				return BasicInfo;
 		}
 	});
-	const current = ref(0);
+	// 步骤条
+	const current = ref(1);
 </script>
 
 <style lang="less" scoped>
