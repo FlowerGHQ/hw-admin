@@ -6,7 +6,11 @@
                     <img
                         :src="current >= item.id ? item.activeImg : item.img"
                         alt="" />
-                    <div :class="{'step-item-title':true,'step-item-title-active':current >= item.id}">
+                    <div
+                        :class="{
+                            'step-item-title': true,
+                            'step-item-title-active': current >= item.id,
+                        }">
                         {{ item.title }}
                     </div>
                 </div>
@@ -16,10 +20,10 @@
                         :src="
                             current >= item.id + 1
                                 ? getAassetsFile(
-                                      '../../../assets/images/supply-chain/line-active.png'
+                                      '../../../../assets/images/supply-chain/line-active.png'
                                   )
                                 : getAassetsFile(
-                                      '../../../assets/images/supply-chain/line.png'
+                                      '../../../../assets/images/supply-chain/line.png'
                                   )
                         "
                         alt="" />
@@ -53,27 +57,27 @@ const stepsaOption = reactive([
         id: 0,
         title: $t("supply-chain.basic_info"),
         img: getAassetsFile(
-            "../../../assets/images/supply-chain/step1-active.png"
+            "../../../../assets/images/supply-chain/step1-active.png"
         ),
         activeImg: getAassetsFile(
-            "../../../assets/images/supply-chain/step1-active.png"
+            "../../../../assets/images/supply-chain/step1-active.png"
         ),
     },
     {
         id: 1,
         title: $t("supply-chain.material_list"),
         content: "Second-content",
-        img: getAassetsFile("../../../assets/images/supply-chain/step2.png"),
+        img: getAassetsFile("../../../../assets/images/supply-chain/step2.png"),
         activeImg: getAassetsFile(
-            "../../../assets/images/supply-chain/step2-active.png"
+            "../../../../assets/images/supply-chain/step2-active.png"
         ),
     },
     {
         id: 2,
         title: $t("supply-chain.submit"),
-        img: getAassetsFile("../../../assets/images/supply-chain/step3.png"),
+        img: getAassetsFile("../../../../assets/images/supply-chain/step3.png"),
         activeImg: getAassetsFile(
-            "../../../assets/images/supply-chain/step3-active.png"
+            "../../../../assets/images/supply-chain/step3-active.png"
         ),
     },
 ]);
@@ -91,34 +95,33 @@ const stepsaOption = reactive([
         align-items: flex-start;
         flex-direction: column;
         justify-content: center;
-        &:last-child{
-                    .step-item-icon-line{
-                        margin-left: -10px;
-                    }
+        &:last-child {
+            .step-item-icon-line {
+                margin-left: -10px;
+            }
         }
         .step-item-icon-line {
             display: flex;
             align-items: center;
             margin-right: -6px;
-            .step-item-icon{
+            .step-item-icon {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                .step-item-title{
+                .step-item-title {
                     color: #666;
-                    font-family: Alibaba PuHuiTi 2.0;
+                    font-family: Alibaba PuHuiTi 2;
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: 22px; /* 157.143% */
                     margin-top: 4px;
                 }
-                .step-item-title-active{
-                    color: #0061FF !important;
+                .step-item-title-active {
+                    color: #0061ff !important;
                 }
-
             }
-            .step-item-line{
+            .step-item-line {
                 margin-top: -20px;
             }
         }
