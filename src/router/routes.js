@@ -12,6 +12,8 @@ const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
 const NOW_LOGIN_TYPE = Data.getLoginType()
+
+// 重定向
 let indexPath = ''
 switch (NOW_LOGIN_TYPE) {
     case LOGIN_TYPE.ADMIN:
@@ -26,7 +28,9 @@ switch (NOW_LOGIN_TYPE) {
     case LOGIN_TYPE.STORE:
         indexPath = '/dashboard/index'
         break;
-
+    case LOGIN_TYPE.SUPPLIER:
+        indexPath = '/supply-home'
+        break;
     default:
         break;
 }
