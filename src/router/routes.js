@@ -98,6 +98,30 @@ const routes = [
 
         ]
     },
+    { // 供应链表单
+        path: '/supply-chain',
+        component: Layout,
+        redirect: '/supply-chain/home',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+        meta: {
+            title: '供应链',
+            title_en: 'Supply Chain',
+            icon: 'i_home',
+            auth: ['MANAGER'], // 管理员
+        },
+        children:[
+            {
+                // 首页
+                path: 'home',
+                name: 'Home',
+                component: () => import('@/views/supply-chain/index.vue'),
+                meta: {
+                    title: '首页',
+                    title_en: 'Home',
+                },
+            }
+        ]
+    },
     // { // 看板
     //     path: '/test-report',
     //     component: Layout,
@@ -2765,30 +2789,7 @@ const routes = [
 
         ]
     },
-    { // 供应链表单
-        path: '/form',
-        component: Layout,
-        redirect: '/form/supply-chain',
-        name: 'supplychainForm',
-        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
-        meta: {
-            title: '供应链表单',
-            title_en: 'System Management',
-            icon: 'i_menu_xitongguanli',
-            auth: ['MANAGER'], // 管理员
-        },
-        children: [
-            {
-                path: 'supply-chain',
-                name: 'supplyChain',
-                component: () => import('@/views/supply-chain/spare-parts-form.vue'),
-                meta: {
-                    title: '文件管理',
-                    title_en: 'Files ',
-                }
-            },
-        ]
-    },
+
     // 测试用例
     {
         path:'/test',
