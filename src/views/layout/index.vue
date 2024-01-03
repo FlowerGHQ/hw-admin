@@ -107,7 +107,7 @@
                                 @click="handleLink(item.path)"
                             >
                                 <i class='icon' :class="item.meta.icon"/>
-                                <span :class="{ 'collapsed-title': collapsed }">{{ item.meta.title }}</span>
+                                <span :class="{ 'collapsed-title': collapsed }">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
