@@ -4,7 +4,8 @@
             'image-uploader-wrap': true,
             'flex-column': props.tipPosition === 'bottom',
             'flex-row': props.tipPosition === 'right',
-        }">
+        }"
+        :id="uploadId">
         <div class="upload-wrap">
             <a-upload
                 name="file"
@@ -55,6 +56,7 @@ import { ref, reactive, watch, computed } from "vue";
 import Core from "@/core";
 import { message } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
+import _ from "lodash";
 const $t = useI18n().t;
 const upload = ref({
     // 上传图片
@@ -102,6 +104,7 @@ const props = defineProps({
         default: () => ["image/jpeg", "image/jpg", "image/png"],
     },
 });
+const uploadId = _.uniqueId("upload_");
 
 // computed
 const limitNum = computed(() => {
@@ -119,23 +122,25 @@ const handleImgCheck = (file, fileList) => {
         if (!isCanUpType) {
             message.warning($t("my_upload.file_incorrect"));
             fileList.pop();
-            return false;
+            reject();
         }
         if (!isLt) {
             message.warning(
                 `${$t("my_upload.picture_smaller")} ${props.limitSize}M!`
             );
             fileList.pop();
-            return false;
+            reject();
         }
         resolve(isCanUpType && isLt);
     });
 };
 const handleDetailChange = ({ file, fileList }) => {
-    console.log(file, fileList);
     if (file.status === "done") {
         // 上传成功
         if (file.response.code === 0) {
+            if (fileList.length > props.limit) {
+                fileList = fileList.slice(0, props.limit);
+            }
             // 上传成功
             upload.value.fileList = fileList;
             $emit("update:value", upload.value.fileList);
@@ -221,5 +226,8 @@ const handlePreview = (file) => {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
+    .tip {
+        margin-bottom: 8px;
+    }
 }
 </style>
