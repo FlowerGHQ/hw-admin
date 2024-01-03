@@ -4,6 +4,9 @@ import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
 
+// 供应商路由
+import supplyRouter from './supply-router'
+
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
@@ -29,7 +32,7 @@ switch (NOW_LOGIN_TYPE) {
 }
 /** 
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限 整个模块
-* @params meta.roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
+* @params meta.roles 这个权限是 在平台方 / 分销商 / 零售商 / 门店 下显示的权限
 * @params meta.auth 这个权限是在系统那边配置每一个用户或者角色的权限显示与否
 * @params meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
 * @params meta.hideen判断是否显示到侧边栏上 true为不显示
@@ -103,7 +106,7 @@ const routes = [
     //     meta: {
     //         title: '测试报告',
     //         title_en: 'Test Report',
-    //         icon: 'i_s_dashboard',    
+    //         icon: 'i_s_dashboard',
     //     },
     //     children: [
     //         {
@@ -2796,7 +2799,8 @@ const routes = [
             not_sub_menu: true,
             hidden: true,
         },          
-    }
+    },
+    ...supplyRouter,    
 ];
 
 export default routes;

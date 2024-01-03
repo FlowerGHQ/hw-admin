@@ -235,6 +235,7 @@ const messages = {
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
             delete: '删除',
             spec_pic: '请上传规格商品图片',
+            verification_code: '验证码',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -2964,6 +2965,7 @@ const messages = {
             spec_pic: 'Please Upload An Image Of The Product With Specifications',
             item_code_tip: 'Commodity code: the parent specification of the multi-specification commodity corresponds to the commodity code;',
             sku_code_tip: 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
+            verification_code: 'Verification Code',
         },
         a: {
             new_retailer: 'Create A New Retailer',

@@ -174,8 +174,10 @@ let Const = {
             DISTRIBUTOR: 15, //分销商
             AGENT: 20, // 零售商
             STORE: 30, // 门店
+            SUPPLIER: 40, // 供应商
         },
         TYPE_LIST: [
+            { value: 40, zh: '供应商', en: 'Supplier' },
             { value: 30, zh: '门店', en: 'Store' },
             { value: 20, zh: '零售商', en: 'Retailer' },
             { value: 15, zh: '分销商', en: 'Distributor' },
@@ -186,6 +188,7 @@ let Const = {
             15: 'DISTRIBUTOR',
             20: 'AGENT',
             30: 'STORE',
+            40: 'SUPPLIER',
             100: 'CUSTOMER',
         },
         ORG_TYPE: {
@@ -193,6 +196,7 @@ let Const = {
             DISTRIBUTOR: 15,
             AGENT: 20,
             STORE: 30,
+            SUPPLIER: 40, // 供应商
         },
         ROUTER_TYPE: {
             SALES: 1,  // 销售
