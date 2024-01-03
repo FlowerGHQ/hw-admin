@@ -17,11 +17,11 @@
         >
             <div class="form-block">
                 <div class="form-title">
-                    <div class="title">{{ $t("supply_chain.contact") }}</div>
+                    <div class="title">{{ $t("supply-chain.contact") }}</div>
                 </div>
                 <div class="form-content">
                     <div class="form-item">
-                        <div class="key">{{ $t("supply_chain.type_supply") }}</div>
+                        <div class="key">{{ $t("supply-chain.type_supply") }}</div>
                         <div class="value">
                             <a-radio-group
                                 v-model:value="specific"

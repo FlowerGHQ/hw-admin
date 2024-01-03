@@ -58,7 +58,7 @@
             <div class="form-block">
                 <div class="form-title">
                     <div  class="title">
-                        {{ $t("supply_chain.contact") }}
+                        {{ $t("supply-chain.contact") }}
                     </div>
                 </div>
                 <div class="form-content">
