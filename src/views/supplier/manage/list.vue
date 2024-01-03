@@ -1,16 +1,18 @@
 <template>
-    <div class="list-container fittings">
+    <div class="list-container">
         <div class="title-container">
             <div class="title-area">{{ $t("item-bom.title") }}</div>
         </div>
         <!-- search -->
         <div class="search">
-            <SearchAll :options="searchList">
-                
-            </SearchAll>
+            <SearchAll :options="searchList"> </SearchAll>
         </div>
         <!-- table -->
         <div class="table-container">
+            <a-table :columns="columns" :data-source="data">
+                <template #bodyCell="{ column, record }">
+                </template>
+            </a-table>
         </div>
     </div>
 </template>
@@ -18,11 +20,9 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
-import SearchAll from "@/components/common/SearchAll.vue"
+import SearchAll from "@/components/common/SearchAll.vue";
 
-
-onMounted(() => {
-});
+onMounted(() => {});
 /* Fetch start*/
 
 /* Fetch end*/
@@ -30,27 +30,6 @@ onMounted(() => {
 /* methods start*/
 
 /* methods end*/
-
 </script>
 
-<style lang="less" scoped>
-.fittings {
-    width: 100%;
-    .title {
-        color: #1d2129;
-        font-family: PingFang SC;
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
-    .table-title {
-        color: #1d2129;
-        font-family: PingFang SC;
-        font-size: 14px;
-        font-weight: 500;
-    }
-}
-
-.set-width {
-    width: 100px;
-}
-</style>
+<style lang="less" scoped></style>
