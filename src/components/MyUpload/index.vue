@@ -19,7 +19,9 @@
                 :multiple="true"
                 :beforeUpload="handleImgCheck"
                 @change="handleDetailChange"
-                @preview="handlePreview">
+                @preview="handlePreview"
+                ref="uploadComponent"
+                >
                 <div
                     class="image-inner"
                     v-if="upload.fileList.length < limitNum">
@@ -28,6 +30,12 @@
                         class="upload-add"
                         alt="" />
                 </div>
+                <template #removeIcon>
+                    <img
+                        src="../../assets/images/upload/close.png"
+                        class="upload-close"
+                        alt="" />
+                </template>
             </a-upload>
         </div>
 
@@ -54,7 +62,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from "vue";
 import Core from "@/core";
-import { message } from "ant-design-vue";
+import { message , Upload  } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 import _ from "lodash";
 const $t = useI18n().t;
@@ -105,34 +113,30 @@ const props = defineProps({
     },
 });
 const uploadId = _.uniqueId("upload_");
-
+const uploadComponent = ref(null);
+console.log("uploadComponent", uploadComponent.value);
 // computed
 const limitNum = computed(() => {
     return props.limit;
 });
-
 const previewVisible = ref(false);
 const previewImage = ref("");
 const $emit = defineEmits(["update:value"]);
 // 校验图片
 const handleImgCheck = (file, fileList) => {
-    return new Promise((resolve, reject) => {
-        const isCanUpType = props.isCanUpType.includes(file.type);
-        const isLt = file.size / 1024 / 1024 < props.limitSize;
-        if (!isCanUpType) {
-            message.warning($t("my_upload.file_incorrect"));
-            fileList.pop();
-            reject();
-        }
-        if (!isLt) {
-            message.warning(
-                `${$t("my_upload.picture_smaller")} ${props.limitSize}M!`
-            );
-            fileList.pop();
-            reject();
-        }
-        resolve(isCanUpType && isLt);
-    });
+    const isCanUpType = props.isCanUpType.includes(file.type);
+    const isLt = file.size / 1024 / 1024 < props.limitSize;
+    if (!isCanUpType) {
+        message.warning($t("my_upload.file_incorrect"));
+        return false || Upload.LIST_IGNORE;
+    }
+    if (!isLt) {
+        message.warning(
+            `${$t("my_upload.picture_smaller")} ${props.limitSize}M!`
+        );
+        return false || Upload.LIST_IGNORE;
+    }
+    return isCanUpType && isLt;
 };
 const handleDetailChange = ({ file, fileList }) => {
     if (file.status === "done") {
@@ -154,11 +158,12 @@ const handleDetailChange = ({ file, fileList }) => {
     }
 };
 const handlePreview = (file) => {
-    console.log(file);
     previewImage.value = file?.response?.data?.filename
         ? Core.Const.NET.FILE_URL_PREFIX + file.response.data.filename
         : file?.url
         ? file.url
+        : file?.thumbUrl
+        ? file.thumbUrl
         : "";
     previewVisible.value = true;
 };
@@ -229,6 +234,39 @@ const handlePreview = (file) => {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    
+}
+
+:deep(.ant-upload-list-item-info){
+    &::before{
+        display: none;
+    }
+}
+:deep(.ant-upload-list-item){
+    padding: 0 !important;
+}
+:deep(.upload-close){
+    width: 20px;
+    height: 20px;
+    margin-top: 4px;
+}
+::v-deep(.anticon-eye) {
+    position: absolute;
+    width: 100% !important;
+    height: 100%;
+    left: -5px;
+    opacity: 0;
+    display: inline-block;
+}
+::v-deep( .ant-upload-list-item-card-actions-btn) {
+    position: absolute;
+    right: 0;
+    top: 0;
+    box-sizing: border-box;
+    padding: 0px !important;
+    z-index: 10;
+}
+::v-deep(.ant-upload-list-item-actions) {
+    width: 100%;
+    height: 100%;
 }
 </style>
