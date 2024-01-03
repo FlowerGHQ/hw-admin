@@ -221,13 +221,14 @@ const handlePreview = (file) => {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
+    .tip {
+        margin-bottom: 8px;
+    }
 }
 .flex-row {
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    .tip {
-        margin-bottom: 8px;
-    }
+    
 }
 </style>
