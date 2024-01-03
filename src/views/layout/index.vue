@@ -589,7 +589,7 @@ export default {
     }
 
     .layout-container {
-        height: calc(~'100% - 50px');
+        height: calc(~'100% - 64px');
     }
 
     .layout-sider {
