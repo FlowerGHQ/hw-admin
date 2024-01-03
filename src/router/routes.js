@@ -3,6 +3,7 @@ import Util from "../core/utils"
 import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
+import MallLayout from '../views/mall/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -59,6 +60,36 @@ const routes = [
             title: '登录',
 	        title_en: 'Login',
         }
+    },
+    { // 分销商登录
+        path: '/loginMall',
+        component: () => import ('@/views/mall/Login.vue'),
+        meta: {
+            hidden: true,
+            title: '登录',
+	        title_en: 'Login',
+        }
+    },
+    { // 看板
+        path: '/mall',
+        component: MallLayout,
+        name:'Mall',
+        meta: {
+            title: '商城',
+            title_en: 'Store',
+            icon: 'i_s_dashboard', 
+            roles: [LOGIN_TYPE.DISTRIBUTOR],  
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/mall/purchase/index.vue'),
+                meta: {
+                    title: '首页',
+                    title_en: 'Index',
+                }
+            },
+        ]
     },
     { // 看板
         path: '/dashboard',
