@@ -5,7 +5,6 @@
                 {{ $t("i.edit") }}
             </div>
         </div>
-        
         <a-form
             ref="formRef"
             name="custom-validation"
@@ -26,124 +25,48 @@
                         <div class="value">
                             <a-radio-group
                                 v-model:value="specific"
+                                @change="handleSpecificModeChange"
                             >
                                 <a-radio :value="1">{{ $t("i.single") }}</a-radio>
                                 <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
+                                <a-radio :value="3">{{ $t("i.multiple") }}</a-radio>
+                                <a-radio :value="4">{{ $t("i.multiple") }}</a-radio>
+                                <a-radio :value="5">{{ $t("i.multiple") }}</a-radio>
                             </a-radio-group>
-                            
                         </div>
                     </div>
                 </div>
             </div>
 
-            
-            <div class="form-block">
-                <!-- 基本信息 -->
-                <div class="form-title">
-                    <div class="title">{{ $t("n.information") }}</div>
-                </div>
-                <div class="form-content">
-                    <!-- 名称  v-if="this.specific.mode === 1"-->
-                    <div class="form-item required">
-                        <div
-                            class="key"
-                        >
-                            {{ $t("n.name") }}
-                        </div>
-                        <div class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                :maxlength="50"
-                            />
-                        </div>
-                    </div>
-                    <!-- 英文名 v-if="this.specific.mode === 1" -->
-                    <div class="form-item required">
-                        <div
-                            class="key"
-                        >
-                            {{ $t("n.name_en") }}
-                        </div>
-                        <div class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                                :maxlength="50"
-                            />
-                        </div>
-                    </div>
-                    <!-- 颜色 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.color") }}</div>
-                        <div class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                            />
-                        </div>
-                    </div>
-                    <!-- 颜色英文 -->
-                    <div class="form-item">
-                        <div class="key">{{ $t("d.color_en") }}</div>
-                        <div class="value">
-                            <a-input
-                                :placeholder="$t('def.input')"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-block">
-                <div class="form-title">
-                    <div  class="title">
-                        联系方式
-                    </div>
-
-                </div>
-                <div class="form-content">
-                    <div class="form-item">
-                        <div class="key">{{ $t("i.mode") }}</div>
-                        <div class="value" >
-                            <a-form-item has-feedback name="pass">
-                                <a-input v-model:value="formState.pass" type="password" autocomplete="off" />
-                            </a-form-item>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t("i.mode") }}</div>
-                        <div class="value" style="background-color: aliceblue;">
-                            <a-form-item has-feedback name="pass">
-                                <a-input v-model:value="formState.pass" type="password" autocomplete="off" />
-                            </a-form-item>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t("i.mode") }}</div>
-                        <div class="value" >
-                            <a-form-item has-feedback  name="checkPass">
-                                <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
-                            </a-form-item>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="key">{{ $t("i.mode") }}</div>
-                        <div class="value" >
-                            <a-form-item has-feedback  name="age">
-                                <a-input-number v-model:value="formState.age" />
-                            </a-form-item>
-                        </div>
-                    </div>
-                    <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-                        <a-button type="primary" html-type="submit">Submit</a-button>
-                        <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
-                    </a-form-item>
-
-                </div>
-            </div>
+            <component
+                ref="allComRef"
+                :is="componentName"
+            >
+            </component>
+            <!-- <Part/> -->
+            <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
+                <a-button type="primary" html-type="submit">Submit</a-button>
+                <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
+            </a-form-item>
         </a-form>
+
     </div>
   </template>
   <script>
-  import { defineComponent, reactive, ref } from 'vue';
+  import { defineComponent, reactive, ref, computed } from 'vue';
+  import Part from "./components/Part.vue";
+  import Broker from "./components/Broker.vue";
+  import Outsourcing from "./components/Outsourcing.vue";
+  import Mold from "./components/Mold.vue";
+  import CustomerRefers from "./components/CustomerRefers.vue";
   export default defineComponent({
+    components: {  
+      Part, // 零件 在 components 对象中注册 MyComponent 组件  
+      Broker, // 代理
+      Outsourcing, // 外协
+      Mold,  // 模具
+      CustomerRefers, // 客指
+    },
     setup() {
       const formRef = ref();
       const formState = reactive({
@@ -166,6 +89,22 @@
           }
         }
       };
+
+      const componentName = computed(()=>{
+        
+        if(specific.value === 1) {
+          return Part;
+        } else if(specific.value === 2) {
+          return Broker;
+        } else if(specific.value === 3) {
+          return Outsourcing;
+        } else if(specific.value === 4) {
+          return Mold;
+        } else if(specific.value === 5) {
+          return CustomerRefers;
+        }
+        return null;
+      })
       let validatePass = async (_rule, value) => {
         if (value === '') {
           return Promise.reject('Please input the password');
@@ -208,6 +147,7 @@
           span: 14,
         },
       };
+  
       const handleFinish = values => {
         console.log(values, formState);
       };
@@ -220,6 +160,9 @@
       const handleValidate = (...args) => {
         console.log(args);
       };
+      const handleSpecificModeChange = (data) => {
+        console.log('data',data);
+      }
       return {
         formState,
         formRef,
@@ -229,17 +172,21 @@
         handleFinish,
         resetForm,
         handleValidate,
-        specific
+        specific,
+        componentName,
+        handleSpecificModeChange,
       };
     },
   });
   </script>
   <style lang="less" scoped>
-      .ant-form-item {
-          margin-bottom: 0px;
-      }
+      
+    // 样式-关于校验表单标签
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
+    :deep(.ant-form-item-control) {
+        max-width: 100% !important;
+    }
 
-      :deep(.ant-form-item-control) {
-          max-width: 100% !important;
-      }
   </style>

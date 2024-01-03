@@ -5,6 +5,6 @@ export default {
     },
     en: {
         type_supply: 'Type Supply',
-		    contact: 'Contact',
+		contact: 'Contact',
     }
 }
