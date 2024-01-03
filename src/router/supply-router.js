@@ -33,7 +33,7 @@ const routers = [
     {
         path: "/supply-home",
         name: "SupplyHome",
-        component: () => import('@/views/supplier/home/home.vue'),
+        component: () => import('@/views/supplier/home/index.vue'),
         meta: {
             title: '首页',
             title_en: 'Supplier Home',
