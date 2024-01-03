@@ -8,14 +8,14 @@
             :limitSize="2"
             tipPosition="bottom" />
         <MyUpload
-            :tip="$t('my_upload.uploadOne')"
+            :tip="$t('my_upload.uploadNine')"
             v-model:value="fileList"
             showTip
             :limit="9"
             :limitSize="2"
             tipPosition="right" />
         <MyUpload
-            :tip="$t('my_upload.uploadOne')"
+            :tip="$t('my_upload.uploadNine')"
             v-model:value="fileList"
             showTip
             :limit="9"
