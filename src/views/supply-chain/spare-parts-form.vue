@@ -1,5 +1,5 @@
 <template>
-    <div class="edit-container">
+    <div class="edit-container-new-edit">
         <div class="title-container">
             <div class="title-area">
                 {{ $t("i.edit") }}
@@ -15,35 +15,32 @@
             @validate="handleValidate"
             @finishFailed="handleFinishFailed"
         >
-            <div class="form-block">
-                <div class="form-title">
-                    <div class="title">{{ $t("supply-chain.contact") }}</div>
+            <div class="form-block-box padding-0">
+                <div class="title-form-top">{{ $t("supply-chain.type_supply") }}</div>
+                <div class="title-top">
+                    <div class="title"></div>
                 </div>
-                <div class="form-content">
-                    <div class="form-item">
-                        <div class="key">{{ $t("supply-chain.type_supply") }}</div>
-                        <div class="value">
-                            <a-radio-group
-                                v-model:value="specific"
-                                @change="handleSpecificModeChange"
-                            >
-                                <a-radio :value="1">{{ $t("i.single") }}</a-radio>
-                                <a-radio :value="2">{{ $t("i.multiple") }}</a-radio>
-                                <a-radio :value="3">{{ $t("i.multiple") }}</a-radio>
-                                <a-radio :value="4">{{ $t("i.multiple") }}</a-radio>
-                                <a-radio :value="5">{{ $t("i.multiple") }}</a-radio>
-                            </a-radio-group>
-                        </div>
-                    </div>
+                <div class="form-content-top">
+                      <a-radio-group
+                          v-model:value="specific"
+                          @change="handleSpecificModeChange"
+                      >
+                          <a-radio :value="1">{{ $t("supply-chain.part") }}</a-radio>
+                          <a-radio :value="2">{{ $t("supply-chain.broker") }}</a-radio>
+                          <a-radio :value="3">{{ $t("supply-chain.outsourcing") }}</a-radio>
+                          <a-radio :value="4">{{ $t("supply-chain.mold") }}</a-radio>
+                          <a-radio :value="5">{{ $t("supply-chain.customer_refers") }}</a-radio>
+                      </a-radio-group>
                 </div>
             </div>
-
-            <component
-                ref="allComRef"
-                :is="componentName"
-            >
-            </component>
-            <!-- <Part/> -->
+            <div class="component-box">
+                <component
+                    ref="allComRef"
+                    :is="componentName"
+                    :msg="msgPart"
+                >
+                </component>
+            </div>
             <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
                 <a-button type="primary" html-type="submit">Submit</a-button>
                 <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
@@ -74,6 +71,109 @@
         checkPass: '',
         age: undefined,
       });
+      const msgPart = computed(()=>[
+        
+          /* 
+                listOne
+                    type 
+                    三种类型 
+                    1输入框input 
+                    1.1 textarea
+                    2 单选
+                    2.1 多选
+                    2.2 下拉选择 
+                    3 数字+单位-输入
+                    5 列表-可添加 
+                */
+        {
+          titleOne: '联系方式',
+          listOne: [
+            {
+              title: '',
+              list: [
+                { key: "名称", value: "name", type: 1 },
+                { key: "电话", value: "phone", type: 1 },
+                { key: "邮箱", value: "email", type: 1 },
+              ]
+            }
+          ]
+        },
+        {
+          titleOne: '基本信息',
+          listOne: [
+          {
+            title: "公司概况",
+            list: [
+              { key: "名称", value: "name", type: 1, onFocus: undefined },
+              { key: "电话", value: "phone", type: 0, onFocus: undefined },
+              { key: "意向度", value: "intention", type: 4, onFocus: undefined },
+              { key: "性别", value: "gender", type: 2.3, onFocus: false },
+              { key: "行业", value: "industry", type: 3, onFocus: false },
+              { key: "来源", value: "source_type", type: 0, onFocus: false },
+              {
+                key: "创建时间",
+                value: "create_time",
+                type: 0.1,
+                onFocus: undefined,
+              },
+              {
+                key: "意向车型",
+                value: "pre_order_car_type",
+                type: 2,
+                onFocus: false,
+              },
+              { key: "状态", value: "tab_type", type: 0.2, onFocus: undefined },
+            ],
+          },
+          {
+            title: "用车信息",
+            list: [
+              { key: "用车城市", value: "group_id", type: 2.2, onFocus: false },
+              {
+                key: "是否有摩托车",
+                value: "moto_owner",
+                type: 2.1,
+                onFocus: false,
+              },
+              {
+                key: "摩托车型号",
+                value: "moto_model",
+                type: 1,
+                onFocus: undefined,
+              },
+              {
+                key: "是否有驾照",
+                value: "driver_license",
+                type: 2.1,
+                onFocus: false,
+              },
+              { key: "骑行经验", value: "ride_exp", type: 2.4, onFocus: false },
+              {
+                key: "其他驾驶工具",
+                value: "other_brand_model",
+                value1: "",
+                value2: "",
+                type: 5,
+                onFocus: false,
+              },
+            ],
+          },
+
+          {
+            title: "其他信息",
+            list: [
+              { key: "是否是KOL", value: "flag_kol", type: 2.1, onFocus: false },
+              {
+                key: "是否寻求合作",
+                value: "flag_seek_cooperation",
+                type: 2.1,
+                onFocus: false,
+              },
+            ],
+          },
+          ]
+        }
+    ])
       const specific = ref(1)
       let checkAge = async (_rule, value) => {
         if (!value) {
@@ -175,6 +275,7 @@
         specific,
         componentName,
         handleSpecificModeChange,
+        msgPart,
       };
     },
   });
@@ -188,5 +289,50 @@
     :deep(.ant-form-item-control) {
         max-width: 100% !important;
     }
-
+    /* .component-box {
+      :deep(.form-block) {
+        padding-top: 58px;
+      }
+    } */
+    
+    :deep(.form-block-box) {
+      position: relative;
+      
+      /* .list-one {
+        border: red solid 1px;
+      }
+      .two-list {
+        display: flex;
+        flex-direction: column;
+        background-color: rebeccapurple;
+      } */
+      .title-form {
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        color:#1D2129;
+        font-size: 18px;
+        font-weight: 500;
+      }
+    } 
+    .padding-0 {
+      display: flex;
+      padding-top: 0px;
+      align-items: center;
+      .title-form-top {
+        width: 18%;
+        color:#1D2129;
+        font-size: 18px;
+        font-weight: 500;
+        padding-left: 20px;
+      }
+      
+      .form-content-top {
+        min-height: 112px;
+        display: flex;
+        width: 78%;
+        align-items: center;
+        padding-left: 100px;
+      }
+    }
   </style>
