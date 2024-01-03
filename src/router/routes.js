@@ -2762,6 +2762,30 @@ const routes = [
 
         ]
     },
+    { // 供应链表单
+        path: '/form',
+        component: Layout,
+        redirect: '/form/supply-chain',
+        name: 'supplychainForm',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+        meta: {
+            title: '供应链表单',
+            title_en: 'System Management',
+            icon: 'i_menu_xitongguanli',
+            auth: ['MANAGER'], // 管理员
+        },
+        children: [
+            {
+                path: 'supply-chain',
+                name: 'supplyChain',
+                component: () => import('@/views/supply-chain/spare-parts-form.vue'),
+                meta: {
+                    title: '文件管理',
+                    title_en: 'Files ',
+                }
+            },
+        ]
+    },
     // 测试用例
     {
         path:'/test',
