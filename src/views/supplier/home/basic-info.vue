@@ -206,8 +206,8 @@
             title: "财务信息",
             list: [
               { key: "法律纠纷", value: "legal_disputes", type: 2, required: true, online: true, radioList: [{ value: 1,name: '有' },{ value: -1,name: '无' }] },
-              { key: "操作工人月平均工资",  value: undefined, valueParam: "mon_avg_work_money", type: 3, required: false },
-              { key: "管理职员人均年产值",  value: undefined, valueParam: "employee_avg_work_money", type: 3, required: false },
+              { key: "操作工人月平均工资", value: undefined, valueParam: "mon_avg_work_money", type: 3, required: false },
+              { key: "管理职员人均年产值", value: undefined, valueParam: "employee_avg_work_money", type: 3, required: false },
               { key: "账期要求", value: "bill_require", type: 2, required: true,online: true, radioList: [{ value: 1,name: '90天' },{ value: 2,name: '75天' },{ value: 3,name: '60天' },{ value: 4,name: '30天' },{ value: 5,name: '其他' }] },
               { key: "发票类型", value: "invoice_type", type: 2, required: true,online: true, radioList: [{ value: 1,name: '增值税发票', inputValue: undefined, isInput: true },{ value: 2,name: '普通发票' },{ value: 3,name: '其他' }] },
             ],
@@ -215,10 +215,54 @@
           {
             title: "营业信息",
             list: [
-              { key: "业务比重", value: "proportion_business", type: 1, required: false, online: true, },
-              { key: "", value: "proportion_business", type: 6, required: false, online: true, },
+              { key: "业务比重", value: undefined, valueParam: "proportion_business", type: 1, required: false, online: true, },
+              { key: "", value: undefined, valueParam: "proportion_business_obj_year", type: 6, required: false, online: true, 
+			    objList: [
+							{
+								title: '近1年',
+								list: [
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								]
+							},{
+								title: '近2年',
+								list: [
+									
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								
+								]
+							},{
+								title: '近3年',
+								list: [
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								
+								]
+							}
+						] 
+				},
             ],
           },
+          {
+            title: "竞争对手",
+            list: [
+              { key: "公司名称", value: undefined, valueParam: "name_c", type: 1, required: false },
+              { key: "市场份额", value: undefined, valueParam: "net_c", type: 1, required: false },
+              { key: "了解评价", value: undefined, valueParam: "date_c", type: 4, required: false, online: true, },
+            ],
+          },
+
+
           ]
         }
     ])
