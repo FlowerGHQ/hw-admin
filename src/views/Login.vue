@@ -146,14 +146,15 @@ export default {
                 Core.Data.setLoginType(res.user.type);  // 设置登录方的数字                
                 let loginType = TYPE_MAP[res.user.type]
                 Core.Data.setUserType(loginType); // 设置登录方的文字
+                
                 if (type === 'supplier') {
                     this.$router.push('/supply-home')
                     return
-                }   
+                }
+                
                 Core.Data.setOrgId(res.user.org_id); // 组织的id
                 Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位  
-                       
+                Core.Data.setCurrency(res.user.currency); // 账号的单位                            
 
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
                 this.isAdminFetch()
