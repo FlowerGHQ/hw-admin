@@ -135,6 +135,7 @@
                     <!-- 动态组件 -->
                     <component
                         :is="currentComponent"
+                        :isSubmit="isSubmit"
                         class="current-components" />
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
@@ -189,13 +190,14 @@ const form = reactive({
     password: "",
     new_password: "",
 });
+// 是否提交申请
+const isSubmit = ref(false);
 const $i18n = useI18n();
 const $store = store;
 const unread = reactive({
     master: "",
     org: "",
 });
-
 const currentComponent = computed(() => {
     switch (current.value) {
         case 0:
@@ -211,7 +213,6 @@ const currentComponent = computed(() => {
 // 步骤条
 const current = ref(1);
 const passShow = ref(false);
-
 // 下一步
 const handleNext = () => {
     if (current.value == 2) return;
@@ -224,7 +225,8 @@ const handleBack = () => {
 };
 // 提交
 const handleSubmit = () => {
-    handleNext();
+    // handleNext();
+    isSubmit.value = true;
 };
 // 中英文切换
 const handleLangSwitch = () => {
