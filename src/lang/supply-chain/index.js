@@ -17,6 +17,9 @@ export default {
         submit: '提交准入申请',
         company_name: "公司名称",
         supplier_type: "供应商类型",
+        serial_number: "序号",
+        submission_time: "提交时间",        
+        view: '查看',
     },
     en: {
         type_supply: 'Type Supply',
@@ -34,6 +37,9 @@ export default {
         // 提交准入申请
         submit: 'Submit',
         company_name: "Company Name",
-        supplier_type: "供应商类型",
+        supplier_type: "Supplier Type",
+        serial_number: "Serial Number",
+        submission_time: "Submission Time",        
+        view: 'View',
     }
 }

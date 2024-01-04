@@ -33,14 +33,16 @@
               * placeholder: "def.select",
             }
         ]
-        isShowMore  // 是否需要-展开收起
-        isShowButton  // 是否需要-搜索重置按钮
-        @search  // 搜索事件  返回了数据
+        isShowMore  // 是否需要-展开收起(默认true)
+        isShowButton  // 是否需要-搜索重置按钮(默认true)
+        @search=fn(data)  // 搜索事件  返回了数据
         @reset  // 重置事件
 
 
-        <test 
+        <SearchAll 
             :options="options" 
+            :isShowMore="true"
+            :isShowButton="true"
             @search="getSearchFrom" 
             @reset="handleSearchReset"
         >
@@ -60,18 +62,11 @@
                     </div>
                 </a-col>
             </template>
-        </test>
 
-        父组件接收
-
-            //父组件中接收子组件传的data
-            getSearchFrom(data) {
-                for(let key in data){
-                    this.searchForm[key] = data[key];
-                }
-                this.getSearchFrom();
-            },
-
+            按钮扩展例子前后
+            <template #pre_btn></template>
+            <template #after_btn></template>
+        </SearchAll>
      -->
     <div class="search-all search-container-new">
 
