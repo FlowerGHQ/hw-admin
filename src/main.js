@@ -6,7 +6,6 @@ import Util from './core/utils'
 import i18n from './core/i18n'
 import Antd from 'ant-design-vue'
 // import './core/vconsole'
-console.log('i18n', i18n)
 import {message,notification} from 'ant-design-vue';
 import MyDirective from './core/myDirective/index.js'
 // import 'default-passive-events' // 解决ios下click事件报错
@@ -33,6 +32,8 @@ app.config.globalProperties.$UserAuth = Util.userAuth  // 判断登录是哪个�
 app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Util.confirm
+// i18n
+app.config.globalProperties.$t = i18n.global.t
 
 app.use(router).use(Antd).use(store).use(i18n).mount('#app')
 

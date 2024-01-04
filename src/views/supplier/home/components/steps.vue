@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from "vue";
+import { ref, reactive, computed} from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
 // 查看当前语言
