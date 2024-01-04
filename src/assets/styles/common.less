@@ -76,6 +76,39 @@
     }
 }
 
+// 水平的form
+.level-search-row {
+    display: flex;    
+    .search-col {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 16px;        
+        .key {
+            color: #1d2129;
+            // white-space: nowrap;            
+        }
+        .key-default-w {
+            width: 80px; // 默认宽度
+        }
+        .value {
+            width: 100%;
+            color: #1d2129;
+        }
+        // 必选图标
+        &.required {
+            .key::before {
+                content: "*";
+                color: #EB4141;
+                // margin-right: 4px;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
 /* 自定义 model 想修改里面的样式 在外面先给个class */
 .custom-ant-modal {
     .ant-modal-header {

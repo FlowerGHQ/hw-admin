@@ -52,7 +52,7 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="onView">{{ $t('supply-chain.view') }}</a-button>
+                        <a-button type="link" @click="onView(record)">{{ $t('supply-chain.view') }}</a-button>
                     </template>                 
                 </template>
             </a-table>
@@ -137,10 +137,13 @@ const onReset = () => {
     refreshTable()
 }
 // 点击查看
-const onView = () => {
+const onView = (record) => {
     console.log("点击查看了");
     router.push({
-        path: '/supply-manage/detail'
+        path: '/supply-manage/detail',
+        query: {
+            id: record.id
+        }
     })
 }
 /* methods end*/
