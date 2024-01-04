@@ -99,9 +99,30 @@
                                         </template>
 
                                         <template v-else-if="$3.type === 6">
-                                            <div style="background-color: red;height: 200px;display: flex;width: calc(100% + 86px);">
-                                                <div v-for="item in 3" style="flex:1;background-color: green;height: 200px;border: yellow 2px solid;">
-                                                    <a-input v-model:value="$3.value"  placeholder="请输入" />
+                                            <div class="form-content-item-column" >
+                                                <div class="item-column-block-box" :key="$4.title" v-for="$4 in $3.objList" >
+                                                    <div class="item-column-title-box">
+                                                        <div class="title">
+                                                            {{ $4.title }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-column-block"  v-for="$5 in $4.list" :key="$5+'$'" >
+                                                        <div class="item-column-title">
+                                                            {{ $5.key }}
+                                                        </div>
+                                                        <div class="item-column-value">
+                                                            <a-input-number
+                                                                v-model:value="$5.value"
+                                                                :placeholder="$t('def.input')"
+                                                                :min="0"
+                                                                :max="1000000000"
+                                                            >
+                                                                <template #addonAfter v-if="$5.unit">
+                                                                    <span class="l-w-h-style">{{ $5.unit }}</span>
+                                                                </template>
+                                                            </a-input-number>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </template>
