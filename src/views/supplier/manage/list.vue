@@ -5,7 +5,13 @@
         </div>
         <!-- search -->
         <div class="search">
-            <SearchAll :options="searchList"> </SearchAll>
+            <SearchAll 
+                :options="searchList"
+                :isShowMore="false"
+                @search="onSearch"
+                @reset="onReset"
+            >
+            </SearchAll>
         </div>
         <!-- table -->
         <div class="table-container">
@@ -17,7 +23,11 @@
                 :row-key="(record) => record.id"
                 :pagination="false"
             >
-                <template #bodyCell="{ column, text, record }">                    
+                <template #bodyCell="{ column, text, record }">
+                    <!-- 操作 -->
+                    <template v-if="column.key === 'operations'">
+                        <a-button type="link" @click="onView">{{ $t('supply-chain.view') }}</a-button>
+                    </template>                 
                 </template>
             </a-table>
         </div>
@@ -50,14 +60,30 @@ const $t = useI18n().t;
 
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t("n.name"), dataIndex: "name" },
-        { title: $t("n.name_en"), dataIndex: "name_en", key: "name_en" },
-        { title: $t("n.continent"), dataIndex: "continent", key: "" },
-        { title: $t("n.country"), dataIndex: "country", key: "country" },
-        { title: $t("def.operate"), key: "operation", fixed: "right" },
+        { title: $t("supply-chain.serial_number"), dataIndex: "number" },
+        { title: $t("supply-chain.company_name"), dataIndex: "name", key: "name" },
+        { title: $t("supply-chain.supplier_type"), dataIndex: "type", key: "type" },
+        { title: $t("supply-chain.submission_time"), dataIndex: "time", key: "time" },
+        { title: $t("common.operations"), key: "operations", fixed: "right" },
     ];
     return columns;
 });
+
+const searchList = ref([
+    { 
+        type: "input", 
+        value: "", 
+        searchParmas: "name",  
+        key: 'supply-chain.company_name' 
+    },
+    { 
+        type: "select",
+        value: undefined,
+        searchParmas: "type",
+        key: 'supply-chain.supplier_type',
+        selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+    },
+])
 
 onMounted(() => {});
 /* Fetch start*/
@@ -75,7 +101,16 @@ const {
 /* Fetch end*/
 
 /* methods start*/
+const onSearch = (data) => {
+    console.log("数据", data);
+}
+const onReset = () => {
 
+}
+// 点击查看
+const onView = () => {
+    console.log("点击查看了");
+}
 /* methods end*/
 </script>
 
