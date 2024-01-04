@@ -135,6 +135,7 @@
                     <!-- 动态组件 -->
                     <component
                         :is="currentComponent"
+                        :isSubmit="isSubmit"
                         class="current-components" />
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
@@ -164,7 +165,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted } from "vue";
 import MyStep from "./components/steps.vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -174,20 +175,29 @@ import MaterialList from "./material-list.vue";
 import SubmitAdmissionApplication from "./submit-admission-application.vue";
 import store from "@/store";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
+const $message = message;
+const $router = useRouter();
 import Core from "@/core";
 
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
 const user = Core.Data.getUser() || {};
-
+const form = reactive({
+    old_password: "",
+    password: "",
+    new_password: "",
+});
+// 是否提交申请
+const isSubmit = ref(false);
 const $i18n = useI18n();
 const $store = store;
 const unread = reactive({
     master: "",
     org: "",
 });
-
 const currentComponent = computed(() => {
     switch (current.value) {
         case 0:
@@ -202,7 +212,7 @@ const currentComponent = computed(() => {
 });
 // 步骤条
 const current = ref(1);
-
+const passShow = ref(false);
 // 下一步
 const handleNext = () => {
     if (current.value == 2) return;
@@ -215,15 +225,93 @@ const handleBack = () => {
 };
 // 提交
 const handleSubmit = () => {
-    handleNext();
+    // handleNext();
+    isSubmit.value = !isSubmit.value;
 };
-
 // 中英文切换
 const handleLangSwitch = () => {
     console.log("handleLangSwitch");
     $store.commit("switchLang");
     $i18n.locale = $store.state.lang;
 };
+const handleEditShow = () => {
+    passShow.value = true;
+};
+const handleLogout = () => {
+    $router.replace("/login");
+    localStorage.clear();
+    Core.Api.Common.logout();
+};
+
+const routerChange = (type) => {
+    let routeUrl = "";
+    switch (type) {
+        case "notice": //系统
+            routeUrl = $router.resolve({
+                path: "/system/notice-list",
+            });
+            window.open(routeUrl.href, "_self");
+            break;
+        case "shop_cart":
+            routeUrl = $router.resolve({
+                path: "/purchase/item-collect",
+            });
+            window.open(routeUrl.href, "_self");
+            break;
+    }
+};
+// 获取未读消息
+const getUnreadCount = () => {
+    // 获取 未读消息数 数据
+    let CATEGORY = Core.Const.NOTICE.CATEGORY;
+    Core.Api.Notice.list({
+        category: CATEGORY.ORG,
+    })
+        .then((res) => {
+            unread.org = res.un_count;
+        })
+        .catch((err) => {
+            console.log("getUnreadCount err", err);
+        });
+    Core.Api.Notice.list({
+        category: CATEGORY.MASTER,
+    })
+        .then((res) => {
+            unread.master = res.un_count;
+        })
+        .catch((err) => {
+            console.log("getUnreadCount err", err);
+        });
+};
+const handleEditSubmit = () => {
+    let form = Core.Util.deepCopy(form);
+    if (!form.old_password) {
+        return $message.warning($t("u.old_password"));
+    }
+    if (!form.password) {
+        return $message.warning($t("u.new_password"));
+    }
+    if (!form.new_password) {
+        return $message.warning($t("u.again"));
+    }
+    if (form.new_password !== form.password) {
+        $message.warning($t("u.not"));
+        return;
+    }
+
+    loading = true;
+    Core.Api.Common.updatePwd(form)
+        .then(() => {
+            $message.success($t("pop_up.save_success"));
+            handleEditClose();
+        })
+        .catch((err) => {
+            console.log("handleSubmit err:", err);
+        });
+};
+onMounted(() => {
+    getUnreadCount();
+});
 </script>
 
 <style lang="less" scoped>
@@ -351,7 +439,7 @@ const handleLangSwitch = () => {
             position: relative;
             overflow: auto;
             .content-main {
-                height: calc(100% - 80px - 68px - 15px);
+                height: calc(100% - 80px - 68px - 20px);
                 margin-top: 15px;
                 overflow: auto;
                 background-color: #FFFFFF;
@@ -369,25 +457,16 @@ const handleLangSwitch = () => {
                     border-radius: 10px;
                     background: #f2f3f5;
                 }
-                .current-components {
-                    height: 100%;
-                }
             }
             .supply-chain-footer {
                 display: flex;
                 height: 68px;
-                width: calc(100% - 60px);
                 padding: 18px 0px;
                 justify-content: center;
                 align-items: center;
                 flex-shrink: 0;
                 border-top: 1px solid #f2f3f5;
                 background: #fff;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                margin-left: 20px;
-                margin-right: 40px;
             }
         }
     }

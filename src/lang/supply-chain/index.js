@@ -15,6 +15,16 @@ export default {
         material_list: '材料清单',
         // 提交准入申请
         submit: '提交准入申请',
+        company_name: "公司名称",
+        supplier_type: "供应商类型",
+        serial_number: "序号",
+        submission_time: "提交时间",        
+        view: '查看',
+        information_submitted_successfully: "信息提交成功",
+        view_materials: "查看资料",
+        tips1: "请等待工作人员审核资质",
+        tips2: "后回到首页",
+        application_Materials: "申请资料列表",
     },
     en: {
         type_supply: 'Type Supply',
@@ -31,5 +41,15 @@ export default {
         material_list: 'Material List',
         // 提交准入申请
         submit: 'Submit',
+        company_name: "Company Name",
+        supplier_type: "Supplier Type",
+        serial_number: "Serial Number",
+        submission_time: "Submission Time",        
+        view: 'View',
+        information_submitted_successfully: "Information submitted successfully",
+        view_materials: "View Materials",
+        tips1: "Please wait for the staff to review their qualifications",
+        tips2: "then go back to the home page",
+        application_Materials: "Application Materials",
     }
 }

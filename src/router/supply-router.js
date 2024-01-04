@@ -23,11 +23,21 @@ const routers = [
         children: [
             {
                 path: 'list',
-                name: 'List',
+                name: 'SupplyList',
                 component: () => import('@/views/supplier/manage/list.vue'),
                 meta: {
                     title: '申请资料列表',
-                    title_en: 'Application Materials',                				
+                    title_en: 'Application Materials',
+                }
+            },
+            {
+                path: 'detail',
+                name: 'SupplyDetail',
+                component: () => import('@/views/supplier/manage/detail.vue'),
+                meta: {
+                    title: '资料详情',
+                    title_en: 'Materials Detail',
+                    hidden: true,
                 }
             },
         ]

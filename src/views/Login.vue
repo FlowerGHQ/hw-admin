@@ -139,21 +139,39 @@ export default {
 
             Core.Api.Common.login(obj).then(res => {
                 console.log('handleLogins apiName res', res)
-                Core.Data.setToken(res.token);                
+
+                Core.Data.setToken(res.token);
                 Core.Data.setUser(res.user.account);
-                Core.Data.setOrgId(res.user.org_id);
-                Core.Data.setOrgType(res.user.org_type);
-                Core.Data.setCurrency(res.user.currency);
-                
-                Core.Data.setLoginType(this.loginForm.user_type);  // 设置登录方的数字
-                
-                let loginType = TYPE_MAP[this.loginForm.user_type]
+
+                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字                
+                let loginType = TYPE_MAP[res.user.type]
                 Core.Data.setUserType(loginType); // 设置登录方的文字
+                
+                if (type === 'supplier') {
+                    this.$router.push('/supply-home')
+                    return
+                }
+                
+                Core.Data.setOrgId(res.user.org_id); // 组织的id
+                Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                Core.Data.setCurrency(res.user.currency); // 账号的单位                            
 
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
                 this.isAdminFetch()
             }).catch(err => {
                 console.log('handleLogins apiName err', err)
+            })
+        },
+        // 获取验证码
+        getPhoneCodeFetch(params = {}) {
+            let obj = {
+                ...params
+            }
+
+            Core.Api.Common.phoneCode(obj).then(res => {
+              console.log("getPhoneCodeFetchs res", res);
+            }).catch(err => {
+                console.log("getPhoneCodeFetchs err", err);
             })
         },
         /* Fetch end*/
@@ -168,14 +186,19 @@ export default {
 
         async handleLogin(type) {
             let form = Core.Util.deepCopy(this.loginForm)            
-            
+            let _supplierLoginForm = Core.Util.deepCopy(this.supplierLoginForm)            
+
             if (type === 'supplier') {
                 if (this.isCheck(this.supplierLoginForm, type)) return;
-                // this.$router.push('/supply-home')
-                this.loginFetch(form)           
+                let obj = {
+                    ..._supplierLoginForm,
+                    type: Core.Const.COMMON.LOGIN_TYPE.CODE,
+                    platform: Core.Const.COMMON.PLATFORM.SUPPLY,
+                }
+                this.loginFetch(obj, 'supplier')                
             } else {
                 if (this.isCheck(form, type)) return;
-                this.loginFetch(form)                
+                this.loginFetch(form)
             }
         },
 
@@ -245,7 +268,18 @@ export default {
         },        
         // 获取验证码
         onGetCode() {
+            // 防止多次点击
             if (this.countdownTime)  return
+
+            if (!this.supplierLoginForm.phone) {
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`)
+            }
+
+            this.getPhoneCodeFetch({
+                type: 1,  // 短信类型：1.登录注册
+                phone: this.supplierLoginForm.phone,
+            })
+
             console.log("获取验证码");
             this.countdown--
             this.$refs['get-code'].innerHTML = this.countdown

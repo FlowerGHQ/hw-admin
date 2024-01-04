@@ -39,7 +39,7 @@
             </a-upload>
         </div>
 
-        <div class="tip" v-if="showTip">{{ tip }}</div>
+        <div class="tip" v-if="showTip && !upload.fileList.length>0">{{ tip }}</div>
         <!-- 自定义图片预览 -->
         <div
             class="image-preview"
@@ -268,5 +268,19 @@ const handlePreview = (file) => {
 ::v-deep(.ant-upload-list-item-actions) {
     width: 100%;
     height: 100%;
+}
+::v-deep(.ant-upload.ant-upload-select-picture-card) {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px dashed #EAECF1;
+    background: #FFF;
+}
+::v-deep(.ant-upload-list-picture-card-container) {
+    width: 80px;
+    height: 80px;
+    border-radius: 4px;
+    border: 1px dashed #EAECF1;
+    background: #FFF;
 }
 </style>
