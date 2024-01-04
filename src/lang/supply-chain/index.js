@@ -70,6 +70,16 @@ export default {
         previous_step: "上一步",
         // 提交申请
         submit_application: "提交申请",
+        // 请选择营业期限
+        please_select_business_term: "请选择营业期限",
+        // 请输入注册资本
+        please_enter_registered_capital: "请输入注册资本",
+        // 注册资本必须为数字
+        registered_capital_must_be_number: "注册资本必须为数字",
+        // 请输入法定代表人
+        please_enter_legal_representative: "请输入法定代表人",
+        // 法定代表人必须为纯文本
+        legal_representative_must_be_pure_text: "法定代表人必须为纯文本",
     },
     en: {
         type_supply: 'Type Supply',
@@ -140,5 +150,15 @@ export default {
         previous_step: "Previous Step",
         // 提交申请
         submit_application: "Submit Application",
+        // 请选择营业期限
+        please_select_business_term: "Please Select Business Term",
+        // 请输入注册资本
+        please_enter_registered_capital: "Please Enter Registered Capital",
+        // 注册资本必须为数字
+        registered_capital_must_be_number: "Registered Capital Must Be Number",
+        // 请输入法定代表人
+        please_enter_legal_representative: "Please Enter Legal Representative",
+        // 法定代表人必须为纯文本
+        legal_representative_must_be_pure_text: "Legal Representative Must Be Pure Text",
     }
 }

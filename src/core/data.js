@@ -194,6 +194,14 @@ class StorageHandler {
     clearCustomerServiceClue() {
         this.removeItem(Const.DATA.CUSTOMER_SERVICE_CLUE)
     }
+
+    // 供应链存储
+    setSupplyChain(value) {
+        this.setItem(Const.DATA.SUPPLY_CHAIN, value);
+    }
+    getSupplyChain() {
+        return this.getItem(Const.DATA.SUPPLY_CHAIN) || ''
+    }
 }
 
 export default new StorageHandler();

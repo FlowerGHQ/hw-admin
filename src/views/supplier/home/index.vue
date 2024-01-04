@@ -1,7 +1,7 @@
 <template>
     <div class="supply-chain">
         <a-layout>
-            <Header>
+            <a-layout-header>
                 <div class="header-left">
                     <img
                         src="@images/header-logo2.png"
@@ -121,14 +121,15 @@
                         </template>
                     </a-dropdown>
                 </div>
-            </Header>
-            <Content>
+            </a-layout-header>
+            <a-layout-content>
                 <MyStep v-model:ActiveCurrent="current" />
                 <div class="content-main">
                     <!-- 动态组件 -->
                     <component
                         :is="currentComponent"
                         :isSubmit="isSubmit"
+                        :isSaveDraft="isSaveDraft"
                         v-model:value="step2Val"
                         class="current-components" />
                 </div>
@@ -153,7 +154,7 @@
                         >{{ $t("supply-chain.submit_application") }}</a-button
                     >
                 </div>
-            </Content>
+            </a-layout-content>
         </a-layout>
     </div>
 </template>
@@ -186,8 +187,10 @@ const form = reactive({
 });
 // 是否提交申请
 const isSubmit = ref(false);
+const isSaveDraft = ref(false);
 const step2Val = ref(false);
 const $i18n = useI18n();
+const lang = useI18n().locale;lang
 const $store = store;
 const currentComponent = computed(() => {
     switch (current.value) {
@@ -248,8 +251,6 @@ const handleLogout = () => {
     localStorage.clear();
     Core.Api.Common.logout();
 };
-
-
 const handleEditSubmit = () => {
     let form = Core.Util.deepCopy(form);
     if (!form.old_password) {
@@ -276,6 +277,11 @@ const handleEditSubmit = () => {
             console.log("handleSubmit err:", err);
         });
 };
+// 保存草稿
+const handleSave = () => {
+    isSaveDraft.value = !isSaveDraft.value;
+};
+
 onMounted(() => {
 });
 </script>
@@ -288,7 +294,7 @@ onMounted(() => {
     flex-direction: column;
     :deep(.ant-layout) {
         flex: 1;
-        header {
+        .ant-layout-header {
             height: 80px;
             border-bottom: 1px solid #e5e6eb;
             background: linear-gradient(0deg, #fff 0%, #fff 100%), #f6f7f9;
@@ -395,7 +401,7 @@ onMounted(() => {
                 color: @TC_header_name;
             }
         }
-        content {
+        .ant-layout-content {
             flex: 1;
             padding: 20px 40px 20px 40px;
             position: relative;

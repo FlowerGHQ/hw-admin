@@ -72,7 +72,6 @@ let Const = {
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',
         KEY_CURRENCY: 'org.currency',
-
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language',
         TAB_POSITION: 'tab.position',
@@ -80,6 +79,7 @@ let Const = {
         GROUP_ID: 'group.id',
         SUPER_ADMIN: 'super_admin',
         CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
+        SUPPLY_CHAIN: 'supply-chain',
     },
     DEFULT_IMG: {
         1: defult_img,

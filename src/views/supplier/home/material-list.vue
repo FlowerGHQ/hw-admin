@@ -8,7 +8,6 @@
                     name="custom-validation"
                     :model="formState"
                     :rules="rules"
-                    v-bind="layout"
                     labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
@@ -100,8 +99,9 @@
                                         name="business_duration_type">
                                         <div class="business-term">
                                             <a-radio-group
-                                                v-model:value="formState.business_duration_type"
-                                                name="business_duration_type">
+                                                v-model:value="
+                                                    formState.business_duration_type
+                                                ">
                                                 <a-radio :value="1">{{
                                                     $t(
                                                         "supply-chain.long_term_validity"
@@ -114,7 +114,10 @@
                                                 }}</a-radio>
                                             </a-radio-group>
                                             <TimeSearch
-                                                v-if="formState.business_duration_type == 2"
+                                                v-if="
+                                                    formState.business_duration_type ==
+                                                    2
+                                                "
                                                 ref="TimeSearchRef"
                                                 @search="handleTimeSearch" />
                                         </div>
@@ -268,7 +271,6 @@
                     name="custom-validation"
                     :model="formState"
                     :rules="rules"
-                    v-bind="layout"
                     labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="24">
@@ -340,9 +342,10 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from "vue";
+import { ref, reactive, watch, onMounted, toRef } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
+import Core from "@/core";
 const formRef1 = ref(null);
 const formRef2 = ref(null);
 const TimeSearchRef = ref(null);
@@ -355,10 +358,15 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    isSaveDraft: {
+        type: Boolean,
+        default: false,
+    },
 });
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
 const $emit = defineEmits(["update:value"]);
+
 // 监听isSubmit
 watch(
     () => props.isSubmit,
@@ -395,37 +403,78 @@ watch(
         deep: true,
     }
 );
+watch(
+    () => props.isSaveDraft,
+    (val) => {
+        console.log("val", val);
+        // 获取数据
+        let data =
+            Core.Data.getSupplyChain() === ""
+                ? {}
+                : JSON.parse(Core.Data.getSupplyChain());
+        // 判断是否为空对象
+        if (Object.keys(data).length === 0) {
+            // 为空对象
+            data = {
+                form: {
+                    confirmatory_material: formState,
+                },
+            };
+        } else {
+            // 不为空对象
+            data.form.confirmatory_material = formState;
+        }
+        console.log("data", JSON.stringify(data));
+        // 保存数据
+        Core.Data.setSupplyChain(JSON.stringify(data));
+    }
+);
 
-const formState = reactive({
+let formState = reactive({
     business_duration_type: 1,
 });
 
 let BusinessTermValid = async (_rule, value) => {
-    if (formState.type == 2) {
+    if (formState.business_duration_type == 2) {
         if (!formState.begin_business_time || !formState.end_business_time) {
-            return Promise.reject("请选择营业期限");
+            console.log($t("supply-chain.please_select_business_term"));
+            return Promise.reject(
+                $t("supply-chain.please_select_business_term")
+            );
         }
+    }
+    if (formState.business_duration_type == 1) {
+        formState.begin_business_time = "";
+        formState.end_business_time = "";
     }
     return Promise.resolve();
 };
 
 let RegisteredCapitalVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject("请输入注册资本");
+        return Promise.reject(
+            $t("supply-chain.please_enter_registered_capital")
+        );
     }
     // 必须为数字
     if (!/^[0-9]*$/.test(value)) {
-        return Promise.reject("注册资本必须为数字");
+        return Promise.reject(
+            $t("supply-chain.registered_capital_must_be_number")
+        );
     }
     return Promise.resolve();
 };
 let LegalRepresentativeVaild = async (_rule, value) => {
     if (!value) {
-        return Promise.reject("请输入法定代表人");
+        return Promise.reject(
+            $t("supply-chain.please_enter_legal_representative")
+        );
     }
     // 纯文本
     if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
-        return Promise.reject("法定代表人必须为纯文本");
+        return Promise.reject(
+            $t("supply-chain.legal_representative_must_be_pure_text")
+        );
     }
     return Promise.resolve();
 };
@@ -494,6 +543,34 @@ const handleTimeSearch = (params) => {
     formState.begin_business_time = params.begin_time;
     formState.end_business_time = params.end_time;
 };
+// 草稿回显
+const draftDataReview = () => {
+    let draftData = Core.Data.getSupplyChain();
+    // 判断是否为空对象
+    if (Object.keys(draftData).length === 0) {
+        formState.business_duration_type = 1;
+    } else {
+        // 解析出来的数据
+        let data = JSON.parse(draftData);
+        Object.keys(data.form.confirmatory_material).forEach((key) => {
+            formState[key] = data.form.confirmatory_material[key];
+        });
+        formState.business_duration_type =
+            data?.form?.confirmatory_material?.business_duration_type || 1;
+    }
+    setTimeout(() => {
+        // 给timeSearch赋值
+        TimeSearchRef.value.createTime = [
+            formState.begin_business_time,
+            formState.end_business_time,
+        ];
+    });
+
+};
+
+onMounted(() => {
+    draftDataReview();
+});
 </script>
 
 <style lang="less" scoped>

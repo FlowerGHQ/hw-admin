@@ -21,8 +21,7 @@
                 @change="handleDetailChange"
                 @preview="handlePreview"
                 @remove="handleRemove"
-                ref="uploadComponent"
-                >
+                ref="uploadComponent">
                 <div
                     class="image-inner"
                     v-if="upload.fileList.length < limitNum">
@@ -40,7 +39,9 @@
             </a-upload>
         </div>
 
-        <div class="tip" v-if="showTip && !upload.fileList.length>0">{{ tip }}</div>
+        <div class="tip" v-if="showTip && !upload.fileList.length > 0">
+            {{ tip }}
+        </div>
         <!-- 自定义图片预览 -->
         <div
             class="image-preview"
@@ -63,7 +64,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from "vue";
 import Core from "@/core";
-import { message , Upload  } from "ant-design-vue";
+import { message, Upload } from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 import _ from "lodash";
 const $t = useI18n().t;
@@ -71,7 +72,7 @@ const upload = ref({
     // 上传图片
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
     fileList: [],
-    fileSting:'',
+    fileSting: "",
     headers: {
         ContentType: false,
     },
@@ -151,11 +152,10 @@ const handleDetailChange = ({ file, fileList }) => {
             fileList.forEach((item) => {
                 item?.response?.data?.filename &&
                     fileArr.push(item?.response?.data?.filename);
-                
             });
             // 上传成功
             upload.value.fileList = fileList;
-            upload.value.fileSting = fileArr.join(',');
+            upload.value.fileSting = fileArr.join(",");
             $emit("update:value", upload.value.fileSting);
         } else {
             // 上传失败
@@ -185,9 +185,39 @@ const handleRemove = (file) => {
         item?.response?.data?.filename &&
             fileArr.push(item?.response?.data?.filename);
     });
-    upload.value.fileSting = fileArr.join(',');
+    upload.value.fileSting =
+        fileArr.length > 0
+            ? fileArr.length > 1
+                ? fileArr.join(",")
+                : fileArr[0]
+            : "";
     $emit("update:value", upload.value.fileSting);
 };
+
+watch(
+    ()=>props.value,
+    (val) => {
+        if (val) {
+            let fileList = [];
+            val.split(",").forEach((item) => {
+                fileList.push({
+                    uid: _.uniqueId("upload_"),
+                    name: item,
+                    status: "done",
+                    url: Core.Const.NET.FILE_URL_PREFIX + item,
+                    response: {
+                        code: 0,
+                        data: {
+                            filename: item,
+                        },
+                    },
+                });
+            });
+            upload.value.fileList = fileList;
+        }
+    }
+)
+
 </script>
 
 <style lang="less" scoped>
@@ -257,15 +287,15 @@ const handleRemove = (file) => {
     align-items: center;
 }
 
-:deep(.ant-upload-list-item-info){
-    &::before{
+:deep(.ant-upload-list-item-info) {
+    &::before {
         display: none;
     }
 }
-:deep(.ant-upload-list-item){
+:deep(.ant-upload-list-item) {
     padding: 0 !important;
 }
-:deep(.upload-close){
+:deep(.upload-close) {
     width: 20px;
     height: 20px;
     margin-top: 4px;
@@ -278,7 +308,7 @@ const handleRemove = (file) => {
     opacity: 0;
     display: inline-block;
 }
-::v-deep( .ant-upload-list-item-card-actions-btn) {
+::v-deep(.ant-upload-list-item-card-actions-btn) {
     position: absolute;
     right: 0;
     top: 0;
@@ -294,14 +324,14 @@ const handleRemove = (file) => {
     width: 80px;
     height: 80px;
     border-radius: 4px;
-    border: 1px dashed #EAECF1;
-    background: #FFF;
+    border: 1px dashed #eaecf1;
+    background: #fff;
 }
 ::v-deep(.ant-upload-list-picture-card-container) {
     width: 80px;
     height: 80px;
     border-radius: 4px;
-    border: 1px dashed #EAECF1;
-    background: #FFF;
+    border: 1px dashed #eaecf1;
+    background: #fff;
 }
 </style>
