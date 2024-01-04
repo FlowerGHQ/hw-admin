@@ -80,6 +80,16 @@ export default {
         please_enter_legal_representative: "请输入法定代表人",
         // 法定代表人必须为纯文本
         legal_representative_must_be_pure_text: "法定代表人必须为纯文本",
+        // 请输入开户名
+        please_enter_account_name: "请输入开户名",
+        // 请输入开户行
+        please_enter_bank_of_deposit: "请输入开户行",
+        // 请输入开户行号
+        please_enter_bank_number: "请输入开户行号",
+        // 请输入银行账号
+        please_enter_bank_account: "请输入银行账号",
+        // 开户行号必须为数字
+        bank_number_must_be_number: "开户行号必须为数字",
     },
     en: {
         type_supply: 'Type Supply',
@@ -160,5 +170,16 @@ export default {
         please_enter_legal_representative: "Please Enter Legal Representative",
         // 法定代表人必须为纯文本
         legal_representative_must_be_pure_text: "Legal Representative Must Be Pure Text",
+        // 请输入开户名
+        please_enter_account_name: "Please Enter Account Name",
+        // 请输入开户行
+        please_enter_bank_of_deposit: "Please Enter Bank Of Deposit",
+        // 请输入开户行号
+        please_enter_bank_number: "Please Enter Bank Number",
+        // 请输入银行账号
+        please_enter_bank_account: "Please Enter Bank Account",
+        // 开户行号必须为数字
+        bank_number_must_be_number: "Bank Number Must Be Number",
+        
     }
 }

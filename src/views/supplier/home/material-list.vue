@@ -507,34 +507,34 @@ const rules = {
     account_name: [
         {
             required: true,
-            message: "请输入开户名",
+            message: $t("supply-chain.please_enter_account_name"),
             trigger: ["change", "blur"],
         },
     ],
     account_with_bank: [
         {
             required: true,
-            message: "请输入开户行",
+            message: $t("supply-chain.please_enter_bank_of_deposit"),
             trigger: ["change", "blur"],
         },
     ],
     account_with_bank_number: [
         {
             required: true,
-            message: "请输入开户行号",
+            message: $t("supply-chain.please_enter_bank_number"),
             trigger: ["change", "blur"],
         },
     ],
     bank_account: [
         {
             required: true,
-            message: "请输入银行账号",
+            message: $t("supply-chain.please_enter_bank_account"),
             trigger: ["change", "blur"],
         },
         // 必须为数字
         {
             pattern: /^[0-9]*$/,
-            message: "开户行号必须为数字",
+            message: $t("supply-chain.bank_number_must_be_number"),
             trigger: ["change", "blur"],
         },
     ],
