@@ -12,7 +12,7 @@ const SUPPLAY = {
         outsourcing: 3,
         mold: 4,
         customer_refers: 5,
-    }
+    },
 }
 
 export default SUPPLAY

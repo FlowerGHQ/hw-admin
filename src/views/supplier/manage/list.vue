@@ -1,7 +1,7 @@
 <template>
     <div class="list-container">
         <div class="title-container">
-            <div class="title-area">{{ $t("item-bom.title") }}</div>
+            <div class="title-area">{{ $t("supply-chain.application_Materials") }}</div>
         </div>
         <!-- search -->
         <div class="search">
@@ -55,7 +55,9 @@ import Core from "@/core";
 import SearchAll from "@/components/common/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
 
+const router = useRouter()
 const $t = useI18n().t;
 
 const tableColumns = computed(() => {
@@ -110,6 +112,9 @@ const onReset = () => {
 // 点击查看
 const onView = () => {
     console.log("点击查看了");
+    router.push({
+        path: '/supply-manage/detail'
+    })
 }
 /* methods end*/
 </script>
