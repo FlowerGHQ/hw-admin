@@ -258,10 +258,66 @@
             list: [
               { key: "公司名称", value: undefined, valueParam: "name_c", type: 1, required: false },
               { key: "市场份额", value: undefined, valueParam: "net_c", type: 1, required: false },
-              { key: "了解评价", value: undefined, valueParam: "date_c", type: 4, required: false, online: true, },
+              { key: "了解评价", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
             ],
           },
+          {
+            title: "客户信息",
+            list: [
+              { key: "主要客户", value: undefined, valueParam: "name_c", type: 7, required: false, online: true,
+			    obj: {
+					columnsList: [
 
+						{ title: '客户序号', key: "customer_order", dataIndex: "customer_order" }, // 客户序号
+						{ title: '客户名称', key: "customer_name", dataIndex: "customer_name" }, // 客户名称
+						{ title: '销售占比', key: "sales_share", dataIndex: "sales_share", unit: '%' }, // 销售占比
+						{ title: '主供零件', key: "main_supply_part", dataIndex: "main_supply_part" }, // 主供零件
+						{ title: '开始合作时间', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time" }, // 开始合作时间
+						{ title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+					],
+					dataSourse: [
+						{
+							id: 1,
+							customer_order: "主要客户一",
+							customer_name: "哈哈哈",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						{
+							id: 2,
+							customer_order: "主要客户一",
+							customer_name: "哈哈哈",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						{
+							id: 3,
+							customer_order: "主要客户一",
+							customer_name: "哈哈哈",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+					]
+				},
+			  },
+            ],
+          },
+          {
+            title: "技术信息",
+            list: [
+              { key: "相关专利", value: undefined, valueParam: "name_c", type: 1, required: false },
+              { key: "研发中心", value: undefined, valueParam: "net_c", type: 1, required: false },
+              { key: "研发合作机构", value: undefined, valueParam: "net_c", type: 1, required: false, online: true,},
+              { key: "研发中心", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true, },
+              { key: "研发中心", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true, },
+              { key: "研发中心", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true, },
+              { key: "设计软件", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
+              { key: "开发流程", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
+            ],
+          },
 
           ]
         }
