@@ -1662,7 +1662,7 @@ const Util = {
           str += (str?',':'')+item[lang==='zh'?'country':'country_en']
       })
       return str || '-'
-  }
+  },
 }
 
 export default Util

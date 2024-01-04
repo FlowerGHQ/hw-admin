@@ -5,8 +5,7 @@ import Layout from '../views/layout/index.vue';
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
-const routers = [
-    
+const routers = [    
     {
         // 供应商管理(仅平台方可看)
         path: "/supply-manage",

@@ -206,8 +206,8 @@
             title: "财务信息",
             list: [
               { key: "法律纠纷", value: "legal_disputes", type: 2, required: true, online: true, radioList: [{ value: 1,name: '有' },{ value: -1,name: '无' }] },
-              { key: "操作工人月平均工资",  value: undefined, valueParam: "mon_avg_work_money", type: 3, required: false },
-              { key: "管理职员人均年产值",  value: undefined, valueParam: "employee_avg_work_money", type: 3, required: false },
+              { key: "操作工人月平均工资", value: undefined, valueParam: "mon_avg_work_money", type: 3, required: false },
+              { key: "管理职员人均年产值", value: undefined, valueParam: "employee_avg_work_money", type: 3, required: false },
               { key: "账期要求", value: "bill_require", type: 2, required: true,online: true, radioList: [{ value: 1,name: '90天' },{ value: 2,name: '75天' },{ value: 3,name: '60天' },{ value: 4,name: '30天' },{ value: 5,name: '其他' }] },
               { key: "发票类型", value: "invoice_type", type: 2, required: true,online: true, radioList: [{ value: 1,name: '增值税发票', inputValue: undefined, isInput: true },{ value: 2,name: '普通发票' },{ value: 3,name: '其他' }] },
             ],
@@ -215,12 +215,304 @@
           {
             title: "营业信息",
             list: [
-              { key: "业务比重", value: "proportion_business", type: 1, required: false, online: true, },
-              { key: "", value: "proportion_business", type: 6, required: false, online: true, },
+              { key: "业务比重", value: undefined, valueParam: "proportion_business", type: 1, required: false, online: true, },
+              { key: "", value: undefined, valueParam: "proportion_business_obj_year", type: 6, required: false, online: true, 
+			    objList: [
+							{
+								title: '近1年',
+								list: [
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								]
+							},{
+								title: '近2年',
+								list: [
+									
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								
+								]
+							},{
+								title: '近3年',
+								list: [
+									{ key: "销售额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "纳税额", value: undefined, valueParam: "posts", type: 3, unit: '万元', required: false, },
+									{ key: "利润率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "资产负债率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+									{ key: "现金流量比率", value: undefined, valueParam: "posts", type: 3, unit: '%', required: false, },
+								
+								]
+							}
+						] 
+				},
             ],
           },
+          {
+            title: "竞争对手",
+            list: [
+              { key: "公司名称", value: undefined, valueParam: "name_c", type: 1, required: false },
+              { key: "市场份额", value: undefined, valueParam: "net_c", type: 1, required: false },
+              { key: "了解评价", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
+            ],
+          },
+          {
+            title: "客户信息",
+            list: [
+              { key: "主要客户", value: undefined, valueParam: "name_c", title_add_text: '客户名称', type: 7, required: false, online: true,
+			  	objItem: {
+					customer_order: undefined,
+					customer_name: undefined,
+					sales_share: undefined,
+					main_supply_part: undefined,
+					begin_cooperation_time: undefined,
+				},
+				buttonText: '添加客户',
+			    obj: {
+					columnsList: [
+
+						{ title: '客户序号', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
+						{ title: '客户名称', key: "customer_name", dataIndex: "customer_name", type: 'input' }, // 客户名称
+						{ title: '销售占比', key: "sales_share", dataIndex: "sales_share", unit: '%', type: 'input-num' }, // 销售占比
+						{ title: '主供零件', key: "main_supply_part", dataIndex: "main_supply_part", type: 'input' }, // 主供零件
+						{ title: '开始合作时间', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time", type: 'time' }, // 开始合作时间
+						{ title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+					],
+					dataSourse: [
+						{
+							id: 1,
+							customer_order: "主要客户1",
+							customer_name: "哈哈哈1",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						{
+							id: 2,
+							customer_order: "主要客户2",
+							customer_name: "哈哈哈2",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						{
+							id: 3,
+							customer_order: "主要客户3",
+							customer_name: "哈哈哈3",
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+					]
+				},
+			  },
+            ],
+          },
+          {
+            title: "技术信息",
+            list: [
+              { key: "相关专利", value: undefined, valueParam: "name_c", type: 1, required: false },
+              { key: "研发中心", value: undefined, valueParam: "net_c", type: 1, required: false },
+              { key: "研发合作机构", value: undefined, valueParam: "net_c", type: 1, required: false, online: true,},
+              { key: "产品设计", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true, 
+			  	optionList: [
+					{ label: '独立设计', value: '独立设计' },
+					{ label: '共同设计', value: '共同设计' },
+					{ label: '转化设计', value: '转化设计' },
+					{ label: '委外设计', value: '委外设计' },
+			   	] 
+			  },
+              { key: "过程设计", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true,  
+			  	optionList: [
+					{ label: '模具设计', value: '模具设计' },
+					{ label: '检具设计', value: '检具设计' },
+					{ label: '工装设计', value: '工装设计' },
+					{ label: '辅具设计', value: '辅具设计' },
+			   	] 
+			  },
+              { key: "过程验证", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true,  
+			  	optionList: [
+					{ label: '模具验收', value: '模具验收' },
+					{ label: '检具验收', value: '检具验收' },
+					{ label: '工装验收', value: '工装验收' },
+					{ label: '产品鉴定', value: '产品鉴定' },
+			   	] 
+			  },
+              { key: "设计软件", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
+              { key: "开发流程", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
+            ],
+          },
+          {
+            title: "质量信息",
+            list: [
+              { key: "质量体系认证", value: undefined, valueParam: "employees_num_total", type: 3, required: false },
+              { key: "环境体系认证", value: undefined, valueParam: "manage_num", type: 3, required: false, },
+              { key: "质量合作机构", value: undefined, valueParam: "quality_num", type: 3, required: false, },
+              { key: "认可实验室", value: undefined, valueParam: "technicians_num", type: 3, required: false, },
+              { key: "质控工具软件", value: undefined, valueParam: "skilled_seniority", type: 3, required: false },
+              { key: "计划认证体系", value: undefined, valueParam: "skilled_seniority", type: 3, required: false },
+              { key: "市场PPM", value: undefined, valueParam: "skilled_seniority", row: 3, type: 1.1, required: false, online: true },
+            ],
+          },
+          {
+            title: "产能产线",
+            list: [
+              { key: "关键自有工序", value: undefined, valueParam: "employees_num_total", row: 3, type: 1.1, required: false, online: true  },
+              { key: "智能自动化线", value: undefined, valueParam: "manage_num", row: 3, type: 1.1, required: false, online: true  },
+              { key: "生产产能负荷", value: undefined, valueParam: "quality_num", row: 3, type: 1.1, required: false, online: true  },
+              
+            ],
+          },
+          {
+            title: "外购管理",
+            list: [
+              { key: "外购工艺", value: undefined, valueParam: "employees_num_total", row: 3, type: 1.1, required: false, online: true  },
+              { key: "外购备件", value: undefined, valueParam: "manage_num", row: 3, type: 1.1, required: false, online: true  },
+              { key: "外购原料", value: undefined, valueParam: "quality_num", row: 3, type: 1.1, required: false, online: true  },
+              { key: "外购制度", value: undefined, valueParam: "quality_num", row: 3, type: 1.1, required: false, online: true  },
+              
+            ],
+          },
+
+
           ]
-        }
+        },
+		{
+			
+			titleOne: '设备信息',
+          	listOne: [
+				{
+					title: "关键生产设备",
+					key: 'production_equipment',
+					list: [
+					{ key: "", value: undefined, valueParam: "name_c", type: 7, required: false, online: true,
+						objItem: {
+							customer_order: undefined,
+							customer_name: undefined,
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						buttonText: '添加设备',
+						obj: {
+							columnsList: [
+
+								{ title: '生产设备名称', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
+								{ title: '规格型号（含吨位）', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
+								{ title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+								{ title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+								{ title: '购置年限', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
+								{ title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+							],
+							dataSourse: [
+								{
+									id: 1,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+								{
+									id: 2,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+								{
+									id: 3,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+							]
+						},
+					  },
+
+				  ],
+          		},
+
+				{
+					title: "关键检测设备",
+					key: 'detection_equipment',
+					list: [
+						{ key: "", value: undefined, valueParam: "name_c", type: 7, required: false, online: true,
+						objItem: {
+							customer_order: undefined,
+							customer_name: undefined,
+							sales_share: undefined,
+							main_supply_part: undefined,
+							begin_cooperation_time: undefined,
+						},
+						buttonText: '添加设备',
+						obj: {
+							columnsList: [
+
+								{ title: '生产设备名称', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
+								{ title: '规格型号（含吨位）', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
+								{ title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+								{ title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+								{ title: '购置年限', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
+								{ title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+							],
+							dataSourse: [
+								{
+									id: 1,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+								{
+									id: 2,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+								{
+									id: 3,
+									name: undefined,
+									spec: undefined,
+									quantity: undefined,
+									manufacturer: undefined,
+									purchase_period: undefined,
+								},
+							]
+						},
+					  },
+
+				  ],
+          		},
+
+			]
+		},
+
+		{
+			
+			titleOne: '补充信息',
+          	listOne: [
+				{
+					title: "",
+					key: 'additional_info',
+					list: [ 
+						{ key: "其他优势说明", value: undefined, valueParam: "additional_info", row: 3, type: 1.1, required: false, online: true  },
+					 ],
+          		},
+
+			]
+		}
     ])
       const specific = ref(1)
       let checkAge = async (_rule, value) => {
@@ -420,5 +712,8 @@
     :deep(.ant-input-number-group-wrapper) {
         width: 100%;
     }
+	:deep(.ant-picker) {
+		width: 100%;
+	}
 }
   </style>

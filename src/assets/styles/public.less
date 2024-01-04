@@ -1655,6 +1655,53 @@ p {
     }
 
     }
+    // 子列样式
+    .form-content-item-column {
+
+        display: flex;
+        width: calc(100% + 86px);
+
+        .item-column-block-box {
+
+            box-sizing: border-box;
+            padding: 0px 0 8px 0;
+            flex:1;
+
+            .item-column-title-box {
+                .title {
+                    color: #8090A6;
+                    font-size: 16px;
+                    font-weight: 500;
+                    width: 126px;
+                    text-align: right;
+                    padding-right: 8px;
+                }
+            }
+            .item-column-title {
+                
+                min-width: 126px;
+                color: #8090A6;
+                text-align: right;
+                padding-right: 8px;
+            }
+
+            .item-column-value {
+                width: calc(~'100% - 86px');
+                max-width: 650px;
+            }
+
+            .item-column-block {
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    // 子列表格样式
+    .form-content-item-table {
+        
+    }
 }
 
 .gray-panel {
