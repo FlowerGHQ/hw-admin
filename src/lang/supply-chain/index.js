@@ -90,6 +90,11 @@ export default {
         please_enter_bank_account: "请输入银行账号",
         // 开户行号必须为数字
         bank_number_must_be_number: "开户行号必须为数字",
+        sales: "销售",
+        quality: "质量",
+        technology: "技术",
+        general_manager: "总经理",
+
     },
     en: {
         type_supply: 'Type Supply',
@@ -180,6 +185,9 @@ export default {
         please_enter_bank_account: "Please Enter Bank Account",
         // 开户行号必须为数字
         bank_number_must_be_number: "Bank Number Must Be Number",
-        
+        sales: "Sales",
+        quality: "Quality",
+        technology: "Technology",
+        general_manager: "General Manager",
     }
 }

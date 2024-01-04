@@ -10,7 +10,7 @@
             <div class="supply-type bg-color m-t-16">
                 <div class="title">供应类型</div>
                 <div class="btn-type-parts">
-                    <MySvgIcon icon-class="parts-icon"/>
+                    <MySvgIcon icon-class="parts-icon" />
                     <span class="m-l-4">零件类</span>
                 </div>
             </div>
@@ -18,14 +18,23 @@
             <div class="contact-information bg-color m-t-16">
                 <div class="title">联系方式</div>
                 <div class="contact-container">
+                    <!-- 职位 -->
                     <div class="level-search-row">
                         <div class="search-col required">
                             <div class="key w-130 t-a-r text-color">职位</div>
                             <div class="value m-l-8">
-                                <a-radio :checked="true">质量</a-radio>
+                                {{ msgDetail.position }}
+                                <a-radio :checked="true">
+                                    {{
+                                        Core.Const.SUPPLAY.POSITION[msgDetail.position]?.t
+                                            ? $t(Core.Const.SUPPLAY.POSITION[msgDetail.position]?.t)
+                                            : "-"
+                                    }}
+                                </a-radio>
                             </div>
                         </div>
                     </div>
+                    <!-- 姓名 -->
                     <div class="level-search-row">
                         <div class="search-col required">
                             <div class="key w-130 t-a-r text-color">姓名</div>
@@ -35,6 +44,7 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 邮箱 -->
                         <div class="search-col required">
                             <div class="key w-130 t-a-r text-color">邮箱</div>
                             <div class="value m-l-8">
@@ -44,6 +54,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- 联系方式 -->
                     <div class="level-search-row">
                         <div class="search-col w-50-percentage required">
                             <div class="key w-130 t-a-r text-color">联系方式</div>
@@ -64,6 +75,7 @@
                     <div class="sub-title">公司概况</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 公司名称 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">公司名称</div>
                                 <div class="value m-l-8">
@@ -72,6 +84,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 公司网址 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">公司网址</div>
                                 <div class="value m-l-8">
@@ -82,16 +95,22 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 成立日期 -->
                             <div class="search-col w-50-percentage required">
                                 <div class="key w-130 t-a-r text-color">成立日期</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
-                                        {{ msgDetail?.company_info?.established_time ? $Util.timeFormat(msgDetail?.company_info?.established_time) : '-' }}
+                                        {{
+                                            msgDetail?.company_info?.established_time
+                                                ? $Util.timeFilter(msgDetail?.company_info?.established_time)
+                                                : "-"
+                                        }}
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 详细地址 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">详细地址</div>
                                 <div class="value m-l-8">
@@ -102,6 +121,7 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 公司性质 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">公司性质</div>
                                 <div class="value m-l-8">
@@ -111,6 +131,7 @@
                                 </div>
                             </div>
                             <div class="search-col">
+                                <!-- 采购半径 -->
                                 <div class="key w-130 t-a-r text-color">采购半径</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
@@ -121,6 +142,7 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 占地面积 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">占地面积</div>
                                 <div class="value m-l-8">
@@ -131,6 +153,7 @@
                                 </div>
                             </div>
                             <div class="search-col">
+                                <!-- 建筑面积 -->
                                 <div class="key w-130 t-a-r text-color">建筑面积</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
@@ -142,6 +165,7 @@
                         </div>
                         <div class="level-search-row">
                             <div class="search-col">
+                                <!-- 母公司名称 -->
                                 <div class="key w-130 t-a-r text-color">母公司名称</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
@@ -150,6 +174,7 @@
                                 </div>
                             </div>
                             <div class="search-col">
+                                <!-- 母公司地址 -->
                                 <div class="key w-130 t-a-r text-color">母公司地址</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
@@ -165,6 +190,7 @@
                     <div class="sub-title">人力资源</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 员工总数 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">员工总数</div>
                                 <div class="value m-l-8">
@@ -173,6 +199,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 管理人数 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">管理人数</div>
                                 <div class="value m-l-8">
@@ -183,6 +210,7 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 质量人数 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">质量人数</div>
                                 <div class="value m-l-8">
@@ -191,6 +219,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 技术人数 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">技术人数</div>
                                 <div class="value m-l-8">
@@ -201,6 +230,7 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 技术工龄 -->
                             <div class="search-col w-50-percentage">
                                 <div class="key w-130 t-a-r text-color">技术工龄</div>
                                 <div class="value m-l-8">
@@ -217,16 +247,22 @@
                     <div class="sub-title">财务信息</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 法律纠纷 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">法律纠纷</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
-                                        {{ msgDetail.financial_info?.average_monthly_wage_of_operating_workers ? '无': '有' }}
+                                        {{
+                                            msgDetail.financial_info?.average_monthly_wage_of_operating_workers
+                                                ? "无"
+                                                : "有"
+                                        }}
                                     </a-radio>
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 操作工人月平均工资 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">操作工人月平均工资</div>
                                 <div class="value m-l-8">
@@ -235,6 +271,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 管理职员人均年产值 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">管理职员人均年产值</div>
                                 <div class="value m-l-8">
@@ -248,6 +285,7 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 账期要求 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">账期要求</div>
                                 <div class="value m-l-8">
@@ -259,12 +297,15 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 发票类型 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">发票类型</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
                                         <span>增值税发票 {{ msgDetail.financial_info?.invoice_type || "-" }}</span>
-                                        <span>{{ msgDetail.financial_info?.invoice_range_value || "-" }}</span>
+                                        <span class="invoice_range">
+                                            {{ msgDetail.financial_info?.invoice_range_value || "-" }}
+                                        </span>
                                     </a-radio>
                                 </div>
                             </div>
@@ -276,6 +317,7 @@
                     <div class="sub-title">营业信息</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 业务比重 -->
                             <div class="search-col w-50-percentage required">
                                 <div class="key w-130 t-a-r text-color">业务比重</div>
                                 <div class="value m-l-8">
@@ -292,7 +334,7 @@
                                         <div class="search-col">
                                             <div class="key w-130 t-a-r text-color proportion-of-item-title">
                                                 {{ item?.recent_year || "-" }}
-                                            </div>                                        
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="level-search-row">
@@ -351,7 +393,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </template>                       
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -362,13 +404,15 @@
                         <div class="level-search-row">
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">竞争对手信息</div>
-                                <div class="value m-l-8" style="width: 70%;">
-                                    <a-table :columns="competitionColumns" :data-source="msgDetail.competitor_analysis" :pagination="false">
+                                <div class="value m-l-8" style="width: 70%">
+                                    <a-table
+                                        :columns="competitionColumns"
+                                        :data-source="msgDetail.competitor_analysis"
+                                        :pagination="false"
+                                    >
                                         <template #bodyCell="{ column, text, record, index }">
                                             <!-- 公司名称 -->
-                                            <template v-if="column.key === 'company_name'">
-
-                                            </template>
+                                            <template v-if="column.key === 'company_name'"> </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
                                                 {{ text }}
@@ -376,7 +420,7 @@
                                             <!-- 了解评价 -->
                                             <template v-if="column.key === 'understand_evaluation'">
                                                 {{ text }}
-                                            </template>                                        
+                                            </template>
                                         </template>
                                     </a-table>
                                 </div>
@@ -391,14 +435,16 @@
                         <div class="level-search-row">
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">主要客户</div>
-                                <div class="value m-l-8" style="width: 70%;">
-                                    <a-table :columns="customerInfoColumns" :data-source="msgDetail.customer_info" :pagination="false">
+                                <div class="value m-l-8" style="width: 70%">
+                                    <a-table
+                                        :columns="customerInfoColumns"
+                                        :data-source="msgDetail.customer_info"
+                                        :pagination="false"
+                                    >
                                         <template #bodyCell="{ column, text, record, index }">
                                             <!-- 序号 -->
                                             <template v-if="column.key === 'index'">
-                                                <div class="customerInfoColumns-index">
-                                                    主要客户{{ index + 1 }}
-                                                </div>
+                                                <div class="customerInfoColumns-index">主要客户{{ index + 1 }}</div>
                                             </template>
                                             <template v-if="column.key === 'customer_name'">
                                                 {{ text }}
@@ -410,7 +456,7 @@
                                                 {{ text }}
                                             </template>
                                             <template v-if="column.key === 'begin_cooperation_time'">
-                                                {{ text ? $Util.timeFormat(text) : '-' }}
+                                                {{ text ? $Util.timeFilter(text, 3) : "-" }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -662,13 +708,21 @@
                 <div class="information-container-form">
                     <div class="sub-title">关键生产设备</div>
                     <div class="information-form">
-                        <a-table :columns="deviceColumns" :data-source="msgDetail.production_equipment" :pagination="false"></a-table>
+                        <a-table
+                            :columns="deviceColumns"
+                            :data-source="msgDetail.production_equipment"
+                            :pagination="false"
+                        ></a-table>
                     </div>
                 </div>
                 <div class="information-container-form m-t-40">
                     <div class="sub-title">关键检测设备</div>
                     <div class="information-form">
-                        <a-table :columns="deviceColumns" :data-source="msgDetail.production_equipment" :pagination="false"></a-table>
+                        <a-table
+                            :columns="deviceColumns"
+                            :data-source="msgDetail.production_equipment"
+                            :pagination="false"
+                        ></a-table>
                     </div>
                 </div>
             </div>
@@ -687,7 +741,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>                          
+                        </div>
                     </div>
                 </div>
             </div>
@@ -748,7 +802,7 @@
                                     <div class="bussiness-time">
                                         {{
                                             msgDetail?.confirmatory_material?.begin_business_time
-                                                ? $Util.timeFormat(
+                                                ? $Util.timeFilter(
                                                       msgDetail?.confirmatory_material?.begin_business_time
                                                   )
                                                 : "-"
@@ -756,7 +810,7 @@
                                         -
                                         {{
                                             msgDetail?.confirmatory_material?.end_business_time
-                                                ? $Util.timeFormat(msgDetail?.confirmatory_material?.end_business_time)
+                                                ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time)
                                                 : "-"
                                         }}
                                     </div>
@@ -934,7 +988,7 @@ const competitionColumns = computed(() => {
     let columns = [
         { title: "公司名称", dataIndex: "company_name", key: "company_name" },
         { title: "市场份额", dataIndex: "market_share", key: "market_share" },
-        { title: "了解评价", dataIndex: "understand_evaluation", key: "understand_evaluation" },                
+        { title: "了解评价", dataIndex: "understand_evaluation", key: "understand_evaluation" },
     ];
     return columns;
 });
@@ -1012,15 +1066,15 @@ function getDetail(params = {}) {
                 position: absolute;
                 top: 0;
                 right: 0;
-                width: 36px;                
+                width: 36px;
                 height: 100%;
-                background-color: #F2F2F2;
+                background-color: #f2f2f2;
                 text-align: center;
 
-                color: #808FA6;
+                color: #808fa6;
                 font-size: 14px;
                 font-weight: 400;
-                border-left: 1px solid #EAECF1;
+                border-left: 1px solid #eaecf1;
             }
         }
     }
@@ -1039,10 +1093,10 @@ function getDetail(params = {}) {
                 height: 52px;
                 line-height: 52px;
                 margin-left: 20%;
-                background-image: url('../../../assets/images/supply-chain/parts-bg.png');
+                background-image: url("../../../assets/images/supply-chain/parts-bg.png");
                 background-size: 100%;
                 text-align: center;
-                color: #FFF;
+                color: #fff;
                 font-size: 16px;
                 font-weight: 600;
             }
@@ -1084,7 +1138,7 @@ function getDetail(params = {}) {
                 width: 95px;
                 height: 32px;
                 line-height: 32px;
-                background-color: #F2F3F5;
+                background-color: #f2f3f5;
                 color: #666;
                 font-size: 14px;
                 font-weight: 400;
@@ -1094,22 +1148,31 @@ function getDetail(params = {}) {
             .proportion-of-list {
                 display: flex;
                 .proportion-of-item {
-                    width: 50%; 
-                    
+                    width: 50%;
+
                     .proportion-of-item-title {
-                        color: #8090A6;
+                        color: #8090a6;
                         font-size: 16px;
                         font-weight: 500;
                     }
                 }
             }
+            .invoice_range {                
+                height: 32px;
+                padding: 8px 12px;
+                box-sizing: border-box;
+                border-radius: 4px;
+                border: 1px solid #EAECF2;
+                background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), #EEF2F6;
+            }
         }
         // 设备信息
-        .equipment-information, .supplementary-information {            
+        .equipment-information,
+        .supplementary-information {
             .information-container-form {
                 display: flex;
                 .sub-title {
-                    width: 20%;                    
+                    width: 20%;
                     text-align: right;
                     color: #1d2129;
                     font-size: 16px;

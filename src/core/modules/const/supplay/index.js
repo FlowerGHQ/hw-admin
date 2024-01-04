@@ -13,6 +13,14 @@ const SUPPLAY = {
         mold: 4,
         customer_refers: 5,
     },
+    // 职位
+    POSITION: {        
+        1: { value: 1, t: 'supply-chain.sales', },
+        2: { value: 2, t: 'supply-chain.quality', },
+        3: { value: 3, t: 'supply-chain.technology', },
+        4: { value: 4, t: 'supply-chain.general_manager', },
+    },
 }
 
 export default SUPPLAY
+
