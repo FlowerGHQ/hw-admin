@@ -11,7 +11,7 @@
                             'step-item-title': true,
                             'step-item-title-active': current >= item.id,
                         }">
-                        {{ item.title }}
+                        {{$t( item.title) }}
                     </div>
                 </div>
                 <div class="step-item-line">
@@ -34,13 +34,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed ,watch} from "vue";
+import { ref, reactive, computed } from "vue";
 import { useI18n } from "vue-i18n";
-import {useStore} from 'vuex'
 const $i18n = useI18n();
 const $t = $i18n.t;
-let $lang = $i18n.locale;
-const $store = useStore();
+const $lang = $i18n.locale;
 const $emit = defineEmits(["update:value"]);
 const $props = defineProps({
     ActiveCurrent: {
@@ -58,7 +56,7 @@ const getAassetsFile = (url) => {
 const stepsaOption = reactive([
     {
         id: 0,
-        title: $t("supply-chain.basic_info"),
+        title: "supply-chain.basic_info",
         img: getAassetsFile(
             "../../../../assets/images/supply-chain/step1-active.png"
         ),
@@ -68,7 +66,7 @@ const stepsaOption = reactive([
     },
     {
         id: 1,
-        title: $t("supply-chain.material_list"),
+        title: "supply-chain.material_list",
         content: "Second-content",
         img: getAassetsFile("../../../../assets/images/supply-chain/step2.png"),
         activeImg: getAassetsFile(
@@ -77,7 +75,7 @@ const stepsaOption = reactive([
     },
     {
         id: 2,
-        title: $t("supply-chain.submit"),
+        title: "supply-chain.submit",
         img: getAassetsFile("../../../../assets/images/supply-chain/step3.png"),
         activeImg: getAassetsFile(
             "../../../../assets/images/supply-chain/step3-active.png"
