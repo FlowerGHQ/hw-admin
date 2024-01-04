@@ -242,6 +242,9 @@ const handleLangSwitch = () => {
     console.log("handleLangSwitch");
     $store.commit("switchLang");
     $i18n.locale = $store.state.lang;
+    console.log("lang:", $i18n.locale);
+    console.log("lang:", $store.state.lang);
+    console.log('i18n', $i18n)
 };
 const handleEditShow = () => {
     passShow.value = true;
