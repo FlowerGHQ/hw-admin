@@ -37,6 +37,8 @@
 import { ref, reactive, computed } from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
+// 查看当前语言
+console.log(useI18n().locale.value);
 const $emit = defineEmits(["update:value"]);
 const $props = defineProps({
     ActiveCurrent: {
@@ -81,6 +83,10 @@ const stepsaOption = reactive([
         ),
     },
 ]);
+
+
+
+console.log(stepsaOption);
 </script>
 
 <style lang="less" scoped>
