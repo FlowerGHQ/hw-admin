@@ -2784,7 +2784,6 @@ export default {
         },
         // 排列组合添加商品
         perAddSpecItem(index) {
-            console.log('排列组合添加商品', this.specific.list[index], 'specific.data111', this.specific.data);
             let list = [],listData = [];
             let obj = {
                         code: "",
@@ -2822,9 +2821,7 @@ export default {
                         value_en: op.en,
                     };
                 })
-                console.log('item----1',item);
             })
-            console.log('list-----1',list);
             list = list.filter(subArray => subArray.length !== 0);  
             if(list.length === 0){
                 return ;
@@ -2860,7 +2857,6 @@ export default {
                 })
             }
             this.specific.data = Core.Util.deepCopy(dataList);
-            console.log('this.specific.data-----1',this.specific.data);
         },
 
         // 批量设置
