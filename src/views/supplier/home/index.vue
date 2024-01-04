@@ -404,6 +404,8 @@ onMounted(() => {
                 height: calc(100% - 80px - 68px - 20px);
                 margin-top: 15px;
                 overflow: auto;
+                background-color: #FFFFFF;
+                border-radius: 6px;
                 // 滚动条样式
                 &::-webkit-scrollbar {
                     width: 8px;

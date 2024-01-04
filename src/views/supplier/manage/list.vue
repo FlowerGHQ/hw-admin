@@ -23,7 +23,33 @@
                 :row-key="(record) => record.id"
                 :pagination="false"
             >
-                <template #bodyCell="{ column, text, record }">
+                <template #bodyCell="{ column, text, record, index }">
+                    <!-- 序号 -->
+                    <template v-if="column.key === 'number'">
+                        {{ index + 1 }}
+                    </template>
+                    <!-- 公司名称 -->
+                    <template v-if="column.key === 'company_name'">
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ text }}</template>
+                            <div
+                                class="one-spils cursor"
+                                :style="{
+                                    width: text?.length > 6 ? 7 * 12 + 'px' : '',
+                                }"
+                            >
+                                {{ text }}
+                            </div>
+                        </a-tooltip>
+                    </template>
+                    <!-- 供应商类型 -->
+                    <template v-if="column.key === 'type'">
+                        {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[text] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[text]?.t) : '-' }}
+                    </template>
+                    <!-- 提交时间 -->
+                    <template v-if="column.key === 'create_time'">
+                        {{ text ? $Util.timeFormat(text) : '-' }}
+                    </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
                         <a-button type="link" @click="onView">{{ $t('supply-chain.view') }}</a-button>
@@ -62,10 +88,10 @@ const $t = useI18n().t;
 
 const tableColumns = computed(() => {
     let columns = [
-        { title: $t("supply-chain.serial_number"), dataIndex: "number" },
-        { title: $t("supply-chain.company_name"), dataIndex: "name", key: "name" },
+        { title: $t("supply-chain.serial_number"), dataIndex: "number", key: "number" },
+        { title: $t("supply-chain.company_name"), dataIndex: "company_name", key: "company_name" },
         { title: $t("supply-chain.supplier_type"), dataIndex: "type", key: "type" },
-        { title: $t("supply-chain.submission_time"), dataIndex: "time", key: "time" },
+        { title: $t("supply-chain.submission_time"), dataIndex: "create_time", key: "create_time" },
         { title: $t("common.operations"), key: "operations", fixed: "right" },
     ];
     return columns;
@@ -75,7 +101,7 @@ const searchList = ref([
     { 
         type: "input", 
         value: "", 
-        searchParmas: "name",  
+        searchParmas: "company_name",  
         key: 'supply-chain.company_name' 
     },
     { 
@@ -89,7 +115,7 @@ const searchList = ref([
 
 onMounted(() => {});
 /* Fetch start*/
-const request = Core.Api.SalesArea.list;
+const request = Core.Api.SUPPLY.adminList;
 const {
     loading,
     tableData,
@@ -104,10 +130,11 @@ const {
 
 /* methods start*/
 const onSearch = (data) => {
-    console.log("数据", data);
+    searchParam.value = data
+    search()
 }
 const onReset = () => {
-
+    refreshTable()
 }
 // 点击查看
 const onView = () => {
