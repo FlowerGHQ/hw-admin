@@ -4,7 +4,7 @@
             <div class="title">基本信息</div>
             <div class="base-info-form">
                 <a-form
-                    ref="formRef"
+                    ref="formRef1"
                     name="custom-validation"
                     :model="formState"
                     :rules="rules"
@@ -44,6 +44,7 @@
                                             :maxlength="15"
                                             showCount
                                             placeholder="请输入"
+                                            name="RegisteredCapital"
                                             v-model:value="
                                                 formState.RegisteredCapital
                                             ">
@@ -60,6 +61,7 @@
                                             :maxlength="5"
                                             showCount
                                             placeholder="请输入"
+                                            name="LegalRepresentative"
                                             v-model:value="
                                                 formState.LegalRepresentative
                                             ">
@@ -76,7 +78,7 @@
                                         <div class="business-term">
                                             <a-radio-group
                                                 v-model:value="formState.type"
-                                                name="radioGroup">
+                                                name="BusinessTerm">
                                                 <a-radio value="1"
                                                     >长期有效</a-radio
                                                 >
@@ -110,6 +112,7 @@
                                             showCount
                                             allowClear
                                             placeholder="请输入"
+                                            name="AccountName"
                                             v-model:value="
                                                 formState.AccountName
                                             ">
@@ -126,6 +129,7 @@
                                             :maxlength="50"
                                             showCount
                                             placeholder="请输入"
+                                            name="BankOfDeposit"
                                             v-model:value="
                                                 formState.BankOfDeposit
                                             ">
@@ -141,6 +145,7 @@
                                         name="BankOfDepositNumber">
                                         <a-input
                                             allowClear
+                                            name="BankOfDepositNumber"
                                             :maxlength="50"
                                             showCount
                                             placeholder="请输入"
@@ -160,6 +165,7 @@
                                             :maxlength="50"
                                             showCount
                                             placeholder="请输入"
+                                            name="BankAccount"
                                             v-model:value="
                                                 formState.BankAccount
                                             ">
@@ -202,7 +208,7 @@
             <div class="title">其他证实性材料</div>
             <div class="other-material-form">
                 <a-form
-                    ref="formRef"
+                    ref="formRef2"
                     name="custom-validation"
                     :model="formState"
                     :rules="rules"
@@ -269,11 +275,51 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, watch } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
-const formRef = ref(null);
+const formRef1 = ref(null);
+const formRef2 = ref(null);
 const TimeSearchRef = ref(null);
+const props = defineProps({
+    isSubmit: {
+        type: Boolean,
+        default: false,
+    },
+});
+// 监听isSubmit
+watch(
+    () => props.isSubmit,
+    () => {
+        // 如果isSubmit变化了，就校验
+        if (formRef1.value) {
+            formRef1.value.clearValidate();
+            formRef1.value
+                .validate()
+                .then((res) => {
+                    console.log("res", res);
+                    if (res) {
+                        // 校验通过
+                        console.log("校验通过");
+                    }
+                })
+                .catch((err) => {
+                    const errorName = err.errorFields[0]?.name[0];
+                    if (!errorName) return;
+                    const errorDom = document.querySelector(
+                        `[name=${errorName}]`
+                    );
+                    // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
+                    errorDom.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                        inline: "nearest",
+                    });
+                });
+        }
+    }
+);
+
 const formState = reactive({
     type: "1",
 });
