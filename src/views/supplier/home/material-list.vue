@@ -559,13 +559,14 @@ const draftDataReview = () => {
             data?.form?.confirmatory_material?.business_duration_type || 1;
     }
     setTimeout(() => {
-        // 给timeSearch赋值
-        TimeSearchRef.value.createTime = [
-            formState.begin_business_time,
-            formState.end_business_time,
-        ];
+        if (TimeSearchRef.value) {
+            // 给timeSearch赋值
+            TimeSearchRef.value.createTime = [
+                formState.begin_business_time,
+                formState.end_business_time,
+            ];
+        }
     });
-
 };
 
 onMounted(() => {
