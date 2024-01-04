@@ -40,6 +40,9 @@
                                         label="注册资本"
                                         name="RegisteredCapital">
                                         <a-input
+                                            allowClear
+                                            :maxlength="15"
+                                            showCount
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.RegisteredCapital
@@ -53,6 +56,9 @@
                                         label="法定代表人"
                                         name="LegalRepresentative">
                                         <a-input
+                                            allowClear
+                                            :maxlength="5"
+                                            showCount
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.LegalRepresentative
@@ -67,12 +73,22 @@
                                     <a-form-item
                                         label="营业期限"
                                         name="BusinessTerm">
-                                        <a-input
-                                            placeholder="请输入"
-                                            v-model:value="
-                                                formState.BusinessTerm
-                                            ">
-                                        </a-input>
+                                        <div class="business-term">
+                                            <a-radio-group
+                                                v-model:value="formState.type"
+                                                name="radioGroup">
+                                                <a-radio value="1"
+                                                    >长期有效</a-radio
+                                                >
+                                                <a-radio value="2"
+                                                    >短期有效</a-radio
+                                                >
+                                            </a-radio-group>
+                                            <TimeSearch
+                                                v-if="formState.type == 2"
+                                                ref="TimeSearchRef"
+                                                @search="handleTimeSearch" />
+                                        </div>
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -90,6 +106,9 @@
                                         label="开户名"
                                         name="AccountName">
                                         <a-input
+                                            :maxlength="50"
+                                            showCount
+                                            allowClear
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.AccountName
@@ -103,6 +122,9 @@
                                         label="开户行"
                                         name="BankOfDeposit">
                                         <a-input
+                                            allowClear
+                                            :maxlength="50"
+                                            showCount
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.BankOfDeposit
@@ -118,6 +140,9 @@
                                         label="开户行号"
                                         name="BankOfDepositNumber">
                                         <a-input
+                                            allowClear
+                                            :maxlength="50"
+                                            showCount
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.BankOfDepositNumber
@@ -131,6 +156,9 @@
                                         label="银行账号"
                                         name="BankAccount">
                                         <a-input
+                                            allowClear
+                                            :maxlength="50"
+                                            showCount
                                             placeholder="请输入"
                                             v-model:value="
                                                 formState.BankAccount
@@ -243,31 +271,106 @@
 <script setup>
 import { ref, reactive } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
+import TimeSearch from "@/components/common/TimeSearch.vue";
 const formRef = ref(null);
-const formState = reactive({});
+const TimeSearchRef = ref(null);
+const formState = reactive({
+    type: "1",
+});
+
+let BusinessTermValid = async (_rule, value) => {
+    if (formState.type == 2) {
+        if (!formState.start_time || !formState.end_time) {
+            return Promise.reject("请选择营业期限");
+        }
+    }
+    return Promise.resolve();
+};
+
+let RegisteredCapitalVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject("请输入注册资本");
+    }
+    // 必须为数字
+    if (!/^[0-9]*$/.test(value)) {
+        return Promise.reject("注册资本必须为数字");
+    }
+    return Promise.resolve();
+};
+let LegalRepresentativeVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject("请输入法定代表人");
+    }
+    // 纯文本
+    if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
+        return Promise.reject("法定代表人必须为纯文本");
+    }
+    return Promise.resolve();
+};
+
 const rules = {
     // 注册资本
     RegisteredCapital: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            validator: RegisteredCapitalVaild,
+            trigger: ["change", "blur"],
+        },
     ],
+    // 法定代表人
     LegalRepresentative: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            validator: LegalRepresentativeVaild,
+            trigger: ["change", "blur"],
+        },
     ],
+    // 营业期限
     BusinessTerm: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            validator: BusinessTermValid,
+            trigger: ["change", "blur"],
+        },
     ],
     AccountName: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            message: "请输入开户名",
+            trigger: ["change", "blur"],
+        },
     ],
     BankOfDeposit: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            message: "请输入开户行",
+            trigger: ["change", "blur"],
+        },
     ],
     BankOfDepositNumber: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            message: "请输入开户行号",
+            trigger: ["change", "blur"],
+        },
     ],
     BankAccount: [
-        { required: true, message: "请输入", trigger: ["change", "blur"] },
+        {
+            required: true,
+            message: "请输入银行账号",
+            trigger: ["change", "blur"],
+        },
+        // 必须为数字
+        {
+            pattern: /^[0-9]*$/,
+            message: "开户行号必须为数字",
+            trigger: ["change", "blur"],
+        },
     ],
+};
+const handleTimeSearch = (params) => {
+    formState.start_time = params.begin_time;
+    formState.end_time = params.end_time;
 };
 </script>
 
@@ -328,6 +431,18 @@ const rules = {
 :deep(.img-area) {
     .ant-col-offset-1 {
         margin-left: 1.9%;
+    }
+}
+:deep(.ant-form-item-control-input-content) {
+    // 清除flex：auto
+    flex: none;
+}
+.business-term {
+    display: flex;
+    align-items: center;
+    :deep(.ant-picker-range) {
+        min-width: 236px;
+        height: 32px;
     }
 }
 </style>
