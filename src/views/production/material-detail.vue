@@ -12,7 +12,7 @@
                 <div class="desc-title">
                     <div class="title-area">
                         <img :src="$Util.imageFilter(detail.image, 3)" />
-                        <span class="title">{{ lang==='zh' ?detail.name : detail.name_en }}</span>
+                        <span class="title">{{ lang === 'zh' ? detail.name : detail.name_en }}</span>
                         <span 
                             v-if="SOURCE_STOCK_TYPE[detail?.sync_type]?.value == 'ERP'" 
                             class="source-erp"
@@ -103,7 +103,11 @@ export default {
         };
     },
     watch: {},
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        },
+    },
     mounted() {
         this.id = Number(this.$route.query.id) || 0
         this.getMaterialDetail();
