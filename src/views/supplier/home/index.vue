@@ -6,9 +6,8 @@
                 <MyStep v-model:ActiveCurrent="current" />
                 <div class="content-main">
                     <!-- 动态组件 -->
-                    <component :is="currentComponent" />
+                    <component :is="currentComponent"  class="current-components"/>
                 </div>
-
                 <div class="supply-chain-footer" v-if="current != 2">
                     <!-- 保存草稿 -->
                     <a-button @click="handleSave">保存草稿</a-button>
@@ -84,11 +83,52 @@ const handleSubmit = () => {
     :deep(.ant-layout) {
         flex: 1;
         header{
-            background: #fff;
-            height: 60px;
-            line-height: 60px;
-            padding: 0 20px;
-            box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+            height: 80px;
+            border-bottom: 1px solid  #E5E6EB;
+            background: linear-gradient(0deg, #FFF 0%, #FFF 100%), #F6F7F9;
+        }
+        content{
+            flex: 1;
+            padding: 20px 40px 20px 40px;
+            position: relative;
+            overflow: auto;
+            .content-main {
+                height: calc(100% - 80px - 68px - 15px);
+                margin-top: 15px;
+                overflow: auto;
+                // 滚动条样式
+                &::-webkit-scrollbar {
+                    width: 8px;
+                    height: 8px;
+                }
+                &::-webkit-scrollbar-thumb {
+                    border-radius: 10px;
+                    background: #C0C4CC;
+                }
+                &::-webkit-scrollbar-track {
+                    border-radius: 10px;
+                    background: #F2F3F5;
+                }
+                .current-components{
+                    height: 100%;
+                }
+            }
+            .supply-chain-footer{
+                    display: flex;
+                    height: 68px;
+                    width: calc(100% - 60px);
+                    padding: 18px 0px;
+                    justify-content: center;
+                    align-items: center;
+                    flex-shrink: 0;
+                    border-top: 1px solid  #F2F3F5;
+                    background: #FFF;
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    margin-left: 20px;
+                    margin-right: 40px;
+            }
         }
     }
 }
