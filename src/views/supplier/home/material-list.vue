@@ -1,7 +1,7 @@
 <template>
     <div class="material-list">
         <div class="base-info content-area">
-            <div class="title">基本信息</div>
+            <div class="title">{{ $t("supply-chain.basic_info") }}</div>
             <div class="base-info-form">
                 <a-form
                     ref="formRef1"
@@ -12,17 +12,25 @@
                     labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title">营业执照照片</div>
+                            <div class="title">
+                                {{ $t("supply-chain.business_license_photos") }}
+                            </div>
                         </a-col>
                         <a-col :span="21">
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <a-form-item
-                                        label="营业执照照片"
+                                        :label="
+                                            $t(
+                                                'supply-chain.business_license_photos'
+                                            )
+                                        "
                                         name="BusinessLicensePhoto"
                                         class="img-area">
                                         <MyUpload
-                                            tip="请上传1张2M内的彩色照片或者彩色扫描件或者加盖公章鲜章的复印件"
+                                            :tip="
+                                                $t('supply-chain.upload_photos')
+                                            "
                                             v-model:value="
                                                 formState.BusinessLicensePhoto
                                             "
@@ -37,13 +45,19 @@
                                 <a-col :span="8">
                                     <!-- 注册资本 -->
                                     <a-form-item
-                                        label="注册资本"
+                                        :label="
+                                            $t(
+                                                'supply-chain.registered_capital'
+                                            )
+                                        "
                                         name="RegisteredCapital">
                                         <a-input
                                             allowClear
                                             :maxlength="15"
                                             showCount
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             name="RegisteredCapital"
                                             v-model:value="
                                                 formState.RegisteredCapital
@@ -54,13 +68,19 @@
                                 <a-col :span="12">
                                     <!-- 法定代表人 -->
                                     <a-form-item
-                                        label="法定代表人"
+                                        :label="
+                                            $t(
+                                                'supply-chain.legal_representative'
+                                            )
+                                        "
                                         name="LegalRepresentative">
                                         <a-input
                                             allowClear
                                             :maxlength="5"
                                             showCount
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             name="LegalRepresentative"
                                             v-model:value="
                                                 formState.LegalRepresentative
@@ -73,18 +93,24 @@
                                 <a-col :span="24">
                                     <!-- 营业期限 -->
                                     <a-form-item
-                                        label="营业期限"
+                                        :label="
+                                            $t('supply-chain.business_term')
+                                        "
                                         name="BusinessTerm">
                                         <div class="business-term">
                                             <a-radio-group
                                                 v-model:value="formState.type"
                                                 name="BusinessTerm">
-                                                <a-radio value="1"
-                                                    >长期有效</a-radio
-                                                >
-                                                <a-radio value="2"
-                                                    >短期有效</a-radio
-                                                >
+                                                <a-radio value="1">{{
+                                                    $t(
+                                                        "supply-chain.long_term_validity"
+                                                    )
+                                                }}</a-radio>
+                                                <a-radio value="2">{{
+                                                    $t(
+                                                        "supply-chain.short_term_validity"
+                                                    )
+                                                }}</a-radio>
                                             </a-radio-group>
                                             <TimeSearch
                                                 v-if="formState.type == 2"
@@ -98,20 +124,26 @@
                     </a-row>
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title">银行开票资料</div>
+                            <div class="title">
+                                {{
+                                    $t("supply-chain.bank_billing_information")
+                                }}
+                            </div>
                         </a-col>
                         <a-col :span="21">
                             <a-row :gutter="24">
                                 <a-col :span="8">
                                     <!-- 开户名 -->
                                     <a-form-item
-                                        label="开户名"
+                                        :label="$t('supply-chain.account_name')"
                                         name="AccountName">
                                         <a-input
                                             :maxlength="50"
                                             showCount
                                             allowClear
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             name="AccountName"
                                             v-model:value="
                                                 formState.AccountName
@@ -122,13 +154,17 @@
                                 <a-col :span="12">
                                     <!-- 开户行 -->
                                     <a-form-item
-                                        label="开户行"
+                                        :label="
+                                            $t('supply-chain.bank_of_deposit')
+                                        "
                                         name="BankOfDeposit">
                                         <a-input
                                             allowClear
                                             :maxlength="50"
                                             showCount
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             name="BankOfDeposit"
                                             v-model:value="
                                                 formState.BankOfDeposit
@@ -141,14 +177,16 @@
                                 <a-col :span="8">
                                     <!-- 开户行号 -->
                                     <a-form-item
-                                        label="开户行号"
+                                        :label="$t('supply-chain.bank_number')"
                                         name="BankOfDepositNumber">
                                         <a-input
                                             allowClear
                                             name="BankOfDepositNumber"
                                             :maxlength="50"
                                             showCount
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             v-model:value="
                                                 formState.BankOfDepositNumber
                                             ">
@@ -158,13 +196,15 @@
                                 <a-col :span="12">
                                     <!-- 银行账号 -->
                                     <a-form-item
-                                        label="银行账号"
+                                        :label="$t('supply-chain.bank_account')"
                                         name="BankAccount">
                                         <a-input
                                             allowClear
                                             :maxlength="50"
                                             showCount
-                                            placeholder="请输入"
+                                            :placeholder="
+                                                $t('supply-chain.please_enter')
+                                            "
                                             name="BankAccount"
                                             v-model:value="
                                                 formState.BankAccount
@@ -177,18 +217,30 @@
                     </a-row>
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title">质量体系证书</div>
+                            <div class="title">
+                                {{
+                                    $t(
+                                        "supply-chain.quality_system_certificate"
+                                    )
+                                }}
+                            </div>
                         </a-col>
                         <a-col :span="21">
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 质量体系证书 -->
                                     <a-form-item
-                                        label="质量体系证书"
+                                        :label="
+                                            $t(
+                                                'supply-chain.quality_system_certificate'
+                                            )
+                                        "
                                         name="QualitySystemCertificate"
                                         class="img-area">
                                         <MyUpload
-                                            tip="请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张"
+                                            :tip="
+                                                $t('supply-chain.please_upload')
+                                            "
                                             v-model:value="
                                                 formState.QualitySystemCertificate
                                             "
@@ -205,7 +257,9 @@
             </div>
         </div>
         <div class="other-material content-area">
-            <div class="title">其他证实性材料</div>
+            <div class="title">
+                {{ $t("supply-chain.other_proving_materials") }}
+            </div>
             <div class="other-material-form">
                 <a-form
                     ref="formRef2"
@@ -217,11 +271,11 @@
                     <a-row :gutter="24">
                         <a-col :span="24">
                             <a-form-item
-                                label="开户行许可证"
+                                :label="$t('supply-chain.bank_account_license')"
                                 name="BusinessLicensePhoto"
                                 class="img-area">
                                 <MyUpload
-                                    tip="请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张"
+                                    :tip="$t('supply-chain.please_upload')"
                                     v-model:value="
                                         formState.BusinessLicensePhoto
                                     "
@@ -235,11 +289,15 @@
                     <a-row :gutter="24">
                         <a-col :span="24">
                             <a-form-item
-                                label="环评证书"
+                                :label="
+                                    $t(
+                                        'supply-chain.environmental_assessment_certificate'
+                                    )
+                                "
                                 name="BusinessLicensePhoto"
                                 class="img-area">
                                 <MyUpload
-                                    tip="请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张"
+                                    :tip="$t('supply-chain.please_upload')"
                                     v-model:value="
                                         formState.BusinessLicensePhoto
                                     "
@@ -253,11 +311,15 @@
                     <a-row :gutter="24">
                         <a-col :span="24">
                             <a-form-item
-                                label="环保报告"
+                                :label="
+                                    $t(
+                                        'supply-chain.environmental_protection_report'
+                                    )
+                                "
                                 name="BusinessLicensePhoto"
                                 class="img-area">
                                 <MyUpload
-                                    tip="请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张"
+                                    :tip="$t('supply-chain.please_upload')"
                                     v-model:value="
                                         formState.BusinessLicensePhoto
                                     "
@@ -286,7 +348,14 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    value: {
+        type: Boolean,
+        default: false,
+    },
 });
+import { useI18n } from "vue-i18n";
+const $t = useI18n().t;
+const $emit = defineEmits(["update:value"]);
 // 监听isSubmit
 watch(
     () => props.isSubmit,
@@ -297,13 +366,14 @@ watch(
             formRef1.value
                 .validate()
                 .then((res) => {
-                    console.log("res", res);
                     if (res) {
                         // 校验通过
-                        console.log("校验通过");
+                        $emit("update:value", true);
                     }
                 })
                 .catch((err) => {
+                    // 校验失败
+                    $emit("update:value", false);
                     const errorName = err.errorFields[0]?.name[0];
                     if (!errorName) return;
                     const errorDom = document.querySelector(
@@ -317,6 +387,9 @@ watch(
                     });
                 });
         }
+    },
+    {
+        deep: true,
     }
 );
 

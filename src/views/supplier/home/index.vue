@@ -9,6 +9,7 @@
                         alt="浩万" />
                 </div>
                 <div class="header-right">
+                    <!-- 中英文的转换 -->
                     <a-button
                         class="lang-switch"
                         type="link"
@@ -16,14 +17,6 @@
                         <i
                             class="icon"
                             :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
-                    </a-button>
-                    <a-divider type="vertical" />
-                    <a-button class="notice PC" type="link">
-                        <a-badge
-                            :count="unread.org + unread.master"
-                            @click="routerChange('notice')">
-                            <i class="icon i_notify" />
-                        </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
                     <a-tag class="PC" color="blue" style="font-size: 12px">{{
@@ -136,27 +129,28 @@
                     <component
                         :is="currentComponent"
                         :isSubmit="isSubmit"
+                        v-model:value="step2Val"
                         class="current-components" />
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
                     <!-- 保存草稿 -->
-                    <a-button @click="handleSave">保存草稿</a-button>
+                    <a-button @click="handleSave">{{ $t("supply-chain.save_draft") }}</a-button>
                     <a-button
                         type="primary"
                         @click="handleNext"
                         v-if="current == 0"
-                        >下 一步</a-button
+                        >{{ $t("supply-chain.next_step") }}</a-button
                     >
                     <!-- 上一步 -->
                     <a-button @click="handleBack" v-if="current == 1"
-                        >上一步</a-button
+                        >{{ $t("supply-chain.previous_step") }}</a-button
                     >
                     <!-- 提交 -->
                     <a-button
                         type="primary"
                         @click="handleSubmit"
                         v-if="current == 1"
-                        >提交申请</a-button
+                        >{{ $t("supply-chain.submit_application") }}</a-button
                     >
                 </div>
             </Content>
@@ -165,7 +159,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted } from "vue";
+import { ref, computed, reactive, onMounted ,watch} from "vue";
 import MyStep from "./components/steps.vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -192,12 +186,9 @@ const form = reactive({
 });
 // 是否提交申请
 const isSubmit = ref(false);
+const step2Val = ref(false);
 const $i18n = useI18n();
 const $store = store;
-const unread = reactive({
-    master: "",
-    org: "",
-});
 const currentComponent = computed(() => {
     switch (current.value) {
         case 0:
@@ -213,6 +204,21 @@ const currentComponent = computed(() => {
 // 步骤条
 const current = ref(1);
 const passShow = ref(false);
+
+// 监听第二步的校验是否完成
+watch(
+    ()=>step2Val.value,
+    (val)=>{
+      if(val){
+        handleNext();
+      }
+    },
+    {
+        immediate:true
+    }
+)
+
+
 // 下一步
 const handleNext = () => {
     if (current.value == 2) return;
@@ -225,7 +231,7 @@ const handleBack = () => {
 };
 // 提交
 const handleSubmit = () => {
-    // handleNext();
+    // 为了每次点击都知道变化
     isSubmit.value = !isSubmit.value;
 };
 // 中英文切换
@@ -243,46 +249,7 @@ const handleLogout = () => {
     Core.Api.Common.logout();
 };
 
-const routerChange = (type) => {
-    let routeUrl = "";
-    switch (type) {
-        case "notice": //系统
-            routeUrl = $router.resolve({
-                path: "/system/notice-list",
-            });
-            window.open(routeUrl.href, "_self");
-            break;
-        case "shop_cart":
-            routeUrl = $router.resolve({
-                path: "/purchase/item-collect",
-            });
-            window.open(routeUrl.href, "_self");
-            break;
-    }
-};
-// 获取未读消息
-const getUnreadCount = () => {
-    // 获取 未读消息数 数据
-    let CATEGORY = Core.Const.NOTICE.CATEGORY;
-    Core.Api.Notice.list({
-        category: CATEGORY.ORG,
-    })
-        .then((res) => {
-            unread.org = res.un_count;
-        })
-        .catch((err) => {
-            console.log("getUnreadCount err", err);
-        });
-    Core.Api.Notice.list({
-        category: CATEGORY.MASTER,
-    })
-        .then((res) => {
-            unread.master = res.un_count;
-        })
-        .catch((err) => {
-            console.log("getUnreadCount err", err);
-        });
-};
+
 const handleEditSubmit = () => {
     let form = Core.Util.deepCopy(form);
     if (!form.old_password) {
@@ -310,7 +277,6 @@ const handleEditSubmit = () => {
         });
 };
 onMounted(() => {
-    getUnreadCount();
 });
 </script>
 
@@ -390,10 +356,6 @@ onMounted(() => {
             .header-right {
                 .fcc();
 
-                .notice {
-                    width: 50px;
-                    height: 50px;
-                }
 
                 .lang-switch {
                     .icon {
