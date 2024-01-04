@@ -5,8 +5,15 @@
         使用例子
         * 代表必填字段
         options: [
+            { 
+                id: 1, // 输入框
+                type: "input", 
+                value: "", 
+                searchParmas: "name",  
+                key: 'supply-chain.company_name' 
+            },
             {
-                id: 2, // 随意
+                id: 2, // 下拉框
               * type: "select", // 类型
               * key: 'n.type', // 名称
               * value: undefined, // 绑定值
@@ -15,13 +22,13 @@
                     select中的数据(里面字段必须这样)
                     数组 
                     [{
-                        * zh: '整车', 
-                        * en: 'Vehicle', 
+                        * zh: '整车',
+                        * en: 'Vehicle',
                         * value: 1  // a-select-option 中的 :value="item.value"  // 固定的
                     }]
                     对象
                     {
-                    '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 }, 
+                        '1': { vlaue: 1, zh: '整车', en: 'Vehicle', key: 1 }, 
                     }            
               * placeholder: "def.select",
             }

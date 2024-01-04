@@ -59,6 +59,22 @@ const tableColumns = computed(() => {
     return columns;
 });
 
+const searchList = ref([
+    { 
+        type: "input", 
+        value: "", 
+        searchParmas: "name",  
+        key: 'supply-chain.company_name' 
+    },
+    { 
+        type: "select",
+        value: undefined,
+        searchParmas: "type",
+        key: 'supply-chain.supplier_type',
+        selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+    },
+])
+
 onMounted(() => {});
 /* Fetch start*/
 const request = Core.Api.SalesArea.list;
