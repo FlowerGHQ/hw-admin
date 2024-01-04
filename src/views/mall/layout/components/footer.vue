@@ -32,7 +32,7 @@ export default {
     color: #FFF;
     .content {
         margin: 0 auto;
-        max-width: 1440px;
+        width: 75%;
     }
     @media (min-width: 820px) {}
     @media (max-width: 820px) {}

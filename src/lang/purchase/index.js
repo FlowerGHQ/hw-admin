@@ -1,0 +1,40 @@
+
+export default {
+    zh: {
+        system: "Horwin业务操作系统",
+        account_login: '登录',
+        conditions: '条款和条件',
+        legal: '隐私',
+        about: '© 2023 | HORWIN Inc',
+        order: 'Order Now',
+        products: 'Our products',
+        services: 'Horwin Services',
+        deals: 'Local Deals',
+        news: 'Horwin Official News',
+        products_name1: 'Vehicle Models',
+        products_name2: 'Accessories',
+        products_name3: 'Peripheral Products',
+        products_mes1: 'We have 13 vehicle models to choose from',
+        products_mes2: 'To choose spareparts for different types of models',
+        products_mes3: 'A wide range of accessories to choose from',
+    },
+    en: {
+        system: "Horwin Business Operating System",
+        account_login: 'Log In',
+        conditions: 'terms & conditions',
+        legal: 'legal',
+        about: '© 2023 | HORWIN Inc',
+        order: 'Order Now',
+        products: 'Our products',
+        services: 'Horwin Services',
+        deals: 'Local Deals',
+        news: 'Horwin Official News',
+        products_name1: 'Vehicle Models',
+        products_name2: 'Accessories',
+        products_name3: 'Peripheral Products',
+        products_mes1: 'We have 13 vehicle models to choose from',
+        products_mes2: 'To choose spareparts for different types of models',
+        products_mes3: 'A wide range of accessories to choose from',
+    }
+}
+

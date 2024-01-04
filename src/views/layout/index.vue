@@ -31,7 +31,7 @@
                 </div>
                 <div class="header-right">
                     <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
-                    <a-button class="lang-switch" type="link" @click="handleLangSwitch">
+                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
                     <a-divider type="vertical" />
@@ -390,9 +390,9 @@ export default {
         },
 
         // 中英文切换
-        handleLangSwitch() {
+        handleLangSwitch(lang) {
             console.log('handleLangSwitch')
-            this.$store.commit('switchLang')
+            this.$store.commit('switchLang', lang)
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale', this.$i18n.locale)
         },

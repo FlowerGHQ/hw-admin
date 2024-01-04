@@ -34,10 +34,11 @@ export default {
 #mall-header{
     height: var(--header-h-pc-mall);
     overflow: hidden;
-    background-color: #FFF;
+    background-color: #000;
+    color: #FFF;
     .content {
         margin: 0 auto;
-        max-width: 1440px;
+        width: 75%;
     }
     @media (min-width: 820px) {}
     @media (max-width: 820px) {}

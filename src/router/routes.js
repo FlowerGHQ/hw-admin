@@ -79,6 +79,7 @@ const routes = [
             title_en: 'Store',
             icon: 'i_s_dashboard', 
             roles: [LOGIN_TYPE.DISTRIBUTOR],  
+            hidden: true
         },
         children: [
             {

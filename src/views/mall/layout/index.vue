@@ -179,9 +179,9 @@ export default {
         },
 
         // 中英文切换
-        handleLangSwitch() {
+        handleLangSwitch(lang) {
             console.log('handleLangSwitch')
-            this.$store.commit('switchLang')
+            this.$store.commit('switchLang', lang)
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale', this.$i18n.locale)
         },
@@ -197,10 +197,14 @@ export default {
     background: #F8F8F8;
     .mall-container {
         min-height: calc(100vh - var(--header-h-pc-mall)/* 页头 */ - var(--footer-h-pc-mall)/* 页尾 */);
-        margin: 0 auto;
-        max-width: 1440px;
     }
     @media (min-width: 820px) {}
     @media (max-width: 820px) {}
+}
+.ant-input {
+   caret-color: red; /* 将光标颜色设为红色 */
+}
+input.ant-input {
+    font-size: 14px;
 }
 </style>

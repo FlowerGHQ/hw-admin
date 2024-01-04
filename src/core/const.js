@@ -201,6 +201,16 @@ let Const = {
             CRM: 4,  // CRM
         },
     },
+    LOGINMALL: { // 登录
+        TYPE_LIST: [
+            { value: 15, zh: '分销商', en: 'Distributor' },
+            { value: 10, zh: '平台方', en: 'Admin' },
+        ],
+        FOOTERMENU: [
+            { lang: 'conditions' },
+            { lang: 'legal' },
+        ]
+    },
     FLAG: {
         YES: 1,
         NO: 0,
