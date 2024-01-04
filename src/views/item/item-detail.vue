@@ -112,7 +112,7 @@
                             <ExplosionImage :detailId="id" :id="currentSpecId" />
                         </template>
                         <template v-else-if="tabKey === 3">
-                            <ItemAccessory :item_id='currentSpecId' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
+                            <ItemAccessory :item_id='currentSpecId || id' :target_type='ATTACHMENT_TYPE.ITEM' :detail='detail'
                                 @submit="getItemDetail" ref="AttachmentFile" />
                         </template>
                     </div>
@@ -360,10 +360,12 @@ export default {
                         flag_default: item.flag_default ? true : false,
                     }
                 })
-                this.specific.data = data.filter(item=>!item.flag_default )
+                this.specific.data = data.filter(item=>!item.flag_default)
                 if (this.specific.data.length) {
                     this.specific.data[0].onClick = true
                     this.currentSpecId = Number(this.specific.data[0].id)
+
+                    console.log('this.specific.data----------------', this.specific.data[0].id)
                 }
                 this.$nextTick(() => {
                     //获取table和table-header高度
