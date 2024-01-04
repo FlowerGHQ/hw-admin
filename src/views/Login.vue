@@ -148,7 +148,11 @@ export default {
                 Core.Data.setUserType(loginType); // 设置登录方的文字
                 Core.Data.setOrgId(res.user.org_id); // 组织的id
                 Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位                            
+                Core.Data.setCurrency(res.user.currency); // 账号的单位  
+                if (type === 'supplier') {
+                    this.$router.push('/supply-home')
+                    return
+                }                          
 
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
                 this.isAdminFetch()
