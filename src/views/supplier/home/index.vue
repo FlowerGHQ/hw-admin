@@ -172,10 +172,10 @@ import store from "@/store";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
+import Core from "@/core";
+import i18n from '@/core/i18n'
 const $message = message;
 const $router = useRouter();
-import Core from "@/core";
-
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
@@ -190,7 +190,7 @@ const isSubmit = ref(false);
 const isSaveDraft = ref(false);
 const step2Val = ref(false);
 const $i18n = useI18n();
-const lang = useI18n().locale;lang
+const lang = useI18n().locale;
 const $store = store;
 const currentComponent = computed(() => {
     switch (current.value) {
@@ -241,7 +241,7 @@ const handleSubmit = () => {
 const handleLangSwitch = () => {
     console.log("handleLangSwitch");
     $store.commit("switchLang");
-    $i18n.locale = $store.state.lang;
+    i18n.global.locale = $store.state.lang;
 };
 const handleEditShow = () => {
     passShow.value = true;
