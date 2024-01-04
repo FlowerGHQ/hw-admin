@@ -833,8 +833,14 @@ export default {
   padding: 16px 0;
 }
 .customerInfo_area {
+  padding-left: 20px;
   .gray-panel {
     margin-left: 0;
+    .panel-content{
+      .desc-title{
+        padding-left: 0;
+      }
+    }
   }
 }
 .right-content {

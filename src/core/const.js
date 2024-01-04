@@ -1843,6 +1843,7 @@ let Const = {
             '50': { key: 50, zh: '支票', en: 'cheque', value: 50 },
             '60': { key: 60, zh: '其他', en: 'other', value: 60 },
             '70': { key: 70, zh: 'paypal', en: 'paypal', value: 70 },
+            '80':  { key: 80, zh: ' pingpong支付', en: 'pingpong', value: 80 },
         },
 
     },
