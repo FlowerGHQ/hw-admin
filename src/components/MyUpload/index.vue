@@ -20,6 +20,7 @@
                 :beforeUpload="handleImgCheck"
                 @change="handleDetailChange"
                 @preview="handlePreview"
+                @remove="handleRemove"
                 ref="uploadComponent"
                 >
                 <div
@@ -70,6 +71,7 @@ const upload = ref({
     // 上传图片
     action: Core.Const.NET.FILE_UPLOAD_END_POINT,
     fileList: [],
+    fileSting:'',
     headers: {
         ContentType: false,
     },
@@ -145,9 +147,16 @@ const handleDetailChange = ({ file, fileList }) => {
             if (fileList.length > props.limit) {
                 fileList = fileList.slice(0, props.limit);
             }
+            let fileArr = [];
+            fileList.forEach((item) => {
+                item?.response?.data?.filename &&
+                    fileArr.push(item?.response?.data?.filename);
+                
+            });
             // 上传成功
             upload.value.fileList = fileList;
-            $emit("update:value", upload.value.fileList);
+            upload.value.fileSting = fileArr.join(',');
+            $emit("update:value", upload.value.fileSting);
         } else {
             // 上传失败
             message.error(file.response.msg);
@@ -166,6 +175,18 @@ const handlePreview = (file) => {
         ? file.thumbUrl
         : "";
     previewVisible.value = true;
+};
+const handleRemove = (file) => {
+    upload.value.fileList = upload.value.fileList.filter(
+        (item) => item.uid !== file.uid
+    );
+    let fileArr = [];
+    upload.value.fileList.forEach((item) => {
+        item?.response?.data?.filename &&
+            fileArr.push(item?.response?.data?.filename);
+    });
+    upload.value.fileSting = fileArr.join(',');
+    $emit("update:value", upload.value.fileSting);
 };
 </script>
 

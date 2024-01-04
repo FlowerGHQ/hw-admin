@@ -25,14 +25,15 @@
                                                 'supply-chain.business_license_photos'
                                             )
                                         "
-                                        name="BusinessLicensePhoto"
+                                        name="business_license_photo"
                                         class="img-area">
                                         <MyUpload
+                                            name="business_license_photo"
                                             :tip="
                                                 $t('supply-chain.upload_photos')
                                             "
                                             v-model:value="
-                                                formState.BusinessLicensePhoto
+                                                formState.business_license_photo
                                             "
                                             showTip
                                             :limit="1"
@@ -50,7 +51,7 @@
                                                 'supply-chain.registered_capital'
                                             )
                                         "
-                                        name="RegisteredCapital">
+                                        name="registered_capital">
                                         <a-input
                                             allowClear
                                             :maxlength="15"
@@ -58,9 +59,9 @@
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
-                                            name="RegisteredCapital"
+                                            name="registered_capital"
                                             v-model:value="
-                                                formState.RegisteredCapital
+                                                formState.registered_capital
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -73,7 +74,7 @@
                                                 'supply-chain.legal_representative'
                                             )
                                         "
-                                        name="LegalRepresentative">
+                                        name="legal_person">
                                         <a-input
                                             allowClear
                                             :maxlength="5"
@@ -81,9 +82,9 @@
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
-                                            name="LegalRepresentative"
+                                            name="legal_person"
                                             v-model:value="
-                                                formState.LegalRepresentative
+                                                formState.legal_person
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -96,24 +97,24 @@
                                         :label="
                                             $t('supply-chain.business_term')
                                         "
-                                        name="BusinessTerm">
+                                        name="business_duration_type">
                                         <div class="business-term">
                                             <a-radio-group
-                                                v-model:value="formState.type"
-                                                name="BusinessTerm">
-                                                <a-radio value="1">{{
+                                                v-model:value="formState.business_duration_type"
+                                                name="business_duration_type">
+                                                <a-radio :value="1">{{
                                                     $t(
                                                         "supply-chain.long_term_validity"
                                                     )
                                                 }}</a-radio>
-                                                <a-radio value="2">{{
+                                                <a-radio :value="2">{{
                                                     $t(
                                                         "supply-chain.short_term_validity"
                                                     )
                                                 }}</a-radio>
                                             </a-radio-group>
                                             <TimeSearch
-                                                v-if="formState.type == 2"
+                                                v-if="formState.business_duration_type == 2"
                                                 ref="TimeSearchRef"
                                                 @search="handleTimeSearch" />
                                         </div>
@@ -136,7 +137,7 @@
                                     <!-- 开户名 -->
                                     <a-form-item
                                         :label="$t('supply-chain.account_name')"
-                                        name="AccountName">
+                                        name="account_name">
                                         <a-input
                                             :maxlength="50"
                                             showCount
@@ -144,9 +145,9 @@
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
-                                            name="AccountName"
+                                            name="account_name"
                                             v-model:value="
-                                                formState.AccountName
+                                                formState.account_name
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -157,7 +158,7 @@
                                         :label="
                                             $t('supply-chain.bank_of_deposit')
                                         "
-                                        name="BankOfDeposit">
+                                        name="account_with_bank">
                                         <a-input
                                             allowClear
                                             :maxlength="50"
@@ -165,9 +166,9 @@
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
-                                            name="BankOfDeposit"
+                                            name="account_with_bank"
                                             v-model:value="
-                                                formState.BankOfDeposit
+                                                formState.account_with_bank
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -178,17 +179,17 @@
                                     <!-- 开户行号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_number')"
-                                        name="BankOfDepositNumber">
+                                        name="account_with_bank_number">
                                         <a-input
                                             allowClear
-                                            name="BankOfDepositNumber"
+                                            name="account_with_bank_number"
                                             :maxlength="50"
                                             showCount
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
                                             v-model:value="
-                                                formState.BankOfDepositNumber
+                                                formState.account_with_bank_number
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -197,7 +198,7 @@
                                     <!-- 银行账号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_account')"
-                                        name="BankAccount">
+                                        name="bank_account">
                                         <a-input
                                             allowClear
                                             :maxlength="50"
@@ -205,9 +206,9 @@
                                             :placeholder="
                                                 $t('supply-chain.please_enter')
                                             "
-                                            name="BankAccount"
+                                            name="bank_account"
                                             v-model:value="
-                                                formState.BankAccount
+                                                formState.bank_account
                                             ">
                                         </a-input>
                                     </a-form-item>
@@ -235,14 +236,15 @@
                                                 'supply-chain.quality_system_certificate'
                                             )
                                         "
-                                        name="QualitySystemCertificate"
+                                        name="quality_system_certificate"
                                         class="img-area">
                                         <MyUpload
+                                            name="quality_system_certificate"
                                             :tip="
                                                 $t('supply-chain.please_upload')
                                             "
                                             v-model:value="
-                                                formState.QualitySystemCertificate
+                                                formState.quality_system_certificate
                                             "
                                             showTip
                                             :limit="9"
@@ -272,12 +274,13 @@
                         <a-col :span="24">
                             <a-form-item
                                 :label="$t('supply-chain.bank_account_license')"
-                                name="BusinessLicensePhoto"
+                                name="account_opening_bank_license"
                                 class="img-area">
                                 <MyUpload
+                                    name="account_opening_bank_license"
                                     :tip="$t('supply-chain.please_upload')"
                                     v-model:value="
-                                        formState.BusinessLicensePhoto
+                                        formState.account_opening_bank_license
                                     "
                                     showTip
                                     :limit="9"
@@ -294,13 +297,12 @@
                                         'supply-chain.environmental_assessment_certificate'
                                     )
                                 "
-                                name="BusinessLicensePhoto"
+                                name="eia_certificate"
                                 class="img-area">
                                 <MyUpload
+                                    name="eia_certificate"
                                     :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="
-                                        formState.BusinessLicensePhoto
-                                    "
+                                    v-model:value="formState.eia_certificate"
                                     showTip
                                     :limit="9"
                                     :limitSize="2"
@@ -316,12 +318,13 @@
                                         'supply-chain.environmental_protection_report'
                                     )
                                 "
-                                name="BusinessLicensePhoto"
+                                name="environmental_report"
                                 class="img-area">
                                 <MyUpload
+                                    name="environmental_report"
                                     :tip="$t('supply-chain.please_upload')"
                                     v-model:value="
-                                        formState.BusinessLicensePhoto
+                                        formState.environmental_report
                                     "
                                     showTip
                                     :limit="9"
@@ -394,12 +397,12 @@ watch(
 );
 
 const formState = reactive({
-    type: "1",
+    business_duration_type: 1,
 });
 
 let BusinessTermValid = async (_rule, value) => {
     if (formState.type == 2) {
-        if (!formState.start_time || !formState.end_time) {
+        if (!formState.begin_business_time || !formState.end_business_time) {
             return Promise.reject("请选择营业期限");
         }
     }
@@ -429,7 +432,7 @@ let LegalRepresentativeVaild = async (_rule, value) => {
 
 const rules = {
     // 注册资本
-    RegisteredCapital: [
+    registered_capital: [
         {
             required: true,
             validator: RegisteredCapitalVaild,
@@ -437,7 +440,7 @@ const rules = {
         },
     ],
     // 法定代表人
-    LegalRepresentative: [
+    legal_person: [
         {
             required: true,
             validator: LegalRepresentativeVaild,
@@ -445,35 +448,35 @@ const rules = {
         },
     ],
     // 营业期限
-    BusinessTerm: [
+    business_duration_type: [
         {
             required: true,
             validator: BusinessTermValid,
             trigger: ["change", "blur"],
         },
     ],
-    AccountName: [
+    account_name: [
         {
             required: true,
             message: "请输入开户名",
             trigger: ["change", "blur"],
         },
     ],
-    BankOfDeposit: [
+    account_with_bank: [
         {
             required: true,
             message: "请输入开户行",
             trigger: ["change", "blur"],
         },
     ],
-    BankOfDepositNumber: [
+    account_with_bank_number: [
         {
             required: true,
             message: "请输入开户行号",
             trigger: ["change", "blur"],
         },
     ],
-    BankAccount: [
+    bank_account: [
         {
             required: true,
             message: "请输入银行账号",
@@ -488,8 +491,8 @@ const rules = {
     ],
 };
 const handleTimeSearch = (params) => {
-    formState.start_time = params.begin_time;
-    formState.end_time = params.end_time;
+    formState.begin_business_time = params.begin_time;
+    formState.end_business_time = params.end_time;
 };
 </script>
 
@@ -518,8 +521,6 @@ const handleTimeSearch = (params) => {
         width: 100%;
         .base-info-form {
             padding: 8px 199px 0 399px;
-            .ant-form {
-            }
         }
     }
     .other-material {
