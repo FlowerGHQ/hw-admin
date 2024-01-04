@@ -20,6 +20,10 @@ export default {
         serial_number: "序号",
         submission_time: "提交时间",        
         view: '查看',
+        information_submitted_successfully: "信息提交成功",
+        view_materials: "查看资料",
+        tips1: "请等待工作人员审核资质",
+        tips2: "后回到首页",
     },
     en: {
         type_supply: 'Type Supply',
@@ -41,5 +45,9 @@ export default {
         serial_number: "Serial Number",
         submission_time: "Submission Time",        
         view: 'View',
+        information_submitted_successfully: "Information submitted successfully",
+        view_materials: "View Materials",
+        tips1: "Please wait for the staff to review their qualifications",
+        tips2: "then go back to the home page",
     }
 }
