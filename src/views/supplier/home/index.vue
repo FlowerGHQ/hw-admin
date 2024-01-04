@@ -226,7 +226,7 @@ const handleBack = () => {
 // 提交
 const handleSubmit = () => {
     // handleNext();
-    isSubmit.value = true;
+    isSubmit.value = !isSubmit.value;
 };
 // 中英文切换
 const handleLangSwitch = () => {

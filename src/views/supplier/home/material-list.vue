@@ -62,7 +62,6 @@
                                             showCount
                                             placeholder="请输入"
                                             name="LegalRepresentative"
-
                                             v-model:value="
                                                 formState.LegalRepresentative
                                             ">
@@ -276,7 +275,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watchEffect } from "vue";
+import { ref, reactive, watch } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 const formRef1 = ref(null);
@@ -289,11 +288,12 @@ const props = defineProps({
     },
 });
 // 监听isSubmit
-watchEffect(() => {
-    console.log("isSubmit", props.isSubmit);
-    //    校验
-    if (props.isSubmit) {
+watch(
+    () => props.isSubmit,
+    () => {
+        // 如果isSubmit变化了，就校验
         if (formRef1.value) {
+            formRef1.value.clearValidate();
             formRef1.value
                 .validate()
                 .then((res) => {
@@ -318,7 +318,7 @@ watchEffect(() => {
                 });
         }
     }
-});
+);
 
 const formState = reactive({
     type: "1",
