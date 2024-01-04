@@ -32,8 +32,6 @@ app.config.globalProperties.$UserAuth = Util.userAuth  // 判断登录是哪个�
 app.config.globalProperties.$message = message
 app.config.globalProperties.$notification = notification
 app.config.globalProperties.$confirm = Util.confirm
-// i18n
-app.config.globalProperties.$t = i18n.global.t
 
 app.use(router).use(Antd).use(store).use(i18n).mount('#app')
 

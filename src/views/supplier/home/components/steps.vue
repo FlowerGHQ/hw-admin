@@ -34,11 +34,13 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed} from "vue";
+import { ref, reactive, computed ,watch} from "vue";
 import { useI18n } from "vue-i18n";
-const $t = useI18n().t;
-// 查看当前语言
-console.log(useI18n().locale.value);
+import {useStore} from 'vuex'
+const $i18n = useI18n();
+const $t = $i18n.t;
+let $lang = $i18n.locale;
+const $store = useStore();
 const $emit = defineEmits(["update:value"]);
 const $props = defineProps({
     ActiveCurrent: {
@@ -50,7 +52,6 @@ const current = computed({
     get: () => $props.ActiveCurrent,
     set: (val) => $emit("update:value", val),
 });
-
 const getAassetsFile = (url) => {
     return new URL(url, import.meta.url).href;
 };
@@ -83,10 +84,6 @@ const stepsaOption = reactive([
         ),
     },
 ]);
-
-
-
-console.log(stepsaOption);
 </script>
 
 <style lang="less" scoped>

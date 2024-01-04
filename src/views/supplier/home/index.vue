@@ -135,7 +135,9 @@
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
                     <!-- 保存草稿 -->
-                    <a-button @click="handleSave">{{ $t("supply-chain.save_draft") }}</a-button>
+                    <a-button @click="handleSave">{{
+                        $t("supply-chain.save_draft")
+                    }}</a-button>
                     <a-button
                         type="primary"
                         @click="handleNext"
@@ -143,9 +145,9 @@
                         >{{ $t("supply-chain.next_step") }}</a-button
                     >
                     <!-- 上一步 -->
-                    <a-button @click="handleBack" v-if="current == 1"
-                        >{{ $t("supply-chain.previous_step") }}</a-button
-                    >
+                    <a-button @click="handleBack" v-if="current == 1">{{
+                        $t("supply-chain.previous_step")
+                    }}</a-button>
                     <!-- 提交 -->
                     <a-button
                         type="primary"
@@ -160,7 +162,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted ,watch} from "vue";
+import { ref, computed, reactive, onMounted, watch } from "vue";
 import MyStep from "./components/steps.vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -168,14 +170,13 @@ import BasicInfo from "./basic-info.vue";
 import MaterialList from "./material-list.vue";
 // 提交准入申请
 import SubmitAdmissionApplication from "./submit-admission-application.vue";
-import store from "@/store";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
+import {useStore} from "vuex";
 const $message = message;
 const $router = useRouter();
 import Core from "@/core";
-
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
@@ -190,8 +191,9 @@ const isSubmit = ref(false);
 const isSaveDraft = ref(false);
 const step2Val = ref(false);
 const $i18n = useI18n();
-const lang = useI18n().locale;lang
-const $store = store;
+const lang = useI18n().locale;
+const $store = useStore();
+const $t = $i18n.t;
 const currentComponent = computed(() => {
     switch (current.value) {
         case 0:
@@ -207,21 +209,18 @@ const currentComponent = computed(() => {
 // 步骤条
 const current = ref(1);
 const passShow = ref(false);
-
 // 监听第二步的校验是否完成
 watch(
-    ()=>step2Val.value,
-    (val)=>{
-      if(val){
-        handleNext();
-      }
+    () => step2Val.value,
+    (val) => {
+        if (val) {
+            handleNext();
+        }
     },
     {
-        immediate:true
+        immediate: true,
     }
-)
-
-
+);
 // 下一步
 const handleNext = () => {
     if (current.value == 2) return;
@@ -239,12 +238,8 @@ const handleSubmit = () => {
 };
 // 中英文切换
 const handleLangSwitch = () => {
-    console.log("handleLangSwitch");
     $store.commit("switchLang");
-    $i18n.locale = $store.state.lang;
-    console.log("lang:", $i18n.locale);
-    console.log("lang:", $store.state.lang);
-    console.log('i18n', $i18n)
+    $i18n.locale.value = $store.state.lang;
 };
 const handleEditShow = () => {
     passShow.value = true;
@@ -285,8 +280,7 @@ const handleSave = () => {
     isSaveDraft.value = !isSaveDraft.value;
 };
 
-onMounted(() => {
-});
+onMounted(() => {});
 </script>
 
 <style lang="less" scoped>
@@ -365,7 +359,6 @@ onMounted(() => {
             .header-right {
                 .fcc();
 
-
                 .lang-switch {
                     .icon {
                         font-size: 20px;
@@ -413,7 +406,7 @@ onMounted(() => {
                 height: calc(100% - 80px - 68px - 20px);
                 margin-top: 15px;
                 overflow: auto;
-                background-color: #FFFFFF;
+                background-color: #ffffff;
                 border-radius: 6px;
                 // 滚动条样式
                 &::-webkit-scrollbar {

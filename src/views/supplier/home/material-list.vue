@@ -365,6 +365,7 @@ const props = defineProps({
 });
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
+const $i18n = useI18n();
 const $emit = defineEmits(["update:value"]);
 
 // 监听isSubmit
@@ -429,6 +430,15 @@ watch(
         Core.Data.setSupplyChain(JSON.stringify(data));
     }
 );
+watch(
+    ()=> $i18n.locale.value,
+    (val)=>{
+        // 重新校验
+        if (formRef1.value) {
+            formRef1.value.clearValidate();
+        }
+    }
+)
 
 let formState = reactive({
     business_duration_type: 1,
@@ -449,7 +459,6 @@ let BusinessTermValid = async (_rule, value) => {
     }
     return Promise.resolve();
 };
-
 let RegisteredCapitalVaild = async (_rule, value) => {
     if (!value) {
         return Promise.reject(
@@ -478,6 +487,35 @@ let LegalRepresentativeVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
+let account_nameVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject($t("supply-chain.please_enter_account_name"));
+    }
+    return Promise.resolve();
+};
+let account_with_bankVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject($t("supply-chain.please_enter_bank_of_deposit"));
+    }
+    return Promise.resolve();
+};
+let account_with_bank_numberVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject($t("supply-chain.please_enter_bank_number"));
+    }
+    return Promise.resolve();
+};
+let bank_accountVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject($t("supply-chain.please_enter_bank_account"));
+    }
+    // 必须为数字
+    if (!/^[0-9]*$/.test(value)) {
+        return Promise.reject($t("supply-chain.bank_number_must_be_number"));
+    }
+    return Promise.resolve();
+};
+
 
 const rules = {
     // 注册资本
@@ -505,36 +543,30 @@ const rules = {
         },
     ],
     account_name: [
-        {
+    {
             required: true,
-            message: $t("supply-chain.please_enter_account_name"),
+            validator: account_nameVaild,
             trigger: ["change", "blur"],
         },
     ],
     account_with_bank: [
         {
             required: true,
-            message: $t("supply-chain.please_enter_bank_of_deposit"),
+            validator: account_with_bankVaild,
             trigger: ["change", "blur"],
         },
     ],
     account_with_bank_number: [
         {
             required: true,
-            message: $t("supply-chain.please_enter_bank_number"),
+            validator: account_with_bank_numberVaild,
             trigger: ["change", "blur"],
         },
     ],
     bank_account: [
         {
             required: true,
-            message: $t("supply-chain.please_enter_bank_account"),
-            trigger: ["change", "blur"],
-        },
-        // 必须为数字
-        {
-            pattern: /^[0-9]*$/,
-            message: $t("supply-chain.bank_number_must_be_number"),
+            validator: bank_accountVaild,
             trigger: ["change", "blur"],
         },
     ],
