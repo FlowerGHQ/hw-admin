@@ -164,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from "vue";
+import { ref, computed, reactive, onMounted } from "vue";
 import MyStep from "./components/steps.vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -174,13 +174,21 @@ import MaterialList from "./material-list.vue";
 import SubmitAdmissionApplication from "./submit-admission-application.vue";
 import store from "@/store";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
+const $message = message;
+const $router = useRouter();
 import Core from "@/core";
 
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
 const user = Core.Data.getUser() || {};
-
+const form = reactive({
+    old_password: "",
+    password: "",
+    new_password: "",
+});
 const $i18n = useI18n();
 const $store = store;
 const unread = reactive({
@@ -202,6 +210,7 @@ const currentComponent = computed(() => {
 });
 // 步骤条
 const current = ref(1);
+const passShow = ref(false);
 
 // 下一步
 const handleNext = () => {
@@ -217,13 +226,90 @@ const handleBack = () => {
 const handleSubmit = () => {
     handleNext();
 };
-
 // 中英文切换
 const handleLangSwitch = () => {
     console.log("handleLangSwitch");
     $store.commit("switchLang");
     $i18n.locale = $store.state.lang;
 };
+const handleEditShow = () => {
+    passShow.value = true;
+};
+const handleLogout = () => {
+    $router.replace("/login");
+    localStorage.clear();
+    Core.Api.Common.logout();
+};
+
+const routerChange = (type) => {
+    let routeUrl = "";
+    switch (type) {
+        case "notice": //系统
+            routeUrl = $router.resolve({
+                path: "/system/notice-list",
+            });
+            window.open(routeUrl.href, "_self");
+            break;
+        case "shop_cart":
+            routeUrl = $router.resolve({
+                path: "/purchase/item-collect",
+            });
+            window.open(routeUrl.href, "_self");
+            break;
+    }
+};
+// 获取未读消息
+const getUnreadCount = () => {
+    // 获取 未读消息数 数据
+    let CATEGORY = Core.Const.NOTICE.CATEGORY;
+    Core.Api.Notice.list({
+        category: CATEGORY.ORG,
+    })
+        .then((res) => {
+            unread.org = res.un_count;
+        })
+        .catch((err) => {
+            console.log("getUnreadCount err", err);
+        });
+    Core.Api.Notice.list({
+        category: CATEGORY.MASTER,
+    })
+        .then((res) => {
+            unread.master = res.un_count;
+        })
+        .catch((err) => {
+            console.log("getUnreadCount err", err);
+        });
+};
+const handleEditSubmit = () => {
+    let form = Core.Util.deepCopy(form);
+    if (!form.old_password) {
+        return $message.warning($t("u.old_password"));
+    }
+    if (!form.password) {
+        return $message.warning($t("u.new_password"));
+    }
+    if (!form.new_password) {
+        return $message.warning($t("u.again"));
+    }
+    if (form.new_password !== form.password) {
+        $message.warning($t("u.not"));
+        return;
+    }
+
+    loading = true;
+    Core.Api.Common.updatePwd(form)
+        .then(() => {
+            $message.success($t("pop_up.save_success"));
+            handleEditClose();
+        })
+        .catch((err) => {
+            console.log("handleSubmit err:", err);
+        });
+};
+onMounted(() => {
+    getUnreadCount();
+});
 </script>
 
 <style lang="less" scoped>
