@@ -437,7 +437,7 @@ onMounted(() => {
             position: relative;
             overflow: auto;
             .content-main {
-                height: calc(100% - 80px - 68px - 15px);
+                height: calc(100% - 80px - 68px - 20px);
                 margin-top: 15px;
                 overflow: auto;
                 // 滚动条样式
@@ -453,25 +453,16 @@ onMounted(() => {
                     border-radius: 10px;
                     background: #f2f3f5;
                 }
-                .current-components {
-                    height: 100%;
-                }
             }
             .supply-chain-footer {
                 display: flex;
                 height: 68px;
-                width: calc(100% - 60px);
                 padding: 18px 0px;
                 justify-content: center;
                 align-items: center;
                 flex-shrink: 0;
                 border-top: 1px solid #f2f3f5;
                 background: #fff;
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                margin-left: 20px;
-                margin-right: 40px;
             }
         }
     }
