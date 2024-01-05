@@ -11,7 +11,12 @@
                 <div class="title">{{ $t('supply-chain.type_supply') }}</div>
                 <div class="btn-type-parts">
                     <MySvgIcon icon-class="parts-icon" />
-                    <span class="m-l-4">{{ $t('supply-chain.part') }}</span>
+                    <span class="m-l-4">
+                        {{
+                            Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type] ?
+                            $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type].t) : "-"
+                        }}
+                    </span>
                 </div>
             </div>
             <!-- 联系方式 -->
@@ -99,11 +104,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.date_establishment') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
-                                        {{
-                                            msgDetail?.company_info?.established_time
-                                                ? $Util.timeFilter(msgDetail?.company_info?.established_time)
-                                                : "-"
-                                        }}
+                                        {{ msgDetail?.company_info?.established_time || "-" }}
                                     </div>
                                 </div>
                             </div>
@@ -252,8 +253,8 @@
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
                                         {{
-                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.average_monthly_wage_of_operating_workers] ?
-                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.average_monthly_wage_of_operating_workers].t) : ""
+                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute] ?
+                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute].t) : ""
                                         }}
                                     </a-radio>
                                 </div>
@@ -429,12 +430,14 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
-                                        :data-source="msgDetail.competitor_analysis"
+                                        :data-source="msgDetail.competitor_analysis || []" 
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
                                             <!-- 公司名称 -->
-                                            <template v-if="column.key === 'company_name'"> </template>
+                                            <template v-if="column.key === 'company_name'">
+                                                {{ text }}
+                                            </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
                                                 {{ text }}
@@ -460,14 +463,10 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="customerInfoColumns"
-                                        :data-source="msgDetail.customer_info"
+                                        :data-source="msgDetail.customer_info || []"
                                         :pagination="false"
                                     >
-                                        <template #bodyCell="{ column, text, record, index }">
-                                            <!-- 序号 -->
-                                            <template v-if="column.key === 'index'">
-                                                <div class="customerInfoColumns-index">{{ $t('supply-chain.major_customer') }}{{ index + 1 }}</div>
-                                            </template>
+                                        <template #bodyCell="{ column, text, record, index }">                                            
                                             <template v-if="column.key === 'customer_name'">
                                                 {{ text }}
                                             </template>
@@ -478,7 +477,7 @@
                                                 {{ text }}
                                             </template>
                                             <template v-if="column.key === 'begin_cooperation_time'">
-                                                {{ text ? $Util.timeFilter(text, 3) : "-" }}
+                                                {{ text  }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -546,8 +545,8 @@
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
                                         <a-checkbox :checked="true">
                                             {{
-                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
-                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                                Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item] ?
+                                                $t(Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item].t) : "-"
                                             }}
                                         </a-checkbox>
                                     </template>
@@ -562,8 +561,8 @@
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
                                         <a-checkbox :checked="true">
                                             {{
-                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
-                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                                Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item] ?
+                                                $t(Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item].t) : "-"
                                             }}
                                         </a-checkbox>
                                     </template>
@@ -770,7 +769,7 @@
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
-                            :data-source="msgDetail.production_equipment"
+                            :data-source="msgDetail.production_equipment || []"
                             :pagination="false"
                         ></a-table>
                     </div>
@@ -781,7 +780,7 @@
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
-                            :data-source="msgDetail.production_equipment"
+                            :data-source="msgDetail.production_equipment || []"
                             :pagination="false"
                         ></a-table>
                     </div>
@@ -831,7 +830,7 @@
                                         <img
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            :src="item"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
                                             alt=""
                                         />
                                     </template>
@@ -866,19 +865,21 @@
                                             $t(Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type].t) : "-"
                                         }}
                                     </a-radio>
-                                    <div class="bussiness-time">
+                                    <div 
+                                        class="bussiness-time" 
+                                        v-if="Number(msgDetail.confirmatory_material?.business_duration_type) === Core.Const.SUPPLAY.BUSINESS_TERM_MAP.short_term_validity">
                                         {{
                                             msgDetail?.confirmatory_material?.begin_business_time
                                                 ? $Util.timeFilter(
                                                       msgDetail?.confirmatory_material?.begin_business_time
                                                   )
-                                                : "-"
+                                                : ""
                                         }}
                                         -
                                         {{
                                             msgDetail?.confirmatory_material?.end_business_time
                                                 ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time)
-                                                : "-"
+                                                : ""
                                         }}
                                     </div>
                                 </div>
@@ -947,7 +948,7 @@
                                         <img
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            :src="item"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
                                             alt=""
                                         />
                                     </template>
@@ -975,7 +976,7 @@
                                         <img
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            :src="item"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
                                             alt=""
                                         />
                                     </template>
@@ -994,7 +995,7 @@
                                         <img
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            :src="item"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
                                             alt=""
                                         />
                                     </template>
@@ -1013,7 +1014,7 @@
                                         <img
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
-                                            :src="item"
+                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
                                             alt=""
                                         />
                                     </template>
@@ -1060,7 +1061,7 @@ const competitionColumns = computed(() => {
 // 客户信息
 const customerInfoColumns = computed(() => {
     let columns = [
-        { title: proxy.$t('supply-chain.customer_serial_number'), dataIndex: "index", key: "index" },
+        { title: proxy.$t('supply-chain.customer_serial_number'), dataIndex: "customer_order", key: "customer_order" },
         { title: proxy.$t('supply-chain.customer_name'), dataIndex: "customer_name", key: "customer_name" },
         { title: proxy.$t('supply-chain.Sales_share'), dataIndex: "sales_share", key: "sales_share" },
         { title: proxy.$t('supply-chain.Main_supply_part'), dataIndex: "main_supply_part", key: "main_supply_part" },
@@ -1309,6 +1310,7 @@ function getDetail(params = {}) {
                         width: 80px;
                         height: 80px;
                         border-radius: 4px;
+                        border: 1px solid #d9d9d9;
                     }
                 }
             }

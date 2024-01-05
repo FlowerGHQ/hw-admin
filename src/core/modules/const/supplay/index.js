@@ -72,10 +72,10 @@ const SUPPLAY = {
         { value: 4, label: 'supply-chain.product_identification' }, //产品鉴定
     ],
     PROCESS_VALIDATION_OBJECT: {
-        1: { value: 1, label: 'supply-chain.mold_acceptance' }, // 模具验收
-        2: { value: 2, label: 'supply-chain.inspection_fixture_acceptance' }, // 检具验收
-        3: { value: 3, label: 'supply-chain.tooling_acceptance' }, //工装验收
-        4: { value: 4, label: 'supply-chain.product_identification' }, //产品鉴定
+        1: { value: 1, t: 'supply-chain.mold_acceptance' }, // 模具验收
+        2: { value: 2, t: 'supply-chain.inspection_fixture_acceptance' }, // 检具验收
+        3: { value: 3, t: 'supply-chain.tooling_acceptance' }, //工装验收
+        4: { value: 4, t: 'supply-chain.product_identification' }, //产品鉴定
     },
 
     // 帐期要求
@@ -94,8 +94,12 @@ const SUPPLAY = {
     },
     // 营业期限
     BUSINESS_TERM: {
-        1: { value: 1, t: 'supply-chain.long_term_validity' }, // 增值税发票
-        2: { value: 2, t: 'supply-chain.short_term_validity' }, // 普通发票
+        1: { value: 1, t: 'supply-chain.long_term_validity' }, // 长期有效
+        2: { value: 2, t: 'supply-chain.short_term_validity' }, // 短期有效
+    },
+    BUSINESS_TERM_MAP: {
+        long_term_validity: 1,
+        short_term_validity: 2,
     },
     // 法律纠纷
     Legal_Dispute: {
