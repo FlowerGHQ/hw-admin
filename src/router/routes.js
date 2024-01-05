@@ -5,7 +5,7 @@ import Data from "../core/data"
 import Layout from '../views/layout/index.vue';
 
 // 供应商路由
-import supplyRouter from './supply-router'
+import { supplyManage, supplyRouters } from './supply-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
@@ -1695,6 +1695,8 @@ const routes = [
             }
         ]
     },
+    // 供应商管理
+    supplyManage,
     { // 数据
         path: '/crm-dashboard',
         component: Layout,
@@ -2781,7 +2783,7 @@ const routes = [
             hidden: true,
         },          
     },
-    ...supplyRouter,    
+    ...supplyRouters,    
 ];
 
 export default routes;
