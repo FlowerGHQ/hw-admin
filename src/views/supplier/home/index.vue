@@ -145,7 +145,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-main">
+                <div :class="{'content-main':!isSubmited,'content-main-submited':isSubmited}">
                     <!-- 动态组件 -->
                     <component
                         :is="currentComponent"
@@ -492,6 +492,8 @@ onMounted(() => {
             padding: 20px 40px 80px 40px;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
             .submited {
                 width: 100%;
                 height: 121px;
@@ -520,8 +522,8 @@ onMounted(() => {
                     }
                 }
             }
-            .content-main {
-                height: calc(100% - 80px - 68px - 20px);
+            .content-main,.content-main-submited {
+                flex: 1;
                 margin-top: 15px;
                 overflow: auto;
                 background-color: #ffffff;
@@ -549,6 +551,9 @@ onMounted(() => {
                 flex-shrink: 0;
                 border-top: 1px solid #f2f3f5;
                 background: #fff;
+                position: absolute;
+                bottom: 0;
+                width: 100%;
             }
         }
     }
