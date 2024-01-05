@@ -209,7 +209,6 @@ export default {
         quality: "Quality",
         technology: "Technology",
         general_manager: "General Manager",
-<<<<<<< HEAD
         // 技术信息
         stand_alone_design: 'Stand-alone design',
         co_design: 'Co-design',
@@ -226,8 +225,6 @@ export default {
         tooling_acceptance: 'Tooling Acceptance',
         product_identification: 'Product Identification',
         
-=======
         save_successfully: "Save Successfully",
->>>>>>> fdd22b564dcd6cbb154dfa70d5d0e40ac5b367a2
     }
 }
