@@ -4,24 +4,24 @@
         <!-- 基本信息 -->
         <div class="base-message">
             <div class="msg-header">
-                <span class="m-l-4">基本信息</span>
+                <span class="m-l-4">{{ $t('supply-chain.basic_info') }}</span>
             </div>
             <!-- 供应类型 -->
             <div class="supply-type bg-color m-t-16">
-                <div class="title">供应类型</div>
+                <div class="title">{{ $t('supply-chain.type_supply') }}</div>
                 <div class="btn-type-parts">
                     <MySvgIcon icon-class="parts-icon" />
-                    <span class="m-l-4">零件类</span>
+                    <span class="m-l-4">{{ $t('supply-chain.part') }}</span>
                 </div>
             </div>
             <!-- 联系方式 -->
             <div class="contact-information bg-color m-t-16">
-                <div class="title">联系方式</div>
+                <div class="title">{{ $t('supply-chain.contact') }}</div>
                 <div class="contact-container">
                     <!-- 职位 -->
                     <div class="level-search-row">
                         <div class="search-col required">
-                            <div class="key w-130 t-a-r text-color">职位</div>
+                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Position') }}</div>
                             <div class="value m-l-8">
                                 <a-radio :checked="true">
                                     {{
@@ -36,7 +36,7 @@
                     <!-- 姓名 -->
                     <div class="level-search-row">
                         <div class="search-col required">
-                            <div class="key w-130 t-a-r text-color">姓名</div>
+                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.name') }}</div>
                             <div class="value m-l-8">
                                 <div class="customer-input">
                                     {{ msgDetail.contact_info?.name || "-" }}
@@ -45,7 +45,7 @@
                         </div>
                         <!-- 邮箱 -->
                         <div class="search-col required">
-                            <div class="key w-130 t-a-r text-color">邮箱</div>
+                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mailbox') }}</div>
                             <div class="value m-l-8">
                                 <div class="customer-input">
                                     {{ msgDetail.contact_info?.email || "-" }}
@@ -56,7 +56,7 @@
                     <!-- 联系方式 -->
                     <div class="level-search-row">
                         <div class="search-col w-50-percentage required">
-                            <div class="key w-130 t-a-r text-color">联系方式</div>
+                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.contact') }}</div>
                             <div class="value m-l-8">
                                 <div class="customer-input">
                                     {{ msgDetail.contact_info?.phone || "-" }}
@@ -68,15 +68,15 @@
             </div>
             <!-- 基本信息 -->
             <div class="basic-information bg-color m-t-16">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('supply-chain.basic_info') }}</div>
                 <!-- 公司概况 -->
                 <div class="information-container-form">
-                    <div class="sub-title">公司概况</div>
+                    <div class="sub-title">{{ $t('supply-chain.company_profile') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 公司名称 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">公司名称</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.company_name') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.name || "-" }}
@@ -85,7 +85,7 @@
                             </div>
                             <!-- 公司网址 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">公司网址</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.company_website') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.website_address || "-" }}
@@ -96,7 +96,7 @@
                         <div class="level-search-row">
                             <!-- 成立日期 -->
                             <div class="search-col w-50-percentage required">
-                                <div class="key w-130 t-a-r text-color">成立日期</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.date_establishment') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{
@@ -111,7 +111,7 @@
                         <div class="level-search-row">
                             <!-- 详细地址 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">详细地址</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.detailed_address') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.address || "-" }}
@@ -122,16 +122,16 @@
                         <div class="level-search-row">
                             <!-- 公司性质 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">公司性质</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.nature_of_company') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.nature || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 采购半径 -->
                             <div class="search-col">
-                                <!-- 采购半径 -->
-                                <div class="key w-130 t-a-r text-color">采购半径</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchasing_radius') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.purchasing_radius || "-" }}
@@ -143,7 +143,7 @@
                         <div class="level-search-row">
                             <!-- 占地面积 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">占地面积</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_space') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.floor_area || "-" }}
@@ -151,9 +151,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- 建筑面积 -->
                             <div class="search-col">
-                                <!-- 建筑面积 -->
-                                <div class="key w-130 t-a-r text-color">建筑面积</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_area') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.building_area || "-" }}
@@ -163,18 +163,18 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 母公司名称 -->
                             <div class="search-col">
-                                <!-- 母公司名称 -->
-                                <div class="key w-130 t-a-r text-color">母公司名称</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.parent_company_name') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.parent_company_name || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 母公司地址 -->
                             <div class="search-col">
-                                <!-- 母公司地址 -->
-                                <div class="key w-130 t-a-r text-color">母公司地址</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Parent_company_address') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.company_info?.parent_company_address || "-" }}
@@ -191,7 +191,7 @@
                         <div class="level-search-row">
                             <!-- 员工总数 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">员工总数</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.total_number_of_employees') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.human_resource?.total_employees || "-" }}
@@ -200,7 +200,7 @@
                             </div>
                             <!-- 管理人数 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">管理人数</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.number_of_managers') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.human_resource?.manager_number || "-" }}
@@ -211,7 +211,7 @@
                         <div class="level-search-row">
                             <!-- 质量人数 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">质量人数</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mass_number') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.human_resource?.mass_number || "-" }}
@@ -220,7 +220,7 @@
                             </div>
                             <!-- 技术人数 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">技术人数</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.skilled_personnel') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.human_resource?.technician_number || "-" }}
@@ -231,7 +231,7 @@
                         <div class="level-search-row">
                             <!-- 技术工龄 -->
                             <div class="search-col w-50-percentage">
-                                <div class="key w-130 t-a-r text-color">技术工龄</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.technical_seniority') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.human_resource?.technical_seniority || "-" }}
@@ -243,18 +243,17 @@
                 </div>
                 <!-- 财务信息 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">财务信息</div>
+                    <div class="sub-title">{{ $t('supply-chain.financial_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 法律纠纷 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">法律纠纷</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.legal_dispute') }}</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
                                         {{
-                                            msgDetail.financial_info?.average_monthly_wage_of_operating_workers
-                                                ? "无"
-                                                : "有"
+                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.average_monthly_wage_of_operating_workers] ?
+                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.average_monthly_wage_of_operating_workers].t) : ""
                                         }}
                                     </a-radio>
                                 </div>
@@ -263,7 +262,7 @@
                         <div class="level-search-row">
                             <!-- 操作工人月平均工资 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">操作工人月平均工资</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.average') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.financial_info?.average_monthly_wage_of_operating_workers || "-" }}
@@ -272,7 +271,7 @@
                             </div>
                             <!-- 管理职员人均年产值 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">管理职员人均年产值</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.per') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{
@@ -286,10 +285,9 @@
                         <div class="level-search-row">
                             <!-- 账期要求 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">账期要求</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.period_requirement') }}</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        <!-- {{ msgDetail.financial_info?.account_period_requirement || "-" }} -->
+                                    <a-radio :checked="true">                                        
                                         <template v-if="Number(msgDetail.financial_info?.account_period_requirement) === 0">                                            
                                             {{ 
                                                 $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[0].t)
@@ -312,7 +310,7 @@
                         <div class="level-search-row">
                             <!-- 发票类型 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">发票类型</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Invoice_type') }}</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
                                         <span>
@@ -332,12 +330,12 @@
                 </div>
                 <!-- 营业信息 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">营业信息</div>
+                    <div class="sub-title">{{ $t('supply-chain.business_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 业务比重 -->
                             <div class="search-col w-50-percentage required">
-                                <div class="key w-130 t-a-r text-color">业务比重</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proportion_of_business') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.business_info?.proportion_of_business || "-" }}
@@ -356,8 +354,9 @@
                                         </div>
                                     </div>
                                     <div class="level-search-row">
+                                        <!-- 销售额 -->
                                         <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">销售额</div>
+                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.sales || "-" }}
@@ -367,8 +366,9 @@
                                         </div>
                                     </div>
                                     <div class="level-search-row">
+                                        <!-- 纳税额 -->
                                         <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">纳税额</div>
+                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.taxes_paid || "-" }}
@@ -378,8 +378,9 @@
                                         </div>
                                     </div>
                                     <div class="level-search-row">
+                                        <!-- 利润率 -->
                                         <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">利润率</div>
+                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.profit_margin || "-" }}
@@ -389,8 +390,9 @@
                                         </div>
                                     </div>
                                     <div class="level-search-row">
+                                        <!-- 资产负债率 -->
                                         <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">资产负债率</div>
+                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.asset_liability_ratio || "-" }}
@@ -400,8 +402,9 @@
                                         </div>
                                     </div>
                                     <div class="level-search-row">
+                                        <!-- 现金流量比率 -->
                                         <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">现金流量比率</div>
+                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.cash_flow_ratio || "-" }}
@@ -516,41 +519,48 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 产品设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">产品设计</div>
-                                <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        {{
-                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.product_design] ?
-                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.product_design].t) : "-"
-                                        }}
-                                    </a-radio>
+                                <div class="value m-l-8 d-fl">                         
+                                    <template v-for="(item, index) in msgDetail.technical_info?.product_design" :key="index">                                    
+                                        <a-checkbox :checked="true">
+                                            {{
+                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
+                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                            }}
+                                        </a-checkbox>
+                                    </template>
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">过程设计</div>
-                                <div class="value m-l-8">
-                                    <a-radio :checked="true">                                        
-                                        {{
-                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_design] ?
-                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_design].t) : "-"
-                                        }}
-                                    </a-radio>
+                                <div class="value m-l-8 d-fl">                                  
+                                    <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
+                                        <a-checkbox :checked="true">
+                                            {{
+                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
+                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                            }}
+                                        </a-checkbox>
+                                    </template>
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">过程验证</div>
-                                <div class="value m-l-8">
-                                    <a-radio :checked="true">                                        
-                                        {{
-                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_validation] ?
-                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_validation].t) : "-"
-                                        }}
-                                    </a-radio>
+                                <div class="value m-l-8 d-fl">                                  
+                                    <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
+                                        <a-checkbox :checked="true">
+                                            {{
+                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
+                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                            }}
+                                        </a-checkbox>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -789,10 +799,7 @@
                                 <div class="key w-130 t-a-r text-color">营业执照照片</div>
                                 <div class="value m-l-8">
                                     <template
-                                        v-for="(item, index) in [
-                                            msgDetail.confirmatory_material?.business_license_photo,
-                                            msgDetail.confirmatory_material?.business_license_photo,
-                                        ]"
+                                        v-for="(item, index) in msgDetail.confirmatory_material?.business_license_photo"
                                         :key="index"
                                     >
                                         <img
@@ -900,10 +907,7 @@
                                 <div class="key w-130 t-a-r text-color">质量体系证书</div>
                                 <div class="value m-l-8">
                                     <template
-                                        v-for="(item, index) in [
-                                            msgDetail.confirmatory_material?.quality_system_certificate,
-                                            msgDetail.confirmatory_material?.quality_system_certificate,
-                                        ]"
+                                        v-for="(item, index) in msgDetail.confirmatory_material?.quality_system_certificate"
                                         :key="index"
                                     >
                                         <img
@@ -930,10 +934,7 @@
                                 <div class="key w-130 t-a-r text-color">开户行许可证</div>
                                 <div class="value m-l-8">
                                     <template
-                                        v-for="(item, index) in [
-                                            msgDetail.confirmatory_material?.account_opening_bank_license,
-                                            msgDetail.confirmatory_material?.account_opening_bank_license,
-                                        ]"
+                                        v-for="(item, index) in msgDetail.confirmatory_material?.account_opening_bank_license"
                                         :key="index"
                                     >
                                         <img
@@ -951,10 +952,7 @@
                                 <div class="key w-130 t-a-r text-color">环评证书</div>
                                 <div class="value m-l-8">
                                     <template
-                                        v-for="(item, index) in [
-                                            msgDetail.confirmatory_material?.eia_certificate,
-                                            msgDetail.confirmatory_material?.eia_certificate,
-                                        ]"
+                                        v-for="(item, index) in msgDetail.confirmatory_material?.eia_certificate"
                                         :key="index"
                                     >
                                         <img
@@ -972,10 +970,7 @@
                                 <div class="key w-130 t-a-r text-color">环保报告</div>
                                 <div class="value m-l-8">
                                     <template
-                                        v-for="(item, index) in [
-                                            msgDetail.confirmatory_material?.environmental_report,
-                                            msgDetail.confirmatory_material?.environmental_report,
-                                        ]"
+                                        v-for="(item, index) in msgDetail.confirmatory_material?.environmental_report"
                                         :key="index"
                                     >
                                         <img
@@ -1051,6 +1046,35 @@ function getDetail(params = {}) {
         .then((res) => {
             console.log("getPhoneCodeFetchs res", res);
             msgDetail.value = res.detail?.form ? JSON.parse(res.detail?.form) : {};
+
+            let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo
+            let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate
+            let accountOpeningBankLicense = msgDetail.value.confirmatory_material?.account_opening_bank_license
+            let eiaCertificate = msgDetail.value.confirmatory_material?.eia_certificate
+            let environmentalReport = msgDetail.value.confirmatory_material?.environmental_report
+
+            // 营业执照照片
+            if (businessLicensePhoto) {
+                msgDetail.value.confirmatory_material.business_license_photo = businessLicensePhoto.split(",")
+            }
+            // 质量体系证书
+            if (qualitySystemCertificate) {
+                msgDetail.value.confirmatory_material.quality_system_certificate = qualitySystemCertificate.split(",")
+            }
+            // 开户行许可证
+            if (accountOpeningBankLicense) {
+                msgDetail.value.confirmatory_material.account_opening_bank_license = accountOpeningBankLicense.split(",")
+            }
+            // 环评证书
+            if (eiaCertificate) {
+                msgDetail.value.confirmatory_material.eia_certificate = eiaCertificate.split(",")
+            }
+            // 环保报告
+            if (environmentalReport) {
+                msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(",")
+            }
+            // console.log("过滤数据", msgDetail.value);
+         
         })
         .catch((err) => {
             console.log("getPhoneCodeFetchs err", err);
@@ -1325,5 +1349,8 @@ function getDetail(params = {}) {
 
 .align-flex-start {
     align-items: flex-start;
+}
+.d-fl {
+    display: flex;
 }
 </style>

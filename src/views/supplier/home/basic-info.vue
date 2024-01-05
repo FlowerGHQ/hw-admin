@@ -159,7 +159,7 @@ export default defineComponent({
      watch(() => props.isSaveDraft,(newVal, oldVal) => {  
         console.log(' props.isSaveDraft-----1',newVal, oldVal);
         detailDraftObj.value = Core.Util.deepCopy(allComRefTable.value.getMsgList())
-        dataIntegration()
+        dataIntegration('draft')
         
         console.log('allComRefTable------1',allComRefTable.value,'detailDraftObj------1',detailDraftObj.value);
         // detailObj.value = Core.Util.deepCopy(newVal);
@@ -677,7 +677,7 @@ export default defineComponent({
 
   // 根据子组件的msgList 的-> detailDraftObj.value 数据整为后端的类型-并存储本地
   // 循环数据对象  转  json
-  const dataIntegration = () => {
+  const dataIntegration = (data) => {
     let obj = {};
     msgPost[0].listOne.forEach((item1,index) => {
         obj[item1.key] = {};
@@ -742,7 +742,15 @@ export default defineComponent({
         })
     })
     // obj['company_name'] = obj?.company_info?.name;
-    Core.Data.setSupplyDraftChain(JSON.stringify(obj));
+    if(data === 'next') {
+      // 校验成功而后
+      // v()  校验方法
+      Core.Data.setSupplyChain(JSON.stringify(obj));
+      return true;
+    }else if('draft') {
+      Core.Data.setSupplyDraftChain(JSON.stringify(obj));
+    }
+
   }
   onMounted(() => {
     console.log('888888888');
@@ -751,7 +759,7 @@ export default defineComponent({
   const beforeSaveVisible = () => {
 
       detailDraftObj.value = Core.Util.deepCopy(allComRefTable.value.getMsgList())
-      dataIntegration()
+      dataIntegration('next')
       // 校验成功而后
       return true;
   }
