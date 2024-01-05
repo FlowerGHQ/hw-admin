@@ -737,9 +737,11 @@ export default defineComponent({
                 obj[$2_item_listOne.key][$3_item_list.valueParam] = $3_item_list.value;
                 
             })
+            
         })
     })
     // obj['company_name'] = obj?.company_info?.name;
+    console.log('----------------------------',obj)
     if(data === 'next') {
       // 校验成功而后
       // v()  校验方法

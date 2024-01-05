@@ -82,6 +82,9 @@ let Const = {
         CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
         SUPPLY_CHAIN: 'supply-chain',
         SUPPLY_Daft_CHAIN: 'supply-draft-chain',
+        SUPPLY_DETAILS_CHAIN: 'supply-details-chain',
+        SUPPLY_STEP: 'supply-step',
+        SUPPLY_ISREAD: 'supply-isread',
     },
     DEFULT_IMG: {
         1: defult_img,

@@ -1,8 +1,8 @@
-import Const from './const';
+import Const from "./const";
 
 function isLocalStorageUsable() {
-    const localStorageTestKey = '__localStorage_support_test';
-    const localStorageTestValue = 'test';
+    const localStorageTestKey = "__localStorage_support_test";
+    const localStorageTestValue = "test";
     let isSupport = false;
 
     try {
@@ -16,19 +16,19 @@ function isLocalStorageUsable() {
         return isSupport;
     } catch (e) {
         if (
-            e.name === 'QuotaExceededError' ||
-            e.name === 'NS_ERROR_DOM_QUOTA_REACHED'
+            e.name === "QuotaExceededError" ||
+            e.name === "NS_ERROR_DOM_QUOTA_REACHED"
         ) {
-            console.warn('localStorage 存储已达上限！');
+            console.warn("localStorage 存储已达上限！");
         } else {
-            console.warn('当前浏览器不支持 localStorage！');
+            console.warn("当前浏览器不支持 localStorage！");
         }
         return isSupport;
     }
 }
 
 function normalizeKey(key) {
-    if (typeof key !== 'string') {
+    if (typeof key !== "string") {
         console.warn(`${key} used as a key, but it is not a string.`);
         key = String(key);
     }
@@ -48,7 +48,7 @@ class StorageHandler {
         if (this.isSupport == null) {
             this.isSupport = isLocalStorageUsable();
         }
-        return this.isSupport
+        return this.isSupport;
     }
 
     setItem(key, value) {
@@ -66,7 +66,7 @@ class StorageHandler {
                     const FINAL_KEY = `${Const.DATA.KEY_PREFIX}${key}`;
                     localStorage.setItem(FINAL_KEY, valueString);
                 } catch (e) {
-                    console.log('e', e);
+                    console.log("e", e);
                 }
             });
         }
@@ -87,91 +87,91 @@ class StorageHandler {
         this.setItem(Const.DATA.KEY_TOKEN, value);
     }
     getToken() {
-        return this.getItem(Const.DATA.KEY_TOKEN)
+        return this.getItem(Const.DATA.KEY_TOKEN);
     }
 
     setUser(value) {
         this.setItem(Const.DATA.KEY_USER, value);
     }
     getUser() {
-        return this.getItem(Const.DATA.KEY_USER)
+        return this.getItem(Const.DATA.KEY_USER);
     }
 
     setOrgId(value) {
         this.setItem(Const.DATA.KEY_ORG_ID, value);
     }
     getOrgId() {
-        return this.getItem(Const.DATA.KEY_ORG_ID)
+        return this.getItem(Const.DATA.KEY_ORG_ID);
     }
 
     setOrgType(value) {
         this.setItem(Const.DATA.KEY_ORG_TYPE, value);
     }
     getOrgType() {
-        return this.getItem(Const.DATA.KEY_ORG_TYPE)
+        return this.getItem(Const.DATA.KEY_ORG_TYPE);
     }
     setCurrency(value) {
         this.setItem(Const.DATA.KEY_CURRENCY, value);
     }
     getCurrency() {
-        return this.getItem(Const.DATA.KEY_CURRENCY)
+        return this.getItem(Const.DATA.KEY_CURRENCY);
     }
 
     setUserType(value) {
         this.setItem(Const.DATA.KEY_USER_TYPE, value);
     }
     getUserType() {
-        return this.getItem(Const.DATA.KEY_USER_TYPE)
+        return this.getItem(Const.DATA.KEY_USER_TYPE);
     }
 
     setLoginType(value) {
         this.setItem(Const.DATA.KEY_LOGIN_TYPE, value);
     }
     getLoginType() {
-        return this.getItem(Const.DATA.KEY_LOGIN_TYPE)
+        return this.getItem(Const.DATA.KEY_LOGIN_TYPE);
     }
 
     setAuthority(value) {
         this.setItem(Const.DATA.KEY_AUTHORITY_LIST, value);
     }
     getAuthority() {
-        return this.getItem(Const.DATA.KEY_AUTHORITY_LIST)
+        return this.getItem(Const.DATA.KEY_AUTHORITY_LIST);
     }
 
     setLang(value) {
         this.setItem(Const.DATA.KEY_LANGUAGE, value);
     }
     getLang() {
-        return this.getItem(Const.DATA.KEY_LANGUAGE)
+        return this.getItem(Const.DATA.KEY_LANGUAGE);
     }
 
     setFieldDisplay(key, value) {
-        let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {}
-        field[key] = value
+        let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {};
+        field[key] = value;
 
         this.setItem(Const.DATA.KEY_FIELD_DISPLAY, field);
     }
     getFieldDisplay(key) {
-        let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {}
-        return key ? (field[key] || []) : {}
+        let field = this.getItem(Const.DATA.KEY_FIELD_DISPLAY) || {};
+        return key ? field[key] || [] : {};
     }
     setTabPosition(value) {
         this.setItem(Const.DATA.TAB_POSITION, value);
     }
     getTabPosition() {
-        return this.getItem(Const.DATA.TAB_POSITION)
+        return this.getItem(Const.DATA.TAB_POSITION);
     }
     setCountryCode(value) {
         this.setItem(Const.DATA.COUNTRY_CODE, value);
     }
     getCountryCode() {
-        return this.getItem(Const.DATA.COUNTRY_CODE)
+        return this.getItem(Const.DATA.COUNTRY_CODE);
     }
     setGroupId(value) {
         this.setItem(Const.DATA.GROUP_ID, value);
     }
     getGroupId() {
-        return this.getItem(Const.DATA.GROUP_ID)
+        return this.getItem(Const.DATA.GROUP_ID);
     }
 
     // 判断这个是否是超级管理员
@@ -179,36 +179,63 @@ class StorageHandler {
         this.setItem(Const.DATA.SUPER_ADMIN, value);
     }
     getManager() {
-        return this.getItem(Const.DATA.SUPER_ADMIN) || false
+        return this.getItem(Const.DATA.SUPER_ADMIN) || false;
     }
     clearManager() {
-        this.removeItem(Const.DATA.SUPER_ADMIN)
+        this.removeItem(Const.DATA.SUPER_ADMIN);
     }
     // 存客服分配线索
     setCustomerServiceClue(value) {
         this.setItem(Const.DATA.CUSTOMER_SERVICE_CLUE, value);
     }
     getCustomerServiceClue() {
-        return this.getItem(Const.DATA.CUSTOMER_SERVICE_CLUE) || []
+        return this.getItem(Const.DATA.CUSTOMER_SERVICE_CLUE) || [];
     }
     clearCustomerServiceClue() {
-        this.removeItem(Const.DATA.CUSTOMER_SERVICE_CLUE)
+        this.removeItem(Const.DATA.CUSTOMER_SERVICE_CLUE);
     }
 
+    // 供应链存储-草稿数据
+    /**
+     * 
+     *  SUPPLY_CHAIN: 'supply-chain',
+        SUPPLY_Daft_CHAIN: 'supply-draft-chain',
+        SUPPLY_DETAILS_CHAIN: 'supply-details-chain',
+        SUPPLY_STEP: 'supply-step',
+        SUPPLY_ISREAD: 'supply-isread',
+     * */
     // 供应链存储-真数据/校验通过
     setSupplyChain(value) {
         this.setItem(Const.DATA.SUPPLY_CHAIN, value);
     }
     getSupplyChain() {
-        return this.getItem(Const.DATA.SUPPLY_CHAIN) || ''
+        return this.getItem(Const.DATA.SUPPLY_CHAIN) || "";
     }
-    
-    // 供应链存储-草稿数据
-    setSupplyDraftChain(value, ) {
+    setSupplyDraftChain(value) {
         this.setItem(Const.DATA.SUPPLY_Daft_CHAIN, value);
     }
     getSupplyDraftChain() {
-        return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || ''
+        return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || "";
+    }
+    setSupplyDetailsChain(value) {
+        this.setItem(Const.DATA.SUPPLY_DETAILS_CHAIN, value);
+    }
+    getSupplyDetailsChain() {
+        return this.getItem(Const.DATA.SUPPLY_DETAILS_CHAIN) || "";
+    }
+    // 设置第几步
+    setStep(value) {
+        this.setItem(Const.DATA.SUPPLY_STEP, value);
+    }
+    getStep() {
+        return this.getItem(Const.DATA.SUPPLY_STEP) || undefined;
+    }
+    // 设置是否已经阅读
+    setRead(value) {
+        this.setItem(Const.DATA.SUPPLY_ISREAD, value);
+    }
+    getRead() {
+        return this.getItem(Const.DATA.SUPPLY_ISREAD) || undefined;
     }
 }
 

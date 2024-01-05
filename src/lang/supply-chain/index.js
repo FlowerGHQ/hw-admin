@@ -204,6 +204,14 @@ export default {
         Sales_share: "销售占比",
         Main_supply_part: "主供零件",
         Start_time: "开始合作时间",
+        // 提交申请前请阅读
+        please_read_before_submitting_an_application: "提交申请前请阅读",
+        // 《廉洁承诺书》
+        commitment_to_integrity: "《廉洁承诺书》",
+        // 《保密和不竞争协议》
+        confidentiality_and_non_competition_agreement: "《保密和不竞争协议》",
+        //  已阅读，发送申请
+        read_and_send_application: "已阅读，发送申请",
     },
     en: {
         type_supply: 'Type Supply',
@@ -404,5 +412,9 @@ export default {
         Sales_share: "Sales share",
         Main_supply_part: "Main supply part",
         Start_time: "Start time",
+        please_read_before_submitting_an_application: "Please read before submitting an application",
+        commitment_to_integrity: "《commitment_to_integrity》",
+        confidentiality_and_non_competition_agreement: "《Confidentiality and non-competition agreement》",
+        read_and_send_application: "Read and send application",
     }
 }

@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import Data from '../core/data'
+import { SUPPLY_CHAIN } from './supply'
 
 const store = createStore({
     state () {
@@ -22,6 +23,10 @@ const store = createStore({
         setRead(state,read){
             state.isRead = read
         }
+    },
+    // modules
+    modules: {
+        SUPPLY_CHAIN
     }
 })
 

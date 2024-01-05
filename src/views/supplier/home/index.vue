@@ -123,7 +123,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <MyStep v-model:ActiveCurrent="current" v-if="!isSubmited" />
+                <MyStep v-model:ActiveCurrent="current" v-if="isSubmited" />
                 <div class="submited" v-else>
                     <div class="main-content">
                         <div class="tips">
@@ -164,9 +164,9 @@
                 <div class="supply-chain-footer" v-if="current != 2">
                     <!-- 承诺书 -->
                     <div class="promise-book" v-if="current == 1" @click="handleOpen">
-                        <span>提交申请前请阅读</span>
-                        <a class="promise-text">《廉洁承诺书》</a>
-                        <a class="promise-text">《保密和不竞争协议》</a>
+                        <span>{{ $t('supply-chain.please_read_before_submitting_an_application') }}</span>
+                        <a class="promise-text">{{$t('supply-chain.commitment_to_integrity')}}</a>
+                        <a class="promise-text">{{ $t('supply-chain.confidentiality_and_non_competition_agreement') }}</a>
                     </div>
                     <div class="btn-area">
                         <!-- 保存草稿 -->
@@ -307,7 +307,7 @@
                     }"
                     @click="handleSubmitOk"
                     >
-                    已阅读，发送申请
+                    {{ $t("supply-chain.read_and_send_application")  }}
                     <div class="time-area" v-if="countTime != 0">
                         (
                     <span class="timing">{{ countTime }}s</span>
@@ -394,15 +394,18 @@ const countDown = () => {
 
 // 是否已经提交
 const isSubmited = computed(() => {
-    return detailObj.value === null ? false : true;
+    return Object.keys(detailObj.value).length > 0 ? true : false;
 });
 
 // 下一步
 const handleNext = () => {
-    console.log('childrenRef',childrenRef.value);
     if(current.value===0){
         if(childrenRef.value.beforeSaveVisible()){
             current.value++; 
+            console.log("$store",$store)
+            // $store的模块SUPPLY_CHAIN的dispatch方法
+            $store.dispatch("SUPPLY_CHAIN/setStep",current.value)
+
         }
         return;
     }
@@ -413,6 +416,7 @@ const handleNext = () => {
 const handleBack = () => {
     if (current.value == 0) return;
     current.value--;
+    $store.dispatch("SUPPLY_CHAIN/setStep",current.value)
 };
 // 提交
 const handleSubmit = () => {
@@ -423,15 +427,15 @@ const handleSubmit = () => {
         visible.value = true;
         return;
     }
-        // 确定点击了提交，促进页面的校验
-        isSubmit.value = !isSubmit.value;
+    // 确定点击了提交，促进页面的校验
+    isSubmit.value = !isSubmit.value;
 
 };
 // 提交数据
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = Core.Data.getSupplyChain() === '' ? '': JSON.parse(Core.Data.getSupplyChain())
-    console.log(data)
+    console.log(data,'-------------------------------------------------------------')
     Core.Api.SUPPLY.add({form:JSON.stringify(data)})
         .then((res) => {
             $message.success($t("supply-chain.supply_submit_successfully"));
@@ -482,7 +486,10 @@ const handleEditSubmit = () => {
 };
 // 保存草稿
 const handleSave = () => {
-    isSaveDraft.value = !isSaveDraft.value;
+    // isSaveDraft.value = !isSaveDraft.value;
+    console.log(childrenRef.value)
+    // 保存草稿
+    childrenRef.value.saveDraft();
 };
 // 获取-详情
 const getDetail = () => {
@@ -490,8 +497,10 @@ const getDetail = () => {
         .then((res) => {
             detailObj.value = res?.detail ?? null;
             if (detailObj.value) {
-                let jsonStr = JSON.parse(detailObj.value.form);
-                Core.Data.setSupplyDraftChain(jsonStr);
+                let jsonStr = detailObj.value.form;
+                // Core.Data.setSupplyDraftChain(jsonStr);
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain",jsonStr)
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain",jsonStr)
             }
         })
         .catch((err) => {});
@@ -512,7 +521,6 @@ const handleOpen = () => {
     }
     visible.value = true;
 };
-
 // 回到第一步
 const handleBackOne = () => {
     current.value = 0;
@@ -530,7 +538,6 @@ watch(
         deep:true
     }
 );
-
 watch(
     () => current.value,
     (val) => {
