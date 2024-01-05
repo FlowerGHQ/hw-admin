@@ -123,6 +123,7 @@ export default {
         general_invoice: "普通发票" ,
         other: "其他" ,
         day: "天",
+        please_complete_info: "请完善信息",
     },
     en: {
         type_supply: 'Type Supply',
@@ -242,5 +243,6 @@ export default {
         general_invoice: "General invoice" ,
         other: "Other" ,
         day: "Day",
+        please_complete_info: "Please complete the information",
     }
 }

@@ -386,6 +386,7 @@ watch(
                 .catch((err) => {
                     // 校验失败
                     $emit("update:value", false);
+                    message.warning($t("supply-chain.please_complete_info"));   
                     const errorName = err.errorFields[0]?.name[0];
                     if (!errorName) return;
                     const errorDom = document.querySelector(

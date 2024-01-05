@@ -163,7 +163,7 @@
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
                     <!-- 承诺书 -->
-                    <div class="promise-book" v-if="current == 1">
+                    <div class="promise-book" v-if="current == 1" @click="handleOpen">
                         <span>提交申请前请阅读</span>
                         <a class="promise-text">《廉洁承诺书》</a>
                         <a class="promise-text">《保密和不竞争协议》</a>
@@ -341,7 +341,7 @@ const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
 const user = Core.Data.getUser() || {};
-const visible = ref(true);
+const visible = ref(false);
 const suppluChain = ref(null);
 const form = reactive({
     old_password: "",
@@ -416,7 +416,8 @@ watch(
     () => visible.value,
     (val) => {
         console.log("visible.value", val);
-        if (val) {
+        // 如果打开了并且倒计时不为0，则开始倒计时
+        if (val&&countTime.value!=0) {
             countTime.value = 30
             countDown();
         }
@@ -451,7 +452,16 @@ const handleBack = () => {
 // 提交
 const handleSubmit = () => {
     // 为了每次点击都知道变化
-    isSubmit.value = !isSubmit.value;
+    // isSubmit.value = !isSubmit.value;
+    // 提交先查看是否已经阅读了协议,如果没有阅读则弹出协议
+    if(!$store.state.isRead){
+        visible.value = true;
+        return;
+    }else{
+        // 确定点击了提交，促进页面的校验
+        isSubmit.value = !isSubmit.value;
+    }
+
 };
 // 提交数据
 const handleSubmitData = () => {
@@ -527,7 +537,19 @@ const getDetail = () => {
 };
 // 发送申请
 const handleSubmitOk = () => {
-    console.log("发送申请");
+    // 已经阅读了
+    $store.commit("setRead",true);
+    visible.value = false;
+    handleSubmit();
+};
+// 打开
+const handleOpen = () => {
+    // 如果已经阅读 了
+    if($store.state.isRead){
+        // 让倒计时直接为0
+        countTime.value = 0
+    }
+    visible.value = true;
 };
 
 // 回到第一步
