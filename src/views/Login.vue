@@ -115,6 +115,10 @@ export default {
     mounted() {
         this.fsLogin()
     },
+    unmounted() {
+        clearInterval(this.countdownTime)
+        this.countdownTime = null
+    },
     methods: {
         /* Fetch start*/
         // 检查是否是超级管理员

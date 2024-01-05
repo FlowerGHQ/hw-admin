@@ -6,12 +6,12 @@
 			</div>
 			<div class="title">{{ $t('supply-chain.information_submitted_successfully') }}</div>
 			<div class="sub-title">
-				{{ $t('supply-chain.tips1') }} 
+				{{ $t('supply-chain.tips1') }}
 				<span class="timing">{{ count }}s</span>
 				{{ $t('supply-chain.tips2') }}
 		</div>
 			<div class="btn" @click="onBtn">
-				<a-button type="primary">{{ $t('supply-chain.view_materials') }}</a-button>
+				<a-button>{{ $t('supply-chain.back') }}</a-button>
 			</div>
 		</div>
 	</div>
@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 var countTime = null
 const count = ref(3)
+const $emit = defineEmits(["handleComeOne"]);
 
 onMounted(() => {
 	countTime = setInterval(() => {
@@ -39,21 +40,16 @@ onMounted(() => {
 
 const onBtn = () => {
 	console.log("跳转");
-	// router.push({
-	// 	path: '',
-	// 	query: {
-
-	// 	}
-	// })
+	$emit("handleComeOne");
+	
 }
 </script>
 
 <style lang="less" scoped>
 .suceess-style {
+	height: 100%;
 	border-radius: 6px;
 	background: #FFF;
-	font-family: Alibaba PuHuiTi 2.0;
-	// position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;

@@ -41,6 +41,12 @@ const SUPPLAY = {
         { value: 3, label: 'supply-chain.translational_design' }, //转化设计
         { value: 4, label: 'supply-chain.outsourced_design' }, //委外设计
     ],
+    TECHNICAL_INFORMATION_OBJECT: {
+        1: { value: 1, t: 'supply-chain.stand_alone_design' }, // 独立设计
+        2: { value: 2, t: 'supply-chain.co_design' }, // 共同设计
+        3: { value: 3, t: 'supply-chain.translational_design' }, //转化设计
+        4: { value: 4, t: 'supply-chain.outsourced_design' }, //委外设计
+    },
 
     // 过程设计
     PROCESS_DESIGN: [
@@ -50,6 +56,12 @@ const SUPPLAY = {
         { value: 7, label: 'supply-chain.tooling_design' }, //辅具设计
         { value: 8, label: 'supply-chain.assistive_device_design' }, //工装设计
     ],
+    PROCESS_DESIGN_OBJECT: {
+        5: { value: 5, t: 'supply-chain.mold_design' }, // 模具设计
+        6: { value: 6, t: 'supply-chain.fixture_design' }, // 检具设计
+        7: { value: 7, t: 'supply-chain.tooling_design' }, //辅具设计
+        8: { value: 8, t: 'supply-chain.assistive_device_design' }, //工装设计
+    },
 
     // 过程验证
     PROCESS_VALIDATION: [
@@ -58,7 +70,33 @@ const SUPPLAY = {
         { value: 2, label: 'supply-chain.inspection_fixture_acceptance' }, // 检具验收
         { value: 3, label: 'supply-chain.tooling_acceptance' }, //工装验收
         { value: 4, label: 'supply-chain.product_identification' }, //产品鉴定
-    ]
+    ],
+    PROCESS_VALIDATION_OBJECT: {
+        1: { value: 1, label: 'supply-chain.mold_acceptance' }, // 模具验收
+        2: { value: 2, label: 'supply-chain.inspection_fixture_acceptance' }, // 检具验收
+        3: { value: 3, label: 'supply-chain.tooling_acceptance' }, //工装验收
+        4: { value: 4, label: 'supply-chain.product_identification' }, //产品鉴定
+    },
+
+    // 帐期要求
+    ACCOUNt_PERIOD_REQUIREMENT: {
+        90: { value: 90, unit: "supply-chain.day", },
+        75: { value: 75, unit: "supply-chain.day", },
+        60: { value: 60, unit: "supply-chain.day", },
+        30: { value: 30, unit: "supply-chain.day", },
+        0: { value: 0, t: "supply-chain.other" },
+    },
+    // 发票类型
+    INVOICE_TYPE: {
+        1: { value: 1, t: 'supply-chain.vat_invoice' }, // 增值税发票
+        2: { value: 2, t: 'supply-chain.general_invoice' }, // 普通发票
+        3: { value: 3, t: 'supply-chain.other' }, // 其他
+    },
+    // 营业期限
+    BUSINESS_TERM: {
+        1: { value: 1, t: 'supply-chain.long_term_validity' }, // 增值税发票
+        2: { value: 2, t: 'supply-chain.short_term_validity' }, // 普通发票
+    }
 
 }
 

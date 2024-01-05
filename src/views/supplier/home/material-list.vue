@@ -67,7 +67,7 @@
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 法定代表人 -->
-                                    <a-form-item
+                                    <!-- <a-form-item
                                         :label="
                                             $t(
                                                 'supply-chain.legal_representative'
@@ -86,7 +86,7 @@
                                                 formState.legal_person
                                             ">
                                         </a-input>
-                                    </a-form-item>
+                                    </a-form-item> -->
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
@@ -102,16 +102,15 @@
                                                 v-model:value="
                                                     formState.business_duration_type
                                                 ">
-                                                <a-radio :value="1">{{
-                                                    $t(
-                                                        "supply-chain.long_term_validity"
-                                                    )
-                                                }}</a-radio>
-                                                <a-radio :value="2">{{
-                                                    $t(
-                                                        "supply-chain.short_term_validity"
-                                                    )
-                                                }}</a-radio>
+                                                <a-radio 
+                                                    v-for="(item, index) in Core.Const.SUPPLAY.BUSINESS_TERM" 
+                                                    :value="item.value"
+                                                    :key="index"
+                                                >
+                                                    {{
+                                                        $t(item.t)
+                                                    }}
+                                                </a-radio>
                                             </a-radio-group>
                                             <TimeSearch
                                                 v-if="
@@ -417,13 +416,11 @@ watch(
         if (Object.keys(data).length === 0) {
             // 为空对象
             data = {
-                form: {
                     confirmatory_material: formState,
-                },
             };
         } else {
             // 不为空对象
-            data.form.confirmatory_material = formState;
+            data.confirmatory_material = formState;
         }
         // 保存数据
         Core.Data.setSupplyChain(JSON.stringify(data));
@@ -475,20 +472,20 @@ let RegisteredCapitalVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
-let LegalRepresentativeVaild = async (_rule, value) => {
-    if (!value) {
-        return Promise.reject(
-            $t("supply-chain.please_enter_legal_representative")
-        );
-    }
-    // 纯文本
-    if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
-        return Promise.reject(
-            $t("supply-chain.legal_representative_must_be_pure_text")
-        );
-    }
-    return Promise.resolve();
-};
+// let LegalRepresentativeVaild = async (_rule, value) => {
+//     if (!value) {
+//         return Promise.reject(
+//             $t("supply-chain.please_enter_legal_representative")
+//         );
+//     }
+//     // 纯文本
+//     if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
+//         return Promise.reject(
+//             $t("supply-chain.legal_representative_must_be_pure_text")
+//         );
+//     }
+//     return Promise.resolve();
+// };
 let account_nameVaild = async (_rule, value) => {
     if (!value) {
         return Promise.reject($t("supply-chain.please_enter_account_name"));
@@ -529,13 +526,13 @@ const rules = {
         },
     ],
     // 法定代表人
-    legal_person: [
-        {
-            required: true,
-            validator: LegalRepresentativeVaild,
-            trigger: ["change", "blur"],
-        },
-    ],
+    // legal_person: [
+    //     {
+    //         required: true,
+    //         validator: LegalRepresentativeVaild,
+    //         trigger: ["change", "blur"],
+    //     },
+    // ],
     // 营业期限
     business_duration_type: [
         {
@@ -579,18 +576,22 @@ const handleTimeSearch = (params) => {
 };
 // 草稿回显
 const draftDataReview = () => {
-    let draftData = Core.Data.getSupplyChain();
+    let draftDataJson = Core.Data.getSupplyChain();
+    let draftData  = draftDataJson === "" ? {} : JSON.parse(draftDataJson);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState.business_duration_type = 1;
     } else {
         // 解析出来的数据
-        let data = JSON.parse(draftData);
-        Object.keys(data.form.confirmatory_material).forEach((key) => {
-            formState[key] = data.form.confirmatory_material[key];
+        let data = draftData;
+        console.log(data);
+        Object.keys(data?.confirmatory_material??{}).forEach((key) => {
+            formState[key] = data.confirmatory_material[key];
         });
         formState.business_duration_type =
-            data?.form?.confirmatory_material?.business_duration_type || 1;
+            data?.confirmatory_material?.business_duration_type || 1;
+
+        console.log(formState);
     }
     setTimeout(() => {
         if (TimeSearchRef.value) {
@@ -613,6 +614,7 @@ onMounted(() => {
     display: flex;
     width: 100%;
     padding: 20px;
+    padding-bottom: 0;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
@@ -632,14 +634,14 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 199px 0 399px;
+            padding: 8px 10.36% 0 20.78%;
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            padding: 8px 696px 0 623px;
+            padding: 8px  32.44% 0  29.55%;
         }
     }
 }
