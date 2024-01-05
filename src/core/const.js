@@ -81,6 +81,7 @@ let Const = {
         SUPER_ADMIN: 'super_admin',
         CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
         SUPPLY_CHAIN: 'supply-chain',
+        SUPPLY_Daft_CHAIN: 'supply-draft-chain',
     },
     DEFULT_IMG: {
         1: defult_img,

@@ -87,8 +87,6 @@
                     </div>
                 </div>  
             </div>
-
-
             <div class="component-box">
                 <component
                     ref="allComRef"
@@ -106,49 +104,82 @@
     </div>
   </template>
   <script>
-  import { defineComponent, onMounted, reactive, ref, computed } from 'vue';
+  import { defineComponent, onMounted, reactive, ref, computed, getCurrentInstance, watch } from 'vue';
   import Core from "@/core";
   import Part from "./components/Part.vue";
   import Broker from "./components/Broker.vue";
   import Outsourcing from "./components/Outsourcing.vue";
   import Mold from "./components/Mold.vue";
   import CustomerRefers from "./components/CustomerRefers.vue";
-import { ListItemMeta } from 'ant-design-vue';
+  
   export default defineComponent({
+    props: {
+        detail: {  
+            type: Object,  
+            required: false, 
+            default: ()=>{
+
+            } 
+        },  
+        isSaveDraft: {  
+            type: Number,  
+            default: 0,  
+        },  
+    },  
     components: {  
       Part, // 零件 在 components 对象中注册 MyComponent 组件  
       Broker, // 代理
       Outsourcing, // 外协
       Mold,  // 模具
       CustomerRefers, // 客指
-    },
-    setup() {
-
-	//   const Core = Core;
+    },/* 
+    watch: {  
+        detail(newVal, oldVal) {  
+          console.log(`detail111 changed from `,newVal, oldVal,' formState.value11', formState.value);
+         
+        },  
+    },   */
+    setup(props) {
+      
+       watch(() => props.detail,(newVal, oldVal) => {  
+          detailObj.value = Core.Util.deepCopy(newVal);
+          console.log(`detailObj.value------11`,detailObj.value);
+          // 真数据/校验后
+          Core.Data.setSupplyChain(detailObj.value?.form);
+          // 草稿数据
+          Core.Data.setSupplyDraftChain(detailObj.value?.form);
+      });
+      // const props = ref(props)
+      const { proxy } = getCurrentInstance()
+	    //   const Core = Core;
+      const detailObj = ref();
       const formRef = ref();
       const formState = reactive({
         pass: '',
         checkPass: '',
         age: undefined,
       });
-	  const msgPost = reactive([
-		{
-          titleOne: '联系方式',
-          listOne: [
-            {
-              title: '',
-              list: [
-                { key: "职位", value: undefined, valueParam: "position", type: 2, required: true,online:true, radioList: [{ value: 1,name: '销售' },{ value: 2,name: '质量' },{ value: 3,name: '技术' },{ value: 4,name: '总经理' }] },
-                { key: "姓名", value: undefined, valueParam: "name", type: 1, required: true, change: true },
-                { key: "邮箱", value: undefined, valueParam: "email", type: 1, required: true, change: true },
-                { key: "联系方式", value: undefined, valueParam: "phone", type: 1, required: true, change: true },
-                { key: "", value: undefined, valueParam: "flag_wechat", text: '微信同号', type: 2.3 },
-              ]
-            }
-          ]
-        }
-	  ])
-		
+      const msgPost = reactive([
+          {
+            titleOne: '联系方式',
+            listOne: [
+              {
+                title: '',
+                list: [
+                  { key: "职位", value: undefined, valueParam: "position", type: 2, required: true,online:true, radioList: [{ value: 1,name: '销售' },{ value: 2,name: '质量' },{ value: 3,name: '技术' },{ value: 4,name: '总经理' }] },
+                  { key: "姓名", value: undefined, valueParam: "name", type: 1, required: true, change: true },
+                  { key: "邮箱", value: undefined, valueParam: "email", type: 1, required: true, change: true },
+                  { key: "联系方式", value: undefined, valueParam: "phone", type: 1, required: true, change: true },
+                  { key: "", value: undefined, valueParam: "flag_wechat", text: '微信同号', type: 2.3 },
+                ]
+              }
+            ]
+          }
+      ])
+
+      const lang = computed(() => {
+          return proxy.$store.state.lang;
+      });
       const msgPart = computed(()=>[
         
           /* 
@@ -320,28 +351,28 @@ import { ListItemMeta } from 'ant-design-vue';
               { key: "研发中心", value: undefined, valueParam: "net_c", type: 1, required: false },
               { key: "研发合作机构", value: undefined, valueParam: "net_c", type: 1, required: false, online: true,},
               { key: "产品设计", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true, 
-			  	optionList: [
-					{ label: '独立设计', value: '独立设计' },
-					{ label: '共同设计', value: '共同设计' },
-					{ label: '转化设计', value: '转化设计' },
-					{ label: '委外设计', value: '委外设计' },
-			   	] 
+                optionList: [
+                  { label: '独立设计', value: '独立设计' },
+                  { label: '共同设计', value: '共同设计' },
+                  { label: '转化设计', value: '转化设计' },
+                  { label: '委外设计', value: '委外设计' },
+                ] 
 			  },
               { key: "过程设计", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true,  
-			  	optionList: [
-					{ label: '模具设计', value: '模具设计' },
-					{ label: '检具设计', value: '检具设计' },
-					{ label: '工装设计', value: '工装设计' },
-					{ label: '辅具设计', value: '辅具设计' },
-			   	] 
+                optionList: [
+                  { label: '模具设计', value: '模具设计' },
+                  { label: '检具设计', value: '检具设计' },
+                  { label: '工装设计', value: '工装设计' },
+                  { label: '辅具设计', value: '辅具设计' },
+                ] 
 			  },
               { key: "过程验证", value: undefined, valueParam: "net_c", type: 2.1, required: false, online: true,  
-			  	optionList: [
-					{ label: '模具验收', value: '模具验收' },
-					{ label: '检具验收', value: '检具验收' },
-					{ label: '工装验收', value: '工装验收' },
-					{ label: '产品鉴定', value: '产品鉴定' },
-			   	] 
+                optionList: [
+                { label: '模具验收', value: '模具验收' },
+                { label: '检具验收', value: '检具验收' },
+                { label: '工装验收', value: '工装验收' },
+                { label: '产品鉴定', value: '产品鉴定' },
+                ] 
 			  },
               { key: "设计软件", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
               { key: "开发流程", value: undefined, valueParam: "date_c", type: 1.1, row: 3, maxlength: 2000, required: false, online: true, },
@@ -627,8 +658,10 @@ import { ListItemMeta } from 'ant-design-vue';
         componentName,
         handleTypeModeChange,
         msgPart,
-		msgPost,
-		Core,
+        msgPost,
+        Core,
+        lang,
+        props,
       };
     },
 	

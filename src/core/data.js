@@ -195,12 +195,20 @@ class StorageHandler {
         this.removeItem(Const.DATA.CUSTOMER_SERVICE_CLUE)
     }
 
-    // 供应链存储
+    // 供应链存储-真数据/校验通过
     setSupplyChain(value) {
         this.setItem(Const.DATA.SUPPLY_CHAIN, value);
     }
     getSupplyChain() {
         return this.getItem(Const.DATA.SUPPLY_CHAIN) || ''
+    }
+    
+    // 供应链存储-草稿数据
+    setSupplyDraftChain(value, ) {
+        this.setItem(Const.DATA.SUPPLY_Daft_CHAIN, value);
+    }
+    getSupplyDraftChain() {
+        return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || ''
     }
 }
 

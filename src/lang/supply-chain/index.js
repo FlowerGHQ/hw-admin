@@ -94,6 +94,21 @@ export default {
         quality: "质量",
         technology: "技术",
         general_manager: "总经理",
+        // 技术信息
+        stand_alone_design: '独立设计',
+        co_design: '共同设计',
+        translational_design: '转化设计',
+        outsourced_design: '委外设计',
+        // 过程设计
+        mold_design: '模具设计',
+        fixture_design: '检具设计',
+        tooling_design: '辅具设计',
+        assistive_device_design: '工装设计',
+        // 过程验证
+        mold_acceptance: '模具验收',
+        inspection_fixture_acceptance: '检具验收',
+        tooling_acceptance: '工装验收',
+        product_identification: '产品鉴定',
 
     },
     en: {
@@ -189,5 +204,21 @@ export default {
         quality: "Quality",
         technology: "Technology",
         general_manager: "General Manager",
+        // 技术信息
+        stand_alone_design: 'Stand-alone design',
+        co_design: 'Co-design',
+        translational_design: 'Translational Design',
+        outsourced_design: 'Outsourced Design',
+        // 过程设计
+        mold_design: 'Mold Design',
+        fixture_design: 'Fixture Design',
+        tooling_design: 'Tooling Design',
+        assistive_device_design: 'Assistive Device Design',
+        // 过程验证
+        mold_acceptance: 'Mold Acceptance',
+        inspection_fixture_acceptance: 'Inspection Fixture Acceptance',
+        tooling_acceptance: 'Tooling Acceptance',
+        product_identification: 'Product Identification',
+        
     }
 }

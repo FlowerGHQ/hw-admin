@@ -131,6 +131,8 @@
                         :isSubmit="isSubmit"
                         :isSaveDraft="isSaveDraft"
                         v-model:value="step2Val"
+                        :step1Val = "step1Val"
+                        :detail="detailObj"
                         class="current-components" />
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
@@ -190,6 +192,7 @@ const form = reactive({
 const isSubmit = ref(false);
 const isSaveDraft = ref(false);
 const step2Val = ref(false);
+const step1Val = ref(false); // 第一步校验变量
 const $i18n = useI18n();
 const lang = useI18n().locale;
 const $store = useStore();
@@ -207,14 +210,28 @@ const currentComponent = computed(() => {
     }
 });
 // 步骤条
-const current = ref(1);
+const current = ref(0);
 const passShow = ref(false);
+const detailObj = ref({});
 // 监听第二步的校验是否完成
 watch(
     () => step2Val.value,
     (val) => {
         if (val) {
             handleNext();
+        }
+    },
+    {
+        immediate: true,
+    }
+);
+// 监听第一步的校验是否完成
+watch(
+    () => step1Val.value,
+    (val) => {
+        if (val) {
+            console.log('step1Val.value ---1', val);
+            // handleNext();
         }
     },
     {
@@ -279,8 +296,21 @@ const handleEditSubmit = () => {
 const handleSave = () => {
     isSaveDraft.value = !isSaveDraft.value;
 };
-
-onMounted(() => {});
+// 获取-详情
+const getDetail = () => {
+    
+    Core.Api.SUPPLY.adminDetail({})
+    .then((res) => {
+        console.log('res-------1121',res);
+        detailObj.value = res.detail;
+    })
+    .catch((err) => {
+        console.log("handleSubmit err:", err);
+    });
+}
+onMounted(() => {
+    getDetail();
+});
 </script>
 
 <style lang="less" scoped>
