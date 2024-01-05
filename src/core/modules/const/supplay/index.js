@@ -96,6 +96,11 @@ const SUPPLAY = {
     BUSINESS_TERM: {
         1: { value: 1, t: 'supply-chain.long_term_validity' }, // 增值税发票
         2: { value: 2, t: 'supply-chain.short_term_validity' }, // 普通发票
+    },
+    // 法律纠纷
+    Legal_Dispute: {
+        '-1': { value: 1, t: 'supply-chain.None' },
+        "1": { value: 1, t: 'supply-chain.Yes' },
     }
 
 }
