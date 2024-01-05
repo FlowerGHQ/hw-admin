@@ -67,7 +67,7 @@
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 法定代表人 -->
-                                    <a-form-item
+                                    <!-- <a-form-item
                                         :label="
                                             $t(
                                                 'supply-chain.legal_representative'
@@ -86,7 +86,7 @@
                                                 formState.legal_person
                                             ">
                                         </a-input>
-                                    </a-form-item>
+                                    </a-form-item> -->
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
@@ -473,20 +473,20 @@ let RegisteredCapitalVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
-let LegalRepresentativeVaild = async (_rule, value) => {
-    if (!value) {
-        return Promise.reject(
-            $t("supply-chain.please_enter_legal_representative")
-        );
-    }
-    // 纯文本
-    if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
-        return Promise.reject(
-            $t("supply-chain.legal_representative_must_be_pure_text")
-        );
-    }
-    return Promise.resolve();
-};
+// let LegalRepresentativeVaild = async (_rule, value) => {
+//     if (!value) {
+//         return Promise.reject(
+//             $t("supply-chain.please_enter_legal_representative")
+//         );
+//     }
+//     // 纯文本
+//     if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
+//         return Promise.reject(
+//             $t("supply-chain.legal_representative_must_be_pure_text")
+//         );
+//     }
+//     return Promise.resolve();
+// };
 let account_nameVaild = async (_rule, value) => {
     if (!value) {
         return Promise.reject($t("supply-chain.please_enter_account_name"));
@@ -527,13 +527,13 @@ const rules = {
         },
     ],
     // 法定代表人
-    legal_person: [
-        {
-            required: true,
-            validator: LegalRepresentativeVaild,
-            trigger: ["change", "blur"],
-        },
-    ],
+    // legal_person: [
+    //     {
+    //         required: true,
+    //         validator: LegalRepresentativeVaild,
+    //         trigger: ["change", "blur"],
+    //     },
+    // ],
     // 营业期限
     business_duration_type: [
         {
