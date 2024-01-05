@@ -614,6 +614,7 @@ onMounted(() => {
     display: flex;
     width: 100%;
     padding: 20px;
+    padding-bottom: 0;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
