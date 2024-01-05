@@ -505,7 +505,7 @@ onMounted(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px 80px 40px;
+            padding: 20px 40px 20px 40px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -542,7 +542,7 @@ onMounted(() => {
             .content-main-submited {
                 flex: 1;
                 margin-top: 15px;
-                overflow: auto;
+                overflow-y: scroll;
                 background-color: #ffffff;
                 border-radius: 6px;
                 // 滚动条样式
@@ -561,9 +561,7 @@ onMounted(() => {
             }
             .supply-chain-footer {
                 min-height: 68px;
-                position: absolute;
-                bottom: 0;
-                width: calc(100% - 80px);
+                width: calc(100%);
                 .btn-area {
                     display: flex;
                     padding: 18px 0px;
@@ -576,6 +574,10 @@ onMounted(() => {
                     background-color: #fff;
                     padding: 20px;
                     text-align: center;
+                    color: #1D2129;
+                    .promise-text{
+                        color: #0061FF;
+                    }
                 }
             }
         }
