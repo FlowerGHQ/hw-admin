@@ -123,7 +123,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <MyStep v-model:ActiveCurrent="current" v-if="!isSubmited"/>
+                <MyStep v-model:ActiveCurrent="current" v-if="!isSubmited" />
                 <div class="submited" v-else>
                     <div class="main-content">
                         <div class="tips">
@@ -145,7 +145,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-main">
+                <div
+                    :class="{
+                        'content-main': !isSubmited,
+                        'content-main-submited': isSubmited,
+                    }">
                     <!-- 动态组件 -->
                     <component
                         :is="currentComponent"
@@ -158,27 +162,37 @@
                         @handleComeOne="handleBackOne" />
                 </div>
                 <div class="supply-chain-footer" v-if="current != 2">
-                    <!-- 保存草稿 -->
-                    <a-button @click="handleSave">{{
-                        $t("supply-chain.save_draft")
-                    }}</a-button>
-                    <a-button
-                        type="primary"
-                        @click="handleNext"
-                        v-if="current == 0"
-                        >{{ $t("supply-chain.next_step") }}</a-button
-                    >
-                    <!-- 上一步 -->
-                    <a-button @click="handleBack" v-if="current == 1">{{
-                        $t("supply-chain.previous_step")
-                    }}</a-button>
-                    <!-- 提交 -->
-                    <a-button
-                        type="primary"
-                        @click="handleSubmit"
-                        v-if="current == 1"
-                        >{{ $t("supply-chain.submit_application") }}</a-button
-                    >
+                    <!-- 承诺书 -->
+                    <div class="promise-book" v-if="current == 1">
+                        <span>提交申请前请阅读</span>
+                        <a class="promise-text">《廉洁承诺书》</a>
+                        <a class="promise-text">《保密和不竞争协议》</a>
+                    </div>
+                    <div class="btn-area">
+                        <!-- 保存草稿 -->
+                        <a-button @click="handleSave">{{
+                            $t("supply-chain.save_draft")
+                        }}</a-button>
+                        <a-button
+                            type="primary"
+                            @click="handleNext"
+                            v-if="current == 0"
+                            >{{ $t("supply-chain.next_step") }}</a-button
+                        >
+                        <!-- 上一步 -->
+                        <a-button @click="handleBack" v-if="current == 1">{{
+                            $t("supply-chain.previous_step")
+                        }}</a-button>
+                        <!-- 提交 -->
+                        <a-button
+                            type="primary"
+                            @click="handleSubmit"
+                            v-if="current == 1"
+                            >{{
+                                $t("supply-chain.submit_application")
+                            }}</a-button
+                        >
+                    </div>
                 </div>
             </a-layout-content>
         </a-layout>
@@ -232,15 +246,16 @@ const currentComponent = computed(() => {
     }
 });
 // 步骤条
-const current = ref(0);
+const current = ref(1);
 const passShow = ref(false);
 const detailObj = ref({});
 // 监听第二步的校验是否完成
 watch(
     () => step2Val.value,
-    (val) => {
+    async (val) => {
         if (val) {
-            handleNext();
+            await handleSubmitData
+            await handleNext();
         }
     },
     {
@@ -261,13 +276,13 @@ watch(
     }
 );
 watch(
-    ()=>current.value,
-    (val)=>{
-        if(val == 0){
+    () => current.value,
+    (val) => {
+        if (val == 0) {
             getDetail();
         }
     }
-)
+);
 
 // 是否已经提交
 const isSubmited = computed(() => {
@@ -289,6 +304,9 @@ const handleBack = () => {
 const handleSubmit = () => {
     // 为了每次点击都知道变化
     isSubmit.value = !isSubmit.value;
+};
+// 提交数据
+const handleSubmitData = () => {
     // 提交
     const data = {
         type: 1, //类别：1.零件类；2.代理类；3.外协类；4.模具类；5.客指类
@@ -358,10 +376,8 @@ const getDetail = () => {
                 let jsonStr = JSON.parse(detailObj.value.form);
                 Core.Data.setSupplyDraftChain(jsonStr);
             }
-
         })
-        .catch((err) => {
-        });
+        .catch((err) => {});
 };
 
 // 回到第一步
@@ -492,36 +508,39 @@ onMounted(() => {
             padding: 20px 40px 80px 40px;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
             .submited {
                 width: 100%;
                 height: 121px;
                 background-color: #fff;
                 margin-top: 20px;
                 padding: 20px;
-                .main-content{
+                .main-content {
                     height: 100%;
                     background-color: rgba(0, 97, 255, 0.05);
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
                     padding: 16px;
-                    .tips{
+                    .tips {
                         display: flex;
                         align-items: center;
-                        color: #165DFF;
+                        color: #165dff;
                         font-size: 18px;
                         font-weight: 500;
-                        img{
+                        img {
                             margin-right: 4px;
                         }
                     }
-                    .sub_tips{
-                        color:  #666;
+                    .sub_tips {
+                        color: #666;
                     }
                 }
             }
-            .content-main {
-                height: calc(100% - 80px - 68px - 20px);
+            .content-main,
+            .content-main-submited {
+                flex: 1;
                 margin-top: 15px;
                 overflow: auto;
                 background-color: #ffffff;
@@ -537,18 +556,27 @@ onMounted(() => {
                 }
                 &::-webkit-scrollbar-track {
                     border-radius: 10px;
-                    background: #f2f3f5;
+                    background: #fff;
                 }
             }
             .supply-chain-footer {
-                display: flex;
-                height: 68px;
-                padding: 18px 0px;
-                justify-content: center;
-                align-items: center;
-                flex-shrink: 0;
-                border-top: 1px solid #f2f3f5;
-                background: #fff;
+                min-height: 68px;
+                position: absolute;
+                bottom: 0;
+                width: calc(100% - 80px);
+                .btn-area {
+                    display: flex;
+                    padding: 18px 0px;
+                    justify-content: center;
+                    align-items: center;
+                    border-top: 1px solid #f2f3f5;
+                    background: #fff;
+                }
+                .promise-book {
+                    background-color: #fff;
+                    padding: 20px;
+                    text-align: center;
+                }
             }
         }
     }
