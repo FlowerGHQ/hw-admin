@@ -260,6 +260,14 @@ watch(
         immediate: true,
     }
 );
+watch(
+    ()=>current.value,
+    (val)=>{
+        if(val == 0){
+            getDetail();
+        }
+    }
+)
 
 // 是否已经提交
 const isSubmited = computed(() => {
