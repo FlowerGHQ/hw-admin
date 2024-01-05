@@ -417,13 +417,11 @@ watch(
         if (Object.keys(data).length === 0) {
             // 为空对象
             data = {
-                form: {
                     confirmatory_material: formState,
-                },
             };
         } else {
             // 不为空对象
-            data.form.confirmatory_material = formState;
+            data.confirmatory_material = formState;
         }
         // 保存数据
         Core.Data.setSupplyChain(JSON.stringify(data));
@@ -579,18 +577,22 @@ const handleTimeSearch = (params) => {
 };
 // 草稿回显
 const draftDataReview = () => {
-    let draftData = Core.Data.getSupplyChain();
+    let draftDataJson = Core.Data.getSupplyChain();
+    let draftData  = draftDataJson === "" ? {} : JSON.parse(draftDataJson);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState.business_duration_type = 1;
     } else {
         // 解析出来的数据
-        let data = JSON.parse(draftData);
-        Object.keys(data.form.confirmatory_material).forEach((key) => {
-            formState[key] = data.form.confirmatory_material[key];
+        let data = draftData;
+        console.log(data);
+        Object.keys(data?.confirmatory_material??{}).forEach((key) => {
+            formState[key] = data.confirmatory_material[key];
         });
         formState.business_duration_type =
-            data?.form?.confirmatory_material?.business_duration_type || 1;
+            data?.confirmatory_material?.business_duration_type || 1;
+
+        console.log(formState);
     }
     setTimeout(() => {
         if (TimeSearchRef.value) {

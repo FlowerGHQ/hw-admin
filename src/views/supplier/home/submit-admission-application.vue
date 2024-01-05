@@ -24,6 +24,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 var countTime = null
 const count = ref(3)
+const $emit = defineEmits(["handleComeOne"]);
 
 onMounted(() => {
 	countTime = setInterval(() => {
@@ -39,12 +40,8 @@ onMounted(() => {
 
 const onBtn = () => {
 	console.log("跳转");
-	// router.push({
-	// 	path: '',
-	// 	query: {
-
-	// 	}
-	// })
+	$emit("handleComeOne");
+	
 }
 </script>
 
