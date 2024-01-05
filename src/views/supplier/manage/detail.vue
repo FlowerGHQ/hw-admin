@@ -23,7 +23,6 @@
                         <div class="search-col required">
                             <div class="key w-130 t-a-r text-color">职位</div>
                             <div class="value m-l-8">
-                                {{ msgDetail.position }}
                                 <a-radio :checked="true">
                                     {{
                                         Core.Const.SUPPLAY.POSITION[msgDetail.position]?.t
@@ -1056,7 +1055,7 @@ function getDetail(params = {}) {
             color: #1d2129;
             font-size: 14px;
             font-weight: 400;
-            height: 32px;
+            min-height: 32px;
             line-height: 32px;
             border-radius: 4px;
             border: 1px solid #eaecf1;

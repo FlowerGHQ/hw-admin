@@ -20,7 +20,7 @@ export default {
         submission_time: "提交时间",        
         view: '查看',
         information_submitted_successfully: "信息提交成功",
-        view_materials: "查看资料",
+        back: "返回",
         tips1: "请等待工作人员审核资质",
         tips2: "后回到首页",
         application_Materials: "申请资料列表",
@@ -119,6 +119,10 @@ export default {
         // 在审核完成前，您可以随时补充资料
         before_the_audit_is_completed_you_can_always_supplement_the_data: "在审核完成前，您可以随时补充资料",
 
+        vat_invoice: "增值税发票" ,
+        general_invoice: "普通发票" ,
+        other: "其他" ,
+        day: "天",
     },
     en: {
         type_supply: 'Type Supply',
@@ -141,7 +145,7 @@ export default {
         submission_time: "Submission Time",        
         view: 'View',
         information_submitted_successfully: "Information submitted successfully",
-        view_materials: "View Materials",
+        back: "Back",
         tips1: "Please wait for the staff to review their qualifications",
         tips2: "then go back to the home page",
         application_Materials: "Application Materials",
@@ -234,5 +238,9 @@ export default {
         supply_submit_failed: "Submit Failed",
         data_submitted_please_wait_for_review: "Data submitted, please wait for review",
         before_the_audit_is_completed_you_can_always_supplement_the_data: "Before the audit is completed, you can always supplement the data",
+        vat_invoice: "VAT invoice" ,
+        general_invoice: "General invoice" ,
+        other: "Other" ,
+        day: "Day",
     }
 }
