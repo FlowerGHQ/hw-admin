@@ -207,7 +207,7 @@ const currentComponent = computed(() => {
     }
 });
 // 步骤条
-const current = ref(1);
+const current = ref(0);
 const passShow = ref(false);
 // 监听第二步的校验是否完成
 watch(

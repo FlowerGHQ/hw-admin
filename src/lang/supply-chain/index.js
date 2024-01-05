@@ -94,6 +94,8 @@ export default {
         quality: "质量",
         technology: "技术",
         general_manager: "总经理",
+        // save_successfully
+        save_successfully: "保存成功",
 
     },
     en: {
@@ -189,5 +191,6 @@ export default {
         quality: "Quality",
         technology: "Technology",
         general_manager: "General Manager",
+        save_successfully: "Save Successfully",
     }
 }
