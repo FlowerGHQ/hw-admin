@@ -4,7 +4,8 @@ import Data from '../core/data'
 const store = createStore({
     state () {
         return {
-            lang: 'zh'
+            lang: 'zh',
+            isRead:false
         }
     },
     mutations: {
@@ -16,6 +17,10 @@ const store = createStore({
                 state.lang = 'zh'
                 Data.setLang('zh')
             }
+        },
+        // 设置是否已经阅读
+        setRead(state,read){
+            state.isRead = read
         }
     }
 })
