@@ -432,7 +432,7 @@ const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = Core.Data.getSupplyChain() === '' ? '': JSON.parse(Core.Data.getSupplyChain())
     console.log(data)
-    Core.Api.SUPPLY.add({form:data})
+    Core.Api.SUPPLY.add({form:JSON.stringify(data)})
         .then((res) => {
             $message.success($t("supply-chain.supply_submit_successfully"));
             handleNext();
