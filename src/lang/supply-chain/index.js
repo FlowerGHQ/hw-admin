@@ -111,6 +111,13 @@ export default {
         product_identification: '产品鉴定',
         // save_successfully
         save_successfully: "保存成功",
+        // 提交成功
+        supply_submit_successfully: "提交成功",
+        supply_submit_failed: "提交失败",
+        // 资料已提交，请等待审核
+        data_submitted_please_wait_for_review: "资料已提交，请等待审核",
+        // 在审核完成前，您可以随时补充资料
+        before_the_audit_is_completed_you_can_always_supplement_the_data: "在审核完成前，您可以随时补充资料",
 
     },
     en: {
@@ -223,5 +230,9 @@ export default {
         product_identification: 'Product Identification',
         
         save_successfully: "Save Successfully",
+        supply_submit_successfully: "Submit Successfully",
+        supply_submit_failed: "Submit Failed",
+        data_submitted_please_wait_for_review: "Data submitted, please wait for review",
+        before_the_audit_is_completed_you_can_always_supplement_the_data: "Before the audit is completed, you can always supplement the data",
     }
 }
