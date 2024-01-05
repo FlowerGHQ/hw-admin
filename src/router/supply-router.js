@@ -18,6 +18,7 @@ const routers = [
             title_en: 'supplier management',
             icon: 'i_menu_fankuguanli',
             roles: [LOGIN_TYPE.ADMIN],  
+            auth: ["supplier-application.list"],
         },
         children: [
             {

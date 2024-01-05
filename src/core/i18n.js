@@ -1853,6 +1853,7 @@ const messages = {
                 'purchase-order': '采购订单',
                 'sales-area': '销售区域',
                 'item': '商品管理',
+                'aftermarket-bom': 'BOM管理',
                 'item-category': '商品分类',
                 'entity': '商品实例',
                 'after-sales-order': '售后订单',
@@ -1897,7 +1898,7 @@ const messages = {
                 'feishu-data': '飞书管理',
                 // 新加入2023/10/9
                 'coc': 'COC证书管理',
-                'aftermarket-bom': 'BOM管理'
+                'supplier-application': '供应商管理',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2236,6 +2237,9 @@ const messages = {
             },
             'aftermarket-bom': {
                 'list': '售后BOM列表'
+            },
+            'supplier-application': {
+                'list': '申请资料列表'
             }
         },
         error_code: {
@@ -4588,6 +4592,7 @@ const messages = {
                 'feishu-data': 'Flying book management',
                 'coc': 'Coc Certificate Management',
                 'aftermarket-bom': 'BOM Management',
+                'supplier-application': 'Supplier Application',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4925,6 +4930,9 @@ const messages = {
             },
             'aftermarket-bom': {
                 'list': 'Aftermarket Bom List'
+            },
+            'supplier-application': {
+                'list': 'Application List'
             }
         },
         error_code: {

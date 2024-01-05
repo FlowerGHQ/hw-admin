@@ -6,6 +6,13 @@ const SUPPLAY = {
         '4': { value: 4, zh:'模具类', en: 'Mold Class', t: 'supply-chain.mold' },
         '5': { value: 5, zh:'客指类', en: 'CustomerRefers Class', t: 'supply-chain.customer_refers' },
     },
+    SUPPLAY_TYPE_MAP: {        
+        Part: 1,
+        Broker: 2,
+        Outsourcing: 3,
+        Mold: 4,
+        CustomerRefers: 5,
+    },
     SUPPLAY_TYPE_LIST: [
         { value: 1, zh:'零件类', en: 'Part Class', t: 'supply-chain.part' },
         { value: 2, zh:'代理类', en: 'Broker Class', t: 'supply-chain.broker' },

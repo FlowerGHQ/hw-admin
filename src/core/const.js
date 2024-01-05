@@ -994,6 +994,7 @@ let Const = {
         { list: [], select: [], key: 'feishu-data', name: '飞书管理' }, // (需要小程序判断权限(还未接入))
         // 新加入2023/10/9
         { list: [], select: [], key: 'coc', name: 'COC证书管理' },
+        { list: [], select: [], key: 'supplier-application', name: '供应商管理' },
     ],
 
     ATTACHMENT: {
