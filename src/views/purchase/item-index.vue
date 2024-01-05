@@ -217,6 +217,7 @@ export default {
       currency: "",
       flag_display: false,
       item_id: 0,
+      key: '',
       firstLevel_key: "",
     };
   },
@@ -231,11 +232,14 @@ export default {
   },
 
   mounted() {
+    this.searchForm.name = this.$route.query.key || ''
+    this.firstLevelId = Number(this.$route.query.tabId) || 0
     this.currency = Core.Data.getCurrency();
     this.firstLevel_key = this.$route.query.first_level_id;
     // this.getTableData();
     this.getCategoryList();
     this.getShopCartData();
+    this.handleSearch();
   },
 
   methods: {

@@ -1,7 +1,22 @@
 <template>
     <div id="mall-footer">
+        <div class="content" style="height: 97px;">
+            <div class="menu-one menu">
+                <span class="menu-item" v-for="(item, index) in menuListOne" :key="index">
+                    {{ $t(`mall.${item.lang}`) }}
+                </span>
+            </div>
+        </div>
         <div class="content">
-            footer
+            <div class="menu">
+                <span class="menu-item" v-for="(item, index) in menuList" :key="index">
+                    {{ $t(`mall.${item.lang}`) }}
+                </span>
+            </div>
+            <div class="about">
+                <!-- {{ $t('mall.about') }} -->
+                © 2023 | HORWIN Inc
+            </div>
         </div>
     </div>
 </template>
@@ -14,6 +29,8 @@ export default {
     data() {
         return {
             Core,
+            menuListOne: Core.Const.LOGINMALL.FOOTERMENUONE,
+            menuList: Core.Const.LOGINMALL.FOOTERMENU,
         };
     },
     computed: {},
@@ -31,8 +48,40 @@ export default {
     background-color: #000;
     color: #FFF;
     .content {
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        .fcc(space-between);
         margin: 0 auto;
         width: 75%;
+        height: 62px;
+        .menu {
+            .menu-item {
+                display: inline-block;
+                margin-right: 40px;
+                color: rgba(255, 255, 255, 0.4);
+                font-family: Urbanist;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: normal;
+                cursor: pointer;
+            }
+        }
+        .about {
+            display: inline-block;
+            margin-right: 40px;
+            color: rgba(255, 255, 255, 0.4);
+            font-family: Urbanist;
+            font-size: 12px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: normal;
+        }
+        .menu-one {
+            .menu-item {
+                font-size: 14px;
+                color: #FFF;
+            }
+        }
     }
     @media (min-width: 820px) {}
     @media (max-width: 820px) {}

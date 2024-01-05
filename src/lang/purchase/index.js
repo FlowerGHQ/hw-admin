@@ -17,6 +17,14 @@ export default {
         products_mes1: 'We have 13 vehicle models to choose from',
         products_mes2: 'To choose spareparts for different types of models',
         products_mes3: 'A wide range of accessories to choose from',
+        admin_backend: 'Admin Backend',
+        coc_download: 'COC Download',
+        photo_video: 'Photo & Video Downloads',
+        admin_backend_mes: 'Here is the subtitle, the specific copy is to be configured',
+        coc_download_mes: 'Here is the subtitle, the specific copy is to be configured',
+        photo_video_mes: 'Here is the subtitle, the specific copy is to be configured',
+        back_top: 'Back Top',
+        search: 'Search',
     },
     en: {
         system: "Horwin Business Operating System",
@@ -35,6 +43,15 @@ export default {
         products_mes1: 'We have 13 vehicle models to choose from',
         products_mes2: 'To choose spareparts for different types of models',
         products_mes3: 'A wide range of accessories to choose from',
+        services_name1: 'Vehicle Models',
+        admin_backend: 'Admin Backend',
+        coc_download: 'COC Download',
+        photo_video: 'Photo & Video Downloads',
+        admin_backend_mes: 'Here is the subtitle, the specific copy is to be configured',
+        coc_download_mes: 'Here is the subtitle, the specific copy is to be configured',
+        photo_video_mes: 'Here is the subtitle, the specific copy is to be configured',
+        back_top: 'Back Top',
+        search: 'Search',
     }
 }
 

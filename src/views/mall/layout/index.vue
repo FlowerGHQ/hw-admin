@@ -192,7 +192,7 @@ export default {
 };
 </script>
     
-<style lang="less">
+<style lang="less" scoped>
 #mall-layout{
     background: #F8F8F8;
     .mall-container {
@@ -202,7 +202,11 @@ export default {
     @media (max-width: 820px) {}
 }
 .ant-input {
-   caret-color: red; /* 将光标颜色设为红色 */
+    border: none;
+    caret-color: red; /* 将光标颜色设为红色 */
+    &:focus {
+        box-shadow: none;
+    }
 }
 input.ant-input {
     font-size: 14px;
