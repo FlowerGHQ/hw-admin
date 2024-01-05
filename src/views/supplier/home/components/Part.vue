@@ -287,6 +287,12 @@ const handleAddSpecItem = (list ,obj ,title) => {
 
     list.push({...obj,id})
 }
+const getMsgList = () => {
+    return msgList.value
+}
+defineExpose({
+    getMsgList
+})
 </script>
 <style lang="less" scoped>
     #part {

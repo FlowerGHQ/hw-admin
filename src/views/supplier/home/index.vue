@@ -127,11 +127,11 @@
                 <div class="content-main">
                     <!-- 动态组件 -->
                     <component
+                        ref="childrenRef"
                         :is="currentComponent"
                         :isSubmit="isSubmit"
                         :isSaveDraft="isSaveDraft"
                         v-model:value="step2Val"
-                        :step1Val = "step1Val"
                         :detail="detailObj"
                         class="current-components" />
                 </div>
@@ -179,6 +179,7 @@ import {useStore} from "vuex";
 const $message = message;
 const $router = useRouter();
 import Core from "@/core";
+const childrenRef = ref(null);
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
@@ -192,7 +193,6 @@ const form = reactive({
 const isSubmit = ref(false);
 const isSaveDraft = ref(false);
 const step2Val = ref(false);
-const step1Val = ref(false); // 第一步校验变量
 const $i18n = useI18n();
 const lang = useI18n().locale;
 const $store = useStore();
@@ -225,21 +225,16 @@ watch(
         immediate: true,
     }
 );
-// 监听第一步的校验是否完成
-watch(
-    () => step1Val.value,
-    (val) => {
-        if (val) {
-            console.log('step1Val.value ---1', val);
-            // handleNext();
-        }
-    },
-    {
-        immediate: true,
-    }
-);
+
 // 下一步
 const handleNext = () => {
+    console.log('childrenRef',childrenRef.value);
+    if(current.value===0){
+        if(childrenRef.value.beforeSaveVisible()){
+            current.value++; 
+        }
+        return;
+    }
     if (current.value == 2) return;
     current.value++;
 };
