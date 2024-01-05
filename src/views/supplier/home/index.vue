@@ -252,9 +252,10 @@ const detailObj = ref({});
 // 监听第二步的校验是否完成
 watch(
     () => step2Val.value,
-    (val) => {
+    async (val) => {
         if (val) {
-            handleNext();
+            await handleSubmitData
+            await handleNext();
         }
     },
     {
@@ -303,6 +304,9 @@ const handleBack = () => {
 const handleSubmit = () => {
     // 为了每次点击都知道变化
     isSubmit.value = !isSubmit.value;
+};
+// 提交数据
+const handleSubmitData = () => {
     // 提交
     const data = {
         type: 1, //类别：1.零件类；2.代理类；3.外协类；4.模具类；5.客指类
@@ -568,7 +572,7 @@ onMounted(() => {
                     border-top: 1px solid #f2f3f5;
                     background: #fff;
                 }
-                .promise-book{
+                .promise-book {
                     background-color: #fff;
                     padding: 20px;
                     text-align: center;
