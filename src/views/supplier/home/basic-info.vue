@@ -150,7 +150,7 @@ export default defineComponent({
     const allComRefTable = ref(null);
      watch(() => props.detail,(newVal, oldVal) => {  
         detailObj.value = Core.Util.deepCopy(newVal);
-        type.value = detailObj.value.type;
+        // type.value = detailObj.value.type ;
         // 草稿数据
         Core.Data.setSupplyDraftChain(detailObj.value?.form);
     });      
