@@ -204,7 +204,7 @@ watch(
                     uid: _.uniqueId("upload_"),
                     name: item,
                     status: "done",
-                    url: Core.Const.NET.FILE_URL_PREFIX + item,
+                    url: Core.Const.NET.OSS_POINT + item,
                     response: {
                         code: 0,
                         data: {
