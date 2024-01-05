@@ -420,11 +420,12 @@
                 </div>
                 <!-- 竞争对手 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">竞争对手</div>
+                    <div class="sub-title">{{ $t('supply-chain.competitor') }}</div>
                     <div class="information-form">
+                        <!-- 竞争对手信息 -->
                         <div class="level-search-row">
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">竞争对手信息</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.competitor_information') }}</div>
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
@@ -451,11 +452,11 @@
                 </div>
                 <!-- 客户信息 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">客户信息</div>
+                    <div class="sub-title">{{ $t('supply-chain.customer_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">主要客户</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.major_customer') }}</div>
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="customerInfoColumns"
@@ -465,7 +466,7 @@
                                         <template #bodyCell="{ column, text, record, index }">
                                             <!-- 序号 -->
                                             <template v-if="column.key === 'index'">
-                                                <div class="customerInfoColumns-index">主要客户{{ index + 1 }}</div>
+                                                <div class="customerInfoColumns-index">{{ $t('supply-chain.major_customer') }}{{ index + 1 }}</div>
                                             </template>
                                             <template v-if="column.key === 'customer_name'">
                                                 {{ text }}
@@ -488,19 +489,21 @@
                 </div>
                 <!-- 技术信息 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">技术信息</div>
+                    <div class="sub-title">{{ $t('supply-chain.Technical_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 相关专利 -->
                             <div class="search-col w-50-percentage">
-                                <div class="key w-130 t-a-r text-color">相关专利</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.related_patent') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.technical_info?.patent || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 研发中心 -->
                             <div class="search-col w-50-percentage">
-                                <div class="key w-130 t-a-r text-color">研发中心</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.research_and_development_center') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.technical_info?.RD_center || "-" }}
@@ -509,8 +512,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 研发合作机构 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">研发合作机构</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.r_d_partner') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.technical_info?.RD_partners || "-" }}
@@ -521,7 +525,7 @@
                         <div class="level-search-row">
                             <!-- 产品设计 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">产品设计</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.product_design') }}</div>
                                 <div class="value m-l-8 d-fl">                         
                                     <template v-for="(item, index) in msgDetail.technical_info?.product_design" :key="index">                                    
                                         <a-checkbox :checked="true">
@@ -535,8 +539,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 过程设计 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">过程设计</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_design') }}</div>
                                 <div class="value m-l-8 d-fl">                                  
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
                                         <a-checkbox :checked="true">
@@ -550,8 +555,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 过程验证 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">过程验证</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_verification') }}</div>
                                 <div class="value m-l-8 d-fl">                                  
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
                                         <a-checkbox :checked="true">
@@ -565,8 +571,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 设计软件 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">设计软件</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.design_software') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.technical_info?.design_software || "-" }}
@@ -575,8 +582,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 开发流程 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">开发流程</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.development_process') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.technical_info?.dev_process || "-" }}
@@ -588,19 +596,21 @@
                 </div>
                 <!-- 质量信息 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">质量信息</div>
+                    <div class="sub-title">{{ $t('supply-chain.quality_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 质量体系认证 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">质量体系认证</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_system_certification') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.certification || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 环境体系认证 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">环境体系认证</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_system_certification') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.env_certification || "-" }}
@@ -609,16 +619,18 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 质量合作机构 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">质量合作机构</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_cooperation_agency') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.partners || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 认可实验室 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">认可实验室</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.accredited_laboratory') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.accredited_laboratory || "-" }}
@@ -627,16 +639,18 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 质控工具软件 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">质控工具软件</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_control_tool_software') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.tool_software || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 计划体系认证 -->
                             <div class="search-col">
-                                <div class="key w-130 t-a-r text-color">计划体系认证</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.planning_system_certification') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.quality_info?.system_certification || "-" }}
@@ -645,8 +659,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 市场PPM -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">市场PPM</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.market_PPM') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.quality_info?.PPM || "-" }}
@@ -658,11 +673,12 @@
                 </div>
                 <!-- 产能产线 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">产能产线</div>
+                    <div class="sub-title">{{ $t('supply-chain.capacity_line') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 关键自有工序 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">关键自有工序</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.key_owned_process') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.produce_capacity?.processes || "-" }}
@@ -671,8 +687,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 智能自动化线 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">智能自动化线</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.intelligent_automation_line') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.produce_capacity?.automation_line || "-" }}
@@ -681,8 +698,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 生产产能负荷 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">生产产能负荷</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.production_capacity_load') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.produce_capacity?.load || "-" }}
@@ -694,11 +712,12 @@
                 </div>
                 <!-- 外购管理 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">外购管理</div>
+                    <div class="sub-title">{{ $t('supply-chain.qutsourcing_management') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 外购工艺 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">外购工艺</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourced_technology') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.outsourcing?.technology || "-" }}
@@ -707,8 +726,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 外购备件 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">外购备件</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourced_spare_parts') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.outsourcing?.parts || "-" }}
@@ -717,8 +737,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 外购原料 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">外购原料</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchased_raw_materials') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.outsourcing?.material || "-" }}
@@ -727,8 +748,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 外购制度 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">外购制度</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourcing_system') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.outsourcing?.system || "-" }}
@@ -741,9 +763,10 @@
             </div>
             <!-- 设备信息 -->
             <div class="equipment-information bg-color m-t-16">
-                <div class="title">设备信息</div>
+                <div class="title">{{ $t('supply-chain.device_information') }}</div>
+                <!-- 关键生产设备 -->
                 <div class="information-container-form">
-                    <div class="sub-title">关键生产设备</div>
+                    <div class="sub-title">{{ $t('supply-chain.key_production_equipment') }}</div>
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
@@ -752,8 +775,9 @@
                         ></a-table>
                     </div>
                 </div>
+                <!-- 关键检测设备 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">关键检测设备</div>
+                    <div class="sub-title">{{ $t('supply-chain.critical_detection_equipment') }}</div>
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
@@ -765,13 +789,14 @@
             </div>
             <!-- 补充信息 -->
             <div class="supplementary-information bg-color m-t-16">
-                <div class="title">补充信息</div>
+                <div class="title">{{ $t('supply-chain.supplementary_information') }}</div>
                 <div class="information-container-form">
                     <div class="sub-title"></div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 其他优势说明 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">其他优势说明</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.other_advantages_description') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input h-64">
                                         {{ msgDetail.additional_info || "-" }}
@@ -786,17 +811,18 @@
         <!-- 材料清单 -->
         <div class="materials-message m-t-30">
             <div class="msg-header">
-                <span class="m-l-4">材料清单</span>
+                <span class="m-l-4">{{ $t('supply-chain.material_list') }}</span>
             </div>
             <!-- 基本信息 -->
             <div class="materials-basic-information bg-color m-t-16">
-                <div class="title">基本信息</div>
+                <div class="title">{{ $t('supply-chain.basic_info') }}</div>
                 <div class="information-container-form">
-                    <div class="sub-title">营业执照照片</div>
+                    <div class="sub-title">{{ $t('supply-chain.business_license_photos') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 营业执照照片 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">营业执照照片</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.business_license_photos') }}</div>
                                 <div class="value m-l-8">
                                     <template
                                         v-for="(item, index) in msgDetail.confirmatory_material?.business_license_photo"
@@ -813,8 +839,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 注册资本 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">注册资本</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.registered_capital') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.confirmatory_material?.registered_capital || "-" }}
@@ -829,8 +856,9 @@
                             </div> -->
                         </div>
                         <div class="level-search-row">
+                            <!-- 营业期限 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">营业期限</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.business_term') }}</div>
                                 <div class="value m-l-8" style="display: flex; align-items: center">
                                     <a-radio :checked="true">                                         
                                         {{
@@ -859,19 +887,22 @@
                     </div>
                 </div>
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">银行开票资料</div>
+                    <!-- 银行开票资料 -->
+                    <div class="sub-title">{{ $t('supply-chain.bank_billing_information') }}</div>
                     <div class="information-form">
+                        <!-- 开户名 -->
                         <div class="level-search-row">
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">开户名</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.account_name') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.confirmatory_material?.account_name || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 开户行 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">开户行</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_of_deposit') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.confirmatory_material?.account_with_bank || "-" }}
@@ -880,16 +911,18 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 开户行号 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">开户行号</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_number') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.confirmatory_material?.account_with_bank_number || "-" }}
                                     </div>
                                 </div>
                             </div>
+                            <!-- 银行账号 -->
                             <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">银行账号</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_account') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail?.confirmatory_material?.bank_account || "-" }}
@@ -900,11 +933,12 @@
                     </div>
                 </div>
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">质量体系证书</div>
+                    <div class="sub-title">{{ $t('supply-chain.quality_system_certificate') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 质量体系证书 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">质量体系证书</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_system_certificate') }}</div>
                                 <div class="value m-l-8">
                                     <template
                                         v-for="(item, index) in msgDetail.confirmatory_material?.quality_system_certificate"
@@ -925,13 +959,14 @@
             </div>
             <!-- 其他证实性材料 -->
             <div class="other-materials bg-color m-t-16">
-                <div class="title">其他证实性材料</div>
+                <div class="title">{{ $t('supply-chain.other_proving_materials') }}</div>
                 <div class="information-container-form m-t-40">
                     <div class="sub-title"></div>
                     <div class="information-form">
                         <div class="level-search-row">
+                            <!-- 开户行许可证 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">开户行许可证</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_account_license') }}</div>
                                 <div class="value m-l-8">
                                     <template
                                         v-for="(item, index) in msgDetail.confirmatory_material?.account_opening_bank_license"
@@ -948,8 +983,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 环评证书 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">环评证书</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_assessment_certificate') }}</div>
                                 <div class="value m-l-8">
                                     <template
                                         v-for="(item, index) in msgDetail.confirmatory_material?.eia_certificate"
@@ -966,8 +1002,9 @@
                             </div>
                         </div>
                         <div class="level-search-row">
+                            <!-- 环保报告 -->
                             <div class="search-col align-flex-start">
-                                <div class="key w-130 t-a-r text-color">环保报告</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_protection_report') }}</div>
                                 <div class="value m-l-8">
                                     <template
                                         v-for="(item, index) in msgDetail.confirmatory_material?.environmental_report"
@@ -991,42 +1028,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, getCurrentInstance } from "vue";
 import { useRoute } from "vue-router";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 
 const route = useRoute();
 const msgDetail = ref({});
+const { proxy } = getCurrentInstance()
 
 // 关键设备和关键检测设备
 const deviceColumns = computed(() => {
     let columns = [
-        { title: "生产设备名称", dataIndex: "name", key: "name" },
-        { title: "规格型号", dataIndex: "spec", key: "spec" },
-        { title: "数量", dataIndex: "quantity", key: "quantity" },
-        { title: "设备制造商", dataIndex: "manufacturer", key: "manufacturer" },
-        { title: "购置年限", dataIndex: "purchase_period", key: "purchase_period" },
+        { title: proxy.$t('supply-chain.Name_of_production_equipment'), dataIndex: "name", key: "name" },
+        { title: proxy.$t('supply-chain.Specification_and_model'), dataIndex: "spec", key: "spec" },
+        { title: proxy.$t('supply-chain.quantity'), dataIndex: "quantity", key: "quantity" },
+        { title: proxy.$t('supply-chain.Equipment_manufacturer'), dataIndex: "manufacturer", key: "manufacturer" },
+        { title: proxy.$t('supply-chain.Purchase_period'), dataIndex: "purchase_period", key: "purchase_period" },
     ];
     return columns;
 });
 // 竞争对手信息
 const competitionColumns = computed(() => {
     let columns = [
-        { title: "公司名称", dataIndex: "company_name", key: "company_name" },
-        { title: "市场份额", dataIndex: "market_share", key: "market_share" },
-        { title: "了解评价", dataIndex: "understand_evaluation", key: "understand_evaluation" },
+        { title: proxy.$t('supply-chain.company_name'), dataIndex: "company_name", key: "company_name" },
+        { title: proxy.$t('supply-chain.market_share'), dataIndex: "market_share", key: "market_share" },
+        { title: proxy.$t('supply-chain.understanding_evaluation'), dataIndex: "understand_evaluation", key: "understand_evaluation" },
     ];
     return columns;
 });
 // 客户信息
 const customerInfoColumns = computed(() => {
     let columns = [
-        { title: "客户序号", dataIndex: "index", key: "index" },
-        { title: "客户名称", dataIndex: "customer_name", key: "customer_name" },
-        { title: "销售占比", dataIndex: "sales_share", key: "sales_share" },
-        { title: "主供零件", dataIndex: "main_supply_part", key: "main_supply_part" },
-        { title: "开始合作时间", dataIndex: "begin_cooperation_time", key: "begin_cooperation_time" },
+        { title: proxy.$t('supply-chain.customer_serial_number'), dataIndex: "index", key: "index" },
+        { title: proxy.$t('supply-chain.customer_name'), dataIndex: "customer_name", key: "customer_name" },
+        { title: proxy.$t('supply-chain.Sales_share'), dataIndex: "sales_share", key: "sales_share" },
+        { title: proxy.$t('supply-chain.Main_supply_part'), dataIndex: "main_supply_part", key: "main_supply_part" },
+        { title: proxy.$t('supply-chain.Start_time'), dataIndex: "begin_cooperation_time", key: "begin_cooperation_time" },
     ];
     return columns;
 });
