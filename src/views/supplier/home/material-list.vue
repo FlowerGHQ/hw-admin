@@ -634,14 +634,14 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 199px 0 399px;
+            padding: 8px 10.36% 0 20.78%;
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            padding: 8px 696px 0 623px;
+            padding: 8px 36.25% 0 32.44%;
         }
     }
 }
