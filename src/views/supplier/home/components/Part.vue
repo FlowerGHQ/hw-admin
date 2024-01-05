@@ -69,7 +69,7 @@
 
                                         <!-- 输入框input  -->
                                         <template v-if="$3.type === 1">
-                                            <a-input v-model:value="$3.value"  placeholder="请输入" autocomplete="off" />
+                                            <a-input v-model:value="$3.value" :maxlength="$3?.maxLength || 500"  placeholder="请输入" autocomplete="off" />
                                         </template>
                                         <!-- textarea -->
                                         <template v-else-if="$3.type === 1.1">
