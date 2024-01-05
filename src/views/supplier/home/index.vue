@@ -1,5 +1,5 @@
 <template>
-    <div class="supply-chain">
+    <div class="supply-chain" ref="suppluChain">
         <a-layout>
             <a-layout-header>
                 <div class="header-left">
@@ -152,11 +152,11 @@
                     }">
                     <!-- 动态组件 -->
                     <component
+                        ref="childrenRef"
                         :is="currentComponent"
                         :isSubmit="isSubmit"
                         :isSaveDraft="isSaveDraft"
                         v-model:value="step2Val"
-                        :step1Val="step1Val"
                         :detail="detailObj"
                         class="current-components"
                         @handleComeOne="handleBackOne" />
@@ -196,6 +196,127 @@
                 </div>
             </a-layout-content>
         </a-layout>
+        <a-modal
+            v-model:visible="visible"
+            class="promise-book-modal"
+            width="860px"
+            :getContainer="
+                () => {
+                    return suppluChain;
+                }
+            "
+            centered>
+            <!-- title -->
+            <template #title>
+                请阅读《廉洁承诺书》和《保密和不竞争协议》
+            </template>
+            <!-- body -->
+            <template #default>
+                <!--廉洁承诺书 -->
+                <div class="promise-book">
+                    <div class="promise-book-title">
+                        <img
+                            src="../../../assets/images/supply-chain/promise_modal.png"
+                            alt="" />
+                        <span>廉洁承诺书</span>
+                    </div>
+                    <ul>
+                        <li>
+                            1.
+                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
+                            上述“保密信息”包括但不限于：
+                        </li>
+                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
+                        <li>
+                            (2)
+                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
+                        </li>
+                        <li>
+                            (3)
+                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
+                        </li>
+                        <li>
+                            (4)
+                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
+                        </li>
+                        <li>
+                            (5)
+                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
+                        </li>
+                        <li>
+                            (6)
+                            双方在合作项目中形成的任何配方、技术、数据、知识产权、研发资料、信息等；
+                        </li>
+                        <li>
+                            (7)
+                            披露方的市场研究结果、市场渗透资料、市场调研数据、市场销售计划、市场销售策略及其他所有市场及销售信息；
+                        </li>
+                        <li>
+                            (8)
+                            披露方专有的任何带有“绝密”、“机密”、“秘密”、“商密”等字样或标示为保密的文件，以及披露方的各项规章制度；
+                        </li>
+                        <li>
+                            (9)
+                            协议披露方为进行合作事项而达成的任何合同、协议、约定或在进行合作事项过程中产生的任何笔记、会议纪要、会谈记录等；
+                        </li>
+                        <li>(10) 其他披露方向接收方披露的信息。</li>
+                    </ul>
+                </div>
+                <!--保密和不竞争协议 -->
+                <div class="promise-book">
+                    <div class="promise-book-title">
+                        <img
+                            src="../../../assets/images/supply-chain/promise_modal.png"
+                            alt="" />
+                        <span>保密和不竞争协议</span>
+                    </div>
+                    <ul>
+                        <li>
+                            1.
+                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
+                            上述“保密信息”包括但不限于：
+                        </li>
+                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
+                        <li>
+                            (2)
+                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
+                        </li>
+                        <li>
+                            (3)
+                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
+                        </li>
+                        <li>
+                            (4)
+                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
+                        </li>
+                        <li>
+                            (5)
+                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
+                        </li>
+                    </ul>
+                </div>
+            </template>
+            <!-- footer -->
+            <template #footer>
+                <!-- 已阅读，发送申请 -->
+                <a-button
+                    type="primary"
+                    :class="{
+                        'btn-disabled': countTime != 0,
+                        'read-btn':countTime == 0,
+                    }"
+                    @click="handleSubmitOk"
+                    >
+                    已阅读，发送申请
+                    <div class="time-area" v-if="countTime != 0">
+                        (
+                    <span class="timing">{{ countTime }}s</span>
+                    )
+                    </div>
+                    
+                </a-button>
+            </template>
+        </a-modal>
     </div>
 </template>
 
@@ -215,10 +336,13 @@ import { useStore } from "vuex";
 const $message = message;
 const $router = useRouter();
 import Core from "@/core";
+const childrenRef = ref(null);
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const $Util = Core.Util;
 const user = Core.Data.getUser() || {};
+const visible = ref(true);
+const suppluChain = ref(null);
 const form = reactive({
     old_password: "",
     password: "",
@@ -228,7 +352,6 @@ const form = reactive({
 const isSubmit = ref(false);
 const isSaveDraft = ref(false);
 const step2Val = ref(false);
-const step1Val = ref(false); // 第一步校验变量
 const $i18n = useI18n();
 const lang = useI18n().locale;
 const $store = useStore();
@@ -249,12 +372,16 @@ const currentComponent = computed(() => {
 const current = ref(1);
 const passShow = ref(false);
 const detailObj = ref({});
+// 定时
+let countTime = ref(30);
+// 定时器
+let timer = null;
 // 监听第二步的校验是否完成
 watch(
     () => step2Val.value,
     async (val) => {
         if (val) {
-            await handleSubmitData
+            await handleSubmitData;
             await handleNext();
         }
     },
@@ -262,19 +389,7 @@ watch(
         immediate: true,
     }
 );
-// 监听第一步的校验是否完成
-watch(
-    () => step1Val.value,
-    (val) => {
-        if (val) {
-            console.log("step1Val.value ---1", val);
-            // handleNext();
-        }
-    },
-    {
-        immediate: true,
-    }
-);
+
 watch(
     () => current.value,
     (val) => {
@@ -283,15 +398,48 @@ watch(
         }
     }
 );
+// 倒计时
+const countDown = () => {
+    if (timer) {
+        clearTimeout(timer);
+        timer = null;
+    }
+    timer =  setTimeout(() => {
+        if (countTime.value > 0) { // 如果倒计时还没结束，则继续
+            countTime.value--; // 倒计时时间减一
+            countDown(); // 没到1秒则继续调用自己
+        }
+    }, 1000);
+};
+// 监听 弹框打开，开始倒计时
+watch(
+    () => visible.value,
+    (val) => {
+        console.log("visible.value", val);
+        if (val) {
+            countTime.value = 30
+            countDown();
+        }
+    },
+    {
+        immediate: true,
+    }
+);
 
 // 是否已经提交
 const isSubmited = computed(() => {
-    console.log("isSubmit.value", detailObj.value === null ? false : true);
     return detailObj.value === null ? false : true;
 });
 
 // 下一步
 const handleNext = () => {
+    console.log('childrenRef',childrenRef.value);
+    if(current.value===0){
+        if(childrenRef.value.beforeSaveVisible()){
+            current.value++; 
+        }
+        return;
+    }
     if (current.value == 2) return;
     current.value++;
 };
@@ -316,7 +464,6 @@ const handleSubmitData = () => {
 
     Core.Api.SUPPLY.add(data)
         .then((res) => {
-            console.log("res", res);
             $message.success($t("supply-chain.supply_submit_successfully"));
         })
         .catch((err) => {
@@ -370,7 +517,6 @@ const handleSave = () => {
 const getDetail = () => {
     Core.Api.SUPPLY.adminDetail({})
         .then((res) => {
-            console.log("res", res);
             detailObj.value = res?.detail ?? null;
             if (detailObj.value) {
                 let jsonStr = JSON.parse(detailObj.value.form);
@@ -378,6 +524,10 @@ const getDetail = () => {
             }
         })
         .catch((err) => {});
+};
+// 发送申请
+const handleSubmitOk = () => {
+    console.log("发送申请");
 };
 
 // 回到第一步
@@ -505,7 +655,7 @@ onMounted(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px 80px 40px;
+            padding: 20px 40px 20px 40px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -542,7 +692,7 @@ onMounted(() => {
             .content-main-submited {
                 flex: 1;
                 margin-top: 15px;
-                overflow: auto;
+                overflow-y: scroll;
                 background-color: #ffffff;
                 border-radius: 6px;
                 // 滚动条样式
@@ -561,9 +711,7 @@ onMounted(() => {
             }
             .supply-chain-footer {
                 min-height: 68px;
-                position: absolute;
-                bottom: 0;
-                width: calc(100% - 80px);
+                width: calc(100%);
                 .btn-area {
                     display: flex;
                     padding: 18px 0px;
@@ -576,7 +724,57 @@ onMounted(() => {
                     background-color: #fff;
                     padding: 20px;
                     text-align: center;
+                    color: #1d2129;
+                    .promise-text {
+                        color: #0061ff;
+                    }
                 }
+            }
+        }
+    }
+    :deep(.promise-book-modal) {
+        //header
+        .ant-modal-header {
+            color: #1d2129;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .ant-modal-body {
+            // ul清除默认样式
+            padding: 20px;
+            ul {
+                padding-left: 0;
+                list-style: none;
+            }
+            .promise-book {
+                .promise-book-title {
+                    height: 34px;
+                    border-radius: 4px;
+                    background: #f2f3f5;
+                    display: flex;
+                    align-items: center;
+                    padding: 9px 10px;
+                    margin-bottom: 10px;
+                    img {
+                        margin-right: 4px;
+                    }
+                }
+            }
+        }
+        // footer
+        .ant-modal-footer {
+            text-align: center;
+            .btn-disabled,.read-btn {
+                border-radius: 4px;
+                border: 1px solid  #0061FF;
+                opacity: 0.3;
+                background: #0061FF;
+                color: #FFF;
+                cursor: not-allowed;
+            }
+            .read-btn{
+                cursor: pointer;
+                opacity: 1;
             }
         }
     }

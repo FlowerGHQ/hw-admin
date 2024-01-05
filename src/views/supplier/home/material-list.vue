@@ -614,6 +614,7 @@ onMounted(() => {
     display: flex;
     width: 100%;
     padding: 20px;
+    padding-bottom: 0;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
@@ -640,7 +641,7 @@ onMounted(() => {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            padding: 8px 36.25% 0 32.44%;
+            padding: 8px  32.44% 0  29.55%;
         }
     }
 }
