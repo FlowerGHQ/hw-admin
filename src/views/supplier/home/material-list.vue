@@ -102,14 +102,13 @@
                                                 v-model:value="
                                                     formState.business_duration_type
                                                 ">
-                                                <a-radio 
-                                                    v-for="(item, index) in Core.Const.SUPPLAY.BUSINESS_TERM" 
+                                                <a-radio
+                                                    v-for="(item, index) in Core
+                                                        .Const.SUPPLAY
+                                                        .BUSINESS_TERM"
                                                     :value="item.value"
-                                                    :key="index"
-                                                >
-                                                    {{
-                                                        $t(item.t)
-                                                    }}
+                                                    :key="index">
+                                                    {{ $t(item.t) }}
                                                 </a-radio>
                                             </a-radio-group>
                                             <TimeSearch
@@ -382,12 +381,14 @@ watch(
                 .validate()
                 .then((res) => {
                     if (res) {
-                        // 校验通过
-                        $emit("update:value", true);
+                        // 校验通过,通知父组件校验步骤2通过
+                        let data =
+                            Core.Data.getSupplyChain() === ""
+                                ? {}
+                                : JSON.parse(Core.Data.getSupplyChain());
 
-                        // 获取本地数据
-                        let data = Core.data.getSupplyChain() === "" ? {} : JSON.parse(Core.data.getSupplyChain());
-                        // 判断是否为空对象
+                        console.log(formState);
+                        console.log(data);
                         if (Object.keys(data).length === 0) {
                             // 为空对象
                             data = {
@@ -397,16 +398,20 @@ watch(
                             // 不为空对象
                             data.confirmatory_material = formState;
                         }
-                        console.log(data);
-                        //存储到本地
-                        Core.Data.setSupplyDraftChain(JSON.stringify(data));
+
+                        // 保存数据
+                        Core.Data.setSupplyChain(JSON.stringify(data));
+
+                        $emit("update:value", true);
+
+
                     }
                 })
                 .catch((err) => {
                     // 校验失败
                     $emit("update:value", false);
-                    message.warning($t("supply-chain.please_complete_info"));   
-                    const errorName = err.errorFields[0]?.name[0];
+                    message.warning($t("supply-chain.please_complete_info"));
+                    const errorName = err?.errorFields[0]?.name[0] ?? undefined;
                     if (!errorName) return;
                     const errorDom = document.querySelector(
                         `[name=${errorName}]`
@@ -429,36 +434,37 @@ watch(
     (val) => {
         // 获取数据
         let data =
-            Core.Data.getSupplyChain() === ""
+            Core.Data.getSupplyDraftChain() === ""
                 ? {}
-                : JSON.parse(Core.Data.getSupplyChain());
+                : JSON.parse(Core.Data.getSupplyDraftChain());
         // 判断是否为空对象
         if (Object.keys(data).length === 0) {
             // 为空对象
             data = {
-                    confirmatory_material: formState,
+                confirmatory_material: formState,
             };
         } else {
             // 不为空对象
             data.confirmatory_material = formState;
         }
+        console.log("草稿数据：", data);
+
         // 保存数据
-        Core.Data.setSupplyChain(JSON.stringify(data));
+        Core.Data.setSupplyDraftChain(JSON.stringify(data));
+
         // 提示
         message.success($t("supply-chain.save_successfully"));
-
     }
 );
 watch(
-    ()=> $i18n.locale.value,
-    (val)=>{
+    () => $i18n.locale.value,
+    (val) => {
         // 重新校验
         if (formRef1.value) {
             formRef1.value.clearValidate();
         }
     }
-)
-
+);
 
 let BusinessTermValid = async (_rule, value) => {
     if (formState.business_duration_type == 2) {
@@ -532,7 +538,6 @@ let bank_accountVaild = async (_rule, value) => {
     return Promise.resolve();
 };
 
-
 const rules = {
     // 注册资本
     registered_capital: [
@@ -559,7 +564,7 @@ const rules = {
         },
     ],
     account_name: [
-    {
+        {
             required: true,
             validator: account_nameVaild,
             trigger: ["change", "blur"],
@@ -593,22 +598,21 @@ const handleTimeSearch = (params) => {
 };
 // 草稿回显
 const draftDataReview = () => {
-    let draftDataJson = Core.Data.getSupplyChain();
-    let draftData  = draftDataJson === "" ? {} : JSON.parse(draftDataJson);
+    let draftDataJson = Core.Data.getSupplyDraftChain();
+    let draftData = draftDataJson === "" ? {} : JSON.parse(draftDataJson);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState.business_duration_type = 1;
     } else {
         // 解析出来的数据
         let data = draftData;
-        console.log(data);
-        Object.keys(data?.confirmatory_material??{}).forEach((key) => {
+        Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
             formState[key] = data.confirmatory_material[key];
         });
         formState.business_duration_type =
             data?.confirmatory_material?.business_duration_type || 1;
 
-        console.log(formState);
+        console.log("回显数据：", formState);
     }
     setTimeout(() => {
         if (TimeSearchRef.value) {
@@ -658,7 +662,7 @@ onMounted(() => {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            padding: 8px  32.44% 0  29.55%;
+            padding: 8px 32.44% 0 29.55%;
         }
     }
 }

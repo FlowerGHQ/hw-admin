@@ -151,8 +151,6 @@ export default defineComponent({
      watch(() => props.detail,(newVal, oldVal) => {  
         detailObj.value = Core.Util.deepCopy(newVal);
         type.value = detailObj.value.type;
-        // 真数据/校验后
-        Core.Data.setSupplyChain(detailObj.value?.form);
         // 草稿数据
         Core.Data.setSupplyDraftChain(detailObj.value?.form);
     });      
@@ -753,7 +751,6 @@ export default defineComponent({
 
   }
   onMounted(() => {
-    console.log('888888888');
   })
 
   const beforeSaveVisible = () => {

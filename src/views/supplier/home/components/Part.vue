@@ -256,7 +256,6 @@ watch(
         if(newValue && Object.keys(newValue)){
             refresh();
         } */
-        console.log('msg----1', newValue, oldValue);
         msgList.value = Core.Util.deepCopy(newValue)
     },
     { deep:true, immediate: true }  
