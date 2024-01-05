@@ -369,7 +369,7 @@ const currentComponent = computed(() => {
     }
 });
 // 步骤条
-const current = ref(1);
+const current = ref(0);
 const passShow = ref(false);
 const detailObj = ref({});
 // 定时
@@ -530,7 +530,7 @@ const getDetail = () => {
             detailObj.value = res?.detail ?? null;
             if (detailObj.value) {
                 let jsonStr = JSON.parse(detailObj.value.form);
-                Core.Data.setSupplyDraftChain(jsonStr);
+                Core.Data.setSupplyChain(jsonStr);
             }
         })
         .catch((err) => {});

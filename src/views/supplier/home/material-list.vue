@@ -367,6 +367,9 @@ import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $emit = defineEmits(["update:value"]);
+let formState = reactive({
+    business_duration_type: 1,
+});
 
 // 监听isSubmit
 watch(
@@ -381,6 +384,22 @@ watch(
                     if (res) {
                         // 校验通过
                         $emit("update:value", true);
+
+                        // 获取本地数据
+                        let data = Core.data.getSupplyChain() === "" ? {} : JSON.parse(Core.data.getSupplyChain());
+                        // 判断是否为空对象
+                        if (Object.keys(data).length === 0) {
+                            // 为空对象
+                            data = {
+                                confirmatory_material: formState,
+                            };
+                        } else {
+                            // 不为空对象
+                            data.confirmatory_material = formState;
+                        }
+                        console.log(data);
+                        //存储到本地
+                        Core.Data.setSupplyDraftChain(JSON.stringify(data));
                     }
                 })
                 .catch((err) => {
@@ -440,9 +459,6 @@ watch(
     }
 )
 
-let formState = reactive({
-    business_duration_type: 1,
-});
 
 let BusinessTermValid = async (_rule, value) => {
     if (formState.business_duration_type == 2) {
