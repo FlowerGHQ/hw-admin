@@ -429,12 +429,14 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
-                                        :data-source="msgDetail.competitor_analysis"
+                                        :data-source="msgDetail.competitor_analysis || []"
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
                                             <!-- 公司名称 -->
-                                            <template v-if="column.key === 'company_name'"> </template>
+                                            <template v-if="column.key === 'company_name'">
+                                                {{ text }}
+                                            </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
                                                 {{ text }}
@@ -460,7 +462,7 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="customerInfoColumns"
-                                        :data-source="msgDetail.customer_info"
+                                        :data-source="msgDetail.customer_info || []"
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
@@ -770,7 +772,7 @@
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
-                            :data-source="msgDetail.production_equipment"
+                            :data-source="msgDetail.production_equipment || []"
                             :pagination="false"
                         ></a-table>
                     </div>
@@ -781,7 +783,7 @@
                     <div class="information-form">
                         <a-table
                             :columns="deviceColumns"
-                            :data-source="msgDetail.production_equipment"
+                            :data-source="msgDetail.production_equipment || []"
                             :pagination="false"
                         ></a-table>
                     </div>
