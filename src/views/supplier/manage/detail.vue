@@ -290,12 +290,21 @@
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
                                         <!-- {{ msgDetail.financial_info?.account_period_requirement || "-" }} -->
-                                        {{ 
-                                            Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[30].value
-                                        }}
-                                        {{ 
-                                            $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[30].unit)
-                                        }}
+                                        <template v-if="Number(msgDetail.financial_info?.account_period_requirement) === 0">                                            
+                                            {{ 
+                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[0].t)
+                                            }}
+                                        </template>
+                                        <template v-else>
+                                            {{ 
+                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
+                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement].value : "-"
+                                            }}
+                                            {{ 
+                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
+                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requiremen].unit) : ""
+                                            }}
+                                        </template>
                                     </a-radio>
                                 </div>
                             </div>
@@ -306,8 +315,13 @@
                                 <div class="key w-130 t-a-r text-color">发票类型</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
-                                        <span>增值税发票 {{ msgDetail.financial_info?.invoice_type || "-" }}</span>
-                                        <span class="invoice_range">
+                                        <span>
+                                            {{
+                                                Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type] ?
+                                                $t(Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type].t) : "-"
+                                            }}
+                                        </span>
+                                        <span class="invoice-range">
                                             {{ msgDetail.financial_info?.invoice_range_value || "-" }}
                                         </span>
                                     </a-radio>
@@ -506,7 +520,10 @@
                                 <div class="key w-130 t-a-r text-color">产品设计</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
-                                        {{ msgDetail.technical_info?.product_design || "-" }}
+                                        {{
+                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.product_design] ?
+                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.product_design].t) : "-"
+                                        }}
                                     </a-radio>
                                 </div>
                             </div>
@@ -515,8 +532,11 @@
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">过程设计</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        {{ msgDetail.technical_info?.process_design || "-" }}
+                                    <a-radio :checked="true">                                        
+                                        {{
+                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_design] ?
+                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_design].t) : "-"
+                                        }}
                                     </a-radio>
                                 </div>
                             </div>
@@ -525,8 +545,11 @@
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">过程验证</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        {{ msgDetail.technical_info?.process_validation || "-" }}
+                                    <a-radio :checked="true">                                        
+                                        {{
+                                            Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_validation] ?
+                                            $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[msgDetail.technical_info?.process_validation].t) : "-"
+                                        }}
                                     </a-radio>
                                 </div>
                             </div>
@@ -791,18 +814,23 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="search-col required">
+                            <!-- <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">法定代表人</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">缺少字段</div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="level-search-row">
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">营业期限</div>
                                 <div class="value m-l-8" style="display: flex; align-items: center">
-                                    <a-radio :checked="true"> 短期还是长期 </a-radio>
+                                    <a-radio :checked="true">                                         
+                                        {{
+                                            Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type] ?
+                                            $t(Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type].t) : "-"
+                                        }}
+                                    </a-radio>
                                     <div class="bussiness-time">
                                         {{
                                             msgDetail?.confirmatory_material?.begin_business_time
@@ -1161,7 +1189,8 @@ function getDetail(params = {}) {
                     }
                 }
             }
-            .invoice_range {                
+            .invoice-range {
+                margin-left: 6px;
                 height: 32px;
                 padding: 8px 12px;
                 box-sizing: border-box;

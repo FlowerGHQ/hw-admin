@@ -91,6 +91,11 @@ const SUPPLAY = {
         1: { value: 1, t: 'supply-chain.vat_invoice' }, // 增值税发票
         2: { value: 2, t: 'supply-chain.general_invoice' }, // 普通发票
         3: { value: 3, t: 'supply-chain.other' }, // 其他
+    },
+    // 营业期限
+    BUSINESS_TERM: {
+        1: { value: 1, t: 'supply-chain.long_term_validity' }, // 增值税发票
+        2: { value: 2, t: 'supply-chain.short_term_validity' }, // 普通发票
     }
 
 }

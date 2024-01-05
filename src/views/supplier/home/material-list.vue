@@ -102,16 +102,15 @@
                                                 v-model:value="
                                                     formState.business_duration_type
                                                 ">
-                                                <a-radio :value="1">{{
-                                                    $t(
-                                                        "supply-chain.long_term_validity"
-                                                    )
-                                                }}</a-radio>
-                                                <a-radio :value="2">{{
-                                                    $t(
-                                                        "supply-chain.short_term_validity"
-                                                    )
-                                                }}</a-radio>
+                                                <a-radio 
+                                                    v-for="(item, index) in Core.Const.SUPPLAY.BUSINESS_TERM" 
+                                                    :value="item.value"
+                                                    :key="index"
+                                                >
+                                                    {{
+                                                        $t(item.t)
+                                                    }}
+                                                </a-radio>
                                             </a-radio-group>
                                             <TimeSearch
                                                 v-if="
