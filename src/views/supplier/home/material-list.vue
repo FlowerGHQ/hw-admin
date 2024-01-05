@@ -345,6 +345,7 @@
 import { ref, reactive, watch, onMounted, toRef } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
+import { message } from "ant-design-vue";
 import Core from "@/core";
 const formRef1 = ref(null);
 const formRef2 = ref(null);
@@ -407,7 +408,6 @@ watch(
 watch(
     () => props.isSaveDraft,
     (val) => {
-        console.log("val", val);
         // 获取数据
         let data =
             Core.Data.getSupplyChain() === ""
@@ -425,9 +425,11 @@ watch(
             // 不为空对象
             data.form.confirmatory_material = formState;
         }
-        console.log("data", JSON.stringify(data));
         // 保存数据
         Core.Data.setSupplyChain(JSON.stringify(data));
+        // 提示
+        message.success($t("supply-chain.save_successfully"));
+
     }
 );
 watch(

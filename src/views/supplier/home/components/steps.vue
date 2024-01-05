@@ -47,7 +47,10 @@ const $props = defineProps({
     },
 });
 const current = computed({
-    get: () => $props.ActiveCurrent,
+    get: () => {
+        console.log($props.ActiveCurrent);
+        return $props.ActiveCurrent;
+    },
     set: (val) => $emit("update:value", val),
 });
 const getAassetsFile = (url) => {
