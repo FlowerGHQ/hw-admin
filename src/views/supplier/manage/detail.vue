@@ -289,8 +289,13 @@
                                 <div class="key w-130 t-a-r text-color">账期要求</div>
                                 <div class="value m-l-8">
                                     <a-radio :checked="true">
-                                        {{ msgDetail.financial_info?.account_period_requirement || "-" }}
-                                        天
+                                        <!-- {{ msgDetail.financial_info?.account_period_requirement || "-" }} -->
+                                        {{ 
+                                            Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[30].value
+                                        }}
+                                        {{ 
+                                            $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[30].unit)
+                                        }}
                                     </a-radio>
                                 </div>
                             </div>

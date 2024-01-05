@@ -80,10 +80,10 @@ const SUPPLAY = {
 
     // 帐期要求
     ACCOUNt_PERIOD_REQUIREMENT: {
-        90: { value: 90, unit: "supply-chain.other.day", },
-        75: { value: 75, unit: "supply-chain.other.day", },
-        60: { value: 60, unit: "supply-chain.other.day", },
-        30: { value: 30, unit: "supply-chain.other.day", },
+        90: { value: 90, unit: "supply-chain.day", },
+        75: { value: 75, unit: "supply-chain.day", },
+        60: { value: 60, unit: "supply-chain.day", },
+        30: { value: 30, unit: "supply-chain.day", },
         0: { value: 0, t: "supply-chain.other" },
     },
     // 发票类型
