@@ -39,14 +39,9 @@
                 </div>
                 <div class="form-content-top">
                       <a-radio-group
-                          v-model:value="specific"
-                          @change="handleSpecificModeChange"
+                          v-model:value="type"
                       >
-                          <a-radio :value="1">{{ $t("supply-chain.part") }}</a-radio>
-                          <a-radio :value="2">{{ $t("supply-chain.broker") }}</a-radio>
-                          <a-radio :value="3">{{ $t("supply-chain.outsourcing") }}</a-radio>
-                          <a-radio :value="4">{{ $t("supply-chain.mold") }}</a-radio>
-                          <a-radio :value="5">{{ $t("supply-chain.customer_refers") }}</a-radio>
+                           <a-radio :value="item.value" v-for="item in Core.Const.SUPPLAY.SUPPLAY_TYPE_LIST">{{ $t(item.t) }}</a-radio>
                       </a-radio-group>
                 </div>
             </div>
@@ -73,6 +68,7 @@
                                         <template v-else-if="$3.type === 2">
                                             <a-radio-group
                                                 v-model:value="$3.value"
+												@change="handleTypeModeChange"
                                             >
                                                 <a-radio :value="radio.value" v-for="radio in $3.radioList" :key="radio.value" >{{ radio.name }}</a-radio>
                                             </a-radio-group>
@@ -110,12 +106,14 @@
     </div>
   </template>
   <script>
-  import { defineComponent, reactive, ref, computed } from 'vue';
+  import { defineComponent, onMounted, reactive, ref, computed } from 'vue';
+  import Core from "@/core";
   import Part from "./components/Part.vue";
   import Broker from "./components/Broker.vue";
   import Outsourcing from "./components/Outsourcing.vue";
   import Mold from "./components/Mold.vue";
   import CustomerRefers from "./components/CustomerRefers.vue";
+import { ListItemMeta } from 'ant-design-vue';
   export default defineComponent({
     components: {  
       Part, // 零件 在 components 对象中注册 MyComponent 组件  
@@ -125,6 +123,8 @@
       CustomerRefers, // 客指
     },
     setup() {
+
+	//   const Core = Core;
       const formRef = ref();
       const formState = reactive({
         pass: '',
@@ -138,11 +138,11 @@
             {
               title: '',
               list: [
-                { key: "职位", value: undefined, valueParam: "posts", type: 2, required: true,online:true, radioList: [{ value: 1,name: '销售' },{ value: 2,name: '质量' },{ value: 3,name: '技术' },{ value: 4,name: '总经理' }] },
-                { key: "姓名", value: undefined, valueParam: "name", type: 1, required: true },
-                { key: "邮箱", value: undefined, valueParam: "email", type: 1, required: true },
-                { key: "联系方式", value: undefined, valueParam: "contact", type: 1, required: true },
-                { key: "", value: undefined, valueParam: "wechat_same", text: '微信同号', type: 2.3, required: true },
+                { key: "职位", value: undefined, valueParam: "position", type: 2, required: true,online:true, radioList: [{ value: 1,name: '销售' },{ value: 2,name: '质量' },{ value: 3,name: '技术' },{ value: 4,name: '总经理' }] },
+                { key: "姓名", value: undefined, valueParam: "name", type: 1, required: true, change: true },
+                { key: "邮箱", value: undefined, valueParam: "email", type: 1, required: true, change: true },
+                { key: "联系方式", value: undefined, valueParam: "phone", type: 1, required: true, change: true },
+                { key: "", value: undefined, valueParam: "flag_wechat", text: '微信同号', type: 2.3 },
               ]
             }
           ]
@@ -514,7 +514,7 @@
 			]
 		}
     ])
-      const specific = ref(1)
+      const type = ref(1)
       let checkAge = async (_rule, value) => {
         if (!value) {
           return Promise.reject('Please input the age');
@@ -532,15 +532,15 @@
 
       const componentName = computed(()=>{
         
-        if(specific.value === 1) {
+        if(type.value === 1) {
           return Part;
-        } else if(specific.value === 2) {
+        } else if(type.value === 2) {
           return Broker;
-        } else if(specific.value === 3) {
+        } else if(type.value === 3) {
           return Outsourcing;
-        } else if(specific.value === 4) {
+        } else if(type.value === 4) {
           return Mold;
-        } else if(specific.value === 5) {
+        } else if(type.value === 5) {
           return CustomerRefers;
         }
         return null;
@@ -601,9 +601,19 @@
       const handleValidate = (...args) => {
         console.log(args);
       };
-      const handleSpecificModeChange = (data) => {
-        console.log('data',data);
+      const handleTypeModeChange = (data) => {
+		let boo = true;
+		if(data.target.value === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
+		msgPost[0].listOne[0].list.forEach((item)=>{
+			if(item.change) {
+				item.required = boo;
+			}
+		})
       }
+	onMounted(() => {
+		console.log('888888888');
+	})
+
       return {
         formState,
         formRef,
@@ -613,13 +623,15 @@
         handleFinish,
         resetForm,
         handleValidate,
-        specific,
+        type,
         componentName,
-        handleSpecificModeChange,
+        handleTypeModeChange,
         msgPart,
 		msgPost,
+		Core,
       };
     },
+	
   });
   </script>
   <style lang="less" scoped>
