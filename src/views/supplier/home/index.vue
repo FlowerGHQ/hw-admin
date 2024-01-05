@@ -369,7 +369,7 @@ const currentComponent = computed(() => {
     }
 });
 // 步骤条
-const current = ref(1);
+const current = ref(0);
 const passShow = ref(false);
 const detailObj = ref({});
 // 定时
