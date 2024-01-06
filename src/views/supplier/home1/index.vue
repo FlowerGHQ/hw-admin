@@ -143,8 +143,23 @@ const btn2 = () => {
         setpCount.value = 2
     } 
     if (setpCount.value < 1) {
-        setpCount.value = 1
+        setpCount.value = 0
     } 
+}
+// 下一步
+const handleNext = () => {
+    if(setpCount.value===0){
+        if(childrenRef.value.beforeSaveVisible()){
+            setpCount.value++; 
+            console.log("$store",$store)
+            // $store的模块SUPPLY_CHAIN的dispatch方法
+            $store.dispatch("SUPPLY_CHAIN/setStep",setpCount.value)
+
+        }
+        return;
+    }
+    if (setpCount.value == 2) return;
+    setpCount.value++;
 }
 // 保存草稿
 const handleSave = () => {
