@@ -5,6 +5,7 @@ import Const from "./const"
 import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
+import Image from './modules/units/image'
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
@@ -1663,9 +1664,8 @@ const Util = {
         })
         return str || '-'
     },
-
-
+    // 照片逻辑
+    Image
 
 }
-
 export default Util
