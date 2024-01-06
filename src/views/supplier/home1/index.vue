@@ -18,7 +18,24 @@
             <!-- 放你们的组件(两个组件) -->
             <!-- <xxxx v-if=""></xxxx>
             <xxxx v-else-if=""></xxxx> -->
-            <a-button @click="btn">下一步</a-button>
+
+            
+            <!-- 动态组件 -->
+            <component
+                ref="childrenRef"
+                :is="setpCountComponent"
+                :isSubmit="isSubmit"
+                :detail="detailObj"
+                class="current-components"
+                @handleComeOne="handleBackOne" />
+                
+            <!-- 保存草稿 -->
+            <a-button @click="handleSave">
+                {{
+                    $t("supply-chain.save_draft")
+                }}
+            </a-button>
+            <a-button @click="handleNext">下一步</a-button>
             <a-button @click="btn2">上一步</a-button>
         </div>
     </div>
@@ -28,7 +45,22 @@
 import Core from '@/core';
 import { computed, ref } from 'vue';
 import SvgIcon from "@/components/MySvgIcon/index.vue";
+import MyStep from "./components/steps.vue";
+import { useStore } from "vuex";
+import { useI18n } from "vue-i18n";
+// 基础信息
+import BasicInfo from "./basic-info.vue";
+// 材料清单
+import MaterialList from "./material-list.vue";
+// 提交准入申请
+import SubmitAdmissionApplication from "./submit-admission-application.vue";
+// ref
+const childrenRef = ref(null);
 
+
+const $i18n = useI18n();
+const $store = useStore();
+const $t = $i18n.t;
 // 步骤条
 const setpObject = computed(() => {
     let result = {
@@ -65,13 +97,36 @@ const setpObject = computed(() => {
 
     return result
 })
-const setpCount = ref(1) // 步骤条
+const setpCount = ref(0) // 步骤条
 
+const setpCountComponent = computed(() => {
+    switch (setpCount.value) {
+        case 0:
+            return BasicInfo;
+        case 1:
+            return MaterialList;
+        case 2:
+            return SubmitAdmissionApplication;
+        default:
+            return BasicInfo;
+    }
+});
 /* fetch start*/
 /* fetch end*/
 
 /* methods start*/
 const btn = () => {
+    
+    if(setpCount.value===0){
+        if(childrenRef.value.beforeSaveVisible()){
+            setpCount.value++; 
+            console.log("$store",$store)
+            // $store的模块SUPPLY_CHAIN的dispatch方法
+            $store.dispatch("SUPPLY_CHAIN/setStep",setpCount.value)
+
+        }
+        return;
+    }
     setpCount.value++
     // 防止数字超出限制
     if (setpCount.value > 2) {
@@ -91,6 +146,12 @@ const btn2 = () => {
         setpCount.value = 1
     } 
 }
+// 保存草稿
+const handleSave = () => {
+    console.log('childrenRef.value111',childrenRef.value)
+    // 保存草稿
+    childrenRef.value.saveDraft();
+};
 /* methods end*/
 </script>
 

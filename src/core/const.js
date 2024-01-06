@@ -29,9 +29,9 @@ switch (window.location.hostname) {
         break;
     case "10.10.12.83":
         // URL_POINT = 'http://10.10.12.65:8889'
-        // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
+        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
-        URL_POINT = 'http://10.10.12.75:8889' // zwq
+        // URL_POINT = 'http://10.10.12.75:8889' // zwq
         break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.horwincloud.com' // 老正式服

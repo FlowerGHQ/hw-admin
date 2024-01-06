@@ -324,7 +324,7 @@
 import { ref, computed, reactive, onMounted, watch } from "vue";
 import MyStep from "./components/steps.vue";
 // 基础信息
-import BasicInfo from "./basic-info.vue";
+import BasicInfo from "./basic-info1111.vue";
 // 材料清单
 import MaterialList from "./material-list.vue";
 // 提交准入申请
