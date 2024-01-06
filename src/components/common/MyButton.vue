@@ -3,13 +3,20 @@
         <span class="my-button-text">
             <slot></slot>
         </span>
+        <template v-if="showRightIcon">
+            <!-- <svg-icon icon-class="arrow-left-color" class-name="right-icon" v-if="type === 'default'"/> -->
+            <svg-icon icon-class="arrow-left" class-name="right-icon"/>
+        </template>
     </div>
 </template>
 
 <script>
+import SvgIcon from "@/components/SvgIcon/index.vue";
 export default {
     name: 'MyButton',
-    components: {},
+    components: {
+        SvgIcon
+    },
     props: {
         // 边距
         padding: {
@@ -32,7 +39,11 @@ export default {
         margin: {
             type: String,
             default: ''
-        }
+        },
+        showRightIcon: {
+            type: Boolean,
+            default: false
+        },
     },
     data() {
         return {}
@@ -55,6 +66,17 @@ export default {
     transition: 0.1s;
     font-family: Montserrat;
     font-size: 16px;
+    .right-icon {
+        height: 20px;
+        width: 0px;
+        margin-left: 8px;
+        transition: 0.3s;
+    }
+    &:hover {
+        .right-icon {
+            width: 20px;
+        }
+    }
 
 }
 .disabled {

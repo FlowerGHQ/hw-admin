@@ -66,7 +66,7 @@
                     ref="password-input" 
                 />
                 <div class="login-btn">
-                    <my-button type="primary" @click="handleLogin">
+                    <my-button type="primary" showRightIcon @click="handleLogin">
                         {{ $t('mall.account_login') }}
                     </my-button>
                 </div>

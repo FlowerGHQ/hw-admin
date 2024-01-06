@@ -7,7 +7,7 @@
                 </div>
                 <div class="header-right">
                     <!-- 头像 -->
-                    <span class="header-menu">
+                    <span class="header-menu tab-animate">
                         <a-dropdown :trigger="['click']" placement="bottom" @visibleChange="avatarDropDownChange">
                             <span class="menu-item-dropdown">
                                 <span class="header-menu-img">
@@ -60,21 +60,21 @@
                         </a-dropdown>
                     </span>
                     <!-- Favorites -->
-                    <span class="header-menu" @click="routerChange('/purchase/item-collect')">
+                    <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text">{{ $t('mall.Favorites') }}</span>
                     </span>
                     <!-- Orders -->
-                    <span class="header-menu" @click="routerChange('/purchase/purchase-order-self')">
+                    <span class="header-menu tab-animate" @click="routerChange('/purchase/purchase-order-self')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text">{{ $t('mall.Orders') }}</span>
                     </span>
                     <!-- More Features -->
-                    <span class="header-menu">
+                    <span class="header-menu tab-animate">
                         <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="moreDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <span class="header-menu-img">
@@ -94,7 +94,7 @@
                         </a-dropdown>
                     </span>
                     <!-- 语言切换 -->
-                    <span class="header-menu">
+                    <span class="header-menu tab-animate">
                         <a-dropdown :trigger="['click']" overlay-class-name='lang-action-menu' placement="bottom" @visibleChange="langDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
@@ -121,7 +121,7 @@
             <div class="search-content content">
                 <img class="logo-img" :src="getHeaderSrc('logo', 'png')" />
                 <div class="search-input">
-                    <input type="text" v-model="searchKey" placeholder="Please Enter Article No. / Designation / Item No.">
+                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')">
                     <my-button type="primary" @click="routerChange('/purchase/item-list', { key: searchKey })">
                         <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
                         {{ $t('purchase.search') }}
@@ -131,18 +131,18 @@
                     <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-15, 0]">
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
                     </a-badge>
-                    <span>Shopping Bag</span>
+                    <span>{{ $t('mall.bag') }}</span>
                 </div>
             </div>
         </div>
         <div id="menu">
             <div class="menu-content content">
                 <!-- vehicle_models -->
-                <span class="menu-item">
+                <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- accessories -->
-                <span class="menu-item">
+                <span class="menu-item tab-animate">
                     <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="accessoriesDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text">{{ $t('mall.accessories') }}</span>
@@ -159,11 +159,11 @@
                     </a-dropdown>
                 </span>
                 <!-- peripheral_products -->
-                <span class="menu-item">
+                <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.peripheral_products') }}</span>
                 </span>
                 <!-- promotional_products -->
-                <span class="menu-item">
+                <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.promotional_products') }}</span>
                 </span>
             </div>
@@ -349,6 +349,7 @@ export default {
         }
         .header-right {
             .fcc();
+            height: 100%;
             .header-menu {
                 .fcc();
                 cursor: pointer;
@@ -449,7 +450,9 @@ export default {
     }
     #menu {
         .menu-item {
+            .flex(center, center,  row);
             margin-right: 40px;
+            cursor: pointer;
             &:last-child {
                 margin-right: 0;
             }
@@ -465,6 +468,9 @@ export default {
                 .mt-triangle-icon {
                     fill: #333;
                 }
+            }
+            &::before {
+                background: #333;
             }
         }
     }
