@@ -2,14 +2,14 @@
     <div id="mall-footer">
         <div class="content" style="height: 97px;">
             <div class="menu-one menu">
-                <span class="menu-item" v-for="(item, index) in menuListOne" :key="index">
+                <span class="menu-item tab-animate" v-for="(item, index) in menuListOne" :key="index">
                     {{ $t(`mall.${item.lang}`) }}
                 </span>
             </div>
         </div>
         <div class="content">
             <div class="menu">
-                <span class="menu-item" v-for="(item, index) in menuList" :key="index">
+                <span class="menu-item tab-animate" v-for="(item, index) in menuList" :key="index">
                     {{ $t(`mall.${item.lang}`) }}
                 </span>
             </div>
@@ -54,8 +54,10 @@ export default {
         width: 75%;
         height: 62px;
         .menu {
+            .fcc();
+            height: 100%;
             .menu-item {
-                display: inline-block;
+                .fcc();
                 margin-right: 40px;
                 color: rgba(255, 255, 255, 0.4);
                 font-family: Urbanist;

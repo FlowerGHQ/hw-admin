@@ -82,3 +82,24 @@
         border-bottom: 0px !important;
     }
 }
+// tab栏hover效果
+.tab-animate {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: inline-block;
+        width: 0%;
+        height: 2px;
+        background: #FFF;
+        border-radius: 1px;
+        transition: width 0.3s;
+    }
+    &:hover::before {
+        width: 100%;
+    }
+}

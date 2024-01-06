@@ -21,7 +21,7 @@
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
                                 <div class="btn">
-                                    <my-button>
+                                    <my-button showRightIcon>
                                         {{ $t('purchase.order') }}
                                     </my-button>
                                 </div>
@@ -74,7 +74,7 @@
                         </div>
                     </div>
                     <div class="btn">
-                        <my-button>
+                        <my-button showRightIcon>
                             {{ $t('purchase.order') }}
                         </my-button>
                     </div>
