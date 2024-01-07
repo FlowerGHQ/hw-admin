@@ -44,19 +44,19 @@ const supplyManage = {
 }
 
 const supplyRouters = [        
+    // {
+    //     path: "/supply-home",
+    //     name: "SupplyHome",
+    //     component: () => import('@/views/supplier/home/index.vue'),
+    //     meta: {
+    //         title: '首页',
+    //         title_en: 'Supplier Home',
+    //         hidden: true,
+    //     },
+    // },
     {
         path: "/supply-home",
         name: "SupplyHome",
-        component: () => import('@/views/supplier/home/index.vue'),
-        meta: {
-            title: '首页',
-            title_en: 'Supplier Home',
-            hidden: true,
-        },
-    },
-    {
-        path: "/supply-home1",
-        name: "SupplyHome1",
         component: () => import('@/views/supplier/home1/index.vue'),
         meta: {
             title: '首页',

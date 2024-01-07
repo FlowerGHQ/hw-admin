@@ -237,6 +237,13 @@ class StorageHandler {
     getRead() {
         return this.getItem(Const.DATA.SUPPLY_ISREAD) || undefined;
     }
+    // 是否已经 提交了
+    setSubmitEd(value) {
+        this.setItem(Const.DATA.SUPPLY_SUBMITED, value);
+    }
+    getSubmitEd() {
+        return this.getItem(Const.DATA.SUPPLY_SUBMITED) || false;
+    }
 }
 
 export default new StorageHandler();
