@@ -482,7 +482,14 @@ const detailDataReview = () => {
   console.log("详情回显数据：", detailData)
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
-    formState.form.business_duration_type = 1
+    // formState.form.business_duration_type = 1
+    formState = {
+      form:{
+        confirmatory_material: {
+          business_duration_type: 1,
+        },
+      }
+    }
   } else {
     // 解析出来的数据
     let data = detailData
@@ -572,7 +579,7 @@ const saveDraft = () => {
 const reviewData = () => {
   // 判断是否已经提交过了
   let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"]
-  console.log("是否已经提交过了：", isSubmit)
+
   if (isSubmit) {
     // 已经提交过了
     detailDataReview()
