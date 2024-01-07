@@ -225,6 +225,15 @@ export default {
     agent_product: "代理产品",
     // 代理证书
     proxy_certificate: "代理证书",
+    service_information:"服务信息",
+    technical_service:"技术服务",
+    quality_service:"质量服务",
+    supply_of_services:"供应服务",
+    specify_information: "指定信息",
+    specified_protocol: "指定协议",
+    specify_part: "指定零件",
+    specify_reason: "指定理由",    
+    specify_service: "指定服务",
   },
   en: {
     type_supply: "Type Supply",
@@ -448,5 +457,14 @@ export default {
     agent_product: "Agent Product",
     // 代理证书
     proxy_certificate: "Proxy Certificate",
+    service_information:"Service information",
+    technical_service:"Technical service",
+    quality_service:"Quality service",
+    supply_of_services:"Supply of services",
+    specify_information: "Specify information",
+    specified_protocol: "Specified protocol",
+    specify_part: "Specify part",
+    specify_reason: "Specify a reason",
+    specify_service: "Specify service",
   },
 }
