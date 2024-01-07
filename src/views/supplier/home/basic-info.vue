@@ -1,6 +1,6 @@
 <template>
   <div class="material-list">
-    
+      {{ formState }}
       <div class="base-info content-area top-box">
           <div class="title">{{ $t("supply-chain.type_supply") }}</div>
           <div class="base-info-form flex-1" >
@@ -43,7 +43,7 @@
                       <a-col :span="21">
                           <a-row :gutter="24">
                               <a-col :span="24">
-                                  <!-- 职业 -->1111111122
+                                  <!-- 职业 -->
                                   <a-form-item
                                       :label="
                                           $t(
@@ -51,13 +51,13 @@
                                           ) 
                                       "
                                       name="positon"
-                                      >{{ formState.position }}33
+                                      >{{ formState.position }}
                                       <a-radio-group
                                                 v-model:value="formState.position"
                                                 @change="handleTypeModeChange"
                                                 name = "positon"
                                             >
-                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION_LIST" :key="radio.value" >{{ $t(radio.t) }}{{ radio }}</a-radio>
+                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}{{ radio }}</a-radio>
                                       </a-radio-group>
                                   </a-form-item>
                               </a-col>
@@ -1334,9 +1334,9 @@ const detection_equipment_column = ref([
 
 
 // 表单对象
-let formState = reactive({
+const formState = reactive({
     type: 1, //表格类型
-    position: 0,
+    position: 4,
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
     // agent_info: {}, // 代理公司概况
@@ -1653,12 +1653,19 @@ const draftDataReview = () => {
   } else {
       // 解析出来的数据
       let data = draftData;
+      console.log('data---------',data);
       Object.keys(data ?? {}).forEach((key) => {
+        console.log(key === 'form');
         if(key === 'form'){
-          formState = {...formState,...data[key]}
-          return;
-        }
+          console.log('data[key]',data[key]);
+         for (const iterator of  Object.keys(data[key])) {
+          formState[iterator] = data[key][iterator]
+          console.log('iterator',iterator);
+         }
+        }else {
+          
           formState[key] = data[key];
+        }
       });
 
       console.log("回显数据：草稿回显", formState);
