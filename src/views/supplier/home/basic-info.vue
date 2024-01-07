@@ -43,7 +43,7 @@
                       <a-col :span="21">
                           <a-row :gutter="24">
                               <a-col :span="24">
-                                  <!-- 职业 -->
+                                  <!-- 职业 -->1111111122
                                   <a-form-item
                                       :label="
                                           $t(
@@ -51,13 +51,13 @@
                                           ) 
                                       "
                                       name="positon"
-                                      >
+                                      >{{ formState.position }}33
                                       <a-radio-group
                                                 v-model:value="formState.position"
                                                 @change="handleTypeModeChange"
                                                 name = "positon"
                                             >
-                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
+                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION_LIST" :key="radio.value" >{{ $t(radio.t) }}{{ radio }}</a-radio>
                                       </a-radio-group>
                                   </a-form-item>
                               </a-col>
@@ -1336,7 +1336,7 @@ const detection_equipment_column = ref([
 // 表单对象
 let formState = reactive({
     type: 1, //表格类型
-    position: '',
+    position: 0,
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
     // agent_info: {}, // 代理公司概况
@@ -1457,7 +1457,7 @@ let formState = reactive({
 });
 let PositionVaild = async (_rule, value) => {
     console.log('_rule, value1111',_rule, value);
-    if (!formState.postion) {
+    if (!formState.position) {
         console.log($t("supply-chain.please_select_position"));
         return Promise.reject(
             $t("supply-chain.please_select_position")
@@ -1649,27 +1649,20 @@ const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
-      formState.business_duration_type = 1;
+
   } else {
       // 解析出来的数据
       let data = draftData;
-      Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
-          formState[key] = data.confirmatory_material[key];
+      Object.keys(data ?? {}).forEach((key) => {
+        if(key === 'form'){
+          formState = {...formState,...data[key]}
+          return;
+        }
+          formState[key] = data[key];
       });
-      formState.business_duration_type =
-          data?.confirmatory_material?.business_duration_type || 1;
 
-      console.log("回显数据：", formState);
+      console.log("回显数据：草稿回显", formState);
   }
-  setTimeout(() => {
-      if (TimeSearchRef.value) {
-          // 给timeSearch赋值
-          TimeSearchRef.value.createTime = [
-              formState.begin_business_time,
-              formState.end_business_time,
-          ];
-      }
-  });
 };
 // 详情回显
 const detailDataReview = () => {
@@ -1677,25 +1670,21 @@ const detailDataReview = () => {
   console.log("详情回显数据：", detailData);
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
-      formState.business_duration_type = 1;
+    console.log('空对象','详情回显');
   } else {
       // 解析出来的数据
       let data = detailData;
-      Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
-          formState[key] = data.confirmatory_material[key];
+      Object.keys(data??{}).forEach((key) => {
+        if(key === 'form'){
+          formState = {...formState,...data[key]}
+          return;
+        }
+        formState[key] = data[key];
       });
-      formState.business_duration_type =
-          data?.confirmatory_material?.business_duration_type || 1;
+      /* formState.business_duration_type =
+          data?.confirmatory_material?.business_duration_type || 1; */
+          console.log('formState----回显数据',formState);
   }
-  setTimeout(() => {
-      if (TimeSearchRef.value) {
-          // 给timeSearch赋值
-          TimeSearchRef.value.createTime = [
-              formState.begin_business_time,
-              formState.end_business_time,
-          ];
-      }
-  });
 };
 // 校验
 const step1Vaild = () => {
