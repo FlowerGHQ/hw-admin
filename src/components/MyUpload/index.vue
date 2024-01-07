@@ -214,47 +214,34 @@ const handleRemove = (file) => {
 
 watch(
   () => props.value,
-  (val,old) => {
-    console.log(old === val, 'old === val')
+  (val) => {
     if (val) {
-        // 判断值是否不再变化
-        if (old === val) {
-            console.log('值不再改变')
-        }
-
-    //   let fileList = []
-    //   val.split(",").forEach((item) => {
-    //     fileList.push({
-    //       uid: _.uniqueId("upload_"),
-    //       name: item,
-    //       status: "done",
-    //       url: Core.Const.NET.OSS_POINT + item,
-    //       response: {
-    //         code: 0,
-    //         data: {
-    //           filename: item,
-    //         },
-    //       },
-    //     })
-    //   })
-    //   upload.value.fileList = fileList
+        // 讲val 的长度赋值给计数
+      loopCount.value = val.split(",").length
+      let fileList = []
+      val.split(",").forEach((item) => {
+        fileList.push({
+          uid: _.uniqueId("upload_"),
+          name: item,
+          status: "done",
+          url: Core.Const.NET.OSS_POINT + item,
+          response: {
+            code: 0,
+            data: {
+              filename: item,
+            },
+          },
+        })
+      })
+      upload.value.fileList = fileList
     }
   },
   {
-    immediate: true,
     deep: true,
   }
 )
 // 监听循环计数、
-watch(
-    () => loopCount.value,
-    (val) => {
-        console.log(val, 'val')
-        if (val === 0) {
-            upload.value.fileList = []
-        }
-    }
-)
+
 </script>
 
 <style lang="less" scoped>
