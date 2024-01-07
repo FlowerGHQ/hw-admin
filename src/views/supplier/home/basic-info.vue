@@ -53,7 +53,7 @@
                                       name="positon"
                                       >
                                       <a-radio-group
-                                                v-model:value="formState.postion"
+                                                v-model:value="formState.position"
                                                 @change="handleTypeModeChange"
                                                 name = "positon"
                                             >
