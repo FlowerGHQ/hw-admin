@@ -22,7 +22,6 @@
                     <a-tag class="PC" color="blue" style="font-size: 12px">{{
                         USER_TYPE[loginType][$i18n.locale]
                     }}</a-tag>
-                    <!-- <a-divider type="vertical"/>-->
                     <a-dropdown
                         :trigger="['click']"
                         overlay-class-name="account-action-menu">
@@ -385,6 +384,7 @@ const lang = computed(() => $store.state.lang);
 // ref
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
+const BasicInfoRef = ref(null)
 //步数样式
 const setpCount = computed(() => {
     return $store.getters["SUPPLY_CHAIN/SETP"];
@@ -486,13 +486,25 @@ const handlePrev = () => {
 };
 // 下一步
 const handleNext = () => {
-    $store.dispatch("SUPPLY_CHAIN/nextStep");
+    
+    // if ($store.getters["SUPPLY_CHAIN/SETP"] === 0) { 
+        BasicInfoRef.value.step1Vaild().then(() => {
+
+            // 提交给下一步
+            // handleSubmitData();
+            
+            // 下一步
+            $store.dispatch("SUPPLY_CHAIN/nextStep");
+        });
+    //  }
+ 
 };
 // 保存草稿
 const handleSave = () => {
-    console.log("MaterialListRef", MaterialListRef.value);
+    console.log("MaterialListRef", MaterialListRef.value,'BasicInfoRef.value',BasicInfoRef.value);
     // 保存草稿
-    MaterialListRef.value.saveDraft();
+    // MaterialListRef.value.saveDraft();
+    BasicInfoRef.value.saveDraft1();
 };
 // 提交
 const handleSubmit = () => {

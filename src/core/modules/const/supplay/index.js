@@ -36,10 +36,10 @@ const SUPPLAY = {
     // 技术信息
     TECHNICAL_INFORMATION: [
 
-        { value: 1, label: 'supply-chain.stand_alone_design' }, // 独立设计
-        { value: 2, label: 'supply-chain.co_design' }, // 共同设计
-        { value: 3, label: 'supply-chain.translational_design' }, //转化设计
-        { value: 4, label: 'supply-chain.outsourced_design' }, //委外设计
+        { value: 1, label: '独立设计' }, // 独立设计
+        { value: 2, label: '共同设计' }, // 共同设计
+        { value: 3, label: '转化设计' }, //转化设计
+        { value: 4, label: '委外设计' }, //委外设计
     ],
     TECHNICAL_INFORMATION_OBJECT: {
         1: { value: 1, t: 'supply-chain.stand_alone_design' }, // 独立设计
@@ -51,10 +51,10 @@ const SUPPLAY = {
     // 过程设计
     PROCESS_DESIGN: [
 
-        { value: 5, label: 'supply-chain.mold_design' }, // 模具设计
-        { value: 6, label: 'supply-chain.fixture_design' }, // 检具设计
-        { value: 7, label: 'supply-chain.tooling_design' }, //辅具设计
-        { value: 8, label: 'supply-chain.assistive_device_design' }, //工装设计
+        { value: 5, label: '模具设计' }, // 模具设计
+        { value: 6, label: '检具设计' }, // 检具设计
+        { value: 7, label: '辅具设计' }, //辅具设计
+        { value: 8, label: '工装设计' }, //工装设计
     ],
     PROCESS_DESIGN_OBJECT: {
         5: { value: 5, t: 'supply-chain.mold_design' }, // 模具设计
@@ -66,10 +66,10 @@ const SUPPLAY = {
     // 过程验证
     PROCESS_VALIDATION: [
 
-        { value: 1, label: 'supply-chain.mold_acceptance' }, // 模具验收
-        { value: 2, label: 'supply-chain.inspection_fixture_acceptance' }, // 检具验收
-        { value: 3, label: 'supply-chain.tooling_acceptance' }, //工装验收
-        { value: 4, label: 'supply-chain.product_identification' }, //产品鉴定
+        { value: 1, label: '模具验收' }, // 模具验收
+        { value: 2, label: '检具验收' }, // 检具验收
+        { value: 3, label: '工装验收' }, //工装验收
+        { value: 4, label: '产品鉴定' }, //产品鉴定
     ],
     PROCESS_VALIDATION_OBJECT: {
         1: { value: 1, t: 'supply-chain.mold_acceptance' }, // 模具验收
@@ -85,7 +85,15 @@ const SUPPLAY = {
         60: { value: 60, unit: "supply-chain.day", },
         30: { value: 30, unit: "supply-chain.day", },
         0: { value: 0, t: "supply-chain.other" },
-    },
+    },    // 帐期要求
+    ACCOUNt_PERIOD_REQUIREMENT_LIST: [
+            
+       { value: 90, unit: "supply-chain.day", },
+       { value: 75, unit: "supply-chain.day", },
+       { value: 60, unit: "supply-chain.day", },
+       { value: 30, unit: "supply-chain.day", },
+       { value: 0, t: "supply-chain.other" },
+    ],
     // 发票类型
     INVOICE_TYPE: {
         1: { value: 1, t: 'supply-chain.vat_invoice' }, // 增值税发票
@@ -103,10 +111,15 @@ const SUPPLAY = {
     },
     // 法律纠纷
     Legal_Dispute: {
-        '-1': { value: 1, t: 'supply-chain.None' },
+        '-1': { value: -1, t: 'supply-chain.None' },
         "1": { value: 1, t: 'supply-chain.Yes' },
+    },
+    // 民营、外资、国有 - 公司性质
+    NATURE: {
+        '1' : {  value: 1, t: 'supply-chain.private' },
+        '2' : {  value: 2, t: 'supply-chain.foreign_owned' },
+        '3' : {  value: 3, t: 'supply-chain.state_owned' },
     }
-
 }
 
 export default SUPPLAY

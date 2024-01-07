@@ -34,6 +34,8 @@ export default {
         registered_capital: "注册资本",
         // 请输入
         please_enter: "请输入",
+        // 请选择
+        please_select: "请选择",
         // 请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张
         please_upload: "请上传2M内的相关图片，支持JPG/JPEG/PNG，最多上传9张",
         // 法定代表人
@@ -90,6 +92,10 @@ export default {
         please_enter_bank_account: "请输入银行账号",
         // 开户行号必须为数字
         bank_number_must_be_number: "开户行号必须为数字",
+        // 请选择职业
+        please_select_position: "请选择职业",
+        // 请填写姓名
+        // please_select_name: "请输入姓名",
         sales: "销售",
         quality: "质量",
         technology: "技术",
@@ -213,6 +219,13 @@ export default {
         //  已阅读，发送申请
         read_and_send_application: "已阅读，发送申请",
         legal_representative: "法人代表",
+        wechat_same_number: "微信同号",
+        // 公司性质
+        private: '民营',
+        foreign_owned: '外资',
+        state_owned: '国有',
+        // 人力资源
+        human_resources: '人力资源'
     },
     en: {
         type_supply: 'Type Supply',
@@ -249,6 +262,8 @@ export default {
         registered_capital: "Registered Capital",
         // q请输入
         please_enter: "Please enter",
+        // 请选择
+        please_select: "please Select",
         // 请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张
         please_upload: "Please upload 2M within the relevant pictures, support JPG/JPEG/PNG, up to 9",
         // 法定代表人
@@ -303,6 +318,10 @@ export default {
         please_enter_bank_account: "Please Enter Bank Account",
         // 开户行号必须为数字
         bank_number_must_be_number: "Bank Number Must Be Number",
+        // 请选择职业
+        please_select_position: "Please Select A Profession",
+
+
         sales: "Sales",
         quality: "Quality",
         technology: "Technology",
@@ -418,5 +437,14 @@ export default {
         confidentiality_and_non_competition_agreement: "《Confidentiality and non-competition agreement》",
         read_and_send_application: "Read and send application",
         legal_representative: "Legal representative",
+        wechat_same_number: "WeChat With The Same Number",
+        // 公司性质
+        private: 'Private',
+        foreign_owned: 'foreign Owned',
+        state_owned: 'state Owned',
+        // 人力资源
+        human_resources: 'Human Resources',
+
+
     }
 }
