@@ -212,6 +212,7 @@ export default {
         confidentiality_and_non_competition_agreement: "《保密和不竞争协议》",
         //  已阅读，发送申请
         read_and_send_application: "已阅读，发送申请",
+        legal_representative: "法人代表",
     },
     en: {
         type_supply: 'Type Supply',
@@ -416,5 +417,6 @@ export default {
         commitment_to_integrity: "《commitment_to_integrity》",
         confidentiality_and_non_competition_agreement: "《Confidentiality and non-competition agreement》",
         read_and_send_application: "Read and send application",
+        legal_representative: "Legal representative",
     }
 }
