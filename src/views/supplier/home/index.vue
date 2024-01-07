@@ -570,6 +570,7 @@ const getDetail = () => {
             let DETAILS = {};
             DETAILS = res?.detail ?? null;
             if (DETAILS) {
+                DETAILS.form = JSON.parse(DETAILS.form);
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
                 if (Object.keys(DETAILS).length > 0) {
                     // 如果已经提交了
