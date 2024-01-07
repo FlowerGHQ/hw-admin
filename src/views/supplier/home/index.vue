@@ -532,8 +532,14 @@ const handleSubmitOk = () => {
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
-    console.log("提交数据", data);
-    Core.Api.SUPPLY.add({ form: JSON.stringify(data) })
+    data?.form ?  data.form = JSON.stringify(data.form) : "{}"
+    // 获取类型
+    if($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value){
+        if ( data?.confirmatory_material?.proxy_certificate){
+            delete data.confirmatory_material.proxy_certificate
+        }
+    }
+    Core.Api.SUPPLY.add(data)
         .then((res) => {
             visible.value = false;
             // 获取详情数据

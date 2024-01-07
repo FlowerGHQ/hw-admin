@@ -78,7 +78,7 @@
             <div class="basic-information bg-color m-t-16">
                 <div class="title">{{ $t('supply-chain.basic_info') }}</div>
                 <!-- 公司概况 -->
-                <div class="information-container-form" v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])">
+                <div class="information-container-form">
                     <div class="sub-title">{{ $t('supply-chain.company_profile') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
@@ -199,9 +199,98 @@
                         </div>
                     </div>
                 </div>
+                <!-- 代理信息 -->
+                <div 
+                    class="information-container-form m-t-40" 
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                >
+                    <div class="sub-title">{{ $t('supply-chain.agent_information') }}</div>
+                    <div class="information-form">
+                        <div class="level-search-row">
+                             <!-- 被代理公司 -->
+                             <div class="search-col m-t-0">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agent_company') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail?.agent_info?.agent_company || "-" }}
+                                    </div>
+                                </div>
+                            </div>                             
+                            <!-- 被代理地址 -->
+                            <div class="search-col m-t-0">
+                               <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_address') }}</div>
+                               <div class="value m-l-8">
+                                    <div class="customer-input">
+                                       {{ msgDetail?.agent_info?.agent_address || "-" }}
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 被代理关系 -->
+                            <div class="search-col w-50-percentage">
+                               <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agency_relationship') }}</div>
+                               <div class="value m-l-8">
+                                    <div class="customer-input">
+                                       {{ msgDetail?.agent_info?.agent_relationship || "-" }}
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 代理权证* -->
+                            <div class="search-col required">
+                               <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_warrant') }}</div>
+                               <div class="value m-l-8">                                   
+                                    <a-radio :checked="true">
+                                        {{
+                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant] ?
+                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant].t) : ""
+                                        }}
+                                    </a-radio>
+                               </div>
+                            </div>
+                            <!-- 代理有效期间* -->
+                            <div class="search-col required">
+                               <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.duration_of_agency') }}</div>
+                               <div class="value m-l-8">
+                                    <div class="agency-time">
+                                        {{
+                                            msgDetail?.agent_info?.agent_effective_begin_time
+                                                ? $Util.timeFilter(
+                                                    msgDetail?.agent_info?.agent_effective_begin_time
+                                                )
+                                                : ""
+                                        }}
+                                        -
+                                        {{
+                                            msgDetail?.agent_info?.agent_effective_end_time
+                                                ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time)
+                                                : ""
+                                        }}
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 代理产品 -->
+                            <div class="search-col w-50-percentage">
+                               <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agent_product') }}</div>
+                               <div class="value m-l-8">
+                                    <div class="customer-input">
+                                      {{ msgDetail?.agent_info?.agent_product || "-" }}
+                                    </div>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- 人力资源 -->
-                <div class="information-container-form m-t-40">
-                    <div class="sub-title">人力资源</div>
+                <div 
+                    class="information-container-form m-t-40" 
+                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                >
+                    <div class="sub-title">{{ $t('supply-chain.Human_resources') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 员工总数 -->
@@ -434,7 +523,10 @@
                     </div>
                 </div>
                 <!-- 竞争对手 -->
-                <div class="information-container-form m-t-40">
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
+                >
                     <div class="sub-title">{{ $t('supply-chain.competitor') }}</div>
                     <div class="information-form">
                         <!-- 竞争对手信息 -->
@@ -444,7 +536,7 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
-                                        :data-source="[] || msgDetail.competitor_analysis || []" 
+                                        :data-source="msgDetail.competitor_analysis || []" 
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
@@ -500,8 +592,57 @@
                         </div>
                     </div>
                 </div>
+                <!-- 服务信息 -->
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                >
+                    <div class="sub-title">{{ $t('supply-chain.service_information') }}</div>
+                    <div class="information-form">
+                        <div class="level-search-row">
+                            <!-- 技术服务 -->
+                            <div class="search-col">
+                                <div class="key w-130 t-a-r text-color">
+                                    {{ $t('supply-chain.technical_service') }}
+                                </div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.service_info?.technical_services || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 质量服务 -->
+                            <div class="search-col">
+                                <div class="key w-130 t-a-r text-color">
+                                    {{ $t('supply-chain.quality_service') }}
+                                </div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.service_info?.quality_service || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 供应服务 -->
+                            <div class="search-col w-50-percentage">
+                                <div class="key w-130 t-a-r text-color">
+                                    {{ $t('supply-chain.supply_of_services') }}
+                                </div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.service_info?.supply_services || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- 技术信息 -->
-                <div class="information-container-form m-t-40">
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                >
                     <div class="sub-title">{{ $t('supply-chain.Technical_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
@@ -515,7 +656,10 @@
                                 </div>
                             </div>
                             <!-- 研发中心 -->
-                            <div class="search-col m-t-0 w-50-percentage">
+                            <div 
+                                class="search-col m-t-0 w-50-percentage"
+                                v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                            >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.research_and_development_center') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
@@ -524,7 +668,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row">
+                        <div 
+                            class="level-search-row"
+                            v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                        >
                             <!-- 研发合作机构 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.r_d_partner') }}</div>
@@ -535,7 +682,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row">
+                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])">
                             <!-- 产品设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.product_design') }}</div>
@@ -608,7 +755,10 @@
                     </div>
                 </div>
                 <!-- 质量信息 -->
-                <div class="information-container-form m-t-40">
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                >
                     <div class="sub-title">{{ $t('supply-chain.quality_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
@@ -684,8 +834,62 @@
                         </div>
                     </div>
                 </div>
+                <!-- 指定信息 -->
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                >                    
+                    <div class="sub-title">{{ $t('supply-chain.specify_information') }}</div>
+                    <div class="information-form">
+                        <div class="level-search-row">
+                            <!-- 指定协议* -->
+                            <div class="search-col m-t-0">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specified_protocol') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.specify_info?.protocol || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 指定零件* -->
+                            <div class="search-col m-t-0">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_part') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.specify_info?.parts || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 指定服务* -->
+                            <div class="search-col">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_service') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.specify_info?.service || "-" }}
+                                    </div>
+                                </div>
+                            </div>                          
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 指定理由* -->
+                            <div class="search-col align-flex-start">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_reason') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input h-64">
+                                        {{ msgDetail.specify_info?.reason || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- 产能产线 -->
-                <div class="information-container-form m-t-40">
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
+                >
                     <div class="sub-title">{{ $t('supply-chain.capacity_line') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
@@ -724,7 +928,10 @@
                     </div>
                 </div>
                 <!-- 外购管理 -->
-                <div class="information-container-form m-t-40">
+                <div 
+                    class="information-container-form m-t-40"
+                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
+                >
                     <div class="sub-title">{{ $t('supply-chain.qutsourcing_management') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
@@ -775,7 +982,10 @@
                 </div>
             </div>
             <!-- 设备信息 -->
-            <div class="equipment-information bg-color m-t-16">
+            <div 
+                class="equipment-information bg-color m-t-16"
+                v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+            >
                 <div class="title">{{ $t('supply-chain.device_information') }}</div>
                 <!-- 关键生产设备 -->
                 <div class="information-container-form">
@@ -1141,7 +1351,7 @@ function getDetail(params = {}) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(",")
             }
             // console.log("过滤数据", msgDetail.value);
-            msgDetail.value.type = 2
+            // msgDetail.value.type = 5
          
         })
         .catch((err) => {
@@ -1258,6 +1468,21 @@ const returnTypeBool = (type, typeIncludes) => {
                 border: 1px solid #EAECF2;
                 background: linear-gradient(0deg, rgba(255, 255, 255, 0.30) 0%, rgba(255, 255, 255, 0.30) 100%), #EEF2F6;
             }
+            // 代理信息用到
+            .agency-time {
+                border-radius: 4px;
+                border: 1px solid #eaecf2;
+                background: #f3f6f9;                
+                height: 32px;
+                line-height: 32px;
+                text-align: center;
+                padding: 0 10px;
+                box-sizing: border-box;
+
+                color: #1d2129;
+                font-size: 14px;
+                font-weight: 400;
+            }
         }
         // 设备信息
         .equipment-information {}
@@ -1295,11 +1520,12 @@ const returnTypeBool = (type, typeIncludes) => {
             .bussiness-time {
                 border-radius: 4px;
                 border: 1px solid #eaecf2;
-                background: #f3f6f9;
-                width: 236px;
+                background: #f3f6f9;                
                 height: 32px;
                 line-height: 32px;
                 text-align: center;
+                padding: 0 10px;
+                box-sizing: border-box;
 
                 color: #1d2129;
                 font-size: 14px;
