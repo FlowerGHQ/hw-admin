@@ -1,5 +1,5 @@
 <template>
-    <div class="supply-chain" ref="suppluChain">
+    <div class="home" ref="suppluChain">
         <a-layout>
             <a-layout-header>
                 <div class="header-left">
@@ -123,8 +123,22 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <MyStep v-model:ActiveCurrent="current" v-if="isSubmited" />
-                <div class="submited" v-else>
+                <div class="setp-bar" v-if="!isSubmited && !submitSuccess">
+                    <template v-for="(item, index) in setpObject" :key="index">
+                        <div
+                            class="setp-base-style setp-text"
+                            :style="{
+                                backgroundImage: 'url(' + item.bg + ')',
+                                color: item.text_color,
+                            }">
+                            <SvgIcon
+                                class="icon-style"
+                                :icon-class="item.icon" />
+                            <span>{{ $t(item.t) }}</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="submited" v-else-if="isSubmited && !submitSuccess">
                     <div class="main-content">
                         <div class="tips">
                             <img
@@ -145,28 +159,56 @@
                         </div>
                     </div>
                 </div>
-                <div
-                    :class="{
-                        'content-main': !isSubmited,
-                        'content-main-submited': isSubmited,
-                    }">
-                    <!-- 动态组件 -->
-                    <component
-                        ref="childrenRef"
-                        :is="currentComponent"
-                        :isSubmit="isSubmit"
-                        :isSaveDraft="isSaveDraft"
-                        v-model:value="step2Val"
-                        :detail="detailObj"
-                        class="current-components"
-                        @handleComeOne="handleBackOne" />
+                <div class="content-main" v-if="!submitSuccess">
+                    <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
+                    <MaterialList
+                        ref="MaterialListRef"
+                        v-else-if="setp === 1" />
                 </div>
-                <div class="supply-chain-footer" v-if="current != 2">
+                <div class="submit-success" v-else>
+                    <div class="container">
+                        <div class="icon">
+                            <img
+                                class="icon-img"
+                                src="../../../assets//images/supply-chain/suceess.png"
+                                alt="" />
+                        </div>
+                        <div class="title">
+                            {{
+                                $t(
+                                    "supply-chain.information_submitted_successfully"
+                                )
+                            }}
+                        </div>
+                        <div class="sub-title">
+                            {{ $t("supply-chain.tips1") }}
+                            <span class="timing">{{ count }}s</span>
+                            {{ $t("supply-chain.tips2") }}
+                        </div>
+                        <div class="btn" @click="onBtn">
+                            <a-button>{{ $t("supply-chain.back") }}</a-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="supply-chain-footer" v-if="!submitSuccess">
                     <!-- 承诺书 -->
-                    <div class="promise-book" v-if="current == 1" @click="handleOpen">
-                        <span>{{ $t('supply-chain.please_read_before_submitting_an_application') }}</span>
-                        <a class="promise-text">{{$t('supply-chain.commitment_to_integrity')}}</a>
-                        <a class="promise-text">{{ $t('supply-chain.confidentiality_and_non_competition_agreement') }}</a>
+                    <div
+                        class="promise-book"
+                        v-if="setp == 1"
+                        @click="handleOpen">
+                        <span>{{
+                            $t(
+                                "supply-chain.please_read_before_submitting_an_application"
+                            )
+                        }}</span>
+                        <a class="promise-text">{{
+                            $t("supply-chain.commitment_to_integrity")
+                        }}</a>
+                        <a class="promise-text">{{
+                            $t(
+                                "supply-chain.confidentiality_and_non_competition_agreement"
+                            )
+                        }}</a>
                     </div>
                     <div class="btn-area">
                         <!-- 保存草稿 -->
@@ -176,18 +218,18 @@
                         <a-button
                             type="primary"
                             @click="handleNext"
-                            v-if="current == 0"
+                            v-if="setp == 0"
                             >{{ $t("supply-chain.next_step") }}</a-button
                         >
                         <!-- 上一步 -->
-                        <a-button @click="handleBack" v-if="current == 1">{{
+                        <a-button @click="handlePrev" v-if="setp == 1">{{
                             $t("supply-chain.previous_step")
                         }}</a-button>
                         <!-- 提交 -->
                         <a-button
                             type="primary"
                             @click="handleSubmit"
-                            v-if="current == 1"
+                            v-if="setp == 1"
                             >{{
                                 $t("supply-chain.submit_application")
                             }}</a-button
@@ -303,17 +345,15 @@
                     type="primary"
                     :class="{
                         'btn-disabled': countTime != 0,
-                        'read-btn':countTime == 0,
+                        'read-btn': countTime == 0,
                     }"
-                    @click="handleSubmitOk"
-                    >
-                    {{ $t("supply-chain.read_and_send_application")  }}
+                    @click="handleSubmitOk">
+                    {{ $t("supply-chain.read_and_send_application") }}
                     <div class="time-area" v-if="countTime != 0">
                         (
-                    <span class="timing">{{ countTime }}s</span>
-                    )
+                        <span class="timing">{{ countTime }}s</span>
+                        )
                     </div>
-                    
                 </a-button>
             </template>
         </a-modal>
@@ -321,129 +361,225 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive, onMounted, watch } from "vue";
-import MyStep from "./components/steps.vue";
-// 基础信息
-import BasicInfo from "./basic-info1111.vue";
-// 材料清单
-import MaterialList from "./material-list.vue";
-// 提交准入申请
-import SubmitAdmissionApplication from "./submit-admission-application.vue";
+import Core from "@/core";
+import { computed, ref, onMounted, watch } from "vue";
+import SvgIcon from "@/components/MySvgIcon/index.vue";
+// import MyStep from "./components/steps.vue";
+import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
-import { useStore } from "vuex";
-const $message = message;
-const $router = useRouter();
-import Core from "@/core";
-const childrenRef = ref(null);
+// 基础信息
+import BasicInfo from "./basic-info.vue";
+// 材料清单
+import MaterialList from "./material-list.vue";
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
-const $Util = Core.Util;
 const user = Core.Data.getUser() || {};
-const visible = ref(false);
+const $i18n = useI18n();
+const $store = useStore();
+const $router = useRouter();
+const $message = message;
+const $t = $i18n.t;
+const lang = computed(() => $store.state.lang);
+// ref
 const suppluChain = ref(null);
-const form = reactive({
+const MaterialListRef = ref(null);
+//步数样式
+const setpCount = computed(() => {
+    return $store.getters["SUPPLY_CHAIN/SETP"];
+});
+// 第几步
+const setp = computed(() => setpCount.value);
+// 步骤条
+const setpObject = computed(() => {
+    let result = {
+        0: {
+            setp: 0,
+            t: "supply-chain.basic_info",
+            bg: Core.Util.Image.getImageFile("supply-chain", "setp-base-bg"),
+            icon: "setp-icon-white",
+            text_color: "#FFF",
+        },
+        1: {
+            setp: 1,
+            t: "supply-chain.material_list",
+            bg: Core.Util.Image.getImageFile(
+                "supply-chain",
+                "setp-material-default-bg"
+            ),
+            icon: "setp-icon-black",
+            text_color: "#666",
+        },
+    };
+
+    switch (setpCount.value) {
+        case 0:
+            result[0].bg = Core.Util.Image.getImageFile(
+                "supply-chain",
+                "setp-base-bg"
+            );
+            result[0].icon = "setp-icon-white";
+            result[0].text_color = "#FFF";
+            result[1].bg = Core.Util.Image.getImageFile(
+                "supply-chain",
+                "setp-material-default-bg"
+            );
+            break;
+        case 1:
+            result[0].bg = Core.Util.Image.getImageFile(
+                "supply-chain",
+                "setp-base-bg"
+            );
+            result[1].bg = Core.Util.Image.getImageFile(
+                "supply-chain",
+                "setp-material-bg"
+            );
+            result[1].icon = "setp-icon-white";
+            result[1].text_color = "#FFF";
+            break;
+    }
+
+    return result;
+});
+// 是否已经提交
+const isSubmited = computed(() => {
+    console.log("isSubmitEd", $store.getters["SUPPLY_CHAIN/isSubmitEd"]);
+    return $store.getters["SUPPLY_CHAIN/isSubmitEd"];
+});
+
+// 廉洁承诺书
+const visible = ref(false);
+// 定时
+let countTime = ref(30);
+// 定时器
+let timer = ref(null);
+const form = ref({
     old_password: "",
     password: "",
     new_password: "",
 });
-// 是否提交申请
-const isSubmit = ref(false);
-const isSaveDraft = ref(false);
-const step2Val = ref(false);
-const $i18n = useI18n();
-const lang = useI18n().locale;
-const $store = useStore();
-const $t = $i18n.t;
-const currentComponent = computed(() => {
-    switch (current.value) {
-        case 0:
-            return BasicInfo;
-        case 1:
-            return MaterialList;
-        case 2:
-            return SubmitAdmissionApplication;
-        default:
-            return BasicInfo;
-    }
-});
-// 步骤条
-const current = ref(0);
 const passShow = ref(false);
-const detailObj = ref({});
-// 定时
-let countTime = ref(30);
-// 定时器
-let timer = null;
-
+// 成功后
+const submitSuccess = ref(false);
+const count = ref(3);
+const countTimer = ref(null);
 // 倒计时
 const countDown = () => {
     if (timer) {
         clearTimeout(timer);
         timer = null;
     }
-    timer =  setTimeout(() => {
-        if (countTime.value > 0) { // 如果倒计时还没结束，则继续
+    timer = setTimeout(() => {
+        if (countTime.value > 0) {
+            // 如果倒计时还没结束，则继续
             countTime.value--; // 倒计时时间减一
             countDown(); // 没到1秒则继续调用自己
         }
     }, 1000);
 };
 
-
-// 是否已经提交
-const isSubmited = computed(() => {
-    return Object.keys(detailObj.value).length > 0 ? true : false;
-});
-
+/* methods start*/
+// 上一步
+const handlePrev = () => {
+    $store.dispatch("SUPPLY_CHAIN/prevStep");
+};
 // 下一步
 const handleNext = () => {
-    if(current.value===0){
-        if(childrenRef.value.beforeSaveVisible()){
-            current.value++; 
-            console.log("$store",$store)
-            // $store的模块SUPPLY_CHAIN的dispatch方法
-            $store.dispatch("SUPPLY_CHAIN/setStep",current.value)
-
-        }
-        return;
-    }
-    if (current.value == 2) return;
-    current.value++;
+    $store.dispatch("SUPPLY_CHAIN/nextStep");
 };
-// 上一步
-const handleBack = () => {
-    if (current.value == 0) return;
-    current.value--;
-    $store.dispatch("SUPPLY_CHAIN/setStep",current.value)
+// 保存草稿
+const handleSave = () => {
+    console.log("MaterialListRef", MaterialListRef.value);
+    // 保存草稿
+    MaterialListRef.value.saveDraft();
 };
 // 提交
 const handleSubmit = () => {
-    // 为了每次点击都知道变化
-    // isSubmit.value = !isSubmit.value;
-    // 提交先查看是否已经阅读了协议,如果没有阅读则弹出协议
-    if(!$store.state.isRead){
+    // 判断是否已经阅读了
+    // 没有阅读
+    if (!$store.getters["SUPPLY_CHAIN/ISREAD"]) {
+        // 打开弹框
         visible.value = true;
-        return;
+    } else {
+        MaterialListRef.value.step2Vaild().then(() => {
+            handleSubmitData();
+        });
     }
-    // 确定点击了提交，促进页面的校验
-    isSubmit.value = !isSubmit.value;
-
+};
+// 提交申请
+const handleSubmitOk = () => {
+    // 将阅读状态改为true
+    $store.dispatch("SUPPLY_CHAIN/setRead", true);
+    MaterialListRef.value.step2Vaild().then(() => {
+        // 跳转到注册按钮
+        handleSubmitData();
+    });
 };
 // 提交数据
 const handleSubmitData = () => {
     // 获取本地上传表单数据
-    const data = Core.Data.getSupplyChain() === '' ? '': JSON.parse(Core.Data.getSupplyChain())
-    console.log(data,'-------------------------------------------------------------')
-    Core.Api.SUPPLY.add({form:JSON.stringify(data)})
+    const data = $store.state.SUPPLY_CHAIN.supplyChain;
+    console.log("提交数据", data);
+    Core.Api.SUPPLY.add({ form: JSON.stringify(data) })
         .then((res) => {
-            $message.success($t("supply-chain.supply_submit_successfully"));
-            handleNext();
+            visible.value = false;
+            // 获取详情数据
+            getDetail();
+            // 成功状态
+            submitSuccess.value = true;
+            // 倒计时
+            count.value = 3
+            // 开始倒计时
+            countTimer.value = setInterval(() => {
+                if (count.value === 0) {
+                    clearInterval(countTimer.value);
+                    countTimer.value = null;
+                    onBtn();
+                } else {
+                    count.value--;
+                }
+            }, 1000);
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
         });
+};
+// 获取详情
+const getDetail = () => {
+    Core.Api.SUPPLY.adminDetail({})
+        .then((res) => {
+            let DETAILS = {};
+            DETAILS = res?.detail ?? null;
+            if (DETAILS) {
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
+                if (Object.keys(DETAILS).length > 0) {
+                    // 如果已经提交了
+                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+                } else {
+                    // 如果没有提交
+                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                }
+            } else {
+                // 如果没有提交
+                $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+            }
+        })
+        .catch((err) => {
+            $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
+        });
+};
+// 打开弹框
+// 打开
+const handleOpen = () => {
+    // 如果已经阅读 了
+    if ($store.getters["SUPPLY_CHAIN/ISREAD"]) {
+        // 让倒计时直接为0
+        countTime.value = 0;
+    } else {
+        countTime.value = 30;
+    }
+    visible.value = true;
 };
 // 中英文切换
 const handleLangSwitch = () => {
@@ -484,76 +620,21 @@ const handleEditSubmit = () => {
             console.log("handleSubmit err:", err);
         });
 };
-// 保存草稿
-const handleSave = () => {
-    // isSaveDraft.value = !isSaveDraft.value;
-    console.log(childrenRef.value)
-    // 保存草稿
-    childrenRef.value.saveDraft();
+
+// 跳转
+const onBtn = () => {
+    submitSuccess.value = false
+    $store.dispatch('SUPPLY_CHAIN/setStep',0)
 };
-// 获取-详情
-const getDetail = () => {
-    Core.Api.SUPPLY.adminDetail({})
-        .then((res) => {
-            detailObj.value = res?.detail ?? null;
-            if (detailObj.value) {
-                let jsonStr = detailObj.value.form;
-                // Core.Data.setSupplyDraftChain(jsonStr);
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain",jsonStr)
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain",jsonStr)
-            }
-        })
-        .catch((err) => {});
-};
-// 发送申请
-const handleSubmitOk = () => {
-    // 已经阅读了
-    $store.commit("setRead",true);
-    visible.value = false;
-    handleSubmit();
-};
-// 打开
-const handleOpen = () => {
-    // 如果已经阅读 了
-    if($store.state.isRead){
-        // 让倒计时直接为0
-        countTime.value = 0
-    }
-    visible.value = true;
-};
-// 回到第一步
-const handleBackOne = () => {
-    current.value = 0;
-};
-// 监听第二步的校验是否完成
-watch(
-    () => step2Val.value,
-     (val) => {
-        if (val) {
-            handleSubmitData();
-        }
-    },
-    {
-        immediate: true,
-        deep:true
-    }
-);
-watch(
-    () => current.value,
-    (val) => {
-        if (val == 0) {
-            getDetail();
-        }
-    }
-);
+
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
     (val) => {
         console.log("visible.value", val);
         // 如果打开了并且倒计时不为0，则开始倒计时
-        if (val&&countTime.value!=0) {
-            countTime.value = 30
+        if (val && countTime.value != 0) {
+            countTime.value = 30;
             countDown();
         }
     },
@@ -561,13 +642,30 @@ watch(
         immediate: true,
     }
 );
+// 监听页面是否为第一页
+watch(
+    () => setp.value,
+    (val) => {
+        console.log("setp.value", val);
+        // 如果是第一页，则获取详情
+        if (val == 0) {
+            getDetail();
+        }
+    },
+    {
+        immediate: true,
+    }
+);
+
 onMounted(() => {
-    getDetail();
+    // getDetail();
 });
+
+/* methods end*/
 </script>
 
 <style lang="less" scoped>
-.supply-chain {
+.home {
     position: relative;
     height: 100vh;
     display: flex;
@@ -682,7 +780,7 @@ onMounted(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px 20px 40px;
+            padding: 20px 40px;
             position: relative;
             overflow: hidden;
             display: flex;
@@ -715,8 +813,29 @@ onMounted(() => {
                     }
                 }
             }
-            .content-main,
-            .content-main-submited {
+            .setp-bar {
+                display: flex;
+                height: 52px;
+                line-height: 52px;
+                width: 100%;
+                .setp-base-style {
+                    width: 50%;
+                    background-size: 100% 100%;
+                }
+
+                .setp-text {
+                    text-align: center;
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+
+                .icon-style {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 4px;
+                }
+            }
+            .content-main {
                 flex: 1;
                 margin-top: 15px;
                 overflow-y: scroll;
@@ -734,6 +853,43 @@ onMounted(() => {
                 &::-webkit-scrollbar-track {
                     border-radius: 10px;
                     background: #fff;
+                }
+            }
+            .submit-success {
+                flex: 1;
+                background-color: #fff;
+                border-radius: 6px;
+                background: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                .container {
+                    .icon {
+                        .icon-img {
+                            width: 101px;
+                            height: 77px;
+                        }
+                    }
+                    .title {
+                        color: #26ab54;
+                        font-size: 18px;
+                        font-weight: 500;
+                        line-height: 22px; /* 122.222% */
+                    }
+                    .sub-title {
+                        margin-top: 5px;
+                        color: #666;
+                        font-size: 12px;
+                        font-weight: 400;
+                        line-height: 22px; /* 183.333% */
+                        .timing {
+                            color: #26ab54;
+                        }
+                    }
+                    .btn {
+                        margin-top: 16px;
+                    }
                 }
             }
             .supply-chain-footer {
@@ -791,15 +947,16 @@ onMounted(() => {
         // footer
         .ant-modal-footer {
             text-align: center;
-            .btn-disabled,.read-btn {
+            .btn-disabled,
+            .read-btn {
                 border-radius: 4px;
-                border: 1px solid  #0061FF;
+                border: 1px solid #0061ff;
                 opacity: 0.3;
-                background: #0061FF;
-                color: #FFF;
+                background: #0061ff;
+                color: #fff;
                 cursor: not-allowed;
             }
-            .read-btn{
+            .read-btn {
                 cursor: pointer;
                 opacity: 1;
             }
