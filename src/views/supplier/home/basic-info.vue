@@ -1336,6 +1336,7 @@ const detection_equipment_column = ref([
 // 表单对象
 let formState = reactive({
     type: 1, //表格类型
+    position: '',
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
     // agent_info: {}, // 代理公司概况
@@ -1710,7 +1711,7 @@ const step1Vaild = () => {
                       // 为空对象
                       data = {
                           type: formState.type,
-                          position: formState.positon,
+                          position: formState.position,
                           form: {
                             ...formState
                           }
@@ -1720,7 +1721,7 @@ const step1Vaild = () => {
                       data = {
                         ...data,
                         type: formState.type,
-                        position: formState.positon,
+                        position: formState.position,
                         form: {
                           ...formState
                         }
@@ -1758,7 +1759,7 @@ const saveDraft1 = () => {
       // 为空对象
       data = {
           type: formState.type,
-          position: formState.positon,
+          position: formState.position,
           form: {
             ...formState
           }
@@ -1768,7 +1769,7 @@ const saveDraft1 = () => {
       data = {
         ...data,
         type: formState.type,
-        position: formState.positon,
+        position: formState.position,
         form: {
           ...formState
         }
