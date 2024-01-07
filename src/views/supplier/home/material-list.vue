@@ -454,15 +454,15 @@ const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
-    formState.business_duration_type = 1
+    formState.form.business_duration_type = 1
   } else {
     // 解析出来的数据
     let data = draftData
-    Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
-      formState[key] = data.confirmatory_material[key]
+    Object.keys(data?.form?.confirmatory_material ?? {}).forEach((key) => {
+      formState[key] = data.form.confirmatory_material[key]
     })
     formState.business_duration_type =
-      data?.confirmatory_material?.business_duration_type || 1
+      data?.form?.confirmatory_material?.business_duration_type || 1
 
     console.log("回显数据：", formState)
   }
@@ -482,15 +482,15 @@ const detailDataReview = () => {
   console.log("详情回显数据：", detailData)
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
-    formState.business_duration_type = 1
+    formState.form.business_duration_type = 1
   } else {
     // 解析出来的数据
     let data = detailData
-    Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
-      formState[key] = data.confirmatory_material[key]
+    Object.keys(data?.form?.confirmatory_material ?? {}).forEach((key) => {
+      formState[key] = data.form.confirmatory_material[key]
     })
     formState.business_duration_type =
-      data?.confirmatory_material?.business_duration_type || 1
+      data?.form?.confirmatory_material?.business_duration_type || 1
   }
   setTimeout(() => {
     if (TimeSearchRef.value) {
@@ -514,11 +514,13 @@ const step2Vaild = () => {
           if (Object.keys(data).length === 0) {
             // 为空对象
             data = {
-              confirmatory_material: formState,
+              form:{
+                confirmatory_material: formState,
+              }
             }
           } else {
             // 不为空对象
-            data.confirmatory_material = formState
+            data.form.confirmatory_material = formState
           }
 
           // 保存数据
@@ -551,11 +553,13 @@ const saveDraft = () => {
   if (Object.keys(data).length === 0) {
     // 为空对象
     data = {
-      confirmatory_material: formState,
+      form:{
+        confirmatory_material: formState,
+      }
     }
   } else {
     // 不为空对象
-    data.confirmatory_material = formState
+    data.form.confirmatory_material = formState
   }
   // 保存数据
   // Core.Data.setSupplyDraftChain(JSON.stringify(data));
