@@ -123,7 +123,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <div class="setp-bar" v-if="!isSubmited">
+                <div class="setp-bar" v-if="!isSubmited && !submitSuccess">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -138,7 +138,7 @@
                         </div>
                     </template>
                 </div>
-                <div class="submited" v-else>
+                <div class="submited" v-else-if="isSubmited && !submitSuccess">
                     <div class="main-content">
                         <div class="tips">
                             <img
@@ -159,13 +159,38 @@
                         </div>
                     </div>
                 </div>
-                <div class="content-main">
+                <div class="content-main" v-if="!submitSuccess">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
                 </div>
-                <div class="supply-chain-footer">
+                <div class="submit-success" v-else>
+                    <div class="container">
+                        <div class="icon">
+                            <img
+                                class="icon-img"
+                                src="../../../assets//images/supply-chain/suceess.png"
+                                alt="" />
+                        </div>
+                        <div class="title">
+                            {{
+                                $t(
+                                    "supply-chain.information_submitted_successfully"
+                                )
+                            }}
+                        </div>
+                        <div class="sub-title">
+                            {{ $t("supply-chain.tips1") }}
+                            <span class="timing">{{ count }}s</span>
+                            {{ $t("supply-chain.tips2") }}
+                        </div>
+                        <div class="btn" @click="onBtn">
+                            <a-button>{{ $t("supply-chain.back") }}</a-button>
+                        </div>
+                    </div>
+                </div>
+                <div class="supply-chain-footer" v-if="!submitSuccess">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -337,11 +362,13 @@
 
 <script setup>
 import Core from "@/core";
-import { computed, ref, onMounted ,watch} from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
 // 材料清单
@@ -351,6 +378,8 @@ const loginType = Core.Data.getLoginType();
 const user = Core.Data.getUser() || {};
 const $i18n = useI18n();
 const $store = useStore();
+const $router = useRouter();
+const $message = message;
 const $t = $i18n.t;
 // ref
 const suppluChain = ref(null);
@@ -423,36 +452,31 @@ const visible = ref(false);
 // 定时
 let countTime = ref(30);
 // 定时器
-let timer = null;
+let timer = ref(null);
+const form = ref({
+    old_password: "",
+    password: "",
+    new_password: "",
+});
+const passShow = ref(false);
+// 成功后
+const submitSuccess = ref(false);
+const count = ref(3);
+const countTimer = ref(null);
 // 倒计时
 const countDown = () => {
     if (timer) {
         clearTimeout(timer);
         timer = null;
     }
-    timer =  setTimeout(() => {
-        if (countTime.value > 0) { // 如果倒计时还没结束，则继续
+    timer = setTimeout(() => {
+        if (countTime.value > 0) {
+            // 如果倒计时还没结束，则继续
             countTime.value--; // 倒计时时间减一
             countDown(); // 没到1秒则继续调用自己
         }
     }, 1000);
 };
-
-// 监听 弹框打开，开始倒计时
-watch(
-    () => visible.value,
-    (val) => {
-        console.log("visible.value", val);
-        // 如果打开了并且倒计时不为0，则开始倒计时
-        if (val&&countTime.value!=0) {
-            countTime.value = 30
-            countDown();
-        }
-    },
-    {
-        immediate: true,
-    }
-);
 
 /* methods start*/
 // 上一步
@@ -465,14 +489,60 @@ const handleNext = () => {
 };
 // 保存草稿
 const handleSave = () => {
-    console.log("childrenRef.value111", childrenRef.value);
+    console.log("MaterialListRef", MaterialListRef.value);
     // 保存草稿
-    childrenRef.value.saveDraft();
+    MaterialListRef.value.saveDraft();
 };
 // 提交
 const handleSubmit = () => {
-    // 校验
-    MaterialListRef.value.step2Vaild();
+    // 判断是否已经阅读了
+    // 没有阅读
+    if (!$store.getters["SUPPLY_CHAIN/ISREAD"]) {
+        // 打开弹框
+        visible.value = true;
+    } else {
+        MaterialListRef.value.step2Vaild().then(() => {
+            handleSubmitData();
+        });
+    }
+};
+// 提交申请
+const handleSubmitOk = () => {
+    // 将阅读状态改为true
+    $store.dispatch("SUPPLY_CHAIN/setRead", true);
+    MaterialListRef.value.step2Vaild().then(() => {
+        // 跳转到注册按钮
+        handleSubmitData();
+    });
+};
+// 提交数据
+const handleSubmitData = () => {
+    // 获取本地上传表单数据
+    const data = $store.state.SUPPLY_CHAIN.supplyChain;
+    console.log("提交数据", data);
+    Core.Api.SUPPLY.add({ form: JSON.stringify(data) })
+        .then((res) => {
+            visible.value = false;
+            // 获取详情数据
+            getDetail();
+            // 成功状态
+            submitSuccess.value = true;
+            // 倒计时
+            count.value = 3
+            // 开始倒计时
+            countTimer.value = setInterval(() => {
+                if (count.value === 0) {
+                    clearInterval(countTimer.value);
+                    countTimer.value = null;
+                    onBtn();
+                } else {
+                    count.value--;
+                }
+            }, 1000);
+        })
+        .catch((err) => {
+            $message.error($t("supply-chain.supply_submit_failed"));
+        });
 };
 // 获取详情
 const getDetail = () => {
@@ -482,14 +552,14 @@ const getDetail = () => {
             DETAILS = res?.detail ?? null;
             if (DETAILS) {
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
-                if(Object.keys(DETAILS).length>0){
+                if (Object.keys(DETAILS).length > 0) {
                     // 如果已经提交了
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
-                }else{
+                } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
                 }
-            }else{
+            } else {
                 // 如果没有提交
                 $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
             }
@@ -502,15 +572,92 @@ const getDetail = () => {
 // 打开
 const handleOpen = () => {
     // 如果已经阅读 了
-    if($store.getters["SUPPLY_CHAIN/ISREAD"]){
+    if ($store.getters["SUPPLY_CHAIN/ISREAD"]) {
         // 让倒计时直接为0
-        countTime.value = 0
+        countTime.value = 0;
+    } else {
+        countTime.value = 30;
     }
     visible.value = true;
 };
+// 中英文切换
+const handleLangSwitch = () => {
+    $store.commit("switchLang");
+    $i18n.locale.value = $store.state.lang;
+};
+const handleEditShow = () => {
+    passShow.value = true;
+};
+const handleLogout = () => {
+    $router.replace("/login");
+    localStorage.clear();
+    Core.Api.Common.logout();
+};
+const handleEditSubmit = () => {
+    let form = Core.Util.deepCopy(form);
+    if (!form.old_password) {
+        return $message.warning($t("u.old_password"));
+    }
+    if (!form.password) {
+        return $message.warning($t("u.new_password"));
+    }
+    if (!form.new_password) {
+        return $message.warning($t("u.again"));
+    }
+    if (form.new_password !== form.password) {
+        $message.warning($t("u.not"));
+        return;
+    }
+
+    loading = true;
+    Core.Api.Common.updatePwd(form)
+        .then(() => {
+            $message.success($t("pop_up.save_success"));
+            handleEditClose();
+        })
+        .catch((err) => {
+            console.log("handleSubmit err:", err);
+        });
+};
+
+// 跳转
+const onBtn = () => {
+    submitSuccess.value = false
+    $store.dispatch('SUPPLY_CHAIN/setStep',0)
+};
+
+// 监听 弹框打开，开始倒计时
+watch(
+    () => visible.value,
+    (val) => {
+        console.log("visible.value", val);
+        // 如果打开了并且倒计时不为0，则开始倒计时
+        if (val && countTime.value != 0) {
+            countTime.value = 30;
+            countDown();
+        }
+    },
+    {
+        immediate: true,
+    }
+);
+// 监听页面是否为第一页
+watch(
+    () => setp.value,
+    (val) => {
+        console.log("setp.value", val);
+        // 如果是第一页，则获取详情
+        if (val == 0) {
+            getDetail();
+        }
+    },
+    {
+        immediate: true,
+    }
+);
 
 onMounted(() => {
-    getDetail();
+    // getDetail();
 });
 
 /* methods end*/
@@ -687,7 +834,7 @@ onMounted(() => {
                     margin-right: 4px;
                 }
             }
-            .content-main{
+            .content-main {
                 flex: 1;
                 margin-top: 15px;
                 overflow-y: scroll;
@@ -705,6 +852,43 @@ onMounted(() => {
                 &::-webkit-scrollbar-track {
                     border-radius: 10px;
                     background: #fff;
+                }
+            }
+            .submit-success {
+                flex: 1;
+                background-color: #fff;
+                border-radius: 6px;
+                background: #fff;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                .container {
+                    .icon {
+                        .icon-img {
+                            width: 101px;
+                            height: 77px;
+                        }
+                    }
+                    .title {
+                        color: #26ab54;
+                        font-size: 18px;
+                        font-weight: 500;
+                        line-height: 22px; /* 122.222% */
+                    }
+                    .sub-title {
+                        margin-top: 5px;
+                        color: #666;
+                        font-size: 12px;
+                        font-weight: 400;
+                        line-height: 22px; /* 183.333% */
+                        .timing {
+                            color: #26ab54;
+                        }
+                    }
+                    .btn {
+                        margin-top: 16px;
+                    }
                 }
             }
             .supply-chain-footer {

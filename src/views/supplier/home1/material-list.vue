@@ -466,7 +466,7 @@ const handleTimeSearch = (params) => {
 };
 // 草稿回显
 const draftDataReview = () => {
-    let draftData = $store.dispatch('SUPPLY_CHAIN/getSupplyDraftChain')
+    let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState.business_duration_type = 1;
@@ -491,57 +491,77 @@ const draftDataReview = () => {
         }
     });
 };
+// 详情回显
+const detailDataReview = () => {
+    let detailData = $store.state.SUPPLY_CHAIN.supplyChain;
+    console.log("详情回显数据：", detailData);
+    // 判断是否为空对象
+    if (Object.keys(detailData).length === 0) {
+        formState.business_duration_type = 1;
+    } else {
+        // 解析出来的数据
+        let data = detailData;
+        Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
+            formState[key] = data.confirmatory_material[key];
+        });
+        formState.business_duration_type =
+            data?.confirmatory_material?.business_duration_type || 1;
+    }
+    setTimeout(() => {
+        if (TimeSearchRef.value) {
+            // 给timeSearch赋值
+            TimeSearchRef.value.createTime = [
+                formState.begin_business_time,
+                formState.end_business_time,
+            ];
+        }
+    });
+};
 // 校验
 const step2Vaild = () => {
-    formRef1.value.clearValidate();
-    formRef1.value
-        .validate()
-        .then((res) => {
-            if (res) {
-                // 校验通过,通知父组件校验步骤2通过
-                let data =
-                    Core.Data.getSupplyChain() === ""
-                        ? {}
-                        : JSON.parse(Core.Data.getSupplyChain());
-
-                console.log(formState);
-                console.log(data);
-                if (Object.keys(data).length === 0) {
-                    // 为空对象
-                    data = {
-                        confirmatory_material: formState,
-                    };
-                } else {
-                    // 不为空对象
-                    data.confirmatory_material = formState;
+    return new Promise((resolve,reject)=>{
+        formRef1.value.clearValidate();
+        formRef1.value
+            .validate()
+            .then((res) => {
+                if (res) {
+                    let data = $store.state.SUPPLY_CHAIN.supplyChain;
+                    if (Object.keys(data).length === 0) {
+                        // 为空对象
+                        data = {
+                            confirmatory_material: formState,
+                        };
+                    } else {
+                        // 不为空对象
+                        data.confirmatory_material = formState;
+                    }
+                    
+                    // 保存数据
+                    $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                    resolve(true)
                 }
-                // 保存数据
-                Core.Data.setSupplyChain(JSON.stringify(data));
-                $emit("update:value", true);
-            }
-        })
-        .catch((err) => {
-            // 校验失败
-            $emit("update:value", false);
-            message.warning($t("supply-chain.please_complete_info"));
-            const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-            if (!errorName) return;
-            const errorDom = document.querySelector(`[name=${errorName}]`);
-            // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-            errorDom.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-                inline: "nearest",
+            })
+            .catch((err) => {
+                // 校验失败
+                message.warning($t("supply-chain.please_complete_info"));
+                const errorName = err?.errorFields[0]?.name[0] ?? undefined;
+                console.log("errorName",err)
+                if (!errorName) return;
+                const errorDom = document.querySelector(`[name=${errorName}]`);
+                // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
+                errorDom.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "nearest",
+                });
+                reject(false)
             });
-        });
+    })
 };
 // 保存草稿
 const saveDraft = () => {
     // 获取数据
-    let data =
-        Core.Data.getSupplyDraftChain() === ""
-            ? {}
-            : JSON.parse(Core.Data.getSupplyDraftChain());
+    let data = $store.state.SUPPLY_CHAIN.supplyDraftChain;
     // 判断是否为空对象
     if (Object.keys(data).length === 0) {
         // 为空对象
@@ -553,34 +573,24 @@ const saveDraft = () => {
         data.confirmatory_material = formState;
     }
     // 保存数据
-    Core.Data.setSupplyDraftChain(JSON.stringify(data));
+    // Core.Data.setSupplyDraftChain(JSON.stringify(data));
+    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
 
     // 提示
     message.success($t("supply-chain.save_successfully"));
 };
 // 回显数据
 const reviewData = () => {
-    let data = Core.Data.getSupplyChain();
-    if (data === "") {
-        return;
+    // 判断是否已经提交过了
+    let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
+    console.log("是否已经提交过了：", isSubmit);
+    if (isSubmit) {
+        // 已经提交过了
+        detailDataReview();
+    } else {
+        // 没有提交过
+        draftDataReview();
     }
-    data = JSON.parse(data);
-    Object.keys(data?.confirmatory_material ?? {}).forEach((key) => {
-        formState[key] = data.confirmatory_material[key];
-    });
-    formState.business_duration_type =
-        data?.confirmatory_material?.business_duration_type || 1;
-    console.log("回显数据：", formState);
-    setTimeout(() => {
-        if (TimeSearchRef.value) {
-            // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.begin_business_time,
-                formState.end_business_time,
-            ];
-        }
-    });
-    return data
 };
 watch(
     () => $i18n.locale.value,
@@ -592,15 +602,14 @@ watch(
     }
 );
 
-
 defineExpose({
     step2Vaild,
-    saveDraft
+    saveDraft,
 });
 
 onMounted(() => {
     // 回显数据
-    draftDataReview();
+    reviewData();
 });
 </script>
 
