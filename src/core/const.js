@@ -85,6 +85,7 @@ let Const = {
         SUPPLY_DETAILS_CHAIN: 'supply-details-chain',
         SUPPLY_STEP: 'supply-step',
         SUPPLY_ISREAD: 'supply-isread',
+        SUPPLY_SUBMITED: 'supply-submited',
     },
     DEFULT_IMG: {
         1: defult_img,

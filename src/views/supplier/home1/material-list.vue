@@ -348,31 +348,14 @@ import Core from "@/core";
 const formRef1 = ref(null);
 const formRef2 = ref(null);
 const TimeSearchRef = ref(null);
-const props = defineProps({
-    isSubmit: {
-        type: Boolean,
-        default: false,
-    },
-    value: {
-        type: Boolean,
-        default: false,
-    },
-    isSaveDraft: {
-        type: Boolean,
-        default: false,
-    },
-});
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
-const $emit = defineEmits(["update:value"]);
 let formState = reactive({
     business_duration_type: 1,
 });
-
-
 let BusinessTermValid = async (_rule, value) => {
     if (formState.business_duration_type == 2) {
         if (!formState.begin_business_time || !formState.end_business_time) {
@@ -402,20 +385,6 @@ let RegisteredCapitalVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
-// let LegalRepresentativeVaild = async (_rule, value) => {
-//     if (!value) {
-//         return Promise.reject(
-//             $t("supply-chain.please_enter_legal_representative")
-//         );
-//     }
-//     // 纯文本
-//     if (!/^[\u4e00-\u9fa5]+$/.test(value)) {
-//         return Promise.reject(
-//             $t("supply-chain.legal_representative_must_be_pure_text")
-//         );
-//     }
-//     return Promise.resolve();
-// };
 let account_nameVaild = async (_rule, value) => {
     if (!value) {
         return Promise.reject($t("supply-chain.please_enter_account_name"));
@@ -453,14 +422,6 @@ const rules = {
             trigger: ["change", "blur"],
         },
     ],
-    // 法定代表人
-    // legal_person: [
-    //     {
-    //         required: true,
-    //         validator: LegalRepresentativeVaild,
-    //         trigger: ["change", "blur"],
-    //     },
-    // ],
     // 营业期限
     business_duration_type: [
         {
@@ -505,8 +466,7 @@ const handleTimeSearch = (params) => {
 };
 // 草稿回显
 const draftDataReview = () => {
-    let draftDataJson = Core.Data.getSupplyDraftChain();
-    let draftData = draftDataJson === "" ? {} : JSON.parse(draftDataJson);
+    let draftData = $store.dispatch('SUPPLY_CHAIN/getSupplyDraftChain')
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
         formState.business_duration_type = 1;
@@ -592,8 +552,6 @@ const saveDraft = () => {
         // 不为空对象
         data.confirmatory_material = formState;
     }
-    console.log("草稿数据：", data);
-
     // 保存数据
     Core.Data.setSupplyDraftChain(JSON.stringify(data));
 
@@ -624,74 +582,6 @@ const reviewData = () => {
     });
     return data
 };
-
-// 监听isSubmit
-watch(
-    () => props.isSubmit,
-    () => {
-        // 如果isSubmit变化了，就校验
-        if (formRef1.value) {
-            formRef1.value.clearValidate();
-            formRef1.value
-                .validate()
-                .then((res) => {
-                    if (res) {
-                        // 校验通过,通知父组件校验步骤2通过
-                        let data = reviewData();
-                        // 保存数据
-                        Core.Data.setSupplyChain(JSON.stringify(data));
-                        $emit("update:value", true);
-                    }
-                })
-                .catch((err) => {
-                    // 校验失败
-                    $emit("update:value", false);
-                    message.warning($t("supply-chain.please_complete_info"));
-                    const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-                    if (!errorName) return;
-                    const errorDom = document.querySelector(
-                        `[name=${errorName}]`
-                    );
-                    // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-                    errorDom.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                        inline: "nearest",
-                    });
-                });
-        }
-    },
-    {
-        deep: true,
-    }
-);
-watch(
-    () => props.isSaveDraft,
-    (val) => {
-        // 获取数据
-        let data =
-            Core.Data.getSupplyDraftChain() === ""
-                ? {}
-                : JSON.parse(Core.Data.getSupplyDraftChain());
-        // 判断是否为空对象
-        if (Object.keys(data).length === 0) {
-            // 为空对象
-            data = {
-                confirmatory_material: formState,
-            };
-        } else {
-            // 不为空对象
-            data.confirmatory_material = formState;
-        }
-        console.log("草稿数据：", data);
-
-        // 保存数据
-        Core.Data.setSupplyDraftChain(JSON.stringify(data));
-
-        // 提示
-        message.success($t("supply-chain.save_successfully"));
-    }
-);
 watch(
     () => $i18n.locale.value,
     (val) => {
@@ -709,6 +599,7 @@ defineExpose({
 });
 
 onMounted(() => {
+    // 回显数据
     draftDataReview();
 });
 </script>

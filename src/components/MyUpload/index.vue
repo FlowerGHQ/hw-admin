@@ -117,7 +117,6 @@ const props = defineProps({
 });
 const uploadId = _.uniqueId("upload_");
 const uploadComponent = ref(null);
-console.log("uploadComponent", uploadComponent.value);
 // computed
 const limitNum = computed(() => {
     return props.limit;
