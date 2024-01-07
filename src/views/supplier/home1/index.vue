@@ -381,6 +381,7 @@ const $store = useStore();
 const $router = useRouter();
 const $message = message;
 const $t = $i18n.t;
+const lang = computed(() => $store.state.lang);
 // ref
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);

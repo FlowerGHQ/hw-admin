@@ -91,7 +91,7 @@ const props = defineProps({
         default: 2,
     },
     value: {
-        type: Array,
+        type: [String,Array],
         default: () => [],
     },
     showTip: {
