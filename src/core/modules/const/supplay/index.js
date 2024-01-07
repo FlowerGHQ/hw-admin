@@ -19,14 +19,7 @@ const SUPPLAY = {
         { value: 3, zh:'外协类', en: 'Outsourcing Class', t: 'supply-chain.outsourcing' },
         { value: 4, zh:'模具类', en: 'Mold Class', t: 'supply-chain.mold' },
         { value: 5, zh:'客指类', en: 'CustomerRefers Class', t: 'supply-chain.customer_refers' },
-    ],
-    SUPPLAY_TYPE_MAP: {        
-        part: 1,
-        broker: 2,
-        outsourcing: 3,
-        mold: 4,
-        customer_refers: 5,
-    },
+    ],   
     // 职位
     POSITION: {        
         1: { value: 1, t: 'supply-chain.sales', },
