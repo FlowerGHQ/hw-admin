@@ -522,7 +522,7 @@ const handleSubmitData = () => {
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
     data?.form ?  data.form = JSON.stringify(data.form) : "{}"
     // 获取类型
-    if($store.state.SUPPLY_CHAIN.supplyType === Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value){
+    if($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value){
         if ( data?.confirmatory_material?.proxy_certificate){
             delete data.confirmatory_material.proxy_certificate
         }
