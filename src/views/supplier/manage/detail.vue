@@ -536,7 +536,7 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
-                                        :data-source="[] || msgDetail.competitor_analysis || []" 
+                                        :data-source="msgDetail.competitor_analysis || []" 
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
