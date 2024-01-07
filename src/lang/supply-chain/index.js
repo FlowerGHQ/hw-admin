@@ -213,6 +213,14 @@ export default {
         //  已阅读，发送申请
         read_and_send_application: "已阅读，发送申请",
         legal_representative: "法人代表",
+        Human_resources: "人力资源",
+        agent_information: "代理信息",
+        agent_company: "被代理公司",
+        proxy_address: "被代理地址",
+        agency_relationship: "被代理关系",
+        proxy_warrant: "代理权证",
+        duration_of_agency: "代理有效期间",
+        agent_product: "代理产品",
     },
     en: {
         type_supply: 'Type Supply',
@@ -418,5 +426,14 @@ export default {
         confidentiality_and_non_competition_agreement: "《Confidentiality and non-competition agreement》",
         read_and_send_application: "Read and send application",
         legal_representative: "Legal representative",
+        Human_resources: "Human Resources",
+        agent_information: "Agent Information",
+        agent_company: "Agent Company",
+        proxy_address: "Proxy Address",
+        agency_relationship: "Agency Relationship",
+        proxy_warrant: "Proxy Warrant",
+        duration_of_agency: "Duration Of Agency",
+        agent_product: "Agent Product",
+        
     }
 }
