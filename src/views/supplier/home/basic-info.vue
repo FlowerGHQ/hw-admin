@@ -1643,10 +1643,6 @@ const handleTypeModeChange = (data) => {
     rules.value.contact_email[0].required = boo;
     rules.value.contact_flag_phone[0].required = boo;
 }
-const handleTimeSearch = (params) => {
-  formState.begin_business_time = params.begin_time;
-  formState.end_business_time = params.end_time;
-};
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
@@ -1714,7 +1710,7 @@ const step1Vaild = () => {
                       // 为空对象
                       data = {
                           type: formState.type,
-                          positon: formState.contact_info.positon,
+                          position: formState.positon,
                           form: {
                             ...formState
                           }
@@ -1724,7 +1720,7 @@ const step1Vaild = () => {
                       data = {
                         ...data,
                         type: formState.type,
-                        positon: formState.contact_info.positon,
+                        position: formState.positon,
                         form: {
                           ...formState
                         }
@@ -1762,7 +1758,7 @@ const saveDraft1 = () => {
       // 为空对象
       data = {
           type: formState.type,
-          positon: formState.contact_info.positon,
+          position: formState.positon,
           form: {
             ...formState
           }
@@ -1772,7 +1768,7 @@ const saveDraft1 = () => {
       data = {
         ...data,
         type: formState.type,
-        positon: formState.contact_info.positon,
+        position: formState.positon,
         form: {
           ...formState
         }
