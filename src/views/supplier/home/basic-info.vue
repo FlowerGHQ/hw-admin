@@ -1,6 +1,5 @@
 <template>
   <div class="material-list">
-      {{ formState }}
       <div class="base-info content-area top-box">
           <div class="title">{{ $t("supply-chain.type_supply") }}</div>
           <div class="base-info-form flex-1" >
@@ -51,13 +50,13 @@
                                           ) 
                                       "
                                       name="positon"
-                                      >{{ formState.position }}
+                                      >
                                       <a-radio-group
                                                 v-model:value="formState.position"
                                                 @change="handleTypeModeChange"
                                                 name = "positon"
                                             >
-                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}{{ radio }}</a-radio>
+                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
                                       </a-radio-group>
                                   </a-form-item>
                               </a-col>
@@ -1649,25 +1648,19 @@ const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
-
+      console.log('空对象','详情回显');
   } else {
       // 解析出来的数据
       let data = draftData;
-      console.log('data---------',data);
       Object.keys(data ?? {}).forEach((key) => {
-        console.log(key === 'form');
         if(key === 'form'){
-          console.log('data[key]',data[key]);
          for (const iterator of  Object.keys(data[key])) {
-          formState[iterator] = data[key][iterator]
-          console.log('iterator',iterator);
+            formState[iterator] = data[key][iterator]
          }
         }else {
-          
           formState[key] = data[key];
         }
       });
-
       console.log("回显数据：草稿回显", formState);
   }
 };
@@ -1683,14 +1676,14 @@ const detailDataReview = () => {
       let data = detailData;
       Object.keys(data??{}).forEach((key) => {
         if(key === 'form'){
-          formState = {...formState,...data[key]}
-          return;
+            for (const iterator of  Object.keys(data[key])) {
+                formState[iterator] = data[key][iterator]
+            }
+        }else {
+            formState[key] = data[key];
         }
-        formState[key] = data[key];
       });
-      /* formState.business_duration_type =
-          data?.confirmatory_material?.business_duration_type || 1; */
-          console.log('formState----回显数据',formState);
+      console.log('详情----回显数据',formState);
   }
 };
 // 校验

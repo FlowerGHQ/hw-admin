@@ -57,25 +57,25 @@
                 <a-col :span="12">
                   <!-- 法定代表人 -->
                   <!-- <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.legal_representative'
-                                            )
-                                        "
-                                        name="legal_person">
-                                        <a-input
-                                            allowClear
-                                            :maxlength="5"
-                                            showCount
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            name="legal_person"
-                                            v-model:value="
-                                                formState.legal_person
-                                            ">
-                                        </a-input>
-                                    </a-form-item> -->
+                      :label="
+                          $t(
+                              'supply-chain.legal_representative'
+                          )
+                      "
+                      name="legal_person">
+                      <a-input
+                          allowClear
+                          :maxlength="5"
+                          showCount
+                          :placeholder="
+                              $t('supply-chain.please_enter')
+                          "
+                          name="legal_person"
+                          v-model:value="
+                              formState.legal_person
+                          ">
+                      </a-input>
+                  </a-form-item> -->
                 </a-col>
               </a-row>
               <a-row :gutter="24">
