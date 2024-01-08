@@ -72,7 +72,7 @@
                                                 name="registered_capital"
                                             >
                                                 <template #addonAfter>
-                                                    <span class="l-w-h-style"> {{$t('supply-chain.ten_thousand_yuan')}} </span>
+                                                    <span> {{$t('supply-chain.ten_thousand_yuan')}} </span>
                                                 </template>
                                       </a-input-number>
                                         </div>
@@ -745,6 +745,22 @@ onMounted(() => {
 :deep(.ant-form-item-control-input-content) {
     // 清除flex：auto
     flex: none;
+}
+:deep(.ant-input-number-group-addon) {
+    background-color: #F2F2F2;
+    color: #808FA6;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #EAECF1;
+    box-sizing: border-box;
+}
+:deep(.ant-input-number-group) {
+    border-radius: 4px;
+    border: 1px solid #EAECF1;
+    background: #FFF;
+    overflow: hidden;
+    
 }
 .business-term {
     display: flex;
