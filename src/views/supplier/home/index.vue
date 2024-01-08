@@ -122,7 +122,8 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <div class="setp-bar">
+                <!-- 已经上传并且没走到成功那一步 -->
+                <div class="setp-bar" v-if="!submitSuccess && isSubmited">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -158,7 +159,7 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="content-main" v-if="!submitSuccess">
+                <div class="content-main" v-if="!submitSuccess && isSubmited">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
@@ -179,17 +180,13 @@
                                 )
                             }}
                         </div>
-                        <div class="sub-title">
-                            {{ $t("supply-chain.tips1") }}
-                            <span class="timing">{{ count }}s</span>
-                            {{ $t("supply-chain.tips2") }}
-                        </div>
+                     
                         <div class="btn" @click="onBtn">
-                            <a-button>{{ $t("supply-chain.back") }}</a-button>
+                            <a-button>{{ $t("supply-chain.view_or_edit_data") }}</a-button>
                         </div>
                     </div>
                 </div>
-                <div class="supply-chain-footer" v-if="!submitSuccess">
+                <div class="supply-chain-footer" v-if="!submitSuccess && isSubmited">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -459,10 +456,8 @@ const form = ref({
     new_password: "",
 });
 const passShow = ref(false);
-// 成功后
+// 成功后，是否到最后一步
 const submitSuccess = ref(false);
-const count = ref(3);
-const countTimer = ref(null);
 // 倒计时
 const countDown = () => {
     if (timer.value) {
@@ -576,18 +571,6 @@ const handleSubmitData = () => {
             getDetail();
             // 成功状态
             submitSuccess.value = true;
-            // 倒计时
-            count.value = 3;
-            // 开始倒计时
-            countTimer.value = setInterval(() => {
-                if (count.value === 0) {
-                    clearInterval(countTimer.value);
-                    countTimer.value = null;
-                    onBtn();
-                } else {
-                    count.value--;
-                }
-            }, 1000);
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
@@ -605,13 +588,16 @@ const getDetail = () => {
                 if (Object.keys(DETAILS).length > 0) {
                     // 如果已经提交了
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+                    submitSuccess.value = true;
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                    submitSuccess.value = false;
                 }
             } else {
                 // 如果没有提交
                 $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                submitSuccess.value = false;
             }
         })
         .catch((err) => {
@@ -721,8 +707,6 @@ onBeforeUnmount(() => {
     timer1.value = null;
     clearTimeout(timer.value);
     timer.value = null;
-    clearInterval(countTimer.value);
-    countTimer.value = null;
 });
 
 /* methods end*/
