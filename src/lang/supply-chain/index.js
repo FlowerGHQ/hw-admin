@@ -1,5 +1,7 @@
 export default {
   zh: {
+    // 万元
+    ten_thousand_yuan: "万元",
     type_supply: "供应类型",
     contact: "联系方式",
     access_code: "获取验证码",
@@ -248,9 +250,12 @@ export default {
     serial_number: "序号",
     precision_grade: "精度等级",
     not_uploaded: "未上传",
-    not_selected: "未选择",
+    not_selected: "未选择",        
+    // 确定删除此数据吗
+    detele_data_sure: '确定删除此数据吗?'
   },
   en: {
+    ten_thousand_yuan:"TEN THOUSAND YUAN",
     type_supply: "Type Supply",
     contact: "Contact",
     access_code: "Access code",
@@ -472,8 +477,11 @@ export default {
     // 公司性质
     private: 'Private',
     foreign_owned: 'foreign Owned',
-    state_owned: 'state Owned',
-    human_resources: "Human Resources",
+    state_owned: 'state Owned',    
+    // 人力资源
+    human_resources: 'Human Resources',
+    // 确定删除此数据吗
+    detele_data_sure: 'Are you sure you want to delete this data?',    
     agent_information: "Agent Information",
     agent_company: "Agent Company",
     proxy_address: "Proxy Address",

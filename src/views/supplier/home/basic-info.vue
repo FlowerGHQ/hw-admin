@@ -8,18 +8,15 @@
                       <div class="title-two">
                       </div>
                   </a-col>
-                  <a-col :span="22">
-                        <div class="top-type-box">
-                                <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
-                                    <MySvgIcon icon-class="white-type" v-if="item.value === formState.type"/>
-                                    <MySvgIcon icon-class="black-type" v-else />
-                                    <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
-                                        {{
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ?
-                                            $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-"
-                                        }}
-                                    </span>
-                                </div>
+                  <a-col :span="22" >
+                        <div class="top-type-box" >
+                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
+                                <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
+                                <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
+                                <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
+                                    {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
+                                </span>
+                            </div>
                         </div>
                   </a-col>
               </a-row>
@@ -256,7 +253,7 @@
                   </a-row>
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t("supply-chain.human_resources")
                               }}
@@ -341,7 +338,7 @@
                   <!-- 财务信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.financial_information"
@@ -439,7 +436,7 @@
                   <!-- 营业信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.financial_information"
@@ -594,7 +591,7 @@
                   <!-- 竞争对手 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.competitor"
@@ -615,11 +612,11 @@
                             >
                                   <template #bodyCell="{ column, record, index }">
                                       <!-- 客户序号 -->
-                                      <!-- <template
-                                          v-if="column.dataIndex === 'customer_order'"
+                                      <template
+                                          v-if="column.dataIndex === 'company_order'"
                                       >
-                                          {{ record.customer_order }}
-                                      </template>  -->
+                                          {{ record.company_order }}
+                                      </template> 
                                       <template
                                           v-if="column.type === 'input'"
                                       >
@@ -653,23 +650,19 @@
                                           <a-button
                                               type="link"
                                               v-if="index"
-                                              @click="handleDelete(formState.competitor_analysis ,record)"
+                                              @click="handleDelete(formState.competitor_analysis ,record ,'竞争对手' ,'company_order')"
                                               >
                                               <i class="icon i_delete" />
-                                                  {{
-                                                      $t("def.delete")
-                                                  }}
-                                              </a-button
-                                          >
+                                                  {{ $t("def.delete") }}
+                                              </a-button>
                                       </template>
                                   </template>
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
-                                  @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj )"
+                                  @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj ,'竞争对手' ,'company_order')"
                                   >
                                   添加对手
                               </a-button
@@ -681,7 +674,7 @@
                   <!-- 客户信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.customer_information"
@@ -740,7 +733,7 @@
                                           <a-button
                                               type="link"
                                               v-if="index"
-                                              @click="handleDelete(formState.customer_info ,record , '客户名称')"
+                                              @click="handleDelete(formState.customer_info ,record , '主要客户','customer_order')"
                                               >
                                               <i class="icon i_delete" />
                                                   {{
@@ -753,10 +746,9 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
-                                  @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户')"
+                                  @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户' ,'customer_order')"
                                   >
                                   添加客户
                               </a-button
@@ -768,7 +760,7 @@
                   <!-- 技术信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.Technical_information"
@@ -862,7 +854,7 @@
                   <!-- 质量信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.quality_information"
@@ -920,7 +912,7 @@
                   <!-- 产能产线 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.capacity_line"
@@ -965,7 +957,7 @@
                   <!-- 外购管理 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.qutsourcing_management"
@@ -1106,7 +1098,6 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
                                   @click="handleAddSpecItem(formState.production_equipment ,production_equipment_obj)"
@@ -1199,7 +1190,6 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
                                   @click="handleAddSpecItem(formState.detection_equipment ,detection_equipment_obj)"
@@ -1285,13 +1275,15 @@ const customer_info_list_column = ref([
 ])
 // 竞争对手
 const competitor_analysis_obj = ref({
+    customer_order:'',
     company_name:'',
     market_share: "",
     understand_evaluation: "",
 })
 const competitor_analysis_column = ref([
   
-    { title: '企业名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 企业名称
+    { title: '公司序号', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
+    { title: '公司名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
     { title: '市场份额', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
     { title: '了解评价', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
     { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
@@ -1333,11 +1325,10 @@ const detection_equipment_column = ref([
   { title: '规格型号', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
   { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
   { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input-num' }, // 精度等级
+  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
   { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
 ])
  
-
 
 // 表单对象
 const formState = reactive({
@@ -1382,6 +1373,7 @@ const formState = reactive({
     },                  // 营业信息(近几年)         
     competitor_analysis: [    // 竞争对手
         {
+            company_order:'竞争对手1',
             company_name: "",
             market_share: "",
             understand_evaluation: "",
@@ -1463,9 +1455,7 @@ const formState = reactive({
     additional_info: "",
 });
 let PositionVaild = async (_rule, value) => {
-    console.log('_rule, value1111',_rule, value);
     if (!formState.position) {
-        console.log($t("supply-chain.please_select_position"));
         return Promise.reject(
             $t("supply-chain.please_select_position")
         );
@@ -1474,14 +1464,12 @@ let PositionVaild = async (_rule, value) => {
         /* formState.begin_business_time = "";
         formState.end_business_time = ""; */
        // 去除校验 
-       console.log('跟该必填');
     }
     return Promise.resolve(); 
 }
 
 let NameVaild = async(_rule, value) => {
     let dataBoo = false;
-    console.log('_rule, value111',_rule, value);
     if(!_rule.required) {
         return Promise.resolve();
     }
@@ -1510,7 +1498,6 @@ let NameVaild = async(_rule, value) => {
 let BusinessTermValid = async (_rule, value) => {
   if (formState.business_duration_type == 2) {
       if (!formState.begin_business_time || !formState.end_business_time) {
-          console.log($t("supply-chain.please_select_business_term"));
           return Promise.reject(
               $t("supply-chain.please_select_business_term")
           );
@@ -1646,6 +1633,7 @@ const rules = ref({
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
+  console.log('draftData',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -1661,7 +1649,6 @@ const draftDataReview = () => {
           formState[key] = data[key];
         }
       });
-      console.log("回显数据：草稿回显", formState);
   }
 };
 // 详情回显
@@ -1670,6 +1657,7 @@ const detailDataReview = () => {
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
       console.log('空对象','详情回显');
+
   } else {
       // 解析出来的数据
       let data = detailData;
@@ -1682,7 +1670,6 @@ const detailDataReview = () => {
             formState[key] = data[key];
         }
       });
-      console.log('详情----回显数据',formState);
   }
 };
 // 校验
@@ -1717,7 +1704,6 @@ const step1Vaild = () => {
                         }
                       }
                   }
-                  console.log('data---step1Vaild',data);
                   // 保存数据
                   $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
                   resolve(true)
@@ -1727,7 +1713,6 @@ const step1Vaild = () => {
               // 校验失败
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-              console.log("errorName",err)
               if (!errorName) return;
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
@@ -1790,27 +1775,39 @@ const reviewData = () => {
   }
 };
 // 删除某一项
-const handleDelete = (list , data, title) => {
-    const index = list.findIndex(
-        (el) => el.id === data.id
-    );
+const handleDelete = (list , data, title , key ) => {
+    
+	Core.Util.confirm({
+		title: $t("supply-chain.detele_data_sure"),
+		content: $t("coc.coc_delete_confirm_content"),
+		okText: $t("coc.coc_btn_comfirm"),
+		cancelText: $t("coc.coc_btn_cancel"),
+		onOk: () => {
 
-    if (index !== -1) {
-        list.splice(index, 1);
-    }
-    // 如果存在名称变更
-    if(title) {
-        list.forEach((ele,ind) => {
-            ele.customer_order = '主要客户' + (ind+1);
-        });  
-    }
+            const index = list.findIndex(
+                (el) => el.id === data.id
+            );
+
+            if (index !== -1) {
+                list.splice(index, 1);
+            }
+            // 如果存在名称变更
+            if(title) {
+                list.forEach((ele,ind) => {
+                    ele[key] = title + (ind+1);
+                });  
+            }
+		},
+        
+	})
+   
 }
-const handleAddSpecItem = (list ,obj ,title) => {
+const handleAddSpecItem = (list ,obj ,title , key ) => {
     
     const id = list.length + 1;
 
     // 如果存在名称变更
-    title ? obj.customer_order = title + id : ''
+    title ? obj[key] = title + id : ''
 
     list.push({...obj,id})
 }
@@ -1884,6 +1881,7 @@ onMounted(() => {
       .flex-1 {
           flex: 1;
           display: flex;
+          padding: 8px 0% 0 15%;
       }
   }
   .other-material {
@@ -1957,10 +1955,9 @@ onMounted(() => {
 
       .type-font {
           font-size: 16px;
-          font-weight: 600;
           margin-left: 4px;
           color:  #666;
-          font-weight: 600;
+          font-weight: 400;
       }
     }
     .click-type {
@@ -2004,5 +2001,50 @@ onMounted(() => {
 }
 :deep(.ant-col .ant-form-item-control .ant-picker) {
     width: 100%
+}
+
+@media (max-width: 1550px) {
+
+    .flex-1 {
+          padding: 8px 0% 0 6% !important;
+      }
+}
+
+.spec-add {
+    margin: 16px auto 40px;
+}
+
+.specific-table {
+    border-radius: 4px;
+    background: #FFF;
+}
+.black-font {
+    font-size: 16px;
+    color: #666;
+}
+.white-font {
+    font-size: 16px;
+    color: #FFF;
+}
+
+:deep(.ant-table) {
+    border: 1px solid #EAECF2;
+    border-bottom: 0px solid #EAECF2;
+}
+:deep(.ant-input-number-group-addon) {
+    background-color: #F2F2F2;
+    color: #808FA6;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    border-color: #EAECF1;
+    box-sizing: border-box;
+}
+:deep(.ant-input-number-group) {
+    border-radius: 4px;
+    border-color: #EAECF1;
+    background: #FFF;
+    overflow: hidden;
+    
 }
 </style>

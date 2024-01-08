@@ -122,7 +122,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <div class="setp-bar" v-if="!isSubmited && !submitSuccess">
+                <div class="setp-bar">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -137,7 +137,7 @@
                         </div>
                     </template>
                 </div>
-                <div class="submited" v-else-if="isSubmited && !submitSuccess">
+                <!-- <div class="submited" v-else-if="isSubmited && !submitSuccess">
                     <div class="main-content">
                         <div class="tips">
                             <img
@@ -157,7 +157,7 @@
                             }}
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="content-main" v-if="!submitSuccess">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
@@ -384,7 +384,7 @@ const lang = computed(() => $store.state.lang);
 // ref
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
-const BasicInfoRef = ref(null)
+const BasicInfoRef = ref(null);
 //步数样式
 const setpCount = computed(() => {
     return $store.getters["SUPPLY_CHAIN/SETP"];
@@ -486,18 +486,32 @@ const handlePrev = () => {
 };
 // 下一步
 const handleNext = () => {
-    
-    // if ($store.getters["SUPPLY_CHAIN/SETP"] === 0) { 
-        BasicInfoRef.value.step1Vaild().then(() => {
+    // if ($store.getters["SUPPLY_CHAIN/SETP"] === 0) {
+    BasicInfoRef.value.step1Vaild().then(() => {
+        // 提交给下一步
+        // handleSubmitData();
 
-            // 提交给下一步
-            // handleSubmitData();
-            
-            // 下一步
-            $store.dispatch("SUPPLY_CHAIN/nextStep");
-        });
+        // 保存草稿
+        // BasicInfoRef.value && BasicInfoRef.value.saveDraft1();
+
+        let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
+        let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
+        let supplyDetailsChain_data =
+            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
+        //存储到草稿和详情数据
+        $store.dispatch(
+            "SUPPLY_CHAIN/setSupplyDetailsChain",
+            Object.assign(supplyDetailsChain_data, supplyChain_data)
+        );
+        $store.dispatch(
+            "SUPPLY_CHAIN/setSupplyDraftChain",
+            Object.assign(supplyDraftChain_data, supplyChain_data)
+        );
+
+        // 下一步
+        $store.dispatch("SUPPLY_CHAIN/nextStep");
+    });
     //  }
- 
 };
 // 保存草稿
 const handleSave = () => {
@@ -522,7 +536,22 @@ const handleSubmit = () => {
 const handleSubmitOk = () => {
     // 将阅读状态改为true
     $store.dispatch("SUPPLY_CHAIN/setRead", true);
+    // 关闭弹框
+    visible.value = false;
     MaterialListRef.value.step2Vaild().then(() => {
+        let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
+        let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
+        let supplyDetailsChain_data =
+            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
+        //存储到草稿和详情数据
+        $store.dispatch(
+            "SUPPLY_CHAIN/setSupplyDetailsChain",
+            Object.assign(supplyDetailsChain_data, supplyChain_data)
+        );
+        $store.dispatch(
+            "SUPPLY_CHAIN/setSupplyDraftChain",
+            Object.assign(supplyDraftChain_data, supplyChain_data)
+        );
         // 跳转到注册按钮
         handleSubmitData();
     });
@@ -531,11 +560,14 @@ const handleSubmitOk = () => {
 const handleSubmitData = () => {
     // 获取本地上传表单数据
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
-    data?.form ?  data.form = JSON.stringify(data.form) : "{}"
+    data?.form ? (data.form = JSON.stringify(data.form)) : "{}";
     // 获取类型
-    if($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value){
-        if ( data?.confirmatory_material?.proxy_certificate){
-            delete data.confirmatory_material.proxy_certificate
+    if (
+        $store.state.SUPPLY_CHAIN.supplyType !=
+        Core.Const.SUPPLAY.SUPPLAY_TYPE["2"].value
+    ) {
+        if (data?.confirmatory_material?.proxy_certificate) {
+            delete data.confirmatory_material.proxy_certificate;
         }
     }
     Core.Api.SUPPLY.add(data)
@@ -546,7 +578,7 @@ const handleSubmitData = () => {
             // 成功状态
             submitSuccess.value = true;
             // 倒计时
-            count.value = 3
+            count.value = 3;
             // 开始倒计时
             countTimer.value = setInterval(() => {
                 if (count.value === 0) {
@@ -601,7 +633,7 @@ const handleOpen = () => {
 };
 // 中英文切换
 const handleLangSwitch = () => {
-    $store.commit("switchLang");
+    $store.dispatch("switchLang");
     $i18n.locale.value = $store.state.lang;
 };
 const handleEditShow = () => {
@@ -641,8 +673,8 @@ const handleEditSubmit = () => {
 
 // 跳转
 const onBtn = () => {
-    submitSuccess.value = false
-    $store.dispatch('SUPPLY_CHAIN/setStep',0)
+    submitSuccess.value = false;
+    $store.dispatch("SUPPLY_CHAIN/setStep", 0);
 };
 
 // 监听 弹框打开，开始倒计时
@@ -664,20 +696,20 @@ watch(
 watch(
     () => setp.value,
     (val) => {
-        console.log("setp.value", val);
+        console.log("setp.value------------", val);
         // 如果是第一页，则获取详情
         if (val == 0) {
             getDetail();
         }
     },
     {
+        deep: true,
         immediate: true,
     }
 );
 
 onMounted(() => {
-    // getDetail();
-    console.log("setp.value", $store.getters["SUPPLY_CHAIN/SETP"]);
+    getDetail();
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
@@ -808,34 +840,34 @@ onMounted(() => {
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            .submited {
-                width: 100%;
-                height: 121px;
-                background-color: #fff;
-                margin-top: 20px;
-                padding: 20px;
-                .main-content {
-                    height: 100%;
-                    background-color: rgba(0, 97, 255, 0.05);
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    padding: 16px;
-                    .tips {
-                        display: flex;
-                        align-items: center;
-                        color: #165dff;
-                        font-size: 18px;
-                        font-weight: 500;
-                        img {
-                            margin-right: 4px;
-                        }
-                    }
-                    .sub_tips {
-                        color: #666;
-                    }
-                }
-            }
+            // .submited {
+            //     width: 100%;
+            //     height: 121px;
+            //     background-color: #fff;
+            //     margin-top: 20px;
+            //     padding: 20px;
+            //     .main-content {
+            //         height: 100%;
+            //         background-color: rgba(0, 97, 255, 0.05);
+            //         display: flex;
+            //         flex-direction: column;
+            //         justify-content: space-between;
+            //         padding: 16px;
+            //         .tips {
+            //             display: flex;
+            //             align-items: center;
+            //             color: #165dff;
+            //             font-size: 18px;
+            //             font-weight: 500;
+            //             img {
+            //                 margin-right: 4px;
+            //             }
+            //         }
+            //         .sub_tips {
+            //             color: #666;
+            //         }
+            //     }
+            // }
             .setp-bar {
                 display: flex;
                 height: 52px;
@@ -951,6 +983,7 @@ onMounted(() => {
             ul {
                 padding-left: 0;
                 list-style: none;
+                color: #666;
             }
             .promise-book {
                 .promise-book-title {
