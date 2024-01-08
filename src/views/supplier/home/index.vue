@@ -480,12 +480,12 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-        $store.dispatch("SUPPLY_CHAIN/prevStep").then(()=>{
-            timer1.value = setTimeout(() => {
+    $store.dispatch("SUPPLY_CHAIN/prevStep").then(() => {
+        timer1.value = setTimeout(() => {
             // 获取详情数据
             BasicInfoRef.value && BasicInfoRef.value.reviewData();
         }, 100);
-    })
+    });
 };
 // 下一步
 const handleNext = () => {
@@ -587,32 +587,43 @@ const handleSubmitData = () => {
 };
 // 获取详情
 const getDetail = () => {
-    Core.Api.SUPPLY.adminDetail({})
-        .then((res) => {
-            let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
-            DETAILS = res?.detail ?? null;
-            console.log('详情数据------------------------------------------',DETAILS)
-            if (DETAILS) {
-                DETAILS.form = JSON.parse(DETAILS.form);
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
-                if (Object.keys(DETAILS).length > 0) {
-                    // 如果已经提交了
-                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
-                    submitSuccess.value = true;
+    return new Promise((resolve, reject) => {
+        Core.Api.SUPPLY.adminDetail({})
+            .then((res) => {
+                let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
+                DETAILS = res?.detail ?? null;
+                console.log(
+                    "详情----------------------------------------:",
+                    DETAILS
+                );
+                if (DETAILS) {
+                    DETAILS.form = JSON.parse(DETAILS.form);
+                    $store.dispatch(
+                        "SUPPLY_CHAIN/setSupplyDetailsChain",
+                        DETAILS
+                    );
+                    if (Object.keys(DETAILS).length > 0) {
+                        // 如果已经提交了
+                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+                        submitSuccess.value = true;
+                    } else {
+                        // 如果没有提交
+                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                        submitSuccess.value = false;
+                    }
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
                     submitSuccess.value = false;
                 }
-            } else {
-                // 如果没有提交
-                $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                submitSuccess.value = false;
-            }
-        })
-        .catch((err) => {
-            $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
-        });
+                resolve();
+            })
+            .catch((err) => {
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
+                reject();
+            });
+    });
 };
 // 打开弹框
 // 打开
@@ -670,18 +681,17 @@ const handleEditSubmit = () => {
 const onBtn = async () => {
     // 查看当前在第几页
     const step = $store.getters["SUPPLY_CHAIN/SETP"];
-    if(step == 0){
+    if (step == 0) {
         submitSuccess.value = false;
-    }else{
-        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(()=>{
+    } else {
+        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(() => {
             submitSuccess.value = false;
-        })
+        });
     }
     timer1.value = setTimeout(() => {
         // 获取详情数据
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
     }, 100);
-
 };
 
 // 监听 弹框打开，开始倒计时
@@ -704,11 +714,9 @@ onMounted(() => {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
     }
-    getDetail();
-    timer1.value = setTimeout(() => {
-        // 获取详情数据
+    getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
-    }, 100);
+    });
 });
 // beforeDestroy
 onBeforeUnmount(() => {
