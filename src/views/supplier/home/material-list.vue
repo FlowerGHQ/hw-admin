@@ -478,7 +478,7 @@ const draftDataReview = () => {
 }
 // 详情回显
 const detailDataReview = () => {
-  let detailData = $store.state.SUPPLY_CHAIN.supplyChain
+  let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain
   console.log("详情回显数据：", detailData)
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
