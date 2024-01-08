@@ -123,7 +123,7 @@
             </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
-                <div class="setp-bar" v-if="!submitSuccess && isSubmited">
+                <div class="setp-bar" v-if="!submitSuccess || isSubmited">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -159,7 +159,7 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="content-main" >
+                <div class="content-main">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
@@ -190,7 +190,7 @@
                 </div>
                 <div
                     class="supply-chain-footer"
-                    v-if="!submitSuccess && isSubmited">
+                    v-if="!submitSuccess || !isSubmited">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -480,7 +480,12 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep");
+        $store.dispatch("SUPPLY_CHAIN/prevStep").then(()=>{
+            timer1.value = setTimeout(() => {
+            // 获取详情数据
+            BasicInfoRef.value && BasicInfoRef.value.reviewData();
+        }, 100);
+    })
 };
 // 下一步
 const handleNext = () => {
@@ -497,11 +502,11 @@ const handleNext = () => {
         let supplyDetailsChain_data =
             $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
         //存储到草稿和详情数据
-        $store.dispatch(
+        $store.commit(
             "SUPPLY_CHAIN/setSupplyDetailsChain",
             Object.assign(supplyDetailsChain_data, supplyChain_data)
         );
-        $store.dispatch(
+        $store.commit(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
         );
@@ -667,12 +672,15 @@ const onBtn = async () => {
     const step = $store.getters["SUPPLY_CHAIN/SETP"];
     if(step == 0){
         submitSuccess.value = false;
-
     }else{
         $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(()=>{
             submitSuccess.value = false;
         })
     }
+    timer1.value = setTimeout(() => {
+        // 获取详情数据
+        BasicInfoRef.value && BasicInfoRef.value.reviewData();
+    }, 100);
 
 };
 
@@ -692,11 +700,11 @@ watch(
 );
 const timer1 = ref(null);
 onMounted(() => {
-    getDetail();
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
     }
+    getDetail();
     timer1.value = setTimeout(() => {
         // 获取详情数据
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
