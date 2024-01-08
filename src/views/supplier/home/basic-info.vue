@@ -11,8 +11,8 @@
                   <a-col :span="22" >
                         <div class="top-type-box" >
                                 <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
-                                    <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" :class="{ 'white-font': item.value === formState.type }"/>
-                                    <!-- <MySvgIcon :icon-class="`black-${item.icon}`" v-else /> v-if="item.value === formState.type"  -->
+                                    <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
+                                    <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
                                     <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
                                         {{
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ?
@@ -2011,13 +2011,15 @@ onMounted(() => {
     border: 1px solid #EAECF2;
     background: #FFF;
 }
+.black-font {
+    font-size: 16px;
+    color: #666;
+}
 .white-font {
+    font-size: 16px;
     color: #FFF;
 }
 
-.black-font {
-    font-size: 16px;
-}
 
 :deep(.ant-input-number-group-addon) {
     background-color: #F2F2F2;
@@ -2033,5 +2035,6 @@ onMounted(() => {
     border: 1px solid #EAECF1;
     background: #FFF;
     overflow: hidden;
+    
 }
 </style>
