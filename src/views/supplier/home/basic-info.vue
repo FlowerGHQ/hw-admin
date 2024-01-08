@@ -10,16 +10,13 @@
                   </a-col>
                   <a-col :span="22" >
                         <div class="top-type-box" >
-                                <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
-                                    <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
-                                    <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
-                                    <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
-                                        {{
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ?
-                                            $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-"
-                                        }}
-                                    </span>
-                                </div>
+                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
+                                <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
+                                <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
+                                <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
+                                    {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
+                                </span>
+                            </div>
                         </div>
                   </a-col>
               </a-row>
@@ -256,7 +253,7 @@
                   </a-row>
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t("supply-chain.human_resources")
                               }}
@@ -341,7 +338,7 @@
                   <!-- 财务信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.financial_information"
@@ -439,7 +436,7 @@
                   <!-- 营业信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.financial_information"
@@ -594,7 +591,7 @@
                   <!-- 竞争对手 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.competitor"
@@ -677,7 +674,7 @@
                   <!-- 客户信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.customer_information"
@@ -763,7 +760,7 @@
                   <!-- 技术信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.Technical_information"
@@ -857,7 +854,7 @@
                   <!-- 质量信息 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.quality_information"
@@ -915,7 +912,7 @@
                   <!-- 产能产线 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.capacity_line"
@@ -960,7 +957,7 @@
                   <!-- 外购管理 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
-                          <div class="title">
+                          <div class="title-two">
                               {{
                                   $t(
                                       "supply-chain.qutsourcing_management"
@@ -1636,7 +1633,6 @@ const rules = ref({
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-  console.log('draftData',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -1667,7 +1663,7 @@ const detailDataReview = () => {
       Object.keys(data??{}).forEach((key) => {
         if(key === 'form'){
             for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator]
+                formState[iterator] = data[key][iterator] 
             }
         }else {
             formState[key] = data[key];
@@ -1768,7 +1764,6 @@ const saveDraft1 = () => {
 const reviewData = () => {
   // 判断是否已经提交过了
   let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-  console.log("是否已经提交过了：", isSubmit);
   if (isSubmit) {
       // 已经提交过了
       detailDataReview();
@@ -1838,12 +1833,13 @@ watch(
 defineExpose({
   step1Vaild,
   saveDraft1,
+  reviewData,
 });
 
-onMounted(() => {
-  // 回显数据
-  reviewData();
-});
+// onMounted(() => {
+//   // 回显数据
+//   reviewData();
+// });
 </script>
 
 <style lang="less" scoped>
@@ -1958,10 +1954,9 @@ onMounted(() => {
 
       .type-font {
           font-size: 16px;
-          font-weight: 600;
           margin-left: 4px;
           color:  #666;
-          font-weight: 600;
+          font-weight: 400;
       }
     }
     .click-type {
@@ -2020,7 +2015,6 @@ onMounted(() => {
 
 .specific-table {
     border-radius: 4px;
-    border: 1px solid #EAECF2;
     background: #FFF;
 }
 .black-font {
@@ -2032,19 +2026,22 @@ onMounted(() => {
     color: #FFF;
 }
 
-
+:deep(.ant-table) {
+    border: 1px solid #EAECF2;
+    border-bottom: 0px solid #EAECF2;
+}
 :deep(.ant-input-number-group-addon) {
     background-color: #F2F2F2;
     color: #808FA6;
     text-align: center;
     font-size: 14px;
     font-weight: 400;
-    border: 1px solid #EAECF1;
+    border-color: #EAECF1;
     box-sizing: border-box;
 }
 :deep(.ant-input-number-group) {
     border-radius: 4px;
-    border: 1px solid #EAECF1;
+    border-color: #EAECF1;
     background: #FFF;
     overflow: hidden;
     

@@ -361,7 +361,7 @@
 
 <script setup>
 import Core from "@/core";
-import { computed, ref, onMounted, watch } from "vue";
+import { computed, ref, onMounted, watch,onBeforeUnmount  } from "vue";
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
@@ -444,7 +444,6 @@ const setpObject = computed(() => {
 });
 // 是否已经提交
 const isSubmited = computed(() => {
-    console.log("isSubmitEd", $store.getters["SUPPLY_CHAIN/isSubmitEd"]);
     return $store.getters["SUPPLY_CHAIN/isSubmitEd"];
 });
 
@@ -466,11 +465,11 @@ const count = ref(3);
 const countTimer = ref(null);
 // 倒计时
 const countDown = () => {
-    if (timer) {
-        clearTimeout(timer);
-        timer = null;
+    if (timer.value) {
+        clearTimeout(timer.value);
+        timer.value = null;
     }
-    timer = setTimeout(() => {
+    timer.value = setTimeout(() => {
         if (countTime.value > 0) {
             // 如果倒计时还没结束，则继续
             countTime.value--; // 倒计时时间减一
@@ -681,7 +680,6 @@ const onBtn = () => {
 watch(
     () => visible.value,
     (val) => {
-        console.log("visible.value", val);
         // 如果打开了并且倒计时不为0，则开始倒计时
         if (val && countTime.value != 0) {
             countTime.value = 30;
@@ -696,24 +694,35 @@ watch(
 watch(
     () => setp.value,
     (val) => {
-        console.log("setp.value------------", val);
-        // 如果是第一页，则获取详情
         if (val == 0) {
             getDetail();
+            setTimeout(() => {
+                // 获取详情数据
+                BasicInfoRef.value && BasicInfoRef.value.reviewData();
+            }, 100);
         }
-    },
-    {
-        deep: true,
-        immediate: true,
     }
 );
-
+const timer1 = ref(null);
 onMounted(() => {
     getDetail();
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
     }
+    timer1.value = setTimeout(() => {
+        // 获取详情数据
+        BasicInfoRef.value && BasicInfoRef.value.reviewData();
+    }, 100);
+});
+// beforeDestroy
+onBeforeUnmount(() => {
+    clearTimeout(timer1.value);
+    timer1.value = null;
+    clearTimeout(timer.value);
+    timer.value = null;
+    clearInterval(countTimer.value);
+    countTimer.value = null;
 });
 
 /* methods end*/
