@@ -8,11 +8,11 @@
                       <div class="title-two">
                       </div>
                   </a-col>
-                  <a-col :span="22">
-                        <div class="top-type-box">
+                  <a-col :span="22" >
+                        <div class="top-type-box" >
                                 <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
-                                    <MySvgIcon icon-class="white-type" v-if="item.value === formState.type"/>
-                                    <MySvgIcon icon-class="black-type" v-else />
+                                    <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" :class="{ 'white-font': item.value === formState.type }"/>
+                                    <!-- <MySvgIcon :icon-class="`black-${item.icon}`" v-else /> v-if="item.value === formState.type"  -->
                                     <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
                                         {{
                                             Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ?
@@ -615,11 +615,11 @@
                             >
                                   <template #bodyCell="{ column, record, index }">
                                       <!-- 客户序号 -->
-                                      <!-- <template
-                                          v-if="column.dataIndex === 'customer_order'"
+                                      <template
+                                          v-if="column.dataIndex === 'company_order'"
                                       >
-                                          {{ record.customer_order }}
-                                      </template>  -->
+                                          {{ record.company_order }}
+                                      </template> 
                                       <template
                                           v-if="column.type === 'input'"
                                       >
@@ -653,23 +653,19 @@
                                           <a-button
                                               type="link"
                                               v-if="index"
-                                              @click="handleDelete(formState.competitor_analysis ,record)"
+                                              @click="handleDelete(formState.competitor_analysis ,record ,'竞争对手' ,'company_order')"
                                               >
                                               <i class="icon i_delete" />
-                                                  {{
-                                                      $t("def.delete")
-                                                  }}
-                                              </a-button
-                                          >
+                                                  {{ $t("def.delete") }}
+                                              </a-button>
                                       </template>
                                   </template>
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
-                                  @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj )"
+                                  @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj ,'竞争对手' ,'company_order')"
                                   >
                                   添加对手
                               </a-button
@@ -740,7 +736,7 @@
                                           <a-button
                                               type="link"
                                               v-if="index"
-                                              @click="handleDelete(formState.customer_info ,record , '客户名称')"
+                                              @click="handleDelete(formState.customer_info ,record , '主要客户','customer_order')"
                                               >
                                               <i class="icon i_delete" />
                                                   {{
@@ -753,10 +749,9 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
-                                  @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户')"
+                                  @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户' ,'customer_order')"
                                   >
                                   添加客户
                               </a-button
@@ -1106,7 +1101,6 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
                                   @click="handleAddSpecItem(formState.production_equipment ,production_equipment_obj)"
@@ -1199,7 +1193,6 @@
                               </a-table>
                               <a-button
                                   class="spec-add"
-                                  style="margin-top: 0px;"
                                   type="primary"
                                   ghost
                                   @click="handleAddSpecItem(formState.detection_equipment ,detection_equipment_obj)"
@@ -1285,13 +1278,15 @@ const customer_info_list_column = ref([
 ])
 // 竞争对手
 const competitor_analysis_obj = ref({
+    customer_order:'',
     company_name:'',
     market_share: "",
     understand_evaluation: "",
 })
 const competitor_analysis_column = ref([
   
-    { title: '企业名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 企业名称
+    { title: '公司序号', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
+    { title: '公司名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
     { title: '市场份额', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
     { title: '了解评价', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
     { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
@@ -1338,7 +1333,6 @@ const detection_equipment_column = ref([
 ])
  
 
-
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
@@ -1382,6 +1376,7 @@ const formState = reactive({
     },                  // 营业信息(近几年)         
     competitor_analysis: [    // 竞争对手
         {
+            company_order:'竞争对手1',
             company_name: "",
             market_share: "",
             understand_evaluation: "",
@@ -1790,7 +1785,7 @@ const reviewData = () => {
   }
 };
 // 删除某一项
-const handleDelete = (list , data, title) => {
+const handleDelete = (list , data, title , key ) => {
     const index = list.findIndex(
         (el) => el.id === data.id
     );
@@ -1801,16 +1796,16 @@ const handleDelete = (list , data, title) => {
     // 如果存在名称变更
     if(title) {
         list.forEach((ele,ind) => {
-            ele.customer_order = '主要客户' + (ind+1);
+            ele[key] = title + (ind+1);
         });  
     }
 }
-const handleAddSpecItem = (list ,obj ,title) => {
+const handleAddSpecItem = (list ,obj ,title , key ) => {
     
     const id = list.length + 1;
 
     // 如果存在名称变更
-    title ? obj.customer_order = title + id : ''
+    title ? obj[key] = title + id : ''
 
     list.push({...obj,id})
 }
@@ -1884,6 +1879,7 @@ onMounted(() => {
       .flex-1 {
           flex: 1;
           display: flex;
+          padding: 8px 0% 0 15%;
       }
   }
   .other-material {
@@ -2004,5 +2000,45 @@ onMounted(() => {
 }
 :deep(.ant-col .ant-form-item-control .ant-picker) {
     width: 100%
+}
+
+@media (max-width: 1550px) {
+
+    .flex-1 {
+          padding: 8px 0% 0 6% !important;
+      }
+}
+
+.spec-add {
+    margin: 16px auto 40px;
+}
+
+.specific-table {
+    border-radius: 4px;
+    border: 1px solid #EAECF2;
+    background: #FFF;
+}
+.white-font {
+    color: #FFF;
+}
+
+.black-font {
+    font-size: 16px;
+}
+
+:deep(.ant-input-number-group-addon) {
+    background-color: #F2F2F2;
+    color: #808FA6;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    border: 1px solid #EAECF1;
+    box-sizing: border-box;
+}
+:deep(.ant-input-number-group) {
+    border-radius: 4px;
+    border: 1px solid #EAECF1;
+    background: #FFF;
+    overflow: hidden;
 }
 </style>
