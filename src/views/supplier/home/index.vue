@@ -666,18 +666,20 @@ watch(
 watch(
     () => setp.value,
     (val) => {
-        console.log("setp.value", val);
+        console.log("setp.value------------", val);
         // 如果是第一页，则获取详情
         if (val == 0) {
             getDetail();
         }
     },
     {
-        deep:true
+        deep:true,
+        immediate: true,
     }
 );
 
 onMounted(() => {
+    getDetail();
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
