@@ -294,7 +294,7 @@
                     class="information-container-form m-t-40" 
                     v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
-                    <div class="sub-title">{{ $t('supply-chain.Human_resources') }}</div>
+                    <div class="sub-title">{{ $t('supply-chain.human_resources') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 员工总数 -->
@@ -544,17 +544,22 @@
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
+                                            <template v-if="column.key === 'company_order'">
+                                                <div class="information-customer-name">
+                                                    {{ text || "-" }}
+                                                </div>
+                                            </template>
                                             <!-- 公司名称 -->
                                             <template v-if="column.key === 'company_name'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <!-- 了解评价 -->
                                             <template v-if="column.key === 'understand_evaluation'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -577,17 +582,22 @@
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'customer_order'">
+                                                <div class="information-customer-name">
+                                                    {{ text || "-" }}
+                                                </div>
+                                            </template>
                                             <template v-if="column.key === 'customer_name'">
-                                                {{ text }}
+                                                {{ text || "-" }}                                                
                                             </template>
                                             <template v-if="column.key === 'sales_share'">
-                                                {{ text }}
+                                                {{ text || "-" }}%
                                             </template>
                                             <template v-if="column.key === 'main_supply_part'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <template v-if="column.key === 'begin_cooperation_time'">
-                                                {{ text  }}
+                                                {{ text || "-"  }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -650,15 +660,6 @@
                     <div class="sub-title">{{ $t('supply-chain.Technical_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
-                            <!-- 相关专利 -->
-                            <div class="search-col m-t-0 w-50-percentage">
-                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.related_patent') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.technical_info?.patent || "-" }}
-                                    </div>
-                                </div>
-                            </div>
                             <!-- 研发中心 -->
                             <div 
                                 class="search-col m-t-0 w-50-percentage"
@@ -668,6 +669,17 @@
                                 <div class="value m-l-8">
                                     <div class="customer-input">
                                         {{ msgDetail.technical_info?.RD_center || "-" }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="level-search-row">
+                            <!-- 相关专利 -->
+                            <div class="search-col">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.related_patent') }}</div>
+                                <div class="value m-l-8">
+                                    <div class="customer-input">
+                                        {{ msgDetail.technical_info?.patent || "-" }}
                                     </div>
                                 </div>
                             </div>
@@ -690,7 +702,7 @@
                             <!-- 产品设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.product_design') }}</div>
-                                <div class="value m-l-8 d-fl">
+                                <div class="value m-l-8 d-fl">                            
                                     <template v-for="(item, index) in msgDetail.technical_info?.product_design" :key="index">                                    
                                         <a-checkbox :checked="true">
                                             {{
@@ -699,6 +711,9 @@
                                             }}
                                         </a-checkbox>
                                     </template>
+                                    <sapn v-if="!msgDetail.technical_info?.product_design?.length">
+                                        {{ $t('supply-chain.not_selected') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -706,7 +721,7 @@
                             <!-- 过程设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_design') }}</div>
-                                <div class="value m-l-8 d-fl">                                  
+                                <div class="value m-l-8 d-fl">
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
                                         <a-checkbox :checked="true">
                                             {{
@@ -715,6 +730,9 @@
                                             }}
                                         </a-checkbox>
                                     </template>
+                                    <sapn v-if="!msgDetail.technical_info?.process_design?.length">
+                                        {{ $t('supply-chain.not_selected') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -722,7 +740,7 @@
                             <!-- 过程验证 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_verification') }}</div>
-                                <div class="value m-l-8 d-fl">                                  
+                                <div class="value m-l-8 d-fl">
                                     <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
                                         <a-checkbox :checked="true">
                                             {{
@@ -731,6 +749,9 @@
                                             }}
                                         </a-checkbox>
                                     </template>
+                                    <sapn v-if="!msgDetail.technical_info?.process_design?.length">
+                                        {{ $t('supply-chain.not_selected') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1000,10 +1021,28 @@
                                 <div class="key w-130 t-a-r text-color"></div>
                                 <div class="value m-l-8">
                                     <a-table
-                                        :columns="deviceColumns"
+                                        :columns="deviceProductionColumns"
                                         :data-source="msgDetail.production_equipment || []"
                                         :pagination="false"
-                                    ></a-table>
+                                    >
+                                        <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'name'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'spec'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'quantity'">
+                                                {{ text || "-" }}%
+                                            </template>
+                                            <template v-if="column.key === 'manufacturer'">
+                                                {{ text || "-" }}
+                                            </template>
+                                            <template v-if="column.key === 'purchase_period'">
+                                                {{ text || "-"  }}
+                                            </template>
+                                        </template>
+                                    </a-table>
                                 </div>
                             </div>
                         </div>                        
@@ -1018,10 +1057,28 @@
                                 <div class="key w-130 t-a-r text-color"></div>
                                 <div class="value m-l-8">
                                     <a-table
-                                        :columns="deviceColumns"
-                                        :data-source="msgDetail.production_equipment || []"
+                                        :columns="deviceDetectionColumns"
+                                        :data-source="msgDetail.detection_equipment || []"
                                         :pagination="false"
-                                    ></a-table>
+                                    >
+                                        <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'name'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'spec'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'quantity'">
+                                                {{ text || "-" }}%
+                                            </template>
+                                            <template v-if="column.key === 'manufacturer'">
+                                                {{ text || "-" }}
+                                            </template>
+                                            <template v-if="column.key === 'accuracy_level'">
+                                                {{ text || "-"  }}
+                                            </template>
+                                        </template>
+                                    </a-table>
                                 </div>
                             </div>
                         </div>                        
@@ -1073,9 +1130,13 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
+                                    <sapn v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
+                                        {{ $t('supply-chain.not_uploaded') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1191,9 +1252,13 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
+                                    <sapn v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
+                                        {{ $t('supply-chain.not_uploaded') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1219,9 +1284,13 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
+                                    <sapn v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
+                                        {{ $t('supply-chain.not_uploaded') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1238,9 +1307,13 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
+                                    <sapn v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
+                                        {{ $t('supply-chain.not_uploaded') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1257,9 +1330,13 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
+                                    <sapn v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
+                                        {{ $t('supply-chain.not_uploaded') }}
+                                    </sapn>
                                 </div>
                             </div>
                         </div>
@@ -1267,6 +1344,10 @@
                 </div>
             </div>
         </div>
+
+        <a-modal width="800px" :visible="previewVisible" title="" :footer="null" @cancel="handleCancel">
+            <img alt="" style="width: 100%" :src="previewImage" />
+        </a-modal>
     </div>
 </template>
 
@@ -1280,8 +1361,12 @@ const route = useRoute();
 const msgDetail = ref({});
 const { proxy } = getCurrentInstance()
 
-// 关键设备和关键检测设备
-const deviceColumns = computed(() => {
+// 预览显影
+const previewVisible = ref(false)
+const previewImage = ref("")
+
+// 关键设备
+const deviceProductionColumns = computed(() => {
     let columns = [
         { title: proxy.$t('supply-chain.Name_of_production_equipment'), dataIndex: "name", key: "name" },
         { title: proxy.$t('supply-chain.Specification_and_model'), dataIndex: "spec", key: "spec" },
@@ -1291,9 +1376,21 @@ const deviceColumns = computed(() => {
     ];
     return columns;
 });
+// 关键检测设备
+const deviceDetectionColumns = computed(() => {
+    let columns = [
+        { title: proxy.$t('supply-chain.Name_of_production_equipment'), dataIndex: "name", key: "name" },
+        { title: proxy.$t('supply-chain.Specification_and_model'), dataIndex: "spec", key: "spec" },
+        { title: proxy.$t('supply-chain.quantity'), dataIndex: "quantity", key: "quantity" },
+        { title: proxy.$t('supply-chain.Equipment_manufacturer'), dataIndex: "manufacturer", key: "manufacturer" },
+        { title: proxy.$t('supply-chain.precision_grade'), dataIndex: "accuracy_level", key: "accuracy_level" },
+    ];
+    return columns;
+});
 // 竞争对手信息
 const competitionColumns = computed(() => {
     let columns = [
+        { title: proxy.$t('supply-chain.serial_number'), dataIndex: "company_order", key: "company_order" },
         { title: proxy.$t('supply-chain.company_name'), dataIndex: "company_name", key: "company_name" },
         { title: proxy.$t('supply-chain.market_share'), dataIndex: "market_share", key: "market_share" },
         { title: proxy.$t('supply-chain.understanding_evaluation'), dataIndex: "understand_evaluation", key: "understand_evaluation" },
@@ -1355,7 +1452,7 @@ function getDetail(params = {}) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(",")
             }
             // console.log("过滤数据", msgDetail.value);
-            // msgDetail.value.type = 5
+            // msgDetail.value.type = 1
          
         })
         .catch((err) => {
@@ -1369,6 +1466,16 @@ function getDetail(params = {}) {
 const returnTypeBool = (type, typeIncludes) => {    
     let result = typeIncludes.includes(Number(type))   
     return result
+}
+// 预览照片
+const handlePreview = (url) => {
+    previewVisible.value = true
+    previewImage.value = url
+}
+// 预览关闭
+const handleCancel = () => {
+    previewVisible.value = false
+    previewImage.value = null
 }
 /* methods end*/
 </script>
@@ -1504,7 +1611,7 @@ const returnTypeBool = (type, typeIncludes) => {
             .information-container-form {
                 display: flex;
                 .sub-title {
-                    width: 20%;
+                    width: 15%;
                     text-align: right;
                     color: #1d2129;
                     font-size: 16px;
@@ -1548,7 +1655,7 @@ const returnTypeBool = (type, typeIncludes) => {
             .information-container-form {
                 display: flex;
                 .sub-title {
-                    width: 20%;
+                    width: 15%;
                     text-align: right;
                     color: #1d2129;
                     font-size: 16px;
@@ -1563,6 +1670,7 @@ const returnTypeBool = (type, typeIncludes) => {
                         height: 80px;
                         border-radius: 4px;
                         border: 1px solid #d9d9d9;
+                        object-fit: cover;
                     }
                 }
             }
@@ -1621,6 +1729,7 @@ const returnTypeBool = (type, typeIncludes) => {
 }
 .w-130 {
     min-width: 130px;
+    max-width: 130px;
 }
 .h-64 {
     min-height: 64px !important;
@@ -1634,5 +1743,16 @@ const returnTypeBool = (type, typeIncludes) => {
 }
 .d-fl {
     display: flex;
+}
+
+:deep(.ant-table-wrapper) {
+    border: 1px solid #EAECF2; 
+}
+
+.information-customer-name {
+    height: 32px;
+    line-height: 32px;
+    background-color: #F2F3F5;
+    text-align: center
 }
 </style>
