@@ -49,10 +49,8 @@ router.beforeEach((to, from, next) => {
         next('/login');
     } else {
         // 已登录
-        const roles = to.meta.roles;
-        // next();
+        const roles = to.meta.roles;        
         if (roles) {
-            console.log(roles, loginType, to)
             // 如果进入的路由meta中有roles规则
             if (roles.includes(loginType)) {
                 // 如果当前usertType在roles arr中有

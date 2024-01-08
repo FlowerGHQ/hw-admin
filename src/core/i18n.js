@@ -236,6 +236,7 @@ const messages = {
             file_prompt_detail: '附件支持上传图片、视频、音频、PDF等格式',
             delete: '删除',
             spec_pic: '请上传规格商品图片',
+            verification_code: '验证码',
         },
         a: { // 零售商
             new_retailer: '新建零售商',
@@ -1914,6 +1915,7 @@ const messages = {
                 'purchase-order': '采购订单',
                 'sales-area': '销售区域',
                 'item': '商品管理',
+                'aftermarket-bom': 'BOM管理',
                 'item-category': '商品分类',
                 'entity': '商品实例',
                 'after-sales-order': '售后订单',
@@ -1958,7 +1960,7 @@ const messages = {
                 'feishu-data': '飞书管理',
                 // 新加入2023/10/9
                 'coc': 'COC证书管理',
-                'aftermarket-bom': 'BOM管理'
+                'supplier-application': '供应商管理',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2297,6 +2299,9 @@ const messages = {
             },
             'aftermarket-bom': {
                 'list': '售后BOM列表'
+            },
+            'supplier-application': {
+                'list': '申请资料列表'
             }
         },
         error_code: {
@@ -3026,6 +3031,7 @@ const messages = {
             spec_pic: 'Please Upload An Image Of The Product With Specifications',
             item_code_tip: 'Commodity code: the parent specification of the multi-specification commodity corresponds to the commodity code;',
             sku_code_tip: 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
+            verification_code: 'Verification Code',
         },
         a: {
             new_retailer: 'Create A New Retailer',
@@ -4712,6 +4718,7 @@ const messages = {
                 'feishu-data': 'Flying book management',
                 'coc': 'Coc Certificate Management',
                 'aftermarket-bom': 'BOM Management',
+                'supplier-application': 'Supplier Application',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -5049,6 +5056,9 @@ const messages = {
             },
             'aftermarket-bom': {
                 'list': 'Aftermarket Bom List'
+            },
+            'supplier-application': {
+                'list': 'Application List'
             }
         },
         error_code: {

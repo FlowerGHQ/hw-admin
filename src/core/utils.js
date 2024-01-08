@@ -5,6 +5,7 @@ import Const from "./const"
 import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
+import Image from './modules/units/image'
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
@@ -1718,14 +1719,16 @@ const Util = {
     },
     // 商品售后-销售区域-方法
     getSalesAreaStr(arr,lang = 'zh') {
-      
-      let str = '';
-      if(!(arr instanceof Array)) return '-'
-      arr?.forEach((item)=>{
-          str += (str?',':'')+item[lang==='zh'?'country':'country_en']
-      })
-      return str || '-'
-  }
-}
+        
+        let str = '';
+        if(!(arr instanceof Array)) return '-'
+        arr?.forEach((item)=>{
+            str += (str?',':'')+item[lang==='zh'?'country':'country_en']
+        })
+        return str || '-'
+    },
+    // 照片逻辑
+    Image
 
+}
 export default Util
