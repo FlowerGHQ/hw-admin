@@ -503,8 +503,8 @@ const handleNext = () => {
 const handleSave = () => {
     console.log("MaterialListRef", MaterialListRef.value,'BasicInfoRef.value',BasicInfoRef.value);
     // 保存草稿
-    // MaterialListRef.value.saveDraft();
-    BasicInfoRef.value.saveDraft1();
+    MaterialListRef.value && MaterialListRef.value.saveDraft();
+    BasicInfoRef.value && BasicInfoRef.value.saveDraft1();
 };
 // 提交
 const handleSubmit = () => {

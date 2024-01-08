@@ -122,6 +122,6 @@ export const SUPPLY_CHAIN = {
     isSubmitEd: (state) => state.isSubmitEd,
     SETP: (state) => state.step,
     ISREAD: (state) => state.isRead,
-    supplyType: (state) => state?.supplyChain?.form?.type ?? undefined,
+    supplyType: (state) => state?.supplyChain?.form?.type ?? undefined
   },
 }
