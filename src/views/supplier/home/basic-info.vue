@@ -163,7 +163,7 @@
                               <a-col :span="12">
                                   <!-- 公司性质 -->
                                   <a-form-item
-                                      :label="$t('supply-chain.detailed_address')"
+                                      :label="$t('supply-chain.nature_of_company')"
                                       name="detailed_address">
                                      
                                     <a-select v-model:value="formState.company_info.nature" :placeholder="$t('supply-chain.please_select')">
