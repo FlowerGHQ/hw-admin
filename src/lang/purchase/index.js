@@ -25,6 +25,7 @@ export default {
         photo_video_mes: '这是字幕，具体副本需要配置',
         back_top: 'Back Top',
         search: '搜索',
+        check_more: '查看更多',
     },
     en: {
         system: "Horwin Business Operating System",
@@ -52,6 +53,7 @@ export default {
         photo_video_mes: 'Here is the subtitle, the specific copy is to be configured',
         back_top: 'Back Top',
         search: 'Search',
+        check_more: '查看更多',
     }
 }
 
