@@ -254,7 +254,7 @@ export default {
                     }, 1000)
                 } else {
                     setTimeout(() => {
-                        this.$router.replace({ path: '/dashboard/index', query: {from: 'login'} })
+                        this.$router.replace({ path: '/mall/index', query: {from: 'login'} })
                     }, 1000)
                 }
             })
