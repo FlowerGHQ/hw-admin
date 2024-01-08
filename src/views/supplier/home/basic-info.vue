@@ -1764,9 +1764,10 @@ const saveDraft1 = () => {
         }
       }
   }
-  console.log('data111',data);
+  if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
+    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data)
+  }
   // 保存数据
-  // Core.Data.setSupplyDraftChain(JSON.stringify(data));
   $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
 
   // 提示

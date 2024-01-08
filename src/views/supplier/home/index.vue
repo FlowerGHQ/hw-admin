@@ -501,7 +501,6 @@ const handleNext = () => {
 };
 // 保存草稿
 const handleSave = () => {
-    console.log("MaterialListRef", MaterialListRef.value,'BasicInfoRef.value',BasicInfoRef.value);
     // 保存草稿
     MaterialListRef.value && MaterialListRef.value.saveDraft();
     BasicInfoRef.value && BasicInfoRef.value.saveDraft1();

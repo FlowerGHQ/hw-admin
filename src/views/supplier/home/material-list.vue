@@ -565,8 +565,12 @@ const saveDraft = () => {
       }
     }
   } else {
+
     // 不为空对象
     data.form.confirmatory_material = formState
+  }
+  if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
+    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data)
   }
   // 保存数据
   // Core.Data.setSupplyDraftChain(JSON.stringify(data));
