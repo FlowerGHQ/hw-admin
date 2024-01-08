@@ -2762,6 +2762,31 @@ const routes = [
 
         ]
     },
+    { // 销售策略管理
+        path: '/sales-strategy-management',
+        component: Layout,
+        redirect: '/sales-strategy-management/sales-strategy-list',
+        name: 'SalesStrategyManagement',
+        type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+        meta: {
+            title: '销售策略管理',
+            title_en: 'System Management',
+            icon: 'i_menu_xitongguanli',
+        },
+        children:[
+            // 销售策略列表
+            {
+                path: 'sales-strategy-list',
+                name: 'SalesStrategyList',
+                component: () => import('@/views/sales-strategy-management/sales-strategy-list.vue'),
+                meta: {
+                    title: '销售策略列表',
+                    title_en: 'Sales Strategy List',
+                }
+            }
+        ]
+
+    },
     // 测试用例
     {
         path:'/test',
