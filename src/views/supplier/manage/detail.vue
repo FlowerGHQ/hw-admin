@@ -544,17 +544,22 @@
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
+                                            <template v-if="column.key === 'company_order'">
+                                                <div class="information-customer-name">
+                                                    {{ text || "-" }}
+                                                </div>
+                                            </template>
                                             <!-- 公司名称 -->
                                             <template v-if="column.key === 'company_name'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <!-- 了解评价 -->
                                             <template v-if="column.key === 'understand_evaluation'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -577,17 +582,22 @@
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'customer_order'">
+                                                <div class="information-customer-name">
+                                                    {{ text || "-" }}
+                                                </div>
+                                            </template>
                                             <template v-if="column.key === 'customer_name'">
-                                                {{ text }}
+                                                {{ text || "-" }}                                                
                                             </template>
                                             <template v-if="column.key === 'sales_share'">
-                                                {{ text }}
+                                                {{ text || "-" }}%
                                             </template>
                                             <template v-if="column.key === 'main_supply_part'">
-                                                {{ text }}
+                                                {{ text || "-" }}
                                             </template>
                                             <template v-if="column.key === 'begin_cooperation_time'">
-                                                {{ text  }}
+                                                {{ text || "-"  }}
                                             </template>
                                         </template>
                                     </a-table>
@@ -1014,7 +1024,25 @@
                                         :columns="deviceProductionColumns"
                                         :data-source="msgDetail.production_equipment || []"
                                         :pagination="false"
-                                    ></a-table>
+                                    >
+                                        <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'name'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'spec'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'quantity'">
+                                                {{ text || "-" }}%
+                                            </template>
+                                            <template v-if="column.key === 'manufacturer'">
+                                                {{ text || "-" }}
+                                            </template>
+                                            <template v-if="column.key === 'purchase_period'">
+                                                {{ text || "-"  }}
+                                            </template>
+                                        </template>
+                                    </a-table>
                                 </div>
                             </div>
                         </div>                        
@@ -1032,7 +1060,25 @@
                                         :columns="deviceDetectionColumns"
                                         :data-source="msgDetail.detection_equipment || []"
                                         :pagination="false"
-                                    ></a-table>
+                                    >
+                                        <template #bodyCell="{ column, text, record, index }">                                            
+                                            <template v-if="column.key === 'name'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'spec'">
+                                                {{ text || "-" }}                                                
+                                            </template>
+                                            <template v-if="column.key === 'quantity'">
+                                                {{ text || "-" }}%
+                                            </template>
+                                            <template v-if="column.key === 'manufacturer'">
+                                                {{ text || "-" }}
+                                            </template>
+                                            <template v-if="column.key === 'accuracy_level'">
+                                                {{ text || "-"  }}
+                                            </template>
+                                        </template>
+                                    </a-table>
                                 </div>
                             </div>
                         </div>                        
@@ -1084,6 +1130,7 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
@@ -1205,6 +1252,7 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
@@ -1236,6 +1284,7 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
@@ -1258,6 +1307,7 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
@@ -1280,6 +1330,7 @@
                                             class="materials-img"
                                             :class="{ 'm-l-16': index > 0 }"
                                             :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
                                             alt=""
                                         />
                                     </template>
@@ -1293,6 +1344,10 @@
                 </div>
             </div>
         </div>
+
+        <a-modal width="800px" :visible="previewVisible" title="" :footer="null" @cancel="handleCancel">
+            <img alt="" style="width: 100%" :src="previewImage" />
+        </a-modal>
     </div>
 </template>
 
@@ -1305,6 +1360,10 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const route = useRoute();
 const msgDetail = ref({});
 const { proxy } = getCurrentInstance()
+
+// 预览显影
+const previewVisible = ref(false)
+const previewImage = ref("")
 
 // 关键设备
 const deviceProductionColumns = computed(() => {
@@ -1393,7 +1452,7 @@ function getDetail(params = {}) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(",")
             }
             // console.log("过滤数据", msgDetail.value);
-            // msgDetail.value.type = 5
+            // msgDetail.value.type = 1
          
         })
         .catch((err) => {
@@ -1407,6 +1466,16 @@ function getDetail(params = {}) {
 const returnTypeBool = (type, typeIncludes) => {    
     let result = typeIncludes.includes(Number(type))   
     return result
+}
+// 预览照片
+const handlePreview = (url) => {
+    previewVisible.value = true
+    previewImage.value = url
+}
+// 预览关闭
+const handleCancel = () => {
+    previewVisible.value = false
+    previewImage.value = null
 }
 /* methods end*/
 </script>
@@ -1542,7 +1611,7 @@ const returnTypeBool = (type, typeIncludes) => {
             .information-container-form {
                 display: flex;
                 .sub-title {
-                    width: 20%;
+                    width: 15%;
                     text-align: right;
                     color: #1d2129;
                     font-size: 16px;
@@ -1586,7 +1655,7 @@ const returnTypeBool = (type, typeIncludes) => {
             .information-container-form {
                 display: flex;
                 .sub-title {
-                    width: 20%;
+                    width: 15%;
                     text-align: right;
                     color: #1d2129;
                     font-size: 16px;
@@ -1601,6 +1670,7 @@ const returnTypeBool = (type, typeIncludes) => {
                         height: 80px;
                         border-radius: 4px;
                         border: 1px solid #d9d9d9;
+                        object-fit: cover;
                     }
                 }
             }
@@ -1659,6 +1729,7 @@ const returnTypeBool = (type, typeIncludes) => {
 }
 .w-130 {
     min-width: 130px;
+    max-width: 130px;
 }
 .h-64 {
     min-height: 64px !important;
@@ -1676,5 +1747,12 @@ const returnTypeBool = (type, typeIncludes) => {
 
 :deep(.ant-table-wrapper) {
     border: 1px solid #EAECF2; 
+}
+
+.information-customer-name {
+    height: 32px;
+    line-height: 32px;
+    background-color: #F2F3F5;
+    text-align: center
 }
 </style>

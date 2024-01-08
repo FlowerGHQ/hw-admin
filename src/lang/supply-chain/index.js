@@ -21,7 +21,7 @@ export default {
     serial_number: "序号",
     submission_time: "提交时间",
     view: "查看",
-    information_submitted_successfully: "信息提交成功",
+    information_submitted_successfully: "资料提交成功，等待审核中",
     back: "返回",
     tips1: "请等待工作人员审核资质",
     tips2: "后回到首页",
@@ -203,7 +203,7 @@ export default {
     supplementary_information: "补充信息",
     other_advantages_description: "其他优势说明",
     Name_of_production_equipment: "生产设备名称",
-    Specification_and_model: "规格型号",
+    Specification_and_model: "规格型号（含吨位）",
     quantity: "数量",
     Equipment_manufacturer: "设备制造商",
     Purchase_period: "购置年限",
@@ -252,7 +252,9 @@ export default {
     not_uploaded: "未上传",
     not_selected: "未选择",        
     // 确定删除此数据吗
-    detele_data_sure: '确定删除此数据吗?'
+    detele_data_sure: '确定删除此数据吗?',
+    // 查看或编辑资料
+    view_or_edit_data: '查看或编辑资料',
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -275,7 +277,7 @@ export default {
     serial_number: "Serial Number",
     submission_time: "Submission Time",
     view: "View",
-    information_submitted_successfully: "Information submitted successfully",
+    information_submitted_successfully: "Information submitted successfully , waiting for audit",
     back: "Back",
     tips1: "Please wait for the staff to review their qualifications",
     tips2: "then go back to the home page",
@@ -455,7 +457,7 @@ export default {
     supplementary_information: "Supplementary information",
     other_advantages_description: "Other advantages description",
     Name_of_production_equipment: "Name of Production Equipment",
-    Specification_and_model: "Specification And Model",
+    Specification_and_model: "Specification And Model (Including tonnage)",
     quantity: "Quantity",
     Equipment_manufacturer: "Equipment Manufacturer",
     Purchase_period: "Purchase Period",
@@ -504,5 +506,6 @@ export default {
     precision_grade: "Precision Grade",
     not_uploaded: "Not uploaded",
     not_selected: "Not selected",
+    view_or_edit_data: 'View or edit data',
   },
 }
