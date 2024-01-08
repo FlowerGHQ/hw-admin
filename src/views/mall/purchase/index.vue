@@ -54,6 +54,11 @@
             <!-- <div class="box deals">
                 <div class="content">
                     <div class="title">{{ $t('purchase.deals') }}</div>
+                    <div class="btn">
+                        <my-button showRightIcon>
+                            {{ $t('purchase.check_more') }}
+                        </my-button>
+                    </div>
                 </div>
             </div> -->
             <!-- HORWIN Official News -->
@@ -75,7 +80,7 @@
                     </div>
                     <div class="btn">
                         <my-button showRightIcon>
-                            {{ $t('purchase.order') }}
+                            {{ $t('purchase.check_more') }}
                         </my-button>
                     </div>
                 </div>
@@ -145,12 +150,12 @@ export default {
                     icon: 'purchase-coc',
                     path: '/coc/coc-certificate',
                 },
-                {
-                    nameLang: 'photo_video',
-                    mesLang: 'photo_video_mes',
-                    icon: 'purchase-phone-video',
-                    path: '',
-                },
+                // {
+                //     nameLang: 'photo_video',
+                //     mesLang: 'photo_video_mes',
+                //     icon: 'purchase-phone-video',
+                //     path: '',
+                // },
             ],
             newsList: [
                 {

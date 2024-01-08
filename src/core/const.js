@@ -235,7 +235,7 @@ let Const = {
         HEADERACCESMENU: [],
         FOOTERMENUONE: [
             { lang: 'coc_download' },
-            { lang: 'photo_Video' },
+            // { lang: 'photo_video' },
             { lang: 'news' },
             { lang: 'local_deals' },
         ],
