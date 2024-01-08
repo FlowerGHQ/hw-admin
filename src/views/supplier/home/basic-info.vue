@@ -1633,7 +1633,6 @@ const rules = ref({
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-  console.log('draftData',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -1664,7 +1663,7 @@ const detailDataReview = () => {
       Object.keys(data??{}).forEach((key) => {
         if(key === 'form'){
             for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator]
+                formState[iterator] = data[key][iterator] 
             }
         }else {
             formState[key] = data[key];
@@ -1765,7 +1764,6 @@ const saveDraft1 = () => {
 const reviewData = () => {
   // 判断是否已经提交过了
   let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-  console.log("是否已经提交过了：", isSubmit);
   if (isSubmit) {
       // 已经提交过了
       detailDataReview();
@@ -1835,12 +1833,13 @@ watch(
 defineExpose({
   step1Vaild,
   saveDraft1,
+  reviewData,
 });
 
-onMounted(() => {
-  // 回显数据
-  reviewData();
-});
+// onMounted(() => {
+//   // 回显数据
+//   reviewData();
+// });
 </script>
 
 <style lang="less" scoped>
