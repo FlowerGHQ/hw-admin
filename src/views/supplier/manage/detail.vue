@@ -129,7 +129,11 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.nature_of_company') }}</div>
                                 <div class="value m-l-8">
                                     <div class="customer-input">
-                                        {{ msgDetail?.company_info?.nature || "-" }}
+                                        {{
+                                            Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t
+                                                ? $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t)
+                                                : "-"
+                                        }}
                                     </div>
                                 </div>
                             </div>
@@ -404,7 +408,7 @@
                                             }}
                                             {{ 
                                                 Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
-                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requiremen].unit) : ""
+                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement]?.unit) : ""
                                             }}
                                         </template>
                                     </a-radio>

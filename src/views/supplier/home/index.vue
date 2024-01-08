@@ -677,6 +677,11 @@ watch(
 
 onMounted(() => {
     // getDetail();
+    console.log("setp.value", $store.getters["SUPPLY_CHAIN/SETP"]);
+    if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
+        // 如果是第二页，则跳转到第一
+        $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+    }
 });
 
 /* methods end*/
