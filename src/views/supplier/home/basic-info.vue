@@ -1328,7 +1328,7 @@ const detection_equipment_column = ref([
   { title: '规格型号', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
   { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
   { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input-num' }, // 精度等级
+  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
   { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
 ])
  
@@ -1779,19 +1779,31 @@ const reviewData = () => {
 };
 // 删除某一项
 const handleDelete = (list , data, title , key ) => {
-    const index = list.findIndex(
-        (el) => el.id === data.id
-    );
+    
+	Core.Util.confirm({
+		title: $t("supply-chain.detele_data_sure"),
+		content: $t("coc.coc_delete_confirm_content"),
+		okText: $t("coc.coc_btn_comfirm"),
+		cancelText: $t("coc.coc_btn_cancel"),
+		onOk: () => {
 
-    if (index !== -1) {
-        list.splice(index, 1);
-    }
-    // 如果存在名称变更
-    if(title) {
-        list.forEach((ele,ind) => {
-            ele[key] = title + (ind+1);
-        });  
-    }
+            const index = list.findIndex(
+                (el) => el.id === data.id
+            );
+
+            if (index !== -1) {
+                list.splice(index, 1);
+            }
+            // 如果存在名称变更
+            if(title) {
+                list.forEach((ele,ind) => {
+                    ele[key] = title + (ind+1);
+                });  
+            }
+		},
+        
+	})
+   
 }
 const handleAddSpecItem = (list ,obj ,title , key ) => {
     
