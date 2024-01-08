@@ -242,13 +242,15 @@ export default {
     specify_part: "指定零件",
     specify_reason: "指定理由",    
     specify_service: "指定服务",
-        wechat_same_number: "微信同号",
-        // 公司性质
-        private: '民营',
-        foreign_owned: '外资',
-        state_owned: '国有',
-        // 人力资源
-        human_resources: '人力资源'
+    wechat_same_number: "微信同号",
+    // 公司性质
+    private: '民营',
+    foreign_owned: '外资',
+    state_owned: '国有',
+    // 人力资源
+    human_resources: '人力资源',
+    // 确定删除此数据吗
+    detele_data_sure: '确定删除此数据吗?'
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -469,15 +471,15 @@ export default {
       "《Confidentiality and non-competition agreement》",
     read_and_send_application: "Read and send application",
     legal_representative: "Legal representative",
-        wechat_same_number: "WeChat With The Same Number",
-        // 公司性质
-        private: 'Private',
-        foreign_owned: 'foreign Owned',
-        state_owned: 'state Owned',
-        // 人力资源
-        human_resources: 'Human Resources',
-
-
+    wechat_same_number: "WeChat With The Same Number",
+    // 公司性质
+    private: 'Private',
+    foreign_owned: 'foreign Owned',
+    state_owned: 'state Owned',
+    // 人力资源
+    human_resources: 'Human Resources',
+    // 确定删除此数据吗
+    detele_data_sure: 'Are you sure you want to delete this data?',
     Human_resources: "Human Resources",
     agent_information: "Agent Information",
     agent_company: "Agent Company",
