@@ -27,7 +27,7 @@
                     @keydown.enter="handleFocusCode"
                 >
                     <template #prefix>
-                        <i class="icon i_user placeholder"/>
+                        <i class="icon i_shouji placeholder"/>
                     </template>
                 </a-input>
                 <div class="supplier-code">
