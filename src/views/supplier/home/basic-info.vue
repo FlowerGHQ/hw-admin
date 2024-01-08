@@ -1,4 +1,114 @@
 <template>
+    <!-- 
+        1.零件类
+
+        职务
+        姓名
+        电话
+        电子邮箱
+
+        公司名称
+        详细地址
+        成立日期
+        注册资本
+        法人代表
+
+        占地面积
+        账期要求
+        开具发票
+        
+        2.代理类
+
+        职务
+        姓名
+        电话
+        电子邮箱
+
+        公司名称
+        详细地址
+        成立日期
+        注册资本
+        法人代表
+        
+        法律纠纷111111
+        占地面积000000
+        账期要求
+        开具发票
+
+        业务比重111111
+        销售额*11111
+        纳税额*111111
+        利润率*111111
+        资产负债率*111111
+        现金流量比率*111111
+
+        客户信息111111
+
+        3.外协类
+
+        职务
+        姓名
+        电话
+        电子邮箱
+
+        公司名称
+        详细地址
+        成立日期
+        注册资本
+        法人代表
+
+        法律纠纷*111111111
+        占地面积000000
+        账期要求
+        开具发票
+
+        销售额*1111111
+        产能产线: all 111111
+
+        4.模具类
+
+        职务
+        姓名
+        电话
+        电子邮箱
+
+        公司名称
+        详细地址
+        成立日期
+        注册资本
+        法人代表
+
+        法律纠纷1111111
+        占地面积00000
+        账期要求
+        开具发票
+        
+        关键生产设备**11111111
+        关键检测设备**11111111
+
+
+        5.客指类
+
+        职务
+        姓名
+        电话
+        电子邮箱
+
+        公司名称
+        详细地址
+        成立日期
+        注册资本
+        法人代表
+
+        法律纠纷1111111
+        占地面积00000
+        账期要求
+        开具发票
+
+
+        销售额*111111
+        指定信息11111
+     -->
   <div class="material-list">
       <div class="base-info content-area top-box">
           <div class="title">{{ $t("supply-chain.type_supply") }}</div>
@@ -106,9 +216,11 @@
                   :model="formState"
                   :rules="rules"
                   labelAlign="right">
+                  <!-- 公司概况 -->
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area" >
                           <div class="title-two">
+                              <!-- 公司概况 -->
                               {{ $t("supply-chain.company_profile") }}
                           </div>
                       </a-col>
@@ -194,8 +306,9 @@
                                   </a-form-item>
                               </a-col>
                           </a-row>
+                          
                           <a-row :gutter="24">
-                              <a-col :span="12">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 12 : 0">
                                   <!-- 占地面积 -->
                                   <a-form-item
                                       :label="$t('supply-chain.floor_space')" >
@@ -211,7 +324,7 @@
                                       </a-input-number>
                                   </a-form-item>
                               </a-col>
-                              <a-col :span="12">
+                              <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 12 : 0">
                                   <!-- 建筑面积 -->
                                   <a-form-item
                                       :label="$t('supply-chain.floor_area')"
@@ -231,7 +344,7 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                              <a-col :span="12">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 12 : 0">
                                   <!-- 母公司名称 -->
                                   <a-form-item
                                       :label="$t('supply-chain.parent_company_name')" >
@@ -239,7 +352,7 @@
                                       <a-input v-model:value="formState.company_info.parent_company_name" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
-                              <a-col :span="12">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 12 : 0">
                                   <!-- 母公司地址 -->
                                   <a-form-item
                                       :label="$t('supply-chain.Parent_company_address')"
@@ -251,15 +364,98 @@
                           </a-row>
                       </a-col>
                   </a-row>
+
+                  <!-- 代理公司概况 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0" class="title-area" >
+                          <div class="title-two">
+                              <!-- 代理信息 -->
+                              {{ $t("supply-chain.agent_information") }}
+                          </div>
+                      </a-col>
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0">
+                          <a-row :gutter="24">
+                              <!-- 被代理公司 -->
+                              <a-col :span="12">
+                                  <a-form-item
+                                      :label="$t('supply-chain.agent_company')"
+                                        >
+                                       <a-input v-model:value="formState.agent_info.agent_company" :placeholder="$t('supply-chain.please_enter')" />
+                                  </a-form-item>
+                              </a-col>
+                              <!-- 被代理地址 -->
+                              <a-col :span="12">
+                                  <a-form-item
+                                      :label="$t('supply-chain.proxy_address')"
+                                       name="company_website">
+                                       <a-input name="company_website" v-model:value="formState.agent_info.agent_address" :placeholder="$t('supply-chain.please_enter')" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col :span="12">
+                                  <!-- 被代理关系 -->
+                                  <a-form-item
+                                      :label="
+                                          $t(
+                                              'supply-chain.agency_relationship'
+                                          )
+                                      " >
+                                          <a-date-picker  valueFormat="YYYY-MM-DD"  v-model:value="formState.agent_info.agent_relationship" />
+                                  </a-form-item>
+                              </a-col>
+                              
+                              <a-col :span="12">
+                                  <!-- 代理有效期间 -->
+                                  <a-form-item
+                                      :label="$t('supply-chain.duration_of_agency')"
+                                      name="detailed_address">
+                                     <TimeSearch
+                                                ref="TimeSearchRef"
+                                                @search="handleTimeSearch"
+                                                :defaultTime="false" />
+                                  </a-form-item>
+                              </a-col>
+                              
+                          </a-row>
+                          <a-row :gutter="24">
+                              <!-- 是否有代理权证 代理权证 -->
+                              <a-col :span="24">
+                                  <a-form-item
+                                      :label="$t('supply-chain.proxy_warrant')"
+                                       name="proxy_warrant">
+                                      <a-radio-group
+                                                v-model:value="formState.agent_info.flag_agent_warrant"
+                                            >
+                                        <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.Legal_Dispute" :key="radio.value" >
+                                                {{  $t(radio.t)  }}
+                                        </a-radio>
+                                    </a-radio-group>
+
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col :span="24">
+                                  <!-- 代理产品 -->
+                                  <a-form-item
+                                      :label="$t('supply-chain.agent_product')">
+                                      <a-input name="proxy_warrant" v-model:value="formState.agent_info.agent_product" :placeholder="$t('supply-chain.please_enter')" /> 
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          
+                      </a-col>
+                  </a-row>
+                  <a-row :gutter="24" >
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0" class="title-area">
                           <div class="title-two">
                               {{
                                   $t("supply-chain.human_resources")
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0">
                           <a-row :gutter="24">
                               <a-col :span="12">                            
                                   <!-- 员工总数 -->
@@ -346,11 +542,11 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
-                          <a-row :gutter="24">
+                      <a-col  :span="21">
+                          <a-row :gutter="24" :span="21">
                               <a-col :span="24">
                                   <!-- 法律纠纷 -->
-                                  <a-form-item
+                                  <a-form-item 
                                       :label="
                                           $t(
                                               'supply-chain.legal_dispute'
@@ -368,7 +564,7 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                              <a-col :span="12">
+                              <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0">
                                   <!-- 操作工人月平均工资 -->
                                   <a-form-item
                                       :label="$t('supply-chain.average')" >
@@ -376,12 +572,11 @@
                                       <a-input v-model:value="formState.financial_info.average_monthly_wage_of_operating_workers" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
-                              <a-col :span="12">
+                              <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 12 : 0">
                                   <!-- 管理职员人均年产值 -->
                                   <a-form-item
                                       :label="$t('supply-chain.per')"
                                       >
-                                     
                                       <a-input v-model:value="formState.financial_info.per_capita_annual_output_value_of_management_staff" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
@@ -439,7 +634,7 @@
                           <div class="title-two">
                               {{
                                   $t(
-                                      "supply-chain.financial_information"
+                                      "supply-chain.business_information"
                                   )
                               }}
                           </div>
@@ -502,7 +697,7 @@
                                   </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                                  <a-col :span="8" v-for="(item,index) in 3">
+                                  <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 8 : 0" v-for="(item,index) in 3">
                                     
                                       <!-- 纳税额 -->
                                       <a-form-item
@@ -523,7 +718,7 @@
                                   </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                                  <a-col :span="8" v-for="(item,index) in 3">
+                                  <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 8 : 0" v-for="(item,index) in 3">
                                     
                                       <!-- 利润率 -->
                                       <a-form-item
@@ -544,7 +739,7 @@
                                   </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                                  <a-col :span="8" v-for="(item,index) in 3">
+                                  <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 8 : 0" v-for="(item,index) in 3">
                                     
                                       <!-- 资产负债率 -->
                                       <a-form-item
@@ -565,7 +760,7 @@
                                   </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                                  <a-col :span="8" v-for="(item,index) in 3">
+                                  <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 8 : 0" v-for="(item,index) in 3">
                                     
                                       <!-- 现金流量比率 -->
                                       <a-form-item
@@ -590,7 +785,7 @@
                   
                   <!-- 竞争对手 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 3 : 0" class="title-area">
                           <div class="title-two">
                               {{
                                   $t(
@@ -599,7 +794,7 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 21 : 0">
                             
                         <div class="form-content-item-table" >
                             <a-table
@@ -759,7 +954,7 @@
                   
                   <!-- 技术信息 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 3 : 0" class="title-area">
                           <div class="title-two">
                               {{
                                   $t(
@@ -768,7 +963,7 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 21 : 0">
                           <a-row :gutter="24">
                               <a-col :span="12">
                                 <!-- 相关专利 -->
@@ -777,7 +972,7 @@
                                       <a-input v-model:value="formState.technical_info.patent" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
-                              <a-col :span="12">
+                              <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 12 : 0">
                                 
                                   <!-- 研发中心 -->
                                   <a-form-item
@@ -787,7 +982,7 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                              <a-col :span="24">
+                              <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0">
                                 <!-- 研发合作机构 -->
                                   <a-form-item
                                       :label="$t('supply-chain.r_d_partner')" >
@@ -796,7 +991,7 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
-                              <a-col :span="24">
+                              <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0">
                                 
                                   <!-- 产品设计 -->
                                   <a-form-item 
@@ -849,11 +1044,21 @@
                                   </a-form-item>
                               </a-col>
                           </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 设计规范 -->
+                                  <a-form-item 
+                                      :label="$t('supply-chain.design_specifications')">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.design_guides"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
                       </a-col>
                   </a-row>
                   <!-- 质量信息 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 3 : 0"  class="title-area">
                           <div class="title-two">
                               {{
                                   $t(
@@ -862,7 +1067,7 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 21 : 0" >
                           <a-row :gutter="24">
                                   <a-col :span="12">
                                     <!-- 质量体系认证 -->
@@ -911,7 +1116,7 @@
                   </a-row>
                   <!-- 产能产线 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
                           <div class="title-two">
                               {{
                                   $t(
@@ -920,7 +1125,7 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 21 : 0">
                         
                           <a-row :gutter="24">
                                 <a-col :span="24">
@@ -956,7 +1161,7 @@
                   </a-row>
                   <!-- 外购管理 -->
                   <a-row :gutter="24">
-                      <a-col :span="3" class="title-area">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
                           <div class="title-two">
                               {{
                                   $t(
@@ -965,7 +1170,7 @@
                               }}
                           </div>
                       </a-col>
-                      <a-col :span="21">
+                      <a-col :span="returnTypeBool (formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 21 : 0" >
                         
                         <a-row :gutter="24">
                                 <a-col :span="24">
@@ -1010,14 +1215,118 @@
                                 </a-row>
                       </a-col>
                   </a-row>
+
+                  <!-- 指定信息 -->
+                  <a-row :gutter="24">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 3 : 0" class="title-area">
+                          <div class="title-two">
+                              {{
+                                  $t(
+                                      "supply-chain.specify_information"
+                                  )
+                              }}
+                          </div>
+                      </a-col>
+                      <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers]) ? 21 : 0" >
+                        
+                        <a-row :gutter="24">
+                                <a-col :span="24">
+                                  
+                                    <!-- 指定理由 -->
+                                    <a-form-item
+                                        :label="$t('supply-chain.specify_reason')" >
+                                          <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.reason"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                    </a-form-item>
+                                </a-col>
+                          </a-row>
+                            <a-row :gutter="24">
+                                    <a-col :span="24">
+                                      
+                                        <!-- 指定零件 -->
+                                        <a-form-item
+                                            :label="$t('supply-chain.specify_part')" >
+                                              <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.parts"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                        </a-form-item>
+                                    </a-col>
+                              </a-row>
+                        
+                              <a-row :gutter="24">
+                                      <a-col :span="24">
+                                        
+                                          <!-- 指定协议 -->
+                                          <a-form-item
+                                              :label="$t('supply-chain.specified_protocol')" >
+                                                <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.protocol"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                          </a-form-item>
+                                      </a-col>
+                                </a-row>
+                              <a-row :gutter="24">
+                                      <a-col :span="24">
+                                        
+                                          <!-- 指定服务 -->
+                                          <a-form-item
+                                              :label="$t('supply-chain.specify_service')" >
+                                                <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.service"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                          </a-form-item>
+                                      </a-col>
+                                </a-row>
+                      </a-col>
+                  </a-row>
+
+                  <!-- 服务信息 -->
+                  <a-row :gutter="24">
+                      <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0" class="title-area">
+                          <div class="title-two">
+                              {{
+                                  $t(
+                                      "supply-chain.service_information"
+                                  )
+                              }}
+                          </div>
+                      </a-col>
+                      <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0" >
+                        
+                        <a-row :gutter="24">
+                                <a-col :span="24">
+                                    <!-- 技术服务 -->
+                                    <a-form-item
+                                        :label="$t('supply-chain.technical_service')" >
+                                          <a-textarea :row="6" :maxlength="2000" v-model:value="formState.service_info.technical_services"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                    </a-form-item>
+                                </a-col>
+                          </a-row>
+                        <a-row :gutter="24">
+                                <a-col :span="24">
+                                    
+                                    <!-- 质量服务 -->
+                                    <a-form-item
+                                        :label="$t('supply-chain.quality_service')" >
+                                            <a-textarea :row="6" :maxlength="2000" v-model:value="formState.service_info.quality_service"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                    </a-form-item>
+                                </a-col>
+                            </a-row>
+                            <a-row :gutter="24">
+                                    <a-col :span="24">
+                                    
+                                        <!-- 供应服务 -->
+                                        <a-form-item
+                                            :label="$t('supply-chain.supply_of_services')" >
+                                            <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.supply_services"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                        </a-form-item>
+                                    </a-col>
+                            </a-row>
+                      </a-col>
+                  </a-row>
+
               </a-form>
           </div>
       </div>
+      
       <!-- 设备信息 -->
-      <div class="base-info content-area margin-t-20">
+      <div class="base-info content-area margin-t-20"  v-if="!returnTypeBool (formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])">
           <div class="title">
               {{ $t("supply-chain.device_information") }}
-          </div>   
+          </div>
           <!-- 关键生产设备 -->
           <div class="base-info-form">
               <a-form
@@ -1337,7 +1646,17 @@ const formState = reactive({
     company_name: '',
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
-    // agent_info: {}, // 代理公司概况
+    agent_info: {// 代理公司概况
+
+        agent_company: "",   // 被代理公司
+        agent_address: "",  // 被代理地址
+        agent_relationship: "",  // 被代理关系
+        flag_agent_warrant: "",  // 是否有代理权证
+        agent_effective_begin_time: "",  // 代理有效开始时间
+        agent_effective_end_time: "",  // 代理有效结束时间
+        agent_product: "",  // 代理产品
+
+    }, 
 
     human_resource: {}, // 人力资源
     financial_info: {}, // 财务信息
@@ -1451,6 +1770,19 @@ const formState = reactive({
             accuracy_level: undefined,
         }
     ],
+    // 指定信息
+	specify_info: {
+		reason: "", // 指定理由
+		parts: "",  // 指定零件
+		protocol: "",// 指定协议
+		service: ""// 指定服务
+	},
+    // 服务信息
+	service_info: {
+		technical_services: "", // 技术服务
+		quality_service: "",    // 质量服务
+		supply_services: "",    // 供应服务
+	},
     // 补充信息
     additional_info: "",
 });
@@ -1650,7 +1982,22 @@ const draftDataReview = () => {
         }
       });
   }
+    setTimeout(() => {
+        if (TimeSearchRef.value) {
+            // 给timeSearch赋值
+            TimeSearchRef.value.createTime = [
+                formState.agent_info.agent_effective_begin_time,
+                formState.agent_info.agent_effective_end_time,
+            ];
+        }
+    });
 };
+
+// 判断哪些类型显示哪些模块
+const returnTypeBool = (type, typeIncludes) => {    
+    let result = typeIncludes.includes(Number(type))   
+    return result
+}
 // 详情回显
 const detailDataReview = () => {
   let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
@@ -1671,6 +2018,20 @@ const detailDataReview = () => {
         }
       });
   }
+    setTimeout(() => {
+        if (TimeSearchRef.value) {
+            // 给timeSearch赋值
+            TimeSearchRef.value.createTime = [
+                formState.agent_info.agent_effective_begin_time,
+                formState.agent_info.agent_effective_end_time,
+            ];
+        }
+    });
+};
+// 代理有效期间
+const handleTimeSearch = (params) => {
+    formState.agent_info.agent_effective_begin_time = params.begin_time;
+    formState.agent_info.agent_effective_end_time = params.end_time;
 };
 // 校验
 const step1Vaild = () => {
