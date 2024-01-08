@@ -123,7 +123,7 @@
             </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
-                <div class="setp-bar" v-if="!submitSuccess || isSubmited">
+                <div class="setp-bar" >
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -190,7 +190,8 @@
                 </div>
                 <div
                     class="supply-chain-footer"
-                    v-if="!submitSuccess || !isSubmited">
+                    v-if="!submitSuccess"
+                >
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -480,12 +481,7 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep").then(() => {
-        timer1.value = setTimeout(() => {
-            // 获取详情数据
-            BasicInfoRef.value && BasicInfoRef.value.reviewData();
-        }, 100);
-    });
+    $store.dispatch("SUPPLY_CHAIN/prevStep")
 };
 // 下一步
 const handleNext = () => {
@@ -605,22 +601,22 @@ const getDetail = () => {
                     if (Object.keys(DETAILS).length > 0) {
                         // 如果已经提交了
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
-                        submitSuccess.value = true;
                     } else {
                         // 如果没有提交
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                        submitSuccess.value = false;
                     }
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
                     $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
-                    submitSuccess.value = false;
+                    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                 }
                 resolve();
             })
             .catch((err) => {
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
+
                 reject();
             });
     });
@@ -688,10 +684,6 @@ const onBtn = async () => {
             submitSuccess.value = false;
         });
     }
-    timer1.value = setTimeout(() => {
-        // 获取详情数据
-        BasicInfoRef.value && BasicInfoRef.value.reviewData();
-    }, 100);
 };
 
 // 监听 弹框打开，开始倒计时
@@ -708,6 +700,23 @@ watch(
         immediate: true,
     }
 );
+// 监听步数
+watch(
+    () => setpCount.value,
+    (val) => {
+        // 如果是第二页，则跳转到第一
+        if (val == 0) {
+            getDetail().then(() => {
+                BasicInfoRef.value && BasicInfoRef.value.reviewData();
+            });   
+        }
+    },
+    {
+        deep: true,
+    }
+);
+
+
 const timer1 = ref(null);
 onMounted(() => {
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
@@ -923,7 +932,6 @@ onBeforeUnmount(() => {
             .submit-success {
                 flex: 1;
                 background-color: #fff;
-                border-radius: 6px;
                 background: #fff;
                 display: flex;
                 justify-content: center;
