@@ -67,7 +67,7 @@
                                             <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span> -->
                                             <a-input-number
                                                 v-model:value="formState.registered_capital"
-                                                :placeholder="$t('def.please_enter')"
+                                                :placeholder="$t('supply-chain.please_enter')"
                                                 :maxlength="15"
                                                 name="registered_capital"
                                             >
