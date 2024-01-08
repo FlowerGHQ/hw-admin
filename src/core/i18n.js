@@ -1183,7 +1183,7 @@ const messages = {
             specification_name: '请输入规格名',
             specification_be_unique: '规格名不可重复',
             specification_keyword: '请输入规格名(英文)',
-            keyword_lowercase: '规格名(英文)应由英文字母组成',
+            keyword_lowercase: '规格名(英文)应由英文字母或者英文+组成',
             keyword_unique: '规格名(英文)不可重复',
             enter_specification_value: '请输入规格值',
             enter_specification_value_en: '请输入规格值英文',
@@ -3899,7 +3899,8 @@ const messages = {
             specification_name: 'Please Enter The Specification',
             specification_be_unique: 'Specifications Cannot Be Repeated',
             specification_keyword: 'Please Enter The Specification Name (English)',
-            keyword_lowercase: 'The Specification Name (English) Should Consist English Letters.',
+            // 规格名(英文)应由英文字母或者英文+组成
+            keyword_lowercase: 'The Specification Name (English) Should Be Composed Of English Letters Or English + Symbol',
             keyword_unique: 'Specification Name (English) Cannot Be Repeated',
             enter_specification_value: 'Please Enter The Specification Value',
             enter_specification_value_en: 'Please Enter Specifications In English',
