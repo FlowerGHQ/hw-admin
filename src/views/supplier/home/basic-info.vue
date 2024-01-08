@@ -53,7 +53,6 @@
                                       >
                                       <a-radio-group
                                                 v-model:value="formState.position"
-                                                @change="handleTypeModeChange"
                                                 name = "positon"
                                             >
                                                 <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
@@ -1193,7 +1192,7 @@
                                                   {{
                                                       $t("def.delete")
                                                   }}
-                                              </a-button
+                                           </a-button
                                           >
                                       </template>
                                   </template>
@@ -1343,7 +1342,7 @@ const detection_equipment_column = ref([
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
-    position: 4,
+    position: 0,
     company_name: '',
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
@@ -1643,15 +1642,7 @@ const rules = ref({
       },
   ],
 });
-// 职业勾选变动
-const handleTypeModeChange = (data) => {
-            
-    let boo = true;
-    if(data.target.value === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-    rules.value.contact_name[0].required = boo;
-    rules.value.contact_email[0].required = boo;
-    rules.value.contact_flag_phone[0].required = boo;
-}
+
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
@@ -1832,7 +1823,18 @@ watch(
       }
   }
 );
-
+// 职业勾选变动
+watch(
+  () => formState.position,
+  (val) => {
+      
+    let boo = true;
+    if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
+    rules.value.contact_name[0].required = boo;
+    rules.value.contact_email[0].required = boo;
+    rules.value.contact_flag_phone[0].required = boo;
+  }
+);
 defineExpose({
   step1Vaild,
   saveDraft1,
