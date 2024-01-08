@@ -1342,7 +1342,7 @@ const detection_equipment_column = ref([
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
-    position: 0,
+    position: '',
     company_name: '',
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
