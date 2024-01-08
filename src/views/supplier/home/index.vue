@@ -159,13 +159,13 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="content-main" v-if="!submitSuccess && isSubmited">
+                <div class="content-main" >
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
                 </div>
-                <div class="submit-success" v-else>
+                <div class="submit-success" v-if="submitSuccess">
                     <div class="container">
                         <div class="icon">
                             <img
@@ -180,13 +180,17 @@
                                 )
                             }}
                         </div>
-                     
+
                         <div class="btn" @click="onBtn">
-                            <a-button>{{ $t("supply-chain.view_or_edit_data") }}</a-button>
+                            <a-button>{{
+                                $t("supply-chain.view_or_edit_data")
+                            }}</a-button>
                         </div>
                     </div>
                 </div>
-                <div class="supply-chain-footer" v-if="!submitSuccess && isSubmited">
+                <div
+                    class="supply-chain-footer"
+                    v-if="!submitSuccess && isSubmited">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -358,7 +362,7 @@
 
 <script setup>
 import Core from "@/core";
-import { computed, ref, onMounted, watch,onBeforeUnmount  } from "vue";
+import { computed, ref, onMounted, watch, onBeforeUnmount } from "vue";
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
@@ -580,8 +584,9 @@ const handleSubmitData = () => {
 const getDetail = () => {
     Core.Api.SUPPLY.adminDetail({})
         .then((res) => {
-            let DETAILS = {};
+            let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
             DETAILS = res?.detail ?? null;
+            console.log('详情数据------------------------------------------',DETAILS)
             if (DETAILS) {
                 DETAILS.form = JSON.parse(DETAILS.form);
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
@@ -657,9 +662,18 @@ const handleEditSubmit = () => {
 };
 
 // 跳转
-const onBtn = () => {
-    submitSuccess.value = false;
-    $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+const onBtn = async () => {
+    // 查看当前在第几页
+    const step = $store.getters["SUPPLY_CHAIN/SETP"];
+    if(step == 0){
+        submitSuccess.value = false;
+
+    }else{
+        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(()=>{
+            submitSuccess.value = false;
+        })
+    }
+
 };
 
 // 监听 弹框打开，开始倒计时
@@ -674,19 +688,6 @@ watch(
     },
     {
         immediate: true,
-    }
-);
-// 监听页面是否为第一页
-watch(
-    () => setp.value,
-    (val) => {
-        if (val == 0) {
-            getDetail();
-            setTimeout(() => {
-                // 获取详情数据
-                BasicInfoRef.value && BasicInfoRef.value.reviewData();
-            }, 100);
-        }
     }
 );
 const timer1 = ref(null);
@@ -912,6 +913,13 @@ onBeforeUnmount(() => {
                 justify-content: center;
                 align-items: center;
                 text-align: center;
+                position: absolute;
+                top: 20px;
+                right: 40px;
+                bottom: 20px;
+                left: 40px;
+                width: calc(100% - 80px);
+                height: calc(100% - 40px);
                 .container {
                     .icon {
                         .icon-img {
