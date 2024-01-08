@@ -10,10 +10,11 @@ const store = createStore({
         }
     },
     mutations: {
-        switchLang (state) {
-            if (state.lang === 'zh') {
-                state.lang = 'en'
-                Data.setLang('en')
+        switchLang (state, props) {
+            if (props) {
+                const lang = props
+                state.lang = lang
+                Data.setLang(lang)
             } else {
                 state.lang = 'zh'
                 Data.setLang('zh')

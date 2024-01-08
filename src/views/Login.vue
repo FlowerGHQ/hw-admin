@@ -3,7 +3,7 @@
     <div class="login-header">
         <span class="text">{{ $t('n.system') }}</span>
         <div class="header-right">
-            <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
+            <a-button class="lang-switch" type="link"  @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
                 <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
             </a-button>
         </div>
@@ -259,9 +259,8 @@ export default {
                 }
             })
         },
-        handleLangSwitch() {            
-            console.log('this.$i18n.locale',this.$i18n.locale)
-            this.$store.commit('switchLang');
+        handleLangSwitch(lang) {
+            this.$store.commit('switchLang', lang);
             this.$i18n.locale = this.$store.state.lang;
         },
 
