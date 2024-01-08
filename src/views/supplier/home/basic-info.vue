@@ -148,6 +148,14 @@
                                           <a-date-picker name="date_establishment"  valueFormat="YYYY-MM-DD"  v-model:value="formState.company_info.established_time" />
                                   </a-form-item>
                               </a-col>
+                              <!-- 法人代表 -->
+                              <a-col :span="12">
+                                  <a-form-item
+                                      :label="$t('supply-chain.legal_representative')"
+                                       name="legal_representative">
+                                       <a-input name="legal_representative" v-model:value="formState.company_info.legal_person" :placeholder="$t('supply-chain.please_enter')" />
+                                  </a-form-item>
+                              </a-col>
                           </a-row>
                           <a-row :gutter="24">
                               <a-col :span="24">
@@ -241,7 +249,7 @@
                                       :label="$t('supply-chain.Parent_company_address')"
                                       >
                                      
-                                      <a-input v-model:value="formState.company_info.Parent_company_address" :placeholder="$t('supply-chain.please_enter')" />
+                                      <a-input v-model:value="formState.company_info.parent_company_address" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
                           </a-row>
@@ -1986,5 +1994,8 @@ onMounted(() => {
         width: 100px;
         margin-left: 6px;
     }
+}
+:deep(.ant-col .ant-form-item-control .ant-picker) {
+    width: 100%
 }
 </style>
