@@ -137,7 +137,7 @@
                         </div>
                     </template>
                 </div>
-                <div class="submited" v-else-if="isSubmited && !submitSuccess">
+                <!-- <div class="submited" v-else-if="isSubmited && !submitSuccess">
                     <div class="main-content">
                         <div class="tips">
                             <img
@@ -157,7 +157,7 @@
                             }}
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <div class="content-main" v-if="!submitSuccess">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
@@ -808,34 +808,34 @@ onMounted(() => {
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            .submited {
-                width: 100%;
-                height: 121px;
-                background-color: #fff;
-                margin-top: 20px;
-                padding: 20px;
-                .main-content {
-                    height: 100%;
-                    background-color: rgba(0, 97, 255, 0.05);
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                    padding: 16px;
-                    .tips {
-                        display: flex;
-                        align-items: center;
-                        color: #165dff;
-                        font-size: 18px;
-                        font-weight: 500;
-                        img {
-                            margin-right: 4px;
-                        }
-                    }
-                    .sub_tips {
-                        color: #666;
-                    }
-                }
-            }
+            // .submited {
+            //     width: 100%;
+            //     height: 121px;
+            //     background-color: #fff;
+            //     margin-top: 20px;
+            //     padding: 20px;
+            //     .main-content {
+            //         height: 100%;
+            //         background-color: rgba(0, 97, 255, 0.05);
+            //         display: flex;
+            //         flex-direction: column;
+            //         justify-content: space-between;
+            //         padding: 16px;
+            //         .tips {
+            //             display: flex;
+            //             align-items: center;
+            //             color: #165dff;
+            //             font-size: 18px;
+            //             font-weight: 500;
+            //             img {
+            //                 margin-right: 4px;
+            //             }
+            //         }
+            //         .sub_tips {
+            //             color: #666;
+            //         }
+            //     }
+            // }
             .setp-bar {
                 display: flex;
                 height: 52px;
