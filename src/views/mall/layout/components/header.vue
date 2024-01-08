@@ -59,21 +59,21 @@
                             </template>
                         </a-dropdown>
                     </span>
-                    <!-- Favorites -->
+                    <!-- 收藏夹 -->
                     <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text">{{ $t('mall.Favorites') }}</span>
                     </span>
-                    <!-- Orders -->
+                    <!-- 订单 -->
                     <span class="header-menu tab-animate" @click="routerChange('/purchase/purchase-order-self')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
                         <span class="header-menu-text">{{ $t('mall.Orders') }}</span>
                     </span>
-                    <!-- More Features -->
+                    <!-- 更多 -->
                     <span class="header-menu tab-animate">
                         <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="moreDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
@@ -137,11 +137,11 @@
         </div>
         <div id="menu">
             <div class="menu-content content">
-                <!-- vehicle_models -->
+                <!-- 车辆型号 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.vehicle_models') }}</span>
                 </span>
-                <!-- accessories -->
+                <!-- 配件 -->
                 <span class="menu-item tab-animate">
                     <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="accessoriesDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
@@ -158,11 +158,11 @@
                         </template> -->
                     </a-dropdown>
                 </span>
-                <!-- peripheral_products -->
+                <!-- 周边产品 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.peripheral_products') }}</span>
                 </span>
-                <!-- promotional_products -->
+                <!-- 促销产品 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.promotional_products') }}</span>
                 </span>

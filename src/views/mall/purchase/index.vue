@@ -11,7 +11,7 @@
             </a-carousel>
         </div>
         <div class="container">
-            <!-- Our products -->
+            <!-- 我们的产品 -->
             <div class="box products">
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Horwin Services -->
+            <!-- Horwin公共事业 -->
             <div class="box services">
                 <div class="content">
                     <div class="title">{{ $t('purchase.services') }}</div>
@@ -50,10 +50,25 @@
                     </div>
                 </div>
             </div>
-            <!-- Local deals -->
+            <!-- 本地交易 -->
             <!-- <div class="box deals">
                 <div class="content">
                     <div class="title">{{ $t('purchase.deals') }}</div>
+                    <div class="deals-list">
+                        <div class="deals-item hover" v-for="(item, index) in dealsList" :key="index">
+                            <div class="img-body">
+                                <div class="img">
+                                    <img class="deals-img" src="@/assets/images/mall/purchase/demo.png">
+                                </div>
+                            </div>
+                            <div class="text">
+                                <p class="text-title" :title="item.title">{{ item.title }}</p>
+                                <p class="mes">{{ item.mes }}</p>
+                                <p class="time" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
+                                <p class="time" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
+                            </div>
+                        </div>
+                    </div>
                     <div class="btn">
                         <my-button showRightIcon>
                             {{ $t('purchase.check_more') }}
@@ -61,7 +76,7 @@
                     </div>
                 </div>
             </div> -->
-            <!-- HORWIN Official News -->
+            <!-- Horwin官方新闻 -->
             <div class="box news">
                 <div class="content">
                     <div class="title">{{ $t('purchase.news') }}</div>
@@ -74,7 +89,8 @@
                             </div>
                             <div class="text">
                                 <p class="text-title" :title="item.title">{{ item.topic }}</p>
-                                <p class="mes">{{ $Util.timeFilter(item.create_time) }}</p>
+                                <p class="mes" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
+                                <p class="mes" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
                             </div>
                         </div>
                     </div>
@@ -157,28 +173,28 @@ export default {
                 //     path: '',
                 // },
             ],
-            newsList: [
-                {
-                    title: 'HORWIN presents unique high performance e-motorcycle',
-                    time: '05.30.2023',
-                    img: 'products-img1',
+            dealsList: [
+                { 
+                    title: 'Christmas discounts in Europe', 
+                    mes: '20% off all items', 
+                    create_time: 1699276878 
                 },
-                {
-                    title: 'HORWIN presents unique high performance e-motorcycle',
-                    time: '05.30.2023',
-                    img: 'products-img1',
-                },
-                {
-                    title: 'HORWIN presents unique high performance e-motorcycle',
-                    time: '05.30.2023',
-                    img: 'products-img1',
+                { 
+                    title: 'The new HORWIN Ranger - a new era of e-mobility', 
+                    mes: 'Breathtaking. Inspiring. Groundbreaking. Or just awesome. Describe it as you want. The HORWIN Ranger is state of the art when it comes to e-mobility.', 
+                    create_time: 1699276878
                 },
             ],
+            newsList: [],
             upTopPosition: 'fixed',
             showTop: false
         };
     },
-    computed: {},
+    computed: {
+        lang() {
+            return this.$store.state.lang
+        }
+    },
     watch: {},
     created() {},
     mounted() {
@@ -395,6 +411,63 @@ export default {
         }
         .deals {
             background: #FFF;
+            .deals-list {
+                .flex(initial, initial, row);
+                flex-wrap: wrap;
+                .deals-item {
+                    .flex(initial, initial, row);
+                    width: calc((100% - 80px) / 3);
+                    margin-right: 40px;
+                    background: #FFF;
+                    cursor: pointer;
+                    
+                    &:nth-child(3n) {
+                        margin-right: 0;
+                    }
+                    &:nth-child(n + 4) {
+                        margin-top: 40px;
+                    }
+                    .img-body {
+                        height: 100%;
+                        min-height: 254px;
+                        width: 100%;
+                        overflow: hidden;
+                        .img {
+                            width: 100%;
+                            overflow: hidden;
+                            .news-img {
+                                width: 100%;
+                                height: 100%;
+                                object-fit: cover;
+                            }
+                        }
+                    }
+                    .text {
+                        .flex(space-between, initial, column);
+                        flex: 1;
+                        padding: 40px 32px;
+                        width: 100%;
+                        .text-title {
+                            .ellipsis(2);
+                            color: #333;
+                            font-family: Montserrat;
+                            font-size: 14px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            margin-bottom: 32px;
+                        }
+                        .mes {
+                            color: #999;
+                            font-family: Montserrat;
+                            font-size: 12px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                        }
+                    }
+                }
+            }
         }
         .news {
             background: #F8F8F8;
