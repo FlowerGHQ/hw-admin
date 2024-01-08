@@ -102,7 +102,7 @@
                   </a-form-item> -->
                                 <!-- </div> -->
                             </div>
-                            <div class="col-area">
+                            <div class="col-area business-term-col-area">
                                 <div class="col-all-area">
                                     <!-- 营业期限 -->
                                     <a-form-item
@@ -788,5 +788,17 @@ onMounted(() => {
   .title-area{
     min-width: 96px;
   }
+}
+:deep(.business-term-col-area){
+    align-items: flex-start;
+    .col-all-area{
+        .ant-form-item{
+            .ant-form-item-label{
+                label{
+                    height: 30px !important;
+                }
+            }
+        }
+    }
 }
 </style>
