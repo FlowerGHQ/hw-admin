@@ -69,6 +69,7 @@
                                                 v-model:value="formState.registered_capital"
                                                 :placeholder="$t('supply-chain.please_enter')"
                                                 :maxlength="15"
+                                                min="0"
                                                 name="registered_capital"
                                             >
                                                 <template #addonAfter>
