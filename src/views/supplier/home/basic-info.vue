@@ -1344,6 +1344,7 @@ const detection_equipment_column = ref([
 const formState = reactive({
     type: 1, //表格类型
     position: 4,
+    company_name: '',
     contact_info: {}, // 联系方式
     company_info: {}, // 公司概况
     // agent_info: {}, // 代理公司概况
@@ -1708,6 +1709,7 @@ const step1Vaild = () => {
                       data = {
                           type: formState.type,
                           position: formState.position,
+                          company_name: formState.company_info?.name,
                           form: {
                             ...formState
                           }
@@ -1718,6 +1720,7 @@ const step1Vaild = () => {
                         ...data,
                         type: formState.type,
                         position: formState.position,
+                        company_name: formState.company_info?.name,
                         form: {
                           ...formState
                         }
@@ -1756,6 +1759,7 @@ const saveDraft1 = () => {
       data = {
           type: formState.type,
           position: formState.position,
+          company_name: formState.company_info?.name,
           form: {
             ...formState
           }
@@ -1766,6 +1770,7 @@ const saveDraft1 = () => {
         ...data,
         type: formState.type,
         position: formState.position,
+        company_name: formState.company_info?.name,
         form: {
           ...formState
         }
