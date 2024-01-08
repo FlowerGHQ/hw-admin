@@ -515,9 +515,16 @@ const handleTimeSearch = (params) => {
 // 草稿回显
 const draftDataReview = () => {
     let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
+    console.log("草稿回显数据：", draftData);
     // 判断是否为空对象
     if (Object.keys(draftData).length === 0) {
-        formState.form.business_duration_type = 1;
+        formState = {
+            form: {
+                confirmatory_material: {
+                    business_duration_type: 1,
+                },
+            },
+        }
     } else {
         // 解析出来的数据
         let data = draftData;

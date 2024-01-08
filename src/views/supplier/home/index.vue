@@ -493,6 +493,8 @@ const handleNext = () => {
             // 提交给下一步
             // handleSubmitData();
             
+            // 保存草稿
+            BasicInfoRef.value && BasicInfoRef.value.saveDraft1();
             // 下一步
             $store.dispatch("SUPPLY_CHAIN/nextStep");
         });
