@@ -52,17 +52,17 @@ const routes = [
 	        title_en: 'login-redirect',
         }
     },
-    { // 登录
-        path: '/login',
-        component: () => import ('@/views/Login.vue'),
-        meta: {
-            hidden: true,
-            title: '登录',
-	        title_en: 'Login',
-        }
-    },
+    // { // 登录
+    //     path: '/login',
+    //     component: () => import ('@/views/Login.vue'),
+    //     meta: {
+    //         hidden: true,
+    //         title: '登录',
+	//         title_en: 'Login',
+    //     }
+    // },
     { // 分销商登录
-        path: '/loginMall',
+        path: '/login',
         component: () => import ('@/views/mall/Login.vue'),
         meta: {
             hidden: true,
