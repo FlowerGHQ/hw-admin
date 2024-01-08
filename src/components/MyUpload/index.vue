@@ -331,6 +331,7 @@ watch(
   left: -5px;
   opacity: 0;
   display: inline-block;
+  margin: 0 !important;
 }
 ::v-deep(.ant-upload-list-item-card-actions-btn) {
   position: absolute;

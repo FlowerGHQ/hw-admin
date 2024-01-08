@@ -1458,9 +1458,7 @@ const formState = reactive({
     additional_info: "",
 });
 let PositionVaild = async (_rule, value) => {
-    console.log('_rule, value1111',_rule, value);
     if (!formState.position) {
-        console.log($t("supply-chain.please_select_position"));
         return Promise.reject(
             $t("supply-chain.please_select_position")
         );
@@ -1469,14 +1467,12 @@ let PositionVaild = async (_rule, value) => {
         /* formState.begin_business_time = "";
         formState.end_business_time = ""; */
        // 去除校验 
-       console.log('跟该必填');
     }
     return Promise.resolve(); 
 }
 
 let NameVaild = async(_rule, value) => {
     let dataBoo = false;
-    console.log('_rule, value111',_rule, value);
     if(!_rule.required) {
         return Promise.resolve();
     }
@@ -1505,7 +1501,6 @@ let NameVaild = async(_rule, value) => {
 let BusinessTermValid = async (_rule, value) => {
   if (formState.business_duration_type == 2) {
       if (!formState.begin_business_time || !formState.end_business_time) {
-          console.log($t("supply-chain.please_select_business_term"));
           return Promise.reject(
               $t("supply-chain.please_select_business_term")
           );
@@ -1641,6 +1636,7 @@ const rules = ref({
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
+  console.log('draftData',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -1656,7 +1652,6 @@ const draftDataReview = () => {
           formState[key] = data[key];
         }
       });
-      console.log("回显数据：草稿回显", formState);
   }
 };
 // 详情回显
@@ -1665,6 +1660,7 @@ const detailDataReview = () => {
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
       console.log('空对象','详情回显');
+
   } else {
       // 解析出来的数据
       let data = detailData;
@@ -1677,7 +1673,6 @@ const detailDataReview = () => {
             formState[key] = data[key];
         }
       });
-      console.log('详情----回显数据',formState);
   }
 };
 // 校验
@@ -1712,7 +1707,6 @@ const step1Vaild = () => {
                         }
                       }
                   }
-                  console.log('data---step1Vaild',data);
                   // 保存数据
                   $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
                   resolve(true)
@@ -1722,7 +1716,6 @@ const step1Vaild = () => {
               // 校验失败
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-              console.log("errorName",err)
               if (!errorName) return;
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致

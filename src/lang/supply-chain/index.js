@@ -1,5 +1,7 @@
 export default {
   zh: {
+    // 万元
+    ten_thousand_yuan: "万元",
     type_supply: "供应类型",
     contact: "联系方式",
     access_code: "获取验证码",
@@ -249,6 +251,7 @@ export default {
         human_resources: '人力资源'
   },
   en: {
+    ten_thousand_yuan:"TEN THOUSAND YUAN",
     type_supply: "Type Supply",
     contact: "Contact",
     access_code: "Access code",

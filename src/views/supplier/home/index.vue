@@ -122,7 +122,7 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <div class="setp-bar" v-if="!isSubmited && !submitSuccess">
+                <div class="setp-bar" >
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -522,6 +522,8 @@ const handleSubmit = () => {
 const handleSubmitOk = () => {
     // 将阅读状态改为true
     $store.dispatch("SUPPLY_CHAIN/setRead", true);
+    // 关闭弹框
+    visible.value = false;
     MaterialListRef.value.step2Vaild().then(() => {
         // 跳转到注册按钮
         handleSubmitData();
@@ -601,7 +603,7 @@ const handleOpen = () => {
 };
 // 中英文切换
 const handleLangSwitch = () => {
-    $store.commit("switchLang");
+    $store.dispatch("switchLang");
     $i18n.locale.value = $store.state.lang;
 };
 const handleEditShow = () => {
@@ -671,13 +673,11 @@ watch(
         }
     },
     {
-        immediate: true,
+        deep:true
     }
 );
 
 onMounted(() => {
-    // getDetail();
-    console.log("setp.value", $store.getters["SUPPLY_CHAIN/SETP"]);
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
@@ -951,6 +951,7 @@ onMounted(() => {
             ul {
                 padding-left: 0;
                 list-style: none;
+                color: #666;
             }
             .promise-book {
                 .promise-book-title {
