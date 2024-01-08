@@ -1633,6 +1633,7 @@ const rules = ref({
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
+  console.log('draftData------------------------------------------------',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -1653,6 +1654,7 @@ const draftDataReview = () => {
 // 详情回显
 const detailDataReview = () => {
   let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
+  console.log('detailData------------------------------------------------',detailData);
   // 判断是否为空对象
   if (Object.keys(detailData).length === 0) {
       console.log('空对象','详情回显');
