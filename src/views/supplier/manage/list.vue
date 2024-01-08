@@ -139,12 +139,13 @@ const onReset = () => {
 // 点击查看
 const onView = (record) => {
     console.log("点击查看了");
-    router.push({
+    let routeUrl = router.resolve({
         path: '/supply-manage/detail',
         query: {
             id: record.id
         }
     })
+    window.open(routeUrl.href, '_block')
 }
 /* methods end*/
 </script>

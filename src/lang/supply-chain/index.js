@@ -223,7 +223,7 @@ export default {
     //  已阅读，发送申请
     read_and_send_application: "已阅读，发送申请",
     legal_representative: "法人代表",
-    Human_resources: "人力资源",
+    human_resources: "人力资源",
     agent_information: "代理信息",
     agent_company: "被代理公司",
     proxy_address: "被代理地址",
@@ -247,8 +247,10 @@ export default {
     private: '民营',
     foreign_owned: '外资',
     state_owned: '国有',
-    // 人力资源
-    human_resources: '人力资源',
+    serial_number: "序号",
+    precision_grade: "精度等级",
+    not_uploaded: "未上传",
+    not_selected: "未选择",        
     // 确定删除此数据吗
     detele_data_sure: '确定删除此数据吗?'
   },
@@ -475,12 +477,11 @@ export default {
     // 公司性质
     private: 'Private',
     foreign_owned: 'foreign Owned',
-    state_owned: 'state Owned',
+    state_owned: 'state Owned',    
     // 人力资源
     human_resources: 'Human Resources',
     // 确定删除此数据吗
-    detele_data_sure: 'Are you sure you want to delete this data?',
-    Human_resources: "Human Resources",
+    detele_data_sure: 'Are you sure you want to delete this data?',    
     agent_information: "Agent Information",
     agent_company: "Agent Company",
     proxy_address: "Proxy Address",
@@ -499,5 +500,9 @@ export default {
     specify_part: "Specify part",
     specify_reason: "Specify a reason",
     specify_service: "Specify service",
+    serial_number: "Serial number",
+    precision_grade: "Precision Grade",
+    not_uploaded: "Not uploaded",
+    not_selected: "Not selected",
   },
 }
