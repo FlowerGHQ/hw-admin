@@ -62,7 +62,7 @@ const routes = [
         }
     },
     { // 分销商登录
-        path: '/login',
+        path: '/loginMall',
         component: () => import ('@/views/mall/Login.vue'),
         meta: {
             hidden: true,

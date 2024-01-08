@@ -165,6 +165,8 @@ const Util = {
         return dayjs.unix(value).format("YYYY年MM月DD日")
       case 5:
         return dayjs.unix(value).format("HH:mm:ss")
+      case 6:// 英文时间格式
+        return dayjs.unix(value).format("DD.MM.YYYY")
       default:
         return "-"
     }
