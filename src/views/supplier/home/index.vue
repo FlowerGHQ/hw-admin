@@ -507,7 +507,7 @@ const handleOpen = () => {
 };
 // 中英文切换
 const handleLangSwitch = () => {
-    $store.dispatch("switchLang");
+    $store.commit("switchLang");
     $i18n.locale.value = $store.state.lang;
 };
 const handleEditShow = () => {

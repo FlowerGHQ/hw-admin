@@ -78,7 +78,7 @@
                                         </div>
                                     </a-form-item>
                                 </div>
-                                <!-- <div :span="12"> -->
+                                <!-- <div class="col-area-item"> -->
                                 <!-- 法定代表人 -->
                                 <!-- <a-form-item
                       :label="
@@ -148,7 +148,7 @@
                         </div>
                         <div class="content-area">
                             <div class="col-area">
-                                <div :span="8">
+                                <div class="col-area-item">
                                     <!-- 开户名 -->
                                     <a-form-item
                                         :label="$t('supply-chain.account_name')"
@@ -165,7 +165,7 @@
                                         </a-input>
                                     </a-form-item>
                                 </div>
-                                <div :span="12">
+                                <div class="col-area-item">
                                     <!-- 开户行 -->
                                     <a-form-item
                                         :label="
@@ -186,7 +186,7 @@
                                 </div>
                             </div>
                             <div class="col-area">
-                                <div :span="8">
+                                <div class="col-area-item">
                                     <!-- 开户行号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_number')"
@@ -203,7 +203,7 @@
                                         </a-input>
                                     </a-form-item>
                                 </div>
-                                <div :span="12">
+                                <div class="col-area-item">
                                     <!-- 银行账号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_account')"
@@ -671,14 +671,16 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10.36% 0 20.78%;
+            width:60.5%;
+            margin: 0 auto;
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            padding: 8px 32.44% 0 28.4%;
+            width: calc(60.5%  - 96px - 88px - 96px - 80px) ;
+            margin: 0 auto;
         }
     }
 }
@@ -757,6 +759,12 @@ onMounted(() => {
     .col-area{
       flex: 1;
       margin-left: 88px;
+      display: flex;
+      align-items:center;
+      flex-wrap:wrap;
+      .col-area-item{
+
+      }
     }
   }
 }
