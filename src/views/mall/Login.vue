@@ -3,32 +3,34 @@
         <div class="login-header">
             <div class="content">
                 <div class="text">
-                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="Horwin">
+                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="HORWIN">
                     <span>{{ $t('mall.system') }}</span>
                 </div>
                 <div class="header-right">
                     <!-- <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                         <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                     </a-button> -->
-                    <a-dropdown :trigger="['click']" placement="bottom" @visibleChange="langDropDownChange">
-                        <div class="mt-user-switch" @click.prevent>
-                            <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
-                            <!-- 当前语言 -->
-                            <span class="mt-header-lang-text">{{ currentAreaType }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
-                        </div>
-                        <template #overlay>
-                            <a-menu style="bottom: 0px; position: relative;">
-                                <a-menu-item key="0" @click="handleLangSwitch('en')">
-                                    <a class="menu_text">EN</a>
-                                </a-menu-item>
-                                <a-menu-divider />
-                                <a-menu-item key="1" @click="handleLangSwitch('zh')">
-                                    <a class="menu_text">中文</a>
-                                </a-menu-item>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
+                    <span class="tab-animate">
+                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
+                            <div class="mt-user-switch" @click.prevent>
+                                <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
+                                <!-- 当前语言 -->
+                                <span class="mt-header-lang-text">{{ currentAreaType }}</span>
+                                <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            </div>
+                            <template #overlay>
+                                <a-menu style="bottom: 0px; position: relative;">
+                                    <a-menu-item key="0" @click="handleLangSwitch('en')">
+                                        <a class="menu_text">EN</a>
+                                    </a-menu-item>
+                                    <a-menu-divider />
+                                    <a-menu-item key="1" @click="handleLangSwitch('zh')">
+                                        <a class="menu_text">中文</a>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </span>
                 </div>
             </div>
         </div>
@@ -259,7 +261,7 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #LoginMall {
     position: relative;
     height: 100vh;
@@ -364,7 +366,6 @@ export default {
         padding: 48px 40px;
         width: 453px;
         background: @BG_panel;
-        border-radius: 6px;
         border: 1px solid @BC_login_box;
         overflow: hidden;
         position: absolute;
@@ -372,9 +373,9 @@ export default {
         right: 12.5%;
         transform: translateY(-50%);
         .form-title {
-            height: 70px;
             font-size: 24px;
             font-weight: 700;
+            margin-bottom: 48px;
             font-family: Montserrat;
             color: #333;
         }
@@ -390,45 +391,52 @@ export default {
                 cursor: pointer;
                 text-align: center;
                 font-size: 16px;
-                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                background: #333;
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 line-height: 24px;
-                padding: 10px;
+                padding: 10px 0;
+                margin-right: 40px;
                 transition: color 0.3s ease;
                 &.active {
-                    color: @TC_P;
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                &:last-child {
+                    margin-right: 0;
                 }
             }
             &::after {
                 content: '';
                 display: inline-block;
                 width: 60px;
-                height: 3px;
+                height: 1.5px;
                 background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                border-radius: 2px;
                 position: absolute;
                 bottom: 2px;
-                transform: translateX(-50%);
                 transition: all .3s ease;
             }
 
             &.DISTRIBUTOR::after {
-                left: 50px;
-                width: 90px;
+                left: 0px;
+                width: 80px;
             }
             &.ADMIN::after {
-                left: 135px;
+                left: 120px;
+                width: 50px;
             }
         }
         .zh {
             &.DISTRIBUTOR::after {
-                left: 35px;
-                width: 60px;
+                left: 0px;
+                width: 48px;
             }
             &.ADMIN::after {
-                left: 103px;
+                left: 88px;
+                width: 48px;
             }
         }
         .login-btn {
@@ -454,52 +462,14 @@ export default {
                     display: inline-block;
                     margin-right: 40px;
                     cursor: pointer;
+                    &:hover {
+                        color: rgba(255, 255, 255, 0.7);
+                    }
                 }
             }
         }
     }
 }
-// dropdown start
-.ant-dropdown-menu {
-    position: relative;
-    border-radius: 0;
-    &::before {
-        content: '';
-        position: absolute;
-        right: 47px;
-        top: -8px;
-        z-index: 999999;
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-bottom: 12px solid #fff;
-    }
-}
-.ant-dropdown-menu-item {
-    width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    &:hover {
-        background-color: #EEE;
-    }
-}
-.ant-dropdown {
-    position: absolute;
-    top: 60px !important;
-}
-.menu_text {
-    color: #000;
-    font-family: Montserrat;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    text-align: center;
-}
-// dropdown end
 .ant-input {
    caret-color: #C6F; /* 将光标颜色设为红色 */
 }
@@ -510,5 +480,57 @@ input.ant-input {
         box-shadow: none;
     }
 }
+</style>
+<style lang="less">
+// dropdown start
+.action-menu {
+    position: absolute;
+    top: 60px !important;
+    .ant-dropdown-menu {
+        position: relative;
+        border-radius: 0;
+        &::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -8px;
+            z-index: 999999;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #fff;
+        }
+    }
+    .ant-dropdown-menu-item {
+        min-width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        &:hover {
+            background-color: #EEE;
+        }
+        .ant-dropdown-menu-title-content {
+            padding: 0 10px;
+        }
+        padding: 8px 0px;
+        .menu_divider {
+            position: relative;
+            bottom: -8px;
+        }
+    }
+    .menu_text {
+        color: #000;
+        font-family: Montserrat;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        text-align: center;
+    }
+}
+// dropdown end
 </style>
     

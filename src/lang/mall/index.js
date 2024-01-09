@@ -1,13 +1,13 @@
 
 export default {
     zh: {
-        system: "Horwin业务操作系统",
+        system: "HORWIN业务操作系统",
         account_login: '登录',
         conditions: '条款和条件',
         legal: '隐私',
         about: '© 2023 | HORWIN Inc',
         hi: '嗨',
-        welcome: '欢迎使用horwin商业操作系统',
+        welcome: '欢迎使用HORWIN商业操作系统',
         Vampireuknow: 'Vampireuknow',
         Favorites: '收藏夹',
         Orders: '订单',
@@ -19,18 +19,18 @@ export default {
         coc_download: 'COC下载',
         photo_video: '照片和视频下载',
         news: '新闻',
-        local_deals: '本地交易',
+        local_deals: '本地政策',
         bag: '购物车',
         search_placeholder: '请输入商品编号 / 名称 / 项目编号'
     },
     en: {
-        system: "Horwin Business Operating System",
+        system: "HORWIN Business Operating System",
         account_login: 'Log In',
         conditions: 'terms & conditions',
         legal: 'legal',
         about: '© 2023 | HORWIN Inc',
         hi: 'Hi',
-        welcome: 'welcome to horwin business operating system',
+        welcome: 'welcome to HORWIN business operating system',
         Vampireuknow: 'Vampireuknow',
         Favorites: 'Favorites',
         Orders: 'Orders',

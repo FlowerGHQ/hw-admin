@@ -5,8 +5,10 @@ export default  {
     */
     ROUTERS:[
         {value:'/mall/index'},
+        {value:'/mall/favorites'},
     ],
     FOOTER:[
         {value:'/mall/index'},
+        {value:'/mall/favorites'},
     ],
 }

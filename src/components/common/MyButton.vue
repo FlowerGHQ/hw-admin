@@ -69,11 +69,11 @@ export default {
     .right-icon {
         height: 20px;
         width: 0px;
-        margin-left: 8px;
         transition: 0.3s;
     }
     &:hover {
         .right-icon {
+            margin-left: 8px;
             width: 20px;
         }
     }

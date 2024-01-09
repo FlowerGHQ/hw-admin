@@ -90,6 +90,14 @@ const routes = [
                     title_en: 'Index',
                 }
             },
+            // {
+            //     path: 'favorites',
+            //     component: () => import('@/views/mall/purchase/favorites.vue'),
+            //     meta: {
+            //         title: '收藏夹',
+            //         title_en: 'Favorites',
+            //     }
+            // },
         ]
     },
     { // 看板

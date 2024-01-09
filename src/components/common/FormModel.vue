@@ -143,11 +143,11 @@ export default {
         margin-right: 10px;
         margin-top: 1px;
         &.be-entering {
-            border-bottom: 1px solid #DFDFDF;
+            border-bottom: 1px solid #EEE;
             caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
         }
         &.not-enter {
-            border-bottom: 1px solid #DFDFDF;
+            border-bottom: 1px solid #EEE;
         }
         &.err-enter {
             border-bottom: 1px solid #FF0000;
@@ -210,11 +210,11 @@ export default {
         // margin-top: 1px;
         width: 100%;
         &.be-entering {
-            border-bottom: 1px solid #DFDFDF;
+            border-bottom: 1px solid #EEE;
             caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
         }
         &.not-enter {
-            border-bottom: 1px solid #DFDFDF;
+            border-bottom: 1px solid #EEE;
         }
         &.err-enter {
             border-bottom: 1px solid #FF0000;
@@ -305,6 +305,11 @@ export default {
             // letter-spacing: 0.56px;
             color: #BFBFBF;
         }
+        /* 解决浏览器自带input:-internal-autofill-selected背景色样式问题 */
+        input { 
+            box-shadow: inset 0 0 0 1000px white !important;
+        }
+
         .web-input {
             outline: none;
             width: 100%;
@@ -316,7 +321,7 @@ export default {
             // letter-spacing: 0.56px;
 
             &.not-enter {
-                border-bottom: 1px solid #DFDFDF;
+                border-bottom: 1px solid #EEE;
                 font-weight: 400;
             }
 
@@ -328,7 +333,7 @@ export default {
             }
 
             &.entered {
-                border-bottom: 1px solid #DFDFDF;
+                border-bottom: 1px solid #EEE;
                 color: #333;
                 font-weight: 400;
             }
@@ -377,11 +382,11 @@ export default {
             margin-right: 10px;
             // margin-top: 1px;
             &.be-entering {
-                border-bottom: 1px solid #DFDFDF;
+                border-bottom: 1px solid #EEE;
                 caret-color: linear-gradient(100deg, #C6F 0%, #66F 100%);
             }
             &.not-enter {
-                border-bottom: 1px solid #DFDFDF;
+                border-bottom: 1px solid #EEE;
             }
             &.err-enter {
                 border-bottom: 1px solid #FF0000;
