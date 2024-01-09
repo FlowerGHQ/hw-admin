@@ -2098,19 +2098,31 @@ sales: [
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-  // 判断是否为空对象
-  if (Object.keys(draftData).length !== 0){
-      // 解析出来的数据
-      let data = draftData;
-      Object.keys(data ?? {}).forEach((key) => {
-        if(key === 'form'){
-         for (const iterator of  Object.keys(data[key])) {
-            formState[iterator] = data[key][iterator]
-         }
-        }else {
-          formState[key] = data[key];
+  if(draftData?.form){
+        let type = typeof(draftData.form);
+        if(type === 'string') {
+            draftData.form = JSON.parse(draftData.form);
+        }else{
+            draftData.form = draftData.form;
         }
-      });
+  }else{
+    draftData.form = {}
+  }
+  console.log('draftData------------------------------------------------',draftData);
+  // 判断是否为空对象
+  if (Object.keys(draftData).length === 0) {
+      console.log('空对象','详情回显');
+  } else {
+        Object.keys(draftData).forEach((key) => {
+            if(key === 'form'){
+                for (const iterator of  Object.keys(draftData[key])) {
+                    formState[iterator] = draftData[key][iterator] //die9
+                }
+            }else {
+                formState[key] = draftData[key];
+            }
+        });
+      
   }
     setTimeout(() => {
         if (TimeSearchRef.value) {
@@ -2122,39 +2134,11 @@ const draftDataReview = () => {
         }
     });
 };
-
 // 判断哪些类型显示哪些模块
 const returnTypeBool = (type, typeIncludes) => {    
     let result = typeIncludes.includes(Number(type))   
     return result
 }
-// 详情回显
-const detailDataReview = () => {
-  let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
-  // 判断是否为空对象
-  if (Object.keys(detailData).length !== 0){
-      // 解析出来的数据
-      let data = detailData;
-      Object.keys(data??{}).forEach((key) => {
-        if(key === 'form'){
-            for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator] 
-            }
-        }else {
-            formState[key] = data[key];
-        }
-      });
-  }
-    setTimeout(() => {
-        if (TimeSearchRef.value) {
-            // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.agent_info.agent_effective_begin_time,
-                formState.agent_info.agent_effective_end_time,
-            ];
-        }
-    });
-};
 // 代理有效期间
 const handleTimeSearch = (params) => {
     formState.agent_info.agent_effective_begin_time = params.begin_time;
@@ -2266,7 +2250,8 @@ const step1Vaild = () => {
                       }
                   }
                   // 保存数据
-                  $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
               }
           })
@@ -2289,51 +2274,24 @@ const step1Vaild = () => {
 // 保存草稿
 const saveDraft1 = () => {
   // 获取数据
-  let data = $store.state.SUPPLY_CHAIN.supplyDraftChain;
   // 判断是否为空对象
-  if (Object.keys(data).length === 0) {
       // 为空对象
-      data = {
-          type: formState.type,
-          position: formState.position,
-          company_name: formState.company_info?.name,
-          form: {
-            ...formState
-          }
-      };
-  } else {
-      // 不为空对象
-      data = {
-        ...data,
+    let data = {
         type: formState.type,
         position: formState.position,
         company_name: formState.company_info?.name,
         form: {
-          ...formState
+            ...formState
         }
-      }
-  }
-  if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
-    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data)
-  }
+    };
   // 保存数据
   $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
-
   // 提示
   message.success($t("supply-chain.save_successfully"));
 };
 // 回显数据
 const reviewData = () => {
-  // 判断是否已经提交过了
-  /* let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-  if (isSubmit) {
-      // 已经提交过了
-      detailDataReview();
-  } else {
-      // 没有提交过
-      draftDataReview();
-  } */
-      draftDataReview();
+    draftDataReview();
 };
 // 删除某一项
 const handleDelete = (list , data, title , key ) => {

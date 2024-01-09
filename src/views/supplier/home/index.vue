@@ -123,7 +123,7 @@
             </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
-                <div class="setp-bar" >
+                <div class="setp-bar" v-if="setp !== 2">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -138,59 +138,16 @@
                         </div>
                     </template>
                 </div>
-                <!-- <div class="submited" v-else-if="isSubmited && !submitSuccess">
-                    <div class="main-content">
-                        <div class="tips">
-                            <img
-                                src="../../../assets/images/supply-chain/audit.png"
-                                alt="" />
-                            <span>{{
-                                $t(
-                                    "supply-chain.data_submitted_please_wait_for_review"
-                                )
-                            }}</span>
-                        </div>
-                        <div class="sub_tips">
-                            {{
-                                $t(
-                                    "supply-chain.before_the_audit_is_completed_you_can_always_supplement_the_data"
-                                )
-                            }}
-                        </div>
-                    </div>
-                </div> -->
                 <div class="content-main">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
-                </div>
-                <div class="submit-success" v-if="submitSuccess">
-                    <div class="container">
-                        <div class="icon">
-                            <img
-                                class="icon-img"
-                                src="../../../assets//images/supply-chain/suceess.png"
-                                alt="" />
-                        </div>
-                        <div class="title">
-                            {{
-                                $t(
-                                    "supply-chain.information_submitted_successfully"
-                                )
-                            }}
-                        </div>
-
-                        <div class="btn" @click="onBtn">
-                            <a-button>{{
-                                $t("supply-chain.view_or_edit_data")
-                            }}</a-button>
-                        </div>
-                    </div>
+                    <Successful  v-else-if="setp === 2"/>
                 </div>
                 <div
                     class="supply-chain-footer"
-                    v-if="!submitSuccess"
+                    v-if="setp !== 2"
                 >
                     <!-- 承诺书 -->
                     <div
@@ -374,6 +331,8 @@ import { message } from "ant-design-vue";
 import BasicInfo from "./basic-info.vue";
 // 材料清单
 import MaterialList from "./material-list.vue";
+// 成功页
+import Successful from "./successful.vue";
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const user = Core.Data.getUser() || {};
@@ -461,8 +420,6 @@ const form = ref({
     new_password: "",
 });
 const passShow = ref(false);
-// 成功后，是否到最后一步
-const submitSuccess = ref(false);
 // 倒计时
 const countDown = () => {
     if (timer.value) {
@@ -482,31 +439,11 @@ const countDown = () => {
 // 上一步
 const handlePrev = () => {
     $store.dispatch("SUPPLY_CHAIN/prevStep")
+    MaterialListRef.value && MaterialListRef.value.handlePrev();
 };
 // 下一步
 const handleNext = () => {
-    // if ($store.getters["SUPPLY_CHAIN/SETP"] === 0) {
-    BasicInfoRef.value.step1Vaild().then(() => {
-        // 提交给下一步
-        // handleSubmitData();
-
-        // 保存草稿
-        // BasicInfoRef.value && BasicInfoRef.value.saveDraft1();
-
-        let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
-        let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        let supplyDetailsChain_data =
-            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
-        //存储到草稿和详情数据
-        $store.commit(
-            "SUPPLY_CHAIN/setSupplyDetailsChain",
-            Object.assign(supplyDetailsChain_data, supplyChain_data)
-        );
-        $store.commit(
-            "SUPPLY_CHAIN/setSupplyDraftChain",
-            Object.assign(supplyDraftChain_data, supplyChain_data)
-        );
-
+    BasicInfoRef.value && BasicInfoRef.value.step1Vaild().then(() => {
         // 下一步
         $store.dispatch("SUPPLY_CHAIN/nextStep");
     });
@@ -543,10 +480,10 @@ const handleSubmitOk = () => {
         let supplyDetailsChain_data =
             $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
         //存储到草稿和详情数据
-        $store.dispatch(
-            "SUPPLY_CHAIN/setSupplyDetailsChain",
-            Object.assign(supplyDetailsChain_data, supplyChain_data)
-        );
+        // $store.dispatch(
+        //     "SUPPLY_CHAIN/setSupplyDetailsChain",
+        //     Object.assign(supplyDetailsChain_data, supplyChain_data)
+        // );
         $store.dispatch(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
@@ -573,9 +510,9 @@ const handleSubmitData = () => {
         .then((res) => {
             visible.value = false;
             // 获取详情数据
-            getDetail();
-            // 成功状态
-            submitSuccess.value = true;
+            getDetail().then(()=>{
+                $store.dispatch("SUPPLY_CHAIN/nextStep");
+            });
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
@@ -586,37 +523,36 @@ const getDetail = () => {
     return new Promise((resolve, reject) => {
         Core.Api.SUPPLY.adminDetail({})
             .then((res) => {
-                let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
+                let DETAILS = {}
                 DETAILS = res?.detail ?? null;
-                console.log(
-                    "详情----------------------------------------:",
-                    DETAILS
-                );
+                let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
                 if (DETAILS) {
-                    DETAILS.form = JSON.parse(DETAILS.form);
-                    $store.dispatch(
-                        "SUPPLY_CHAIN/setSupplyDetailsChain",
-                        DETAILS
-                    );
                     if (Object.keys(DETAILS).length > 0) {
+                        // 将form解析
+                        DETAILS.form = JSON.parse(DETAILS.form);
+                        let data = Object.assign(DETAILS, draftData);
+                        // 存储到草稿数据
+                        $store.dispatch(
+                            "SUPPLY_CHAIN/setSupplyDraftChain",
+                            data
+                        );
                         // 如果已经提交了
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+
                     } else {
                         // 如果没有提交
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                     }
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
                     $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                 }
                 resolve();
             })
             .catch((err) => {
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
-
                 reject();
             });
     });
@@ -673,18 +609,7 @@ const handleEditSubmit = () => {
         });
 };
 
-// 跳转
-const onBtn = async () => {
-    // 查看当前在第几页
-    const step = $store.getters["SUPPLY_CHAIN/SETP"];
-    if (step == 0) {
-        submitSuccess.value = false;
-    } else {
-        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(() => {
-            submitSuccess.value = false;
-        });
-    }
-};
+
 
 // 监听 弹框打开，开始倒计时
 watch(
@@ -700,11 +625,10 @@ watch(
         immediate: true,
     }
 );
-// 监听步数
+// 监听是否在第一页
 watch(
-    () => setpCount.value,
+    () => setp.value,
     (val) => {
-        // 如果是第二页，则跳转到第一
         if (val == 0) {
             getDetail().then(() => {
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
@@ -719,13 +643,13 @@ watch(
 
 const timer1 = ref(null);
 onMounted(() => {
-    if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
-        // 如果是第二页，则跳转到第一
-        $store.dispatch("SUPPLY_CHAIN/setStep", 0);
-    }
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
-    });
+        // 如果已经提交了
+        if (isSubmited.value) {
+            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
+        }
+    });   
 });
 // beforeDestroy
 onBeforeUnmount(() => {
@@ -855,38 +779,9 @@ onBeforeUnmount(() => {
         .ant-layout-content {
             flex: 1;
             padding: 20px 40px;
-            position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            // .submited {
-            //     width: 100%;
-            //     height: 121px;
-            //     background-color: #fff;
-            //     margin-top: 20px;
-            //     padding: 20px;
-            //     .main-content {
-            //         height: 100%;
-            //         background-color: rgba(0, 97, 255, 0.05);
-            //         display: flex;
-            //         flex-direction: column;
-            //         justify-content: space-between;
-            //         padding: 16px;
-            //         .tips {
-            //             display: flex;
-            //             align-items: center;
-            //             color: #165dff;
-            //             font-size: 18px;
-            //             font-weight: 500;
-            //             img {
-            //                 margin-right: 4px;
-            //             }
-            //         }
-            //         .sub_tips {
-            //             color: #666;
-            //         }
-            //     }
-            // }
             .setp-bar {
                 display: flex;
                 height: 52px;
@@ -929,49 +824,7 @@ onBeforeUnmount(() => {
                     background: #fff;
                 }
             }
-            .submit-success {
-                flex: 1;
-                background-color: #fff;
-                background: #fff;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                position: absolute;
-                top: 20px;
-                right: 40px;
-                bottom: 20px;
-                left: 40px;
-                width: calc(100% - 80px);
-                height: calc(100% - 40px);
-                .container {
-                    .icon {
-                        .icon-img {
-                            width: 101px;
-                            height: 77px;
-                        }
-                    }
-                    .title {
-                        color: #26ab54;
-                        font-size: 18px;
-                        font-weight: 500;
-                        line-height: 22px; /* 122.222% */
-                    }
-                    .sub-title {
-                        margin-top: 5px;
-                        color: #666;
-                        font-size: 12px;
-                        font-weight: 400;
-                        line-height: 22px; /* 183.333% */
-                        .timing {
-                            color: #26ab54;
-                        }
-                    }
-                    .btn {
-                        margin-top: 16px;
-                    }
-                }
-            }
+
             .supply-chain-footer {
                 min-height: 68px;
                 width: calc(100%);

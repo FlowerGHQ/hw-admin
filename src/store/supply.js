@@ -14,10 +14,6 @@ export const SUPPLY_CHAIN = {
     supplyDraftChain: !Core.Data.getSupplyDraftChain()
       ? {}
       : JSON.parse(Core.Data.getSupplyDraftChain()),
-    // 供应链存储-详情数据
-    supplyDetailsChain: !Core.Data.getSupplyDetailsChain()
-      ? {}
-      : JSON.parse(Core.Data.getSupplyDetailsChain()),
     // 第几步
     step: !Core.Data.getStep() ? 0 : Core.Data.getStep(),
     // 是否已经阅读了
@@ -50,20 +46,6 @@ export const SUPPLY_CHAIN = {
         Core.Data.setSupplyDraftChain(value)
       }
     },
-    // 供应链存储-详情数据
-    setSupplyDetailsChain(state, value) {
-      state.supplyDetailsChain = value
-
-
-      // 判断是否为json
-      if (typeof value == "object") {
-        Core.Data.setSupplyDetailsChain(JSON.stringify(value))
-      }
-      // 如果为字符串，直接存储
-      if (typeof value == "string") {
-        Core.Data.setSupplyDetailsChain(value)
-      }
-    },
     // 设置第几步
     setStep(state, value) {
       state.step = value
@@ -88,10 +70,6 @@ export const SUPPLY_CHAIN = {
     // 供应链存储-草稿数据
     setSupplyDraftChain({ commit }, value) {
       commit("setSupplyDraftChain", value)
-    },
-    // 供应链存储-详情数据
-    setSupplyDetailsChain({ commit }, value) {
-      commit("setSupplyDetailsChain", value)
     },
     // 设置第几步
     setStep({ commit }, value) {
