@@ -2103,7 +2103,7 @@ const draftDataReview = () => {
             draftData.form = draftData.form;
         }
   }else{
-    draftData.form = {}
+    draftData = {}
   }
   console.log('draftData------------------------------------------------',draftData);
   // 判断是否为空对象
