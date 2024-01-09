@@ -209,89 +209,9 @@
             </template>
             <!-- body -->
             <template #default>
-                <!--廉洁承诺书 -->
-                <div class="promise-book">
-                    <div class="promise-book-title">
-                        <img
-                            src="../../../assets/images/supply-chain/promise_modal.png"
-                            alt="" />
-                        <span>廉洁承诺书</span>
-                    </div>
-                    <ul>
-                        <li>
-                            1.
-                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
-                            上述“保密信息”包括但不限于：
-                        </li>
-                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
-                        <li>
-                            (2)
-                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
-                        </li>
-                        <li>
-                            (3)
-                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
-                        </li>
-                        <li>
-                            (4)
-                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
-                        </li>
-                        <li>
-                            (5)
-                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
-                        </li>
-                        <li>
-                            (6)
-                            双方在合作项目中形成的任何配方、技术、数据、知识产权、研发资料、信息等；
-                        </li>
-                        <li>
-                            (7)
-                            披露方的市场研究结果、市场渗透资料、市场调研数据、市场销售计划、市场销售策略及其他所有市场及销售信息；
-                        </li>
-                        <li>
-                            (8)
-                            披露方专有的任何带有“绝密”、“机密”、“秘密”、“商密”等字样或标示为保密的文件，以及披露方的各项规章制度；
-                        </li>
-                        <li>
-                            (9)
-                            协议披露方为进行合作事项而达成的任何合同、协议、约定或在进行合作事项过程中产生的任何笔记、会议纪要、会谈记录等；
-                        </li>
-                        <li>(10) 其他披露方向接收方披露的信息。</li>
-                    </ul>
-                </div>
+                <HonestPage />
                 <!--保密和不竞争协议 -->
-                <div class="promise-book">
-                    <div class="promise-book-title">
-                        <img
-                            src="../../../assets/images/supply-chain/promise_modal.png"
-                            alt="" />
-                        <span>保密和不竞争协议</span>
-                    </div>
-                    <ul>
-                        <li>
-                            1.
-                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
-                            上述“保密信息”包括但不限于：
-                        </li>
-                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
-                        <li>
-                            (2)
-                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
-                        </li>
-                        <li>
-                            (3)
-                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
-                        </li>
-                        <li>
-                            (4)
-                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
-                        </li>
-                        <li>
-                            (5)
-                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
-                        </li>
-                    </ul>
-                </div>
+                <SecrecyNotCompete />
             </template>
             <!-- footer -->
             <template #footer>
@@ -330,6 +250,11 @@ import BasicInfo from "./basic-info.vue";
 import MaterialList from "./material-list.vue";
 // 成功页
 import Successful from "./successful.vue";
+// 廉洁承诺书
+import HonestPage from './components/honest-page.vue';
+// 保密和不竞争
+import SecrecyNotCompete from './components/secrecy-not-compete.vue';
+
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const user = Core.Data.getUser() || {};
@@ -521,34 +446,35 @@ const getDetail = () => {
                 if (DETAILS) {
                     if (Object.keys(DETAILS).length > 0) {
                         // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
-                        if(DETAILS?.form){
+                        if (DETAILS?.form) {
                             let type = typeof DETAILS.form;
-                            if(type === 'string'){
-                                DETAILS.form = JSON.parse(DETAILS.form)
+                            if (type === "string") {
+                                DETAILS.form = JSON.parse(DETAILS.form);
                             }
-                            if(type === 'object'){
-                                DETAILS.form = DETAILS.form
+                            if (type === "object") {
+                                DETAILS.form = DETAILS.form;
                             }
-                        }else{
-                            DETAILS.form = {}
+                        } else {
+                            DETAILS.form = {};
                         }
-                        if(Object.keys($store.state.SUPPLY_CHAIN.supplyDraftChain).length > 0){
-                            DETAILS = Object.assign(DETAILS, $store.state.SUPPLY_CHAIN.supplyDraftChain);
+                        if (
+                            Object.keys(
+                                $store.state.SUPPLY_CHAIN.supplyDraftChain
+                            ).length > 0
+                        ) {
+                            DETAILS = Object.assign(
+                                DETAILS,
+                                $store.state.SUPPLY_CHAIN.supplyDraftChain
+                            );
                         }
                         let data = DETAILS;
                         console.log("data:", data);
                         // 存储到草稿数据
-                        $store.commit(
-                            "SUPPLY_CHAIN/setSupplyDraftChain",
-                            data
-                        );
+                        $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
                         // 如果已经提交了
                         Object.keys(DETAILS.form).length > 0
                             ? $store.commit("SUPPLY_CHAIN/setSubmitEd", true)
-                            : $store.commit(
-                                  "SUPPLY_CHAIN/setSubmitEd",
-                                  false
-                              );
+                            : $store.commit("SUPPLY_CHAIN/setSubmitEd", false);
                     } else {
                         // 如果没有提交
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
