@@ -123,7 +123,7 @@
             </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
-                <div class="setp-bar" >
+                <div class="setp-bar" v-if="setp !== 2">
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -138,60 +138,14 @@
                         </div>
                     </template>
                 </div>
-                <!-- <div class="submited" v-else-if="isSubmited && !submitSuccess">
-                    <div class="main-content">
-                        <div class="tips">
-                            <img
-                                src="../../../assets/images/supply-chain/audit.png"
-                                alt="" />
-                            <span>{{
-                                $t(
-                                    "supply-chain.data_submitted_please_wait_for_review"
-                                )
-                            }}</span>
-                        </div>
-                        <div class="sub_tips">
-                            {{
-                                $t(
-                                    "supply-chain.before_the_audit_is_completed_you_can_always_supplement_the_data"
-                                )
-                            }}
-                        </div>
-                    </div>
-                </div> -->
                 <div class="content-main">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
+                    <Successful v-else-if="setp === 2" />
                 </div>
-                <div class="submit-success" v-if="submitSuccess">
-                    <div class="container">
-                        <div class="icon">
-                            <img
-                                class="icon-img"
-                                src="../../../assets//images/supply-chain/suceess.png"
-                                alt="" />
-                        </div>
-                        <div class="title">
-                            {{
-                                $t(
-                                    "supply-chain.information_submitted_successfully"
-                                )
-                            }}
-                        </div>
-
-                        <div class="btn" @click="onBtn">
-                            <a-button>{{
-                                $t("supply-chain.view_or_edit_data")
-                            }}</a-button>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    class="supply-chain-footer"
-                    v-if="!submitSuccess"
-                >
+                <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -255,89 +209,9 @@
             </template>
             <!-- body -->
             <template #default>
-                <!--廉洁承诺书 -->
-                <div class="promise-book">
-                    <div class="promise-book-title">
-                        <img
-                            src="../../../assets/images/supply-chain/promise_modal.png"
-                            alt="" />
-                        <span>廉洁承诺书</span>
-                    </div>
-                    <ul>
-                        <li>
-                            1.
-                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
-                            上述“保密信息”包括但不限于：
-                        </li>
-                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
-                        <li>
-                            (2)
-                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
-                        </li>
-                        <li>
-                            (3)
-                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
-                        </li>
-                        <li>
-                            (4)
-                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
-                        </li>
-                        <li>
-                            (5)
-                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
-                        </li>
-                        <li>
-                            (6)
-                            双方在合作项目中形成的任何配方、技术、数据、知识产权、研发资料、信息等；
-                        </li>
-                        <li>
-                            (7)
-                            披露方的市场研究结果、市场渗透资料、市场调研数据、市场销售计划、市场销售策略及其他所有市场及销售信息；
-                        </li>
-                        <li>
-                            (8)
-                            披露方专有的任何带有“绝密”、“机密”、“秘密”、“商密”等字样或标示为保密的文件，以及披露方的各项规章制度；
-                        </li>
-                        <li>
-                            (9)
-                            协议披露方为进行合作事项而达成的任何合同、协议、约定或在进行合作事项过程中产生的任何笔记、会议纪要、会谈记录等；
-                        </li>
-                        <li>(10) 其他披露方向接收方披露的信息。</li>
-                    </ul>
-                </div>
+                <HonestPage />
                 <!--保密和不竞争协议 -->
-                <div class="promise-book">
-                    <div class="promise-book-title">
-                        <img
-                            src="../../../assets/images/supply-chain/promise_modal.png"
-                            alt="" />
-                        <span>保密和不竞争协议</span>
-                    </div>
-                    <ul>
-                        <li>
-                            1.
-                            “保密信息”指：披露方或其代表通过任何形式(包括但不限于口头、书面、邮件、传真、QQ、微信、短信、演示等任何方式)、任何载体(包括但不限于文字、数据、电子数据、符号、图形、胶片、图表、图像、视频和音频、计算机媒介和网络等为载体)披露给接收方的有关各自业务、技术和产品等各方面的资料、信息和商业信息等，无论是否记载或标注为保密信息。
-                            上述“保密信息”包括但不限于：
-                        </li>
-                        <li>(1) 双方合作的事实、内容、经过及结果；</li>
-                        <li>
-                            (2)
-                            涉及披露方发展战略及规划、生产经营、业务、人事、资产、财务、客户、技术等相关的任何数据、报表、图幅、报告、信息、资料等；
-                        </li>
-                        <li>
-                            (3)
-                            披露方的产品及相关资料或信息，包括但不限于产品工艺、设计研发资料、产品数据、包装技术规格书、生产质量要求、BOM清单、披露方客户信息、披露方及关联公司及客户的技术信息、经营信息、图纸、计划、规格、方法、标准、材料的定价等；
-                        </li>
-                        <li>
-                            (4)
-                            披露方现有研发和技术秘密及配方方案、产品原料及供应商、客户、合作方等信息；
-                        </li>
-                        <li>
-                            (5)
-                            披露方已经获得或正在申请的知识产权项下的任何信息，或其他未公开的技术诀窍；
-                        </li>
-                    </ul>
-                </div>
+                <SecrecyNotCompete />
             </template>
             <!-- footer -->
             <template #footer>
@@ -374,6 +248,13 @@ import { message } from "ant-design-vue";
 import BasicInfo from "./basic-info.vue";
 // 材料清单
 import MaterialList from "./material-list.vue";
+// 成功页
+import Successful from "./successful.vue";
+// 廉洁承诺书
+import HonestPage from './components/honest-page.vue';
+// 保密和不竞争
+import SecrecyNotCompete from './components/secrecy-not-compete.vue';
+
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
 const user = Core.Data.getUser() || {};
@@ -461,8 +342,6 @@ const form = ref({
     new_password: "",
 });
 const passShow = ref(false);
-// 成功后，是否到最后一步
-const submitSuccess = ref(false);
 // 倒计时
 const countDown = () => {
     if (timer.value) {
@@ -481,35 +360,16 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep")
+    $store.dispatch("SUPPLY_CHAIN/prevStep");
+    MaterialListRef.value && MaterialListRef.value.handlePrev();
 };
 // 下一步
 const handleNext = () => {
-    // if ($store.getters["SUPPLY_CHAIN/SETP"] === 0) {
-    BasicInfoRef.value.step1Vaild().then(() => {
-        // 提交给下一步
-        // handleSubmitData();
-
-        // 保存草稿
-        // BasicInfoRef.value && BasicInfoRef.value.saveDraft1();
-
-        let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
-        let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        let supplyDetailsChain_data =
-            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
-        //存储到草稿和详情数据
-        $store.commit(
-            "SUPPLY_CHAIN/setSupplyDetailsChain",
-            Object.assign(supplyDetailsChain_data, supplyChain_data)
-        );
-        $store.commit(
-            "SUPPLY_CHAIN/setSupplyDraftChain",
-            Object.assign(supplyDraftChain_data, supplyChain_data)
-        );
-
-        // 下一步
-        $store.dispatch("SUPPLY_CHAIN/nextStep");
-    });
+    BasicInfoRef.value &&
+        BasicInfoRef.value.step1Vaild().then(() => {
+            // 下一步
+            $store.dispatch("SUPPLY_CHAIN/nextStep");
+        });
     //  }
 };
 // 保存草稿
@@ -540,13 +400,7 @@ const handleSubmitOk = () => {
     MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        let supplyDetailsChain_data =
-            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
-        //存储到草稿和详情数据
-        $store.dispatch(
-            "SUPPLY_CHAIN/setSupplyDetailsChain",
-            Object.assign(supplyDetailsChain_data, supplyChain_data)
-        );
+
         $store.dispatch(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
@@ -573,9 +427,9 @@ const handleSubmitData = () => {
         .then((res) => {
             visible.value = false;
             // 获取详情数据
-            getDetail();
-            // 成功状态
-            submitSuccess.value = true;
+            getDetail().then(() => {
+                $store.dispatch("SUPPLY_CHAIN/nextStep");
+            });
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
@@ -583,40 +437,58 @@ const handleSubmitData = () => {
 };
 // 获取详情
 const getDetail = () => {
+    console.log("获取详情中---------------------------");
     return new Promise((resolve, reject) => {
         Core.Api.SUPPLY.adminDetail({})
             .then((res) => {
-                let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
+                let DETAILS = {};
                 DETAILS = res?.detail ?? null;
-                console.log(
-                    "详情----------------------------------------:",
-                    DETAILS
-                );
                 if (DETAILS) {
-                    DETAILS.form = JSON.parse(DETAILS.form);
-                    $store.dispatch(
-                        "SUPPLY_CHAIN/setSupplyDetailsChain",
-                        DETAILS
-                    );
                     if (Object.keys(DETAILS).length > 0) {
+                        // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
+                        if (DETAILS?.form) {
+                            let type = typeof DETAILS.form;
+                            if (type === "string") {
+                                DETAILS.form = JSON.parse(DETAILS.form);
+                            }
+                            if (type === "object") {
+                                DETAILS.form = DETAILS.form;
+                            }
+                        } else {
+                            DETAILS.form = {};
+                        }
+                        if (
+                            Object.keys(
+                                $store.state.SUPPLY_CHAIN.supplyDraftChain
+                            ).length > 0
+                        ) {
+                            DETAILS = Object.assign(
+                                DETAILS,
+                                $store.state.SUPPLY_CHAIN.supplyDraftChain
+                            );
+                        }
+                        let data = DETAILS;
+                        console.log("data:", data);
+                        // 存储到草稿数据
+                        $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
                         // 如果已经提交了
-                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+                        Object.keys(DETAILS.form).length > 0
+                            ? $store.commit("SUPPLY_CHAIN/setSubmitEd", true)
+                            : $store.commit("SUPPLY_CHAIN/setSubmitEd", false);
                     } else {
                         // 如果没有提交
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                     }
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
                     $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                 }
                 resolve();
             })
             .catch((err) => {
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
                 $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
-
                 reject();
             });
     });
@@ -644,6 +516,7 @@ const handleEditShow = () => {
 const handleLogout = () => {
     $router.replace("/login");
     localStorage.clear();
+    $store.dispatch("SUPPLY_CHAIN/clearAll");
     Core.Api.Common.logout();
 };
 const handleEditSubmit = () => {
@@ -673,19 +546,6 @@ const handleEditSubmit = () => {
         });
 };
 
-// 跳转
-const onBtn = async () => {
-    // 查看当前在第几页
-    const step = $store.getters["SUPPLY_CHAIN/SETP"];
-    if (step == 0) {
-        submitSuccess.value = false;
-    } else {
-        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(() => {
-            submitSuccess.value = false;
-        });
-    }
-};
-
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
@@ -700,31 +560,26 @@ watch(
         immediate: true,
     }
 );
-// 监听步数
+// 监听是否在第一页
 watch(
-    () => setpCount.value,
+    () => setp.value,
     (val) => {
-        // 如果是第二页，则跳转到第一
         if (val == 0) {
             getDetail().then(() => {
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
-            });   
+            });
         }
-    },
-    {
-        deep: true,
     }
 );
 
-
 const timer1 = ref(null);
 onMounted(() => {
-    if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
-        // 如果是第二页，则跳转到第一
-        $store.dispatch("SUPPLY_CHAIN/setStep", 0);
-    }
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
+        // // 如果已经提交了
+        if (isSubmited.value) {
+            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
+        }
     });
 });
 // beforeDestroy
@@ -855,38 +710,9 @@ onBeforeUnmount(() => {
         .ant-layout-content {
             flex: 1;
             padding: 20px 40px;
-            position: relative;
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            // .submited {
-            //     width: 100%;
-            //     height: 121px;
-            //     background-color: #fff;
-            //     margin-top: 20px;
-            //     padding: 20px;
-            //     .main-content {
-            //         height: 100%;
-            //         background-color: rgba(0, 97, 255, 0.05);
-            //         display: flex;
-            //         flex-direction: column;
-            //         justify-content: space-between;
-            //         padding: 16px;
-            //         .tips {
-            //             display: flex;
-            //             align-items: center;
-            //             color: #165dff;
-            //             font-size: 18px;
-            //             font-weight: 500;
-            //             img {
-            //                 margin-right: 4px;
-            //             }
-            //         }
-            //         .sub_tips {
-            //             color: #666;
-            //         }
-            //     }
-            // }
             .setp-bar {
                 display: flex;
                 height: 52px;
@@ -929,49 +755,7 @@ onBeforeUnmount(() => {
                     background: #fff;
                 }
             }
-            .submit-success {
-                flex: 1;
-                background-color: #fff;
-                background: #fff;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                position: absolute;
-                top: 20px;
-                right: 40px;
-                bottom: 20px;
-                left: 40px;
-                width: calc(100% - 80px);
-                height: calc(100% - 40px);
-                .container {
-                    .icon {
-                        .icon-img {
-                            width: 101px;
-                            height: 77px;
-                        }
-                    }
-                    .title {
-                        color: #26ab54;
-                        font-size: 18px;
-                        font-weight: 500;
-                        line-height: 22px; /* 122.222% */
-                    }
-                    .sub-title {
-                        margin-top: 5px;
-                        color: #666;
-                        font-size: 12px;
-                        font-weight: 400;
-                        line-height: 22px; /* 183.333% */
-                        .timing {
-                            color: #26ab54;
-                        }
-                    }
-                    .btn {
-                        margin-top: 16px;
-                    }
-                }
-            }
+
             .supply-chain-footer {
                 min-height: 68px;
                 width: calc(100%);

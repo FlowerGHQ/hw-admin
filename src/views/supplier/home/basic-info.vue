@@ -892,29 +892,38 @@
                                         <template
                                             v-if="column.type === 'input'"
                                         >
-                                            <a-input 
-                                                v-model:value="record[column.dataIndex]"
-                                                :placeholder="$t('def.input')"
-                                            />
+                                            <!-- `${column.dataIndex}+${index}` -->
+                                            <a-form-item :name="column.dataIndex">
+                                                <a-input  :name="column.dataIndex"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.type === 'input-num'"
                                         >
-                                            <a-input-number
-                                                v-model:value="record[column.dataIndex]"
-                                                :placeholder="$t('def.input')"
-                                                :min="0"
-                                                :max="1000000000"
-                                            >
-                                                <template #addonAfter v-if="column.unit">
-                                                    <span class="l-w-h-style">{{ column.unit }}</span>
-                                                </template>
-                                            </a-input-number>
+                                            <a-form-item :name="column.dataIndex">
+                                                <a-input-number  :name="column.dataIndex"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                    :min="0"
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
+                                                    </template>
+                                                </a-input-number>
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.type === 'time'"
                                         >
-                                            <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                            <a-form-item :name="column.dataIndex">
+                                                <span :name="column.dataIndex">
+                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                </span>
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.dataIndex === 'operation'"
@@ -1837,7 +1846,6 @@ let BusinessTermValid = async (_rule, value) => {
 };
 
 let companyVaild = async (_rule, value) => {
-    console.log('_rule, value0111111',_rule,'value', value);
     let dataBoo = false;
     if(!_rule.required) {
         return Promise.resolve();
@@ -1871,6 +1879,9 @@ let companyVaild = async (_rule, value) => {
                 }
             })
             break;
+        case 'taxes_paid':        // 纳税额
+            dataBoo = findItemIsNoneFromList('business_info' , 'taxes_paid');
+            break;
             
     }
     if(dataBoo) return Promise.reject(
@@ -1897,7 +1908,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             break;
             
         case 'date_establishment': //成立日期
-            console.log('date_establishment111',formState.company_info?.established_time);
             if(!formState.company_info?.established_time){
                 dataBoo = true;
             }
@@ -1918,7 +1928,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             }
             break;
         case 'duration_of_agency': // 代理有效期间
-            console.log('00000000','duration_of_agency',formState.agent_info);
             if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
                 dataBoo = true;
             }
@@ -1932,12 +1941,76 @@ let flagLegalDisputeValid =  async (_rule, value) => {
 };
 
 
+const findItemIsNoneWrite = (parObjkey , key) => {
+    let boo = false;
+    formState[parObjkey].forEach((item,index)=>{
+        if(!item[key]) boo = true;
+    })
+    return boo;
+}
+const findItemIsNoneFromList = (parObjkey , key) => {
+    let boo = false;
+    formState[parObjkey]['list'].forEach((item,index)=>{
+        if(!item[key]) boo = true;
+    })
+    return boo;
+}
 
-let account_nameVaild = async (_rule, value) => {
-  if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_account_name"));
-  }
-  return Promise.resolve();
+
+let tableVaild = async (_rule, value) => {
+  console.log('_rule, value------tableVaild',_rule, value);
+  let dataBoo = false;
+    if(!_rule.required) {
+        return Promise.resolve();
+    }
+    switch(_rule.fullField){
+
+        case 'customer_name': // 客户名称
+            dataBoo = findItemIsNoneWrite('customer_info' , 'customer_name')
+            break;
+        case 'sales_share': // 销售占比
+            dataBoo = findItemIsNoneWrite('customer_info' , 'sales_share')
+            break;
+        case 'main_supply_part': // 主供零件
+            dataBoo = findItemIsNoneWrite('customer_info' , 'main_supply_part')
+            break;
+        case 'begin_cooperation_time': // 开始合作时间
+            dataBoo = findItemIsNoneWrite('customer_info' , 'begin_cooperation_time')
+            break;
+            
+        /* case 'date_establishment': //成立日期
+            console.log('date_establishment111',formState.company_info?.established_time);
+            if(!formState.company_info?.established_time){
+                dataBoo = true;
+            }
+            break; 
+        case 'period_requirement':  // 账期要求
+            if (!formState.financial_info?.account_period_requirement) {
+                dataBoo = true;
+            }
+            break;
+        case 'Invoice_type': // 开具发票
+            if (!formState.financial_info?.invoice_type) {
+                dataBoo = true;
+            }
+            break;
+        case 'proxy_warrant': // 代理权证
+            if ((!formState.agent_info?.flag_agent_warrant) && formState.type===2) {
+                dataBoo = true;
+            }
+            break;
+        case 'duration_of_agency': // 代理有效期间
+            console.log('00000000','duration_of_agency',formState.agent_info);
+            if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
+                dataBoo = true;
+            }
+            break; */
+            
+    }
+    if(dataBoo) return Promise.reject(
+        $t("supply-chain.please_fill_form") //请填写表单
+    );
+    return Promise.resolve();
 };
 let account_with_bankVaild = async (_rule, value) => {
   if (!value) {
@@ -2051,66 +2124,109 @@ const rules = ref({
           trigger: ["change", "blur"],
       },
   ],
-  // 代理权证
-  proxy_warrant: [
-      {
-          required: true,
-          validator: flagLegalDisputeValid,
-          trigger: ["change", "blur"],
-      },
-  ],
- // 代理有效期间
- duration_of_agency: [
-    {
-        required: true,
-        validator: flagLegalDisputeValid,
-        trigger: ["change", "blur"],
-    },
-  ],
-//  业务比重
-  proportion_of_business: [
-      {
-          required: true,
-          validator: companyVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
-//  销售额
-sales: [
-      {
-          required: true,
-          validator: companyVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
-//   客户信息
-/*   customer_info_list_column: [
-
-    {
-          required: true,
-          validator: companyVaild,
-          trigger: ["change", "blur"],
-      },
-  ], */
-
+  
 });
+const rulesOther = ref({
+    // 代理权证
+    proxy_warrant: [
+        {
+            required: true,
+            validator: flagLegalDisputeValid,
+            trigger: ["change", "blur"],
+        },
+    ],
+    // 代理有效期间
+    duration_of_agency: [
+        {
+            required: true,
+            validator: flagLegalDisputeValid,
+            trigger: ["change", "blur"],
+        },
+    ],
+    //  业务比重
+    proportion_of_business: [
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    //  销售额
+    sales: [
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    // 纳税额
+    taxes_paid: [
+      {
+          required: true,
+          validator: companyVaild,
+          trigger: ["change", "blur"],
+      },
+    ],
+    // 客户信息
+    // 客户名称
+    customer_name: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+
+    sales_share: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    main_supply_part: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    begin_cooperation_time: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+})
 
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-  // 判断是否为空对象
-  if (Object.keys(draftData).length !== 0){
-      // 解析出来的数据
-      let data = draftData;
-      Object.keys(data ?? {}).forEach((key) => {
-        if(key === 'form'){
-         for (const iterator of  Object.keys(data[key])) {
-            formState[iterator] = data[key][iterator]
-         }
-        }else {
-          formState[key] = data[key];
+  if(draftData?.form){
+        let type = typeof(draftData.form);
+        if(type === 'string') {
+            draftData.form = JSON.parse(draftData.form);
+        }else{
+            draftData.form = draftData.form;
         }
-      });
+  }else{
+    draftData = {}
+  }
+  // 判断是否为空对象
+  if (Object.keys(draftData).length === 0) {
+      console.log('空对象','详情回显');
+  } else {
+        Object.keys(draftData).forEach((key) => {
+            if(key === 'form'){
+                for (const iterator of  Object.keys(draftData[key])) {
+                    formState[iterator] = draftData[key][iterator] //die9
+                }
+            }else {
+                formState[key] = draftData[key];
+            }
+        });
+      
   }
     setTimeout(() => {
         if (TimeSearchRef.value) {
@@ -2122,39 +2238,11 @@ const draftDataReview = () => {
         }
     });
 };
-
 // 判断哪些类型显示哪些模块
 const returnTypeBool = (type, typeIncludes) => {    
     let result = typeIncludes.includes(Number(type))   
     return result
 }
-// 详情回显
-const detailDataReview = () => {
-  let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
-  // 判断是否为空对象
-  if (Object.keys(detailData).length !== 0){
-      // 解析出来的数据
-      let data = detailData;
-      Object.keys(data??{}).forEach((key) => {
-        if(key === 'form'){
-            for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator] 
-            }
-        }else {
-            formState[key] = data[key];
-        }
-      });
-  }
-    setTimeout(() => {
-        if (TimeSearchRef.value) {
-            // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.agent_info.agent_effective_begin_time,
-                formState.agent_info.agent_effective_end_time,
-            ];
-        }
-    });
-};
 // 代理有效期间
 const handleTimeSearch = (params) => {
     formState.agent_info.agent_effective_begin_time = params.begin_time;
@@ -2173,7 +2261,6 @@ const step1Vaild = () => {
       Promise.all([form1Promise, form2Promise, form3Promise]).then(([res1, res2, res3]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
-            console.log('res1, res2, res31111111',res1, res2, res3);
             if (res1 && res2 && res3) {
                 let data = $store.state.SUPPLY_CHAIN.supplyChain;
                   // 判断是否为空对象
@@ -2212,20 +2299,18 @@ const step1Vaild = () => {
                         }
                     }) 
                   }*/
-                  console.log('0000000000000000000');
                   // 保存数据
                   $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
             }
         }).catch(err => {  
             // 至少有一个 Promise 失败  
             // 处理错误...  
               // 校验失败
-              console.log('err111',err);
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
               if (!errorName) return;
-              console.log('errorName111',errorName);
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
               errorDom.scrollIntoView({
@@ -2266,7 +2351,8 @@ const step1Vaild = () => {
                       }
                   }
                   // 保存数据
-                  $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
               }
           })
@@ -2289,51 +2375,24 @@ const step1Vaild = () => {
 // 保存草稿
 const saveDraft1 = () => {
   // 获取数据
-  let data = $store.state.SUPPLY_CHAIN.supplyDraftChain;
   // 判断是否为空对象
-  if (Object.keys(data).length === 0) {
       // 为空对象
-      data = {
-          type: formState.type,
-          position: formState.position,
-          company_name: formState.company_info?.name,
-          form: {
-            ...formState
-          }
-      };
-  } else {
-      // 不为空对象
-      data = {
-        ...data,
+    let data = {
         type: formState.type,
         position: formState.position,
         company_name: formState.company_info?.name,
         form: {
-          ...formState
+            ...formState
         }
-      }
-  }
-  if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
-    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data)
-  }
+    };
   // 保存数据
   $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
-
   // 提示
   message.success($t("supply-chain.save_successfully"));
 };
 // 回显数据
 const reviewData = () => {
-  // 判断是否已经提交过了
-  /* let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-  if (isSubmit) {
-      // 已经提交过了
-      detailDataReview();
-  } else {
-      // 没有提交过
-      draftDataReview();
-  } */
-      draftDataReview();
+    draftDataReview();
 };
 // 删除某一项
 const handleDelete = (list , data, title , key ) => {
@@ -2395,8 +2454,12 @@ watch(
 );
 watch(()=>formState.type ,
     (newval,oldval)=>{
-
+        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
+        rules.value = {
+            ...rules.value, ...rulesOther.value 
+        } 
         if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
+            console.log('pppppppppppppppppppppppp');
             // 业务比重
             rules.value.proportion_of_business[0].required = true;
             // 代理有效期间
@@ -2407,7 +2470,7 @@ watch(()=>formState.type ,
             // 销售额
             rules.value.sales[0].required = true;
         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
-
+ 
             
         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
             // 销售额
@@ -2602,6 +2665,11 @@ onMounted(() => {
       }
 }
 
+.form-content-item-table {
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
+}
 .spec-add {
     margin: 16px auto 40px;
 }

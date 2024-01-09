@@ -37,8 +37,10 @@ export default {
     registered_capital: "注册资本",
     // 请输入
     please_enter: "请输入",
-        // 请选择
-        please_select: "请选择",
+    // 请选择
+    please_select: "请选择",
+    // 请填写表格
+    please_fill_form: "请填写表格",
     // 请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张
     please_upload: "请上传2M内的相关图片，支持JPG/JPEG/PNG，最多上传9张",
     // 法定代表人
@@ -95,10 +97,10 @@ export default {
     please_enter_bank_account: "请输入银行账号",
     // 开户行号必须为数字
     bank_number_must_be_number: "开户行号必须为数字",
-        // 请选择职业
-        please_select_position: "请选择职业",
-        // 请填写姓名
-        // please_select_name: "请输入姓名",
+    // 请选择职业
+    please_select_position: "请选择职业",
+    // 请填写姓名
+    // please_select_name: "请输入姓名",
     sales: "销售",
     quality: "质量",
     technology: "技术",
@@ -295,8 +297,10 @@ export default {
     registered_capital: "Registered Capital",
     // q请输入
     please_enter: "Please enter",
-        // 请选择
-        please_select: "please Select",
+    // 请选择
+    please_select: "please Select",
+    // 请填写表格
+    please_fill_form: "Please Fill Out The Form",
     // 请上传2M内的相关图片，支持JPG/JPNG/PNG，最多上传9张
     please_upload:
       "Please upload 2M within the relevant pictures, support JPG/JPEG/PNG, up to 9",
