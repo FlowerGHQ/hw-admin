@@ -53,6 +53,8 @@ export const SUPPLY_CHAIN = {
     // 供应链存储-详情数据
     setSupplyDetailsChain(state, value) {
       state.supplyDetailsChain = value
+
+
       // 判断是否为json
       if (typeof value == "object") {
         Core.Data.setSupplyDetailsChain(JSON.stringify(value))

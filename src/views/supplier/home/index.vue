@@ -122,7 +122,8 @@
                 </div>
             </a-layout-header>
             <a-layout-content>
-                <div class="setp-bar">
+                <!-- 已经上传并且没走到成功那一步 -->
+                <div class="setp-bar" >
                     <template v-for="(item, index) in setpObject" :key="index">
                         <div
                             class="setp-base-style setp-text"
@@ -158,13 +159,13 @@
                         </div>
                     </div>
                 </div> -->
-                <div class="content-main" v-if="!submitSuccess">
+                <div class="content-main">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
                 </div>
-                <div class="submit-success" v-else>
+                <div class="submit-success" v-if="submitSuccess">
                     <div class="container">
                         <div class="icon">
                             <img
@@ -179,17 +180,18 @@
                                 )
                             }}
                         </div>
-                        <div class="sub-title">
-                            {{ $t("supply-chain.tips1") }}
-                            <span class="timing">{{ count }}s</span>
-                            {{ $t("supply-chain.tips2") }}
-                        </div>
+
                         <div class="btn" @click="onBtn">
-                            <a-button>{{ $t("supply-chain.back") }}</a-button>
+                            <a-button>{{
+                                $t("supply-chain.view_or_edit_data")
+                            }}</a-button>
                         </div>
                     </div>
                 </div>
-                <div class="supply-chain-footer" v-if="!submitSuccess">
+                <div
+                    class="supply-chain-footer"
+                    v-if="!submitSuccess"
+                >
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -361,7 +363,7 @@
 
 <script setup>
 import Core from "@/core";
-import { computed, ref, onMounted, watch } from "vue";
+import { computed, ref, onMounted, watch, onBeforeUnmount } from "vue";
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
@@ -444,7 +446,6 @@ const setpObject = computed(() => {
 });
 // 是否已经提交
 const isSubmited = computed(() => {
-    console.log("isSubmitEd", $store.getters["SUPPLY_CHAIN/isSubmitEd"]);
     return $store.getters["SUPPLY_CHAIN/isSubmitEd"];
 });
 
@@ -460,17 +461,15 @@ const form = ref({
     new_password: "",
 });
 const passShow = ref(false);
-// 成功后
+// 成功后，是否到最后一步
 const submitSuccess = ref(false);
-const count = ref(3);
-const countTimer = ref(null);
 // 倒计时
 const countDown = () => {
-    if (timer) {
-        clearTimeout(timer);
-        timer = null;
+    if (timer.value) {
+        clearTimeout(timer.value);
+        timer.value = null;
     }
-    timer = setTimeout(() => {
+    timer.value = setTimeout(() => {
         if (countTime.value > 0) {
             // 如果倒计时还没结束，则继续
             countTime.value--; // 倒计时时间减一
@@ -482,7 +481,7 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep");
+    $store.dispatch("SUPPLY_CHAIN/prevStep")
 };
 // 下一步
 const handleNext = () => {
@@ -499,11 +498,11 @@ const handleNext = () => {
         let supplyDetailsChain_data =
             $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
         //存储到草稿和详情数据
-        $store.dispatch(
+        $store.commit(
             "SUPPLY_CHAIN/setSupplyDetailsChain",
             Object.assign(supplyDetailsChain_data, supplyChain_data)
         );
-        $store.dispatch(
+        $store.commit(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
         );
@@ -577,18 +576,6 @@ const handleSubmitData = () => {
             getDetail();
             // 成功状态
             submitSuccess.value = true;
-            // 倒计时
-            count.value = 3;
-            // 开始倒计时
-            countTimer.value = setInterval(() => {
-                if (count.value === 0) {
-                    clearInterval(countTimer.value);
-                    countTimer.value = null;
-                    onBtn();
-                } else {
-                    count.value--;
-                }
-            }, 1000);
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
@@ -596,28 +583,43 @@ const handleSubmitData = () => {
 };
 // 获取详情
 const getDetail = () => {
-    Core.Api.SUPPLY.adminDetail({})
-        .then((res) => {
-            let DETAILS = {};
-            DETAILS = res?.detail ?? null;
-            if (DETAILS) {
-                DETAILS.form = JSON.parse(DETAILS.form);
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", DETAILS);
-                if (Object.keys(DETAILS).length > 0) {
-                    // 如果已经提交了
-                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+    return new Promise((resolve, reject) => {
+        Core.Api.SUPPLY.adminDetail({})
+            .then((res) => {
+                let DETAILS = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
+                DETAILS = res?.detail ?? null;
+                console.log(
+                    "详情----------------------------------------:",
+                    DETAILS
+                );
+                if (DETAILS) {
+                    DETAILS.form = JSON.parse(DETAILS.form);
+                    $store.dispatch(
+                        "SUPPLY_CHAIN/setSupplyDetailsChain",
+                        DETAILS
+                    );
+                    if (Object.keys(DETAILS).length > 0) {
+                        // 如果已经提交了
+                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
+                    } else {
+                        // 如果没有提交
+                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                    }
                 } else {
                     // 如果没有提交
                     $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
+                    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
+                    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
                 }
-            } else {
-                // 如果没有提交
-                $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-            }
-        })
-        .catch((err) => {
-            $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
-        });
+                resolve();
+            })
+            .catch((err) => {
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", {});
+                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
+
+                reject();
+            });
+    });
 };
 // 打开弹框
 // 打开
@@ -672,16 +674,22 @@ const handleEditSubmit = () => {
 };
 
 // 跳转
-const onBtn = () => {
-    submitSuccess.value = false;
-    $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+const onBtn = async () => {
+    // 查看当前在第几页
+    const step = $store.getters["SUPPLY_CHAIN/SETP"];
+    if (step == 0) {
+        submitSuccess.value = false;
+    } else {
+        $store.dispatch("SUPPLY_CHAIN/setStep", 0).then(() => {
+            submitSuccess.value = false;
+        });
+    }
 };
 
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
     (val) => {
-        console.log("visible.value", val);
         // 如果打开了并且倒计时不为0，则开始倒计时
         if (val && countTime.value != 0) {
             countTime.value = 30;
@@ -692,28 +700,39 @@ watch(
         immediate: true,
     }
 );
-// 监听页面是否为第一页
+// 监听步数
 watch(
-    () => setp.value,
+    () => setpCount.value,
     (val) => {
-        console.log("setp.value------------", val);
-        // 如果是第一页，则获取详情
+        // 如果是第二页，则跳转到第一
         if (val == 0) {
-            getDetail();
+            getDetail().then(() => {
+                BasicInfoRef.value && BasicInfoRef.value.reviewData();
+            });   
         }
     },
     {
         deep: true,
-        immediate: true,
     }
 );
 
+
+const timer1 = ref(null);
 onMounted(() => {
-    getDetail();
     if ($store.getters["SUPPLY_CHAIN/SETP"] == 1) {
         // 如果是第二页，则跳转到第一
         $store.dispatch("SUPPLY_CHAIN/setStep", 0);
     }
+    getDetail().then(() => {
+        BasicInfoRef.value && BasicInfoRef.value.reviewData();
+    });
+});
+// beforeDestroy
+onBeforeUnmount(() => {
+    clearTimeout(timer1.value);
+    timer1.value = null;
+    clearTimeout(timer.value);
+    timer.value = null;
 });
 
 /* methods end*/
@@ -913,12 +932,18 @@ onMounted(() => {
             .submit-success {
                 flex: 1;
                 background-color: #fff;
-                border-radius: 6px;
                 background: #fff;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 text-align: center;
+                position: absolute;
+                top: 20px;
+                right: 40px;
+                bottom: 20px;
+                left: 40px;
+                width: calc(100% - 80px);
+                height: calc(100% - 40px);
                 .container {
                     .icon {
                         .icon-img {

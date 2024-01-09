@@ -21,7 +21,7 @@ export default {
     serial_number: "序号",
     submission_time: "提交时间",
     view: "查看",
-    information_submitted_successfully: "信息提交成功",
+    information_submitted_successfully: "资料提交成功，等待审核中",
     back: "返回",
     tips1: "请等待工作人员审核资质",
     tips2: "后回到首页",
@@ -203,7 +203,7 @@ export default {
     supplementary_information: "补充信息",
     other_advantages_description: "其他优势说明",
     Name_of_production_equipment: "生产设备名称",
-    Specification_and_model: "规格型号",
+    Specification_and_model: "规格型号（含吨位）",
     quantity: "数量",
     Equipment_manufacturer: "设备制造商",
     Purchase_period: "购置年限",
@@ -223,7 +223,7 @@ export default {
     //  已阅读，发送申请
     read_and_send_application: "已阅读，发送申请",
     legal_representative: "法人代表",
-    Human_resources: "人力资源",
+    human_resources: "人力资源",
     agent_information: "代理信息",
     agent_company: "被代理公司",
     proxy_address: "被代理地址",
@@ -243,14 +243,20 @@ export default {
     specify_reason: "指定理由",    
     specify_service: "指定服务",
     wechat_same_number: "微信同号",
+    
     // 公司性质
     private: '民营',
     foreign_owned: '外资',
     state_owned: '国有',
-    // 人力资源
-    human_resources: '人力资源',
+    serial_number: "序号",
+    precision_grade: "精度等级",
+    not_uploaded: "未上传",
+    not_selected: "未选择",        
     // 确定删除此数据吗
-    detele_data_sure: '确定删除此数据吗?'
+    detele_data_sure: '确定删除此数据吗?',
+    design_specifications: '设计规范',
+    // 查看或编辑资料
+    view_or_edit_data: '查看或编辑资料',
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -273,7 +279,7 @@ export default {
     serial_number: "Serial Number",
     submission_time: "Submission Time",
     view: "View",
-    information_submitted_successfully: "Information submitted successfully",
+    information_submitted_successfully: "Information submitted successfully , waiting for audit",
     back: "Back",
     tips1: "Please wait for the staff to review their qualifications",
     tips2: "then go back to the home page",
@@ -453,7 +459,7 @@ export default {
     supplementary_information: "Supplementary information",
     other_advantages_description: "Other advantages description",
     Name_of_production_equipment: "Name of Production Equipment",
-    Specification_and_model: "Specification And Model",
+    Specification_and_model: "Specification And Model (Including tonnage)",
     quantity: "Quantity",
     Equipment_manufacturer: "Equipment Manufacturer",
     Purchase_period: "Purchase Period",
@@ -475,12 +481,15 @@ export default {
     // 公司性质
     private: 'Private',
     foreign_owned: 'foreign Owned',
-    state_owned: 'state Owned',
+    state_owned: 'state Owned',    
     // 人力资源
     human_resources: 'Human Resources',
     // 确定删除此数据吗
     detele_data_sure: 'Are you sure you want to delete this data?',
+    design_specifications: 'Design Specifications',
+
     Human_resources: "Human Resources",
+    detele_data_sure: 'Are you sure you want to delete this data?',    
     agent_information: "Agent Information",
     agent_company: "Agent Company",
     proxy_address: "Proxy Address",
@@ -499,5 +508,10 @@ export default {
     specify_part: "Specify part",
     specify_reason: "Specify a reason",
     specify_service: "Specify service",
+    serial_number: "Serial number",
+    precision_grade: "Precision Grade",
+    not_uploaded: "Not uploaded",
+    not_selected: "Not selected",
+    view_or_edit_data: 'View or edit data',
   },
 }
