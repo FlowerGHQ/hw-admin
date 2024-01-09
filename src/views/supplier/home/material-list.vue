@@ -149,7 +149,7 @@
                         </div>
                         <div class="content-area">
                             <div class="col-area">
-                                <div class="col-area-label">
+                                <div class="col-area-item">
                                     <!-- 开户名 -->
                                     <a-form-item
                                         :label="$t('supply-chain.account_name')"
@@ -166,7 +166,7 @@
                                         </a-input>
                                     </a-form-item>
                                 </div>
-                                <div class="col-area-content">
+                                <div class="col-area-item">
                                     <!-- 开户行 -->
                                     <a-form-item
                                         :label="
@@ -187,7 +187,7 @@
                                 </div>
                             </div>
                             <div class="col-area">
-                                <div class="col-area-label">
+                                <div class="col-area-item">
                                     <!-- 开户行号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_number')"
@@ -204,7 +204,7 @@
                                         </a-input>
                                     </a-form-item>
                                 </div>
-                                <div class="col-area-content">
+                                <div class="col-area-item">
                                     <!-- 银行账号 -->
                                     <a-form-item
                                         :label="$t('supply-chain.bank_account')"
@@ -672,8 +672,7 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            // padding: 8px 10.36% 0 20.78%;
-            width: 60.5%;
+            width:60.5%;
             margin: 0 auto;
         }
     }
@@ -681,7 +680,7 @@ onMounted(() => {
         width: 100%;
         margin-top: 21px;
         .other-material-form {
-            width: calc( 60.5% - 90px - 96px - 178px); // 60.5% - 左边距 - 左边标题 
+            width: calc(60.5%  - 96px - 88px - 96px - 80px) ;
             margin: 0 auto;
         }
     }
@@ -762,7 +761,12 @@ onMounted(() => {
     .col-area{
       flex: 1 !important;
       margin-left: 88px;
-      flex-wrap: wrap;
+      display: flex;
+      align-items:center;
+      flex-wrap:wrap;
+      .col-area-item{
+
+      }
     }
   }
   .title-area{

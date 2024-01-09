@@ -1601,7 +1601,7 @@ export default {
             limit: 10,
             showConfigSet: false,
             configSetMes: {},
-            oldConfigSetMes: {},
+            // oldConfigSetMes: {},
             configIndex: 0,
             uniqueArr: [],
             // 固定盒子宽度
