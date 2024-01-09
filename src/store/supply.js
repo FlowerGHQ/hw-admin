@@ -97,6 +97,14 @@ export const SUPPLY_CHAIN = {
     setSubmitEd({ commit }, value) {
       commit("setSubmitEd", value)
     },
+    // 清空所有数据
+    clearAll({ commit }) {
+      commit("setSupplyChain", {})
+      commit("setSupplyDraftChain", {})
+      commit("setStep", 0)
+      commit("setRead", false)
+      commit("setSubmitEd", false)
+    },
   },
   getters: {
     isSubmitEd: (state) => state.isSubmitEd,
