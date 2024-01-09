@@ -103,30 +103,30 @@
 
 <style lang="less" scoped>
 .promise-book {
-    ul,li{
+    ul,
+    li {
         padding-left: 0;
         list-style: none;
         color: #666;
         line-height: 1.5;
     }
-    .promise-book {
-        padding-bottom: 20px;
-        padding-top: 10px;
-        .promise-book-title {
-            height: 34px;
-            border-radius: 4px;
-            background: #f2f3f5;
-            display: flex;
-            align-items: center;
-            padding: 9px 10px;
-            margin-bottom: 10px;
-            img {
-                margin-right: 4px;
-            }
+    padding-bottom: 30px;
+    padding-top: 10px;
+    .promise-book-title {
+        height: 34px;
+        border-radius: 4px;
+        background: #f2f3f5;
+        display: flex;
+        align-items: center;
+        padding: 9px 10px;
+        margin-bottom: 10px;
+        img {
+            margin-right: 4px;
+            width: 16px;
+            height: 16px;
         }
-      
     }
-    .mt{
+    .mt {
         // 空出一行
         margin-top: 1em;
     }

@@ -253,6 +253,25 @@
                                   </a-form-item>
                               </a-col>
                               <!-- 法人代表 -->
+                              <!-- <a-col :span="12">
+                                  <a-form-item
+                                      :label="$t('supply-chain.legal_representative')"
+                                       name="legal_representative">
+                                       <a-input name="legal_representative" v-model:value="formState.company_info.legal_person" :placeholder="$t('supply-chain.please_enter')" />
+                                  </a-form-item>
+                              </a-col> -->
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col :span="12">
+                                  <!-- 固定资产 -->
+                                  
+                                  <a-form-item
+                                       label="固定资产"
+                                       >
+                                       <a-input v-model:value="formState.company_info.fixed_assets" :placeholder="$t('supply-chain.please_enter')" />
+                                  </a-form-item>
+                              </a-col>
+                              <!-- 法人代表 -->
                               <a-col :span="12">
                                   <a-form-item
                                       :label="$t('supply-chain.legal_representative')"
@@ -336,6 +355,16 @@
                                                     <span class="l-w-h-style">m²</span>
                                                 </template>
                                       </a-input-number>
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing ,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 12 : 0">
+                                  <!-- 经营场所 -->
+                                  <a-form-item
+                                      label="经营场所" >
+                                      
+                                      <a-input v-model:value="formState.company_info.premises" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
                           </a-row>
@@ -696,9 +725,11 @@
                                       <!-- 纳税额 -->
                                       <a-form-item
                                           :label="$t('supply-chain.tax_amount')"
+                                          name="taxes_paid"
                                           >
                                           
                                           <a-input-number
+                                                    name="taxes_paid"
                                                     v-model:value="formState.business_info.list[index].taxes_paid"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
@@ -717,9 +748,11 @@
                                       <!-- 利润率 -->
                                       <a-form-item
                                           :label="$t('supply-chain.profit_rate')"
+                                          name="profit_margin"
                                           >
                                           
                                           <a-input-number
+                                                    name="profit_margin"
                                                     v-model:value="formState.business_info.list[index].profit_margin"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
@@ -737,10 +770,12 @@
                                     
                                       <!-- 资产负债率 -->
                                       <a-form-item
+                                            name="asset_liability_ratio"
                                           :label="$t('supply-chain.asset_liability_ratio')"
                                           >
                                           
                                           <a-input-number
+                                                    name="asset_liability_ratio"
                                                     v-model:value="formState.business_info.list[index].asset_liability_ratio"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
@@ -758,10 +793,12 @@
                                     
                                       <!-- 现金流量比率 -->
                                       <a-form-item
+                                          name="cash_flow_ratio"
                                           :label="$t('supply-chain.cash_flow_ratio')"
                                           >
                                           
                                           <a-input-number
+                                                    name="cash_flow_ratio"
                                                     v-model:value="formState.business_info.list[index].cash_flow_ratio"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
@@ -994,6 +1031,16 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 设计规范 -->
+                                  <a-form-item 
+                                      :label="$t('supply-chain.design_specifications')">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.design_guides"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
                               <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 24 : 0">
                                 
                                   <!-- 产品设计 -->
@@ -1027,6 +1074,66 @@
                               </a-col>
                           </a-row>
                           <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具轮廓 -->
+                                  <a-form-item 
+                                      label="模具轮廓">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_profile"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具重量 -->
+                                  <a-form-item 
+                                      label="模具重量">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_weight"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具品类 -->
+                                  <a-form-item 
+                                      label="模具品类">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_category"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具设计 -->
+                                  <a-form-item 
+                                      label="模具设计">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_design"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具制造 -->
+                                  <a-form-item 
+                                      label="模具制造">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_manufacture"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
+                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
+                                
+                                  <!-- 模具验收 -->
+                                  <a-form-item 
+                                      label="模具验收">
+                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_acceptance"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                  </a-form-item>
+                              </a-col>
+                          </a-row>
+                          <a-row :gutter="24">
                               <a-col :span="24">
                                 
                                   <!-- 设计软件 -->
@@ -1047,16 +1154,7 @@
                                   </a-form-item>
                               </a-col>
                           </a-row>
-                          <a-row :gutter="24">
-                              <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 24 : 0" >
-                                
-                                  <!-- 设计规范 -->
-                                  <a-form-item 
-                                      :label="$t('supply-chain.design_specifications')">
-                                      <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.design_guides"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
-                                  </a-form-item>
-                              </a-col>
-                          </a-row>
+                          
                       </a-col>
                   </a-row>
                   <!-- 质量信息 -->
@@ -1134,9 +1232,10 @@
                                 <a-col :span="24">
                                   <!-- 关键自有工序 -->
                                     <a-form-item
+                                        name="processes"
                                         :label="$t('supply-chain.key_owned_process')" >
                                           
-                                        <a-textarea :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.processes"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                        <a-textarea name="processes" :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.processes"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                     </a-form-item>
                                 </a-col>
                           </a-row>
@@ -1145,8 +1244,10 @@
                                   
                                     <!-- 智能自动化线 -->
                                     <a-form-item
+                                        name="automation_line"
                                         :label="$t('supply-chain.intelligent_automation_line')" >
-                                          <a-textarea :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.automation_line"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                          <a-textarea
+                                        name="automation_line" :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.automation_line"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                     </a-form-item>
                                 </a-col>
                           </a-row>
@@ -1155,8 +1256,10 @@
                                   
                                     <!-- 生产产能负荷 -->
                                     <a-form-item
+                                        name="load"
                                         :label="$t('supply-chain.production_capacity_load')" >
-                                          <a-textarea :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.load"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                          <a-textarea 
+                                        name="load" :row="6" :maxlength="2000" v-model:value="formState.produce_capacity.load"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                     </a-form-item>
                                 </a-col>
                           </a-row>
@@ -1237,8 +1340,10 @@
                                   
                                     <!-- 指定理由 -->
                                     <a-form-item
+                                        name = "reason"
                                         :label="$t('supply-chain.specify_reason')" >
-                                          <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.reason"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                          <a-textarea 
+                                        name = "reason" :row="6" :maxlength="2000" v-model:value="formState.specify_info.reason"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                     </a-form-item>
                                 </a-col>
                           </a-row>
@@ -1246,9 +1351,9 @@
                                     <a-col :span="24">
                                       
                                         <!-- 指定零件 -->
-                                        <a-form-item
+                                        <a-form-item name = "parts" 
                                             :label="$t('supply-chain.specify_part')" >
-                                              <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.parts"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                              <a-textarea name = "parts" :row="6" :maxlength="2000" v-model:value="formState.specify_info.parts"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                         </a-form-item>
                                     </a-col>
                               </a-row>
@@ -1257,9 +1362,9 @@
                                       <a-col :span="24">
                                         
                                           <!-- 指定协议 -->
-                                          <a-form-item
+                                          <a-form-item  name = "protocol" 
                                               :label="$t('supply-chain.specified_protocol')" >
-                                                <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.protocol"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                                <a-textarea  name = "protocol"  :row="6" :maxlength="2000" v-model:value="formState.specify_info.protocol"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                           </a-form-item>
                                       </a-col>
                                 </a-row>
@@ -1268,8 +1373,10 @@
                                         
                                           <!-- 指定服务 -->
                                           <a-form-item
+                                              name="service"
                                               :label="$t('supply-chain.specify_service')" >
-                                                <a-textarea :row="6" :maxlength="2000" v-model:value="formState.specify_info.service"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
+                                                <a-textarea
+                                              name="service" :row="6" :maxlength="2000" v-model:value="formState.specify_info.service"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                           </a-form-item>
                                       </a-col>
                                 </a-row>
@@ -1333,8 +1440,9 @@
           <!-- 关键生产设备 -->
           <div class="base-info-form">
               <a-form
-                  name="custom-validation"
                   :rules="rules"
+                  ref="formRef3"
+                  :model="formState"
                   labelAlign="right">
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
@@ -1358,38 +1466,42 @@
                                 class="specific-table"
                             >
                                   <template #bodyCell="{ column, record, index }">
-                                      <!-- 客户序号 -->
-                                      <!-- <template
-                                          v-if="column.dataIndex === 'customer_order'"
-                                      >
-                                          {{ record.customer_order }}
-                                      </template>  -->
+
                                       <template
                                           v-if="column.type === 'input'"
                                       >
-                                          <a-input 
-                                              v-model:value="record[column.dataIndex]"
-                                              :placeholder="$t('def.input')"
-                                          />
+                                           <a-form-item :name="`production_${column.dataIndex}`">
+                                                <a-input :name="`production_${column.dataIndex}`" 
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
+                                          </a-form-item>
                                       </template>
                                       <template
                                           v-else-if="column.type === 'input-num'"
                                       >
-                                          <a-input-number
-                                              v-model:value="record[column.dataIndex]"
-                                              :placeholder="$t('def.input')"
-                                              :min="0"
-                                              :max="1000000000"
-                                          >
-                                              <template #addonAfter v-if="column.unit">
-                                                  <span class="l-w-h-style">{{ column.unit }}</span>
-                                              </template>
-                                          </a-input-number>
+                                           <a-form-item :name="`production_${column.dataIndex}`">
+                                                <a-input-number :name="`production_${column.dataIndex}`"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                    :min="0"
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
+                                                    </template>
+                                                </a-input-number>
+                                                
+                                          </a-form-item>
                                       </template>
                                       <template
                                           v-else-if="column.type === 'time'"
                                       >
-                                          <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                           <a-form-item :name="`production_${column.dataIndex}`">
+                                                <span :name="`production_${column.dataIndex}`">
+                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                </span>
+                                          </a-form-item>
                                       </template>
                                       <template
                                           v-else-if="column.dataIndex === 'operation'"
@@ -1427,6 +1539,8 @@
               <a-form
                   name="custom-validation"
                   :rules="rules"
+                  ref="formRef4"
+                  :model="formState"
                   labelAlign="right">
                   <a-row :gutter="24">
                       <a-col :span="3" class="title-area">
@@ -1459,29 +1573,36 @@
                                       <template
                                           v-if="column.type === 'input'"
                                       >
-                                          <a-input 
-                                              v-model:value="record[column.dataIndex]"
-                                              :placeholder="$t('def.input')"
-                                          />
+                                      
+                                          <a-form-item :name="`detection_${column.dataIndex}`">
+                                                <a-input  :name="`detection_${column.dataIndex}`"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
+                                          </a-form-item>
                                       </template>
-                                      <template
-                                          v-else-if="column.type === 'input-num'"
-                                      >
-                                          <a-input-number
-                                              v-model:value="record[column.dataIndex]"
-                                              :placeholder="$t('def.input')"
-                                              :min="0"
-                                              :max="1000000000"
-                                          >
-                                              <template #addonAfter v-if="column.unit">
-                                                  <span class="l-w-h-style">{{ column.unit }}</span>
-                                              </template>
-                                          </a-input-number>
+                                      <template v-else-if="column.type === 'input-num'" >
+                                            <a-form-item :name="`detection_${column.dataIndex}`">
+                                                <a-input-number :name="`detection_${column.dataIndex}`"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                    :min="0"
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
+                                                    </template>
+                                                </a-input-number>
+                                            </a-form-item>
                                       </template>
                                       <template
                                           v-else-if="column.type === 'time'"
                                       >
-                                          <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                            <a-form-item :name="`detection_${column.dataIndex}`">
+                                                <span :name="`detection_${column.dataIndex}`">
+                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                </span>
+                                            </a-form-item>
                                       </template>
                                       <template
                                           v-else-if="column.dataIndex === 'operation'"
@@ -1514,7 +1635,6 @@
                   </a-row>
               </a-form>
 
-
           </div>
       </div>
       <!-- 补充信息 -->
@@ -1522,7 +1642,6 @@
           <div class="title">{{ $t("supply-chain.supplementary_information") }}</div>
           <div class="base-info-form" >
               <a-form
-                  ref="formRef3"
                   name="custom-validation"
                   :model="formState"
                   :rules="rules"
@@ -1562,6 +1681,7 @@ import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const formRef1 = ref(null);
 const formRef2 = ref(null);
 const formRef3 = ref(null);
+const formRef4 = ref(null);
 const TimeSearchRef = ref(null);
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
@@ -1658,12 +1778,13 @@ const formState = reactive({
         agent_effective_begin_time: "",  // 代理有效开始时间
         agent_effective_end_time: "",  // 代理有效结束时间
         agent_product: "",  // 代理产品
+        fixed_assets: "",   // 固定资产
 
     }, 
 
     human_resource: {}, // 人力资源
     financial_info: {}, // 财务信息
-    business_info: {
+    business_info: {    // 营业信息(近几年) 
       proportion_of_business: '',
       list: [
           {
@@ -1692,7 +1813,7 @@ const formState = reactive({
           },
           
       ],
-    },                        // 营业信息(近几年)         
+    },                                
     competitor_analysis: [    // 竞争对手
         {
             company_order:'竞争对手1',
@@ -1723,7 +1844,15 @@ const formState = reactive({
 
         design_software: "",// 设计软件
         dev_process: "", // 开发流程
-    },
+		mold_profile: "",//模具轮廓
+		mold_weight: "",//模具重量
+		mold_category: "",//模具品类
+		mold_design: "",//模具设计
+		mold_manufacture: "",//模具制造
+		mold_acceptance: "",//模具验收
+		design_software: "",//设计软件
+		dev_process: "", //开发流程 
+   },
     quality_info: {  // 质量
         
         certification: "",// 质量体系认证
@@ -1749,19 +1878,19 @@ const formState = reactive({
       material: "", // 外购原料
       system: "", // 外购制度
     },
-    // 生产设备
+    // 关键生产设备
     production_equipment: [
       
         {
             id: 1,
-            name: undefined,
-            spec: undefined,
-            quantity: undefined,
-            manufacturer: undefined,
-            purchase_period: undefined,
+            name: undefined,/* 生产设备名称 */
+            spec: undefined,/* 规格型号（含吨位） */
+            quantity: undefined,/* 数量 */
+            manufacturer: undefined,/* 设备制造商 */
+            purchase_period: undefined,/* 购置年限 */
         }
     ],
-    // 检测设备
+    // 关键检测设备
     detection_equipment: [
       
         {
@@ -1866,22 +1995,65 @@ let companyVaild = async (_rule, value) => {
                 dataBoo = true;
             }
             break;
+
+
+        // 营业信息
         case 'proportion_of_business':        // 业务比重
             if (!formState.business_info?.proportion_of_business) {
                 dataBoo = true;
             }
             break;
+
         case 'sales':        // 销售额
-            formState.business_info?.list.forEach((item)=>{
+            /* formState.business_info?.list.forEach((item)=>{
                 if (!item.sales) {
                     dataBoo = true;
                     return;
                 }
-            })
+            }) */
+            dataBoo = findItemIsNoneFromList('business_info' , 'sales');
             break;
-        case 'taxes_paid':        // 纳税额
+        case 'taxes_paid':                  // 纳税额
             dataBoo = findItemIsNoneFromList('business_info' , 'taxes_paid');
             break;
+        case 'profit_margin':               // 利润率
+            dataBoo = findItemIsNoneFromList('business_info' , 'profit_margin');
+            break;
+        case 'asset_liability_ratio':        // 资产负债率
+            dataBoo = findItemIsNoneFromList('business_info' , 'asset_liability_ratio');
+            break;
+        case 'cash_flow_ratio':             // 现金流量比率
+            dataBoo = findItemIsNoneFromList('business_info' , 'cash_flow_ratio');
+            break;
+
+
+        // 指定信息
+        case 'reason':                  // 指定理由
+            dataBoo = findObjIsNoneFromList('specify_info' , 'reason');
+            break;
+        case 'parts':               // 指定零件
+            dataBoo = findObjIsNoneFromList('specify_info' , 'parts');
+            break;
+        case 'protocol':        // 指定协议
+            dataBoo = findObjIsNoneFromList('specify_info' , 'protocol');
+            break;
+        case 'service':             // 指定服务
+            dataBoo = findObjIsNoneFromList('specify_info' , 'service');
+            break;
+
+        // 产能产线
+        case 'processes':                  // 关键自有工序
+            dataBoo = findObjIsNoneFromList('produce_capacity' , 'processes');
+            break;
+        case 'automation_line':               // 智能自动化线
+            dataBoo = findObjIsNoneFromList('produce_capacity' , 'automation_line');
+            break;
+        case 'load':        // 智能自动化线
+            dataBoo = findObjIsNoneFromList('produce_capacity' , 'load');
+            break;
+
+
+
             
     }
     if(dataBoo) return Promise.reject(
@@ -1891,10 +2063,6 @@ let companyVaild = async (_rule, value) => {
 };
 // 是否-法律纠纷
 let flagLegalDisputeValid =  async (_rule, value) => {
-  /* if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_account_name"));
-  }
-  return Promise.resolve(); */
   
   let dataBoo = false;
     if(!_rule.required) {
@@ -1940,7 +2108,7 @@ let flagLegalDisputeValid =  async (_rule, value) => {
     return Promise.resolve();
 };
 
-
+// 辅助表格校验方法1 table
 const findItemIsNoneWrite = (parObjkey , key) => {
     let boo = false;
     formState[parObjkey].forEach((item,index)=>{
@@ -1948,6 +2116,7 @@ const findItemIsNoneWrite = (parObjkey , key) => {
     })
     return boo;
 }
+// 辅助表格校验方法2 list
 const findItemIsNoneFromList = (parObjkey , key) => {
     let boo = false;
     formState[parObjkey]['list'].forEach((item,index)=>{
@@ -1955,8 +2124,14 @@ const findItemIsNoneFromList = (parObjkey , key) => {
     })
     return boo;
 }
+// 辅助表格校验方法3 obj
+const findObjIsNoneFromList = (parObjkey , key) => {
+    let boo = false;
+    if(!formState[parObjkey]?.[key]) boo = true;
+    return boo;
+}
 
-
+// 表格校验
 let tableVaild = async (_rule, value) => {
   console.log('_rule, value------tableVaild',_rule, value);
   let dataBoo = false;
@@ -1977,34 +2152,41 @@ let tableVaild = async (_rule, value) => {
         case 'begin_cooperation_time': // 开始合作时间
             dataBoo = findItemIsNoneWrite('customer_info' , 'begin_cooperation_time')
             break;
-            
-        /* case 'date_establishment': //成立日期
-            console.log('date_establishment111',formState.company_info?.established_time);
-            if(!formState.company_info?.established_time){
-                dataBoo = true;
-            }
-            break; 
-        case 'period_requirement':  // 账期要求
-            if (!formState.financial_info?.account_period_requirement) {
-                dataBoo = true;
-            }
+
+        // 关键生产设备 
+        case 'production_name': // 生产设备名称
+            dataBoo = findItemIsNoneWrite('production_equipment' , 'name')
             break;
-        case 'Invoice_type': // 开具发票
-            if (!formState.financial_info?.invoice_type) {
-                dataBoo = true;
-            }
+        case 'production_spec': // 规格型号（含吨位）
+            dataBoo = findItemIsNoneWrite('production_equipment' , 'spec')
             break;
-        case 'proxy_warrant': // 代理权证
-            if ((!formState.agent_info?.flag_agent_warrant) && formState.type===2) {
-                dataBoo = true;
-            }
+        case 'production_quantity': // 数量
+            dataBoo = findItemIsNoneWrite('production_equipment' , 'quantity')
             break;
-        case 'duration_of_agency': // 代理有效期间
-            console.log('00000000','duration_of_agency',formState.agent_info);
-            if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
-                dataBoo = true;
-            }
-            break; */
+        case 'production_manufacturer': // 设备制造商
+            dataBoo = findItemIsNoneWrite('production_equipment' , 'manufacturer')
+            break;
+        case 'production_purchase_period': // 购置年限
+            dataBoo = findItemIsNoneWrite('production_equipment' ,  'purchase_period')
+            break;
+
+
+        // 关键检测设备 
+        case 'detection_name': // 检测设备名称
+            dataBoo = findItemIsNoneWrite('detection_equipment' , 'name')
+            break;
+        case 'detection_spec': // 规格型号
+            dataBoo = findItemIsNoneWrite('detection_equipment' , 'spec')
+            break;
+        case 'detection_quantity': // 数量
+            dataBoo = findItemIsNoneWrite('detection_equipment' , 'quantity')
+            break;
+        case 'detection_manufacturer': // 设备制造商
+            dataBoo = findItemIsNoneWrite('detection_equipment' , 'manufacturer')
+            break;
+        case 'detection_accuracy_level': // 精度等级
+            dataBoo = findItemIsNoneWrite('detection_equipment' , 'accuracy_level')
+            break;
             
     }
     if(dataBoo) return Promise.reject(
@@ -2012,29 +2194,15 @@ let tableVaild = async (_rule, value) => {
     );
     return Promise.resolve();
 };
-let account_with_bankVaild = async (_rule, value) => {
-  if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_bank_of_deposit"));
-  }
-  return Promise.resolve();
-};
-let account_with_bank_numberVaild = async (_rule, value) => {
-  if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_bank_number"));
-  }
-  return Promise.resolve();
-};
-let bank_accountVaild = async (_rule, value) => {
-  if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_bank_account"));
-  }
-  // 必须为数字
-  if (!/^[0-9]*$/.test(value)) {
-      return Promise.reject($t("supply-chain.bank_number_must_be_number"));
-  }
-  return Promise.resolve();
-};
-const rules = ref({
+
+
+
+
+// 当前类的校验
+const rules = ref({})
+
+// 五个类共有的校验集合
+const rulesAll = ref({
   positon: [//职业
 
       {
@@ -2126,50 +2294,93 @@ const rules = ref({
   ],
   
 });
+
+// 五个类除共有的校验集合
 const rulesOther = ref({
-    // 代理权证
-    proxy_warrant: [
+
+    // 代理产权
+    proxy_warrant: [/* 代理权证 */
         {
             required: true,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
     ],
-    // 代理有效期间
-    duration_of_agency: [
+    duration_of_agency: [/* 代理有效期间 */
         {
             required: true,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
     ],
-    //  业务比重
-    proportion_of_business: [
+
+    // 营业信息
+    proportion_of_business: [/* 业务比重 */
         {
             required: true,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
     ],
-    //  销售额
-    sales: [
+    sales: [/* 销售额 */
         {
             required: true,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
     ],
-    // 纳税额
-    taxes_paid: [
+    taxes_paid: [/* 纳税额 */
       {
           required: true,
           validator: companyVaild,
           trigger: ["change", "blur"],
       },
     ],
+    profit_margin: [/* 利润率 */
+      {
+          required: true,
+          validator: companyVaild,
+          trigger: ["change", "blur"],
+      },
+    ],
+    asset_liability_ratio: [/* 资产负债率 */
+      {
+          required: true,
+          validator: companyVaild,
+          trigger: ["change", "blur"],
+      },
+    ],
+    cash_flow_ratio: [/* 现金流量比率 */
+      {
+          required: true,
+          validator: companyVaild,
+          trigger: ["change", "blur"],
+      },
+    ],
+
     // 客户信息
-    // 客户名称
-    customer_name: [
+    customer_name: [/* 客户名称 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    sales_share: [/* 销售占比 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    main_supply_part: [/* 主供零件 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    begin_cooperation_time: [/* 开始合作时间 */
         {
             required: true,
             validator: tableVaild,
@@ -2177,27 +2388,133 @@ const rulesOther = ref({
         },
     ],
 
-    sales_share: [
+    // 关键生产设备
+    production_name: [/* 生产设备名称 */
         {
             required: true,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
     ],
-    main_supply_part: [
+    production_spec: [/* 规格型号（含吨位） */
         {
             required: true,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
     ],
-    begin_cooperation_time: [
+    production_quantity: [/* 数量 */
         {
             required: true,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
     ],
+    production_manufacturer: [/* 设备制造商 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    production_purchase_period: [/* 购置年限 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    
+    // 关键检测设备
+    detection_name: [/* 检测设备名称 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    detection_spec: [/* 规格型号 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    detection_quantity: [/* 数量 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    detection_manufacturer: [/* 设备制造商 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    detection_accuracy_level: [/* 精度等级 */
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+
+    // 指定信息 
+    reason: [/* 指定理由 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ], 
+    parts: [/* 指定零件 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    protocol: [/* 指定协议 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    service: [/* 指定服务 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    // 产能产线
+    processes: [/* 关键自有工序 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    automation_line: [/* 智能自动化线 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    load: [/* 智能自动化线 */
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    
+
 })
 
 // 草稿回显
@@ -2254,14 +2571,16 @@ const step1Vaild = () => {
       formRef1.value.clearValidate();
       formRef2.value.clearValidate();
       formRef3.value.clearValidate();
+      formRef4.value.clearValidate();
       const form1Promise = formRef1.value.validate(); // 获取表单1的验证 Promise  
       const form2Promise = formRef2.value.validate(); // 获取表单2的验证 Promise  
-      const form3Promise = formRef3.value.validate(); // 获取表单2的验证 Promise  
+      const form3Promise = formRef3.value.validate(); // 获取表单3的验证 Promise  
+      const form4Promise = formRef4.value.validate(); // 获取表单4的验证 Promise  
 
-      Promise.all([form1Promise, form2Promise, form3Promise]).then(([res1, res2, res3]) => {  
+      Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
-            if (res1 && res2 && res3) {
+            if (res1 && res2 && res3 && res4) {
                 let data = $store.state.SUPPLY_CHAIN.supplyChain;
                   // 判断是否为空对象
                   if (Object.keys(data).length === 0) {
@@ -2310,6 +2629,7 @@ const step1Vaild = () => {
               // 校验失败
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
+              console.log('errorName111',errorName,err);
               if (!errorName) return;
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
@@ -2431,6 +2751,150 @@ const handleAddSpecItem = (list ,obj ,title , key ) => {
 
     list.push({...obj,id})
 }
+// 根据type 动态设置rules
+const setRules = () => {
+    
+    let broker_v_list = [/* 代理类 */
+
+        // 代理产权
+        'proxy_warrant'/* 代理权证 */,
+        'duration_of_agency'/* 代理有效期间 */,
+
+        // 营业信息 business_info
+        'proportion_of_business'/* 业务比重 */,
+        'sales'/* 销售额 */,
+        'taxes_paid'/* 纳税额 */,
+        'profit_margin'/* 利润率 */,
+        'asset_liability_ratio'/* 资产负债率 */,
+        'cash_flow_ratio'/* 现金流量比率 */,
+
+        // 客户信息 customer_info
+        'customer_name'/* 客户名称 */,
+        'sales_share'/* 销售占比 */,
+        'main_supply_part'/* 主供零件 */,
+        'begin_cooperation_time'/* 开始合作时间 */,
+
+    ]
+
+    let outsourcing_v_list = [/* 外协类 */
+
+        // 营业信息 business_info
+        'sales'/* 销售额 */,
+
+        // 客户信息 customer_info
+        'customer_name'/* 客户名称 */,
+        'sales_share'/* 销售占比 */,
+        'main_supply_part'/* 主供零件 */,
+        'begin_cooperation_time'/* 开始合作时间 */,
+
+        // 产能产线 produce_capacity
+        'processes'/* 关键自有工序 */,
+        'automation_line'/* 智能自动化线 */,
+        'load'/* 生产产能负荷 */,
+
+        // 关键生产设备 production_equipment
+        'production_name'/* 生产设备名称 */,
+        'production_spec'/* 规格型号（含吨位） */,
+        'production_quantity'/* 数量 */,
+        'production_manufacturer'/* 设备制造商 */,
+        'production_purchase_period'/* 购置年限 */,
+
+        // 关键检测设备 detection_equipment
+        'detection_name'/* 生产设备名称 */,
+        'detection_spec'/* 规格型号（含吨位） */,
+        'detection_quantity'/* 数量 */,
+        'detection_manufacturer'/* 设备制造商 */,
+        'detection_accuracy_level'/* 精度等级 */,
+
+    ]
+
+    let mold_v_list = [/* 模具类 */
+
+        // 关键生产设备 production_equipment
+        'production_name'/* 生产设备名称 */,
+        'production_spec'/* 规格型号（含吨位） */,
+        'production_quantity'/* 数量 */,
+        'production_manufacturer'/* 设备制造商 */,
+        'production_purchase_period'/* 购置年限 */,
+
+        // 关键检测设备 detection_equipment
+        'detection_name'/* 生产设备名称 */,
+        'detection_spec'/* 规格型号（含吨位） */,
+        'detection_quantity'/* 数量 */,
+        'detection_manufacturer'/* 设备制造商 */,
+        'detection_accuracy_level'/* 精度等级 */,
+
+    ]
+
+    let customer_refers_v_list = [/* 客指类 */
+
+        // 营业信息 business_info
+        'sales'/* 销售额 */,
+
+        // 客户信息 customer_info
+        'customer_name'/* 客户名称 */,
+        'sales_share'/* 销售占比 */,
+        'main_supply_part'/* 主供零件 */,
+        'begin_cooperation_time'/* 开始合作时间 */,
+
+        // 指定信息 specify_info
+        'reason'/* 指定理由 */,
+        'parts'/* 指定零件 */,
+        'protocol'/* 指定协议 */,
+        'service'/* 指定服务 */,
+
+    ]
+    /* rules.value = {
+        ...rulesAll.value, ...rulesOther.value 
+    } */
+
+    let obj = {}
+    let otherR = Object.keys(rulesOther.value);
+    switch(formState.type){
+        case Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value:
+            for (const iterator of otherR) {
+
+                if(broker_v_list.includes(iterator)) {
+                    obj[iterator] = rulesOther.value[iterator]
+                }
+
+            }
+            break;
+        case Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value:
+            for (const iterator of otherR) {
+
+                if(outsourcing_v_list.includes(iterator)) {
+                    obj[iterator] = rulesOther.value[iterator]
+                }
+
+            }
+            break;
+        case Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value:
+            for (const iterator of otherR) {
+
+                if(mold_v_list.includes(iterator)) {
+                    obj[iterator] = rulesOther.value[iterator]
+                }
+
+            }
+            break;
+        case Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value:
+            for (const iterator of otherR) {
+
+                if(customer_refers_v_list.includes(iterator)) {
+                    obj[iterator] = rulesOther.value[iterator]
+                }
+
+            }
+            
+            break;
+    }
+    console.log('obj000000',obj);
+    rules.value = {
+        ...rulesAll.value , ...obj
+    }
+
+}
 watch(
   () => $i18n.locale.value,
   (val) => {
@@ -2445,45 +2909,24 @@ watch(
   () => formState.position,
   (val) => {
       
-    let boo = true;
-    if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-    rules.value.contact_name[0].required = boo;
-    rules.value.contact_email[0].required = boo;
-    rules.value.contact_flag_phone[0].required = boo;
+    /* let boo = true;
+    if(formState.position === 4) boo = false;
+    rules.value&&rules.value?.contact_name?.[0]?.required = boo;
+    rules.value&&rules.value?.contact_email?.[0]?.required = boo;
+    rules.value&&rules.value?.contact_flag_phone?.[0]?.required = boo; */
   }
 );
+// 监听类别变动
 watch(()=>formState.type ,
     (newval,oldval)=>{
-        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
-        rules.value = {
-            ...rules.value, ...rulesOther.value 
-        } 
-        if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
-            console.log('pppppppppppppppppppppppp');
-            // 业务比重
-            rules.value.proportion_of_business[0].required = true;
-            // 代理有效期间
-            rules.value.duration_of_agency[0].required = true;
-            rules.value.proxy_warrant[0].required = true;
 
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
- 
-            
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
-            // 销售额
-            rules.value.sales[0].required = true;
+        // 重置校验规则
+        setRules()
 
-        }else{
-            // 业务比重
-            rules.value.proportion_of_business[0].required = false;
-            rules.value.sales[0].required = false;
-            // 代理有效期间
-            rules.value.proxy_warrant[0].required = false;
-            rules.value.duration_of_agency[0].required = false;
-        }
+        formRef1.value.clearValidate();
+        formRef2.value.clearValidate();
+        formRef3.value.clearValidate();
+        formRef4.value.clearValidate();
     }
 );
 defineExpose({
@@ -2493,8 +2936,12 @@ defineExpose({
 });
 
 onMounted(() => {
-  // 回显数据
-  reviewData();
+
+    // 回显数据
+    reviewData();
+  
+    // 重置校验规则
+    setRules()
 });
 </script>
 
