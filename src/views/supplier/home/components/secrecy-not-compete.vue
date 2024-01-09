@@ -3,7 +3,7 @@
     <div class="promise-book">
         <div class="promise-book-title">
             <img
-                src="../../../assets/images/supply-chain/promise_modal.png"
+				src="../../../../assets/images/supply-chain/promise_modal.png"
                 alt="" />
             <span>保密和不竞争协议</span>
         </div>

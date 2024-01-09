@@ -3,7 +3,7 @@
     <div class="promise-book">
         <div class="promise-book-title">
             <img
-                src="../../../assets/images/supply-chain/promise_modal.png"
+                src="../../../../assets/images/supply-chain/promise_modal.png"
                 alt="" />
             <span>廉洁承诺书</span>
         </div>
