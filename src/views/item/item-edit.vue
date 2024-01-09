@@ -2559,7 +2559,7 @@ export default {
                     );
                 }
             } else if (type === "words") {
-                let reg = /^[a-zA-Z]+$/g;
+                let reg = /^[A-Za-z\s!@#$%^&*()_+-=\[\]{};':"\\|,.<>\/?]+$/g;
                 if (!item.key) {
                     this.specification.isWords = true;
                     return this.$message.warning(
