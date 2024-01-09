@@ -143,12 +143,9 @@
                     <MaterialList
                         ref="MaterialListRef"
                         v-else-if="setp === 1" />
-                    <Successful  v-else-if="setp === 2"/>
+                    <Successful v-else-if="setp === 2" />
                 </div>
-                <div
-                    class="supply-chain-footer"
-                    v-if="setp !== 2"
-                >
+                <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
                     <div
                         class="promise-book"
@@ -438,15 +435,16 @@ const countDown = () => {
 /* methods start*/
 // 上一步
 const handlePrev = () => {
-    $store.dispatch("SUPPLY_CHAIN/prevStep")
+    $store.dispatch("SUPPLY_CHAIN/prevStep");
     MaterialListRef.value && MaterialListRef.value.handlePrev();
 };
 // 下一步
 const handleNext = () => {
-    BasicInfoRef.value && BasicInfoRef.value.step1Vaild().then(() => {
-        // 下一步
-        $store.dispatch("SUPPLY_CHAIN/nextStep");
-    });
+    BasicInfoRef.value &&
+        BasicInfoRef.value.step1Vaild().then(() => {
+            // 下一步
+            $store.dispatch("SUPPLY_CHAIN/nextStep");
+        });
     //  }
 };
 // 保存草稿
@@ -477,7 +475,7 @@ const handleSubmitOk = () => {
     MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        
+
         $store.dispatch(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
@@ -504,7 +502,7 @@ const handleSubmitData = () => {
         .then((res) => {
             visible.value = false;
             // 获取详情数据
-            getDetail().then(()=>{
+            getDetail().then(() => {
                 $store.dispatch("SUPPLY_CHAIN/nextStep");
             });
         })
@@ -514,10 +512,11 @@ const handleSubmitData = () => {
 };
 // 获取详情
 const getDetail = () => {
+    console.log("获取详情中---------------------------");
     return new Promise((resolve, reject) => {
         Core.Api.SUPPLY.adminDetail({})
             .then((res) => {
-                let DETAILS = {}
+                let DETAILS = {};
                 DETAILS = res?.detail ?? null;
                 let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
                 if (DETAILS) {
@@ -525,15 +524,24 @@ const getDetail = () => {
                         // 将form解析
                         DETAILS.form = JSON.parse(DETAILS.form);
                         // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
-                        let data = Object.assign(DETAILS,draftData);
+                        let data;
+                        if (draftData && Object.keys(draftData).length > 0) {
+                            data = Object.assign(DETAILS, draftData);
+                        } else {
+                            data = Object.assign(draftData, DETAILS);
+                        }
                         // 存储到草稿数据
                         $store.dispatch(
                             "SUPPLY_CHAIN/setSupplyDraftChain",
                             data
                         );
                         // 如果已经提交了
-                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true);
-
+                        Object.keys(DETAILS.form).length > 0
+                            ? $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true)
+                            : $store.dispatch(
+                                  "SUPPLY_CHAIN/setSubmitEd",
+                                  false
+                              );
                     } else {
                         // 如果没有提交
                         $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
@@ -575,6 +583,7 @@ const handleEditShow = () => {
 const handleLogout = () => {
     $router.replace("/login");
     localStorage.clear();
+    $store.dispatch("SUPPLY_CHAIN/clearAll");
     Core.Api.Common.logout();
 };
 const handleEditSubmit = () => {
@@ -604,8 +613,6 @@ const handleEditSubmit = () => {
         });
 };
 
-
-
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
@@ -627,11 +634,10 @@ watch(
         if (val == 0) {
             getDetail().then(() => {
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
-            });   
+            });
         }
-    },
+    }
 );
-
 
 const timer1 = ref(null);
 onMounted(() => {
@@ -641,7 +647,7 @@ onMounted(() => {
         if (isSubmited.value) {
             $store.dispatch("SUPPLY_CHAIN/setStep", 2);
         }
-    });   
+    });
 });
 // beforeDestroy
 onBeforeUnmount(() => {
