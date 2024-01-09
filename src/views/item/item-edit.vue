@@ -2960,13 +2960,11 @@ export default {
             this.configIndex = index
             this.configSetMes = item
             this.oldConfigSetMes = Core.Util.deepCopy(item)
-            this.oldSpecificData = Core.Util.deepCopy(this.specific.data)
             this.showConfigSet = true
         },
         //关闭规格值设置弹出-回调
         handleCancelConfig() {
             this.specific.list[this.configIndex] = this.oldConfigSetMes
-            this.specific.data = Core.Util.deepCopy(this.oldSpecificData);
             this.closeConfig()
         },
         //关闭规格值设置弹出
