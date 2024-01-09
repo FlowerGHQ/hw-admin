@@ -331,7 +331,7 @@ const isSubmited = computed(() => {
 });
 
 // 廉洁承诺书
-const visible = ref(true);
+const visible = ref(false);
 // 定时
 let countTime = ref(30);
 // 定时器
