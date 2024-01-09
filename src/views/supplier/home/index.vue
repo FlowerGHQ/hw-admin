@@ -518,27 +518,34 @@ const getDetail = () => {
             .then((res) => {
                 let DETAILS = {};
                 DETAILS = res?.detail ?? null;
-                let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
                 if (DETAILS) {
                     if (Object.keys(DETAILS).length > 0) {
-                        // 将form解析
-                        DETAILS.form = JSON.parse(DETAILS.form);
                         // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
-                        let data;
-                        if (draftData && Object.keys(draftData).length > 0) {
-                            data = Object.assign(DETAILS, draftData);
-                        } else {
-                            data = Object.assign(draftData, DETAILS);
+                        if(DETAILS?.form){
+                            let type = typeof DETAILS.form;
+                            if(type === 'string'){
+                                DETAILS.form = JSON.parse(DETAILS.form)
+                            }
+                            if(type === 'object'){
+                                DETAILS.form = DETAILS.form
+                            }
+                        }else{
+                            DETAILS.form = {}
                         }
+                        if(Object.keys($store.state.SUPPLY_CHAIN.supplyDraftChain).length > 0){
+                            DETAILS = Object.assign(DETAILS, $store.state.SUPPLY_CHAIN.supplyDraftChain);
+                        }
+                        let data = DETAILS;
+                        console.log("data:", data);
                         // 存储到草稿数据
-                        $store.dispatch(
+                        $store.commit(
                             "SUPPLY_CHAIN/setSupplyDraftChain",
                             data
                         );
                         // 如果已经提交了
                         Object.keys(DETAILS.form).length > 0
-                            ? $store.dispatch("SUPPLY_CHAIN/setSubmitEd", true)
-                            : $store.dispatch(
+                            ? $store.commit("SUPPLY_CHAIN/setSubmitEd", true)
+                            : $store.commit(
                                   "SUPPLY_CHAIN/setSubmitEd",
                                   false
                               );
