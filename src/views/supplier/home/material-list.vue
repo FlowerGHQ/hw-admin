@@ -547,39 +547,6 @@ const draftDataReview = () => {
         }
     });
 };
-// 详情回显
-const detailDataReview = () => {
-    let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
-    console.log("详情回显数据：", detailData);
-    // 判断是否为空对象
-    if (Object.keys(detailData).length === 0) {
-        // formState.form.business_duration_type = 1
-        formState = {
-            form: {
-                confirmatory_material: {
-                    business_duration_type: 1,
-                },
-            },
-        };
-    } else {
-        // 解析出来的数据
-        let data = detailData;
-        Object.keys(data?.form?.confirmatory_material ?? {}).forEach((key) => {
-            formState[key] = data.form.confirmatory_material[key];
-        });
-        formState.business_duration_type =
-            data?.form?.confirmatory_material?.business_duration_type || 1;
-    }
-    setTimeout(() => {
-        if (TimeSearchRef.value) {
-            // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.begin_business_time,
-                formState.end_business_time,
-            ];
-        }
-    });
-};
 // 校验
 const step2Vaild = () => {
     return new Promise((resolve, reject) => {
@@ -623,11 +590,10 @@ const step2Vaild = () => {
             });
     });
 };
-// 保存草稿
-const saveDraft = () => {
-    // 获取数据
-    let data = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-    // 判断是否为空对象
+// 点击上一步的操作
+const handlePrev = () => {
+    // 保存数据
+    let data = $store.state.SUPPLY_CHAIN.supplyChain;
     if (Object.keys(data).length === 0) {
         // 为空对象
         data = {
@@ -639,9 +605,13 @@ const saveDraft = () => {
         // 不为空对象
         data.form.confirmatory_material = formState;
     }
-    if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
-        $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data);
-    }
+    $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+    $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
+};
+// 保存草稿
+const saveDraft = () => {
+    let data = {}
+    data.form.confirmatory_material = formState;
     // 保存数据
     // Core.Data.setSupplyDraftChain(JSON.stringify(data));
     $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
@@ -651,16 +621,8 @@ const saveDraft = () => {
 };
 // 回显数据
 const reviewData = () => {
-    // 判断是否已经提交过了
-    let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-
-    if (isSubmit) {
-        // 已经提交过了
-        detailDataReview();
-    } else {
-        // 没有提交过
-        draftDataReview();
-    }
+    // 没有提交过
+    draftDataReview();
 };
 
 watch(
@@ -676,6 +638,7 @@ watch(
 defineExpose({
     step2Vaild,
     saveDraft,
+    handlePrev
 });
 
 onMounted(() => {
