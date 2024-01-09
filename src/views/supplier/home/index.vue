@@ -477,13 +477,7 @@ const handleSubmitOk = () => {
     MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        let supplyDetailsChain_data =
-            $store.state.SUPPLY_CHAIN.supplyDetailsChain; //拿到详情数据
-        //存储到草稿和详情数据
-        // $store.dispatch(
-        //     "SUPPLY_CHAIN/setSupplyDetailsChain",
-        //     Object.assign(supplyDetailsChain_data, supplyChain_data)
-        // );
+        
         $store.dispatch(
             "SUPPLY_CHAIN/setSupplyDraftChain",
             Object.assign(supplyDraftChain_data, supplyChain_data)
@@ -530,7 +524,8 @@ const getDetail = () => {
                     if (Object.keys(DETAILS).length > 0) {
                         // 将form解析
                         DETAILS.form = JSON.parse(DETAILS.form);
-                        let data = Object.assign(DETAILS, draftData);
+                        // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
+                        let data = Object.assign(DETAILS,draftData);
                         // 存储到草稿数据
                         $store.dispatch(
                             "SUPPLY_CHAIN/setSupplyDraftChain",
@@ -635,9 +630,6 @@ watch(
             });   
         }
     },
-    {
-        deep: true,
-    }
 );
 
 
@@ -645,10 +637,10 @@ const timer1 = ref(null);
 onMounted(() => {
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
-        // 如果已经提交了
-        if (isSubmited.value) {
-            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
-        }
+        // // 如果已经提交了
+        // if (isSubmited.value) {
+        //     $store.dispatch("SUPPLY_CHAIN/setStep", 2);
+        // }
     });   
 });
 // beforeDestroy

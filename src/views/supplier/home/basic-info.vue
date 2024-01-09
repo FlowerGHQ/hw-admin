@@ -1837,7 +1837,6 @@ let BusinessTermValid = async (_rule, value) => {
 };
 
 let companyVaild = async (_rule, value) => {
-    console.log('_rule, value0111111',_rule,'value', value);
     let dataBoo = false;
     if(!_rule.required) {
         return Promise.resolve();
@@ -1897,7 +1896,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             break;
             
         case 'date_establishment': //成立日期
-            console.log('date_establishment111',formState.company_info?.established_time);
             if(!formState.company_info?.established_time){
                 dataBoo = true;
             }
@@ -1918,7 +1916,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             }
             break;
         case 'duration_of_agency': // 代理有效期间
-            console.log('00000000','duration_of_agency',formState.agent_info);
             if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
                 dataBoo = true;
             }
@@ -2124,6 +2121,7 @@ const draftDataReview = () => {
         });
       
   }
+  console.log('formState---------------------------',formState);
     setTimeout(() => {
         if (TimeSearchRef.value) {
             // 给timeSearch赋值
@@ -2157,7 +2155,6 @@ const step1Vaild = () => {
       Promise.all([form1Promise, form2Promise, form3Promise]).then(([res1, res2, res3]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
-            console.log('res1, res2, res31111111',res1, res2, res3);
             if (res1 && res2 && res3) {
                 let data = $store.state.SUPPLY_CHAIN.supplyChain;
                   // 判断是否为空对象
@@ -2196,20 +2193,18 @@ const step1Vaild = () => {
                         }
                     }) 
                   }*/
-                  console.log('0000000000000000000');
                   // 保存数据
                   $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
             }
         }).catch(err => {  
             // 至少有一个 Promise 失败  
             // 处理错误...  
               // 校验失败
-              console.log('err111',err);
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
               if (!errorName) return;
-              console.log('errorName111',errorName);
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
               errorDom.scrollIntoView({
