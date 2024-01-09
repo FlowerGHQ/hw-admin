@@ -892,29 +892,38 @@
                                         <template
                                             v-if="column.type === 'input'"
                                         >
-                                            <a-input 
-                                                v-model:value="record[column.dataIndex]"
-                                                :placeholder="$t('def.input')"
-                                            />
+                                            <!-- `${column.dataIndex}+${index}` -->
+                                            <a-form-item :name="column.dataIndex">
+                                                <a-input  :name="column.dataIndex"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.type === 'input-num'"
                                         >
-                                            <a-input-number
-                                                v-model:value="record[column.dataIndex]"
-                                                :placeholder="$t('def.input')"
-                                                :min="0"
-                                                :max="1000000000"
-                                            >
-                                                <template #addonAfter v-if="column.unit">
-                                                    <span class="l-w-h-style">{{ column.unit }}</span>
-                                                </template>
-                                            </a-input-number>
+                                            <a-form-item :name="column.dataIndex">
+                                                <a-input-number  :name="column.dataIndex"
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                    :min="0"
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
+                                                    </template>
+                                                </a-input-number>
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.type === 'time'"
                                         >
-                                            <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                            <a-form-item :name="column.dataIndex">
+                                                <span :name="column.dataIndex">
+                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                </span>
+                                            </a-form-item>
                                         </template>
                                         <template
                                             v-else-if="column.dataIndex === 'operation'"
@@ -1932,12 +1941,68 @@ let flagLegalDisputeValid =  async (_rule, value) => {
 };
 
 
+const findItemIsNoneWrite = (parObjkey , key) => {
+    let boo = false;
+    formState[parObjkey].forEach((item,index)=>{
+        if(!item[key]) boo = true;
+    })
+    return boo;
+}
 
-let account_nameVaild = async (_rule, value) => {
-  if (!value) {
-      return Promise.reject($t("supply-chain.please_enter_account_name"));
-  }
-  return Promise.resolve();
+let tableVaild = async (_rule, value) => {
+  console.log('_rule, value------tableVaild',_rule, value);
+  let dataBoo = false;
+    if(!_rule.required) {
+        return Promise.resolve();
+    }
+    switch(_rule.fullField){
+
+        case 'customer_name': // 客户名称
+            dataBoo = findItemIsNoneWrite('customer_info' , 'customer_name')
+            break;
+        case 'sales_share': // 销售占比
+            dataBoo = findItemIsNoneWrite('customer_info' , 'sales_share')
+            break;
+        case 'main_supply_part': // 主供零件
+            dataBoo = findItemIsNoneWrite('customer_info' , 'main_supply_part')
+            break;
+        case 'begin_cooperation_time': // 开始合作时间
+            dataBoo = findItemIsNoneWrite('customer_info' , 'begin_cooperation_time')
+            break;
+            
+        /* case 'date_establishment': //成立日期
+            console.log('date_establishment111',formState.company_info?.established_time);
+            if(!formState.company_info?.established_time){
+                dataBoo = true;
+            }
+            break; 
+        case 'period_requirement':  // 账期要求
+            if (!formState.financial_info?.account_period_requirement) {
+                dataBoo = true;
+            }
+            break;
+        case 'Invoice_type': // 开具发票
+            if (!formState.financial_info?.invoice_type) {
+                dataBoo = true;
+            }
+            break;
+        case 'proxy_warrant': // 代理权证
+            if ((!formState.agent_info?.flag_agent_warrant) && formState.type===2) {
+                dataBoo = true;
+            }
+            break;
+        case 'duration_of_agency': // 代理有效期间
+            console.log('00000000','duration_of_agency',formState.agent_info);
+            if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
+                dataBoo = true;
+            }
+            break; */
+            
+    }
+    if(dataBoo) return Promise.reject(
+        $t("supply-chain.please_fill_form") //请填写表单
+    );
+    return Promise.resolve();
 };
 let account_with_bankVaild = async (_rule, value) => {
   if (!value) {
@@ -2083,7 +2148,7 @@ sales: [
           trigger: ["change", "blur"],
       },
   ],
-//   客户信息
+// 客户信息
 /*   customer_info_list_column: [
 
     {
@@ -2093,6 +2158,35 @@ sales: [
       },
   ], */
 
+    customer_name: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+
+    sales_share: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    main_supply_part: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    begin_cooperation_time: [
+        {
+            required: true,
+            validator: tableVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
 });
 
 // 草稿回显
@@ -2138,7 +2232,7 @@ const detailDataReview = () => {
       Object.keys(data??{}).forEach((key) => {
         if(key === 'form'){
             for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator] 
+                formState[iterator] = data[key][iterator]
             }
         }else {
             formState[key] = data[key];
@@ -2393,7 +2487,7 @@ watch(
     rules.value.contact_flag_phone[0].required = boo;
   }
 );
-watch(()=>formState.type ,
+/* watch(()=>formState.type ,
     (newval,oldval)=>{
 
         if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
@@ -2422,7 +2516,7 @@ watch(()=>formState.type ,
             rules.value.duration_of_agency[0].required = false;
         }
     }
-);
+); */
 defineExpose({
   step1Vaild,
   saveDraft1,
@@ -2602,6 +2696,11 @@ onMounted(() => {
       }
 }
 
+.form-content-item-table {
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
+}
 .spec-add {
     margin: 16px auto 40px;
 }
