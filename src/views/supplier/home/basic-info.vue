@@ -2031,13 +2031,13 @@ let companyVaild = async (_rule, value) => {
         case 'reason':                  // 指定理由
             dataBoo = findObjIsNoneFromList('specify_info' , 'reason');
             break;
-        case 'parts':               // 利润率
+        case 'parts':               // 指定零件
             dataBoo = findObjIsNoneFromList('specify_info' , 'parts');
             break;
-        case 'protocol':        // 资产负债率
+        case 'protocol':        // 指定协议
             dataBoo = findObjIsNoneFromList('specify_info' , 'protocol');
             break;
-        case 'service':             // 现金流量比率
+        case 'service':             // 指定服务
             dataBoo = findObjIsNoneFromList('specify_info' , 'service');
             break;
 
@@ -2491,6 +2491,7 @@ const rulesOther = ref({
             trigger: ["change", "blur"],
         },
     ],
+    // 产能产线
     processes: [/* 关键自有工序 */
         {
             required: true,
@@ -2908,11 +2909,11 @@ watch(
   () => formState.position,
   (val) => {
       
-    let boo = true;
-    if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-        rulesAll.value.contact_name[0].required = boo;
-        rulesAll.value.contact_email[0].required = boo;
-        rulesAll.value.contact_flag_phone[0].required = boo;
+    /* let boo = true;
+    if(formState.position === 4) boo = false;
+    rules.value&&rules.value?.contact_name?.[0]?.required = boo;
+    rules.value&&rules.value?.contact_email?.[0]?.required = boo;
+    rules.value&&rules.value?.contact_flag_phone?.[0]?.required = boo; */
   }
 );
 // 监听类别变动
