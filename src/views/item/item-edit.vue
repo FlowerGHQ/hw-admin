@@ -2965,6 +2965,10 @@ export default {
         //关闭规格值设置弹出-回调
         handleCancelConfig() {
             this.specific.list[this.configIndex] = this.oldConfigSetMes
+            this.closeConfig()
+        },
+        //关闭规格值设置弹出
+        closeConfig() {
             this.uniqueArr = []
             this.showConfigSet = false
         },
