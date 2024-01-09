@@ -638,9 +638,9 @@ onMounted(() => {
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
         // // 如果已经提交了
-        // if (isSubmited.value) {
-        //     $store.dispatch("SUPPLY_CHAIN/setStep", 2);
-        // }
+        if (isSubmited.value) {
+            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
+        }
     });   
 });
 // beforeDestroy
