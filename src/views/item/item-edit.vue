@@ -1601,7 +1601,7 @@ export default {
             limit: 10,
             showConfigSet: false,
             configSetMes: {},
-            // oldConfigSetMes: {},
+            oldConfigSetMes: {},
             configIndex: 0,
             uniqueArr: [],
             // 固定盒子宽度
@@ -2875,12 +2875,12 @@ export default {
         openConfigSet(index, item) {
             this.configIndex = index
             this.configSetMes = item
-            // this.oldConfigSetMes = Core.Util.deepCopy(item)
+            this.oldConfigSetMes = Core.Util.deepCopy(item)
             this.showConfigSet = true
         },
         //关闭规格值设置弹出-回调
         handleCancelConfig() {
-            // this.specific.list[this.configIndex] = this.oldConfigSetMes
+            this.specific.list[this.configIndex] = this.oldConfigSetMes
             this.closeConfig()
         },
         //关闭规格值设置弹出
