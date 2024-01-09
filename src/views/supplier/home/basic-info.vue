@@ -1846,7 +1846,6 @@ let BusinessTermValid = async (_rule, value) => {
 };
 
 let companyVaild = async (_rule, value) => {
-    console.log('_rule, value0111111',_rule,'value', value);
     let dataBoo = false;
     if(!_rule.required) {
         return Promise.resolve();
@@ -1906,7 +1905,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             break;
             
         case 'date_establishment': //成立日期
-            console.log('date_establishment111',formState.company_info?.established_time);
             if(!formState.company_info?.established_time){
                 dataBoo = true;
             }
@@ -1927,7 +1925,6 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             }
             break;
         case 'duration_of_agency': // 代理有效期间
-            console.log('00000000','duration_of_agency',formState.agent_info);
             if ((!formState.agent_info?.agent_effective_begin_time || !formState.agent_info?.agent_effective_end_time)&&formState.type===2) {
                 dataBoo = true;
             }
@@ -2192,20 +2189,33 @@ sales: [
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
-  // 判断是否为空对象
-  if (Object.keys(draftData).length !== 0){
-      // 解析出来的数据
-      let data = draftData;
-      Object.keys(data ?? {}).forEach((key) => {
-        if(key === 'form'){
-         for (const iterator of  Object.keys(data[key])) {
-            formState[iterator] = data[key][iterator]
-         }
-        }else {
-          formState[key] = data[key];
+  if(draftData?.form){
+        let type = typeof(draftData.form);
+        if(type === 'string') {
+            draftData.form = JSON.parse(draftData.form);
+        }else{
+            draftData.form = draftData.form;
         }
-      });
+  }else{
+    draftData = {}
   }
+  console.log('draftData------------------------------------------------',draftData);
+  // 判断是否为空对象
+  if (Object.keys(draftData).length === 0) {
+      console.log('空对象','详情回显');
+  } else {
+        Object.keys(draftData).forEach((key) => {
+            if(key === 'form'){
+                for (const iterator of  Object.keys(draftData[key])) {
+                    formState[iterator] = draftData[key][iterator] //die9
+                }
+            }else {
+                formState[key] = draftData[key];
+            }
+        });
+      
+  }
+  console.log('formState---------------------------',formState);
     setTimeout(() => {
         if (TimeSearchRef.value) {
             // 给timeSearch赋值
@@ -2216,39 +2226,11 @@ const draftDataReview = () => {
         }
     });
 };
-
 // 判断哪些类型显示哪些模块
 const returnTypeBool = (type, typeIncludes) => {    
     let result = typeIncludes.includes(Number(type))   
     return result
 }
-// 详情回显
-const detailDataReview = () => {
-  let detailData = $store.state.SUPPLY_CHAIN.supplyDetailsChain;
-  // 判断是否为空对象
-  if (Object.keys(detailData).length !== 0){
-      // 解析出来的数据
-      let data = detailData;
-      Object.keys(data??{}).forEach((key) => {
-        if(key === 'form'){
-            for (const iterator of  Object.keys(data[key])) {
-                formState[iterator] = data[key][iterator]
-            }
-        }else {
-            formState[key] = data[key];
-        }
-      });
-  }
-    setTimeout(() => {
-        if (TimeSearchRef.value) {
-            // 给timeSearch赋值
-            TimeSearchRef.value.createTime = [
-                formState.agent_info.agent_effective_begin_time,
-                formState.agent_info.agent_effective_end_time,
-            ];
-        }
-    });
-};
 // 代理有效期间
 const handleTimeSearch = (params) => {
     formState.agent_info.agent_effective_begin_time = params.begin_time;
@@ -2267,7 +2249,6 @@ const step1Vaild = () => {
       Promise.all([form1Promise, form2Promise, form3Promise]).then(([res1, res2, res3]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
-            console.log('res1, res2, res31111111',res1, res2, res3);
             if (res1 && res2 && res3) {
                 let data = $store.state.SUPPLY_CHAIN.supplyChain;
                   // 判断是否为空对象
@@ -2306,20 +2287,18 @@ const step1Vaild = () => {
                         }
                     }) 
                   }*/
-                  console.log('0000000000000000000');
                   // 保存数据
                   $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
             }
         }).catch(err => {  
             // 至少有一个 Promise 失败  
             // 处理错误...  
               // 校验失败
-              console.log('err111',err);
               message.warning($t("supply-chain.please_complete_info"));
               const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
               if (!errorName) return;
-              console.log('errorName111',errorName);
               const errorDom = document.querySelector(`[name=${errorName}]`);
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
               errorDom.scrollIntoView({
@@ -2360,7 +2339,8 @@ const step1Vaild = () => {
                       }
                   }
                   // 保存数据
-                  $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit("SUPPLY_CHAIN/setSupplyChain", data);
+                  $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
                   resolve(true)
               }
           })
@@ -2383,51 +2363,24 @@ const step1Vaild = () => {
 // 保存草稿
 const saveDraft1 = () => {
   // 获取数据
-  let data = $store.state.SUPPLY_CHAIN.supplyDraftChain;
   // 判断是否为空对象
-  if (Object.keys(data).length === 0) {
       // 为空对象
-      data = {
-          type: formState.type,
-          position: formState.position,
-          company_name: formState.company_info?.name,
-          form: {
-            ...formState
-          }
-      };
-  } else {
-      // 不为空对象
-      data = {
-        ...data,
+    let data = {
         type: formState.type,
         position: formState.position,
         company_name: formState.company_info?.name,
         form: {
-          ...formState
+            ...formState
         }
-      }
-  }
-  if ($store.getters["SUPPLY_CHAIN/isSubmitEd"]) {
-    $store.dispatch("SUPPLY_CHAIN/setSupplyDetailsChain", data)
-  }
+    };
   // 保存数据
   $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
-
   // 提示
   message.success($t("supply-chain.save_successfully"));
 };
 // 回显数据
 const reviewData = () => {
-  // 判断是否已经提交过了
-  /* let isSubmit = $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-  if (isSubmit) {
-      // 已经提交过了
-      detailDataReview();
-  } else {
-      // 没有提交过
-      draftDataReview();
-  } */
-      draftDataReview();
+    draftDataReview();
 };
 // 删除某一项
 const handleDelete = (list , data, title , key ) => {

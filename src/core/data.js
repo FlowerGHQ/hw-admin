@@ -217,12 +217,6 @@ class StorageHandler {
     getSupplyDraftChain() {
         return this.getItem(Const.DATA.SUPPLY_Daft_CHAIN) || "";
     }
-    setSupplyDetailsChain(value) {
-        this.setItem(Const.DATA.SUPPLY_DETAILS_CHAIN, value);
-    }
-    getSupplyDetailsChain() {
-        return this.getItem(Const.DATA.SUPPLY_DETAILS_CHAIN) || "";
-    }
     // 设置第几步
     setStep(value) {
         this.setItem(Const.DATA.SUPPLY_STEP, value);
