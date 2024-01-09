@@ -1879,6 +1879,9 @@ let companyVaild = async (_rule, value) => {
                 }
             })
             break;
+        case 'taxes_paid':        // 纳税额
+            dataBoo = findItemIsNoneFromList('business_info' , 'taxes_paid');
+            break;
             
     }
     if(dataBoo) return Promise.reject(
@@ -1945,6 +1948,14 @@ const findItemIsNoneWrite = (parObjkey , key) => {
     })
     return boo;
 }
+const findItemIsNoneFromList = (parObjkey , key) => {
+    let boo = false;
+    formState[parObjkey]['list'].forEach((item,index)=>{
+        if(!item[key]) boo = true;
+    })
+    return boo;
+}
+
 
 let tableVaild = async (_rule, value) => {
   console.log('_rule, value------tableVaild',_rule, value);
@@ -2113,48 +2124,51 @@ const rules = ref({
           trigger: ["change", "blur"],
       },
   ],
-  // 代理权证
-  proxy_warrant: [
-      {
-          required: true,
-          validator: flagLegalDisputeValid,
-          trigger: ["change", "blur"],
-      },
-  ],
- // 代理有效期间
- duration_of_agency: [
-    {
-        required: true,
-        validator: flagLegalDisputeValid,
-        trigger: ["change", "blur"],
-    },
-  ],
-//  业务比重
-  proportion_of_business: [
+  
+});
+const rulesOther = ref({
+    // 代理权证
+    proxy_warrant: [
+        {
+            required: true,
+            validator: flagLegalDisputeValid,
+            trigger: ["change", "blur"],
+        },
+    ],
+    // 代理有效期间
+    duration_of_agency: [
+        {
+            required: true,
+            validator: flagLegalDisputeValid,
+            trigger: ["change", "blur"],
+        },
+    ],
+    //  业务比重
+    proportion_of_business: [
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    //  销售额
+    sales: [
+        {
+            required: true,
+            validator: companyVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    // 纳税额
+    taxes_paid: [
       {
           required: true,
           validator: companyVaild,
           trigger: ["change", "blur"],
       },
-  ],
-//  销售额
-sales: [
-      {
-          required: true,
-          validator: companyVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
-// 客户信息
-/*   customer_info_list_column: [
-
-    {
-          required: true,
-          validator: companyVaild,
-          trigger: ["change", "blur"],
-      },
-  ], */
-
+    ],
+    // 客户信息
+    // 客户名称
     customer_name: [
         {
             required: true,
@@ -2184,7 +2198,7 @@ sales: [
             trigger: ["change", "blur"],
         },
     ],
-});
+})
 
 // 草稿回显
 const draftDataReview = () => {
@@ -2199,7 +2213,6 @@ const draftDataReview = () => {
   }else{
     draftData = {}
   }
-  console.log('draftData------------------------------------------------',draftData);
   // 判断是否为空对象
   if (Object.keys(draftData).length === 0) {
       console.log('空对象','详情回显');
@@ -2215,7 +2228,6 @@ const draftDataReview = () => {
         });
       
   }
-  console.log('formState---------------------------',formState);
     setTimeout(() => {
         if (TimeSearchRef.value) {
             // 给timeSearch赋值
@@ -2440,10 +2452,14 @@ watch(
     rules.value.contact_flag_phone[0].required = boo;
   }
 );
-/* watch(()=>formState.type ,
+watch(()=>formState.type ,
     (newval,oldval)=>{
-
+        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
+        rules.value = {
+            ...rules.value, ...rulesOther.value 
+        } 
         if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
+            console.log('pppppppppppppppppppppppp');
             // 业务比重
             rules.value.proportion_of_business[0].required = true;
             // 代理有效期间
@@ -2454,7 +2470,7 @@ watch(
             // 销售额
             rules.value.sales[0].required = true;
         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
-
+ 
             
         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
             // 销售额
@@ -2469,7 +2485,7 @@ watch(
             rules.value.duration_of_agency[0].required = false;
         }
     }
-); */
+);
 defineExpose({
   step1Vaild,
   saveDraft1,
