@@ -136,6 +136,8 @@ export default {
     other: "其他",
     day: "天",
     please_complete_info: "请完善信息",
+    please_table_complete_info: "请完善表格信息",
+
     Yes: "有",
     None: "无",
     Position: "职位",
@@ -401,6 +403,7 @@ export default {
     other: "Other",
     day: "Day",
     please_complete_info: "Please complete the information",
+    please_table_complete_info: "Please complete the table information",
     Yes: "Yes",
     None: "No",
     Position: "Position",

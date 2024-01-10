@@ -10,7 +10,7 @@
                   </a-col>
                   <a-col :span="22" >
                         <div class="top-type-box" >
-                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
+                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value">
                                 <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
                                 <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
                                 <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
@@ -48,13 +48,12 @@
                                       "
                                       name="positon"
                                       >
-                                      <!-- <a-radio-group
-                                                v-model:value="formState.position"
-                                                name = "positon"
-                                            >
-                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
-                                      </a-radio-group> -->
-                                      <a-checkbox-group @change="handleCheckBox" v-model:value="formState.position" name="checkboxgroup" :options="plainOptions" />
+                                      <a-checkbox-group 
+                                        @change="handleCheckBox" 
+                                        v-model:value="formState.position" 
+                                        name="positon" 
+                                        :options="plainOptions" 
+                                      />
                                   </a-form-item>
                               </a-col>
                           </a-row>
@@ -74,20 +73,24 @@
                                   </a-form-item>
                               </a-col> -->
                               <a-col :span="24">
-                                <a-form-item :label="' '" name="contact_info">
-                                    <div class="form-content-item-table" >
+                                <a-form-item :label="' '" name="contact_info" class="form-content-item">
+                                    <div 
+                                        class="form-content-item-table" 
+                                        name="contact_info"
+                                    >
                                         <a-table
                                             :columns="contact_info_column"
                                             :dataSource="formState.contact_info"
                                             :row-key="(record) => record.id"
                                             :pagination="false"
                                             class="specific-table-position"
+                                            :rowClassName="(record, index) => record.position === 4 ? 'no-require' : ''"
                                         >
                                             <template #bodyCell="{ column, record, index }">
                                                 <template
                                                     v-if="column.dataIndex === 'position'"
                                                 >
-                                                   <div class="position-label">
+                                                   <div :class="{'position-label':true,'no-require':record.position === 4}">
                                                         {{ $t(Core.Const.SUPPLAY.POSITION_MAP[record.position].t)  }}
                                                    </div>
                                                 </template> 
@@ -1642,6 +1645,7 @@ const customer_info_list_obj = ref({
 const plainOptions = computed(()=>{
     let arr = []
     Core.Const.SUPPLAY.POSITION.forEach(item=>{
+       
         arr.push({
             label: $t(item.label),
             value: item.value
@@ -1661,17 +1665,22 @@ const contact_info_column = ref([
 
 ])
 const handleCheckBox = (checkedValue) => {
-    console.log(checkedValue);
+    // 清除
     formState.position = checkedValue
     let arr = []
     checkedValue.forEach(item=>{
-        arr.push({
-            position: item,
-            name: '',
-            phone: '',
-            email: '',
-            flag_wechat:false
-        })
+         // 如果formState.contact_info里面有这个职位,就将这个职位的信息push到arr里面
+         if(formState.contact_info.some(item2=>item2.position == item)){
+            arr.push(formState.contact_info.find(item2=>item2.position == item))
+         }else{
+            arr.push({
+                position: item,
+                name: '',
+                phone: '',
+                email: '',
+                flag_wechat:false
+            })
+         }
     })
     formState.contact_info = arr
 }   
@@ -1737,14 +1746,20 @@ const detection_equipment_column = ref([
   { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
   { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
 ])
- 
-
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
-    position: [],
+    position: [4],
     company_name: '',
-    contact_info: [], // 联系方式
+    contact_info: [
+        {
+            position: 4,
+            name: '',
+            phone: '',
+            email: '',
+            flag_wechat:false
+        }
+    ], // 联系方式
     company_info: {}, // 公司概况
     agent_info: {// 代理公司概况
 
@@ -1896,60 +1911,29 @@ const formState = reactive({
     additional_info: "",
 });
 let PositionVaild = async (_rule, value) => {
-    if (!formState.position) {
+    if (formState.position.length == 0) {
         return Promise.reject(
             $t("supply-chain.please_select_position")
         );
     }
-    if (formState.postion == 4) {
-        /* formState.begin_business_time = "";
-        formState.end_business_time = ""; */
-       // 去除校验 
-    }
     return Promise.resolve(); 
 }
-
-let NameVaild = async(_rule, value) => {
-    let dataBoo = false;
-    if(!_rule.required) {
+let contactInfoVaild = (_rule, value)=>{
+    // 如果只有一个数据,并且position为4,就不用校验
+    if(formState.contact_info.length == 1 && formState.contact_info[0].position == 4){
         return Promise.resolve();
     }
-    switch(_rule.fullField){
-        case 'contact_name': 
-            if (!formState.contact_info?.name) {
-                dataBoo = true;
+    else if(formState.contact_info.length > 1){
+       let arr = formState.contact_info.filter(item=>item.position != 4)
+       for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+            if (!element.name || !element.phone || !element.email) {
+                return Promise.reject(false);
             }
-            break;
-        case 'contact_email':
-            if (!formState.contact_info?.email) {
-                dataBoo = true;
-            }
-            break;
-        case 'contact_flag_phone':
-            if (!formState.contact_info?.phone) {
-                dataBoo = true;
-            }
-            break;
+       }
     }
-    if(dataBoo) return Promise.reject(
-        $t("supply-chain.please_enter")
-    );
     return Promise.resolve();
 }
-let BusinessTermValid = async (_rule, value) => {
-  if (formState.business_duration_type == 2) {
-      if (!formState.begin_business_time || !formState.end_business_time) {
-          return Promise.reject(
-              $t("supply-chain.please_select_business_term")
-          );
-      }
-  }
-  if (formState.business_duration_type == 1) {
-      formState.begin_business_time = "";
-      formState.end_business_time = "";
-  }
-  return Promise.resolve();
-};
 
 let companyVaild = async (_rule, value) => {
     let dataBoo = false;
@@ -2107,10 +2091,8 @@ const findObjIsNoneFromList = (parObjkey , key) => {
     if(!formState[parObjkey]?.[key]) boo = true;
     return boo;
 }
-
 // 表格校验
 let tableVaild = async (_rule, value) => {
-  console.log('_rule, value------tableVaild',_rule, value);
   let dataBoo = false;
     if(!_rule.required) {
         return Promise.resolve();
@@ -2171,47 +2153,48 @@ let tableVaild = async (_rule, value) => {
     );
     return Promise.resolve();
 };
-
-
-
-
 // 当前类的校验
 const rules = ref({})
-
 // 五个类共有的校验集合
 const rulesAll = ref({
   positon: [//职业
-
       {
           required: true,
           validator: PositionVaild,
           trigger: ["change", "blur"],
       },
   ],
-  contact_name: [// 姓名
-    
+  contact_info:[ // 联系方式
       {
           required: true,
-          validator: NameVaild,
+          validator: contactInfoVaild,
           trigger: ["change", "blur"],
       },
   ],
-  contact_email: [// 邮箱
+//   contact_name: [// 姓名
     
-      {
-          required: true,
-          validator: NameVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
-  contact_flag_phone: [// 手机号
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
+//   contact_email: [// 邮箱
     
-      {
-          required: true,
-          validator: NameVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
+//   contact_flag_phone: [// 手机号
+    
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
   // 公司名称
   company_name_name: [
       {
@@ -2271,7 +2254,6 @@ const rulesAll = ref({
   ],
   
 });
-
 // 五个类除共有的校验集合
 const rulesOther = ref({
 
@@ -2493,7 +2475,6 @@ const rulesOther = ref({
     
 
 })
-
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
@@ -2553,7 +2534,6 @@ const step1Vaild = () => {
       const form2Promise = formRef2.value.validate(); // 获取表单2的验证 Promise  
       const form3Promise = formRef3.value.validate(); // 获取表单3的验证 Promise  
       const form4Promise = formRef4.value.validate(); // 获取表单4的验证 Promise  
-
       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
@@ -2609,6 +2589,7 @@ const step1Vaild = () => {
               console.log('errorName111',errorName,err);
               if (!errorName) return;
               const errorDom = document.querySelector(`[name=${errorName}]`);
+              console.log(errorDom)
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
               errorDom.scrollIntoView({
                   behavior: "smooth",
@@ -2617,56 +2598,6 @@ const step1Vaild = () => {
               });
               reject(false)
         });
-            //   await Promise.all([form1Promise, form2Promise, form3Promise]); // 同时等待两个表单验证完成  
-     
-      /* formRef1.value
-          .validate()
-          .then((res) => {
-              if (res) {
-                  let data = $store.state.SUPPLY_CHAIN.supplyChain;
-                  // 判断是否为空对象
-                  if (Object.keys(data).length === 0) {
-                      // 为空对象
-                      data = {
-                          type: formState.type,
-                          position: formState.position,
-                          company_name: formState.company_info?.name,
-                          form: {
-                            ...formState
-                          }
-                      };
-                  } else {
-                      // 不为空对象
-                      data = {
-                        ...data,
-                        type: formState.type,
-                        position: formState.position,
-                        company_name: formState.company_info?.name,
-                        form: {
-                          ...formState
-                        }
-                      }
-                  }
-                  // 保存数据
-                  $store.commit("SUPPLY_CHAIN/setSupplyChain", data);
-                  $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
-                  resolve(true)
-              }
-          })
-          .catch((err) => {
-              // 校验失败
-              message.warning($t("supply-chain.please_complete_info"));
-              const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-              if (!errorName) return;
-              const errorDom = document.querySelector(`[name=${errorName}]`);
-              // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-              errorDom.scrollIntoView({
-                  behavior: "smooth",
-                  block: "center",
-                  inline: "nearest",
-              });
-              reject(false)
-          }); */
   })
 };
 // 保存草稿
@@ -2727,7 +2658,7 @@ const handleAddSpecItem = (list ,obj ,title , key ) => {
     title ? obj[key] = title + id : ''
 
     list.push({...obj,id})
-}
+}          
 // 根据type 动态设置rules
 const setRules = () => {
     
@@ -2866,7 +2797,6 @@ const setRules = () => {
             
             break;
     }
-    console.log('obj000000',obj);
     rules.value = {
         ...rulesAll.value , ...obj
     }
@@ -2881,66 +2811,12 @@ watch(
       }
   }
 );
-// // 职业勾选变动
-// watch(
-//   () => formState.position,
-//   (val) => {
-      
-//     let boo = true;
-//     if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-//     rules.value.contact_name[0].required = boo;
-//     rules.value.contact_email[0].required = boo;
-//     rules.value.contact_flag_phone[0].required = boo;
-//   }
-// );
-watch(()=>formState.type ,
-    (newval,oldval)=>{
-        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
-        rules.value = {
-            ...rules.value, ...rulesOther.value 
-        } 
-        if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
-            console.log('pppppppppppppppppppppppp');
-            // 业务比重
-            rules.value.proportion_of_business[0].required = true;
-            // 代理有效期间
-            rules.value.duration_of_agency[0].required = true;
-            rules.value.proxy_warrant[0].required = true;
-
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
- 
-            
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-
-        }else{
-            // 业务比重
-            rules.value.proportion_of_business[0].required = false;
-            rules.value.sales[0].required = false;
-            // 代理有效期间
-            rules.value.proxy_warrant[0].required = false;
-            rules.value.duration_of_agency[0].required = false;
-        }
-    }
-);
-    /* let boo = true;
-    if(formState.position === 4) boo = false;
-    rules.value&&rules.value?.contact_name?.[0]?.required = boo;
-    rules.value&&rules.value?.contact_email?.[0]?.required = boo;
-    rules.value&&rules.value?.contact_flag_phone?.[0]?.required = boo; */
-//   }
 // );
 // 监听类别变动
 watch(()=>formState.type ,
     (newval,oldval)=>{
-
         // 重置校验规则
         setRules()
-
         formRef1.value.clearValidate();
         formRef2.value.clearValidate();
         formRef3.value.clearValidate();
@@ -2952,12 +2828,9 @@ defineExpose({
   saveDraft1,
   reviewData,
 });
-
 onMounted(() => {
-
     // 回显数据
     reviewData();
-  
     // 重置校验规则
     setRules()
 });
@@ -3152,6 +3025,11 @@ onMounted(() => {
                 margin-right: 2px;
             }
         }
+        .no-require{
+            &::before {
+             display: none;
+            }
+        }
         .phone-and-wechart{
             display: flex;
             align-items: center;
@@ -3159,6 +3037,30 @@ onMounted(() => {
                 margin-left: 8px;
                 display: flex;
             }
+        }
+    }
+}
+:deep(.form-content-item){
+    .ant-form-item-label{
+        .ant-form-item-required{
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
+:deep(.ant-table-tbody){
+    .no-require{
+        .ant-table-cell{
+          #custom-validation_contact_info{
+                border: 1px solid #EAECF2 !important;
+                // 清除所有的失败的样式,border box-shadow
+                &:focus,&:hover{
+                    border: 1px solid #EAECF2 !important;
+                    box-shadow: none !important;
+                }
+
+           }
         }
     }
 }
