@@ -9,7 +9,7 @@
                       </div>
                   </a-col>
                   <a-col :span="22" >
-                        <div class="top-type-box" >
+                        <div class="top-type-box">
                             <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
                                 <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
                                 <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
@@ -3090,6 +3090,7 @@ onMounted(() => {
         border: 1px solid #EAECF1;
         background: #FFF;
     }
+    
 }
 .m-l-4 {
     margin-left: 4px;
