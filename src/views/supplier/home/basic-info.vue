@@ -11,8 +11,8 @@
                   <a-col :span="22" >
                         <div class="top-type-box" >
                             <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value">
-                                <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
-                                <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
+                                <MySvgIcon :icon-class="`white-${item.icon}`"  :class="{'white-font':item.value === formState.type,'black-font':item.value !== formState.type}" />
+                                <!-- <MySvgIcon :icon-class="`white-${item.icon}`" class="black-font" v-else  />  -->
                                 <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
                                     {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
                                 </span>
@@ -100,6 +100,9 @@
                                                 >
                                                 <a-input 
                                                     name="name" 
+                                                    :class="{
+                                                        'require':record.position !== 4 && !record.name
+                                                    }"
                                                     v-model:value="record.name" 
                                                     :placeholder="$t('supply-chain.please_enter')" />
                                                 </template> 
@@ -110,6 +113,9 @@
                                                         <a-input 
                                                             name="phone" 
                                                             class="phone-area"
+                                                            :class="{
+                                                                'require':record.position !== 4 && !record.phone
+                                                            }"
                                                             v-model:value="record.phone" 
                                                             :placeholder="$t('supply-chain.please_enter')" />
                                                         <a-checkbox 
@@ -123,6 +129,9 @@
                                                 >
                                                 <a-input 
                                                     name="email" 
+                                                    :class="{
+                                                        'require':record.position !== 4 && !record.email
+                                                    }"
                                                     v-model:value="record.email" 
                                                     :placeholder="$t('supply-chain.please_enter')" />
                                                 </template> 
@@ -2960,15 +2969,19 @@ onMounted(() => {
 
     .type-parts {
 
-        width: 176px;
+        min-width: 176px;
         height: 58.25px;
         flex-shrink: 0;
         text-align: center;
         margin-right: 20px;
+        padding: 0 54px;
         line-height: 58.25px;
         cursor: pointer;
         .fcc();
         box-sizing: border-box;
+        &:last-child {
+            margin-right: 0;
+        }
 
       .type-font {
           font-size: 16px;
@@ -2976,11 +2989,24 @@ onMounted(() => {
           color:  #666;
           font-weight: 400;
       }
-    }
-    .click-type {
-      
+      &:hover {
         background-image: url("../../../assets/images/supply-chain/parts-bg.png");
         background-size: 100% 100%;
+        .type-font{
+            color: #fff !important;
+        }
+        svg{
+            fill: #fff;
+            path{
+                fill: #fff;
+            }
+        }
+      }
+    }
+    .click-type {
+        background-image: url("../../../assets/images/supply-chain/parts-bg.png");
+        background-size: 100% 100%;
+        
     }
     .border-type {
         border-radius: 4px;
@@ -3035,7 +3061,8 @@ onMounted(() => {
     .specific-table-position{
         color:#1D2129;
         .position-label{
-            width: 74px;
+            min-width: 74px;
+            padding:6px 18px;
             border-radius: 4px;
             height: 32px;
             background:#F2F3F5;
@@ -3090,7 +3117,7 @@ onMounted(() => {
     }
     .require{
         .ant-table-cell{
-            #custom-validation_contact_info{
+            .require{
                 border: 1px solid #FF4D4F !important;
                 // 清除所有的失败的样式,border box-shadow
                 &:focus,&:hover{
@@ -3125,10 +3152,22 @@ onMounted(() => {
 .black-font {
     font-size: 16px;
     color: #666;
+    svg{
+        fill: #666;
+        path{
+            fill: #666;
+        }
+    }
 }
 .white-font {
     font-size: 16px;
     color: #FFF;
+    svg{
+        fill: #FFF;
+        path{
+            fill: #FFF;
+        }
+    }
 }
 
 :deep(.ant-table) {
