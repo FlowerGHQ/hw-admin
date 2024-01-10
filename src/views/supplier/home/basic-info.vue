@@ -779,6 +779,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
                                       <!-- 竞争对手序号 -->
                                       <template
@@ -833,7 +836,7 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj ,'竞争对手' ,'company_order')"
                                   >
-                                  添加对手
+                                  {{ $t("supply-chain.add_opponents") }}
                               </a-button
                               >
                           </div>
@@ -862,6 +865,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                    <template #headerCell="{title}">
+                                        {{ $t(title) }}
+                                    </template>
                                     <template #bodyCell="{ column, record, index }">
                                         <!-- 客户序号 -->
                                         <!-- <template
@@ -928,7 +934,8 @@
                                     ghost
                                     @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户' ,'customer_order')"
                                     >
-                                    添加客户
+                                    
+                                    {{ $t("supply-chain.add_customers") }}
                                 </a-button
                                 >
                             </div>
@@ -1411,6 +1418,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
 
                                       <template
@@ -1472,7 +1482,8 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.production_equipment ,production_equipment_obj)"
                                   >
-                                  添加生产设备
+                                  
+                                    {{ $t("supply-chain.add_production_equipment") }}
                               </a-button
                               >
                           </div>
@@ -1509,6 +1520,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
                                       <!-- 客户序号 -->
                                       <!-- <template
@@ -1573,7 +1587,8 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.detection_equipment ,detection_equipment_obj)"
                                   >
-                                  添加检测设备
+                                  
+                                  {{ $t("supply-chain.add_detection_equipment") }}
                               </a-button
                               >
                           </div>
@@ -1679,14 +1694,15 @@ const handleCheckBox = (checkedValue) => {
     })
     formState.contact_info = arr
 }   
+// 客户信息
 const customer_info_list_column = ref([
   
-    { title: '客户序号', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
-    { title: '客户名称', key: "customer_name", dataIndex: "customer_name", type: 'input' }, // 客户名称
-    { title: '销售占比', key: "sales_share", dataIndex: "sales_share", unit: '%', type: 'input-num' }, // 销售占比
-    { title: '主供零件', key: "main_supply_part", dataIndex: "main_supply_part", type: 'input' }, // 主供零件
-    { title: '开始合作时间', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time", type: 'time' }, // 开始合作时间
-    { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+    { title: 'supply-chain.customer_serial_number', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
+    { title: 'supply-chain.customer_name', key: "customer_name", dataIndex: "customer_name", type: 'input' }, // 客户名称
+    { title: 'supply-chain.Sales_share', key: "sales_share", dataIndex: "sales_share", unit: '%', type: 'input-num' }, // 销售占比
+    { title: 'supply-chain.Main_supply_part', key: "main_supply_part", dataIndex: "main_supply_part", type: 'input' }, // 主供零件
+    { title: 'supply-chain.Start_time', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time", type: 'time' }, // 开始合作时间
+    { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 // 竞争对手
 const competitor_analysis_obj = ref({
@@ -1697,11 +1713,11 @@ const competitor_analysis_obj = ref({
 })
 const competitor_analysis_column = ref([
   
-    { title: '公司序号', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
-    { title: '公司名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
-    { title: '市场份额', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
-    { title: '了解评价', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
-    { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+    { title: 'supply-chain.company_serial_number', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
+    { title: 'supply-chain.company_name', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
+    { title: 'supply-chain.market_share', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
+    { title: 'supply-chain.understanding_evaluation', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
+    { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 
 // 生产设备
@@ -1714,12 +1730,12 @@ const production_equipment_obj = ref({
 })
 const production_equipment_column = ref([
   
-  { title: '生产设备名称', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
-  { title: '规格型号（含吨位）', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
-  { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
-  { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '购置年限', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
-  { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+  { title: 'supply-chain.Name_of_production_equipment', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
+  { title: 'supply-chain.Specification_and_model', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
+  { title: 'supply-chain.quantity', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+  { title: 'supply-chain.Equipment_manufacturer', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+  { title: 'supply-chain.Purchase_period', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
+  { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 // 检测设备
 const detection_equipment_obj = ref({
@@ -1734,12 +1750,12 @@ const detection_equipment_obj = ref({
 const detection_equipment_column = ref([
  
   
-  { title: '检测设备名称', key: "name", dataIndex: "name", type: 'input' }, // 检测设备名称
-  { title: '规格型号', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
-  { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
-  { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
-  { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+  { title: 'supply-chain.Name_of_detection_equipment', key: "name", dataIndex: "name", type: 'input' }, // 检测设备名称
+  { title: 'supply-chain.Specification_text', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
+  { title: 'supply-chain.quantity', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+  { title: 'supply-chain.Equipment_manufacturer', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+  { title: 'supply-chain.precision_grade', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
+  { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
  
 
