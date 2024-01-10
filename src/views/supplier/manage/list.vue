@@ -156,10 +156,16 @@ const onView = (record) => {
 }
 const onBtn = () => {
     console.log("点击查看了");
-    let routeUrl = router.resolve({
-        path: '/supply-manage/add',
+    // let routeUrl = router.resolve({
+    //     path: '/supply-manage/add',
+    // })
+    // window.open(routeUrl.href, '_block')
+    router.push({
+        name: 'SupplyAdd',
+        params: {
+            id: 1
+        }
     })
-    window.open(routeUrl.href, '_block')
 }
 /* methods end*/
 </script>
