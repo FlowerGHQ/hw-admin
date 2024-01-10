@@ -208,7 +208,7 @@
                                   <!-- 固定资产 -->
                                   
                                   <a-form-item
-                                       label="固定资产"
+                                       :label="$t('supply-chain.fixed_assets')"
                                        >
                                        <a-input v-model:value="formState.company_info.fixed_assets" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
@@ -304,7 +304,7 @@
                               <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing ,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 12 : 0">
                                   <!-- 经营场所 -->
                                   <a-form-item
-                                      label="经营场所" >
+                                      :label="$t('supply-chain.establishments')" >
                                       
                                       <a-input v-model:value="formState.company_info.premises" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
@@ -418,6 +418,7 @@
                           
                       </a-col>
                   </a-row>
+                  <!-- 人力资源 -->
                   <a-row :gutter="24" >
                       <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0" class="title-area">
                           <div class="title-two">
@@ -654,7 +655,7 @@
                                                             :max="1000000000"
                                                         >
                                                             <template #addonAfter>
-                                                                <span class="l-w-h-style">万元</span>
+                                                                <span class="l-w-h-style">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
                                                             </template>
                                                 </a-input-number>
                                           </span>
@@ -678,7 +679,7 @@
                                                     :max="1000000000"
                                                 >
                                                     <template #addonAfter>
-                                                        <span class="l-w-h-style">万元</span>
+                                                        <span class="l-w-h-style">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
                                                     </template>
                                           </a-input-number>
                                       </a-form-item>
@@ -779,7 +780,7 @@
                                 class="specific-table"
                             >
                                   <template #bodyCell="{ column, record, index }">
-                                      <!-- 客户序号 -->
+                                      <!-- 竞争对手序号 -->
                                       <template
                                           v-if="column.dataIndex === 'company_order'"
                                       >
@@ -1020,7 +1021,7 @@
                                 
                                   <!-- 模具轮廓 -->
                                   <a-form-item 
-                                      label="模具轮廓">
+                                      :label="$t('supply-chain.mold_profile')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_profile"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1030,7 +1031,7 @@
                                 
                                   <!-- 模具重量 -->
                                   <a-form-item 
-                                      label="模具重量">
+                                      :label="$t('supply-chain.mold_weight')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_weight"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1040,7 +1041,7 @@
                                 
                                   <!-- 模具品类 -->
                                   <a-form-item 
-                                      label="模具品类">
+                                      :label="$t('supply-chain.mold_category')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_category"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1050,7 +1051,7 @@
                                 
                                   <!-- 模具设计 -->
                                   <a-form-item 
-                                      label="模具设计">
+                                      :label="$t('supply-chain.mould_design')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_design"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1060,7 +1061,7 @@
                                 
                                   <!-- 模具制造 -->
                                   <a-form-item 
-                                      label="模具制造">
+                                      :label="$t('supply-chain.mold_manufacturing')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_manufacture"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1070,7 +1071,7 @@
                                 
                                   <!-- 模具验收 -->
                                   <a-form-item 
-                                      label="模具验收">
+                                      :label="$t('supply-chain.mold_acceptance')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_acceptance"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1099,6 +1100,7 @@
                           
                       </a-col>
                   </a-row>
+
                   <!-- 质量信息 -->
                   <a-row :gutter="24">
                       <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 3 : 0"  class="title-area">
@@ -1157,6 +1159,7 @@
                             </a-row>
                       </a-col>
                   </a-row>
+
                   <!-- 产能产线 -->
                   <a-row :gutter="24">
                       <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
@@ -1207,6 +1210,7 @@
                           </a-row>
                       </a-col>
                   </a-row>
+                  
                   <!-- 外购管理 -->
                   <a-row :gutter="24">
                       <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
