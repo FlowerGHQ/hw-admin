@@ -1686,7 +1686,12 @@ const Util = {
               fn({ page: pagination.page })
           }
       }
-    }
+    },
+    // 地域决定金额单位
+    regionalUnitMoney() {
+        let val = Data.getLang() || 'eur';
+        return { ...Const.ORDER.AreaUnit[val] };
+    },
 }
 
 export default Util

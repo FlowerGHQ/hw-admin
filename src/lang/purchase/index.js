@@ -11,7 +11,7 @@ export default {
         services: 'HORWIN服务',
         deals: '本地政策',
         news: 'HORWIN官方新闻',
-        products_name1: '车辆型号',
+        products_name1: '整车',
         products_name2: '配件',
         products_name3: '周边产品',
         products_mes1: '我们有13种车型可供选择',
@@ -25,7 +25,10 @@ export default {
         photo_video_mes: '这是字幕，具体副本需要配置',
         back_top: 'Back Top',
         search: '搜索',
+        searching: '搜索中',
         check_more: '查看更多',
+        my_favorites: '我的收藏',
+        search_results: '搜索结果',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -39,7 +42,7 @@ export default {
         deals: 'Local Deals',
         news: 'HORWIN Official News',
         products_name1: 'Vehicle Models',
-        products_name2: 'Accessories',
+        products_name2: 'Spareparts',
         products_name3: 'Peripheral Products',
         products_mes1: 'We have 13 vehicle models to choose from',
         products_mes2: 'To choose spareparts for different types of models',
@@ -53,7 +56,10 @@ export default {
         photo_video_mes: 'Here is the subtitle, the specific copy is to be configured',
         back_top: 'Back Top',
         search: 'Search',
+        searching: 'Searching',
         check_more: '查看更多',
+        my_favorites: 'My Favorites',
+        search_results: 'Search Results',
     }
 }
 

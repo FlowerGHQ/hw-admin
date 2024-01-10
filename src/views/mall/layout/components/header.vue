@@ -120,13 +120,15 @@
         </div>
         <div id="search">
             <div class="search-content content">
-                <img class="logo-img" :src="getHeaderSrc('logo', 'png')" />
+                <img class="logo-img" :src="getHeaderSrc('logo', 'png')" @click="routerChange('/mall/index')" />
                 <div class="search-input">
-                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')">
-                    <my-button type="primary" @click="routerChange('/purchase/item-list', { key: searchKey })">
-                        <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
-                        {{ $t('purchase.search') }}
-                    </my-button>
+                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')" @keyup.enter="search(searchKey)">
+                    <div @click="search(searchKey)">
+                        <my-button type="primary">
+                            <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
+                            {{ $t('purchase.search') }}
+                        </my-button>
+                    </div>
                 </div>
                 <div class="bag" @click="routerChange('/purchase/item-collect')">
                     <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-6, -2]">
@@ -138,15 +140,15 @@
         </div>
         <div id="menu">
             <div class="menu-content content">
-                <!-- 车辆型号 -->
+                <!-- 整车 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
                 <span class="menu-item tab-animate">
-                    <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="accessoriesDropDownChange">
+                    <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
-                            <span class="menu-item-text">{{ $t('mall.accessories') }}</span>
+                            <span class="menu-item-text">{{ $t('mall.spareparts') }}</span>
                             <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShowShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                         </div>
                         <!-- <template #overlay>
@@ -163,7 +165,7 @@
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.peripheral_products') }}</span>
                 </span>
-                <!-- 促销产品 -->
+                <!-- 广宣品 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.promotional_products') }}</span>
                 </span>
@@ -202,11 +204,15 @@ export default {
             },
             menuList: Core.Const.LOGINMALL.HEADERMENU,
             accessoriesMenuList: Core.Const.LOGINMALL.HEADERACCESMENU,
-            shopCartNum: 0,
-            searchKey: ''
+            searchKey: '',
+            searchLoading: false
         };
     },
-    computed: {},
+    computed: {
+        shopCartNum() {
+            return this.$store.state.shopCartNum
+        }
+    },
     watch: {},
     created() {
         const lang = Core.Data.getLang()
@@ -217,15 +223,17 @@ export default {
     },
     mounted() {
         this.getShopCartList()
+        this.searchKey = this.$store.state.mallSearchKey
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
             const path = `../../../../assets/images/mall/header/${name}.${type}`;
             return headerModules[path]?.default || '';
         },
+        // 获取购物车商品数量
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
-                this.shopCartNum = res.count
+                this.$store.commit('setShopCartNum', res.count)
             })
         },
         handleLangSwitch(lang) {
@@ -250,8 +258,8 @@ export default {
         langDropDownChange(e) {
             this.langShow = e
         },
-        accessoriesDropDownChange(e) {
-            this.accessoriesShow = e
+        sparepartsDropDownChange(e) {
+            this.sparepartsShow = e
         },
         // 修改密码
         handleEditShow() {
@@ -295,6 +303,17 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        search(key) {
+            if (this.searchLoading) return;
+            this.searchLoading = true
+            if (!key) {
+                this.searchLoading = false
+                return this.$message.warning(this.$t('mall.search_placeholder'))
+            }
+            this.searchLoading = false
+            this.$store.commit('setMallKey', key);
+            this.routerChange('/mall/search', { key })
         },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
@@ -377,6 +396,7 @@ export default {
     #search {
         .logo-img {
             width: 122px;
+            cursor: pointer;
         }
         .search-input {
             .flex(initial, center,  row);

@@ -4,7 +4,9 @@ import Data from '../core/data'
 const store = createStore({
     state () {
         return {
-            lang: 'zh'
+            lang: 'zh',
+            mallSearchKey: '',
+            shopCartNum: 0,
         }
     },
     mutations: {
@@ -17,7 +19,17 @@ const store = createStore({
                 state.lang = 'zh'
                 Data.setLang('zh')
             }
-        }
+        },
+        setMallKey(state, props) {
+            if (props || props === '') {
+                state.mallSearchKey = props
+            }
+        },
+        setShopCartNum(state, props) {
+            if (props || props === '') {
+                state.shopCartNum = props
+            }
+        },
     }
 })
 

@@ -953,6 +953,9 @@ const apiList = {
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
 
+    },
+    DISTRIBUTOR_HOME: {
+        searchList: ['PostJson', 'new/list'], // 分销商首页搜索
     }
 }; 
 

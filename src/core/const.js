@@ -2703,6 +2703,13 @@ let Const = {
         'en':  { key: 101, value: 'en', label: '欧洲' },
         'us':  { key: 201, value: 'us', label: '美国' },
         'de':  { key: 102, value: 'de', label: '德国' },
+    },
+    ORDER: {
+        // 区域-area对应订单金额单位
+        AreaUnit: {
+            "zh": { key: '1', name_index: 'name' },
+            "en": { key: '2', name_index: 'name_en' },
+        }
     }
 
 };

@@ -6,9 +6,11 @@ export default  {
     ROUTERS:[
         {value:'/mall/index'},
         {value:'/mall/favorites'},
+        {value:'/mall/search'},
     ],
     FOOTER:[
         {value:'/mall/index'},
         {value:'/mall/favorites'},
+        {value:'/mall/search'},
     ],
 }

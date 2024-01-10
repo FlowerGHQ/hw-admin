@@ -90,6 +90,14 @@ const routes = [
                     title_en: 'Index',
                 }
             },
+            {
+                path: 'search',
+                component: () => import('@/views/mall/purchase/search.vue'),
+                meta: {
+                    title: '搜索',
+                    title_en: 'Search',
+                }
+            },
             // {
             //     path: 'favorites',
             //     component: () => import('@/views/mall/purchase/favorites.vue'),
