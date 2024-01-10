@@ -1,10 +1,12 @@
 import { createStore } from 'vuex'
 import Data from '../core/data'
+import { SUPPLY_CHAIN } from './supply'
 
 const store = createStore({
     state () {
         return {
             lang: 'zh',
+            isRead:false,
             mallSearchKey: '',
             shopCartNum: 0,
         }
@@ -30,6 +32,14 @@ const store = createStore({
                 state.shopCartNum = props
             }
         },
+        // 设置是否已经阅读
+        setRead(state,read){
+            state.isRead = read
+        }
+    },
+    // modules
+    modules: {
+        SUPPLY_CHAIN
     }
 })
 

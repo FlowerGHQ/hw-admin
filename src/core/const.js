@@ -31,6 +31,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://10.10.12.65:8889'
         URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
+        // URL_POINT = 'http://10.10.12.75:8889' // zwq
         break;
     case 'eos.hw.innotick.com':
         URL_POINT = 'https://eos-api.horwincloud.com' // 老正式服
@@ -47,7 +48,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.0.0.213:8889' // zwq
+        // URL_POINT = 'http://10.10.12.75:8889' // zwq
         // URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
@@ -72,7 +73,6 @@ let Const = {
         KEY_USER_TYPE: 'user.type',
         KEY_AUTHORITY_LIST: 'authority.list',
         KEY_CURRENCY: 'org.currency',
-
         KEY_FIELD_DISPLAY: 'field.display',
         KEY_LANGUAGE: 'language',
         TAB_POSITION: 'tab.position',
@@ -80,6 +80,11 @@ let Const = {
         GROUP_ID: 'group.id',
         SUPER_ADMIN: 'super_admin',
         CUSTOMER_SERVICE_CLUE: 'customer-service-clue',
+        SUPPLY_CHAIN: 'supply-chain',
+        SUPPLY_Daft_CHAIN: 'supply-draft-chain',
+        SUPPLY_STEP: 'supply-step',
+        SUPPLY_ISREAD: 'supply-isread',
+        SUPPLY_SUBMITED: 'supply-submited',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -154,6 +159,7 @@ let Const = {
             DISTRIBUTOR: 15, //分销商
             AGENT: 20, // 零售商
             STORE: 30, // 门店
+            SUPPLIER: 60, // 供应商
             CUSTOMER: 100, // 顾客
         },
         TYPE_MAP: {
@@ -161,6 +167,7 @@ let Const = {
             '15': { key: 15, zh: '分销商', en: 'Distributor' },
             '20': { key: 20, zh: '零售商', en: 'Retailer' },
             '30': { key: 30, zh: '门店', en: 'Store' },
+            '60': { key: 60, zh: '供应商', en: 'Supplier' },
             /*  10: '平台方',
               15: '分销商',
               20: '零售商',
@@ -174,8 +181,10 @@ let Const = {
             DISTRIBUTOR: 15, //分销商
             AGENT: 20, // 零售商
             STORE: 30, // 门店
+            SUPPLIER: 60, // 供应商
         },
         TYPE_LIST: [
+            { value: 60, zh: '供应商', en: 'Supplier' },
             { value: 30, zh: '门店', en: 'Store' },
             { value: 20, zh: '零售商', en: 'Retailer' },
             { value: 15, zh: '分销商', en: 'Distributor' },
@@ -186,6 +195,7 @@ let Const = {
             15: 'DISTRIBUTOR',
             20: 'AGENT',
             30: 'STORE',
+            60: 'SUPPLIER',
             100: 'CUSTOMER',
         },
         ORG_TYPE: {
@@ -193,6 +203,7 @@ let Const = {
             DISTRIBUTOR: 15,
             AGENT: 20,
             STORE: 30,
+            SUPPLIER: 60, // 供应商
         },
         ROUTER_TYPE: {
             SALES: 1,  // 销售
@@ -1015,6 +1026,7 @@ let Const = {
         { list: [], select: [], key: 'feishu-data', name: '飞书管理' }, // (需要小程序判断权限(还未接入))
         // 新加入2023/10/9
         { list: [], select: [], key: 'coc', name: 'COC证书管理' },
+        { list: [], select: [], key: 'supplier-application', name: '供应商管理' },
     ],
 
     ATTACHMENT: {

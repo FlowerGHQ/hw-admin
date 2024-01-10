@@ -5,6 +5,7 @@ import Const from "./const"
 import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
+import Image from './modules/units/image'
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
@@ -1657,7 +1658,7 @@ const Util = {
     },
     // 商品售后-销售区域-方法
     getSalesAreaStr(arr,lang = 'zh') {
-      
+
       let str = '';
       if(!(arr instanceof Array)) return '-'
       arr?.forEach((item)=>{
@@ -1672,7 +1673,7 @@ const Util = {
        * @param {Function} fn 回调方法
        * @param {Object} pagination 分页对象
        * @param {Boolean} scrollLoading 是否已触发
-       * 
+       *
        * 使用 Core.Util.scroll.handleScrollFn(e, this.getData, this.pagination, this.showLoading)
        */
     handleScrollFn(e, fn, pagination = {}, scrollLoading = false, hitBottomHeightQ = '') {
@@ -1692,6 +1693,8 @@ const Util = {
         let val = Data.getLang() || 'eur';
         return { ...Const.ORDER.AreaUnit[val] };
     },
-}
+    // 照片逻辑
+    Image
 
+}
 export default Util

@@ -952,6 +952,12 @@ const apiList = {
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+    },
+    // 供应商接口
+    SUPPLY: {
+        adminList: ['PostJson','supplier-application/list'],  // 平台方供应商管理list
+        adminDetail: ['PostJson','supplier-application/detail'],  // 平台方供应商管理详情
+        add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
 
     },
     DISTRIBUTOR_HOME: {
