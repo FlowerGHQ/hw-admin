@@ -15,6 +15,13 @@
         </div>
         <!-- table -->
         <div class="table-container">
+            <a-button 
+                class="m-b-10" 
+                type="primary"
+                @click="onBtn"
+            >
+                {{ $t('supply-chain.create_data') }}
+            </a-button>
             <a-table
                 :columns="tableColumns"
                 :data-source="tableData"
@@ -144,6 +151,13 @@ const onView = (record) => {
         query: {
             id: record.id
         }
+    })
+    window.open(routeUrl.href, '_block')
+}
+const onBtn = () => {
+    console.log("点击查看了");
+    let routeUrl = router.resolve({
+        path: '/supply-manage/add',
     })
     window.open(routeUrl.href, '_block')
 }
