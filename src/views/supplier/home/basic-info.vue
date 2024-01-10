@@ -2546,14 +2546,14 @@ const handleTimeSearch = (params) => {
 // 校验
 const step1Vaild = () => {
   return new Promise(async (resolve,reject)=>{
-      formRef1.value.clearValidate();
-      formRef2.value.clearValidate();
-      formRef3.value.clearValidate();
-      formRef4.value.clearValidate();
-      const form1Promise = formRef1.value.validate(); // 获取表单1的验证 Promise  
-      const form2Promise = formRef2.value.validate(); // 获取表单2的验证 Promise  
-      const form3Promise = formRef3.value.validate(); // 获取表单3的验证 Promise  
-      const form4Promise = formRef4.value.validate(); // 获取表单4的验证 Promise  
+      formRef1.value && formRef1.value.clearValidate();
+      formRef2.value && formRef2.value.clearValidate();
+      formRef3.value && formRef3.value.clearValidate();
+      formRef4.value && formRef4.value.clearValidate();
+      const form1Promise = formRef1.value && formRef1.value.validate(); // 获取表单1的验证 Promise  
+      const form2Promise = formRef2.value && formRef2.value.validate(); // 获取表单2的验证 Promise  
+      const form3Promise = formRef3.value && formRef3.value.validate(); // 获取表单3的验证 Promise  
+      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise  
       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
@@ -2837,10 +2837,10 @@ watch(()=>formState.type ,
     (newval,oldval)=>{
         // 重置校验规则
         setRules()
-        formRef1.value.clearValidate();
-        formRef2.value.clearValidate();
-        formRef3.value.clearValidate();
-        formRef4.value.clearValidate();
+        formRef1.value && formRef1.value.clearValidate();
+        formRef2.value && formRef2.value.clearValidate();
+        formRef3.value && formRef3.value.clearValidate();
+        formRef4.value && formRef4.value.clearValidate();
     }
 );
 defineExpose({
