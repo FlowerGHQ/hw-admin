@@ -670,6 +670,11 @@ onMounted(() => {
     }
     .base-info {
         width: 100%;
+        .title{
+            color: #1D2129;
+            font-size: 18px;
+            font-weight: 500;
+        }
         .base-info-form {
             width:60.5%;
             margin: 0 auto;
@@ -678,6 +683,11 @@ onMounted(() => {
     .other-material {
         width: 100%;
         margin-top: 21px;
+        .title{
+            color: #1D2129;
+            font-size: 18px;
+            font-weight: 500;
+        }
         .other-material-form {
             width: calc(60.5%  - 96px - 88px - 96px - 80px) ;
             margin: 0 auto;
@@ -717,12 +727,10 @@ onMounted(() => {
     text-align: center;
     font-size: 14px;
     font-weight: 400;
-    border: 1px solid #EAECF1;
     box-sizing: border-box;
 }
 :deep(.ant-input-number-group) {
     border-radius: 4px;
-    border: 1px solid #EAECF1;
     background: #FFF;
     overflow: hidden;
     
@@ -746,7 +754,6 @@ onMounted(() => {
         display: inline-flex;
         justify-content: center;
         align-items: center;
-        border: 1px solid #EAECF1;
         border-left: none;
     }
 }

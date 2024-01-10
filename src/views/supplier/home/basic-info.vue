@@ -1,114 +1,4 @@
-<template>
-    <!-- 
-        1.零件类
-
-        职务
-        姓名
-        电话
-        电子邮箱
-
-        公司名称
-        详细地址
-        成立日期
-        注册资本
-        法人代表
-
-        占地面积
-        账期要求
-        开具发票
-        
-        2.代理类
-
-        职务
-        姓名
-        电话
-        电子邮箱
-
-        公司名称
-        详细地址
-        成立日期
-        注册资本
-        法人代表
-        
-        法律纠纷111111
-        占地面积000000
-        账期要求
-        开具发票
-
-        业务比重111111
-        销售额*11111
-        纳税额*111111
-        利润率*111111
-        资产负债率*111111
-        现金流量比率*111111
-
-        客户信息111111
-
-        3.外协类
-
-        职务
-        姓名
-        电话
-        电子邮箱
-
-        公司名称
-        详细地址
-        成立日期
-        注册资本
-        法人代表
-
-        法律纠纷*111111111
-        占地面积000000
-        账期要求
-        开具发票
-
-        销售额*1111111
-        产能产线: all 111111
-
-        4.模具类
-
-        职务
-        姓名
-        电话
-        电子邮箱
-
-        公司名称
-        详细地址
-        成立日期
-        注册资本
-        法人代表
-
-        法律纠纷1111111
-        占地面积00000
-        账期要求
-        开具发票
-        
-        关键生产设备**11111111
-        关键检测设备**11111111
-
-
-        5.客指类
-
-        职务
-        姓名
-        电话
-        电子邮箱
-
-        公司名称
-        详细地址
-        成立日期
-        注册资本
-        法人代表
-
-        法律纠纷1111111
-        占地面积00000
-        账期要求
-        开具发票
-
-
-        销售额*111111
-        指定信息11111
-     -->
+<template>  
   <div class="material-list">
       <div class="base-info content-area top-box">
           <div class="title">{{ $t("supply-chain.type_supply") }}</div>
@@ -158,35 +48,88 @@
                                       "
                                       name="positon"
                                       >
-                                      <a-radio-group
+                                      <!-- <a-radio-group
                                                 v-model:value="formState.position"
                                                 name = "positon"
                                             >
                                                 <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
-                                      </a-radio-group>
+                                      </a-radio-group> -->
+                                      <a-checkbox-group @change="handleCheckBox" v-model:value="formState.position" name="checkboxgroup" :options="plainOptions" />
                                   </a-form-item>
                               </a-col>
                           </a-row>
+                          <!-- 姓名 联系人邮箱  联系方式 同步微信-->
                           <a-row :gutter="24">
-                              <a-col :span="12">
-                                  <!-- 姓名 -->
+                              <!-- <a-col :span="12">
                                   <a-form-item :label="$t('supply-chain.name')" name="contact_name">
                                       <a-input :maxlength="7" name="contact_name" v-model:value="formState.contact_info.name" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
                               </a-col>
                               <a-col :span="12">
-                                  <!-- 联系人邮箱 -->
                                   <a-form-item
                                       :label="$t('supply-chain.mailbox')"
                                       name="contact_email">
                                       
                                       <a-input name="contact_email" v-model:value="formState.contact_info.email" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
+                              </a-col> -->
+                              <a-col :span="24">
+                                <a-form-item :label="' '" name="contact_info">
+                                    <div class="form-content-item-table" >
+                                        <a-table
+                                            :columns="contact_info_column"
+                                            :dataSource="formState.contact_info"
+                                            :row-key="(record) => record.id"
+                                            :pagination="false"
+                                            class="specific-table-position"
+                                        >
+                                            <template #bodyCell="{ column, record, index }">
+                                                <template
+                                                    v-if="column.dataIndex === 'position'"
+                                                >
+                                                   <div class="position-label">
+                                                        {{ $t(Core.Const.SUPPLAY.POSITION_MAP[record.position].t)  }}
+                                                   </div>
+                                                </template> 
+                                                <template
+                                                    v-if="column.dataIndex === 'name'"
+                                                >
+                                                <a-input 
+                                                    name="name" 
+                                                    v-model:value="record.name" 
+                                                    :placeholder="$t('supply-chain.please_enter')" />
+                                                </template> 
+                                                <template
+                                                    v-if="column.dataIndex === 'phone'"
+                                                >
+                                                    <div class="phone-and-wechart">
+                                                        <a-input 
+                                                            name="phone" 
+                                                            class="phone-area"
+                                                            v-model:value="record.phone" 
+                                                            :placeholder="$t('supply-chain.please_enter')" />
+                                                        <a-checkbox 
+                                                            class="flag-wechat-area" 
+                                                            v-model:checked="record.flag_wechat"
+                                                        >{{ $t('supply-chain.wechat_same_number') }}</a-checkbox>
+                                                    </div>
+                                                </template> 
+                                                <template
+                                                    v-if="column.dataIndex === 'email'"
+                                                >
+                                                <a-input 
+                                                    name="email" 
+                                                    v-model:value="record.email" 
+                                                    :placeholder="$t('supply-chain.please_enter')" />
+                                                </template> 
+                                            </template>
+                                        </a-table>
+                                    </div>
+                                </a-form-item>
                               </a-col>
                           </a-row>
-                          <a-row :gutter="24">
+                          <!-- <a-row :gutter="24">
                               <a-col :span="12">
-                                  <!-- 联系方式 -->
                                   <a-form-item
                                       :label="$t('supply-chain.contact')"
                                       name="contact_flag_phone">
@@ -195,13 +138,12 @@
                                   </a-form-item>
                               </a-col>
                               <a-col :span="12">
-                                  <!-- 同步微信 -->
                                   <a-form-item>
                                       <a-checkbox  v-model:checked="formState.contact_info.flag_wechat">{{ $t('supply-chain.wechat_same_number') }}</a-checkbox>
                                       
                                   </a-form-item>
                               </a-col>
-                          </a-row>
+                          </a-row> -->
                       </a-col>
                   </a-row>
               </a-form>
@@ -1553,7 +1495,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, onMounted, toRef } from "vue";
+import { ref, reactive, watch, onMounted, toRef,computed } from "vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import { message } from "ant-design-vue";
@@ -1576,6 +1518,43 @@ const customer_info_list_obj = ref({
     main_supply_part: "",
     begin_cooperation_time: "",
 })
+// 职位多选
+const plainOptions = computed(()=>{
+    let arr = []
+    Core.Const.SUPPLAY.POSITION.forEach(item=>{
+        arr.push({
+            label: $t(item.label),
+            value: item.value
+        })
+    })
+    return arr
+})
+// 联系信息的table
+const contact_info_column = ref([
+    {id:0 , title: '职位身份', key: "position", dataIndex: "position" , align:'center',width:90}, // 职务
+    // 姓名
+    {id:1 , title: '姓名', key: "name", dataIndex: "name" , align:'center'}, // 姓名
+    // 手机号
+    {id:3 , title: '联系方式', key: "phone", dataIndex: "phone", align:'center'}, // 手机号
+    // 邮箱
+    {id:2 , title: '邮箱', key: "email", dataIndex: "email" , align:'center'}, // 邮箱
+
+])
+const handleCheckBox = (checkedValue) => {
+    console.log(checkedValue);
+    formState.position = checkedValue
+    let arr = []
+    checkedValue.forEach(item=>{
+        arr.push({
+            position: item,
+            name: '',
+            phone: '',
+            email: '',
+            flag_wechat:false
+        })
+    })
+    formState.contact_info = arr
+}   
 const customer_info_list_column = ref([
   
     { title: '客户序号', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
@@ -1618,8 +1597,6 @@ const production_equipment_column = ref([
   { title: '购置年限', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
   { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
 ])
- 
-
 // 检测设备
 const detection_equipment_obj = ref({
     
@@ -1645,9 +1622,9 @@ const detection_equipment_column = ref([
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
-    position: '',
+    position: [],
     company_name: '',
-    contact_info: {}, // 联系方式
+    contact_info: [], // 联系方式
     company_info: {}, // 公司概况
     agent_info: {// 代理公司概况
 
@@ -2440,52 +2417,52 @@ watch(
       }
   }
 );
-// 职业勾选变动
-watch(
-  () => formState.position,
-  (val) => {
+// // 职业勾选变动
+// watch(
+//   () => formState.position,
+//   (val) => {
       
-    let boo = true;
-    if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-    rules.value.contact_name[0].required = boo;
-    rules.value.contact_email[0].required = boo;
-    rules.value.contact_flag_phone[0].required = boo;
-  }
-);
-watch(()=>formState.type ,
-    (newval,oldval)=>{
-        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
-        rules.value = {
-            ...rules.value, ...rulesOther.value 
-        } 
-        if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
-            console.log('pppppppppppppppppppppppp');
-            // 业务比重
-            rules.value.proportion_of_business[0].required = true;
-            // 代理有效期间
-            rules.value.duration_of_agency[0].required = true;
-            rules.value.proxy_warrant[0].required = true;
+//     let boo = true;
+//     if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
+//     rules.value.contact_name[0].required = boo;
+//     rules.value.contact_email[0].required = boo;
+//     rules.value.contact_flag_phone[0].required = boo;
+//   }
+// );
+// watch(()=>formState.type ,
+//     (newval,oldval)=>{
+//         let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
+//         rules.value = {
+//             ...rules.value, ...rulesOther.value 
+//         } 
+//         if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
+//             console.log('pppppppppppppppppppppppp');
+//             // 业务比重
+//             rules.value.proportion_of_business[0].required = true;
+//             // 代理有效期间
+//             rules.value.duration_of_agency[0].required = true;
+//             rules.value.proxy_warrant[0].required = true;
 
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
+//         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value){
+//             // 销售额
+//             rules.value.sales[0].required = true;
+//         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
  
             
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
-            // 销售额
-            rules.value.sales[0].required = true;
+//         }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
+//             // 销售额
+//             rules.value.sales[0].required = true;
 
-        }else{
-            // 业务比重
-            rules.value.proportion_of_business[0].required = false;
-            rules.value.sales[0].required = false;
-            // 代理有效期间
-            rules.value.proxy_warrant[0].required = false;
-            rules.value.duration_of_agency[0].required = false;
-        }
-    }
-);
+//         }else{
+//             // 业务比重
+//             rules.value.proportion_of_business[0].required = false;
+//             rules.value.sales[0].required = false;
+//             // 代理有效期间
+//             rules.value.proxy_warrant[0].required = false;
+//             rules.value.duration_of_agency[0].required = false;
+//         }
+//     }
+// );
 defineExpose({
   step1Vaild,
   saveDraft1,
@@ -2494,7 +2471,7 @@ defineExpose({
 
 onMounted(() => {
   // 回显数据
-  reviewData();
+//   reviewData();
 });
 </script>
 
@@ -2668,6 +2645,33 @@ onMounted(() => {
 .form-content-item-table {
     :deep(.ant-form-item) {
         margin-bottom: 0px;
+    }
+    .specific-table-position{
+        color:#1D2129;
+        .position-label{
+            width: 74px;
+            border-radius: 4px;
+            height: 32px;
+            background:#F2F3F5;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            // 添加必填的标志
+            &::before {
+                content: "*";
+                color: #FF4D4F;
+                margin-right: 2px;
+            }
+        }
+        .phone-and-wechart{
+            display: flex;
+            align-items: center;
+            .flag-wechat-area{
+                margin-left: 8px;
+                display: flex;
+            }
+        }
     }
 }
 .spec-add {

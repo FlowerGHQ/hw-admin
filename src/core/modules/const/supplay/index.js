@@ -21,6 +21,13 @@ const SUPPLAY = {
         { value: 5, zh:'客指类', en: 'CustomerRefers Class', t: 'supply-chain.customer_refers' },
     ],   
     // 职位
+    POSITION_MAP: {        
+        1: { value: 1, t: 'supply-chain.sales', },
+        2: { value: 2, t: 'supply-chain.quality', },
+        3: { value: 3, t: 'supply-chain.technology', },
+        4: { value: 4, t: 'supply-chain.general_manager', },
+    },
+    // 职位
     POSITION: [        
         { value: 1, t: 'supply-chain.sales',label:'supply-chain.sales'},
         { value: 2, t: 'supply-chain.quality', label:'supply-chain.quality'},
