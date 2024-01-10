@@ -193,7 +193,7 @@
                                   <!-- 成立日期 -->
                                   <a-form-item :label="$t('supply-chain.date_establishment')" name="date_establishment">
                                     <span name="date_establishment">
-                                        <a-date-picker  valueFormat="YYYY-MM-DD"  v-model:value="formState.company_info.established_time" />
+                                        <a-date-picker  valueFormat="X"  v-model:value="formState.company_info.established_time" />
                                     </span>
                                   </a-form-item>
                               </a-col>
@@ -371,7 +371,7 @@
                                               'supply-chain.agency_relationship'
                                           )
                                       " >
-                                          <a-date-picker  valueFormat="YYYY-MM-DD"  v-model:value="formState.agent_info.agent_relationship" />
+                                          <a-date-picker  valueFormat="X"  v-model:value="formState.agent_info.agent_relationship" />
                                   </a-form-item>
                               </a-col>
                               
@@ -817,7 +817,7 @@
                                       <template
                                           v-else-if="column.type === 'time'"
                                       >
-                                          <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                          <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                       </template>
                                       <template
                                           v-else-if="column.dataIndex === 'operation'"
@@ -910,7 +910,7 @@
                                         >
                                             <a-form-item :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                         </template>
@@ -1458,7 +1458,7 @@
                                       >
                                            <a-form-item :name="`production_${column.dataIndex}`">
                                                 <span :name="`production_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                           </a-form-item>
                                       </template>
@@ -1563,7 +1563,7 @@
                                       >
                                             <a-form-item :name="`detection_${column.dataIndex}`">
                                                 <span :name="`detection_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                       </template>
