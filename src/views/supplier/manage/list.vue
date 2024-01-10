@@ -149,17 +149,17 @@ const onView = (record) => {
     let routeUrl = router.resolve({
         path: '/supply-manage/detail',
         query: {
-            id: record.id
+            id: record.id            
         }
     })
-    window.open(routeUrl.href, '_block')
+    window.open(routeUrl.href, '_blank')
 }
 const onBtn = () => {
     console.log("点击查看了");
     let routeUrl = router.resolve({
         path: '/supply-manage/add',
     })
-    window.open(routeUrl.href, '_block')
+    window.open(routeUrl.href, '_blank')
 }
 /* methods end*/
 </script>

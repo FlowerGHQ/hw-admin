@@ -194,12 +194,21 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">                                
                                         <div class="customer-input">
-                                            {{ msgDetail?.company_info?.established_time || "-" }}
+                                            {{
+                                                msgDetail?.company_info?.established_time
+                                                    ? $Util.timeFilter(
+                                                          msgDetail?.company_info?.established_time, 3
+                                                      )
+                                                    : ""
+                                            }}
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <!-- v-model:value="msgDetail.company_info.established_time" -->
-                                        <a-date-picker class="w-100" valueFormat="YYYY-MM-DD"  @change="(event) => handleTimeSearch(event, 'date_establishment')"/>
+                                        <a-date-picker
+                                            class="w-100"
+                                            v-model:value="parameters.company_info.established_time"
+                                            @change="(event) => handleTimeSearch(event, 'date_establishment')"
+                                        />                                            
                                     </template>
                                 </div>
                             </div>
@@ -293,7 +302,7 @@
                                     <a-input-number
                                         class="w-100"
                                         :class="{ 'customer-input-number': !isEdit }"
-                                        v-model:value="parameters.company_info.legal_person"
+                                        v-model:value="parameters.company_info.floor_area"
                                         :placeholder="$t('common.please_enter')" 
                                         :disabled="!isEdit"
                                         :min="0"
@@ -354,7 +363,7 @@
                                 </div>
                             </div>  
                             <!-- 母公司地址 -->
-                            <div class="search-col w-50-percentage">
+                            <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Parent_company_address') }}</div>
                                 <div class="value m-l-8">                                   
                                     <a-input
@@ -465,7 +474,11 @@
                                     <template v-else>
                                         <TimeSearch
                                             class="w-100"
-                                            ref="TimeSearchRef"
+                                            ref="TimeDurationOfAgency"
+                                            :value="[
+                                                parameters.agent_info.agent_effective_begin_time,
+                                                parameters.agent_info.agent_effective_end_time
+                                            ]"
                                             @search="(event) => handleTimeSearch(event, 'agent_info')"
                                             :defaultTime="false" />
                                     </template>
@@ -926,7 +939,7 @@
                                                 />
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('competitor_delete', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -935,7 +948,7 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
@@ -1000,15 +1013,15 @@
                                                 />  
                                             </template>
                                             <!-- 开始合作时间 -->
-                                            <template v-if="column.key === 'begin_cooperation_time'">
-                                                <a-date-picker 
-                                                    class="w-100" 
-                                                    valueFormat="YYYY-MM-DD"  
-                                                    @change="(event) => handleTimeSearch(event, 'begin_cooperation_time', record.begin_cooperation_time)"
-                                                />
+                                            <template v-if="column.key === 'begin_cooperation_time'">                                               
+                                                <a-date-picker
+                                                    class="w-100"
+                                                    v-model:value="record.begin_cooperation_time"
+                                                    @change="(event) => handleTimeSearch(event, 'begin_cooperation_time')"
+                                                />  
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('customer_information_delete', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -1017,7 +1030,7 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
@@ -1667,7 +1680,7 @@
                                             <template v-if="column.key === 'spec'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.spec"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1675,7 +1688,7 @@
                                             <template v-if="column.key === 'quantity'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.quantity"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1683,7 +1696,7 @@
                                             <template v-if="column.key === 'manufacturer'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.manufacturer"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1691,13 +1704,13 @@
                                             <template v-if="column.key === 'purchase_period'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.purchase_period"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('key_production_equipment', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -1706,7 +1719,7 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
@@ -1744,7 +1757,7 @@
                                             <template v-if="column.key === 'spec'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.spec"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />                                               
@@ -1752,7 +1765,7 @@
                                             <template v-if="column.key === 'quantity'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.quantity"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
@@ -1760,7 +1773,7 @@
                                             <template v-if="column.key === 'manufacturer'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.manufacturer"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
@@ -1768,13 +1781,13 @@
                                             <template v-if="column.key === 'accuracy_level'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.accuracy_level"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('critical_detection_equipment', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -1783,7 +1796,7 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
@@ -1862,7 +1875,8 @@
                                             showTip
                                             :limit="1"
                                             :limitSize="2"
-                                            tipPosition="right" />
+                                            tipPosition="right"
+                                        />
                                     </template>
                                 </div>
                             </div>
@@ -1923,10 +1937,15 @@
                                                     <TimeSearch
                                                         class="m-l-4"
                                                         v-if="Number(parameters.confirmatory_material.business_duration_type) === 2"
-                                                        ref="TimeSearchRef"
+                                                        :value="[
+                                                            parameters.confirmatory_material.begin_business_time,
+                                                            parameters.confirmatory_material.end_business_time
+                                                        ]"
+                                                        ref="TimeBusinessTerm"
                                                         @search="(event) => handleTimeSearch(event, 'business_term')"
-                                                        :defaultTime="false" />                                                  
-                                                    </template>
+                                                        :defaultTime="false"
+                                                    />
+                                                </template>
                                             </a-radio>                                           
                                         </a-radio-group>
                                     </template>
@@ -2282,7 +2301,8 @@ const customerInfoColumns = computed(() => {
     return columns;
 });
 
-const TimeSearchRef = ref(null)
+const TimeBusinessTerm = ref(null) // 营业期限
+const TimeDurationOfAgency = ref(null) // 代理有效期间
 const isClose = ref(false) // MyMask 显影
 const isEdit = ref(false)
 const parameters = ref({
@@ -2328,7 +2348,7 @@ const parameters = ref({
     human_resource: {
 		total_employees: "", // 员工总数
 		manager_number: "", // 管理人数
-		mass_numbe: "", // 质量人数
+		mass_number: "", // 质量人数
 		technician_number: "", // 技术人数
 		technical_seniority: "", // 技术工龄
     },
@@ -2487,6 +2507,15 @@ function getDetail(params = {}) {
                     // console.log("数组", parameters.value[key]);
                     // 判断 数组
                     parameters.value[key] = keys
+
+                    if (key === 'customer_info') {
+                        // 开始合作时间
+                        parameters.value[key].forEach((el) => {
+                            // 标准格式
+                            el.begin_cooperation_time = dayjs.unix(el.begin_cooperation_time)
+                        })
+                    }
+
                 } else if (keys instanceof Object) {
                     // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
                     for (const item in parameters.value[key]) {
@@ -2494,6 +2523,11 @@ function getDetail(params = {}) {
                         if (parameters.value[key].hasOwnProperty(item)) {
                             parameters.value[key][item] = keys[item] || ""
                         }
+                    }
+
+                    if (key === 'company_info') {
+                        // 成立日期(过滤一下)
+                        parameters.value[key].established_time = dayjs.unix(parameters.value[key].established_time)
                     }
 
                 } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
@@ -2546,7 +2580,11 @@ const saveDetail = (params = {}) => {
 
     Core.Api.SUPPLY.adminAdd(obj)
         .then((res) => {
-
+            console.log("成功", res);
+            proxy.$message.success(proxy.$t('common.successfully_saved'));
+            router.push({
+                path: '/supply-manage/list',
+            })
         })
         .catch((err) => {
             console.log("getPhoneCodeFetchs err", err);
@@ -2581,7 +2619,9 @@ const handleTimeSearch = (params, type, recordItem) => {
             parameters.value.confirmatory_material.end_business_time = params.end_time
             break;    
         case "date_establishment":
-            parameters.value.company_info.established_time = dayjs(params).unix()
+            console.log("sss", dayjs(parameters.value.company_info.established_time).format('DD/MM/YYYY'));
+            // 成立日期
+            // parameters.value.company_info.established_time = dayjs(params).unix()
             break;    
         case "agent_info":
             // 代理有效期间
@@ -2590,7 +2630,7 @@ const handleTimeSearch = (params, type, recordItem) => {
             break;    
         case "begin_cooperation_time":
             // 开始合作时间
-            recordItem = dayjs(params).unix()
+            // recordItem = dayjs(params).unix()
             // console.log(dayjs(params).unix());
             // console.log("recordItem",params, recordItem);
             break;    
@@ -2607,21 +2647,40 @@ const onSelectType = (type) => {
 const onSuction = (type) => {
     switch (type) {
         case 'edit':
-            isEdit.value = true
-            console.log("TimeSearchRef.value", TimeSearchRef.value);
-            if (TimeSearchRef.value) {
-                // 给timeSearch赋值
-                TimeSearchRef.value.createTime = [
-                    parameters.value['confirmatory_material'].begin_business_time,
-                    parameters.value['confirmatory_material'].end_business_time,
-                ];
-            }
+            isEdit.value = true            
             break;
         case 'cancel-edit':
             isEdit.value = false
             break;
         case 'add':
-            console.log("提交数据", );
+            const form = Core.Util.deepCopy(parameters.value)           
+            for (const key in form) {
+                switch (key) {
+                    case 'company_info':                        
+                        // 成立日期(过滤一下)
+                        form[key].established_time = dayjs(parameters.value[key].established_time).unix()
+                        break;
+                    case 'customer_info':
+                        // 开始合作时间(过滤一下)
+                        form[key].forEach((el, index) => {
+                            // 标准格式
+                            el.begin_cooperation_time = dayjs(parameters.value[key][index].begin_cooperation_time).unix()
+                        })
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+            console.log("提交数据 from", form);
+
+            saveDetail({
+                id: route.query.id,
+                type: form.type,
+                company_name: form.company_info.name,
+                form: JSON.stringify(form)
+            })
+
             break;
         case 'continue_fill':
             onPingPongMaskClose()

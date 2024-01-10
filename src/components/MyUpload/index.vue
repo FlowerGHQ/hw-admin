@@ -238,6 +238,7 @@ watch(
   },
   {
     deep: true,
+    immediate: true,
   }
 )
 // 监听循环计数、
