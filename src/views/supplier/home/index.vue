@@ -1,7 +1,7 @@
 <template>
     <div class="home" ref="suppluChain">
         <a-layout>
-            <a-layout-header>
+            <a-layout-header v-if="!isOtherPageFlag">
                 <div class="header-left">
                     <img
                         src="@images/header-logo2.png"
@@ -242,7 +242,7 @@ import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -261,6 +261,7 @@ const user = Core.Data.getUser() || {};
 const $i18n = useI18n();
 const $store = useStore();
 const $router = useRouter();
+const $route = useRoute();
 const $message = message;
 const $t = $i18n.t;
 const lang = computed(() => $store.state.lang);
@@ -356,6 +357,10 @@ const countDown = () => {
         }
     }, 1000);
 };
+const isOtherPageFlag = computed(()=>{
+    return $route.query?.otherPage == 'true';
+})
+
 
 /* methods start*/
 // 上一步
@@ -369,6 +374,10 @@ const handleNext = () => {
         BasicInfoRef.value.step1Vaild().then(() => {
             // 下一步
             $store.dispatch("SUPPLY_CHAIN/nextStep");
+        }).catch((err)=>{
+            if(isOtherPageFlag){
+                $store.dispatch("SUPPLY_CHAIN/nextStep");
+            }
         });
     //  }
 };
@@ -388,6 +397,10 @@ const handleSubmit = () => {
     } else {
         MaterialListRef.value.step2Vaild().then(() => {
             handleSubmitData();
+        }).catch(err=>{
+            if(isOtherPageFlag){
+                handleSubmitData();
+            }
         });
     }
 };
@@ -574,6 +587,8 @@ watch(
 
 const timer1 = ref(null);
 onMounted(() => {
+    console.log($route.query,'-------------------------------------');
+
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
         // // 如果已经提交了
