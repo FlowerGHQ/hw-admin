@@ -910,7 +910,7 @@
                                         >
                                             <a-form-item :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
-                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X" picker="year"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                         </template>
