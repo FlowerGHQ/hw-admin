@@ -28,17 +28,17 @@ const SUPPLAY = {
         4: { value: 4, t: 'supply-chain.general_manager', },
     },
     // 职位
-    POSITION: [        
+    POSITION: [
+        { value: 4, t: 'supply-chain.general_manager', label:'supply-chain.general_manager'},
         { value: 1, t: 'supply-chain.sales',label:'supply-chain.sales'},
         { value: 2, t: 'supply-chain.quality', label:'supply-chain.quality'},
         { value: 3, t: 'supply-chain.technology', label:'supply-chain.technology'},
-        { value: 4, t: 'supply-chain.general_manager', label:'supply-chain.general_manager'},
     ],
     POSITION_LIST: [
+        { value: 4, t: 'supply-chain.general_manager', },
         { value: 1, t: 'supply-chain.sales', },
         { value: 2, t: 'supply-chain.quality', },
         { value: 3, t: 'supply-chain.technology', },
-        { value: 4, t: 'supply-chain.general_manager', },
     ], 
     // 技术信息
     TECHNICAL_INFORMATION: [

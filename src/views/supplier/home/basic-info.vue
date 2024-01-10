@@ -9,8 +9,8 @@
                       </div>
                   </a-col>
                   <a-col :span="22" >
-                        <div class="top-type-box">
-                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"  @click="formState.type = item.value">
+                        <div class="top-type-box" >
+                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value">
                                 <MySvgIcon :icon-class="`white-${item.icon}`" v-if="item.value === formState.type" class="white-font" />
                                 <MySvgIcon :icon-class="`black-${item.icon}`" class="black-font" v-else /> 
                                 <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
@@ -48,13 +48,12 @@
                                       "
                                       name="positon"
                                       >
-                                      <!-- <a-radio-group
-                                                v-model:value="formState.position"
-                                                name = "positon"
-                                            >
-                                                <a-radio :value="radio.value" v-for="radio in Core.Const.SUPPLAY.POSITION" :key="radio.value" >{{ $t(radio.t) }}</a-radio>
-                                      </a-radio-group> -->
-                                      <a-checkbox-group @change="handleCheckBox" v-model:value="formState.position" name="checkboxgroup" :options="plainOptions" />
+                                      <a-checkbox-group 
+                                        @change="handleCheckBox" 
+                                        v-model:value="formState.position" 
+                                        name="positon" 
+                                        :options="plainOptions" 
+                                      />
                                   </a-form-item>
                               </a-col>
                           </a-row>
@@ -74,20 +73,24 @@
                                   </a-form-item>
                               </a-col> -->
                               <a-col :span="24">
-                                <a-form-item :label="' '" name="contact_info">
-                                    <div class="form-content-item-table" >
+                                <a-form-item :label="' '" name="contact_info" class="form-content-item">
+                                    <div 
+                                        class="form-content-item-table" 
+                                        name="contact_info"
+                                    >
                                         <a-table
                                             :columns="contact_info_column"
                                             :dataSource="formState.contact_info"
                                             :row-key="(record) => record.id"
                                             :pagination="false"
                                             class="specific-table-position"
+                                            :rowClassName="(record, index) => record.position === 4 ? 'no-require' : ''"
                                         >
                                             <template #bodyCell="{ column, record, index }">
                                                 <template
                                                     v-if="column.dataIndex === 'position'"
                                                 >
-                                                   <div class="position-label">
+                                                   <div :class="{'position-label':true,'no-require':record.position === 4}">
                                                         {{ $t(Core.Const.SUPPLAY.POSITION_MAP[record.position].t)  }}
                                                    </div>
                                                 </template> 
@@ -190,7 +193,7 @@
                                   <!-- 成立日期 -->
                                   <a-form-item :label="$t('supply-chain.date_establishment')" name="date_establishment">
                                     <span name="date_establishment">
-                                        <a-date-picker  valueFormat="YYYY-MM-DD"  v-model:value="formState.company_info.established_time" />
+                                        <a-date-picker  valueFormat="X"  v-model:value="formState.company_info.established_time" />
                                     </span>
                                   </a-form-item>
                               </a-col>
@@ -208,7 +211,7 @@
                                   <!-- 固定资产 -->
                                   
                                   <a-form-item
-                                       label="固定资产"
+                                       :label="$t('supply-chain.fixed_assets')"
                                        >
                                        <a-input v-model:value="formState.company_info.fixed_assets" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
@@ -304,7 +307,7 @@
                               <a-col  :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing ,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 12 : 0">
                                   <!-- 经营场所 -->
                                   <a-form-item
-                                      label="经营场所" >
+                                      :label="$t('supply-chain.establishments')" >
                                       
                                       <a-input v-model:value="formState.company_info.premises" :placeholder="$t('supply-chain.please_enter')" />
                                   </a-form-item>
@@ -368,7 +371,7 @@
                                               'supply-chain.agency_relationship'
                                           )
                                       " >
-                                          <a-date-picker  valueFormat="YYYY-MM-DD"  v-model:value="formState.agent_info.agent_relationship" />
+                                          <a-date-picker  valueFormat="X"  v-model:value="formState.agent_info.agent_relationship" />
                                   </a-form-item>
                               </a-col>
                               
@@ -418,6 +421,7 @@
                           
                       </a-col>
                   </a-row>
+                  <!-- 人力资源 -->
                   <a-row :gutter="24" >
                       <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0" class="title-area">
                           <div class="title-two">
@@ -654,7 +658,7 @@
                                                             :max="1000000000"
                                                         >
                                                             <template #addonAfter>
-                                                                <span class="l-w-h-style">万元</span>
+                                                                <span class="l-w-h-style">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
                                                             </template>
                                                 </a-input-number>
                                           </span>
@@ -678,7 +682,7 @@
                                                     :max="1000000000"
                                                 >
                                                     <template #addonAfter>
-                                                        <span class="l-w-h-style">万元</span>
+                                                        <span class="l-w-h-style">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
                                                     </template>
                                           </a-input-number>
                                       </a-form-item>
@@ -778,8 +782,11 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
-                                      <!-- 客户序号 -->
+                                      <!-- 竞争对手序号 -->
                                       <template
                                           v-if="column.dataIndex === 'company_order'"
                                       >
@@ -810,7 +817,7 @@
                                       <template
                                           v-else-if="column.type === 'time'"
                                       >
-                                          <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                          <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                       </template>
                                       <template
                                           v-else-if="column.dataIndex === 'operation'"
@@ -832,7 +839,7 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.competitor_analysis ,competitor_analysis_obj ,'竞争对手' ,'company_order')"
                                   >
-                                  添加对手
+                                  {{ $t("supply-chain.add_opponents") }}
                               </a-button
                               >
                           </div>
@@ -861,6 +868,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                    <template #headerCell="{title}">
+                                        {{ $t(title) }}
+                                    </template>
                                     <template #bodyCell="{ column, record, index }">
                                         <!-- 客户序号 -->
                                         <!-- <template
@@ -900,7 +910,7 @@
                                         >
                                             <a-form-item :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X" picker="year"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                         </template>
@@ -927,7 +937,8 @@
                                     ghost
                                     @click="handleAddSpecItem(formState.customer_info ,customer_info_list_obj ,'主要客户' ,'customer_order')"
                                     >
-                                    添加客户
+                                    
+                                    {{ $t("supply-chain.add_customers") }}
                                 </a-button
                                 >
                             </div>
@@ -1020,7 +1031,7 @@
                                 
                                   <!-- 模具轮廓 -->
                                   <a-form-item 
-                                      label="模具轮廓">
+                                      :label="$t('supply-chain.mold_profile')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_profile"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1030,7 +1041,7 @@
                                 
                                   <!-- 模具重量 -->
                                   <a-form-item 
-                                      label="模具重量">
+                                      :label="$t('supply-chain.mold_weight')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_weight"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1040,7 +1051,7 @@
                                 
                                   <!-- 模具品类 -->
                                   <a-form-item 
-                                      label="模具品类">
+                                      :label="$t('supply-chain.mold_category')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_category"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1050,7 +1061,7 @@
                                 
                                   <!-- 模具设计 -->
                                   <a-form-item 
-                                      label="模具设计">
+                                      :label="$t('supply-chain.mould_design')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_design"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1060,7 +1071,7 @@
                                 
                                   <!-- 模具制造 -->
                                   <a-form-item 
-                                      label="模具制造">
+                                      :label="$t('supply-chain.mold_manufacturing')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_manufacture"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1070,7 +1081,7 @@
                                 
                                   <!-- 模具验收 -->
                                   <a-form-item 
-                                      label="模具验收">
+                                      :label="$t('supply-chain.mold_acceptance')">
                                       <a-textarea :row="6" :maxlength="2000" v-model:value="formState.technical_info.mold_acceptance"  :placeholder="$t('supply-chain.please_enter')" autocomplete="off" />
                                   </a-form-item>
                               </a-col>
@@ -1099,6 +1110,7 @@
                           
                       </a-col>
                   </a-row>
+
                   <!-- 质量信息 -->
                   <a-row :gutter="24">
                       <a-col :span="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) ? 3 : 0"  class="title-area">
@@ -1157,6 +1169,7 @@
                             </a-row>
                       </a-col>
                   </a-row>
+
                   <!-- 产能产线 -->
                   <a-row :gutter="24">
                       <a-col  :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
@@ -1207,6 +1220,7 @@
                           </a-row>
                       </a-col>
                   </a-row>
+                  
                   <!-- 外购管理 -->
                   <a-row :gutter="24">
                       <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) ? 3 : 0" class="title-area">
@@ -1407,6 +1421,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
 
                                       <template
@@ -1441,7 +1458,7 @@
                                       >
                                            <a-form-item :name="`production_${column.dataIndex}`">
                                                 <span :name="`production_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                           </a-form-item>
                                       </template>
@@ -1468,7 +1485,8 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.production_equipment ,production_equipment_obj)"
                                   >
-                                  添加生产设备
+                                  
+                                    {{ $t("supply-chain.add_production_equipment") }}
                               </a-button
                               >
                           </div>
@@ -1505,6 +1523,9 @@
                                 :pagination="false"
                                 class="specific-table"
                             >
+                                  <template #headerCell="{title}">
+                                      {{ $t(title) }}
+                                  </template>
                                   <template #bodyCell="{ column, record, index }">
                                       <!-- 客户序号 -->
                                       <!-- <template
@@ -1542,7 +1563,7 @@
                                       >
                                             <a-form-item :name="`detection_${column.dataIndex}`">
                                                 <span :name="`detection_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="YYYY-MM-DD"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                       </template>
@@ -1569,7 +1590,8 @@
                                   ghost
                                   @click="handleAddSpecItem(formState.detection_equipment ,detection_equipment_obj)"
                                   >
-                                  添加检测设备
+                                  
+                                  {{ $t("supply-chain.add_detection_equipment") }}
                               </a-button
                               >
                           </div>
@@ -1642,6 +1664,7 @@ const customer_info_list_obj = ref({
 const plainOptions = computed(()=>{
     let arr = []
     Core.Const.SUPPLAY.POSITION.forEach(item=>{
+       
         arr.push({
             label: $t(item.label),
             value: item.value
@@ -1661,28 +1684,34 @@ const contact_info_column = ref([
 
 ])
 const handleCheckBox = (checkedValue) => {
-    console.log(checkedValue);
+    // 清除
     formState.position = checkedValue
     let arr = []
     checkedValue.forEach(item=>{
-        arr.push({
-            position: item,
-            name: '',
-            phone: '',
-            email: '',
-            flag_wechat:false
-        })
+         // 如果formState.contact_info里面有这个职位,就将这个职位的信息push到arr里面
+         if(formState.contact_info.some(item2=>item2.position == item)){
+            arr.push(formState.contact_info.find(item2=>item2.position == item))
+         }else{
+            arr.push({
+                position: item,
+                name: '',
+                phone: '',
+                email: '',
+                flag_wechat:false
+            })
+         }
     })
     formState.contact_info = arr
 }   
+// 客户信息
 const customer_info_list_column = ref([
   
-    { title: '客户序号', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
-    { title: '客户名称', key: "customer_name", dataIndex: "customer_name", type: 'input' }, // 客户名称
-    { title: '销售占比', key: "sales_share", dataIndex: "sales_share", unit: '%', type: 'input-num' }, // 销售占比
-    { title: '主供零件', key: "main_supply_part", dataIndex: "main_supply_part", type: 'input' }, // 主供零件
-    { title: '开始合作时间', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time", type: 'time' }, // 开始合作时间
-    { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+    { title: 'supply-chain.customer_serial_number', key: "customer_order", dataIndex: "customer_order", type: 'text' }, // 客户序号
+    { title: 'supply-chain.customer_name', key: "customer_name", dataIndex: "customer_name", type: 'input' }, // 客户名称
+    { title: 'supply-chain.Sales_share', key: "sales_share", dataIndex: "sales_share", unit: '%', type: 'input-num' }, // 销售占比
+    { title: 'supply-chain.Main_supply_part', key: "main_supply_part", dataIndex: "main_supply_part", type: 'input' }, // 主供零件
+    { title: 'supply-chain.Start_time', key: "begin_cooperation_time", dataIndex: "begin_cooperation_time", type: 'time' }, // 开始合作时间
+    { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 // 竞争对手
 const competitor_analysis_obj = ref({
@@ -1693,11 +1722,11 @@ const competitor_analysis_obj = ref({
 })
 const competitor_analysis_column = ref([
   
-    { title: '公司序号', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
-    { title: '公司名称', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
-    { title: '市场份额', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
-    { title: '了解评价', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
-    { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+    { title: 'supply-chain.company_serial_number', key: "company_order", dataIndex: "company_order", type: 'text' }, // 公司序号
+    { title: 'supply-chain.company_name', key: "company_name", dataIndex: "company_name", type: 'input' }, // 公司名称
+    { title: 'supply-chain.market_share', key: "market_share", dataIndex: "market_share", type: 'input' }, // 市场份额
+    { title: 'supply-chain.understanding_evaluation', key: "understand_evaluation", dataIndex: "understand_evaluation", unit: '%', type: 'input' }, // 了解评价
+    { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 
 // 生产设备
@@ -1710,12 +1739,12 @@ const production_equipment_obj = ref({
 })
 const production_equipment_column = ref([
   
-  { title: '生产设备名称', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
-  { title: '规格型号（含吨位）', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
-  { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
-  { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '购置年限', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
-  { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+  { title: 'supply-chain.Name_of_production_equipment', key: "name", dataIndex: "name", type: 'input' }, // 生产设备名称
+  { title: 'supply-chain.Specification_and_model', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号（含吨位）
+  { title: 'supply-chain.quantity', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+  { title: 'supply-chain.Equipment_manufacturer', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+  { title: 'supply-chain.Purchase_period', key: "purchase_period", dataIndex: "purchase_period", type: 'input-num' }, // 购置年限
+  { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
 // 检测设备
 const detection_equipment_obj = ref({
@@ -1730,21 +1759,27 @@ const detection_equipment_obj = ref({
 const detection_equipment_column = ref([
  
   
-  { title: '检测设备名称', key: "name", dataIndex: "name", type: 'input' }, // 检测设备名称
-  { title: '规格型号', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
-  { title: '数量', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
-  { title: '设备制造商', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
-  { title: '精度等级', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
-  { title: '操作', key: "delete", dataIndex: "operation" }, // 操作
+  { title: 'supply-chain.Name_of_detection_equipment', key: "name", dataIndex: "name", type: 'input' }, // 检测设备名称
+  { title: 'supply-chain.Specification_text', key: "spec", dataIndex: "spec", type: 'input'  }, // 规格型号
+  { title: 'supply-chain.quantity', key: "quantity", dataIndex: "quantity", type: 'input-num' }, // 数量
+  { title: 'supply-chain.Equipment_manufacturer', key: "manufacturer", dataIndex: "manufacturer", type: 'input' }, // 设备制造商
+  { title: 'supply-chain.precision_grade', key: "purchase_period", dataIndex: "accuracy_level", type: 'input' }, // 精度等级
+  { title: 'supply-chain.operate', key: "delete", dataIndex: "operation" }, // 操作
 ])
- 
-
 // 表单对象
 const formState = reactive({
     type: 1, //表格类型
-    position: [],
+    position: [4],
     company_name: '',
-    contact_info: [], // 联系方式
+    contact_info: [
+        {
+            position: 4,
+            name: '',
+            phone: '',
+            email: '',
+            flag_wechat:false
+        }
+    ], // 联系方式
     company_info: {}, // 公司概况
     agent_info: {// 代理公司概况
 
@@ -1896,60 +1931,29 @@ const formState = reactive({
     additional_info: "",
 });
 let PositionVaild = async (_rule, value) => {
-    if (!formState.position) {
+    if (formState.position.length == 0) {
         return Promise.reject(
             $t("supply-chain.please_select_position")
         );
     }
-    if (formState.postion == 4) {
-        /* formState.begin_business_time = "";
-        formState.end_business_time = ""; */
-       // 去除校验 
-    }
     return Promise.resolve(); 
 }
-
-let NameVaild = async(_rule, value) => {
-    let dataBoo = false;
-    if(!_rule.required) {
+let contactInfoVaild = (_rule, value)=>{
+    // 如果只有一个数据,并且position为4,就不用校验
+    if(formState.contact_info.length == 1 && formState.contact_info[0].position == 4){
         return Promise.resolve();
     }
-    switch(_rule.fullField){
-        case 'contact_name': 
-            if (!formState.contact_info?.name) {
-                dataBoo = true;
+    else if(formState.contact_info.length > 1){
+       let arr = formState.contact_info.filter(item=>item.position != 4)
+       for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+            if (!element.name || !element.phone || !element.email) {
+                return Promise.reject(false);
             }
-            break;
-        case 'contact_email':
-            if (!formState.contact_info?.email) {
-                dataBoo = true;
-            }
-            break;
-        case 'contact_flag_phone':
-            if (!formState.contact_info?.phone) {
-                dataBoo = true;
-            }
-            break;
+       }
     }
-    if(dataBoo) return Promise.reject(
-        $t("supply-chain.please_enter")
-    );
     return Promise.resolve();
 }
-let BusinessTermValid = async (_rule, value) => {
-  if (formState.business_duration_type == 2) {
-      if (!formState.begin_business_time || !formState.end_business_time) {
-          return Promise.reject(
-              $t("supply-chain.please_select_business_term")
-          );
-      }
-  }
-  if (formState.business_duration_type == 1) {
-      formState.begin_business_time = "";
-      formState.end_business_time = "";
-  }
-  return Promise.resolve();
-};
 
 let companyVaild = async (_rule, value) => {
     let dataBoo = false;
@@ -2107,10 +2111,8 @@ const findObjIsNoneFromList = (parObjkey , key) => {
     if(!formState[parObjkey]?.[key]) boo = true;
     return boo;
 }
-
 // 表格校验
 let tableVaild = async (_rule, value) => {
-  console.log('_rule, value------tableVaild',_rule, value);
   let dataBoo = false;
     if(!_rule.required) {
         return Promise.resolve();
@@ -2171,47 +2173,48 @@ let tableVaild = async (_rule, value) => {
     );
     return Promise.resolve();
 };
-
-
-
-
 // 当前类的校验
 const rules = ref({})
-
 // 五个类共有的校验集合
 const rulesAll = ref({
   positon: [//职业
-
       {
           required: true,
           validator: PositionVaild,
           trigger: ["change", "blur"],
       },
   ],
-  contact_name: [// 姓名
-    
+  contact_info:[ // 联系方式
       {
           required: true,
-          validator: NameVaild,
+          validator: contactInfoVaild,
           trigger: ["change", "blur"],
       },
   ],
-  contact_email: [// 邮箱
+//   contact_name: [// 姓名
     
-      {
-          required: true,
-          validator: NameVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
-  contact_flag_phone: [// 手机号
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
+//   contact_email: [// 邮箱
     
-      {
-          required: true,
-          validator: NameVaild,
-          trigger: ["change", "blur"],
-      },
-  ],
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
+//   contact_flag_phone: [// 手机号
+    
+//       {
+//           required: true,
+//           validator: NameVaild,
+//           trigger: ["change", "blur"],
+//       },
+//   ],
   // 公司名称
   company_name_name: [
       {
@@ -2271,7 +2274,6 @@ const rulesAll = ref({
   ],
   
 });
-
 // 五个类除共有的校验集合
 const rulesOther = ref({
 
@@ -2493,7 +2495,6 @@ const rulesOther = ref({
     
 
 })
-
 // 草稿回显
 const draftDataReview = () => {
   let draftData = $store.state.SUPPLY_CHAIN.supplyDraftChain;
@@ -2545,15 +2546,14 @@ const handleTimeSearch = (params) => {
 // 校验
 const step1Vaild = () => {
   return new Promise(async (resolve,reject)=>{
-      formRef1.value.clearValidate();
-      formRef2.value.clearValidate();
-      formRef3.value.clearValidate();
-      formRef4.value.clearValidate();
-      const form1Promise = formRef1.value.validate(); // 获取表单1的验证 Promise  
-      const form2Promise = formRef2.value.validate(); // 获取表单2的验证 Promise  
-      const form3Promise = formRef3.value.validate(); // 获取表单3的验证 Promise  
-      const form4Promise = formRef4.value.validate(); // 获取表单4的验证 Promise  
-
+      formRef1.value && formRef1.value.clearValidate();
+      formRef2.value && formRef2.value.clearValidate();
+      formRef3.value && formRef3.value.clearValidate();
+      formRef4.value && formRef4.value.clearValidate();
+      const form1Promise = formRef1.value && formRef1.value.validate(); // 获取表单1的验证 Promise  
+      const form2Promise = formRef2.value && formRef2.value.validate(); // 获取表单2的验证 Promise  
+      const form3Promise = formRef3.value && formRef3.value.validate(); // 获取表单3的验证 Promise  
+      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise  
       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  
@@ -2609,6 +2609,7 @@ const step1Vaild = () => {
               console.log('errorName111',errorName,err);
               if (!errorName) return;
               const errorDom = document.querySelector(`[name=${errorName}]`);
+              console.log(errorDom)
               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
               errorDom.scrollIntoView({
                   behavior: "smooth",
@@ -2617,56 +2618,6 @@ const step1Vaild = () => {
               });
               reject(false)
         });
-            //   await Promise.all([form1Promise, form2Promise, form3Promise]); // 同时等待两个表单验证完成  
-     
-      /* formRef1.value
-          .validate()
-          .then((res) => {
-              if (res) {
-                  let data = $store.state.SUPPLY_CHAIN.supplyChain;
-                  // 判断是否为空对象
-                  if (Object.keys(data).length === 0) {
-                      // 为空对象
-                      data = {
-                          type: formState.type,
-                          position: formState.position,
-                          company_name: formState.company_info?.name,
-                          form: {
-                            ...formState
-                          }
-                      };
-                  } else {
-                      // 不为空对象
-                      data = {
-                        ...data,
-                        type: formState.type,
-                        position: formState.position,
-                        company_name: formState.company_info?.name,
-                        form: {
-                          ...formState
-                        }
-                      }
-                  }
-                  // 保存数据
-                  $store.commit("SUPPLY_CHAIN/setSupplyChain", data);
-                  $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
-                  resolve(true)
-              }
-          })
-          .catch((err) => {
-              // 校验失败
-              message.warning($t("supply-chain.please_complete_info"));
-              const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-              if (!errorName) return;
-              const errorDom = document.querySelector(`[name=${errorName}]`);
-              // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-              errorDom.scrollIntoView({
-                  behavior: "smooth",
-                  block: "center",
-                  inline: "nearest",
-              });
-              reject(false)
-          }); */
   })
 };
 // 保存草稿
@@ -2727,7 +2678,7 @@ const handleAddSpecItem = (list ,obj ,title , key ) => {
     title ? obj[key] = title + id : ''
 
     list.push({...obj,id})
-}
+}          
 // 根据type 动态设置rules
 const setRules = () => {
     
@@ -2866,7 +2817,6 @@ const setRules = () => {
             
             break;
     }
-    console.log('obj000000',obj);
     rules.value = {
         ...rulesAll.value , ...obj
     }
@@ -2881,70 +2831,16 @@ watch(
       }
   }
 );
-// // 职业勾选变动
-// watch(
-//   () => formState.position,
-//   (val) => {
-      
-//     let boo = true;
-//     if(formState.position === Core.Const.SUPPLAY.POSITION[4].value) boo = false;
-//     rules.value.contact_name[0].required = boo;
-//     rules.value.contact_email[0].required = boo;
-//     rules.value.contact_flag_phone[0].required = boo;
-//   }
-// );
-watch(()=>formState.type ,
-    (newval,oldval)=>{
-        let broker_v_list = ['proxy_warrant', 'duration_of_agency', 'proportion_of_business', 'sales', 'taxes_paid']
-        rules.value = {
-            ...rules.value, ...rulesOther.value 
-        } 
-        if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[2].value){
-            console.log('pppppppppppppppppppppppp');
-            // 业务比重
-            rules.value.proportion_of_business[0].required = true;
-            // 代理有效期间
-            rules.value.duration_of_agency[0].required = true;
-            rules.value.proxy_warrant[0].required = true;
-
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[3].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[4].value){
- 
-            
-        }else if(newval === Core.Const.SUPPLAY.SUPPLAY_TYPE[5].value){
-            // 销售额
-            rules.value.sales[0].required = true;
-
-        }else{
-            // 业务比重
-            rules.value.proportion_of_business[0].required = false;
-            rules.value.sales[0].required = false;
-            // 代理有效期间
-            rules.value.proxy_warrant[0].required = false;
-            rules.value.duration_of_agency[0].required = false;
-        }
-    }
-);
-    /* let boo = true;
-    if(formState.position === 4) boo = false;
-    rules.value&&rules.value?.contact_name?.[0]?.required = boo;
-    rules.value&&rules.value?.contact_email?.[0]?.required = boo;
-    rules.value&&rules.value?.contact_flag_phone?.[0]?.required = boo; */
-//   }
 // );
 // 监听类别变动
 watch(()=>formState.type ,
     (newval,oldval)=>{
-
         // 重置校验规则
         setRules()
-
-        formRef1.value.clearValidate();
-        formRef2.value.clearValidate();
-        formRef3.value.clearValidate();
-        formRef4.value.clearValidate();
+        formRef1.value && formRef1.value.clearValidate();
+        formRef2.value && formRef2.value.clearValidate();
+        formRef3.value && formRef3.value.clearValidate();
+        formRef4.value && formRef4.value.clearValidate();
     }
 );
 defineExpose({
@@ -2952,12 +2848,9 @@ defineExpose({
   saveDraft1,
   reviewData,
 });
-
 onMounted(() => {
-
     // 回显数据
     reviewData();
-  
     // 重置校验规则
     setRules()
 });
@@ -3153,6 +3046,11 @@ onMounted(() => {
                 margin-right: 2px;
             }
         }
+        .no-require{
+            &::before {
+             display: none;
+            }
+        }
         .phone-and-wechart{
             display: flex;
             align-items: center;
@@ -3160,6 +3058,30 @@ onMounted(() => {
                 margin-left: 8px;
                 display: flex;
             }
+        }
+    }
+}
+:deep(.form-content-item){
+    .ant-form-item-label{
+        .ant-form-item-required{
+            &::before {
+                display: none;
+            }
+        }
+    }
+}
+:deep(.ant-table-tbody){
+    .no-require{
+        .ant-table-cell{
+          #custom-validation_contact_info{
+                border: 1px solid #EAECF2 !important;
+                // 清除所有的失败的样式,border box-shadow
+                &:focus,&:hover{
+                    border: 1px solid #EAECF2 !important;
+                    box-shadow: none !important;
+                }
+
+           }
         }
     }
 }
