@@ -53,6 +53,10 @@
                                         </a-modal>
                                     </a-menu-item>
                                     <a-menu-divider class="menu_divider" />
+                                    <a-menu-item @click="routerChange('/login')">
+                                        <a class="menu_text">{{ $t('mall.switch_identity') }}</a>
+                                    </a-menu-item>
+                                    <a-menu-divider class="menu_divider" />
                                     <a-menu-item @click="handleLogout">
                                         <a class="menu_text">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
@@ -133,6 +137,7 @@
                 <div class="bag" @click="routerChange('/purchase/item-collect')">
                     <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-6, -2]">
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
+                        <svg-icon icon-class="car-icon" class-name="car-icon" />
                     </a-badge>
                     <span>{{ $t('mall.bag') }}</span>
                 </div>
@@ -451,6 +456,13 @@ export default {
                 width: 18px;
                 height: 18px;
                 margin-right: 8px;
+                display: inline-block;
+            }
+            .car-icon {
+                width: 18px;
+                height: 18px;
+                margin-right: 8px;
+                display: none;
             }
             > span {
                 color: #333;
@@ -470,6 +482,21 @@ export default {
                 font-size: 10px;
                 line-height: 14px;
                 padding: 0 4px;
+            }
+            &:hover {
+                border: 1px solid #C6F;
+                > span {
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                .header-bag-icon {
+                    display: none;
+                }
+                .car-icon {
+                    display: inline-block;
+                }
             }
         }
     }

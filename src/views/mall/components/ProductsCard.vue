@@ -27,6 +27,7 @@
                     </span>
                     <span class="car" @click="addCar(record)">
                         <svg-icon icon-class="car-icon" class-name="car-icon" />
+                        <svg-icon icon-class="car-white-icon" class-name="car-white-icon" />
                     </span>
                 </div>
             </div>
@@ -241,8 +242,18 @@ const getShopCartList = () => {
                     height: 32px;
                     border: 1px solid #C6F;
                     cursor: pointer;
+                    .car-white-icon {
+                        display: none;
+                    }
                     &:hover {
-                        opacity: 0.7;
+                        border: none;
+                        background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                        .car-icon {
+                            display: none;
+                        }
+                        .car-white-icon {
+                            display: inline-block;
+                        }
                     }
                 }
             }

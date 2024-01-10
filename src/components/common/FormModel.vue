@@ -290,7 +290,7 @@ export default {
         width: 100%;
         display: flex;
         align-items: center;
-        margin-bottom: 43px;
+        margin-bottom: 30px;
         position: relative;
         &.mb24 {
             margin-bottom: 24px !important;
@@ -313,7 +313,7 @@ export default {
         .web-input {
             outline: none;
             width: 100%;
-            padding: 8px 0;
+            padding: 15px 0;
             box-sizing: border-box;
             font-weight: 400;
             font-style: normal;

@@ -15,6 +15,10 @@ const apiList = {
         logout: ['Post', 'system/logout'], // 账号登出
         updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改
 
+        checkAccount: ['PostJson', 'system/login/check-account'], // 校验登录账号
+        selectUser: ['PostJson', 'system/login/select-user'], // 选择用户登录
+        switchUser: ['PostJson', 'system/switch-user'], // 切换用户
+
         emailCode: ['Post', 'common/email-verification-code-send'], // 发送邮箱验证码
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息

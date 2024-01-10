@@ -32,21 +32,6 @@ export default {
             headAuth: false,
             footAuth: false,
             loginType: Core.Data.getLoginType(),
-            openKeys: [],
-            selectedKeys: [],
-            passShow: false,
-            user: Core.Data.getUser() || {},
-            form: {
-                id: '',
-                password: '',
-                new_password: '',
-                old_password: '',
-            },
-            unread: {
-                master: '',
-                org: '',
-            },
-            tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
         };
     },
     computed: {
@@ -95,97 +80,6 @@ export default {
         if (window.innerWidth <= 830) {}
     },
     methods: {
-        routerChange(type) {
-            let routeUrl = ''
-            switch (type) {
-                case 'notice':        //系统
-                    routeUrl = this.$router.resolve({
-                        path: "/system/notice-list",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-                case 'shop_cart':
-                    routeUrl = this.$router.resolve({
-                        path: "/purchase/item-collect",
-                    })
-                    window.open(routeUrl.href, '_self')
-                    break;
-
-            }
-        },
-        getUnreadCount() {    // 获取 未读消息数 数据
-            let CATEGORY = Core.Const.NOTICE.CATEGORY
-            Core.Api.Notice.list({
-                category: CATEGORY.ORG
-            }).then(res => {
-                this.unread.org = res.un_count;
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
-            })
-            Core.Api.Notice.list({
-                category: CATEGORY.MASTER
-            }).then(res => {
-                this.unread.master = res.un_count;
-            }).catch(err => {
-                console.log('getUnreadCount err', err)
-            })
-        },
-        handleLink(path) {
-            this.$router.push(path);
-        },
-
-        handleLogout() {           
-            this.$router.replace('/login');
-            localStorage.clear()
-            Core.Api.Common.logout()
-        },
-
-        handleEditShow() {
-            this.passShow = true;
-        },
-        handleEditClose() {
-            this.passShow = false;
-            this.form = {
-                id: '',
-                password: '',
-                new_password: '',
-                old_password: '',
-            }
-        },
-        handleEditSubmit() {
-            let form = Core.Util.deepCopy(this.form)
-            console.log('handleLogin form:', form)
-            if (!form.old_password) {
-                return this.$message.warning(this.$t('u.old_password'))
-            }
-            if (!form.password) {
-                return this.$message.warning(this.$t('u.new_password'))
-            }
-            if (!form.new_password) {
-                return this.$message.warning(this.$t('u.again'))
-            }
-            if (this.form.new_password !== this.form.password) {
-                this.$message.warning(this.$t('u.not'))
-                return
-            }
-
-            this.loading = true;
-            Core.Api.Common.updatePwd(this.form).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
-                this.handleEditClose();
-            }).catch(err => {
-                console.log('handleSubmit err:', err)
-            })
-        },
-
-        // 中英文切换
-        handleLangSwitch(lang) {
-            console.log('handleLangSwitch')
-            this.$store.commit('switchLang', lang)
-            this.$i18n.locale = this.$store.state.lang
-            console.log('this.$i18n.locale', this.$i18n.locale)
-        },
-
         // 监听窗口变化
         handleWindowResize(e) {},
     }
