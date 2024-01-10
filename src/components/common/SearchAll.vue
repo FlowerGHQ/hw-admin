@@ -104,6 +104,23 @@
                             </div>
                         </div>
                     </a-col>
+                    <a-col v-else-if="(item.type === 'select-search-multiple')" :xs="24" :sm="24" :xl="11" :xxl="8" class="search-box" >
+                        <div  class="item-box">
+                            <div class="key-box">
+                                {{ $t(item.key) }}
+                            </div>
+                            <div class="value-box">
+                                <a-select
+                                    v-model:value="item.value"
+                                    :options="item.selectMap"
+                                    :mode="item.multiple?'multiple':''"
+                                    show-search
+                                    :filter-option="filterOption"
+                                    :placeholder="$t(`${ item.placeholder || 'def.input' }`)">
+                                </a-select>
+                            </div>
+                        </div>
+                    </a-col>
                 </template>
             </slot>
             <slot name="time"></slot>
@@ -184,7 +201,9 @@ export default {
         
     },
     methods:{
-        
+        filterOption(input,option){
+            return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+        },
         // 查询
         handleSearch() {
             
@@ -220,7 +239,6 @@ export default {
             this.getSearchItem();
             
         },
-
         // 更改dom显隐
         getSearchItem(type = 'none') {
 
