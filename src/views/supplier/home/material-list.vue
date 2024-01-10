@@ -610,7 +610,11 @@ const handlePrev = () => {
 };
 // 保存草稿
 const saveDraft = () => {
-    let data = {}
+    let data = {
+        form: {
+            confirmatory_material: {}
+        }
+    }
     data.form.confirmatory_material = formState;
     // 保存数据
     // Core.Data.setSupplyDraftChain(JSON.stringify(data));

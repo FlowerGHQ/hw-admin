@@ -1683,16 +1683,19 @@ const plainOptions = computed(()=>{
     return arr
 })
 // 联系信息的table
-const contact_info_column = ref([
-    {id:0 , title: '职位身份', key: "position", dataIndex: "position" , align:'center',width:90}, // 职务
-    // 姓名
-    {id:1 , title: '姓名', key: "name", dataIndex: "name" , align:'center'}, // 姓名
-    // 手机号
-    {id:3 , title: '联系方式', key: "phone", dataIndex: "phone", align:'center'}, // 手机号
-    // 邮箱
-    {id:2 , title: '邮箱', key: "email", dataIndex: "email" , align:'center'}, // 邮箱
+const contact_info_column = computed(() => {
+    let columns = [        
+        {id:0 , title: $t('supply-chain.position_identity'), key: "position", dataIndex: "position" , align:'center',width:90}, // 职务
+        // 姓名
+        {id:1 , title: $t('supply-chain.name'), key: "name", dataIndex: "name" , align:'center'}, // 姓名
+        // 手机号
+        {id:3 , title: $t('supply-chain.contact'), key: "phone", dataIndex: "phone", align:'center'}, // 手机号
+        // 邮箱
+        {id:2 , title: $t('supply-chain.mailbox'), key: "email", dataIndex: "email" , align:'center'}, // 邮箱
+    ]
 
-])
+    return columns
+})
 const handleCheckBox = (checkedValue) => {
     // 清除
     formState.position = checkedValue
@@ -2563,7 +2566,7 @@ const step1Vaild = () => {
       const form1Promise = formRef1.value && formRef1.value.validate(); // 获取表单1的验证 Promise  
       const form2Promise = formRef2.value && formRef2.value.validate(); // 获取表单2的验证 Promise  
       const form3Promise = formRef3.value && formRef3.value.validate(); // 获取表单3的验证 Promise  
-      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise  
+      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise
       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  

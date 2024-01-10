@@ -1,6 +1,9 @@
 <template>
     <div class="supply-detail">
-        <div class="back"></div>
+        <div class="back m-b-20 cursor" @click="onBack">
+            <MySvgIcon icon-class="supply-m-d-arrow-left" />
+            <span>供应商资料查看/编辑</span>
+        </div>
         <!-- 基本信息 -->
         <div class="base-message">
             <div class="msg-header">
@@ -59,52 +62,95 @@
                     <div class="information-form">
                         <!-- 职位 -->
                         <div class="level-search-row">
-                            <div class="search-col m-t-0 required">
-                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Position') }}</div>
+                            <div class="search-col m-t-0 required align-flex-start">
+                                <div 
+                                    class="key w-130 t-a-r text-color"
+                                    :class="{ 'm-t-4': isEdit }"
+                                >
+                                    {{ $t('supply-chain.Position') }}
+                                </div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        {{
-                                            Core.Const.SUPPLAY.POSITION[msgDetail.position]?.t
-                                                ? $t(Core.Const.SUPPLAY.POSITION[msgDetail.position]?.t)
-                                                : "-"
-                                        }}
-                                    </a-radio>
+                                    <template v-if="!isEdit">
+                                        <div class="d-fl m-t-4">
+                                            <a-checkbox v-for="item in msgDetail.position" :checked="true">
+                                                {{
+                                                    Core.Const.SUPPLAY.POSITION_MAP[item]?.t
+                                                        ? $t(Core.Const.SUPPLAY.POSITION_MAP[item]?.t)
+                                                        : "-"
+                                                }}
+                                            </a-checkbox>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <a-checkbox-group 
+                                            v-model:value="parameters.position" 
+                                            name="checkboxgroup" 
+                                            :options="plainOptions(Core.Const.SUPPLAY.POSITION)"
+                                            @change="onPosition"
+                                        />
+                                    </template>
+                                    <a-table
+                                        class="m-t-8"
+                                        :columns="contactInformation"
+                                        :data-source="parameters.contact_info || []" 
+                                        :pagination="false"
+                                    >
+                                        <template #bodyCell="{ column, text, record, index }">
+                                            <!-- 职位身份 -->
+                                            <template v-if="column.key === 'position'">
+                                                <div class="information-customer-name w-100">
+                                                    <span class="information-customer-name-required">*</span>
+                                                    <span class="m-l-4">
+                                                        {{
+                                                            Core.Const.SUPPLAY.POSITION_MAP[text]?.t
+                                                                ? $t(Core.Const.SUPPLAY.POSITION_MAP[text]?.t)
+                                                                : "-"
+                                                        }}
+                                                    </span>
+                                                </div>
+                                            </template>
+                                            <!-- 姓名 -->
+                                            <template v-if="column.key === 'name'">
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
+                                            </template>
+                                            <!-- 联系方式 -->
+                                            <template v-if="column.key === 'phone'">
+                                                <div class="d-fl">
+                                                    <a-input
+                                                        :class="{ 'customer-input': !isEdit }"
+                                                        v-model:value="record.phone"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                    />
+                                                    <a-checkbox 
+                                                        class="m-l-8" 
+                                                        v-model:checked="record.flag_wechat"
+                                                        :disabled="!isEdit"
+                                                    >
+                                                        {{ $t('supply-chain.wechat_same_number') }}
+                                                    </a-checkbox>
+                                                </div>
+                                            </template>
+                                            <!-- 邮箱 -->
+                                            <template v-if="column.key === 'email'">
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.email"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
+                                            </template>                                            
+                                        </template>
+                                    </a-table>
                                 </div>
                             </div>
                         </div>
-                        <!-- 姓名 -->
-                        <div class="level-search-row">
-                            <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.name') }}</div>
-                                <div class="value m-l-8">
-                                    {{ msgDetail.contact_info?.name }}
-                                    <!-- <a-input 
-                                        v-model:value="msgDetail.contact_info?.name" 
-                                        :placeholder="$t('common.please_enter')" 
-                                        /> -->
-                                </div>
-                            </div>
-                            <!-- 邮箱 -->
-                            <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mailbox') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.contact_info?.email || "-" }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 联系方式 -->
-                        <div class="level-search-row">
-                            <div class="search-col w-50-percentage required">
-                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.contact') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.contact_info?.phone || "-" }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -148,18 +194,27 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">                                
                                         <div class="customer-input">
-                                            {{ msgDetail?.company_info?.established_time || "-" }}
+                                            {{
+                                                msgDetail?.company_info?.established_time
+                                                    ? $Util.timeFilter(
+                                                          msgDetail?.company_info?.established_time, 3
+                                                      )
+                                                    : ""
+                                            }}
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <!-- v-model:value="msgDetail.company_info.established_time" -->
-                                        <a-date-picker class="w-100" valueFormat="YYYY-MM-DD"  @change="(event) => handleTimeSearch(event, 'date_establishment')"/>
+                                        <a-date-picker
+                                            class="w-100"
+                                            v-model:value="parameters.company_info.established_time"
+                                            @change="(event) => handleTimeSearch(event, 'date_establishment')"
+                                        />                                            
                                     </template>
                                 </div>
                             </div>
                             <!-- 固定资产 -->
                             <div class="search-col w-50-percentage">
-                                <div class="key w-130 t-a-r text-color">固定资产</div>
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.fixed_assets') }}</div>
                                 <div class="value m-l-8">
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
@@ -247,7 +302,7 @@
                                     <a-input-number
                                         class="w-100"
                                         :class="{ 'customer-input-number': !isEdit }"
-                                        v-model:value="parameters.company_info.legal_person"
+                                        v-model:value="parameters.company_info.floor_area"
                                         :placeholder="$t('common.please_enter')" 
                                         :disabled="!isEdit"
                                         :min="0"
@@ -280,6 +335,21 @@
                                     </a-input-number>
                                 </div>
                             </div>
+                            
+                            <!-- 经营场所 -->
+                            <div class="search-col">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.establishments') }}</div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.company_info.premises"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
+                                </div>
+                            </div>  
+                        </div>
+                        <div class="level-search-row">
                             <!-- 母公司名称 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.parent_company_name') }}</div>
@@ -291,11 +361,9 @@
                                         :disabled="!isEdit"
                                     />
                                 </div>
-                            </div>                      
-                        </div>
-                        <div class="level-search-row">
+                            </div>  
                             <!-- 母公司地址 -->
-                            <div class="search-col w-50-percentage">
+                            <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Parent_company_address') }}</div>
                                 <div class="value m-l-8">                                   
                                     <a-input
@@ -406,7 +474,11 @@
                                     <template v-else>
                                         <TimeSearch
                                             class="w-100"
-                                            ref="TimeSearchRef"
+                                            ref="TimeDurationOfAgency"
+                                            :value="[
+                                                parameters.agent_info.agent_effective_begin_time,
+                                                parameters.agent_info.agent_effective_end_time
+                                            ]"
                                             @search="(event) => handleTimeSearch(event, 'agent_info')"
                                             :defaultTime="false" />
                                     </template>
@@ -867,7 +939,7 @@
                                                 />
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('competitor_delete', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -876,13 +948,13 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
                                         @click="onAddBtn('competitor')"
                                     >
-                                        添加对手
+                                        {{ $t('supply-chain.add_opponents') }}
                                     </a-button>
                                 </div>
                             </div>
@@ -941,15 +1013,15 @@
                                                 />  
                                             </template>
                                             <!-- 开始合作时间 -->
-                                            <template v-if="column.key === 'begin_cooperation_time'">
-                                                <a-date-picker 
-                                                    class="w-100" 
-                                                    valueFormat="YYYY-MM-DD"  
-                                                    @change="(event) => handleTimeSearch(event, 'begin_cooperation_time', record.begin_cooperation_time)"
-                                                />
+                                            <template v-if="column.key === 'begin_cooperation_time'">                                               
+                                                <a-date-picker
+                                                    class="w-100"
+                                                    v-model:value="record.begin_cooperation_time"
+                                                    @change="(event) => handleTimeSearch(event, 'begin_cooperation_time')"
+                                                />  
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('customer_information_delete', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -958,13 +1030,13 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
                                         @click="onAddBtn('customer_information')"
                                     >
-                                        添加客户
+                                        {{ $t('supply-chain.add_customers') }}
                                     </a-button>
                                 </div>
                             </div>
@@ -1091,15 +1163,11 @@
                                         </sapn>
                                     </template>
                                     <template v-else>
-                                        <a-radio-group v-model:value="parameters.technical_info.product_design">
-                                            <a-radio 
-                                                v-for="(item, index) in Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT"
-                                                :key="index"
-                                                :value="item.value"
-                                            >
-                                                {{ $t(item.t) }}
-                                            </a-radio>                                           
-                                        </a-radio-group>
+                                        <a-checkbox-group 
+                                            v-model:value="parameters.technical_info.product_design" 
+                                            name="productDesign" 
+                                            :options="plainOptions(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT)" 
+                                        />                                       
                                     </template>
                                 </div>
                             </div>
@@ -1123,15 +1191,11 @@
                                         </sapn>
                                     </template>
                                     <template v-else>
-                                        <a-radio-group v-model:value="parameters.technical_info.process_design">
-                                            <a-radio 
-                                                v-for="(item, index) in Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT"
-                                                :key="index"
-                                                :value="item.value"
-                                            >
-                                                {{ $t(item.t) }}
-                                            </a-radio>                                           
-                                        </a-radio-group>
+                                        <a-checkbox-group 
+                                            v-model:value="parameters.technical_info.process_design" 
+                                            name="productDesign" 
+                                            :options="plainOptions(Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT)" 
+                                        />                                          
                                     </template>
                                 </div>
                             </div>
@@ -1155,15 +1219,11 @@
                                         </sapn>
                                     </template>
                                     <template v-else>
-                                        <a-radio-group v-model:value="parameters.technical_info.process_validation">
-                                            <a-radio 
-                                                v-for="(item, index) in Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT"
-                                                :key="index"
-                                                :value="item.value"
-                                            >
-                                                {{ $t(item.t) }}
-                                            </a-radio>                                           
-                                        </a-radio-group>
+                                        <a-checkbox-group 
+                                            v-model:value="parameters.technical_info.process_validation" 
+                                            name="productDesign" 
+                                            :options="plainOptions(Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT)" 
+                                        />
                                     </template>
                                 </div>
                             </div>
@@ -1620,7 +1680,7 @@
                                             <template v-if="column.key === 'spec'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.spec"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1628,7 +1688,7 @@
                                             <template v-if="column.key === 'quantity'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.quantity"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1636,7 +1696,7 @@
                                             <template v-if="column.key === 'manufacturer'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.manufacturer"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
@@ -1644,13 +1704,13 @@
                                             <template v-if="column.key === 'purchase_period'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.purchase_period"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('key_production_equipment', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -1659,13 +1719,13 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
                                         @click="onAddBtn('key_production_equipment')"
                                     >
-                                        添加生产设备
+                                        {{ $t('supply-chain.add_production_equipment') }}
                                     </a-button>
                                 </div>
                             </div>
@@ -1697,7 +1757,7 @@
                                             <template v-if="column.key === 'spec'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.spec"
                                                     :placeholder="$t('common.please_enter')" 
                                                     :disabled="!isEdit"
                                                 />                                               
@@ -1705,7 +1765,7 @@
                                             <template v-if="column.key === 'quantity'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.quantity"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
@@ -1713,7 +1773,7 @@
                                             <template v-if="column.key === 'manufacturer'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.manufacturer"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
@@ -1721,13 +1781,13 @@
                                             <template v-if="column.key === 'accuracy_level'">
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
-                                                    v-model:value="record.name"
+                                                    v-model:value="record.accuracy_level"
                                                     :placeholder="$t('common.please_enter')"
                                                     :disabled="!isEdit"
                                                 /> 
                                             </template>
                                             <!-- 操作 -->
-                                            <template v-if="column.key === 'operations'">
+                                            <template v-if="column.key === 'operations' && isEdit">
                                                 <a-button v-if="index !== 0" type="link" @click="onDeleate('critical_detection_equipment', record, index)">
                                                     <i class="icon i_delete" />
                                                     {{ $t("def.delete") }}
@@ -1736,13 +1796,13 @@
                                         </template>
                                     </a-table>
                                     <a-button
-                                        v-if="!edit"
+                                        v-if="isEdit"
                                         class="m-t-16"
                                         type="primary"
                                         ghost
                                         @click="onAddBtn('critical_detection_equipment')"
                                     >
-                                        添加检测设备
+                                        {{ $t('supply-chain.add_detection_equipment') }}
                                     </a-button>
                                 </div>
                             </div>
@@ -1815,7 +1875,8 @@
                                             showTip
                                             :limit="1"
                                             :limitSize="2"
-                                            tipPosition="right" />
+                                            tipPosition="right"
+                                        />
                                     </template>
                                 </div>
                             </div>
@@ -1852,14 +1913,14 @@
                                             {{
                                                 msgDetail?.confirmatory_material?.begin_business_time
                                                     ? $Util.timeFilter(
-                                                          msgDetail?.confirmatory_material?.begin_business_time
+                                                          msgDetail?.confirmatory_material?.begin_business_time, 3
                                                       )
                                                     : ""
                                             }}
                                             -
                                             {{
                                                 msgDetail?.confirmatory_material?.end_business_time
-                                                    ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time)
+                                                    ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time, 3)
                                                     : ""
                                             }}
                                         </div>
@@ -1876,10 +1937,15 @@
                                                     <TimeSearch
                                                         class="m-l-4"
                                                         v-if="Number(parameters.confirmatory_material.business_duration_type) === 2"
-                                                        ref="TimeSearchRef"
+                                                        :value="[
+                                                            parameters.confirmatory_material.begin_business_time,
+                                                            parameters.confirmatory_material.end_business_time
+                                                        ]"
+                                                        ref="TimeBusinessTerm"
                                                         @search="(event) => handleTimeSearch(event, 'business_term')"
-                                                        :defaultTime="false" />                                                  
-                                                    </template>
+                                                        :defaultTime="false"
+                                                    />
+                                                </template>
                                             </a-radio>                                           
                                         </a-radio-group>
                                     </template>
@@ -2108,27 +2174,60 @@
         </a-modal>
 
         <div class="suction-bottom">
-            <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
+            <template v-if="!isEdit">            
+                <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
+            </template>
+            <template v-else>
+                <a-button @click="onSuction('cancel-edit')">{{ $t('supply-chain.cancel_editing') }}</a-button>
+                <a-button type="primary" @click="onSuction('add')">{{ $t('supply-chain.submit_materials') }}</a-button>
+            </template>
         </div>
+
+
+        <MyMask :isClose="isClose" @close="onPingPongMaskClose">
+            <div class="mask-center">
+                <div class="title">{{ $t('supply-chain.mask_tips1') }}</div>
+                <div class="sub-title">{{ $t('supply-chain.mask_tips2') }}</div>
+                <div class="line"></div>
+                <div class="btn">
+                    <a-button @click="onSuction('continue_fill')">{{ $t('supply-chain.continue_fill') }}</a-button>
+                    <a-button type="primary" @click="onSuction('submit_exit')">{{ $t('supply-chain.submit_exit') }}</a-button>
+                </div>
+            </div>
+        </MyMask>
     </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed, getCurrentInstance } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
+import MyMask from "../../../components/common/MyMask.vue";
 import MyUpload from "@/components/MyUpload/index.vue";
 import dayjs from 'dayjs';
 
 const route = useRoute();
+const router = useRouter();
 const msgDetail = ref({});
 const { proxy } = getCurrentInstance()
 
 // 预览显影
 const previewVisible = ref(false)
 const previewImage = ref("")
+
+// 联系方式
+const contactInformation = computed(() => {
+    let columns = [
+        { title: proxy.$t('supply-chain.position_identity'), dataIndex: "position", key: "position" },
+        { title: proxy.$t('supply-chain.name'), dataIndex: "name", key: "name" },
+        { title: proxy.$t('supply-chain.contact'), dataIndex: "phone", key: "phone" },
+        { title: proxy.$t('supply-chain.mailbox'), dataIndex: "email", key: "email" },        
+    ];
+
+    return columns;
+});
 
 // 关键生产设备
 const deviceProductionColumns = computed(() => {
@@ -2202,10 +2301,22 @@ const customerInfoColumns = computed(() => {
     return columns;
 });
 
-
-const isEdit = ref(true)
+const TimeBusinessTerm = ref(null) // 营业期限
+const TimeDurationOfAgency = ref(null) // 代理有效期间
+const isClose = ref(false) // MyMask 显影
+const isEdit = ref(false)
 const parameters = ref({
     type: "",
+    // 联系方式
+    contact_info: [
+        // {
+        //     "position": "职务：1.销售；2.质量；3.技术；4.总经理",
+        //     "name": "姓名",
+        //     "email": "邮箱",
+        //     "phone": "手机号",
+        //     "flag_wechat": "是否同微信号"
+        // }
+    ],
     // 公司概况
     company_info: {
         name: "", // 名称
@@ -2237,7 +2348,7 @@ const parameters = ref({
     human_resource: {
 		total_employees: "", // 员工总数
 		manager_number: "", // 管理人数
-		mass_numbe: "", // 质量人数
+		mass_number: "", // 质量人数
 		technician_number: "", // 技术人数
 		technical_seniority: "", // 技术工龄
     },
@@ -2300,6 +2411,19 @@ const parameters = ref({
 		accredited_laboratory: "", // 认可实验室
 		system_certification: "", // 计划体系认证
 	},
+    // 产能产线
+    produce_capacity: {
+        processes: "",
+        automation_line: "",
+        load: ""
+    },
+    // 外购管理
+    outsourcing: {
+        technology: "", // 外购工艺
+        parts: "", // 外购备件
+        material: "", // 外购原料
+        system: "", // 外购制度
+     },
     // 指定信息
     specify_info: {
 		reason: "", // 指定理由
@@ -2307,36 +2431,11 @@ const parameters = ref({
 		protocol: "", // 指定协议
 		service: "", // 指定服务
 	},
-    // 产能产线
-    produce_capacity: {
-		processes: "",
-		automation_line: "",
-		load: ""
-	},
-    // 外购管理
-    outsourcing: {
-		technology: "", // 外购工艺
-		parts: "", // 外购备件
-		material: "", // 外购原料
-		system: "", // 外购制度
- 	},
-    // 材料清单基本信息
-    confirmatory_material: {
-		business_license_photo: "", // 营业执照照片
-		registered_capital: "", // 注册资本({{ $t('supply-chain.ten_thousand_yuan') }})
-		legal_person: "", // 法人代表
-		business_duration_type: "", // 营业期限类型：1.长期有效，2.短期有效
-		begin_business_time: "", // 营业开始时间
-		end_business_time: "", // 营业结束时间
-		account_name: "", // 开户名
-		account_with_bank: "", // 开户行
-		account_with_bank_number: "", // 开户行行号
-		bank_account: "", // 银行账号
-		quality_system_certificate: "", // 质量体系证书
-		proxy_certificate: "", // 代理证书
-		account_opening_bank_license: "", // 开户行许可证
-		eia_certificate: "", // 环评证书
-		environmental_report: "", // 环保报告
+    // 服务信息
+    service_info: {
+		technical_services: "", // 技术服务
+		quality_service: "", // 质量服务
+		supply_services: "", // 供应服务
 	},
     // 关键生产设备
     production_equipment: [
@@ -2358,6 +2457,24 @@ const parameters = ref({
         //     "accuracy_level": "精度等级"
         // }
     ],
+    // 材料清单基本信息
+    confirmatory_material: {
+		business_license_photo: "", // 营业执照照片
+		registered_capital: "", // 注册资本({{ $t('supply-chain.ten_thousand_yuan') }})
+		legal_person: "", // 法人代表
+		business_duration_type: "", // 营业期限类型：1.长期有效，2.短期有效
+		begin_business_time: "", // 营业开始时间
+		end_business_time: "", // 营业结束时间
+		account_name: "", // 开户名
+		account_with_bank: "", // 开户行
+		account_with_bank_number: "", // 开户行行号
+		bank_account: "", // 银行账号
+		quality_system_certificate: "", // 质量体系证书
+		proxy_certificate: "", // 代理证书
+		account_opening_bank_license: "", // 开户行许可证
+		eia_certificate: "", // 环评证书
+		environmental_report: "", // 环保报告
+	},   
 
     additional_info: ""
 })  // 一堆信息判断参数
@@ -2390,6 +2507,15 @@ function getDetail(params = {}) {
                     // console.log("数组", parameters.value[key]);
                     // 判断 数组
                     parameters.value[key] = keys
+
+                    if (key === 'customer_info') {
+                        // 开始合作时间
+                        parameters.value[key].forEach((el) => {
+                            // 标准格式
+                            el.begin_cooperation_time = dayjs.unix(el.begin_cooperation_time)
+                        })
+                    }
+
                 } else if (keys instanceof Object) {
                     // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
                     for (const item in parameters.value[key]) {
@@ -2397,6 +2523,11 @@ function getDetail(params = {}) {
                         if (parameters.value[key].hasOwnProperty(item)) {
                             parameters.value[key][item] = keys[item] || ""
                         }
+                    }
+
+                    if (key === 'company_info') {
+                        // 成立日期(过滤一下)
+                        parameters.value[key].established_time = dayjs.unix(parameters.value[key].established_time)
                     }
 
                 } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
@@ -2441,6 +2572,24 @@ function getDetail(params = {}) {
             console.log("getPhoneCodeFetchs err", err);
         });
 }
+// 保存接口
+const saveDetail = (params = {}) => {
+    let obj = {
+        ...params,
+    };
+
+    Core.Api.SUPPLY.adminAdd(obj)
+        .then((res) => {
+            console.log("成功", res);
+            proxy.$message.success(proxy.$t('common.successfully_saved'));
+            router.push({
+                path: '/supply-manage/list',
+            })
+        })
+        .catch((err) => {
+            console.log("getPhoneCodeFetchs err", err);
+        });
+}
 /* Fetch end*/
 
 /* methods start*/
@@ -2470,7 +2619,9 @@ const handleTimeSearch = (params, type, recordItem) => {
             parameters.value.confirmatory_material.end_business_time = params.end_time
             break;    
         case "date_establishment":
-            parameters.value.company_info.established_time = dayjs(params).unix()
+            console.log("sss", dayjs(parameters.value.company_info.established_time).format('DD/MM/YYYY'));
+            // 成立日期
+            // parameters.value.company_info.established_time = dayjs(params).unix()
             break;    
         case "agent_info":
             // 代理有效期间
@@ -2479,7 +2630,7 @@ const handleTimeSearch = (params, type, recordItem) => {
             break;    
         case "begin_cooperation_time":
             // 开始合作时间
-            recordItem = dayjs(params).unix()
+            // recordItem = dayjs(params).unix()
             // console.log(dayjs(params).unix());
             // console.log("recordItem",params, recordItem);
             break;    
@@ -2496,7 +2647,46 @@ const onSelectType = (type) => {
 const onSuction = (type) => {
     switch (type) {
         case 'edit':
-            isEdit.value = true
+            isEdit.value = true            
+            break;
+        case 'cancel-edit':
+            isEdit.value = false
+            break;
+        case 'add':
+            const form = Core.Util.deepCopy(parameters.value)           
+            for (const key in form) {
+                switch (key) {
+                    case 'company_info':                        
+                        // 成立日期(过滤一下)
+                        form[key].established_time = dayjs(parameters.value[key].established_time).unix()
+                        break;
+                    case 'customer_info':
+                        // 开始合作时间(过滤一下)
+                        form[key].forEach((el, index) => {
+                            // 标准格式
+                            el.begin_cooperation_time = dayjs(parameters.value[key][index].begin_cooperation_time).unix()
+                        })
+                        break;
+                
+                    default:
+                        break;
+                }
+            }
+            console.log("提交数据 from", form);
+
+            saveDetail({
+                id: route.query.id,
+                type: form.type,
+                company_name: form.company_info.name,
+                form: JSON.stringify(form)
+            })
+
+            break;
+        case 'continue_fill':
+            onPingPongMaskClose()
+            break;
+        case 'submit_exit':
+            onSuction('add')
             break;
 
         default:
@@ -2587,6 +2777,53 @@ const onDeleate = (type, record, index) => {
             break;
     }
 }
+// 职位多选等过滤数据 Core.Const.SUPPLAY.POSITION
+const plainOptions = (data) => {
+    let arr = []
+
+    for (const key in data) {
+        arr.push({
+            label: proxy.$t(data[key].label),
+            value: data[key].value
+        })
+    }
+
+    return arr
+}
+// 职位选择change
+const onPosition = (arr) => {
+    console.log("e", arr);
+
+    // 删除不在 arr 中的元素
+    parameters.value.contact_info = parameters.value.contact_info.filter(el => arr.includes(el.position));
+
+    // 添加缺失的元素
+    arr.forEach(el => {
+        if (!parameters.value.contact_info.some(item => item.position === el)) {
+            parameters.value.contact_info.push({
+                position: el,
+                name: "",
+                email: "",
+                phone: "",
+                flag_wechat: false
+            });
+        }
+    });
+    
+    console.log("职位选择change", parameters.value.contact_info);
+}
+// 打开遮罩框
+const onPingPongMaskClose = () => {
+    isClose.value = false
+}
+// 返回按钮
+const onBack = () => {
+    if (isEdit.value) {
+        isClose.value = true
+    } else {
+        router.back()
+    }
+}
 
 /* methods end*/
 </script>
@@ -2667,7 +2904,11 @@ const onDeleate = (type, record, index) => {
             }
         }
     }
-    .back {}
+    .back {
+        color: #1D2129;
+        font-size: 18px;
+        font-weight: 600;
+    }
     // 基本信息
     .base-message {
         // 供应类型
@@ -2698,7 +2939,8 @@ const onDeleate = (type, record, index) => {
             .edit-type {
                 display: flex;
                 .edit-type-item {
-                    width: 15%;
+                    padding: 0 10px;
+                    min-width: 15%;
                     height: 52px;
                     line-height: 52px;
                     text-align: center;
@@ -2940,5 +3182,39 @@ const onDeleate = (type, record, index) => {
 }
 .no-white-space {
     white-space: nowrap;
+}
+
+.mask-center {    
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    font-family: Montserrat;
+    padding: 32px 24px;
+    box-sizing: border-box;
+
+    .title {
+        color: #1D2129;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .sub-title {
+        color: #1D2129;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 34px;
+    }
+    .line {
+        margin-top: 32px;
+        margin-bottom: 18px;
+        border-top: 1px solid #F2F3F5;
+    }
+    .btn {
+        display: flex;
+        justify-content: center;
+    }
 }
 </style>
