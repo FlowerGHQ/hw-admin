@@ -357,6 +357,7 @@ const countDown = () => {
         }
     }, 1000);
 };
+// 从平台方的list中创建出来
 const isOtherPageFlag = computed(()=>{
     return $route.query?.otherPage == 'true';
 })
@@ -578,6 +579,11 @@ watch(
     () => setp.value,
     (val) => {
         if (val == 0) {
+            
+            if (isOtherPageFlag) {
+                // 平台方 供应商管理 list进来的
+                return
+            }
             getDetail().then(() => {
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
             });
@@ -589,6 +595,11 @@ const timer1 = ref(null);
 onMounted(() => {
     console.log($route.query,'-------------------------------------');
 
+    if (isOtherPageFlag) {
+        // 平台方 供应商管理 list进来的
+        return
+    }
+    
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
         // // 如果已经提交了

@@ -2566,7 +2566,7 @@ const step1Vaild = () => {
       const form1Promise = formRef1.value && formRef1.value.validate(); // 获取表单1的验证 Promise  
       const form2Promise = formRef2.value && formRef2.value.validate(); // 获取表单2的验证 Promise  
       const form3Promise = formRef3.value && formRef3.value.validate(); // 获取表单3的验证 Promise  
-      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise  
+      const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise
       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {  
             // 所有 Promise 都成功完成  
             // 处理结果...  

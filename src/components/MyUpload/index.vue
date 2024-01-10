@@ -216,7 +216,8 @@ watch(
   () => props.value,
   (val) => {
     if (val) {
-        // 讲val 的长度赋值给计数
+      if (val instanceof Array) return
+      // 讲val 的长度赋值给计数
       loopCount.value = val.split(",").length
       let fileList = []
       val.split(",").forEach((item) => {
