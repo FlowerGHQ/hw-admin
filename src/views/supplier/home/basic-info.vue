@@ -100,6 +100,9 @@
                                                 >
                                                 <a-input 
                                                     name="name" 
+                                                    :class="{
+                                                        'require':record.position !== 4 && !record.name
+                                                    }"
                                                     v-model:value="record.name" 
                                                     :placeholder="$t('supply-chain.please_enter')" />
                                                 </template> 
@@ -110,6 +113,9 @@
                                                         <a-input 
                                                             name="phone" 
                                                             class="phone-area"
+                                                            :class="{
+                                                                'require':record.position !== 4 && !record.phone
+                                                            }"
                                                             v-model:value="record.phone" 
                                                             :placeholder="$t('supply-chain.please_enter')" />
                                                         <a-checkbox 
@@ -123,6 +129,9 @@
                                                 >
                                                 <a-input 
                                                     name="email" 
+                                                    :class="{
+                                                        'require':record.position !== 4 && !record.email
+                                                    }"
                                                     v-model:value="record.email" 
                                                     :placeholder="$t('supply-chain.please_enter')" />
                                                 </template> 
@@ -3032,7 +3041,8 @@ onMounted(() => {
     .specific-table-position{
         color:#1D2129;
         .position-label{
-            width: 74px;
+            min-width: 74px;
+            padding:6px 18px;
             border-radius: 4px;
             height: 32px;
             background:#F2F3F5;
@@ -3087,7 +3097,7 @@ onMounted(() => {
     }
     .require{
         .ant-table-cell{
-            #custom-validation_contact_info{
+            .require{
                 border: 1px solid #FF4D4F !important;
                 // 清除所有的失败的样式,border box-shadow
                 &:focus,&:hover{
