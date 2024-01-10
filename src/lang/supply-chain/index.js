@@ -77,6 +77,8 @@ export default {
     previous_step: "上一步",
     // 提交申请
     submit_application: "提交申请",
+    // 操作
+    operate: '操作',
     // 请选择营业期限
     please_select_business_term: "请选择营业期限",
     // 请输入注册资本
@@ -151,6 +153,8 @@ export default {
     purchasing_radius: "采购半径",
     floor_space: "占地面积",
     floor_area: "建筑面积",
+    fixed_assets: "固定资产",
+    establishments: '经营场所',
     parent_company_name: "母公司名称",
     Parent_company_address: "母公司地址",
     total_number_of_employees: "员工总数",
@@ -171,8 +175,13 @@ export default {
     profit_rate: "利润率",
     asset_liability_ratio: "资产负债率",
     cash_flow_ratio: "现金流量比率",
+    // 竞争对手
+    company_serial_number: '公司序号',
     competitor: "竞争对手",
     competitor_information: "竞争对手信息",
+    add_opponents: "添加对手",
+    // 客户信息
+    add_customers: "添加客户",
     customer_information: "客户信息",
     major_customer: "主要客户",
     Technical_information: "技术信息",
@@ -201,16 +210,22 @@ export default {
     qutsourced_spare_parts: "外购备件",
     purchased_raw_materials: "外购原料",
     qutsourcing_system: "外购制度",
+    // 设备信息
     device_information: "设备信息",
     key_production_equipment: "关键生产设备",
     critical_detection_equipment: "关键检测设备",
     supplementary_information: "补充信息",
     other_advantages_description: "其他优势说明",
     Name_of_production_equipment: "生产设备名称",
+    Name_of_detection_equipment: "检测设备名称",
     Specification_and_model: "规格型号（含吨位）",
+    Specification_text: "规格型号",
     quantity: "数量",
     Equipment_manufacturer: "设备制造商",
     Purchase_period: "购置年限",
+    add_production_equipment: '添加生产设备',
+    add_detection_equipment: '添加检测设备',
+
     market_share: "市场份额",
     understanding_evaluation: "了解评价",
     customer_serial_number: "客户序号",
@@ -255,7 +270,7 @@ export default {
     serial_number: "序号",
     precision_grade: "精度等级",
     not_uploaded: "未上传",
-    not_selected: "未选择",        
+    not_selected: "未选择",
     // 确定删除此数据吗
     detele_data_sure: '确定删除此数据吗?',
     design_specifications: '设计规范',
@@ -346,6 +361,8 @@ export default {
     previous_step: "Previous Step",
     // 提交申请
     submit_application: "Submit Application",
+    // 操作
+    operate: 'operate',
     // 请选择营业期限
     please_select_business_term: "Please Select Business Term",
     // 请输入注册资本
@@ -417,6 +434,8 @@ export default {
     purchasing_radius: "Purchasing Radius",
     floor_space: "Floor Space",
     floor_area: "Floor Area",
+    fixed_assets: "Fixed Assets",
+    establishments: 'Establishments',
     parent_company_name: "Parent Company Name",
     Parent_company_address: "Parent Company Address",
     total_number_of_employees: "Total Number of Employees",
@@ -439,6 +458,9 @@ export default {
     cash_flow_ratio: "Cash Flow Ratio",
     competitor: "Competitor",
     competitor_information: "Competitor Information",
+    add_opponents: "Add Opponents",
+    // 客户信息
+    add_customers: "Add Customers",
     customer_information: "Customer Information",
     major_customer: "Major Customer",
     Technical_information: "Technical Information",
@@ -467,16 +489,23 @@ export default {
     qutsourced_spare_parts: "Outsourced spare parts",
     purchased_raw_materials: "Purchased raw materials",
     qutsourcing_system: "Outsourcing system",
+    
+    // 设备信息
     device_information: "Device information",
     key_production_equipment: "Key production equipment",
     critical_detection_equipment: "Critical detection equipment",
     supplementary_information: "Supplementary information",
     other_advantages_description: "Other advantages description",
     Name_of_production_equipment: "Name of Production Equipment",
+    Name_of_detection_equipment: "Name of Detection Equipment",
     Specification_and_model: "Specification And Model (Including tonnage)",
+    Specification_text: "Specification And Model",
     quantity: "Quantity",
     Equipment_manufacturer: "Equipment Manufacturer",
     Purchase_period: "Purchase Period",
+    add_production_equipment: 'Add Production Equipment',
+    add_detection_equipment: 'Add Detection Equipment',
+
     market_share: "Market share",
     understanding_evaluation: "Understanding evaluation",
     customer_serial_number: "Customer serial number",
