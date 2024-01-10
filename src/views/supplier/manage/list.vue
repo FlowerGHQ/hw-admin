@@ -161,9 +161,9 @@ const onBtn = () => {
     // })
     // window.open(routeUrl.href, '_block')
     router.push({
-        name: 'SupplyAdd',
-        params: {
-            id: 1
+        path: '/supply-manage/add',
+        query: {
+            otherPage: true
         }
     })
 }

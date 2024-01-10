@@ -65,10 +65,9 @@ router.beforeEach((to, from, next) => {
             // 如果进入的路由meta中有roles规则
             if (roles.includes(loginType)) {
                 // 如果当前usertType在roles arr中有
-                if(hasParams(to.path,to.params)){
-                    console.log('有参数,并且在列表中','参数为:',to.params)
+                if(hasParams(to.path,to.query)){
                     next();
-                }else if(paramsList.includes(to.path) && !hasParams(to.path,to.params)){
+                }else if(paramsList.includes(to.path) && !hasParams(to.path,to.query) && from.path !='/'){//from.path !='/' 防止刷新造成的跳转
                     next('/supply-manage/list');
                 }
                 next();
