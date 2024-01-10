@@ -259,6 +259,13 @@ export default {
     design_specifications: '设计规范',
     // 查看或编辑资料
     view_or_edit_data: '查看或编辑资料',
+    mold_profile: "模具轮廓",
+    mold_weight: "模具重量",
+    mold_category: "模具品类",
+    mould_design: "模具设计",
+    mold_manufacturing: "模具制造",
+    mold_acceptance: "模具验收",    
+    editing_data: "编辑资料",
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -517,5 +524,12 @@ export default {
     not_uploaded: "Not uploaded",
     not_selected: "Not selected",
     view_or_edit_data: 'View or edit data',
+    mold_profile: "Mold profile.",
+    mold_weight: "Mold weight.",
+    mold_category: "Mold category.",
+    mould_design: "Mould design.",
+    mold_manufacturing: "Mold manufacturing.",
+    mold_acceptance: "Mold acceptance",
+    editing_data: "Editing data",
   },
 }

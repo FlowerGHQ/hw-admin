@@ -16,15 +16,35 @@
                             <div class="search-col m-t-0">
                                 <div class="key w-130 t-a-r text-color"></div>
                                 <div class="value m-l-8">
-                                    <div class="btn-type-parts">
-                                        <MySvgIcon icon-class="parts-icon" />
-                                        <span class="m-l-4">
-                                            {{
-                                                Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type] ?
-                                                $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type].t) : "-"
-                                            }}
-                                        </span>
-                                    </div>
+                                    <template v-if="!isEdit">                                    
+                                        <div class="btn-type-parts">
+                                            <MySvgIcon icon-class="parts-icon" />
+                                            <span class="m-l-4">
+                                                {{
+                                                    Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type] ?
+                                                    $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[msgDetail.type].t) : "-"
+                                                }}
+                                            </span>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <div class="edit-type">
+                                            <div 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE" 
+                                                :key="index"
+                                                class="edit-type-item cursor"
+                                                :class="{
+                                                    'edit-type-item-select': Number(item.value) === Number(parameters.type),
+                                                    'm-l-20': index !== 0
+                                                }"
+                                                @click="onSelectType(item.value)"
+                                            >
+                                                <MySvgIcon v-if="Number(item.value) === Number(parameters.type)" :icon-class="`white-${item.icon}`" class="white-font"/>
+                                                <MySvgIcon v-else :icon-class="`black-${item.icon}`" class="black-font"/>
+                                                <span class="m-l-4">{{ $t(item.t) }}</span>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -126,9 +146,15 @@
                             <div class="search-col w-50-percentage required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.date_establishment') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.company_info?.established_time || "-" }}
-                                    </div>
+                                    <template v-if="!isEdit">                                
+                                        <div class="customer-input">
+                                            {{ msgDetail?.company_info?.established_time || "-" }}
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <!-- v-model:value="msgDetail.company_info.established_time" -->
+                                        <a-date-picker class="w-100" valueFormat="YYYY-MM-DD"  @change="(event) => handleTimeSearch(event, 'date_establishment')"/>
+                                    </template>
                                 </div>
                             </div>
                             <!-- 固定资产 -->
@@ -163,13 +189,22 @@
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.nature_of_company') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{
-                                            Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t
-                                                ? $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t)
-                                                : "-"
-                                        }}
-                                    </div>
+                                    <template v-if="!isEdit">
+                                        <div class="customer-input">
+                                            {{
+                                                Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t
+                                                    ? $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t)
+                                                    : "-"
+                                            }}
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <a-select class="w-100" v-model:value="parameters.company_info.nature" :placeholder="$t('supply-chain.please_select')">
+                                            <a-select-option :value="item.value" v-for="item in Core.Const.SUPPLAY.NATURE"> 
+                                                {{ $t(item.t) }}
+                                            </a-select-option>
+                                        </a-select>
+                                    </template>
                                 </div>
                             </div>
                             <!-- 法人代表 -->
@@ -190,20 +225,38 @@
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchasing_radius') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.company_info?.purchasing_radius || "-" }}
-                                        <div class="unit">KM</div>
-                                    </div>
+                                    <a-input-number
+                                        class="w-100"
+                                        :class="{ 'customer-input-number': !isEdit }"
+                                        v-model:value="parameters.company_info.purchasing_radius"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                        :min="0"
+                                        :max="1000000000"
+                                    >
+                                        <template #addonAfter>
+                                            <span class="unit">KM</span>
+                                        </template>
+                                    </a-input-number>
                                 </div>
                             </div>
                             <!-- 占地面积 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_space') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.company_info?.floor_area || "-" }}
-                                        <div class="unit">m²</div>
-                                    </div>
+                                    <a-input-number
+                                        class="w-100"
+                                        :class="{ 'customer-input-number': !isEdit }"
+                                        v-model:value="parameters.company_info.legal_person"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                        :min="0"
+                                        :max="1000000000"
+                                    >
+                                        <template #addonAfter>
+                                            <span class="unit">m²</span>
+                                        </template>
+                                    </a-input-number>
                                 </div>
                             </div>                           
                         </div>
@@ -212,10 +265,19 @@
                              <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_area') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.company_info?.building_area || "-" }}
-                                        <div class="unit">m²</div>
-                                    </div>
+                                    <a-input-number
+                                        class="w-100"
+                                        :class="{ 'customer-input-number': !isEdit }"
+                                        v-model:value="parameters.company_info.building_area"
+                                        :placeholder="$t('common.please_enter')"
+                                        :disabled="!isEdit"
+                                        :min="0"
+                                        :max="1000000000"
+                                    >
+                                        <template #addonAfter>
+                                            <span class="unit">m²</span>
+                                        </template>
+                                    </a-input-number>
                                 </div>
                             </div>
                             <!-- 母公司名称 -->
@@ -251,26 +313,32 @@
                 <div 
                     class="information-container-form m-t-40" 
                     v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
-                >
+                    >
                     <div class="sub-title">{{ $t('supply-chain.agent_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                              <!-- 被代理公司 -->
                              <div class="search-col m-t-0">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agent_company') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.agent_info?.agent_company || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.agent_info.agent_company"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>                             
                             <!-- 被代理地址 -->
                             <div class="search-col m-t-0">
                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_address') }}</div>
                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                       {{ msgDetail?.agent_info?.agent_address || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.agent_info.agent_address"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                </div>
                             </div>
                         </div>
@@ -279,9 +347,12 @@
                             <div class="search-col w-50-percentage">
                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agency_relationship') }}</div>
                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                       {{ msgDetail?.agent_info?.agent_relationship || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.agent_info.agent_relationship"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                </div>
                             </div>
                         </div>
@@ -289,34 +360,56 @@
                             <!-- 代理权证* -->
                             <div class="search-col required">
                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_warrant') }}</div>
-                               <div class="value m-l-8">                                   
-                                    <a-radio :checked="true">
-                                        {{
-                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant] ?
-                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant].t) : ""
-                                        }}
-                                    </a-radio>
+                               <div class="value m-l-8">
+                                    <template v-if="!isEdit">
+                                        <a-radio :checked="true">
+                                            {{
+                                                Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant] ?
+                                                $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.agent_info?.flag_agent_warrant].t) : ""
+                                            }}
+                                        </a-radio>
+                                    </template>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.financial_info.flag_agent_warrant">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.Legal_Dispute"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                {{ $t(item.t) }}
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                </div>
                             </div>
                             <!-- 代理有效期间* -->
                             <div class="search-col required">
                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.duration_of_agency') }}</div>
                                <div class="value m-l-8">
-                                    <div class="agency-time">
-                                        {{
-                                            msgDetail?.agent_info?.agent_effective_begin_time
-                                                ? $Util.timeFilter(
-                                                    msgDetail?.agent_info?.agent_effective_begin_time
-                                                )
-                                                : ""
-                                        }}
-                                        -
-                                        {{
-                                            msgDetail?.agent_info?.agent_effective_end_time
-                                                ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time)
-                                                : ""
-                                        }}
-                                    </div>
+                                    <template v-if="!isEdit">
+                                        <div class="agency-time">
+                                            {{
+                                                msgDetail?.agent_info?.agent_effective_begin_time
+                                                    ? $Util.timeFilter(
+                                                        msgDetail?.agent_info?.agent_effective_begin_time
+                                                    )
+                                                    : ""
+                                            }}
+                                            -
+                                            {{
+                                                msgDetail?.agent_info?.agent_effective_end_time
+                                                    ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time)
+                                                    : ""
+                                            }}
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <TimeSearch
+                                            class="w-100"
+                                            ref="TimeSearchRef"
+                                            @search="(event) => handleTimeSearch(event, 'agent_info')"
+                                            :defaultTime="false" />
+                                    </template>
                                </div>
                             </div>
                         </div>
@@ -325,9 +418,12 @@
                             <div class="search-col w-50-percentage">
                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.agent_product') }}</div>
                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                      {{ msgDetail?.agent_info?.agent_product || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.agent_info.agent_product"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                </div>
                             </div>
                         </div>
@@ -346,7 +442,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.total_number_of_employees') }}</div>
                                 <div class="value m-l-8">                                    
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.total_employees"
                                         :placeholder="$t('common.please_enter')" 
@@ -359,7 +455,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.number_of_managers') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.manager_number"
                                         :placeholder="$t('common.please_enter')" 
@@ -374,7 +470,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mass_number') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.mass_number"
                                         :placeholder="$t('common.please_enter')" 
@@ -387,7 +483,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.skilled_personnel') }}</div>
                                 <div class="value m-l-8">                                   
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technician_number"
                                         :placeholder="$t('common.please_enter')" 
@@ -402,7 +498,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.technical_seniority') }}</div>
                                 <div class="value m-l-8">                                    
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technical_seniority"
                                         :placeholder="$t('common.please_enter')" 
@@ -422,12 +518,25 @@
                             <div class="search-col m-t-0 required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.legal_dispute') }}</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        {{
-                                            Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute] ?
-                                            $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute].t) : ""
-                                        }}
-                                    </a-radio>
+                                    <template v-if="!isEdit">
+                                        <a-radio :checked="true">
+                                            {{
+                                                Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute] ?
+                                                $t(Core.Const.SUPPLAY.Legal_Dispute[msgDetail.financial_info?.flag_legal_dispute].t) : ""
+                                            }}
+                                        </a-radio>
+                                    </template>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.financial_info.flag_legal_dispute">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.Legal_Dispute"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                {{ $t(item.t) }}
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -462,23 +571,42 @@
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.period_requirement') }}</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">                                        
-                                        <template v-if="Number(msgDetail.financial_info?.account_period_requirement) === 0">                                            
-                                            {{ 
-                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[0].t)
-                                            }}
-                                        </template>
-                                        <template v-else>
-                                            {{ 
-                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
-                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement].value : "-"
-                                            }}
-                                            {{ 
-                                                Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
-                                                $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement]?.unit) : ""
-                                            }}
-                                        </template>
-                                    </a-radio>
+
+                                    <template v-if="!isEdit">
+                                        <a-radio :checked="true">                                        
+                                            <template v-if="Number(msgDetail.financial_info?.account_period_requirement) === 0">                                            
+                                                {{ 
+                                                    $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[0].t)
+                                                }}
+                                            </template>
+                                            <template v-else>
+                                                {{ 
+                                                    Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
+                                                    Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement].value : "-"
+                                                }}
+                                                {{ 
+                                                    Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement] ?
+                                                    $t(Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT[msgDetail.financial_info?.account_period_requirement]?.unit) : ""
+                                                }}
+                                            </template>
+                                        </a-radio>
+                                    </template>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.financial_info.account_period_requirement">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT_LIST"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                <template v-if="Number(item.value) !== 0">
+                                                    {{ item.value }}{{ $t(item.unit) }}
+                                                </template>
+                                                <template v-else>
+                                                    {{ $t(item.t) }}
+                                                </template>                                                
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>                                    
                                 </div>
                             </div>
                         </div>
@@ -487,22 +615,49 @@
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.Invoice_type') }}</div>
                                 <div class="value m-l-8">
-                                    <a-radio :checked="true">
-                                        <div class="d-fl-a">
-                                            <span class="no-white-space m-r-4">
-                                                {{
-                                                    Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type] ?
-                                                    $t(Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type].t) : "-"
-                                                }}
-                                            </span>                                      
-                                            <a-input                                        
-                                                :class="{ 'invoice-range': !isEdit }"
-                                                v-model:value="parameters.financial_info.invoice_range_value"
-                                                :placeholder="$t('common.please_enter')" 
-                                                :disabled="!isEdit"
-                                            />
-                                        </div>
-                                    </a-radio>
+                                    <template v-if="!isEdit">
+                                        <a-radio :checked="true">                                        
+                                            <div class="d-fl-a">
+                                                <span class="no-white-space m-r-4">
+                                                    {{
+                                                        Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type] ?
+                                                        $t(Core.Const.SUPPLAY.INVOICE_TYPE[msgDetail.financial_info?.invoice_type].t) : "-"
+                                                    }}
+                                                </span>
+                                                <a-input
+                                                    class="invoice-range"
+                                                    v-model:value="parameters.financial_info.invoice_range_value"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
+                                            </div>
+                                        </a-radio>
+                                    </template>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.financial_info.invoice_type">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.INVOICE_TYPE"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                <template v-if="Number(item.value) === 1">
+                                                    <div class="d-fl-a">
+                                                        <span class="no-white-space m-r-4">
+                                                            {{ $t(item.t) }}
+                                                        </span>
+                                                        <a-input
+                                                            v-model:value="parameters.financial_info.invoice_range_value"
+                                                            :placeholder="$t('common.please_enter')" 
+                                                            :disabled="!isEdit"
+                                                        />
+                                                    </div>
+                                                </template>
+                                                <template v-else>
+                                                    {{ $t(item.t) }}
+                                                </template>
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -543,7 +698,7 @@
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.sales || "-" }}
-                                                    <div class="unit">万元</div>
+                                                    <div class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -555,7 +710,7 @@
                                             <div class="value m-l-8">
                                                 <div class="customer-input">
                                                     {{ item?.taxes_paid || "-" }}
-                                                    <div class="unit">万元</div>
+                                                    <div class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -741,21 +896,27 @@
                                 v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                             >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.research_and_development_center') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.technical_info?.RD_center || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.technical_info.RD_center"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <!-- 相关专利 -->
-                            <div class="search-col">
+                            <div class="search-col" :class="{ 'm-t-0': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.related_patent') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.technical_info?.patent || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.technical_info.patent"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -766,78 +927,224 @@
                             <!-- 研发合作机构 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.r_d_partner') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.technical_info?.RD_partners || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.technical_info.RD_partners"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])">
+                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 产品设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.product_design') }}</div>
-                                <div class="value m-l-8 d-fl">                            
-                                    <template v-for="(item, index) in msgDetail.technical_info?.product_design" :key="index">                                    
-                                        <a-checkbox :checked="true">
-                                            {{
-                                                Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
-                                                $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
-                                            }}
-                                        </a-checkbox>
+                                <div class="value m-l-8 d-fl">                                                                
+                                    <template v-if="!isEdit">
+                                        <template v-for="(item, index) in msgDetail.technical_info?.product_design" :key="index">                                    
+                                            <a-checkbox :checked="true">
+                                                {{
+                                                    Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item] ?
+                                                    $t(Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT[item].t) : "-"
+                                                }}
+                                            </a-checkbox>
+                                        </template>
+                                        <sapn v-if="!msgDetail.technical_info?.product_design?.length">
+                                            {{ $t('supply-chain.not_selected') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.technical_info?.product_design?.length">
-                                        {{ $t('supply-chain.not_selected') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.technical_info.product_design">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.TECHNICAL_INFORMATION_OBJECT"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                {{ $t(item.t) }}
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row">
+                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 过程设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_design') }}</div>
-                                <div class="value m-l-8 d-fl">
-                                    <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
-                                        <a-checkbox :checked="true">
-                                            {{
-                                                Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item] ?
-                                                $t(Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item].t) : "-"
-                                            }}
-                                        </a-checkbox>
+                                <div class="value m-l-8 d-fl">                                    
+                                    <template v-if="!isEdit">
+                                        <template v-for="(item, index) in msgDetail.technical_info?.process_design" :key="index">                                    
+                                            <a-checkbox :checked="true">
+                                                {{
+                                                    Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item] ?
+                                                    $t(Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT[item].t) : "-"
+                                                }}
+                                            </a-checkbox>
+                                        </template>
+                                        <sapn v-if="!msgDetail.technical_info?.process_design?.length">
+                                            {{ $t('supply-chain.not_selected') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.technical_info?.process_design?.length">
-                                        {{ $t('supply-chain.not_selected') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.technical_info.process_design">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.PROCESS_DESIGN_OBJECT"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                {{ $t(item.t) }}
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row">
+                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 过程验证 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_verification') }}</div>
-                                <div class="value m-l-8 d-fl">
-                                    <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
-                                        <a-checkbox :checked="true">
-                                            {{
-                                                Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item] ?
-                                                $t(Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item].t) : "-"
-                                            }}
-                                        </a-checkbox>
+                                <div class="value m-l-8 d-fl">                                   
+                                    <template v-if="!isEdit">
+                                        <template v-for="(item, index) in msgDetail.technical_info?.process_validation" :key="index">                                    
+                                            <a-checkbox :checked="true">
+                                                {{
+                                                    Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item] ?
+                                                    $t(Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT[item].t) : "-"
+                                                }}
+                                            </a-checkbox>
+                                        </template>
+                                        <sapn v-if="!msgDetail.technical_info?.process_validation?.length">
+                                            {{ $t('supply-chain.not_selected') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.technical_info?.process_design?.length">
-                                        {{ $t('supply-chain.not_selected') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.technical_info.process_validation">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.PROCESS_VALIDATION_OBJECT"
+                                                :key="index"
+                                                :value="item.value"
+                                            >
+                                                {{ $t(item.t) }}
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
+                        <template v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                            <!-- 设计规范 -->
+                            <div class="level-search-row">
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.design_specifications') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.design_software"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-search-row">
+                                <!-- 模具轮廓 -->
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_profile') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_profile"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                                <!-- 模具重量 -->
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_weight') }}</div>
+                                    <div class="value m-l-8">
+                                        <a-input-number
+                                            class="w-100"
+                                            :class="{ 'customer-input-number': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_weight"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                            :min="0"
+                                            :max="1000000000"
+                                        >
+                                            <template #addonAfter>
+                                                <span class="unit">KG</span>
+                                            </template>
+                                        </a-input-number>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="level-search-row">
+                                <!-- 模具品类 -->
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_category') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_category"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                                <!-- 模具设计 -->
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mould_design') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_design"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 模具制造 -->
+                            <div class="level-search-row">
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_manufacturing') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_manufacture"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                                <!-- 模具验收 -->
+                                <div class="search-col">
+                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_acceptance') }}</div>
+                                    <div class="value m-l-8">                                   
+                                        <a-input
+                                            :class="{ 'customer-input': !isEdit }"
+                                            v-model:value="parameters.technical_info.mold_acceptance"
+                                            :placeholder="$t('common.please_enter')" 
+                                            :disabled="!isEdit"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
                         <div class="level-search-row">
                             <!-- 设计软件 -->
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.design_software') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.technical_info?.design_software || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                   
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.technical_info.design_software"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -846,9 +1153,12 @@
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.development_process') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.technical_info?.dev_process || "-" }}
-                                    </div>
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.technical_info.dev_process"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -866,18 +1176,24 @@
                             <div class="search-col m-t-0">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_system_certification') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.certification || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.certification"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 环境体系认证 -->
                             <div class="search-col m-t-0">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_system_certification') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.env_certification || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.env_certification"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -885,19 +1201,25 @@
                             <!-- 质量合作机构 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_cooperation_agency') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.partners || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.partners"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 认可实验室 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.accredited_laboratory') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.accredited_laboratory || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.accredited_laboratory"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -905,19 +1227,25 @@
                             <!-- 质控工具软件 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_control_tool_software') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.tool_software || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.tool_software"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 计划体系认证 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.planning_system_certification') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.quality_info?.system_certification || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.quality_info.system_certification"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -926,9 +1254,12 @@
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.market_PPM') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.quality_info?.PPM || "-" }}
-                                    </div>
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.quality_info.PPM"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -938,48 +1269,60 @@
                 <div 
                     class="information-container-form m-t-40"
                     v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
-                >                    
+                >
                     <div class="sub-title">{{ $t('supply-chain.specify_information') }}</div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 指定协议* -->
-                            <div class="search-col m-t-0">
+                            <div class="search-col m-t-0 required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specified_protocol') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.specify_info?.protocol || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.specify_info.protocol"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 指定零件* -->
-                            <div class="search-col m-t-0">
+                            <div class="search-col m-t-0 required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_part') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.specify_info?.parts || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.specify_info.parts"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <!-- 指定服务* -->
-                            <div class="search-col">
+                            <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_service') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.specify_info?.service || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.specify_info.service"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>                          
                         </div>
                         <div class="level-search-row">
                             <!-- 指定理由* -->
-                            <div class="search-col align-flex-start">
+                            <div class="search-col align-flex-start required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.specify_reason') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.specify_info?.reason || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.specify_info.reason"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -994,34 +1337,52 @@
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 关键自有工序 -->
-                            <div class="search-col m-t-0 align-flex-start">
+                            <div 
+                                class="search-col m-t-0 align-flex-start"
+                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                            >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.key_owned_process') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.produce_capacity?.processes || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.produce_capacity.processes"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <!-- 智能自动化线 -->
-                            <div class="search-col align-flex-start">
+                            <div 
+                                class="search-col align-flex-start"
+                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                            >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.intelligent_automation_line') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.produce_capacity?.automation_line || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.produce_capacity.automation_line"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
                         <div class="level-search-row">
                             <!-- 生产产能负荷 -->
-                            <div class="search-col align-flex-start">
+                            <div 
+                                class="search-col align-flex-start"
+                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                            >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.production_capacity_load') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.produce_capacity?.load || "-" }}
-                                    </div>
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.produce_capacity.load"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1038,10 +1399,13 @@
                             <!-- 外购工艺 -->
                             <div class="search-col m-t-0 align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourced_technology') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.outsourcing?.technology || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.outsourcing.technology"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1049,10 +1413,13 @@
                             <!-- 外购备件 -->
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourced_spare_parts') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.outsourcing?.parts || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.outsourcing.parts"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1061,9 +1428,12 @@
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchased_raw_materials') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.outsourcing?.material || "-" }}
-                                    </div>
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.outsourcing.material"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1072,9 +1442,12 @@
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.qutsourcing_system') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.outsourcing?.system || "-" }}
-                                    </div>
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.outsourcing.system"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1170,10 +1543,13 @@
                             <!-- 其他优势说明 -->
                             <div class="search-col m-t-0 align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.other_advantages_description') }}</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input h-64">
-                                        {{ msgDetail.additional_info || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                  
+                                    <a-textarea
+                                        :class="{ 'customer-input': !isEdit, 'h-64': true }"
+                                        v-model:value="parameters.additional_info"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1197,21 +1573,33 @@
                             <div class="search-col m-t-0 align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.business_license_photos') }}</div>
                                 <div class="value m-l-8">
-                                    <template
-                                        v-for="(item, index) in msgDetail.confirmatory_material?.business_license_photo"
-                                        :key="index"
-                                    >
-                                        <img
-                                            class="materials-img"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
-                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
-                                            alt=""
-                                        />
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.business_license_photo"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
-                                        {{ $t('supply-chain.not_uploaded') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="business_license_photo"
+                                            :tip="$t('supply-chain.upload_photos')"
+                                            v-model:value="parameters.confirmatory_material.business_license_photo"
+                                            showTip
+                                            :limit="1"
+                                            :limitSize="2"
+                                            tipPosition="right" />
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1220,46 +1608,64 @@
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.registered_capital') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.confirmatory_material?.registered_capital || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.confirmatory_material.registered_capital"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
-                            </div>
-                            <!-- <div class="search-col required">
-                                <div class="key w-130 t-a-r text-color">法定代表人</div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">缺少字段</div>
-                                </div>
-                            </div> -->
+                            </div>                            
                         </div>
                         <div class="level-search-row">
                             <!-- 营业期限 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.business_term') }}</div>
                                 <div class="value m-l-8" style="display: flex; align-items: center">
-                                    <a-radio :checked="true">                                         
-                                        {{
-                                            Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type] ?
-                                            $t(Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type].t) : "-"
-                                        }}
-                                    </a-radio>
-                                    <div 
-                                        class="bussiness-time" 
-                                        v-if="Number(msgDetail.confirmatory_material?.business_duration_type) === Core.Const.SUPPLAY.BUSINESS_TERM_MAP.short_term_validity">
-                                        {{
-                                            msgDetail?.confirmatory_material?.begin_business_time
-                                                ? $Util.timeFilter(
-                                                      msgDetail?.confirmatory_material?.begin_business_time
-                                                  )
-                                                : ""
-                                        }}
-                                        -
-                                        {{
-                                            msgDetail?.confirmatory_material?.end_business_time
-                                                ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time)
-                                                : ""
-                                        }}
-                                    </div>
+                                    <template v-if="!isEdit">
+                                        <a-radio :checked="true">                                         
+                                            {{
+                                                Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type] ?
+                                                $t(Core.Const.SUPPLAY.BUSINESS_TERM[msgDetail.confirmatory_material?.business_duration_type].t) : "-"
+                                            }}
+                                        </a-radio>
+                                        <div 
+                                            class="bussiness-time" 
+                                            v-if="Number(msgDetail.confirmatory_material?.business_duration_type) === Core.Const.SUPPLAY.BUSINESS_TERM_MAP.short_term_validity">
+                                            {{
+                                                msgDetail?.confirmatory_material?.begin_business_time
+                                                    ? $Util.timeFilter(
+                                                          msgDetail?.confirmatory_material?.begin_business_time
+                                                      )
+                                                    : ""
+                                            }}
+                                            -
+                                            {{
+                                                msgDetail?.confirmatory_material?.end_business_time
+                                                    ? $Util.timeFilter(msgDetail?.confirmatory_material?.end_business_time)
+                                                    : ""
+                                            }}
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <a-radio-group v-model:value="parameters.confirmatory_material.business_duration_type">
+                                            <a-radio 
+                                                v-for="(item, index) in Core.Const.SUPPLAY.BUSINESS_TERM"
+                                                :key="index"
+                                                :value="item.value"
+                                            >                                               
+                                                {{ $t(item.t) }}
+                                                <template v-if="Number(item.value) === 2">
+                                                    <TimeSearch
+                                                        class="m-l-4"
+                                                        v-if="Number(parameters.confirmatory_material.business_duration_type) === 2"
+                                                        ref="TimeSearchRef"
+                                                        @search="(event) => handleTimeSearch(event, 'business_term')"
+                                                        :defaultTime="false" />                                                  
+                                                    </template>
+                                            </a-radio>                                           
+                                        </a-radio-group>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1274,18 +1680,24 @@
                             <div class="search-col m-t-0 required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.account_name') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.confirmatory_material?.account_name || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.confirmatory_material.account_name"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 开户行 -->
                             <div class="search-col m-t-0 required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_of_deposit') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.confirmatory_material?.account_with_bank || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.confirmatory_material.account_with_bank"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1294,18 +1706,24 @@
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_number') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.confirmatory_material?.account_with_bank_number || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.confirmatory_material.account_with_bank_number"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 银行账号 -->
                             <div class="search-col required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_account') }}</div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail?.confirmatory_material?.bank_account || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.confirmatory_material.bank_account"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1318,22 +1736,34 @@
                             <!-- 质量体系证书 -->
                             <div class="search-col m-t-0 align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.quality_system_certificate') }}</div>
-                                <div class="value m-l-8">
-                                    <template
-                                        v-for="(item, index) in msgDetail.confirmatory_material?.quality_system_certificate"
-                                        :key="index"
-                                    >
-                                        <img
-                                            class="materials-img"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
-                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
-                                            alt=""
-                                        />
+                                <div class="value m-l-8">                                   
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.quality_system_certificate"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
-                                        {{ $t('supply-chain.not_uploaded') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="quality_system_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.quality_system_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1350,22 +1780,34 @@
                             <!-- 开户行许可证 -->
                             <div class="search-col m-t-0 align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.bank_account_license') }}</div>
-                                <div class="value m-l-8">
-                                    <template
-                                        v-for="(item, index) in msgDetail.confirmatory_material?.account_opening_bank_license"
-                                        :key="index"
-                                    >
-                                        <img
-                                            class="materials-img"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
-                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
-                                            alt=""
-                                        />
+                                <div class="value m-l-8">                                    
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.account_opening_bank_license"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
-                                        {{ $t('supply-chain.not_uploaded') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="account_opening_bank_license"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.account_opening_bank_license"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1373,22 +1815,34 @@
                             <!-- 环评证书 -->
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_assessment_certificate') }}</div>
-                                <div class="value m-l-8">
-                                    <template
-                                        v-for="(item, index) in msgDetail.confirmatory_material?.eia_certificate"
-                                        :key="index"
-                                    >
-                                        <img
-                                            class="materials-img"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
-                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
-                                            alt=""
-                                        />
+                                <div class="value m-l-8">                                    
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.eia_certificate"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
-                                        {{ $t('supply-chain.not_uploaded') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="eia_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.eia_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1396,22 +1850,34 @@
                             <!-- 环保报告 -->
                             <div class="search-col align-flex-start">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.environmental_protection_report') }}</div>
-                                <div class="value m-l-8">
-                                    <template
-                                        v-for="(item, index) in msgDetail.confirmatory_material?.environmental_report"
-                                        :key="index"
-                                    >
-                                        <img
-                                            class="materials-img"
-                                            :class="{ 'm-l-16': index > 0 }"
-                                            :src="Core.Const.NET.FILE_URL_PREFIX + item"
-                                            @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
-                                            alt=""
-                                        />
+                                <div class="value m-l-8">                                    
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.environmental_report"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
                                     </template>
-                                    <sapn v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
-                                        {{ $t('supply-chain.not_uploaded') }}
-                                    </sapn>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="environmental_report"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.environmental_report"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -1423,6 +1889,10 @@
         <a-modal width="800px" :visible="previewVisible" title="" :footer="null" @cancel="handleCancel">
             <img alt="" style="width: 100%" :src="previewImage" />
         </a-modal>
+
+        <div class="suction-bottom">
+            <a-button @click="onSuction('edit')">{{ $t('supply-chain.editing_data') }}</a-button>
+        </div>
     </div>
 </template>
 
@@ -1431,6 +1901,9 @@ import { ref, onMounted, computed, getCurrentInstance } from "vue";
 import { useRoute } from "vue-router";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import TimeSearch from "@/components/common/TimeSearch.vue";
+import MyUpload from "@/components/MyUpload/index.vue";
+import dayjs from 'dayjs';
 
 const route = useRoute();
 const msgDetail = ref({});
@@ -1484,8 +1957,9 @@ const customerInfoColumns = computed(() => {
     return columns;
 });
 
-const isEdit = ref(true)
-const parameters = ref({    
+const isEdit = ref(false)
+const parameters = ref({
+    type: "",
     // 公司概况
     company_info: {
         name: "", // 名称
@@ -1503,6 +1977,16 @@ const parameters = ref({
 		parent_company_name: "", // 母公司名称
 		parent_company_address: "", // 母公司地址
     },
+    // 代理信息
+    agent_info: {
+		agent_company: "", // 被代理公司
+		agent_address: "", // 被代理地址
+		agent_relationship: "", // 被代理关系
+		flag_agent_warrant: "", // 是否有代理权证
+		agent_effective_begin_time: "", // 代理有效开始时间
+		agent_effective_end_time: "", // 代理有效结束时间
+		agent_product: "", // 代理产品
+	},
     // 人力资源
     human_resource: {
 		total_employees: "", // 员工总数
@@ -1525,7 +2009,74 @@ const parameters = ref({
 		proportion_of_business: "", // 业务比重
 		list: []
 	},
+    // 相关专利
+    technical_info: {
+		patent: "", // 相关专利
+		RD_center: "", // 研发中心
+		RD_partners: "", // 研发合作机构
+		design_guides: "", // 设计规范
+		product_design: "", // 产品设计: 独立设计,共同设计,转化设计,委外设计
+		process_design: "", // 过程设计: 模具设计,检具设计,工装设计,辅具设计
+		process_validation: "", // 过程验证: 模具验收,检具验收,工装维护,产品鉴定
+		mold_profile: "", // 模具轮廓
+		mold_weight: "", // 模具重量
+		mold_category: "", // 模具品类
+		mold_design: "", // 模具设计
+		mold_manufacture: "", // 模具制造
+		mold_acceptance: "", // 模具验收
+		design_software: "", // 设计软件
+		dev_process: "", // 开发流程	
+    },
+    // 质量信息
+    quality_info: {
+		certification: "", // 质量体系认证
+		partners: "", // 质量合作机构
+		tool_software: "", // 质控工具软件
+		PPM: "", // 市场PPM
+		env_certification: "", // 环境体系认证
+		accredited_laboratory: "", // 认可实验室
+		system_certification: "", // 计划体系认证
+	},
+    // 指定信息
+    specify_info: {
+		reason: "", // 指定理由
+		parts: "", // 指定零件
+		protocol: "", // 指定协议
+		service: "", // 指定服务
+	},
+    // 产能产线
+    produce_capacity: {
+		processes: "",
+		automation_line: "",
+		load: ""
+	},
+    // 外购管理
+    outsourcing: {
+		technology: "", // 外购工艺
+		parts: "", // 外购备件
+		material: "", // 外购原料
+		system: "", // 外购制度
+ 	},
+    // 材料清单基本信息
+    confirmatory_material: {
+		business_license_photo: "", // 营业执照照片
+		registered_capital: "", // 注册资本({{ $t('supply-chain.ten_thousand_yuan') }})
+		legal_person: "", // 法人代表
+		business_duration_type: "", // 营业期限类型：1.长期有效，2.短期有效
+		begin_business_time: "", // 营业开始时间
+		end_business_time: "", // 营业结束时间
+		account_name: "", // 开户名
+		account_with_bank: "", // 开户行
+		account_with_bank_number: "", // 开户行行号
+		bank_account: "", // 银行账号
+		quality_system_certificate: "", // 质量体系证书
+		proxy_certificate: "", // 代理证书
+		account_opening_bank_license: "", // 开户行许可证
+		eia_certificate: "", // 环评证书
+		environmental_report: "", // 环保报告
+	},
 
+    additional_info: ""
 })  // 一堆信息判断参数
 onMounted(() => {
     getDetail({
@@ -1543,6 +2094,30 @@ function getDetail(params = {}) {
         .then((res) => {
             console.log("getPhoneCodeFetchs res", res);
             msgDetail.value = res.detail?.form ? JSON.parse(res.detail?.form) : {};
+
+            // 回显数据
+            for (const key in msgDetail.value) {
+                let keys = msgDetail.value[key]
+                // console.log("key",key,  msgDetail.value[key], msgDetail.value[key] instanceof String);
+                // console.log(typeof keys);
+                if (keys instanceof Object) {                    
+                    // 判断 是对象 
+                    for (const item in parameters.value[key]) {
+                        // 存在在添加
+                        if (parameters.value[key].hasOwnProperty(item)) {
+                            parameters.value[key][item] = keys[item] || ""
+                        }
+                    }
+
+                } else if (keys instanceof Array) {
+                    // 判断 数组                
+
+                } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
+                    // | 字符串 | 数字 | 布尔
+                    console.log("kkk", key, keys);
+                    parameters.value[key] = keys
+                }
+            }
 
             let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo
             let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate
@@ -1569,29 +2144,9 @@ function getDetail(params = {}) {
             // 环保报告
             if (environmentalReport) {
                 msgDetail.value.confirmatory_material.environmental_report = environmentalReport.split(",")
-            }
-            // console.log("过滤数据", msgDetail.value);
+            }          
+            
             // msgDetail.value.type = 1
-         
-            for (const key in msgDetail.value) {
-                // console.log("key",key,  msgDetail.value[key] instanceof Array);
-                let keys = msgDetail.value[key]
-                if (keys instanceof Object) {                    
-                    // 判断 是对象 
-                    for (const item in parameters.value[key]) {
-                        // 存在在添加
-                        if (parameters.value[key].hasOwnProperty(item)) {
-                            parameters.value[key][item] = keys[item]
-                        }
-                    }
-
-                } else if (keys instanceof Array) {
-                    // 判断 数组
-
-                } else if (keys instanceof String || keys instanceof Number || keys instanceof Boolean) {
-                    // | 字符串 | 数字 | 布尔
-                }
-            }
 
             console.log("输出的", parameters.value);
         })
@@ -1617,6 +2172,44 @@ const handleCancel = () => {
     previewVisible.value = false
     previewImage.value = null
 }
+
+// 营业期限时间选择器
+const handleTimeSearch = (params, type) => {
+    console.log("时间组件", params);
+    switch (type) {
+        case "business_term":
+            console.log("营业期限", params);
+            parameters.value.confirmatory_material.begin_business_time = params.begin_time
+            parameters.value.confirmatory_material.end_business_time = params.end_time
+            break;    
+        case "date_establishment":
+            parameters.value.company_info.established_time = dayjs(params).unix()
+            break;    
+        case "agent_info":
+            // 代理有效期间
+            parameters.value.agent_info.agent_effective_begin_time = params.begin_time
+            parameters.value.agent_info.agent_effective_end_time = params.end_time
+            break;    
+        default:
+            break;
+    }  
+};
+
+// 供应类型选择
+const onSelectType = (type) => {
+    parameters.value.type = Number(type)
+}
+// 底部按钮
+const onSuction = (type) => {
+    switch (type) {
+        case 'edit':
+            isEdit.value = true
+            break;
+
+        default:
+            break;
+    }
+}
 /* methods end*/
 </script>
 
@@ -1626,6 +2219,8 @@ const handleCancel = () => {
     box-sizing: border-box;
     border-radius: 6px;
     background: #fff;
+    position: relative;
+    padding-bottom: 100px;
 
     .bg-color {
         border-radius: 6px;
@@ -1671,6 +2266,28 @@ const handleCancel = () => {
                 border-left: 1px solid #eaecf1;
             }
         }
+        .customer-input-number {
+            position: relative;
+            
+            :deep(.ant-input-number) {
+                color: #1d2129;
+                font-size: 14px;
+                font-weight: 400;
+                cursor: initial;
+                background: linear-gradient(0deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.3) 100%), #eef2f6;
+            }
+            :deep(.ant-input-number-input-wrap > .ant-input-number-input) {
+                cursor: initial;
+            }
+            :deep(.ant-input-number-group-addon) {
+                min-width: 36px;
+                background-color: #f2f2f2;
+                color: #808fa6;
+                font-size: 14px;
+                font-weight: 400;
+                border-left: 1px solid #eaecf1;
+            }
+        }
     }
     .back {}
     // 基本信息
@@ -1693,11 +2310,43 @@ const handleCancel = () => {
                 line-height: 52px;
                 background-image: url("../../../assets/images/supply-chain/parts-bg.png");
                 background-size: 100%;
+                background-repeat:no-repeat;
                 text-align: center;
                 color: #fff;
                 font-size: 16px;
                 font-weight: 600;
             }
+
+            .edit-type {
+                display: flex;
+                .edit-type-item {
+                    width: 15%;
+                    height: 52px;
+                    line-height: 52px;
+                    text-align: center;
+                    color: #666;
+                    font-size: 16px;
+                    font-weight: 600;
+                    border-radius: 4px;
+                    border: 1px solid #EAECF1;
+                    background: #FFF;
+                    box-sizing: content-box;
+                    &.edit-type-item-select {
+                        background-image: url("../../../assets/images/supply-chain/parts-bg.png");
+                        background-size: 100% 100%;
+                        background-repeat: no-repeat;
+                        color: #FFF;
+                    }
+                    .black-font {
+                        color: #666;
+                    }
+                    .white-font {
+                        color: #FFF;
+                    }
+                }
+
+            }
+
         }
         // 联系方式
         .contact-information {}               
@@ -1842,6 +2491,19 @@ const handleCancel = () => {
             border: 2px solid #0061ff;
             height: 13px;
         }
+    }
+
+    // 编辑资料
+    .suction-bottom {
+        width: calc(100% - 232px);
+        position: fixed;
+        bottom: 0;
+        right: 16px;
+        border-top: 1px solid #EAECF1;
+        background: #FFF;
+        text-align: center;
+        padding: 18px 0px;
+        box-sizing: border-box;
     }
 }
 
