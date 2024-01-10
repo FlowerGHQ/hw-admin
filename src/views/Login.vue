@@ -21,8 +21,8 @@
             <!-- 供应商 页面用手机号 -->
             <template v-if="loginForm.user_type === TYPE.SUPPLIER">
                 <a-input
-                    class="form-item" 
-                    :placeholder="$t('n.enter') + $t('n.phone')" 
+                    class="form-item"
+                    :placeholder="$t('n.enter') + $t('n.phone')"
                     v-model:value="supplierLoginForm.phone"
                     @keydown.enter="handleFocusCode"
                 >
@@ -147,18 +147,18 @@ export default {
                 Core.Data.setToken(res.token);
                 Core.Data.setUser(res.user.account);
 
-                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字                
+                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
                 let loginType = TYPE_MAP[res.user.type]
                 Core.Data.setUserType(loginType); // 设置登录方的文字
-                
+
                 if (type === 'supplier') {
                     this.$router.push('/supply-home')
                     return
                 }
-                
+
                 Core.Data.setOrgId(res.user.org_id); // 组织的id
                 Core.Data.setOrgType(res.user.org_type); // 组织的类型
-                Core.Data.setCurrency(res.user.currency); // 账号的单位                            
+                Core.Data.setCurrency(res.user.currency); // 账号的单位
 
                 this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
                 this.isAdminFetch()
@@ -189,8 +189,8 @@ export default {
         },
 
         async handleLogin(type) {
-            let form = Core.Util.deepCopy(this.loginForm)            
-            let _supplierLoginForm = Core.Util.deepCopy(this.supplierLoginForm)            
+            let form = Core.Util.deepCopy(this.loginForm)
+            let _supplierLoginForm = Core.Util.deepCopy(this.supplierLoginForm)
 
             if (type === 'supplier') {
                 if (this.isCheck(this.supplierLoginForm, type)) return;
@@ -199,7 +199,7 @@ export default {
                     type: Core.Const.COMMON.LOGIN_TYPE.CODE,
                     platform: Core.Const.COMMON.PLATFORM.SUPPLY,
                 }
-                this.loginFetch(obj, 'supplier')                
+                this.loginFetch(obj, 'supplier')
             } else {
                 if (this.isCheck(form, type)) return;
                 this.loginFetch(form)
@@ -268,7 +268,7 @@ export default {
         handleFocusCode() {
             // 快速定位到验证码
             this.$refs['code-input'].focus()
-        },        
+        },
         // 获取验证码
         onGetCode() {
             // 防止多次点击
@@ -304,7 +304,7 @@ export default {
                 }
             }, 1000)
 
-            
+
         }
     }
 };
@@ -338,7 +338,7 @@ export default {
             }
         }
     }
-    .login-container {        
+    .login-container {
         background: @BG_panel;
         border-radius: 6px;
         border: 1px solid @BC_login_box;
@@ -367,7 +367,7 @@ export default {
                 font-size: 16px;
                 color: @TC_N;
                 line-height: 24px;
-                padding: 10px 0px;                
+                padding: 10px 0px;
                 width: 68px;
                 transition: color 0.3s ease;
                 &.active {
@@ -382,8 +382,8 @@ export default {
                 background: @BG_P;
                 border-radius: 2px;
                 position: absolute;
-                bottom: 2px;                
-                transition: left .3s ease;                
+                bottom: 2px;
+                transition: left .3s ease;
                 right: 0;
             }
 
@@ -439,18 +439,18 @@ export default {
         height: 44px;
     }
     .get-code-text {
-        width: 100px;        
+        width: 100px;
         display: flex;
         align-items: center;
-        justify-content: center;        
-        height: 44px;        
+        justify-content: center;
+        height: 44px;
         white-space: nowrap;
         border: 1px solid #EAECF2;
         border-radius: 4px;
         color: @BG_P;
         margin-left: 20px;
         font-size: 12px;
-        cursor: pointer;        
+        cursor: pointer;
     }
 }
 </style>

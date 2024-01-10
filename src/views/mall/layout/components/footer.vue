@@ -9,7 +9,7 @@
         </div>
         <div class="content">
             <div class="menu">
-                <span class="menu-item tab-animate" v-for="(item, index) in menuList" :key="index">
+                <span class="menu-item" v-for="(item, index) in menuList" :key="index">
                     {{ $t(`mall.${item.lang}`) }}
                 </span>
             </div>
@@ -66,6 +66,9 @@ export default {
                 font-weight: 400;
                 line-height: normal;
                 cursor: pointer;
+                &:hover {
+                    color: rgba(255, 255, 255, 0.7);
+                }
             }
         }
         .about {
@@ -82,6 +85,9 @@ export default {
             .menu-item {
                 font-size: 14px;
                 color: #FFF;
+                &:hover {
+                    color: #FFF;
+                }
             }
         }
     }

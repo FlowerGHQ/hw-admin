@@ -50,7 +50,7 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
-        // URL_POINT = 'http://10.10.12.75:8889' // zwq
+        URL_POINT = 'http://10.10.12.75:8889' // zwq
         // URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
@@ -87,6 +87,8 @@ let Const = {
         SUPPLY_STEP: 'supply-step',
         SUPPLY_ISREAD: 'supply-isread',
         SUPPLY_SUBMITED: 'supply-submited',
+        USER_TYPE_LIST: 'user-type-list',
+        LOGIN_MES: 'login-mes',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -2778,6 +2780,13 @@ let Const = {
         'en':  { key: 101, value: 'en', label: '欧洲' },
         'us':  { key: 201, value: 'us', label: '美国' },
         'de':  { key: 102, value: 'de', label: '德国' },
+    },
+    ORDER: {
+        // 区域-area对应订单金额单位
+        AreaUnit: {
+            "zh": { key: '1', name_index: 'name' },
+            "en": { key: '2', name_index: 'name_en' },
+        }
     }
 
 };

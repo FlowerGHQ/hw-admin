@@ -8,7 +8,7 @@
                 <div class="header-right">
                     <!-- 头像 -->
                     <span class="header-menu tab-animate">
-                        <a-dropdown :trigger="['click']" placement="bottom" @visibleChange="avatarDropDownChange">
+                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="avatarDropDownChange">
                             <span class="menu-item-dropdown">
                                 <span class="header-menu-img">
                                     <a-avatar :src="$Util.imageFilter(user.avatar, 3)" :size="18" alt="user" />
@@ -19,7 +19,7 @@
                             <template #overlay>
                                 <a-menu style="text-align: center;">
                                     <a-menu-item @click="handleEditShow">
-                                        <a-button type="link" class="menu-item-btn">{{ $t('n.password') }}</a-button>
+                                        <a class="menu_text">{{ $t('n.password') }}</a>
                                         <a-modal v-model:visible="passShow" :title="$t('n.password')"
                                             class="password-edit-modal" :after-close="handleEditClose">
                                             <div class="form-title">
@@ -52,8 +52,13 @@
                                             </template>
                                         </a-modal>
                                     </a-menu-item>
+                                    <a-menu-divider class="menu_divider" />
+                                    <a-menu-item @click="routerChange('/login')">
+                                        <a class="menu_text">{{ $t('mall.switch_identity') }}</a>
+                                    </a-menu-item>
+                                    <a-menu-divider class="menu_divider" />
                                     <a-menu-item @click="handleLogout">
-                                        <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
+                                        <a class="menu_text">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
@@ -75,7 +80,7 @@
                     </span>
                     <!-- 更多 -->
                     <span class="header-menu tab-animate">
-                        <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="moreDropDownChange">
+                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="moreDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <span class="header-menu-img">
                                     <a-avatar :src="getHeaderSrc('more', 'png')" :size="18" alt="user" />
@@ -87,7 +92,7 @@
                                 <a-menu style="text-align: center;">
                                         <a-menu-item :key="item.key" v-for="(item, index) in menuList" @click="routerChange(item.path)">
                                             <a class="menu_text">{{ $t(`router.${item.nameLang}`) }}</a>
-                                            <a-menu-divider class="menu_divider" />
+                                            <a-menu-divider class="menu_divider" v-if="index < menuList.length - 1" />
                                         </a-menu-item>
                                 </a-menu>
                             </template>
@@ -95,7 +100,7 @@
                     </span>
                     <!-- 语言切换 -->
                     <span class="header-menu tab-animate">
-                        <a-dropdown :trigger="['click']" overlay-class-name='lang-action-menu' placement="bottom" @visibleChange="langDropDownChange">
+                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
                                 <span class="mt-header-lang-text">{{ currentAreaType }}</span>
@@ -106,7 +111,7 @@
                                     <a-menu-item key="0" @click="handleLangSwitch('en')">
                                         <a class="menu_text">EN</a>
                                     </a-menu-item>
-                                    <a-menu-divider />
+                                    <a-menu-divider class="menu_divider" />
                                     <a-menu-item key="1" @click="handleLangSwitch('zh')">
                                         <a class="menu_text">中文</a>
                                     </a-menu-item>
@@ -119,17 +124,20 @@
         </div>
         <div id="search">
             <div class="search-content content">
-                <img class="logo-img" :src="getHeaderSrc('logo', 'png')" />
+                <img class="logo-img" :src="getHeaderSrc('logo', 'png')" @click="routerChange('/mall/index')" />
                 <div class="search-input">
-                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')">
-                    <my-button type="primary" @click="routerChange('/purchase/item-list', { key: searchKey })">
-                        <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
-                        {{ $t('purchase.search') }}
-                    </my-button>
+                    <input type="text" v-model="searchKey" :placeholder="$t('mall.search_placeholder')" @keyup.enter="search(searchKey)">
+                    <div @click="search(searchKey)">
+                        <my-button type="primary">
+                            <svg-icon icon-class="header-search-icon" class-name="header-search-icon" />
+                            {{ $t('purchase.search') }}
+                        </my-button>
+                    </div>
                 </div>
                 <div class="bag" @click="routerChange('/purchase/item-collect')">
-                    <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-15, 0]">
+                    <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-6, -2]">
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
+                        <svg-icon icon-class="car-icon" class-name="car-icon" />
                     </a-badge>
                     <span>{{ $t('mall.bag') }}</span>
                 </div>
@@ -137,15 +145,15 @@
         </div>
         <div id="menu">
             <div class="menu-content content">
-                <!-- 车辆型号 -->
+                <!-- 整车 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
                 <span class="menu-item tab-animate">
-                    <a-dropdown :trigger="['click']" overlay-class-name='more-action-menu' placement="bottom" @visibleChange="accessoriesDropDownChange">
+                    <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
-                            <span class="menu-item-text">{{ $t('mall.accessories') }}</span>
+                            <span class="menu-item-text">{{ $t('mall.spareparts') }}</span>
                             <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShowShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                         </div>
                         <!-- <template #overlay>
@@ -162,7 +170,7 @@
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.peripheral_products') }}</span>
                 </span>
-                <!-- 促销产品 -->
+                <!-- 广宣品 -->
                 <span class="menu-item tab-animate">
                     <span class="menu-item-text">{{ $t('mall.promotional_products') }}</span>
                 </span>
@@ -201,11 +209,15 @@ export default {
             },
             menuList: Core.Const.LOGINMALL.HEADERMENU,
             accessoriesMenuList: Core.Const.LOGINMALL.HEADERACCESMENU,
-            shopCartNum: 0,
-            searchKey: ''
+            searchKey: '',
+            searchLoading: false
         };
     },
-    computed: {},
+    computed: {
+        shopCartNum() {
+            return this.$store.state.shopCartNum
+        }
+    },
     watch: {},
     created() {
         const lang = Core.Data.getLang()
@@ -216,15 +228,17 @@ export default {
     },
     mounted() {
         this.getShopCartList()
+        this.searchKey = this.$store.state.mallSearchKey
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
             const path = `../../../../assets/images/mall/header/${name}.${type}`;
             return headerModules[path]?.default || '';
         },
+        // 获取购物车商品数量
         getShopCartList() {
             Core.Api.ShopCart.list().then(res => {
-                this.shopCartNum = res.count
+                this.$store.commit('setShopCartNum', res.count)
             })
         },
         handleLangSwitch(lang) {
@@ -249,8 +263,8 @@ export default {
         langDropDownChange(e) {
             this.langShow = e
         },
-        accessoriesDropDownChange(e) {
-            this.accessoriesShow = e
+        sparepartsDropDownChange(e) {
+            this.sparepartsShow = e
         },
         // 修改密码
         handleEditShow() {
@@ -294,6 +308,17 @@ export default {
             }).catch(err => {
                 console.log('handleSubmit err:', err)
             })
+        },
+        search(key) {
+            if (this.searchLoading) return;
+            this.searchLoading = true
+            if (!key) {
+                this.searchLoading = false
+                return this.$message.warning(this.$t('mall.search_placeholder'))
+            }
+            this.searchLoading = false
+            this.$store.commit('setMallKey', key);
+            this.routerChange('/mall/search', { key })
         },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
@@ -376,6 +401,7 @@ export default {
     #search {
         .logo-img {
             width: 122px;
+            cursor: pointer;
         }
         .search-input {
             .flex(initial, center,  row);
@@ -429,7 +455,14 @@ export default {
             .header-bag-icon {
                 width: 18px;
                 height: 18px;
-                margin-right: 20px;
+                margin-right: 8px;
+                display: inline-block;
+            }
+            .car-icon {
+                width: 18px;
+                height: 18px;
+                margin-right: 8px;
+                display: none;
             }
             > span {
                 color: #333;
@@ -439,12 +472,31 @@ export default {
                 font-weight: 500;
                 line-height: 150%; /* 18px */
             }
+            .ant-badge {
+                display: flex;
+                align-items: center;
+            }
             .ant-badge-count {
                 height: 14px;
                 min-width: 14px;
                 font-size: 10px;
                 line-height: 14px;
                 padding: 0 4px;
+            }
+            &:hover {
+                border: 1px solid #C6F;
+                > span {
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                .header-bag-icon {
+                    display: none;
+                }
+                .car-icon {
+                    display: inline-block;
+                }
             }
         }
     }
@@ -530,53 +582,54 @@ export default {
     @media (min-width: 820px) {}
     @media (max-width: 820px) {}
 }
+</style>
+<style lang="less">
 // dropdown start
-.ant-dropdown-menu {
-    position: relative;
-    border-radius: 0;
-    &::before {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: -8px;
-        transform: translateX(-50%);
-        z-index: 999999;
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-bottom: 12px solid #fff;
-    }
-}
-.more-action-menu .ant-dropdown-menu-item {
-    padding: 5px 0;
-    .menu_divider {
-        position: relative;
-        bottom: -5px;
-    }
-}
-.lang-action-menu .ant-dropdown-menu-item {
-    width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    &:hover {
-        background-color: #EEE;
-    }
-}
-.ant-dropdown {
+.action-menu {
     position: absolute;
     top: 60px !important;
-}
-.menu_text {
-    color: #000;
-    font-family: Montserrat;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    text-align: center;
+    .ant-dropdown-menu {
+        position: relative;
+        border-radius: 0;
+        &::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -8px;
+            z-index: 999999;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #fff;
+        }
+    }
+    .ant-dropdown-menu-item {
+        min-width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        &:hover {
+            background-color: #EEE;
+        }
+        padding: 8px 0px;
+        .menu_divider {
+            position: relative;
+            bottom: -8px;
+        }
+    }
+    .menu_text {
+        color: #000;
+        font-family: Montserrat;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        text-align: center;
+        padding: 0 10px;
+    }
 }
 // dropdown end
 </style>

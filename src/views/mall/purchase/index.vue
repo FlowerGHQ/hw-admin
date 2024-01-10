@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Horwin公共事业 -->
+            <!-- Horwin服务 -->
             <div class="box services">
                 <div class="content">
                     <div class="title">{{ $t('purchase.services') }}</div>
@@ -62,8 +62,10 @@
                                 </div>
                             </div>
                             <div class="text">
-                                <p class="text-title" :title="item.title">{{ item.title }}</p>
-                                <p class="mes">{{ item.mes }}</p>
+                                <div>
+                                    <p class="text-title" :title="item.title">{{ item.title }}</p>
+                                    <p class="text-subtitle" :title="item.mes">{{ item.mes }}</p>
+                                </div>
                                 <p class="time" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
                                 <p class="time" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
                             </div>
@@ -339,7 +341,7 @@ export default {
                             text-align: center;
                             margin-bottom: 10px;
                             #my-button {
-                                width: 142px;
+                                padding: 12px 32px;
                             }
                         }
                     }
@@ -395,6 +397,7 @@ export default {
                             font-style: normal;
                             font-weight: 500;
                             line-height: normal;
+                            margin-bottom: 10px;
                         }
                         .mes {
                             color: #999;
@@ -412,11 +415,10 @@ export default {
         .deals {
             background: #FFF;
             .deals-list {
-                .flex(initial, initial, row);
+                .flex(initial, initial, column);
                 flex-wrap: wrap;
                 .deals-item {
                     .flex(initial, initial, row);
-                    width: calc((100% - 80px) / 3);
                     margin-right: 40px;
                     background: #FFF;
                     cursor: pointer;
@@ -424,18 +426,16 @@ export default {
                     &:nth-child(3n) {
                         margin-right: 0;
                     }
-                    &:nth-child(n + 4) {
+                    &:nth-child(n + 2) {
                         margin-top: 40px;
                     }
                     .img-body {
-                        height: 100%;
-                        min-height: 254px;
-                        width: 100%;
+                        height: 254px;
                         overflow: hidden;
                         .img {
-                            width: 100%;
+                            height: 100%;
                             overflow: hidden;
-                            .news-img {
+                            .deals-img {
                                 width: 100%;
                                 height: 100%;
                                 object-fit: cover;
@@ -445,19 +445,29 @@ export default {
                     .text {
                         .flex(space-between, initial, column);
                         flex: 1;
-                        padding: 40px 32px;
+                        padding: 40px;
                         width: 100%;
+                        background: #FAFAFA;;
                         .text-title {
-                            .ellipsis(2);
+                            .ellipsis(1);
                             color: #333;
                             font-family: Montserrat;
-                            font-size: 14px;
+                            font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
-                            line-height: normal;
-                            margin-bottom: 32px;
+                            line-height: 28px; /* 155.556% */
                         }
-                        .mes {
+                        .text-subtitle {
+                            .ellipsis(2);
+                            color: #999;
+                            font-family: Montserrat;
+                            font-size: 12px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: normal;
+                            margin-top: 16px;
+                        }
+                        .time {
                             color: #999;
                             font-family: Montserrat;
                             font-size: 12px;
@@ -532,7 +542,7 @@ export default {
             .fcc();
             margin-top: 40px;
             #my-button {
-                width: 149px;
+                padding: 12px 32px;
             }
         }
     }
@@ -562,6 +572,7 @@ export default {
             font-weight: 500;
             line-height: normal;
             text-transform: capitalize;
+            white-space: nowrap;
         }
         &:hover {
             .back-top-icon {

@@ -69,11 +69,11 @@ export default {
     .right-icon {
         height: 20px;
         width: 0px;
-        margin-left: 8px;
         transition: 0.3s;
     }
     &:hover {
         .right-icon {
+            margin-left: 8px;
             width: 20px;
         }
     }
@@ -93,6 +93,7 @@ export default {
         text-align: center;
     }
     &:hover {
+        border: none;
         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
         border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
         .my-button-text {

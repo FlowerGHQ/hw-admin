@@ -3,73 +3,112 @@
         <div class="login-header">
             <div class="content">
                 <div class="text">
-                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="Horwin">
+                    <img class="img" src="@/assets/images/mall/login/icon.svg" alt="HORWIN">
                     <span>{{ $t('mall.system') }}</span>
                 </div>
                 <div class="header-right">
                     <!-- <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                         <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                     </a-button> -->
-                    <a-dropdown :trigger="['click']" placement="bottom" @visibleChange="langDropDownChange">
-                        <div class="mt-user-switch" @click.prevent>
-                            <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
-                            <!-- 当前语言 -->
-                            <span class="mt-header-lang-text">{{ currentAreaType }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
-                        </div>
-                        <template #overlay>
-                            <a-menu style="bottom: 0px; position: relative;">
-                                <a-menu-item key="0" @click="handleLangSwitch('en')">
-                                    <a class="menu_text">EN</a>
-                                </a-menu-item>
-                                <a-menu-divider />
-                                <a-menu-item key="1" @click="handleLangSwitch('zh')">
-                                    <a class="menu_text">中文</a>
-                                </a-menu-item>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
+                    <span class="tab-animate">
+                        <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
+                            <div class="mt-user-switch" @click.prevent>
+                                <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
+                                <!-- 当前语言 -->
+                                <span class="mt-header-lang-text">{{ currentAreaType }}</span>
+                                <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            </div>
+                            <template #overlay>
+                                <a-menu style="bottom: 0px; position: relative;">
+                                    <a-menu-item key="0" @click="handleLangSwitch('en')">
+                                        <a class="menu_text">EN</a>
+                                    </a-menu-item>
+                                    <a-menu-divider />
+                                    <a-menu-item key="1" @click="handleLangSwitch('zh')">
+                                        <a class="menu_text">中文</a>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
+                    </span>
                 </div>
             </div>
         </div>
         <div class="login-container">
-            <div class="form-title">{{ $t('mall.account_login') }}</div>
+            <div class="form-title">{{ user_type_list.length > 0 ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
             <div class="form-content">
-                <div class="login-type" :class="[TYPE_MAP[loginForm.user_type], lang]">
-                    <div class="type-item" v-for="item of loginTypeList" :key="item.value"
-                        :class="loginForm.user_type === item.value ? 'active' : ''"
-                        @click="loginForm.user_type = item.value">
-                        {{item[$i18n.locale]}}
+                <template v-if="user_type_list.length === 0">
+                    <div class="login-type">
+                        <div class="type-item" v-for="item of loginMethodsList" :key="item.id"
+                            :class="login_methods === item.id ? 'active' : ''"
+                            @click="login_methods = item.id">
+                            <svg-icon :icon-class="item.icon" :class-name="item.icon" />
+                            <svg-icon :icon-class="item.icon_black" :class-name="item.icon_black" />
+                            {{ $t(`mall.${item.name_lang}`) }}
+                        </div>
                     </div>
-                </div>
-                <!-- 用户名 -->
-                <FormModel 
-                    key="username" 
-                    @handleValid="handleChangeUserNameValid"
-                    :unValid="unUserNameValid" 
-                    type="Basic" 
-                    :placeholder="$t('n.username')"
-                    @keydownEnter="handleFocusPwd" 
-                    :value="loginForm.username"
-                    @input="loginForm.username = $event.target.value" 
-                />
-                <!-- 密码 -->
-                <FormModel 
-                    key="password" 
-                    @handleValid="handleChangePassWordValid"
-                    :unValid="unPassWordValid" 
-                    type="Password" 
-                    :placeholder="$t('n.enter_password')"
-                    @keydownEnter="handleLogin" 
-                    :value="loginForm.password"
-                    @input="loginForm.password = $event.target.value"
-                    ref="password-input" 
-                />
-                <div class="login-btn">
-                    <my-button type="primary" showRightIcon @click="handleLogin">
-                        {{ $t('mall.account_login') }}
-                    </my-button>
-                </div>
+                    <!-- 手机号登录 -->
+                    <template v-if="login_methods === 1">
+                        <!-- 手机号 -->
+                        <FormModel 
+                            key="phone" 
+                            @handleValid="handleChangePhoneValid"
+                            :unValid="unPhoneValid" 
+                            type="Basic" 
+                            :placeholder="$t('mall.enter_phone')"
+                            @keydownEnter="handleFocusCode" 
+                            :value="loginPhoneForm.phone"
+                            @input="loginPhoneForm.phone = $event.target.value" 
+                        />
+                        <!-- 验证码 -->
+                        <div class="web-value">
+                            <input ref="code" @focus="handleCodeFocus" :placeholder="$t('mall.enter_code')" v-model="loginPhoneForm.code" :class="codeInputClassName" type="text">
+                            <button :class="['web-verification', loginPhoneForm.phone ? 'can-hover' : 'grey']" v-if="!countdown" @click="sendCode">
+                                {{ $t(/*发送验证码*/'mall.verification_code') }}
+                            </button>
+                            <button class="web-verification grey" v-else disabled>{{ $t(/*已发送*/'mall.sented')
+                            }}({{ countdown }})</button>
+                        </div>
+                    </template>
+                    <!-- 密码登录 -->
+                    <template v-else>
+                        <!-- 用户名 -->
+                        <FormModel 
+                            key="username" 
+                            @handleValid="handleChangeUserNameValid"
+                            :unValid="unUserNameValid" 
+                            type="Basic" 
+                            :placeholder="$t('n.username')"
+                            @keydownEnter="handleFocusPwd" 
+                            :value="loginForm.username"
+                            @input="loginForm.username = $event.target.value" 
+                        />
+                        <!-- 密码 -->
+                        <FormModel 
+                            key="password" 
+                            @handleValid="handleChangePassWordValid"
+                            :unValid="unPassWordValid" 
+                            type="Password" 
+                            :placeholder="$t('n.enter_password')"
+                            @keydownEnter="handleAccount" 
+                            :value="loginForm.password"
+                            @input="loginForm.password = $event.target.value"
+                            ref="password-input" 
+                        />
+                    </template>
+                    <div class="login-btn" @click="handleAccount">
+                        <my-button type="primary" showRightIcon>
+                            {{ $t('mall.account_login') }}
+                        </my-button>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="user-list">
+                        <div class="user-item" v-for="item in user_type_list" :key="item" @click="handleLogin(item)">
+                            {{ Core.Const.USER.TYPE_MAP[item][lang] }}
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="login-footer">
@@ -108,28 +147,62 @@ export default {
     props: {},
     data() {
         return {
+            Core,
             zhCN,
             enUS,
             TYPE,
             TYPE_MAP,
+            loginMethodsList: [
+                {
+                    id: 1,
+                    name_lang: 'phone_number',
+                    icon: 'phone-icon',
+                    icon_black: 'phone-black-icon',
+                },
+                {
+                    id: 2,
+                    name_lang: 'password',
+                    icon: 'pwd-icon',
+                    icon_black: 'pwd-black-icon',
+                },
+            ],
             loginTypeList: Core.Const.LOGINMALL.TYPE_LIST,
             menuList: Core.Const.LOGINMALL.FOOTERMENU,
-
+            loginPhoneForm: {
+                phone: '',
+                code: '',
+            },
             loginForm: {
                 username: '',
                 password: '',
-                user_type: 15, 
             },
-
+            login_methods: 1,
             user: {},
             currentAreaType: '',
             langShow: false,
+            unPhoneValid: false,
+            unValidCode: false,
             unUserNameValid: false,
             unPassWordValid: false,
+            codeInputStatus: 'not-enter',
+            countdown: null, // 倒计时
+            countdownTime: null, // 定时器记录
+            user_type_list: []
         };
     },
     watch: {},
     computed: {
+        codeInputClassName() {
+            if (this.codeInputStatus === 'not-enter' && !this.loginPhoneForm.code) {
+                return 'web-input not-enter';
+            } else if (this.codeInputStatus === 'be-entering') {
+                return 'web-input be-entering';
+            } else if (this.codeInputStatus === 'entered' && this.loginPhoneForm.code) {
+                return 'web-input entered';
+            } else if (this.codeInputStatus === 'err-enter') {
+                return 'web-input err-enter';
+            }
+        },
         lang() {
             return this.$store.state.lang
         }
@@ -140,11 +213,15 @@ export default {
             Core.Data.setLang("zh")
         }
         this.handleLangSwitch(Core.Data.getLang())
-        // 初始化看选中哪个登录方
-        this.loginForm.user_type = Core.Data.getLoginType() || TYPE.ADMIN
+        // Core.Data.clearUserTypeList();// 用于测试
+        this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
         this.fsLogin()
+    },
+    unmounted() {
+        clearInterval(this.countdownTime)
+        this.countdownTime = null
     },
     methods: {
         /* Fetch start*/
@@ -168,39 +245,136 @@ export default {
                 jsapi.apiAuth();                
             }
         },
+        handleFocusCode() {
+            this.$refs['code'].focus()
+        },
         handleFocusPwd() {
             this.$refs['password-input'].focus()
         },
         // 必填项检查
-        checkInput(form) {
+        checkInput(form, type) {
             let allValid = true;
-            console.log(form)
-            this.unUserNameValid = !form.username;
-            this.unPassWordValid = !form.password;
-            allValid = form.username && form.password
+            if (type === 1) {
+                this.unPhoneValid = !form.phone;
+                this.unValidCode = !form.code;
+                this.codeInputStatus = form.code ? 'entered' : 'err-enter';
+                allValid = form.phone && form.code
+            } else if (type === 2) {
+                this.unUserNameValid = !form.username;
+                this.unPassWordValid = !form.password;
+                allValid = form.username && form.password
+            }
             return allValid;
         },
-        async handleLogin() {
-            console.log(this.loginForm)
-            let form = Core.Util.deepCopy(this.loginForm)
-            if (this.checkInput(form)) {//表单验证通过且验证码正确
-                Core.Api.Common.login(form).then(res => {
-                    console.log('handleLogin apiName res', res)                
-                    Core.Data.setToken(res.token);                
-                    Core.Data.setUser(res.user.account);
-                    Core.Data.setOrgId(res.user.org_id);
-                    Core.Data.setOrgType(res.user.org_type);
-                    Core.Data.setCurrency(res.user.currency);
-
-                    Core.Data.setLoginType(this.loginForm.user_type);  // 设置登录方的数字
-
-                    let loginType = TYPE_MAP[this.loginForm.user_type]
-                    Core.Data.setUserType(loginType); // 设置登录方的文字
-
-                    this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
-                    this.isAdminFetch()
-                });
+        handleAccount() {
+            let type = this.login_methods
+            if (type === 1) {
+                let form = Core.Util.deepCopy(this.loginPhoneForm)
+                if (!this.checkInput(form, type)) return;
+                let obj = {
+                    ...form,
+                    type: Core.Const.COMMON.LOGIN_TYPE.CODE,
+                    // platform: Core.Const.COMMON.PLATFORM.SUPPLY,
+                }
+                this.checkAccountFetch(obj, 1)
+            } else if (type === 2) {
+                let form = Core.Util.deepCopy(this.loginForm)
+                if (!this.checkInput(form, type)) return;
+                let obj = {
+                    ...form,
+                    type: Core.Const.COMMON.LOGIN_TYPE.PWD,
+                    // platform: Core.Const.COMMON.PLATFORM.SUPPLY,
+                }
+                this.checkAccountFetch(obj, 2)
             }
+        },
+        async handleLogin(user_type) {
+            let token = Core.Data.getToken();
+            if (token) {
+                this.switchUserFetch(user_type)
+            } else {
+                let obj = Core.Data.getLoginMes();
+                obj.user_type = user_type
+                this.loginFetch(obj, obj.type)
+            }
+        },
+        // 校验登录账号接口
+        checkAccountFetch(params = {}) {
+            let obj = {
+                ...params
+            }
+
+            Core.Api.Common.checkAccount(obj).then(res => {
+                Core.Data.setLoginMes(obj);
+                Core.Data.setUserTypeList(res?.user_type_list);
+                this.user_type_list = res?.user_type_list
+                if (this.user_type_list.length === 1) {// 如果类型只有一种则跳过选择直接登录
+                    this.handleLogin(this.user_type_list[0])
+                }
+            })
+        },
+        // 登录接口
+        loginFetch(params = {}, type) {
+            let obj = {
+                ...params
+            }
+
+            Core.Api.Common.selectUser(obj).then(res => {
+                console.log('handleLogins apiName res', res)
+
+                Core.Data.setToken(res.token);
+                Core.Data.setUser(res.user.account);
+
+                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
+                let loginType = TYPE_MAP[res.user.type]
+                Core.Data.setUserType(loginType); // 设置登录方的文字
+
+                // 手机登录跳转供应链页面
+                if (res.user.type === TYPE.SUPPLIER) {
+                    this.$router.push('/supply-home')
+                    return
+                }
+
+                Core.Data.setOrgId(res.user.org_id); // 组织的id
+                Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                Core.Data.setCurrency(res.user.currency); // 账号的单位
+
+                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
+                this.isAdminFetch()
+
+                // 登录成功清除登录传参信息
+                Core.Data.clearLoginMes();
+            }).catch(err => {
+                console.log('handleLogins apiName err', err)
+            })
+        },
+        // 切换身份接口
+        switchUserFetch(user_type) {
+            Core.Api.Common.switchUser({ user_type }).then(res => {
+                console.log('handleLogins apiName res', res)
+
+                Core.Data.setToken(res.token);
+                Core.Data.setUser(res.user.account);
+
+                Core.Data.setLoginType(res.user.type);  // 设置登录方的数字
+                let loginType = TYPE_MAP[res.user.type]
+                Core.Data.setUserType(loginType); // 设置登录方的文字
+
+                // 手机登录跳转供应链页面
+                if (res.user.type === TYPE.SUPPLIER) {
+                    this.$router.push('/supply-home')
+                    return
+                }
+
+                Core.Data.setOrgId(res.user.org_id); // 组织的id
+                Core.Data.setOrgType(res.user.org_type); // 组织的类型
+                Core.Data.setCurrency(res.user.currency); // 账号的单位
+
+                this.getAuthority(res.user.id, res.user.type, loginType, res.user.role_id, res.user.flag_admin, res.user.flag_group_customer_admin);
+                this.isAdminFetch()
+            }).catch(err => {
+                console.log('handleLogins apiName err', err)
+            })
         },
 
         async getAuthority(userId, userType, loginType, roleId, flag_admin, flagGroupCustomerAdmin) {
@@ -235,6 +409,40 @@ export default {
                 }
             })
         },
+        sendCode() {  //发送验证码
+            // 防止多次点击
+            if (this.countdownTime)  return
+
+            if (!this.loginPhoneForm.phone) {
+                return this.$message.warning(`${this.$t('n.enter')}${this.$t('n.phone')}`)
+            }
+
+            this.getPhoneCodeFetch({
+                type: 1,  // 短信类型：1.登录注册
+                phone: this.loginPhoneForm.phone,
+            })
+            this.countdown = 60
+            this.countdown--
+            this.countdownTime = setInterval(() => {
+                this.countdown--
+                if(this.countdown === 0) {
+                    clearInterval(this.countdownTime)
+                    this.countdownTime = null
+                    this.countdown = null
+                }
+            }, 1000)
+        },
+        // 获取验证码
+        getPhoneCodeFetch(params = {}) {
+            let obj = {
+                ...params
+            }
+            Core.Api.Common.phoneCode(obj).then(res => {
+              console.log("getPhoneCodeFetchs res", res);
+            }).catch(err => {
+                console.log("getPhoneCodeFetchs err", err);
+            })
+        },
         handleLangSwitch(lang) {
             this.$store.commit('switchLang', lang);
             this.$i18n.locale = this.$store.state.lang;
@@ -255,11 +463,18 @@ export default {
         handleChangePassWordValid() {
             this.unPassWordValid = false
         },
+        handleChangePhoneValid() {
+            this.unPhoneValid = false
+        },
+        // 验证码输入框聚焦
+        handleCodeFocus() {
+            this.codeInputStatus = 'be-entering'
+        },
     }
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 #LoginMall {
     position: relative;
     height: 100vh;
@@ -363,8 +578,8 @@ export default {
     .login-container {
         padding: 48px 40px;
         width: 453px;
+        min-height: 465px;
         background: @BG_panel;
-        border-radius: 6px;
         border: 1px solid @BC_login_box;
         overflow: hidden;
         position: absolute;
@@ -372,9 +587,9 @@ export default {
         right: 12.5%;
         transform: translateY(-50%);
         .form-title {
-            height: 70px;
             font-size: 24px;
             font-weight: 700;
+            margin-bottom: 24px;
             font-family: Montserrat;
             color: #333;
         }
@@ -388,51 +603,145 @@ export default {
             margin-bottom: 28px;
             .type-item {
                 cursor: pointer;
+                flex: 1;
+                .fcc();
                 text-align: center;
-                font-size: 16px;
-                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                font-size: 14px;
+                background: #666;
+                border: 1px solid #EEE;
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 line-height: 24px;
-                padding: 10px;
+                padding: 10px 0;
                 transition: color 0.3s ease;
-                &.active {
-                    color: @TC_P;
+                .phone-icon, .phone-black-icon, .pwd-icon, .pwd-black-icon {
+                    width: 20px;
+                    height: 20px;
+                    margin-right: 4px;
+                }
+                .phone-icon, .pwd-icon {
+                    display: none;
+                }
+                .phone-black-icon, .pwd-black-icon {
+                    display: inline-block;
                 }
             }
-            &::after {
-                content: '';
-                display: inline-block;
-                width: 60px;
-                height: 3px;
+            .active {
+                border: 1px solid #C6F;
                 background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-                border-radius: 2px;
-                position: absolute;
-                bottom: 2px;
-                transform: translateX(-50%);
-                transition: all .3s ease;
-            }
-
-            &.DISTRIBUTOR::after {
-                left: 50px;
-                width: 90px;
-            }
-            &.ADMIN::after {
-                left: 135px;
-            }
-        }
-        .zh {
-            &.DISTRIBUTOR::after {
-                left: 35px;
-                width: 60px;
-            }
-            &.ADMIN::after {
-                left: 103px;
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                .phone-icon, .pwd-icon {
+                    display: inline-block;
+                }
+                .phone-black-icon, .pwd-black-icon {
+                    display: none;
+                }
             }
         }
         .login-btn {
             margin-top: 48px;
+        }
+        .web-value {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            position: relative;
+            input::-webkit-input-placeholder {
+                /* 修改placeholder颜色  */
+                font-size: 14px;
+                font-family: Montserrat;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 150%; /* 21px */
+                // letter-spacing: 0.56px;
+                color: #BFBFBF;
+            }
+            input:focus {
+                outline: none;
+            }
+            .web-input {
+                outline: none;
+                width: 100%;
+                padding: 15px 0;
+                box-sizing: border-box;
+                font-weight: 400;
+                font-style: normal;
+                font-family: Montserrat;
+                // letter-spacing: 0.56px;
+                &.not-enter {
+                    border-bottom: 1px solid #DFDFDF;
+                    font-weight: 400;
+                }
+                &.be-entering {
+                    border-bottom: 1px solid #BFBFBF;
+                    color: #333;
+                    font-weight: 400;
+                    caret-color: #C6F;
+                }
+                &.entered {
+                    border-bottom: 1px solid #DFDFDF;
+                    color: #333;
+                    font-weight: 400;
+                }
+                &.err-enter {
+                    border-bottom: 1px solid #FF0000;
+                    color: #333;
+                    font-weight: 400;
+                    &::-webkit-input-placeholder {
+                        color: #FF0000;
+                    }
+                }
+            }
+            .web-verification {
+                font-family: Montserrat;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 150%; /* 21px */
+                // letter-spacing: 0.56px;
+                position: absolute;
+                right: 0;
+                &.grey {
+                    color: #999999;
+                    //pointer-events: none; /* 禁用鼠标事件 */
+                    cursor: not-allowed; /* 鼠标样式为禁用状态 */
+                }
+                &.can-hover:hover {
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+            }
+        }
+        .user-list {
+            .user-item {
+                .flex(initial, center, row);
+                color: #333;
+                font-family: Montserrat;
+                font-size: 14px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 150%; /* 21px */
+                padding: 16px;
+                border: 1px solid #EEE;
+                margin-bottom: 16px;
+                cursor: pointer;
+                &:hover {
+                    border: 1px solid #C6F;
+                    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
         }
     }
     .login-footer {
@@ -454,52 +763,14 @@ export default {
                     display: inline-block;
                     margin-right: 40px;
                     cursor: pointer;
+                    &:hover {
+                        color: rgba(255, 255, 255, 0.7);
+                    }
                 }
             }
         }
     }
 }
-// dropdown start
-.ant-dropdown-menu {
-    position: relative;
-    border-radius: 0;
-    &::before {
-        content: '';
-        position: absolute;
-        right: 47px;
-        top: -8px;
-        z-index: 999999;
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-bottom: 12px solid #fff;
-    }
-}
-.ant-dropdown-menu-item {
-    width: 120px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    &:hover {
-        background-color: #EEE;
-    }
-}
-.ant-dropdown {
-    position: absolute;
-    top: 60px !important;
-}
-.menu_text {
-    color: #000;
-    font-family: Montserrat;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: 150%;
-    text-align: center;
-}
-// dropdown end
 .ant-input {
    caret-color: #C6F; /* 将光标颜色设为红色 */
 }
@@ -510,5 +781,57 @@ input.ant-input {
         box-shadow: none;
     }
 }
+</style>
+<style lang="less">
+// dropdown start
+.action-menu {
+    position: absolute;
+    top: 60px !important;
+    .ant-dropdown-menu {
+        position: relative;
+        border-radius: 0;
+        &::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: -8px;
+            z-index: 999999;
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-bottom: 12px solid #fff;
+        }
+    }
+    .ant-dropdown-menu-item {
+        min-width: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        &:hover {
+            background-color: #EEE;
+        }
+        .ant-dropdown-menu-title-content {
+            padding: 0 10px;
+        }
+        padding: 8px 0px;
+        .menu_divider {
+            position: relative;
+            bottom: -8px;
+        }
+    }
+    .menu_text {
+        color: #000;
+        font-family: Montserrat;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 150%;
+        text-align: center;
+    }
+}
+// dropdown end
 </style>
     

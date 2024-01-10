@@ -1721,13 +1721,40 @@ const Util = {
     },
     // 商品售后-销售区域-方法
     getSalesAreaStr(arr,lang = 'zh') {
-        
-        let str = '';
-        if(!(arr instanceof Array)) return '-'
-        arr?.forEach((item)=>{
-            str += (str?',':'')+item[lang==='zh'?'country':'country_en']
-        })
-        return str || '-'
+
+      let str = '';
+      if(!(arr instanceof Array)) return '-'
+      arr?.forEach((item)=>{
+          str += (str?',':'')+item[lang==='zh'?'country':'country_en']
+      })
+      return str || '-'
+    },
+
+    /**
+       * 监听触底滚动
+       * @param {Object} e dom
+       * @param {Function} fn 回调方法
+       * @param {Object} pagination 分页对象
+       * @param {Boolean} scrollLoading 是否已触发
+       *
+       * 使用 Core.Util.scroll.handleScrollFn(e, this.getData, this.pagination, this.showLoading)
+       */
+    handleScrollFn(e, fn, pagination = {}, scrollLoading = false, hitBottomHeightQ = '') {
+      if (!e || !fn) return;
+      const hitBottomHeight = 10;
+      const element = e;
+      if (Math.ceil(element.scrollTop + element.clientHeight) >= element.scrollHeight - (hitBottomHeightQ || 0 + hitBottomHeight)) {
+          // console.log("滑到底部")
+          if ((pagination.page < pagination.total_page) && !scrollLoading) {
+              pagination.page ++
+              fn({ page: pagination.page })
+          }
+      }
+    },
+    // 地域决定金额单位
+    regionalUnitMoney() {
+        let val = Data.getLang() || 'eur';
+        return { ...Const.ORDER.AreaUnit[val] };
     },
     // 照片逻辑
     Image

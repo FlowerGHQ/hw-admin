@@ -61,15 +61,6 @@ const routes = [
     },
     { // 登录
         path: '/login',
-        component: () => import ('@/views/Login.vue'),
-        meta: {
-            hidden: true,
-            title: '登录',
-	        title_en: 'Login',
-        }
-    },
-    { // 分销商登录
-        path: '/loginMall',
         component: () => import ('@/views/mall/Login.vue'),
         meta: {
             hidden: true,
@@ -77,6 +68,15 @@ const routes = [
 	        title_en: 'Login',
         }
     },
+    // { // 分销商登录
+    //     path: '/loginMall',
+    //     component: () => import ('@/views/mall/Login.vue'),
+    //     meta: {
+    //         hidden: true,
+    //         title: '登录',
+	//         title_en: 'Login',
+    //     }
+    // },
     { // 看板
         path: '/mall',
         component: MallLayout,
@@ -97,6 +97,22 @@ const routes = [
                     title_en: 'Index',
                 }
             },
+            {
+                path: 'search',
+                component: () => import('@/views/mall/purchase/search.vue'),
+                meta: {
+                    title: '搜索',
+                    title_en: 'Search',
+                }
+            },
+            // {
+            //     path: 'favorites',
+            //     component: () => import('@/views/mall/purchase/favorites.vue'),
+            //     meta: {
+            //         title: '收藏夹',
+            //         title_en: 'Favorites',
+            //     }
+            // },
         ]
     },
     { // 看板

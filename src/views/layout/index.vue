@@ -86,6 +86,10 @@
                                         </template>
                                     </a-modal>
                                 </a-menu-item>
+                                <a-menu-item @click="$router.push('/login')">
+                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity') }}</a-button>
+                                </a-menu-item>
+                                <a-menu-divider class="menu_divider" />
                                 <a-menu-item @click="handleLogout">
                                     <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                                 </a-menu-item>
