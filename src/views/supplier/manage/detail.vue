@@ -312,7 +312,7 @@
                 <!-- 代理信息 -->
                 <div 
                     class="information-container-form m-t-40" 
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                     >
                     <div class="sub-title">{{ $t('supply-chain.agent_information') }}</div>
                     <div class="information-form">
@@ -432,7 +432,7 @@
                 <!-- 人力资源 -->
                 <div 
                     class="information-container-form m-t-40" 
-                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.human_resources') }}</div>
                     <div class="information-form">
@@ -681,85 +681,145 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="proportion-of-list">
+                        <div class="proportion-of-list">                            
                             <template v-for="(item, index) in msgDetail.business_info?.list" :key="index">
-                                <div class="proportion-of-item">
-                                    <div class="level-search-row">
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color proportion-of-item-title">
-                                                {{ item?.recent_year || "-" }}
+                                    <div class="proportion-of-item">
+                                        <div class="level-search-row">
+                                            <div class="search-col">
+                                                <div class="key w-130 t-a-r text-color proportion-of-item-title">
+                                                    {{ item?.recent_year || "-" }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="level-search-row">
-                                        <!-- 销售额 -->
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
-                                            <div class="value m-l-8">
-                                                <div class="customer-input">
-                                                    {{ item?.sales || "-" }}
-                                                    <div class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</div>
+                                        <div class="level-search-row">
+                                            <!-- 销售额 -->
+                                            <div 
+                                                class="search-col"
+                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                                            >
+                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
+                                                <div class="value m-l-8">
+                                                    <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="item.sales"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
+                                                        </template>
+                                                    </a-input-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-search-row">
+                                            <!-- 纳税额 -->
+                                            <div 
+                                                class="search-col"
+                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                            >
+                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
+                                                <div class="value m-l-8">
+                                                    <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="item.taxes_paid"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
+                                                        </template>
+                                                    </a-input-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-search-row">
+                                            <!-- 利润率 -->
+                                            <div 
+                                                class="search-col"
+                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                            >
+                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
+                                                <div class="value m-l-8">
+                                                    <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="item.profit_margin"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">%</span>
+                                                        </template>
+                                                    </a-input-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-search-row">
+                                            <!-- 资产负债率 -->
+                                            <div 
+                                                class="search-col"
+                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                            >
+                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
+                                                <div class="value m-l-8">
+                                                    <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="item.asset_liability_ratio"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">%</span>
+                                                        </template>
+                                                    </a-input-number>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="level-search-row">
+                                            <!-- 现金流量比率 -->
+                                            <div 
+                                                class="search-col"
+                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                            >
+                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
+                                                <div class="value m-l-8">
+                                                    <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="item.cash_flow_ratio"
+                                                        :placeholder="$t('common.please_enter')" 
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">%</span>
+                                                        </template>
+                                                    </a-input-number>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="level-search-row">
-                                        <!-- 纳税额 -->
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
-                                            <div class="value m-l-8">
-                                                <div class="customer-input">
-                                                    {{ item?.taxes_paid || "-" }}
-                                                    <div class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="level-search-row">
-                                        <!-- 利润率 -->
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
-                                            <div class="value m-l-8">
-                                                <div class="customer-input">
-                                                    {{ item?.profit_margin || "-" }}
-                                                    <div class="unit">%</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="level-search-row">
-                                        <!-- 资产负债率 -->
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
-                                            <div class="value m-l-8">
-                                                <div class="customer-input">
-                                                    {{ item?.asset_liability_ratio || "-" }}
-                                                    <div class="unit">%</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="level-search-row">
-                                        <!-- 现金流量比率 -->
-                                        <div class="search-col">
-                                            <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
-                                            <div class="value m-l-8">
-                                                <div class="customer-input">
-                                                    {{ item?.cash_flow_ratio || "-" }}
-                                                    <div class="unit">%</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </template>
+                            </template>                            
                         </div>
                     </div>
                 </div>
                 <!-- 竞争对手 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.competitor') }}</div>
                     <div class="information-form">
@@ -770,29 +830,60 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="competitionColumns"
-                                        :data-source="msgDetail.competitor_analysis || []" 
+                                        :data-source="parameters.competitor_analysis || []" 
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">
                                             <template v-if="column.key === 'company_order'">
                                                 <div class="information-customer-name">
-                                                    {{ text || "-" }}
+                                                    {{ $t('supply-chain.competitor') }}{{ index + 1  }}
                                                 </div>
                                             </template>
                                             <!-- 公司名称 -->
                                             <template v-if="column.key === 'company_name'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.company_name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
                                             </template>
                                             <!-- 市场份额 -->
                                             <template v-if="column.key === 'market_share'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.market_share"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
                                             </template>
                                             <!-- 了解评价 -->
                                             <template v-if="column.key === 'understand_evaluation'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.understand_evaluation"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />
+                                            </template>
+                                            <!-- 操作 -->
+                                            <template v-if="column.key === 'operations'">
+                                                <a-button v-if="index !== 0" type="link" @click="onDeleate('competitor_delete', record, index)">
+                                                    <i class="icon i_delete" />
+                                                    {{ $t("def.delete") }}
+                                                </a-button>
                                             </template>
                                         </template>
                                     </a-table>
+                                    <a-button
+                                        v-if="!edit"
+                                        class="m-t-16"
+                                        type="primary"
+                                        ghost
+                                        @click="onAddBtn('competitor')"
+                                    >
+                                        添加对手
+                                    </a-button>
                                 </div>
                             </div>
                         </div>
@@ -808,29 +899,73 @@
                                 <div class="value m-l-8" style="width: 70%">
                                     <a-table
                                         :columns="customerInfoColumns"
-                                        :data-source="msgDetail.customer_info || []"
+                                        :data-source="parameters.customer_info || []"
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">                                            
                                             <template v-if="column.key === 'customer_order'">
-                                                <div class="information-customer-name">
-                                                    {{ text || "-" }}
+                                                <div class="information-customer-name m-l-4">
+                                                    <span v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" class="information-customer-name-required">*</span>
+                                                    {{ $t('supply-chain.major_customer') }}{{ index + 1  }}
                                                 </div>
                                             </template>
                                             <template v-if="column.key === 'customer_name'">
-                                                {{ text || "-" }}                                                
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.customer_name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />                                             
                                             </template>
                                             <template v-if="column.key === 'sales_share'">
-                                                {{ text || "-" }}%
+                                                <a-input-number
+                                                        class="w-100"
+                                                        :class="{ 'customer-input-number': !isEdit }"
+                                                        v-model:value="record.sales_share"
+                                                        :placeholder="$t('common.please_enter')"
+                                                        :disabled="!isEdit"
+                                                        :min="0"
+                                                        :max="1000000000"
+                                                    >
+                                                        <template #addonAfter>
+                                                            <span class="unit">%</span>
+                                                        </template>
+                                                    </a-input-number>
                                             </template>
                                             <template v-if="column.key === 'main_supply_part'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.main_supply_part"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />  
                                             </template>
+                                            <!-- 开始合作时间 -->
                                             <template v-if="column.key === 'begin_cooperation_time'">
-                                                {{ text || "-"  }}
+                                                <a-date-picker 
+                                                    class="w-100" 
+                                                    valueFormat="YYYY-MM-DD"  
+                                                    @change="(event) => handleTimeSearch(event, 'begin_cooperation_time', record.begin_cooperation_time)"
+                                                />
+                                            </template>
+                                            <!-- 操作 -->
+                                            <template v-if="column.key === 'operations'">
+                                                <a-button v-if="index !== 0" type="link" @click="onDeleate('customer_information_delete', record, index)">
+                                                    <i class="icon i_delete" />
+                                                    {{ $t("def.delete") }}
+                                                </a-button>
                                             </template>
                                         </template>
                                     </a-table>
+                                    <a-button
+                                        v-if="!edit"
+                                        class="m-t-16"
+                                        type="primary"
+                                        ghost
+                                        @click="onAddBtn('customer_information')"
+                                    >
+                                        添加客户
+                                    </a-button>
                                 </div>
                             </div>
                         </div>
@@ -839,7 +974,7 @@
                 <!-- 服务信息 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.service_information') }}</div>
                     <div class="information-form">
@@ -885,7 +1020,7 @@
                 <!-- 技术信息 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                    v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.Technical_information') }}</div>
                     <div class="information-form">
@@ -893,7 +1028,7 @@
                             <!-- 研发中心 -->
                             <div 
                                 class="search-col m-t-0 w-50-percentage"
-                                v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                                v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                             >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.research_and_development_center') }}</div>
                                 <div class="value m-l-8">                                    
@@ -908,7 +1043,7 @@
                         </div>
                         <div class="level-search-row">
                             <!-- 相关专利 -->
-                            <div class="search-col" :class="{ 'm-t-0': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }">
+                            <div class="search-col" :class="{ 'm-t-0': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.related_patent') }}</div>
                                 <div class="value m-l-8">
                                     <a-input
@@ -922,7 +1057,7 @@
                         </div>
                         <div 
                             class="level-search-row"
-                            v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                            v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                         >
                             <!-- 研发合作机构 -->
                             <div class="search-col">
@@ -937,7 +1072,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                        <div class="level-search-row" v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 产品设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.product_design') }}</div>
@@ -969,7 +1104,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                        <div class="level-search-row" v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 过程设计 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_design') }}</div>
@@ -1001,7 +1136,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="level-search-row" v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                        <div class="level-search-row" v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 过程验证 -->
                             <div class="search-col">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.process_verification') }}</div>
@@ -1033,7 +1168,7 @@
                                 </div>
                             </div>
                         </div>
-                        <template v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
+                        <template v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])">
                             <!-- 设计规范 -->
                             <div class="level-search-row">
                                 <div class="search-col">
@@ -1167,7 +1302,7 @@
                 <!-- 质量信息 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
+                    v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.quality_information') }}</div>
                     <div class="information-form">
@@ -1268,7 +1403,7 @@
                 <!-- 指定信息 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.specify_information') }}</div>
                     <div class="information-form">
@@ -1331,7 +1466,7 @@
                 <!-- 产能产线 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.capacity_line') }}</div>
                     <div class="information-form">
@@ -1339,7 +1474,7 @@
                             <!-- 关键自有工序 -->
                             <div 
                                 class="search-col m-t-0 align-flex-start"
-                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
                             >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.key_owned_process') }}</div>
                                 <div class="value m-l-8">                                    
@@ -1356,7 +1491,7 @@
                             <!-- 智能自动化线 -->
                             <div 
                                 class="search-col align-flex-start"
-                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
                             >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.intelligent_automation_line') }}</div>
                                 <div class="value m-l-8">                                    
@@ -1373,7 +1508,7 @@
                             <!-- 生产产能负荷 -->
                             <div 
                                 class="search-col align-flex-start"
-                                :class="{ 'required': returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
                             >
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.production_capacity_load') }}</div>
                                 <div class="value m-l-8">
@@ -1391,7 +1526,7 @@
                 <!-- 外购管理 -->
                 <div 
                     class="information-container-form m-t-40"
-                    v-if="returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
+                    v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])"
                 >
                     <div class="sub-title">{{ $t('supply-chain.qutsourcing_management') }}</div>
                     <div class="information-form">
@@ -1457,7 +1592,7 @@
             <!-- 设备信息 -->
             <div 
                 class="equipment-information bg-color m-t-16"
-                v-if="!returnTypeBool(msgDetail.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
             >
                 <div class="title">{{ $t('supply-chain.device_information') }}</div>
                 <!-- 关键生产设备 -->
@@ -1470,27 +1605,68 @@
                                 <div class="value m-l-8">
                                     <a-table
                                         :columns="deviceProductionColumns"
-                                        :data-source="msgDetail.production_equipment || []"
+                                        :data-source="parameters.production_equipment || []"
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">                                            
                                             <template v-if="column.key === 'name'">
-                                                {{ text || "-" }}                                                
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />   
                                             </template>
                                             <template v-if="column.key === 'spec'">
-                                                {{ text || "-" }}                                                
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />  
                                             </template>
                                             <template v-if="column.key === 'quantity'">
-                                                {{ text || "-" }}%
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />  
                                             </template>
                                             <template v-if="column.key === 'manufacturer'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />  
                                             </template>
                                             <template v-if="column.key === 'purchase_period'">
-                                                {{ text || "-"  }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />  
+                                            </template>
+                                            <!-- 操作 -->
+                                            <template v-if="column.key === 'operations'">
+                                                <a-button v-if="index !== 0" type="link" @click="onDeleate('key_production_equipment', record, index)">
+                                                    <i class="icon i_delete" />
+                                                    {{ $t("def.delete") }}
+                                                </a-button>
                                             </template>
                                         </template>
                                     </a-table>
+                                    <a-button
+                                        v-if="!edit"
+                                        class="m-t-16"
+                                        type="primary"
+                                        ghost
+                                        @click="onAddBtn('key_production_equipment')"
+                                    >
+                                        添加生产设备
+                                    </a-button>
                                 </div>
                             </div>
                         </div>                        
@@ -1506,27 +1682,68 @@
                                 <div class="value m-l-8">
                                     <a-table
                                         :columns="deviceDetectionColumns"
-                                        :data-source="msgDetail.detection_equipment || []"
+                                        :data-source="parameters.detection_equipment || []"
                                         :pagination="false"
                                     >
                                         <template #bodyCell="{ column, text, record, index }">                                            
                                             <template v-if="column.key === 'name'">
-                                                {{ text || "-" }}                                                
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />                                               
                                             </template>
                                             <template v-if="column.key === 'spec'">
-                                                {{ text || "-" }}                                                
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')" 
+                                                    :disabled="!isEdit"
+                                                />                                               
                                             </template>
                                             <template v-if="column.key === 'quantity'">
-                                                {{ text || "-" }}%
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')"
+                                                    :disabled="!isEdit"
+                                                /> 
                                             </template>
                                             <template v-if="column.key === 'manufacturer'">
-                                                {{ text || "-" }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')"
+                                                    :disabled="!isEdit"
+                                                /> 
                                             </template>
                                             <template v-if="column.key === 'accuracy_level'">
-                                                {{ text || "-"  }}
+                                                <a-input
+                                                    :class="{ 'customer-input': !isEdit }"
+                                                    v-model:value="record.name"
+                                                    :placeholder="$t('common.please_enter')"
+                                                    :disabled="!isEdit"
+                                                /> 
+                                            </template>
+                                            <!-- 操作 -->
+                                            <template v-if="column.key === 'operations'">
+                                                <a-button v-if="index !== 0" type="link" @click="onDeleate('critical_detection_equipment', record, index)">
+                                                    <i class="icon i_delete" />
+                                                    {{ $t("def.delete") }}
+                                                </a-button>
                                             </template>
                                         </template>
                                     </a-table>
+                                    <a-button
+                                        v-if="!edit"
+                                        class="m-t-16"
+                                        type="primary"
+                                        ghost
+                                        @click="onAddBtn('critical_detection_equipment')"
+                                    >
+                                        添加检测设备
+                                    </a-button>
                                 </div>
                             </div>
                         </div>                        
@@ -1913,7 +2130,7 @@ const { proxy } = getCurrentInstance()
 const previewVisible = ref(false)
 const previewImage = ref("")
 
-// 关键设备
+// 关键生产设备
 const deviceProductionColumns = computed(() => {
     let columns = [
         { title: proxy.$t('supply-chain.Name_of_production_equipment'), dataIndex: "name", key: "name" },
@@ -1922,6 +2139,13 @@ const deviceProductionColumns = computed(() => {
         { title: proxy.$t('supply-chain.Equipment_manufacturer'), dataIndex: "manufacturer", key: "manufacturer" },
         { title: proxy.$t('supply-chain.Purchase_period'), dataIndex: "purchase_period", key: "purchase_period" },
     ];
+
+    if (isEdit) {
+        columns.push(
+            { title: proxy.$t('common.operations'),  key: "operations" },
+        )
+    }
+
     return columns;
 });
 // 关键检测设备
@@ -1933,6 +2157,13 @@ const deviceDetectionColumns = computed(() => {
         { title: proxy.$t('supply-chain.Equipment_manufacturer'), dataIndex: "manufacturer", key: "manufacturer" },
         { title: proxy.$t('supply-chain.precision_grade'), dataIndex: "accuracy_level", key: "accuracy_level" },
     ];
+
+    if (isEdit) {
+        columns.push(
+            { title: proxy.$t('common.operations'),  key: "operations" },
+        )
+    }
+
     return columns;
 });
 // 竞争对手信息
@@ -1942,7 +2173,14 @@ const competitionColumns = computed(() => {
         { title: proxy.$t('supply-chain.company_name'), dataIndex: "company_name", key: "company_name" },
         { title: proxy.$t('supply-chain.market_share'), dataIndex: "market_share", key: "market_share" },
         { title: proxy.$t('supply-chain.understanding_evaluation'), dataIndex: "understand_evaluation", key: "understand_evaluation" },
+        
     ];
+
+    if (isEdit) {
+        columns.push(
+            { title: proxy.$t('common.operations'),  key: "operations" },
+        )
+    }
     return columns;
 });
 // 客户信息
@@ -1952,12 +2190,20 @@ const customerInfoColumns = computed(() => {
         { title: proxy.$t('supply-chain.customer_name'), dataIndex: "customer_name", key: "customer_name" },
         { title: proxy.$t('supply-chain.Sales_share'), dataIndex: "sales_share", key: "sales_share" },
         { title: proxy.$t('supply-chain.Main_supply_part'), dataIndex: "main_supply_part", key: "main_supply_part" },
-        { title: proxy.$t('supply-chain.Start_time'), dataIndex: "begin_cooperation_time", key: "begin_cooperation_time" },
+        { title: proxy.$t('supply-chain.Start_time'), dataIndex: "begin_cooperation_time", key: "begin_cooperation_time" },       
     ];
+
+    if (isEdit) {
+        columns.push(
+            { title: proxy.$t('common.operations'),  key: "operations" },
+        )
+    }
+
     return columns;
 });
 
-const isEdit = ref(false)
+
+const isEdit = ref(true)
 const parameters = ref({
     type: "",
     // 公司概况
@@ -2009,6 +2255,23 @@ const parameters = ref({
 		proportion_of_business: "", // 业务比重
 		list: []
 	},
+    // 对手信息
+    competitor_analysis: [
+        // {
+        //     "company_name": "企业名称",
+        //     "market_share": "市场份额",
+        //     "understand_evaluation": "了解评价"
+        // }
+    ],
+    // 客户信息
+    customer_info: [
+        // {
+        //     "customer_name": "客户名称",
+        //     "sales_share": "销售占比",
+        //     "main_supply_part": "主供零件",
+        //     "begin_cooperation_time": "开始合作时间"
+        // }
+    ],
     // 相关专利
     technical_info: {
 		patent: "", // 相关专利
@@ -2075,9 +2338,30 @@ const parameters = ref({
 		eia_certificate: "", // 环评证书
 		environmental_report: "", // 环保报告
 	},
+    // 关键生产设备
+    production_equipment: [
+        // {
+        //     "name": "生产设备名称",
+        //     "spec": "规格型号",
+        //     "quantity": "数量",
+        //     "manufacturer": "设备制造商",
+        //     "purchase_period": "购置年限"
+	    // }
+    ],
+    // 关键检测设备
+	detection_equipment: [
+        // {
+        //     "name": "检测设备名称",
+        //     "Spec": "规格型号",
+        //     "quantity": "数量",
+        //     "manufacturer": "设备制造商",
+        //     "accuracy_level": "精度等级"
+        // }
+    ],
 
     additional_info: ""
 })  // 一堆信息判断参数
+
 onMounted(() => {
     getDetail({
         id: route.query.id,
@@ -2100,17 +2384,20 @@ function getDetail(params = {}) {
                 let keys = msgDetail.value[key]
                 // console.log("key",key,  msgDetail.value[key], msgDetail.value[key] instanceof String);
                 // console.log(typeof keys);
-                if (keys instanceof Object) {                    
-                    // 判断 是对象 
+                // console.log(key, keys instanceof Array);
+
+                if (keys instanceof Array) {
+                    // console.log("数组", parameters.value[key]);
+                    // 判断 数组
+                    parameters.value[key] = keys
+                } else if (keys instanceof Object) {
+                    // 判断 是对象 [数组其实也是对象 所以先判断数组在判断对象]
                     for (const item in parameters.value[key]) {
                         // 存在在添加
                         if (parameters.value[key].hasOwnProperty(item)) {
                             parameters.value[key][item] = keys[item] || ""
                         }
                     }
-
-                } else if (keys instanceof Array) {
-                    // 判断 数组                
 
                 } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
                     // | 字符串 | 数字 | 布尔
@@ -2158,8 +2445,8 @@ function getDetail(params = {}) {
 
 /* methods start*/
 // 判断哪些类型显示哪些模块
-const returnTypeBool = (type, typeIncludes) => {    
-    let result = typeIncludes.includes(Number(type))   
+const returnTypeBool = (type, typeIncludes) => {
+    let result = typeIncludes.includes(Number(type))
     return result
 }
 // 预览照片
@@ -2174,7 +2461,7 @@ const handleCancel = () => {
 }
 
 // 营业期限时间选择器
-const handleTimeSearch = (params, type) => {
+const handleTimeSearch = (params, type, recordItem) => {
     console.log("时间组件", params);
     switch (type) {
         case "business_term":
@@ -2189,6 +2476,12 @@ const handleTimeSearch = (params, type) => {
             // 代理有效期间
             parameters.value.agent_info.agent_effective_begin_time = params.begin_time
             parameters.value.agent_info.agent_effective_end_time = params.end_time
+            break;    
+        case "begin_cooperation_time":
+            // 开始合作时间
+            recordItem = dayjs(params).unix()
+            // console.log(dayjs(params).unix());
+            // console.log("recordItem",params, recordItem);
             break;    
         default:
             break;
@@ -2210,6 +2503,91 @@ const onSuction = (type) => {
             break;
     }
 }
+
+// 表格添加数据
+const onAddBtn = (type) => {
+    switch (type) {
+        case 'competitor':
+            // 添加对手
+            parameters.value.competitor_analysis.push(
+                {
+                    company_name: "",
+                    market_share: "",
+                    understand_evaluation: "",
+                }
+            )
+            console.log("添加对手", parameters.value.competitor_analysis);
+            break;
+        case 'customer_information':
+            // 添加客户
+            parameters.value.customer_info.push(
+                {
+                    customer_name: "",
+                    sales_share: "",
+                    main_supply_part: "",
+                    begin_cooperation_time: "",
+                }
+            )
+            break;
+        case 'key_production_equipment':
+            // 添加生产设备
+            parameters.value.production_equipment.push(
+                {
+                    name: "",
+                    spec: "",
+                    quantity: "",
+                    manufacturer: "",
+                    purchase_period: ""
+                }
+            )
+            break;
+        case 'critical_detection_equipment':
+            // 添加关键检测设备
+            parameters.value.detection_equipment.push(
+                {
+                    name: "",
+                    Spec: "",
+                    quantity: "",
+                    manufacturer: "",
+                    accuracy_level: "",
+                }
+            )
+            break;
+    
+        default:
+            break;
+    }
+}
+// 表格删除数据
+const onDeleate = (type, record, index) => {
+    console.log("type", type, "record", record, "index", index);
+    switch (type) {
+        case 'competitor_delete':
+            // 对手删除
+            parameters.value.competitor_analysis.splice(index, 1)
+            console.log("对手删除", parameters.value.competitor_analysis);
+            break;
+        case 'customer_information_delete':
+            // 客户删除
+            parameters.value.customer_info.splice(index, 1)
+            console.log("关键检测设备删除", parameters.value.competitor_analysis);
+            break;
+        case 'key_production_equipment':
+            // 生产设备删除
+            parameters.value.production_equipment.splice(index, 1)  
+            console.log("关键检测设备删除", parameters.value.competitor_analysis);
+            break;
+        case 'critical_detection_equipment':
+            // 关键检测设备删除
+            parameters.value.detection_equipment.splice(index, 1)   
+            console.log("关键检测设备删除", parameters.value.competitor_analysis);         
+            break;
+    
+        default:
+            break;
+    }
+}
+
 /* methods end*/
 </script>
 
@@ -2343,6 +2721,11 @@ const onSuction = (type) => {
                     .white-font {
                         color: #FFF;
                     }
+
+                    // &:hover {
+                    //     border: 1px solid #0061FF;
+                    //     color: #0061FF,
+                    // }
                 }
 
             }
@@ -2540,10 +2923,17 @@ const onSuction = (type) => {
 }
 
 .information-customer-name {
+    padding: 0 10px;
     height: 32px;
     line-height: 32px;
     background-color: #F2F3F5;
-    text-align: center
+    text-align: center;
+    display: inline-block;
+
+    .information-customer-name-required {    
+        color: #EB4141;                
+        vertical-align: middle;
+    }
 }
 .w-100 {
     width: 100%
