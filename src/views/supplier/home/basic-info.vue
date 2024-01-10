@@ -84,7 +84,8 @@
                                             :row-key="(record) => record.id"
                                             :pagination="false"
                                             class="specific-table-position"
-                                            :rowClassName="(record, index) => record.position === 4 ? 'no-require' : ''"
+                                            :rowClassName="
+                                                (record, index) => record.position === 4 ? 'no-require' : record.position !== 4 &&( !record.name || !record.email || !record.phone) ? 'require' : ''"
                                         >
                                             <template #bodyCell="{ column, record, index }">
                                                 <template
@@ -3078,6 +3079,31 @@ onMounted(() => {
                 &:focus,&:hover{
                     border: 1px solid #EAECF2 !important;
                     box-shadow: none !important;
+                }
+
+           }
+        }
+    }
+    .require{
+        .ant-table-cell{
+            #custom-validation_contact_info{
+                border: 1px solid #FF4D4F !important;
+                // 清除所有的失败的样式,border box-shadow
+                &:focus,&:hover{
+                    border: 1px solid #FF4D4F !important;
+                    box-shadow: none !important;
+                }
+            }
+        }
+    }
+    .ant-table-row{
+        .ant-table-cell{
+            input{
+                border: 1px solid #EAECF2 ;
+                // 清除所有的失败的样式,border box-shadow
+                &:focus,&:hover{
+                    border: 1px solid #EAECF2 ;
+                    box-shadow: none ;
                 }
 
            }
