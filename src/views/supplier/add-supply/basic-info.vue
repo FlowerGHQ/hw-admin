@@ -10,7 +10,7 @@
                     <a-col :span="22">
                         <div class="top-type-box">
                             <div
-                                class="type-parts"
+                                class="type-parts m-b-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
                                     'border-type':

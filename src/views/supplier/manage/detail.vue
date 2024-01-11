@@ -1,6 +1,6 @@
 <template>
     <div class="supply-detail">
-        <div class="back m-b-20 cursor" @click="onBack">
+        <div v-if="false" class="back m-b-20 cursor" @click="onBack">
             <MySvgIcon icon-class="supply-m-d-arrow-left" />
             <span>供应商资料查看/编辑</span>
         </div>
@@ -11,9 +11,9 @@
             </div>
             <!-- 供应类型 -->
             <div class="supply-type bg-color m-t-16">
-                <div class="title position-t-56 m-l-20">{{ $t('supply-chain.type_supply') }}</div>
-                <div class="information-container-form position-t-56">
-                    <div class="sub-title"></div>
+                <div class="title">{{ $t('supply-chain.type_supply') }}</div>
+                <div class="information-container-form" style="flex: 1">
+                    <div style="width: 10%"></div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -35,7 +35,7 @@
                                             <div 
                                                 v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE" 
                                                 :key="index"
-                                                class="edit-type-item cursor"
+                                                class="edit-type-item cursor m-t-16"
                                                 :class="{
                                                     'edit-type-item-select': Number(item.value) === Number(parameters.type),
                                                     'm-l-20': index !== 0
@@ -44,8 +44,7 @@
                                             >
                                                 
                                                 <MySvgIcon 
-                                                    :icon-class="`white-${item.icon}`" 
-                                                    class="white-font"
+                                                    :icon-class="`white-${item.icon}`"                                                     
                                                     :class="{
                                                         'white-font': Number(item.value) === Number(parameters.type),
                                                         'black-font': Number(item.value) !== Number(parameters.type),
@@ -2064,6 +2063,44 @@
                                 </div>
                             </div>
                         </div>
+                        <div 
+                            class="level-search-row"
+                            v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                        >
+                            <!-- 代理证书 -->
+                            <div class="search-col align-flex-start">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_certificate') }}</div>
+                                <div class="value m-l-8">                                   
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.proxy_certificate"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
+                                    </template>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="proxy_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.proxy_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2318,7 +2355,7 @@ const customerInfoColumns = computed(() => {
 const TimeBusinessTerm = ref(null) // 营业期限
 const TimeDurationOfAgency = ref(null) // 代理有效期间
 const isClose = ref(false) // MyMask 显影
-const isEdit = ref(true)
+const isEdit = ref(false)
 const parameters = ref({
     type: "",
     // 联系方式
@@ -2553,6 +2590,7 @@ function getDetail(params = {}) {
 
             let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo
             let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate
+            let proxyCertificate = msgDetail.value.confirmatory_material?.proxy_certificate
             let accountOpeningBankLicense = msgDetail.value.confirmatory_material?.account_opening_bank_license
             let eiaCertificate = msgDetail.value.confirmatory_material?.eia_certificate
             let environmentalReport = msgDetail.value.confirmatory_material?.environmental_report
@@ -2564,6 +2602,11 @@ function getDetail(params = {}) {
             // 质量体系证书
             if (qualitySystemCertificate) {
                 msgDetail.value.confirmatory_material.quality_system_certificate = qualitySystemCertificate.split(",")
+            }
+            // 代理证书
+            if (proxyCertificate) {
+                msgDetail.value.confirmatory_material.proxy_certificate = proxyCertificate.split(",")
+                // console.log("代理证书", msgDetail.value.confirmatory_material.proxy_certificate);
             }
             // 开户行许可证
             if (accountOpeningBankLicense) {
@@ -2927,8 +2970,10 @@ const onBack = () => {
     .base-message {
         // 供应类型
         .supply-type {
-            height: 112px;
+            min-height: 112px;
             position: relative;
+            display: flex;
+            align-items: center;
 
             .position-t-56 {
                 position: absolute;
@@ -2952,6 +2997,7 @@ const onBack = () => {
 
             .edit-type {
                 display: flex;
+                flex-wrap: wrap;
                 .edit-type-item {
                     padding: 0 10px;
                     min-width: 15%;
