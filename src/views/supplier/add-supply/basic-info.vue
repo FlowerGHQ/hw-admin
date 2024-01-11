@@ -1630,7 +1630,7 @@
                                                     .product_design
                                             "
                                             :options="
-                                               ProductionOption
+                                               TECHNICAL_INFORMATION
                                             " />
                                     </a-form-item>
                                 </a-col>
@@ -1648,8 +1648,7 @@
                                                     .process_design
                                             "
                                             :options="
-                                                Core.Const.SUPPLAY
-                                                    .PROCESS_DESIGN
+                                               PROCESS_DESIGN
                                             " />
                                     </a-form-item>
                                 </a-col>
@@ -1669,8 +1668,7 @@
                                                     .process_validation
                                             "
                                             :options="
-                                                Core.Const.SUPPLAY
-                                                    .PROCESS_VALIDATION
+                                                PROCESS_VALIDATION
                                             " />
                                     </a-form-item>
                                 </a-col>
@@ -2798,7 +2796,7 @@ const $i18n = useI18n();
 const $store = useStore();
 
 
-const ProductionOption =  computed(()=>{
+const TECHNICAL_INFORMATION =  computed(()=>{
     let  arr = []
     Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item)=>{
         arr.push({
@@ -2808,6 +2806,29 @@ const ProductionOption =  computed(()=>{
     })
     return arr
 })
+
+const PROCESS_DESIGN = computed(()=>{
+    let arr = []
+    Core.Const.SUPPLAY.PROCESS_DESIGN.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
+const PROCESS_VALIDATION = computed(()=>{
+    let arr = []
+    Core.Const.SUPPLAY.PROCESS_VALIDATION.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
 
 // 表格添加对象 - 客户名称
 const customer_info_list_obj = ref({
