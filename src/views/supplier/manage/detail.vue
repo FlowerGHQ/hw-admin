@@ -42,9 +42,23 @@
                                                 }"
                                                 @click="onSelectType(item.value)"
                                             >
-                                                <MySvgIcon v-if="Number(item.value) === Number(parameters.type)" :icon-class="`white-${item.icon}`" class="white-font"/>
-                                                <MySvgIcon v-else :icon-class="`black-${item.icon}`" class="black-font"/>
-                                                <span class="m-l-4">{{ $t(item.t) }}</span>
+                                                
+                                                <MySvgIcon 
+                                                    :icon-class="`white-${item.icon}`" 
+                                                    class="white-font"
+                                                    :class="{
+                                                        'white-font': Number(item.value) === Number(parameters.type),
+                                                        'black-font': Number(item.value) !== Number(parameters.type),
+                                                    }"
+                                                />
+                                                <span
+                                                    class="m-l-4"
+                                                    :class="{
+                                                        'black-font': Number(item.value) !== Number(parameters.type),
+                                                    }"
+                                                >
+                                                    {{ $t(item.t) }}
+                                                </span>
                                             </div>
                                         </div>
                                     </template>
@@ -2304,7 +2318,7 @@ const customerInfoColumns = computed(() => {
 const TimeBusinessTerm = ref(null) // 营业期限
 const TimeDurationOfAgency = ref(null) // 代理有效期间
 const isClose = ref(false) // MyMask 显影
-const isEdit = ref(false)
+const isEdit = ref(true)
 const parameters = ref({
     type: "",
     // 联系方式
@@ -2964,10 +2978,12 @@ const onBack = () => {
                         color: #FFF;
                     }
 
-                    // &:hover {
-                    //     border: 1px solid #0061FF;
-                    //     color: #0061FF,
-                    // }
+                    &:hover {
+                        border: 1px solid #0061FF;
+                        .black-font {
+                            color: #0061FF;
+                        }
+                    }
                 }
 
             }
