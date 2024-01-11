@@ -1027,7 +1027,7 @@
                                   <!-- 产品设计 -->
                                   <a-form-item 
                                       :label="$t('supply-chain.product_design')">
-                                      <a-checkbox-group v-model:value="formState.technical_info.product_design" :options="Core.Const.SUPPLAY.TECHNICAL_INFORMATION" />
+                                      <a-checkbox-group v-model:value="formState.technical_info.product_design" :options="TECHNICAL_INFORMATION" />
 
                                   </a-form-item>
                               </a-col>
@@ -1038,7 +1038,7 @@
                                   <!-- 过程设计 -->
                                   <a-form-item 
                                       :label="$t('supply-chain.process_design')">
-                                      <a-checkbox-group v-model:value="formState.technical_info.process_design" :options="Core.Const.SUPPLAY.PROCESS_DESIGN" />
+                                      <a-checkbox-group v-model:value="formState.technical_info.process_design" :options="SUPPLAY.PROCESS_DESIGN" />
 
                                   </a-form-item>
                               </a-col>
@@ -1049,7 +1049,7 @@
                                   <!-- 过程验证 -->
                                   <a-form-item 
                                       :label="$t('supply-chain.process_verification')">
-                                      <a-checkbox-group v-model:value="formState.technical_info.process_validation" :options="Core.Const.SUPPLAY.PROCESS_VALIDATION" />
+                                      <a-checkbox-group v-model:value="formState.technical_info.process_validation" :options="SUPPLAY.PROCESS_VALIDATION" />
 
                                   </a-form-item>
                               </a-col>
@@ -1680,6 +1680,44 @@ import { useStore } from "vuex";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
+
+const TECHNICAL_INFORMATION =  computed(()=>{
+    let  arr = []
+    Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
+const PROCESS_DESIGN = computed(()=>{
+    let arr = []
+    Core.Const.SUPPLAY.PROCESS_DESIGN.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
+const PROCESS_VALIDATION = computed(()=>{
+    let arr = []
+    Core.Const.SUPPLAY.PROCESS_VALIDATION.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
+
+
+
+
 // 表格添加对象 - 客户名称
 const customer_info_list_obj = ref({
     customer_order:'',
