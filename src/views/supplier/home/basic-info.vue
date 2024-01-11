@@ -1038,7 +1038,7 @@
                                   <!-- 过程设计 -->
                                   <a-form-item 
                                       :label="$t('supply-chain.process_design')">
-                                      <a-checkbox-group v-model:value="formState.technical_info.process_design" :options="SUPPLAY.PROCESS_DESIGN" />
+                                      <a-checkbox-group v-model:value="formState.technical_info.process_design" :options="PROCESS_DESIGN" />
 
                                   </a-form-item>
                               </a-col>
@@ -1049,7 +1049,7 @@
                                   <!-- 过程验证 -->
                                   <a-form-item 
                                       :label="$t('supply-chain.process_verification')">
-                                      <a-checkbox-group v-model:value="formState.technical_info.process_validation" :options="SUPPLAY.PROCESS_VALIDATION" />
+                                      <a-checkbox-group v-model:value="formState.technical_info.process_validation" :options="PROCESS_VALIDATION" />
 
                                   </a-form-item>
                               </a-col>
