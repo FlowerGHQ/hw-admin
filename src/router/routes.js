@@ -3,6 +3,7 @@ import Util from "../core/utils"
 import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
+import MallLayout from '../views/mall/layout/index.vue';
 
 // 供应商路由
 import { supplyManage, supplyRouters } from './supply-router'
@@ -20,13 +21,13 @@ switch (NOW_LOGIN_TYPE) {
         indexPath = '/distributor'
         break;
     case LOGIN_TYPE.DISTRIBUTOR:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
     case LOGIN_TYPE.AGENT:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
     case LOGIN_TYPE.STORE:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
     case LOGIN_TYPE.SUPPLIER:
         indexPath = '/supply-home'
@@ -60,12 +61,59 @@ const routes = [
     },
     { // 登录
         path: '/login',
-        component: () => import ('@/views/Login.vue'),
+        component: () => import ('@/views/mall/Login.vue'),
         meta: {
             hidden: true,
             title: '登录',
 	        title_en: 'Login',
         }
+    },
+    // { // 分销商登录
+    //     path: '/loginMall',
+    //     component: () => import ('@/views/mall/Login.vue'),
+    //     meta: {
+    //         hidden: true,
+    //         title: '登录',
+	//         title_en: 'Login',
+    //     }
+    // },
+    { // 看板
+        path: '/mall',
+        component: MallLayout,
+        name:'Mall',
+        meta: {
+            title: '商城',
+            title_en: 'Store',
+            icon: 'i_s_dashboard', 
+            roles: [LOGIN_TYPE.DISTRIBUTOR],  
+            hidden: true
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/mall/purchase/index.vue'),
+                meta: {
+                    title: '首页',
+                    title_en: 'Index',
+                }
+            },
+            {
+                path: 'search',
+                component: () => import('@/views/mall/purchase/search.vue'),
+                meta: {
+                    title: '搜索',
+                    title_en: 'Search',
+                }
+            },
+            // {
+            //     path: 'favorites',
+            //     component: () => import('@/views/mall/purchase/favorites.vue'),
+            //     meta: {
+            //         title: '收藏夹',
+            //         title_en: 'Favorites',
+            //     }
+            // },
+        ]
     },
     { // 看板
         path: '/dashboard',

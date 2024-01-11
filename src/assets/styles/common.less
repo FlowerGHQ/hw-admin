@@ -78,18 +78,18 @@
 
 // 水平的form
 .level-search-row {
-    display: flex;    
+    display: flex;
     .search-col {
         width: 100%;
         display: flex;
         align-items: center;
         font-size: 14px;
         font-weight: 400;
-        margin-top: 16px;  
+        margin-top: 16px;
 
         .key {
             color: #1d2129;
-            // white-space: nowrap;            
+            // white-space: nowrap;
         }
         .key-default-w {
             width: 80px; // 默认宽度
@@ -128,14 +128,14 @@
     position: relative;
 
     .form-block-box {
-        
+
     // 新增页 分块
     margin: 0 20px 20px;
     background: #F8FAFC;
     border-radius: 6px;
     overflow: hidden;
     padding-top: 58px;
-        
+
     .form-block {
         // 新增页 分块
         // margin: 0 20px 20px;
@@ -219,7 +219,7 @@
                 }
             }
             .item-column-title {
-                
+
                 min-width: 126px;
                 color: #8090A6;
                 text-align: right;
@@ -241,7 +241,7 @@
 
     // 子列表格样式
     .form-content-item-table {
-        
+
     }
 }
 
@@ -355,4 +355,26 @@
 }
 .m-b-40 {
     margin-bottom: 40px;
+}
+
+// tab栏hover效果
+.tab-animate {
+    position: relative;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: inline-block;
+        width: 0%;
+        height: 2px;
+        background: #FFF;
+        border-radius: 1px;
+        transition: width 0.3s;
+    }
+    &:hover::before {
+        width: 100%;
+    }
 }
