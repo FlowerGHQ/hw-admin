@@ -1,7 +1,7 @@
 <template>
     <div class="home" ref="suppluChain">
         <a-layout>
-            <a-layout-header v-if="!isOtherPageFlag">
+            <a-layout-header>
                 <div class="header-left">
                     <img
                         src="@images/header-logo2.png"
@@ -365,12 +365,6 @@ const countDown = () => {
         }
     }, 1000);
 };
-// 从平台方的list中创建出来
-const isOtherPageFlag = computed(()=>{
-    return $route.query?.otherPage == 'true';
-})
-
-
 /* methods start*/
 // 上一步
 const handlePrev = () => {
@@ -383,12 +377,7 @@ const handleNext = () => {
         BasicInfoRef.value.step1Vaild().then(() => {
             // 下一步
             $store.dispatch("SUPPLY_CHAIN/nextStep");
-        }).catch((err)=>{
-            if(isOtherPageFlag){
-                $store.dispatch("SUPPLY_CHAIN/nextStep");
-            }
-        });
-    //  }
+        })
 };
 // 保存草稿
 const handleSave = () => {
@@ -406,11 +395,7 @@ const handleSubmit = () => {
     } else {
         MaterialListRef.value.step2Vaild().then(() => {
             handleSubmitData();
-        }).catch(err=>{
-            if(isOtherPageFlag){
-                handleSubmitData();
-            }
-        });
+        })
     }
 };
 // 提交申请
@@ -428,11 +413,7 @@ const handleSubmitOk = () => {
         );
         // 跳转到注册按钮
         handleSubmitData();
-    }).catch(()=>{
-        if(isOtherPageFlag){
-            handleSubmitData();
-        }
-     })
+    })
 };
 // 提交数据
 const handleSubmitData = () => {
@@ -462,7 +443,6 @@ const handleSubmitData = () => {
 };
 // 获取详情
 const getDetail = () => {
-    console.log("获取详情中---------------------------");
     return new Promise((resolve, reject) => {
         Core.Api.SUPPLY.adminDetail({})
             .then((res) => {
@@ -493,7 +473,6 @@ const getDetail = () => {
                             );
                         }
                         let data = DETAILS;
-                        console.log("data:", data);
                         // 存储到草稿数据
                         $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
                         // 如果已经提交了
@@ -590,11 +569,6 @@ watch(
     () => setp.value,
     (val) => {
         if (val == 0) {
-            
-            if (isOtherPageFlag) {
-                // 平台方 供应商管理 list进来的
-                return
-            }
             getDetail().then(() => {
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
             });
@@ -604,13 +578,6 @@ watch(
 
 const timer1 = ref(null);
 onMounted(() => {
-    console.log($route.query,'-------------------------------------');
-
-    if (isOtherPageFlag) {
-        // 平台方 供应商管理 list进来的
-        return
-    }
-    
     getDetail().then(() => {
         BasicInfoRef.value && BasicInfoRef.value.reviewData();
         // // 如果已经提交了
