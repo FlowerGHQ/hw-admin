@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="login-container">
-            <div class="form-title">{{ user_type_list.length > 0 ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
+            <div class="form-title">{{ user_type_list.length > 1 ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
             <div class="form-content">
                 <template v-if="user_type_list.length > 1">
                     <div class="user-list">
