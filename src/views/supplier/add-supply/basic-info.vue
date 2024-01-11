@@ -4169,6 +4169,7 @@ defineExpose({
 onMounted(() => {
     // 回显数据
     reviewData();
+    setRules();
 });
 </script>
 
