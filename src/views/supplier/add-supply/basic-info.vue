@@ -3915,9 +3915,6 @@ const step1Vaild = async () => {
             },
         };
     }
-    // 保存数据
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
     await $store.dispatch("SUPPLY_CHAIN/nextStep");
 };
 // 保存草稿
@@ -4132,12 +4129,6 @@ defineExpose({
     step1Vaild,
     saveDraft1,
     reviewData,
-});
-onMounted(() => {
-    // 回显数据
-    reviewData();
-    // 重置校验规则
-    setRules();
 });
 </script>
 

@@ -612,10 +612,6 @@ const step2Vaild = async () => {
         // 不为空对象
         data.form.confirmatory_material = formState;
     }
-
-    // 保存数据
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-    await $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
 };
 // 点击上一步的操作
 const handlePrev = () => {
@@ -669,10 +665,6 @@ defineExpose({
     handlePrev,
 });
 
-onMounted(() => {
-    // 回显数据
-    reviewData();
-});
 </script>
 
 <style lang="less" scoped>
