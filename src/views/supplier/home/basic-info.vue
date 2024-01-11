@@ -9,11 +9,29 @@
                       </div>
                   </a-col>
                   <a-col :span="22" >
-                        <div class="top-type-box" >
-                            <div class="type-parts" :class="{ 'click-type': item.value === formState.type, 'border-type':  item.value !== formState.type }" v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value">
-                                <MySvgIcon :icon-class="`white-${item.icon}`"  :class="{'white-font':item.value === formState.type,'black-font':item.value !== formState.type}" />
-                                <!-- <MySvgIcon :icon-class="`white-${item.icon}`" class="black-font" v-else  />  -->
-                                <span class="m-l-4 type-font" :class="{ 'color-w' : item.value === formState.type }">
+                        <div class="top-type-box">
+                            <div
+                                v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
+                                class="type-parts"
+                                :class="{
+                                    'click-type': item.value === formState.type,
+                                    'border-type':  item.value !== formState.type
+                                }"
+                            >
+                                <MySvgIcon
+                                    :icon-class="`white-${item.icon}`"
+                                    :class= "{
+                                        'white-font':item.value === formState.type,
+                                        'black-font':item.value !== formState.type
+                                    }"
+                                />
+                                <span 
+                                    class="m-l-4 type-font" 
+                                    :class="{ 
+                                        'color-w' : item.value === formState.type,
+                                        'black-font':item.value !== formState.type
+                                    }"
+                                >
                                     {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
                                 </span>
                             </div>
@@ -2976,32 +2994,37 @@ onMounted(() => {
         margin-right: 20px;
         padding: 0 54px;
         line-height: 58.25px;
+        font-weight: 600;
         cursor: pointer;
         .fcc();
         box-sizing: border-box;
+
         &:last-child {
             margin-right: 0;
         }
 
-      .type-font {
-          font-size: 16px;
-          margin-left: 4px;
-          color:  #666;
-          font-weight: 400;
-      }
-      &:hover {
-        background-image: url("../../../assets/images/supply-chain/parts-bg.png");
-        background-size: 100% 100%;
-        .type-font{
-            color: #fff !important;
+        .type-font {
+            font-size: 16px;
+            margin-left: 4px;
+            color:#666;
+            font-weight: 400;
         }
-        svg{
-            fill: #fff;
-            path{
-                fill: #fff;
+
+        .black-font {
+            font-size: 16px;
+            color: #666;
+        }
+        .white-font {
+            font-size: 16px;
+            color: #FFF;
+        }
+
+        &:hover { 
+            border: 1px solid #0061FF;
+            .black-font {
+                color: #0061FF;
             }
         }
-      }
     }
     .click-type {
         background-image: url("../../../assets/images/supply-chain/parts-bg.png");
@@ -3149,26 +3172,6 @@ onMounted(() => {
     border-radius: 4px;
     background: #FFF;
 }
-.black-font {
-    font-size: 16px;
-    color: #666;
-    svg{
-        fill: #666;
-        path{
-            fill: #666;
-        }
-    }
-}
-.white-font {
-    font-size: 16px;
-    color: #FFF;
-    svg{
-        fill: #FFF;
-        path{
-            fill: #FFF;
-        }
-    }
-}
 
 :deep(.ant-table) {
     border: 1px solid #EAECF2;
@@ -3188,6 +3191,5 @@ onMounted(() => {
     border-color: #EAECF1;
     background: #FFF;
     overflow: hidden;
-    
 }
 </style>
