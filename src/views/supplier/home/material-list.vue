@@ -569,6 +569,7 @@ const step2Vaild = () => {
 
                     // 保存数据
                     $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+                    $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
                     resolve(true);
                 }
             })
