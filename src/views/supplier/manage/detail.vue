@@ -207,13 +207,12 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">                                
                                         <div class="customer-input">
-                                            {{
-                                                msgDetail?.company_info?.established_time
-                                                    ? $Util.timeFilter(
-                                                          msgDetail?.company_info?.established_time, 3
-                                                      )
-                                                    : ""
-                                            }}
+                                            <span v-if="msgDetail?.company_info?.established_time">
+                                                {{ $Util.timeFilter(msgDetail?.company_info?.established_time, 3) }}
+                                            </span>
+                                            <span v-else class="custom-please-enter">
+                                                {{ $t('common.please_enter') }}
+                                            </span>  
                                         </div>
                                     </template>
                                     <template v-else>
@@ -259,11 +258,12 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">
                                         <div class="customer-input">
-                                            {{
-                                                Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t
-                                                    ? $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t)
-                                                    : "-"
-                                            }}
+                                            <span v-if="Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t">                                            
+                                                {{ $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t) }}
+                                            </span>
+                                            <span v-else class="custom-please-enter">
+                                                {{ $t('common.please_enter') }}
+                                            </span>                                            
                                         </div>
                                     </template>
                                     <template v-else>
@@ -472,14 +472,14 @@
                                             {{
                                                 msgDetail?.agent_info?.agent_effective_begin_time
                                                     ? $Util.timeFilter(
-                                                        msgDetail?.agent_info?.agent_effective_begin_time
+                                                        msgDetail?.agent_info?.agent_effective_begin_time,3
                                                     )
                                                     : ""
                                             }}
                                             -
                                             {{
                                                 msgDetail?.agent_info?.agent_effective_end_time
-                                                    ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time)
+                                                    ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time, 3)
                                                     : ""
                                             }}
                                         </div>
@@ -1031,6 +1031,7 @@
                                                     class="w-100"
                                                     v-model:value="record.begin_cooperation_time"
                                                     @change="(event) => handleTimeSearch(event, 'begin_cooperation_time')"
+                                                    :disabled="!isEdit"
                                                 />  
                                             </template>
                                             <!-- 操作 -->
@@ -1069,10 +1070,13 @@
                                 <div class="key w-130 t-a-r text-color">
                                     {{ $t('supply-chain.technical_service') }}
                                 </div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.technical_services || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.technical_services"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 质量服务 -->
@@ -1081,9 +1085,12 @@
                                     {{ $t('supply-chain.quality_service') }}
                                 </div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.quality_service || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.quality_service"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1094,9 +1101,12 @@
                                     {{ $t('supply-chain.supply_of_services') }}
                                 </div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.supply_services || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.supply_services"
+                                        :placeholder="$t('common.please_enter')"
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1171,7 +1181,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.product_design?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.product_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1199,7 +1209,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.process_design?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1227,7 +1237,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.process_validation?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_validation?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1876,7 +1886,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2046,7 +2056,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2128,7 +2138,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2163,7 +2173,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2198,7 +2208,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2563,7 +2573,7 @@ function getDetail(params = {}) {
                         // 开始合作时间
                         parameters.value[key].forEach((el) => {
                             // 标准格式
-                            el.begin_cooperation_time = dayjs.unix(el.begin_cooperation_time)
+                            el.begin_cooperation_time = el.begin_cooperation_time ? dayjs.unix(el.begin_cooperation_time) : null
                         })
                     }
 
@@ -2578,7 +2588,8 @@ function getDetail(params = {}) {
 
                     if (key === 'company_info') {
                         // 成立日期(过滤一下)
-                        parameters.value[key].established_time = dayjs.unix(parameters.value[key].established_time)
+                        // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
+                        parameters.value[key].established_time = parameters.value[key].established_time ? dayjs.unix(parameters.value[key].established_time) : null
                     }
 
                 } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
@@ -3278,5 +3289,13 @@ const onBack = () => {
         display: flex;
         justify-content: center;
     }
+}
+
+.custom-please-enter {
+    color: #c7bfbf;
+    margin-left: 4px;
+}
+.custom-not_uploaded {
+    color: #c7bfbf;
 }
 </style>
