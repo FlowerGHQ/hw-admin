@@ -1630,8 +1630,7 @@
                                                     .product_design
                                             "
                                             :options="
-                                                Core.Const.SUPPLAY
-                                                    .TECHNICAL_INFORMATION
+                                               ProductionOption
                                             " />
                                     </a-form-item>
                                 </a-col>
@@ -2797,6 +2796,19 @@ import { useStore } from "vuex";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
+
+
+const ProductionOption =  computed(()=>{
+    let  arr = []
+    Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item)=>{
+        arr.push({
+            label:$t(item.t),
+            value:item.value
+        })
+    })
+    return arr
+})
+
 // 表格添加对象 - 客户名称
 const customer_info_list_obj = ref({
     customer_order: "",

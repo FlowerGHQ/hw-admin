@@ -43,10 +43,10 @@ const SUPPLAY = {
     // 技术信息
     TECHNICAL_INFORMATION: [
 
-        { value: 1, label: '独立设计' }, // 独立设计
-        { value: 2, label: '共同设计' }, // 共同设计
-        { value: 3, label: '转化设计' }, //转化设计
-        { value: 4, label: '委外设计' }, //委外设计
+        { value: 1, label: '独立设计',t: 'supply-chain.stand_alone_design' }, // 独立设计
+        { value: 2, label: '共同设计', t: 'supply-chain.co_design' }, // 共同设计
+        { value: 3, label: '转化设计', t: 'supply-chain.translational_design' }, //转化设计
+        { value: 4, label: '委外设计', t: 'supply-chain.outsourced_design' }, //委外设计
     ],
     TECHNICAL_INFORMATION_OBJECT: {
         1: { value: 1, t: 'supply-chain.stand_alone_design', label: "supply-chain.stand_alone_design" }, // 独立设计
