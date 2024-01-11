@@ -285,7 +285,9 @@ const handleSubmitData = () => {
         .then((res) => {
             visible.value = false;
             // 下一步
-            $store.dispatch("SUPPLY_CHAIN/nextStep");
+            $router.push('/supply-manage/list');
+            // 跳转页面
+            $store.dispatch("SUPPLY_CHAIN/setStep", 0);
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
@@ -318,14 +320,8 @@ watch(
     }
 );
 
-const timer1 = ref(null);
-onMounted(() => {
- 
-});
 // beforeDestroy
 onBeforeUnmount(() => {
-    clearTimeout(timer1.value);
-    timer1.value = null;
     clearTimeout(timer.value);
     timer.value = null;
 });

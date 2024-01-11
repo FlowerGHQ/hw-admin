@@ -21,14 +21,10 @@
 <script setup>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-const router = useRouter();
 const $store = useStore();
 
 // 跳转
 const onBtn = async () => {
-    router.push('/supply-manage/list');
-    // 跳转页面
     $store.dispatch("SUPPLY_CHAIN/setStep", 0);
 };
 </script>

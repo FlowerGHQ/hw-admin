@@ -473,6 +473,7 @@ const getDetail = () => {
                             );
                         }
                         let data = DETAILS;
+                        console.log("data:", data);
                         // 存储到草稿数据
                         $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
                         // 如果已经提交了
