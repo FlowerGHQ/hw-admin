@@ -31,7 +31,9 @@
             <div class="table-container">
                 <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                     :loading="loading"
-                    :row-key="record => record.id" :pagination='false'>
+                    :row-key="record => record.id" 
+                    :pagination='false'
+                >
                     <template #bodyCell="{ column, text , record}">
                         <template v-if="column.dataIndex === 'name' && $auth('sales-area.detail')">
                             <a-tooltip placement="top" :title='text'>
@@ -39,7 +41,7 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'country'">
-                            <a-tooltip placement="top" :title='text'>
+                            <a-tooltip placement="topLeft" :title='text'>
                                 <span class="hand">{{ text || '-' }}</span>
                             </a-tooltip>
                         </template>
@@ -104,7 +106,7 @@ export default {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en',key: 'name_en'},
-                // {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
+                // {title: this.$t('n.continent'), dataIndex: 'continent',key: ''}, // 大洲
                 {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
@@ -135,7 +137,7 @@ export default {
                         path: "/distributor/sales-area-edit",
                         query: {id: item.id}
                     })
-                    window.open(routeUrl.href, '_self')
+                    window.open(routeUrl.href, '_blank')
                     break;
             }
         },
