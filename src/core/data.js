@@ -238,6 +238,27 @@ class StorageHandler {
     getSubmitEd() {
         return this.getItem(Const.DATA.SUPPLY_SUBMITED) || false;
     }
+    // 保存用户类型列表
+    setUserTypeList(value) {
+        return this.setItem(Const.DATA.USER_TYPE_LIST, value);
+    }
+    getUserTypeList() {
+        return this.getItem(Const.DATA.USER_TYPE_LIST) || [];
+    }
+    clearUserTypeList() {
+        this.removeItem(Const.DATA.USER_TYPE_LIST);
+    }
+    // 保存登录传参信息
+    setLoginMes(value) {
+        return this.setItem(Const.DATA.LOGIN_MES, value);
+    }
+    getLoginMes() {
+        return this.getItem(Const.DATA.LOGIN_MES) || undefined;
+    }
+    clearLoginMes() {
+        console.log(123);
+        this.removeItem(Const.DATA.LOGIN_MES);
+    }
 }
 
 export default new StorageHandler();

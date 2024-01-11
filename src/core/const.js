@@ -85,6 +85,8 @@ let Const = {
         SUPPLY_STEP: 'supply-step',
         SUPPLY_ISREAD: 'supply-isread',
         SUPPLY_SUBMITED: 'supply-submited',
+        USER_TYPE_LIST: 'user-type-list',
+        LOGIN_MES: 'login-mes',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -211,6 +213,35 @@ let Const = {
             PRODUCTION: 3, // 生产
             CRM: 4,  // CRM
         },
+    },
+    LOGINMALL: { // 登录
+        TYPE_LIST: [
+            { value: 15, zh: '分销商', en: 'Distributor' },
+            { value: 10, zh: '平台方', en: 'Admin' },
+        ],
+        HEADERMENU: [
+            { key: '1', nameLang: 'dashboard', path: '/dashboard/index' },
+            { key: '2', nameLang: 'distribution', path: '/distributor/distributor-detail-sp' },
+            { key: '3', nameLang: 'after_sales', path: '/aftersales' },
+            { key: '4', nameLang: 'maintenance', path: '/repair' },
+            { key: '5', nameLang: 'feedback', path: '/feedback' },
+            { key: '6', nameLang: 'accounts', path: '/wallet' },
+            { key: '7', nameLang: 'customers', path: '/eos-customer' },
+            { key: '8', nameLang: 'coc_certificate_management', path: '/coc/coc-certificate' },
+            { key: '9', nameLang: 'system_setting', path: '/crm-setting' },
+            { key: '10', nameLang: 'system_management', path: '/system' },
+        ],
+        HEADERACCESMENU: [],
+        FOOTERMENUONE: [
+            { lang: 'coc_download' },
+            // { lang: 'photo_video' },
+            { lang: 'news' },
+            { lang: 'local_deals' },
+        ],
+        FOOTERMENU: [
+            { lang: 'conditions' },
+            { lang: 'legal' },
+        ]
     },
     FLAG: {
         YES: 1,
@@ -2681,6 +2712,18 @@ let Const = {
             '1': { color: 'green', text: '已订阅' },
             '2': { color: 'grey', text: '已退订' },
         },
+    },
+    LANG_MAP: {
+        'en':  { key: 101, value: 'en', label: '欧洲' },
+        'us':  { key: 201, value: 'us', label: '美国' },
+        'de':  { key: 102, value: 'de', label: '德国' },
+    },
+    ORDER: {
+        // 区域-area对应订单金额单位
+        AreaUnit: {
+            "zh": { key: '1', name_index: 'name' },
+            "en": { key: '2', name_index: 'name_en' },
+        }
     }
 
 };

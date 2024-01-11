@@ -1,7 +1,7 @@
 <template>
     <div class="supply-detail">
         <div class="back m-b-20 cursor" @click="onBack">
-            <MySvgIcon icon-class="arrow-left" />
+            <MySvgIcon icon-class="supply-m-d-arrow-left" />
             <span>供应商资料查看/编辑</span>
         </div>
         <!-- 基本信息 -->
