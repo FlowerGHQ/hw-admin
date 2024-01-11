@@ -57,7 +57,7 @@ export default {
         back_top: 'Back Top',
         search: 'Search',
         searching: 'Searching',
-        check_more: '查看更多',
+        check_more: 'Check More',
         my_favorites: 'My Favorites',
         search_results: 'Search Results',
     }

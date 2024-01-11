@@ -2,16 +2,16 @@
     <div id="mall-footer">
         <div class="content" style="height: 97px;">
             <div class="menu-one menu">
-                <span class="menu-item tab-animate" v-for="(item, index) in menuListOne" :key="index">
+                <span class="menu-item tab-animate" v-for="(item, index) in menuListOne" :key="index" @click="routerChange(item.path)">
                     {{ $t(`mall.${item.lang}`) }}
                 </span>
             </div>
         </div>
         <div class="content">
             <div class="menu">
-                <span class="menu-item" v-for="(item, index) in menuList" :key="index">
+                <!-- <span class="menu-item" v-for="(item, index) in menuList" :key="index">
                     {{ $t(`mall.${item.lang}`) }}
-                </span>
+                </span> -->
             </div>
             <div class="about">
                 <!-- {{ $t('mall.about') }} -->
@@ -37,7 +37,21 @@ export default {
     watch: {},
     created() {},
     mounted() {},
-    methods: {}
+    methods: {
+        // 路由跳转
+        routerChange(routeUrl, item = {}, type = 1) {
+            switch (type) {
+                case 1:
+                    this.$router.push({
+                        path: routeUrl,
+                        query: item
+                    })
+                    break;
+                default:
+                    break;
+            }
+        },
+    }
 };
 </script>
     
@@ -73,7 +87,6 @@ export default {
         }
         .about {
             display: inline-block;
-            margin-right: 40px;
             color: rgba(255, 255, 255, 0.4);
             font-family: Urbanist;
             font-size: 12px;

@@ -12,9 +12,10 @@
                     <p class="title">{{ record[$Util.regionalUnitMoney().name_index] }}</p>
                     <p class="code">{{ record.code ? record.code : '-' }}</p>
                 </div>
-                <p class="favorites">
-                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" />
-                    <span class="favorites-text">Favorites</span>
+                <p class="favorites" @click="addFavorites(record)">
+                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-if="!record.in_favorite" />
+                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-else />
+                    <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                 </p>
             </div>
             <div class="mes-right">
@@ -51,17 +52,20 @@ const props = defineProps({
 
 const editCount = ref(1)
 const currency = ref('€')
+const paramPrice = ref(false)
 /* computed start */
 const lang = computed(() => {
     return store.state.lang
 })
 /* computed end */
-const emits = defineEmits(['update:activeKey','handlechange'])
+const emits = defineEmits(['handlechange'])
 onMounted(() => {
     if (Core.Data.getCurrency() === 'EUR'){
         currency.value =  "€"
+        paramPrice.value = false
     } else {
         currency.value =  "$"
+        paramPrice.value = true
     }
 })
 /* fetch start */
@@ -81,6 +85,34 @@ const addCar = (item) => {
 const getShopCartList = () => {
     Core.Api.ShopCart.list().then(res => {
         proxy.$store.commit('setShopCartNum', res.count)
+    })
+}
+// 添加收藏
+const addFavorites = async (item) => {
+    if (item.in_favorite) {
+        return proxy.$message.warning(proxy.$t("i.item_favorite"));
+        // return removeFavorites(item)
+    }
+    try {
+        if(paramPrice.value) {
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_eur })
+        }else {
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_usd })
+        }
+        proxy.$message.success(proxy.$t('pop_up.operate'))
+    } catch(err) {
+        console.log('handleMoveToFavorite err:', err)
+    } finally {
+        // 重新获取列表数据
+        emits('handlechange')
+    }
+}
+// 删除收藏
+const removeFavorites = (item) => {
+    Core.Api.Favorite.remove({ id: item.id }).then(() => {
+        proxy.$message.success(proxy.$t('pop_up.move'))
+        // 重新获取列表数据
+        emits('handlechange')
     })
 }
 /* fetch end */
@@ -128,7 +160,8 @@ const getShopCartList = () => {
             }
             .favorites {
                 .flex(initial, center, row);
-                padding-bottom: 31px;
+                margin-bottom: 31px;
+                cursor: pointer;
                 .favorites-icon {
                     height: 18px;
                     width: 18px;

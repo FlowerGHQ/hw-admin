@@ -53,10 +53,10 @@
                                         </a-modal>
                                     </a-menu-item>
                                     <a-menu-divider class="menu_divider" />
-                                    <a-menu-item @click="routerChange('/login')">
+                                    <a-menu-item @click="routerChange('/login')" v-if="user_type_list.length > 1">
                                         <a class="menu_text">{{ $t('mall.switch_identity') }}</a>
                                     </a-menu-item>
-                                    <a-menu-divider class="menu_divider" />
+                                    <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                     <a-menu-item @click="handleLogout">
                                         <a class="menu_text">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
@@ -139,7 +139,7 @@
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
                         <svg-icon icon-class="car-icon" class-name="car-icon" />
                     </a-badge>
-                    <span>{{ $t('mall.bag') }}</span>
+                    <span class="bag-text">{{ $t('mall.bag') }}</span>
                 </div>
             </div>
         </div>
@@ -210,25 +210,34 @@ export default {
             menuList: Core.Const.LOGINMALL.HEADERMENU,
             accessoriesMenuList: Core.Const.LOGINMALL.HEADERACCESMENU,
             searchKey: '',
-            searchLoading: false
+            searchLoading: false,
+            user_type_list: []
         };
     },
     computed: {
         shopCartNum() {
             return this.$store.state.shopCartNum
+        },
+        mallSearchKey() {
+            
+            return this.$store.state.mallSearchKey
         }
     },
-    watch: {},
+    watch: {
+        mallSearchKey(newV) {
+            this.searchKey = newV
+        }
+    },
     created() {
         const lang = Core.Data.getLang()
         if (lang === "" || lang === null){
             Core.Data.setLang("zh")
         }
         this.handleLangSwitch(Core.Data.getLang())
+        this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
         this.getShopCartList()
-        this.searchKey = this.$store.state.mallSearchKey
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
@@ -485,7 +494,7 @@ export default {
             }
             &:hover {
                 border: 1px solid #C6F;
-                > span {
+                > .bag-text {
                     background: linear-gradient(100deg, #C6F 0%, #66F 100%);
                     background-clip: text;
                     -webkit-background-clip: text;

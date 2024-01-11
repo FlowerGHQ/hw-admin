@@ -33,6 +33,8 @@ export default {
         sented: '已发送',
         choose_identity: '请选择要登录的身份',
         switch_identity: '切换身份',
+        favorites: '收藏',
+        collected: '已收藏',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -66,6 +68,8 @@ export default {
         sented: 'Sented',
         choose_identity: 'Please Choose An Identity To Enter',
         switch_identity: 'Switch Identity',
+        favorites: 'Favorites',
+        collected: 'Collected',
     }
 }
 

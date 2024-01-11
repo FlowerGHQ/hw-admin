@@ -86,10 +86,10 @@
                                         </template>
                                     </a-modal>
                                 </a-menu-item>
-                                <a-menu-item @click="$router.push('/login')">
+                                <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
                                     <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity') }}</a-button>
                                 </a-menu-item>
-                                <a-menu-divider class="menu_divider" />
+                                <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
                                     <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                                 </a-menu-item>
@@ -187,6 +187,7 @@ export default {
                 org: '',
             },
             tabPosition: 1, // 顶部的 销售 售后 生产 CRM权限
+            user_type_list: []
         };
     },
     provide() {
@@ -291,9 +292,11 @@ export default {
         }
     },
     created() {
+        this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
         this.loginType = Core.Data.getLoginType()
+        console.log(this.loginType)
         this.getUnreadCount();
         if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
             Core.Data.setLang("zh")
@@ -301,7 +304,9 @@ export default {
         this.$i18n.locale = Core.Data.getLang()
         this.$store.state.lang = Core.Data.getLang()
         this.tabPosition = Core.Data.getTabPosition() || 1
-        this.handleRouterSwitch();
+        if (this.loginType === Core.Const.USER.TYPE.ADMIN) {
+            this.handleRouterSwitch();
+        }
 
         // 监听页面窗口
         window.onresize = this.handleWindowResize
