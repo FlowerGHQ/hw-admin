@@ -39,7 +39,9 @@
                             </a-tooltip>
                         </template>
                         <template v-if="column.key === 'country'">
-                            {{ text || '-' }}
+                            <a-tooltip placement="top" :title='text'>
+                                <span class="hand">{{ text || '-' }}</span>
+                            </a-tooltip>
                         </template>
                         <template v-if="column.key === 'name_en'">
                             {{ text || '-' }}
@@ -102,7 +104,7 @@ export default {
             let columns = [
                 {title: this.$t('n.name'), dataIndex: 'name'},
                 {title: this.$t('n.name_en'), dataIndex: 'name_en',key: 'name_en'},
-                {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
+                // {title: this.$t('n.continent'), dataIndex: 'continent',key: ''},
                 {title: this.$t('n.country'),dataIndex: 'country',key: 'country'},
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
@@ -200,4 +202,15 @@ export default {
 
 <style lang="less" scoped>
 // #SalesAreaList {}
+.hand {
+    cursor: pointer;
+    display: block;
+    width: 60em;
+    overflow: hidden;
+    /* 显示省略符号来代表被修剪的文本。 */
+    text-overflow: ellipsis;
+    /* 文本不换行 */
+    white-space: nowrap;
+    text-align: left;
+}
 </style>
