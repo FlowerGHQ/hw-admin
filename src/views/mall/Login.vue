@@ -37,7 +37,14 @@
         <div class="login-container">
             <div class="form-title">{{ user_type_list.length > 0 ? $t('mall.choose_identity') : $t('mall.account_login') }}</div>
             <div class="form-content">
-                <template v-if="user_type_list.length === 0">
+                <template v-if="user_type_list.length > 1">
+                    <div class="user-list">
+                        <div class="user-item" v-for="item in user_type_list" :key="item" @click="handleLogin(item)">
+                            {{ Core.Const.USER.TYPE_MAP[item][lang] }}
+                        </div>
+                    </div>
+                </template>
+                <template v-else>
                     <div class="login-type">
                         <div class="type-item" v-for="item of loginMethodsList" :key="item.id"
                             :class="login_methods === item.id ? 'active' : ''"
@@ -100,13 +107,6 @@
                         <my-button type="primary" showRightIcon>
                             {{ $t('mall.account_login') }}
                         </my-button>
-                    </div>
-                </template>
-                <template v-else>
-                    <div class="user-list">
-                        <div class="user-item" v-for="item in user_type_list" :key="item" @click="handleLogin(item)">
-                            {{ Core.Const.USER.TYPE_MAP[item][lang] }}
-                        </div>
                     </div>
                 </template>
             </div>
@@ -176,7 +176,7 @@ export default {
                 username: '',
                 password: '',
             },
-            login_methods: 1,
+            login_methods: 2,
             user: {},
             currentAreaType: '',
             langShow: false,

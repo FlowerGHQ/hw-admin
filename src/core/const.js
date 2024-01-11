@@ -233,10 +233,10 @@ let Const = {
         ],
         HEADERACCESMENU: [],
         FOOTERMENUONE: [
-            { lang: 'coc_download' },
+            { lang: 'coc_download', path: '/coc/coc-certificate' },
             // { lang: 'photo_video' },
-            { lang: 'news' },
-            { lang: 'local_deals' },
+            // { lang: 'news' },
+            // { lang: 'local_deals' },
         ],
         FOOTERMENU: [
             { lang: 'conditions' },
@@ -576,10 +576,10 @@ let Const = {
             COMPONENT: 2//零件
         },
         TYPE_MAP: {
-            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 },
-            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2 },
-            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3 },
-            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4 },
+            '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1, id: 1, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/purchase/item-list' },
+            '2': { key: 2, zh: '零部件', en: 'Parts', value: 2, id: 2, nameLang: 'products_name2', mesLang: 'products_mes2',img: 'products-img2', path: '/purchase/item-list' },
+            '3': { key: 3, zh: '周边', en: 'Peripheral', value: 3, id: 53, nameLang: 'products_name3', mesLang: 'products_mes3',img: 'products-img3', path: '/purchase/item-list' },
+            '4': { key: 4, zh: '广宣品', en: 'Publicity products', value: 4, id: 59, nameLang: 'products_name1', mesLang: 'products_mes1',img: 'products-img1', path: '/purchase/item-list' },
         },
         MONETARY_TYPE: {
             '￥': 'CNY',

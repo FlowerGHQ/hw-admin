@@ -16,7 +16,7 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList" :key="index" @click="routerChange(item.path, { tabId: item.tabId })">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path, { tabId: item.id })">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                             <div class="text">
-                                <p class="text-title" :title="item.title">{{ item.topic }}</p>
+                                <p class="text-title" :title="item.topic">{{ item.topic }}</p>
                                 <p class="mes" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
                                 <p class="mes" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
                             </div>
@@ -132,29 +132,7 @@ export default {
                 { img: 'banner' },
                 { img: 'banner' },
             ],
-            productsList: [
-                {
-                    nameLang: 'products_name1',
-                    mesLang: 'products_mes1',
-                    img: 'products-img1',
-                    path: '/purchase/item-list',
-                    tabId: 1
-                },
-                {
-                    nameLang: 'products_name2',
-                    mesLang: 'products_mes2',
-                    img: 'products-img2',
-                    path: '/purchase/item-list',
-                    tabId: 2
-                },
-                {
-                    nameLang: 'products_name3',
-                    mesLang: 'products_mes3',
-                    img: 'products-img3',
-                    path: '/purchase/item-list',
-                    tabId: 53
-                },
-            ],
+            productsList: Object.values(Core.Const.ITEM.TYPE_MAP),
             servicesList: [
                 {
                     nameLang: 'admin_backend',
