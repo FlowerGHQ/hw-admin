@@ -332,7 +332,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 .home {
     position: relative;
-    height: 100vh;
+    // height: 100vh;
     display: flex;
     flex-direction: column;
     :deep(.ant-layout) {
@@ -472,7 +472,7 @@ onBeforeUnmount(() => {
                 }
             }
             .content-main {
-                flex: 1;
+                flex: 1;                
                 margin-top: 15px;
                 overflow-y: scroll;
                 background-color: #ffffff;
