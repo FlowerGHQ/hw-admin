@@ -765,18 +765,16 @@ onMounted(() => {
 .col-area{
   display: flex;
   align-items: flex-start;
-  .content-area{
-    padding: 0;
-    flex: 1;
-    .col-area{
-      flex: 1;
-      margin-left: 88px;
-      display: flex;
-      align-items:center;
-      flex-wrap:wrap;
-      .col-area-item{
-
-      }
+  .title-area{
+    width: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 16px;
+    .title{
+      color: #1D2129;
+      font-size: 14px;
+      font-weight: 500;
     }
   }
 }

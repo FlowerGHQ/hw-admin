@@ -320,14 +320,8 @@ watch(
     }
 );
 
-const timer1 = ref(null);
-onMounted(() => {
- 
-});
 // beforeDestroy
 onBeforeUnmount(() => {
-    clearTimeout(timer1.value);
-    timer1.value = null;
     clearTimeout(timer.value);
     timer.value = null;
 });
