@@ -22,6 +22,12 @@ export default {
 		delete: '删除',
 		// 查看和编辑
 		view_and_edit: '查看和编辑',
+		// 生效状态
+		effective_status: '生效状态',
+		// 未生效
+		not_yet: '未生效',
+		// 已生效
+		already_in_effect: '已生效',
     },
     en: {
 		//序号
@@ -46,5 +52,11 @@ export default {
 		delete: 'Delete',
 		// 查看和编辑
 		view_and_edit: 'View and Edit',
+		// 生效状态
+		effective_status: 'Effective Status',
+		// 未生效
+		not_yet: 'Not Yet',
+		// 已生效
+		already_in_effect: 'Already in Effect',
     }
 }

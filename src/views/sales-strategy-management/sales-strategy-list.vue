@@ -14,9 +14,7 @@
             </div>
             <div class="operate-container">
                 <a-button type="primary" @click="addStrategy">
-                    <template #icon>
-                        <plus-outlined />
-                    </template>
+                
                     新增策略
                 </a-button>
             </div>
@@ -44,7 +42,7 @@
                             <!-- 超过5个字符 -->
                             <div
                                 class="strategy_name-cell"
-                                v-if="text.length > 5">
+                                v-if="text.length > 8">
                                 <a-tooltip placement="topLeft" :title="text">
                                     {{ text }}
                                 </a-tooltip>
@@ -55,32 +53,66 @@
                         </template>
                         <!-- 地区赠品 -->
                         <template v-if="column.dataIndex === 'area_and_gift'">
-                            <!-- 超过5个字符 -->
                             <div
-                                class="strategy_name-cell-wrap"
-                                v-if="text.length > 20">
-                                <a-tooltip placement="topLeft" :title="text">
-                                    {{ text }}
+                                class="area-gift-content"
+                                v-if="record.area_and_gift.length >= 3">
+                                <a-tooltip 
+                                    placement="topLeft" 
+                                    :getPopupContainer="trigger => trigger.parentNode"
+                                >
+                                   <template #title>
+                                        <div>
+                                            <div v-for="(item, index) in record.area_and_gift" :key="index">
+                                                <span class="area">{{ item.area }}</span>
+                                                <span class="gift">{{ item.gift }}</span>
+                                            </div>
+                                        </div>
+                                   </template>
+                                    <div
+                                        class="area-gift-content-item"
+                                        v-for="(item, index) in getAreaAndGift(record.area_and_gift)"
+                                        :key="item">
+                                        <span class="area">{{ item.area }}</span>
+                                        <span class="gift">{{ item.gift }}</span>
+                                    </div>
                                 </a-tooltip>
                             </div>
-                            <div class="strategy_name-cell-common" v-else>
-                                {{ text }}
+                            <div class="area-gift-content-common" v-else>
+                                <div
+                                    class="area-gift-content-common-item"
+                                    v-for="(item, index) in record.area_and_gift"
+                                    :key="index">
+                                    <span  class="area">{{ item.area }}</span>
+                                    <span class="gift">{{ item.gift }}</span>
+                                </div>
                             </div>
+                        </template>
+                        <!-- 生效状态 -->
+                        <template v-if="column.dataIndex === 'effective_status'">
+                             <!--switch  -->
+                            <a-switch
+                                :checked="text == 1"
+                                :loading="switchLoading"
+                                @change="onSwitchChange(record)"
+                            />
                         </template>
                         <!-- 操作 -->
                         <template v-if="column.dataIndex === 'operation'">
-                            <!-- 启用 -->
-                            <a-button type="link">{{
-                                $t("sales-strategy-management.enable")
-                            }}</a-button>
                             <!-- 删除 -->
-                            <a-button type="link">{{
-                                $t("sales-strategy-management.delete")
-                            }}</a-button>
-                            <!-- 查看编辑 -->
-                            <a-button type="link">{{
-                                $t("sales-strategy-management.view_and_edit")
-                            }}</a-button>
+                            <a-button type="link" >
+                                <i class="icon i_delete"/>
+                                {{ $t('def.delete') }}
+                            </a-button>
+                            <!-- 查看 -->
+                            <a-button type="link" >
+                                <i class="icon i_eyes"/>
+                                {{ $t('def.see') }}
+                            </a-button>
+                            <!-- 编辑 -->
+                            <a-button type="link" >
+                                <i class="icon i_edit"/>
+                                {{ $t('def.edit') }}
+                            </a-button>
                         </template>
                     </template>
                 </a-table>
@@ -110,31 +142,46 @@
 
 <script setup>
 import SearchAll from "@/components/common/SearchAll.vue";
-import { PlusOutlined } from "@ant-design/icons-vue";
 import Core from "../../core";
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
 // 使用useTable
 import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
 import {useRouter} from "vue-router";
+import _ from "lodash";
 const $router = useRouter();
 const $t = useI18n().t;
 const $i18n = useI18n();
+// hooks
 const request = () =>
     new Promise((resolve, reject) => {
         let arr = [];
         for (let i = 0; i < 10; i++) {
             arr.push({
                 id: 1,
-                serial_number: 1,
-                strategy_name:
-                    "测试1测试1测试1测试1测试1测试1测试1测试1测试1测试1测试1",
-                type: "整车",
-                gift_rule: "测试1",
-                area_and_gift:
-                    "【美国】说明书（45435435454）、充电线（werwerwer）、充电器（werwerwer）、充电头（werwerwer）",
-                creation_time: "2021-08-09 10:00:00",
-                effective_status: "有效",
+                strategy_name:"SK1系列说明书、充电线配置",
+                gift_rule: "【每满送】起送门槛10，每满10送1",
+                area_and_gift:[
+                    {
+                        area: "美国",
+                        gift: "说明书（45435435454）",
+                    },
+                    {
+                        area: "英国",
+                        gift: "说明书（45435435454）",
+                    },
+                    {
+                        area: "中国",
+                        gift: "说明书（45435435454）",
+                    },
+                    {
+                        area: "俄罗斯",
+                        gift: "说明书（45435435454）",
+                    },
+                   
+                ],
+                creation_time: "2023.11.12 15:00:00",
+                effective_status: i % 2 == 0 ? 1 : 0,
             });
         }
         setTimeout(() => {
@@ -144,7 +191,6 @@ const request = () =>
             });
         }, 1000);
     });
-
 const {
     loading,
     tableData,
@@ -156,42 +202,43 @@ const {
     searchParam,
 } = useTable({ request ,isPageAble:false});
 
+// data
 const tableColumns = computed(() => {
     let columns = [
         {
+            // 序号
             title: $t("sales-strategy-management.serial_number"),
             dataIndex: "serial_number",
             width: 80,
             fixed: "left",
-            align: "center",
         },
         {
+            // 策略名称
             title: $t("sales-strategy-management.strategy_name"),
             dataIndex: "strategy_name",
             key: "strategy_name",
         },
-        {
-            title: $t("sales-strategy-management.type"),
-            dataIndex: "type",
-            key: "type",
-        },
+        // 赠送规则
         {
             title: $t("sales-strategy-management.gift_rule"),
             dataIndex: "gift_rule",
             key: "gift_rule",
         },
+        // 地区与赠品
         {
             title: $t("sales-strategy-management.area_and_gift"),
             dataIndex: "area_and_gift",
             key: "area_and_gift",
         },
+        // 创建时间
         {
             title: $t("sales-strategy-management.creation_time"),
             dataIndex: "creation_time",
             key: "creation_time",
         },
+        // 生效状态
         {
-            title: $t("sales-strategy-management.area_and_gift"),
+            title: $t("sales-strategy-management.effective_status"),
             dataIndex: "effective_status",
             key: "effective_status",
         },
@@ -242,8 +289,29 @@ const searchList = ref([
         placeholder: "def.select",
     },
 ]);
+const switchLoading = ref(false);
+
+
+
+// methods
+
+// 截取前三个
+const getAreaAndGift = (data) => {
+    let arr = _.cloneDeep(data);
+    let returnArr = [];
+    if (arr.length >= 3) {
+        returnArr = arr.splice(0, 3);
+    }else{
+        returnArr = arr;
+    }
+    return returnArr;
+};
+
 const getSearchFrom = (data) => {
     console.log(data);
+};
+const onSwitchChange = (record) => {
+    console.log(record);
 };
 const addStrategy = () => {
     $router.push('/sales-strategy-management/sales-strategy-edit')
@@ -257,6 +325,8 @@ const addStrategy = () => {
     }
 }
 :deep(.ant-table-cell) {
+    color: #1D2129;
+
     .strategy_name-cell {
         width: 100px;
         // 超出隐藏
@@ -265,16 +335,60 @@ const addStrategy = () => {
         white-space: nowrap;
         cursor: pointer;
     }
-    .strategy_name-cell-wrap {
-        width: 150px;
+    .area-gift-content-common{
+        display: flex;
+        align-items: center;
+        .area-gift-content-common-item{
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            .area{
+                display: flex;
+                height: 24px;
+                padding: 2px 4px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 4px;
+                background: #F2F3F5;
+                margin-right: 8px;
+            }
+            &:last-child{
+                margin-right: 0;
+            }
+           
+        }    
+    }
+    .area-gift-content{
         cursor: pointer;
-        // 超过两行隐藏并显示省略号
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: normal;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        > span{
+            display: flex;
+            .area-gift-content-item{
+                margin-right: 8px;
+                vertical-align: middle;
+                .area{
+                    display: flex;
+                    height: 24px;
+                    padding: 2px 4px;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 4px;
+                    background: #F2F3F5;
+                    margin-right: 8px;
+                    float: left;
+                }
+                .gift{
+                    line-height: 24px;
+                }
+                &:last-child{
+                    margin-right: 0;
+                    width: 100px;
+                    // 超出隐藏
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
     }
 }
 </style>
