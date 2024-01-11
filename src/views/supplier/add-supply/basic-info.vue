@@ -10,41 +10,28 @@
                     <a-col :span="22">
                         <div class="top-type-box">
                             <div
-                                class="type-parts m-b-16"
+                                v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
+                                class="type-parts"
                                 :class="{
                                     'click-type': item.value === formState.type,
-                                    'border-type':
-                                        item.value !== formState.type,
+                                    'border-type':  item.value !== formState.type
                                 }"
-                                v-for="(item, index) in Core.Const.SUPPLAY
-                                    .SUPPLAY_TYPE"
-                                @click="formState.type = item.value">
+                            >
                                 <MySvgIcon
                                     :icon-class="`white-${item.icon}`"
-                                    :class="{
-                                        'white-font':
-                                            item.value === formState.type,
-                                        'black-font':
-                                            item.value !== formState.type,
-                                    }" />
-                                <!-- <MySvgIcon :icon-class="`white-${item.icon}`" class="black-font" v-else  />  -->
-                                <span
-                                    class="m-l-4 type-font"
-                                    :class="{
-                                        'color-w':
-                                            item.value === formState.type,
-                                    }">
-                                    {{
-                                        Core.Const.SUPPLAY.SUPPLAY_TYPE[
-                                            item.value
-                                        ]
-                                            ? $t(
-                                                  Core.Const.SUPPLAY
-                                                      .SUPPLAY_TYPE[item.value]
-                                                      .t
-                                              )
-                                            : "-"
-                                    }}
+                                    :class= "{
+                                        'white-font':item.value === formState.type,
+                                        'black-font':item.value !== formState.type
+                                    }"
+                                />
+                                <span 
+                                    class="m-l-4 type-font" 
+                                    :class="{ 
+                                        'color-w' : item.value === formState.type,
+                                        'black-font':item.value !== formState.type
+                                    }"
+                                >
+                                    {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
                                 </span>
                             </div>
                         </div>
@@ -4290,17 +4277,19 @@ onMounted(() => {
             color: #666;
             font-weight: 400;
         }
+        .black-font {
+            font-size: 16px;
+            color: #666;
+        }
+        .white-font {
+            font-size: 16px;
+            color: #FFF;
+        }
+
         &:hover {
-            background-image: url("../../../assets/images/supply-chain/parts-bg.png");
-            background-size: 100% 100%;
-            .type-font {
-                color: #fff !important;
-            }
-            svg {
-                fill: #fff;
-                path {
-                    fill: #fff;
-                }
+            border: 1px solid #0061FF;
+            .black-font {
+                color: #0061FF;
             }
         }
     }
