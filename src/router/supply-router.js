@@ -43,7 +43,7 @@ const supplyManage = {
         {
             path: 'add',
             name: 'SupplyAdd',
-            component: () => import('@/views/supplier/home/index.vue'),
+            component: () => import('@/views/supplier/add-supply/index.vue'),
             meta: {
                 title: '创建资料',
                 title_en: 'Create Data',
