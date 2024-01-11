@@ -3230,4 +3230,7 @@ onMounted(() => {
     background: #FFF;
     overflow: hidden;
 }
+:deep(#custom-validation_begin_cooperation_time){
+    border: none !important;
+}
 </style>
