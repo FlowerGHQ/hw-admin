@@ -89,7 +89,8 @@ import SearchAll from "@/components/common/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
-
+import { useStore } from "vuex";
+const $store = useStore();
 const router = useRouter()
 const $t = useI18n().t;
 
@@ -155,13 +156,12 @@ const onView = (record) => {
     window.open(routeUrl.href, '_blank')
 }
 const onBtn = () => {
-    console.log("点击查看了");
     router.push({
         path: '/supply-manage/add',
-        query: {
-            otherPage: true
-        }
     })
+    // 清空所有缓存
+    $store.dispatch("SUPPLY_CHAIN/clearAll");
+    
 }
 /* methods end*/
 </script>

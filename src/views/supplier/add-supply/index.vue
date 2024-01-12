@@ -1,135 +1,6 @@
 <template>
     <div class="home" ref="suppluChain">
         <a-layout>
-            <a-layout-header>
-                <div class="header-left">
-                    <img
-                        src="@images/header-logo2.png"
-                        class="logo"
-                        alt="浩万" />
-                </div>
-                <div class="header-right">
-                    <!-- 中英文的转换 -->
-                    <a-button
-                        class="lang-switch"
-                        type="link"
-                        @click="handleLangSwitch">
-                        <i
-                            class="icon"
-                            :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
-                    </a-button>
-                    <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px">{{
-                        USER_TYPE[loginType][$i18n.locale]
-                    }}</a-tag>
-                    <a-dropdown
-                        :trigger="['click']"
-                        overlay-class-name="account-action-menu">
-                        <a-button class="user-info" type="link">
-                            <a-avatar
-                                class="user-avatar PC"
-                                :src="$Util.imageFilter(user.avatar, 3)"
-                                :size="30">
-                                <template #icon
-                                    ><i class="icon i_user"
-                                /></template>
-                            </a-avatar>
-                            <span class="user-name">{{ user.name }}</span>
-                        </a-button>
-                        <template #overlay>
-                            <a-menu style="text-align: center">
-                                <a-menu-item @click="handleEditShow">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("n.password") }}</a-button
-                                    >
-                                    <a-modal
-                                        v-model:visible="passShow"
-                                        :title="$t('n.password')"
-                                        class="password-edit-modal"
-                                        :after-close="handleEditClose">
-                                        <div class="form-title">
-                                            <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.old") }}:
-                                                </div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        :placeholder="
-                                                            $t('def.input')
-                                                        "
-                                                        v-model:value="
-                                                            form.old_password
-                                                        " />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.new") }}:
-                                                </div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="
-                                                            form.password
-                                                        "
-                                                        :placeholder="
-                                                            $t('def.input')
-                                                        " />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.double") }}:
-                                                </div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="
-                                                            form.new_password
-                                                        "
-                                                        :placeholder="
-                                                            $t('n.double')
-                                                        " />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <template #footer>
-                                            <a-button
-                                                key="back"
-                                                @click="handleEditSubmit"
-                                                type="primary"
-                                                >{{ $t("def.sure") }}</a-button
-                                            >
-                                            <a-button
-                                                @click="passShow = false"
-                                                >{{
-                                                    $t("def.cancel")
-                                                }}</a-button
-                                            >
-                                        </template>
-                                    </a-modal>
-                                </a-menu-item>
-                                <a-menu-divider class="menu_divider" />
-                                <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("mall.switch_identity") }}</a-button
-                                    >
-                                </a-menu-item>
-                                <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
-                                <a-menu-item @click="handleLogout">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("n.exit") }}</a-button
-                                    >
-                                </a-menu-item>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
-                </div>
-            </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
                 <div class="setp-bar" v-if="setp !== 2">
@@ -263,22 +134,15 @@ import Successful from "./successful.vue";
 import HonestPage from './components/honest-page.vue';
 // 保密和不竞争
 import SecrecyNotCompete from './components/secrecy-not-compete.vue';
-
-const USER_TYPE = Core.Const.USER.TYPE_MAP;
-const loginType = Core.Data.getLoginType();
-const user = Core.Data.getUser() || {};
 const $i18n = useI18n();
 const $store = useStore();
 const $router = useRouter();
-const $route = useRoute();
 const $message = message;
 const $t = $i18n.t;
-const lang = computed(() => $store.state.lang);
 // ref
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
-const user_type_list = ref(Core.Data.getUserTypeList());
 //步数样式
 const setpCount = computed(() => {
     return $store.getters["SUPPLY_CHAIN/SETP"];
@@ -336,22 +200,12 @@ const setpObject = computed(() => {
 
     return result;
 });
-// 是否已经提交
-const isSubmited = computed(() => {
-    return $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-});
-
 // 廉洁承诺书
 const visible = ref(false);
 // 定时
 let countTime = ref(30);
 // 定时器
 let timer = ref(null);
-const form = ref({
-    old_password: "",
-    password: "",
-    new_password: "",
-});
 const passShow = ref(false);
 // 倒计时
 const countDown = () => {
@@ -375,11 +229,8 @@ const handlePrev = () => {
 };
 // 下一步
 const handleNext = () => {
-    BasicInfoRef.value &&
-        BasicInfoRef.value.step1Vaild().then(() => {
-            // 下一步
-            $store.dispatch("SUPPLY_CHAIN/nextStep");
-        })
+    BasicInfoRef.value &&  BasicInfoRef.value.step1Vaild()
+       
 };
 // 保存草稿
 const handleSave = () => {
@@ -395,9 +246,8 @@ const handleSubmit = () => {
         // 打开弹框
         visible.value = true;
     } else {
-        MaterialListRef.value.step2Vaild().then(() => {
-            handleSubmitData();
-        })
+        MaterialListRef.value.step2Vaild()
+        handleSubmitData();
     }
 };
 // 提交申请
@@ -434,71 +284,14 @@ const handleSubmitData = () => {
     Core.Api.SUPPLY.add(data)
         .then((res) => {
             visible.value = false;
-            // 获取详情数据
-            getDetail().then(() => {
-                $store.dispatch("SUPPLY_CHAIN/nextStep");
-            });
+            // 下一步
+            $router.push('/supply-manage/list');
+            // 跳转页面
+            $store.dispatch("SUPPLY_CHAIN/setStep", 0);
         })
         .catch((err) => {
             $message.error($t("supply-chain.supply_submit_failed"));
         });
-};
-// 获取详情
-const getDetail = () => {
-    return new Promise((resolve, reject) => {
-        Core.Api.SUPPLY.adminDetail({})
-            .then((res) => {
-                let DETAILS = {};
-                DETAILS = res?.detail ?? null;
-                if (DETAILS) {
-                    if (Object.keys(DETAILS).length > 0) {
-                        // 需要显示的是详情数据所以需要合并，用detail数据覆盖草稿数据
-                        if (DETAILS?.form) {
-                            let type = typeof DETAILS.form;
-                            if (type === "string") {
-                                DETAILS.form = JSON.parse(DETAILS.form);
-                            }
-                            if (type === "object") {
-                                DETAILS.form = DETAILS.form;
-                            }
-                        } else {
-                            DETAILS.form = {};
-                        }
-                        if (
-                            Object.keys(
-                                $store.state.SUPPLY_CHAIN.supplyDraftChain
-                            ).length > 0
-                        ) {
-                            DETAILS = Object.assign(
-                                DETAILS,
-                                $store.state.SUPPLY_CHAIN.supplyDraftChain
-                            );
-                        }
-                        let data = DETAILS;
-                        console.log("data:", data);
-                        // 存储到草稿数据
-                        $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
-                        // 如果已经提交了
-                        Object.keys(DETAILS.form).length > 0
-                            ? $store.commit("SUPPLY_CHAIN/setSubmitEd", true)
-                            : $store.commit("SUPPLY_CHAIN/setSubmitEd", false);
-                    } else {
-                        // 如果没有提交
-                        $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
-                    }
-                } else {
-                    // 如果没有提交
-                    $store.dispatch("SUPPLY_CHAIN/setSubmitEd", false);
-                    $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
-                }
-                resolve();
-            })
-            .catch((err) => {
-                $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", {});
-                reject();
-            });
-    });
 };
 // 打开弹框
 // 打开
@@ -512,47 +305,6 @@ const handleOpen = () => {
     }
     visible.value = true;
 };
-// 中英文切换
-const handleLangSwitch = () => {
-    $store.commit("switchLang");
-    $i18n.locale.value = $store.state.lang;
-};
-const handleEditShow = () => {
-    passShow.value = true;
-};
-const handleLogout = () => {
-    $router.replace("/login");
-    localStorage.clear();
-    $store.dispatch("SUPPLY_CHAIN/clearAll");
-    Core.Api.Common.logout();
-};
-const handleEditSubmit = () => {
-    let form = Core.Util.deepCopy(form);
-    if (!form.old_password) {
-        return $message.warning($t("u.old_password"));
-    }
-    if (!form.password) {
-        return $message.warning($t("u.new_password"));
-    }
-    if (!form.new_password) {
-        return $message.warning($t("u.again"));
-    }
-    if (form.new_password !== form.password) {
-        $message.warning($t("u.not"));
-        return;
-    }
-
-    loading = true;
-    Core.Api.Common.updatePwd(form)
-        .then(() => {
-            $message.success($t("pop_up.save_success"));
-            handleEditClose();
-        })
-        .catch((err) => {
-            console.log("handleSubmit err:", err);
-        });
-};
-
 // 监听 弹框打开，开始倒计时
 watch(
     () => visible.value,
@@ -567,32 +319,9 @@ watch(
         immediate: true,
     }
 );
-// 监听是否在第一页
-watch(
-    () => setp.value,
-    (val) => {
-        if (val == 0) {
-            getDetail().then(() => {
-                BasicInfoRef.value && BasicInfoRef.value.reviewData();
-            });
-        }
-    }
-);
 
-const timer1 = ref(null);
-onMounted(() => {
-    getDetail().then(() => {
-        BasicInfoRef.value && BasicInfoRef.value.reviewData();
-        // // 如果已经提交了
-        if (isSubmited.value) {
-            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
-        }
-    });
-});
 // beforeDestroy
 onBeforeUnmount(() => {
-    clearTimeout(timer1.value);
-    timer1.value = null;
     clearTimeout(timer.value);
     timer.value = null;
 });
@@ -603,7 +332,7 @@ onBeforeUnmount(() => {
 <style lang="less" scoped>
 .home {
     position: relative;
-    height: 100vh;
+    // height: 100vh;
     display: flex;
     flex-direction: column;
     :deep(.ant-layout) {
@@ -743,7 +472,7 @@ onBeforeUnmount(() => {
                 }
             }
             .content-main {
-                flex: 1;
+                flex: 1;                
                 margin-top: 15px;
                 overflow-y: scroll;
                 background-color: #ffffff;

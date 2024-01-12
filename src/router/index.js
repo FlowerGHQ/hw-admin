@@ -26,22 +26,10 @@ function inWhiteList(toPath) {
     const bool = whiteList.some(el => el == toPath) // 有一个正确就正确
     return bool
 }
-const paramsList = ['/supply-manage/add'];
-
-// 必须含参数的路由
-function hasParams(toPath,params) {
-    console.log(toPath,params)
-    const bool = paramsList.some(el => el == toPath) // 有一个正确就正确
-    const isHasParams = Object.keys(params).length > 0
-    console.log(bool,'在列表中',isHasParams,'有参数')
-    return bool && isHasParams  //在列表中 且有参数
-}
-
 router.beforeEach((to, from, next) => {	
     window.scrollTo(0, 0);// 跳转页面后 滚动条默认置顶
     const token = Core.Data.getToken();
     const loginType = Core.Data.getLoginType()
-
     NProgress.start();
     if (to.meta.title) {
 	    const lang = Core.Data.getLang();
@@ -52,25 +40,18 @@ router.beforeEach((to, from, next) => {
         NProgress.done();
         return
     }
-
     if (!token) {
         // 没登录
         message.info('请先登录');
         NProgress.done();
         next('/login');
     } else {
-
         // 已登录
         const roles = to.meta.roles;   
         if (roles) {
             // 如果进入的路由meta中有roles规则
             if (roles.includes(loginType)) {
-                // 如果当前usertType在roles arr中有
-                if(hasParams(to.path,to.query)){
-                    next();
-                }else if(paramsList.includes(to.path) && !hasParams(to.path,to.query) && from.path !='/'){//from.path !='/' 防止刷新造成的跳转
-                    next('/supply-manage/list');
-                }
+              
                 next();
             } else {
                 // 表前userType禁止访问

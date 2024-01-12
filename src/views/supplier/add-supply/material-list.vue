@@ -10,7 +10,7 @@
                     :rules="rules"
                     labelAlign="right">
                     <div class="col-area">
-                        <div  class="title-area">
+                        <div class="title-area">
                             <div class="title">
                                 {{ $t("supply-chain.business_license_photos") }}
                             </div>
@@ -66,20 +66,30 @@
                                             </a-input>
                                             <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span> -->
                                             <a-input-number
-                                                v-model:value="formState.registered_capital"
-                                                :placeholder="$t('supply-chain.please_enter')"
+                                                v-model:value="
+                                                    formState.registered_capital
+                                                "
+                                                :placeholder="
+                                                    $t(
+                                                        'supply-chain.please_enter'
+                                                    )
+                                                "
                                                 :maxlength="15"
-                                                min="0"
-                                                name="registered_capital"
-                                            >
+                                                name="registered_capital">
                                                 <template #addonAfter>
-                                                    <span> {{$t('supply-chain.ten_thousand_yuan')}} </span>
+                                                    <span>
+                                                        {{
+                                                            $t(
+                                                                "supply-chain.ten_thousand_yuan"
+                                                            )
+                                                        }}
+                                                    </span>
                                                 </template>
-                                      </a-input-number>
+                                            </a-input-number>
                                         </div>
                                     </a-form-item>
                                 </div>
-                                <!-- <div class="col-area-content"> -->
+                                <!-- <div class="col-area-item"> -->
                                 <!-- 法定代表人 -->
                                 <!-- <a-form-item
                       :label="
@@ -140,7 +150,7 @@
                         </div>
                     </div>
                     <div class="col-area">
-                        <div  class="title-area">
+                        <div class="title-area">
                             <div class="title">
                                 {{
                                     $t("supply-chain.bank_billing_information")
@@ -225,7 +235,7 @@
                         </div>
                     </div>
                     <div class="col-area">
-                        <div  class="title-area">
+                        <div class="title-area">
                             <div class="title">
                                 {{
                                     $t(
@@ -269,7 +279,7 @@
                             supplyType ==
                             Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value
                         ">
-                        <div  class="title-area">
+                        <div class="title-area">
                             <div class="title">
                                 {{ $t("supply-chain.proxy_certificate") }}
                             </div>
@@ -525,7 +535,7 @@ const draftDataReview = () => {
                     business_duration_type: 1,
                 },
             },
-        }
+        };
     } else {
         // 解析出来的数据
         let data = draftData;
@@ -548,48 +558,64 @@ const draftDataReview = () => {
     });
 };
 // 校验
-const step2Vaild = () => {
-    return new Promise((resolve, reject) => {
-        formRef1.value.clearValidate();
-        formRef1.value
-            .validate()
-            .then((res) => {
-                if (res) {
-                    let data = $store.state.SUPPLY_CHAIN.supplyChain;
-                    if (Object.keys(data).length === 0) {
-                        // 为空对象
-                        data = {
-                            form: {
-                                confirmatory_material: formState,
-                            },
-                        };
-                    } else {
-                        // 不为空对象
-                        data.form.confirmatory_material = formState;
-                    }
+const step2Vaild = async () => {
+    // return new Promise((resolve, reject) => {
+    //     formRef1.value.clearValidate();
+    //     formRef1.value
+    //         .validate()
+    //         .then((res) => {
+    //             if (res) {
+    //                 let data = $store.state.SUPPLY_CHAIN.supplyChain;
+    //                 if (Object.keys(data).length === 0) {
+    //                     // 为空对象
+    //                     data = {
+    //                         form: {
+    //                             confirmatory_material: formState,
+    //                         },
+    //                     };
+    //                 } else {
+    //                     // 不为空对象
+    //                     data.form.confirmatory_material = formState;
+    //                 }
 
-                    // 保存数据
-                    $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-                    $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
-                    resolve(true);
-                }
-            })
-            .catch((err) => {
-                // 校验失败
-                message.warning($t("supply-chain.please_complete_info"));
-                const errorName = err?.errorFields[0]?.name[0] ?? undefined;
-                console.log("errorName", err);
-                if (!errorName) return;
-                const errorDom = document.querySelector(`[name=${errorName}]`);
-                // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-                errorDom.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center",
-                    inline: "nearest",
-                });
-                reject(false);
-            });
-    });
+    //                 // 保存数据
+    //                 $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+    //                 $store.dispatch('SUPPLY_CHAIN/setSupplyDraftChain',data);
+    //                 resolve(true);
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             // 校验失败
+    //             message.warning($t("supply-chain.please_complete_info"));
+    //             const errorName = err?.errorFields[0]?.name[0] ?? undefined;
+    //             console.log("errorName", err);
+    //             if (!errorName) return;
+    //             const errorDom = document.querySelector(`[name=${errorName}]`);
+    //             // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
+    //             errorDom.scrollIntoView({
+    //                 behavior: "smooth",
+    //                 block: "center",
+    //                 inline: "nearest",
+    //             });
+    //             reject(false);
+    //         });
+    // });
+    let data = $store.state.SUPPLY_CHAIN.supplyChain;
+    if (Object.keys(data).length === 0) {
+        // 为空对象
+        data = {
+            form: {
+                confirmatory_material: formState,
+            },
+        };
+    } else {
+        // 不为空对象
+        data.form.confirmatory_material = formState;
+    }
+
+    // 保存数据
+    await $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
+    await $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
 };
 // 点击上一步的操作
 const handlePrev = () => {
@@ -607,20 +633,17 @@ const handlePrev = () => {
         data.form.confirmatory_material = formState;
     }
     $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
-    $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);
+    $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
 };
 // 保存草稿
 const saveDraft = () => {
     let data = {
         form: {
-            confirmatory_material: {}
-        }
-    }
+            confirmatory_material: {},
+        },
+    };
     data.form.confirmatory_material = formState;
-    // 保存数据
-    // Core.Data.setSupplyDraftChain(JSON.stringify(data));
     $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
-
     // 提示
     message.success($t("supply-chain.save_successfully"));
 };
@@ -643,7 +666,7 @@ watch(
 defineExpose({
     step2Vaild,
     saveDraft,
-    handlePrev
+    handlePrev,
 });
 
 onMounted(() => {
@@ -676,26 +699,26 @@ onMounted(() => {
     }
     .base-info {
         width: 100%;
-        .title{
-            color: #1D2129;
+        .title {
+            color: #1d2129;
             font-size: 18px;
             font-weight: 500;
         }
         .base-info-form {
-            width:60.5%;
+            width: 60.5%;
             margin: 0 auto;
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
-        .title{
-            color: #1D2129;
+        .title {
+            color: #1d2129;
             font-size: 18px;
             font-weight: 500;
         }
         .other-material-form {
-            width: calc(60.5%  - 96px - 88px - 96px - 80px) ;
+            width: calc(60.5% - 96px - 88px - 96px - 80px);
             margin: 0 auto;
         }
     }
@@ -728,8 +751,8 @@ onMounted(() => {
     flex: none;
 }
 :deep(.ant-input-number-group-addon) {
-    background-color: #F2F2F2;
-    color: #808FA6;
+    background-color: #f2f2f2;
+    color: #808fa6;
     text-align: center;
     font-size: 14px;
     font-weight: 400;
@@ -737,9 +760,8 @@ onMounted(() => {
 }
 :deep(.ant-input-number-group) {
     border-radius: 4px;
-    background: #FFF;
+    background: #fff;
     overflow: hidden;
-    
 }
 .business-term {
     display: flex;
@@ -753,44 +775,50 @@ onMounted(() => {
     display: flex;
     align-items: center;
     .unit {
-        color: #808FA6;
+        color: #808fa6;
         min-width: 36px;
         height: 30px;
-        background-color: #F2F2F2;
+        background-color: #f2f2f2;
         display: inline-flex;
         justify-content: center;
         align-items: center;
         border-left: none;
     }
 }
-.col-area{
-  display: flex;
-  align-items: flex-start;
-  flex: 1;
-  .content-area{
-    padding: 0;
-    flex: 1;
-    .col-area{
-      flex: 1 !important;
-      margin-left: 88px;
-      display: flex;
-      align-items:center;
-      flex-wrap:wrap;
-      .col-area-item{
-
-      }
-    }
-  }
-  .title-area{
-    min-width: 96px;
-  }
-}
-:deep(.business-term-col-area){
+.col-area {
+    display: flex;
     align-items: flex-start;
-    .col-all-area{
-        .ant-form-item{
-            .ant-form-item-label{
-                label{
+    .content-area {
+        padding: 0;
+        flex: 1;
+        .col-area {
+            flex: 1;
+            margin-left: 88px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+    }
+    
+    .title-area{
+        width: 96px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        margin-right: 16px;
+        .title{
+        color: #1D2129;
+        font-size: 14px;
+        font-weight: 500;
+        }
+    }
+}
+:deep(.business-term-col-area) {
+    align-items: flex-start;
+    .col-all-area {
+        .ant-form-item {
+            .ant-form-item-label {
+                label {
                     height: 30px !important;
                 }
             }

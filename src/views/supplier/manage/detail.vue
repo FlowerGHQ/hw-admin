@@ -1,6 +1,6 @@
 <template>
     <div class="supply-detail">
-        <div class="back m-b-20 cursor" @click="onBack">
+        <div v-if="false" class="back m-b-20 cursor" @click="onBack">
             <MySvgIcon icon-class="supply-m-d-arrow-left" />
             <span>供应商资料查看/编辑</span>
         </div>
@@ -11,9 +11,9 @@
             </div>
             <!-- 供应类型 -->
             <div class="supply-type bg-color m-t-16">
-                <div class="title position-t-56 m-l-20">{{ $t('supply-chain.type_supply') }}</div>
-                <div class="information-container-form position-t-56">
-                    <div class="sub-title"></div>
+                <div class="title">{{ $t('supply-chain.type_supply') }}</div>
+                <div class="information-container-form" style="flex: 1">
+                    <div style="width: 10%"></div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -35,16 +35,29 @@
                                             <div 
                                                 v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE" 
                                                 :key="index"
-                                                class="edit-type-item cursor"
+                                                class="edit-type-item cursor m-t-16"
                                                 :class="{
                                                     'edit-type-item-select': Number(item.value) === Number(parameters.type),
                                                     'm-l-20': index !== 0
                                                 }"
                                                 @click="onSelectType(item.value)"
                                             >
-                                                <MySvgIcon v-if="Number(item.value) === Number(parameters.type)" :icon-class="`white-${item.icon}`" class="white-font"/>
-                                                <MySvgIcon v-else :icon-class="`black-${item.icon}`" class="black-font"/>
-                                                <span class="m-l-4">{{ $t(item.t) }}</span>
+                                                
+                                                <MySvgIcon 
+                                                    :icon-class="`white-${item.icon}`"                                                     
+                                                    :class="{
+                                                        'white-font': Number(item.value) === Number(parameters.type),
+                                                        'black-font': Number(item.value) !== Number(parameters.type),
+                                                    }"
+                                                />
+                                                <span
+                                                    class="m-l-4"
+                                                    :class="{
+                                                        'black-font': Number(item.value) !== Number(parameters.type),
+                                                    }"
+                                                >
+                                                    {{ $t(item.t) }}
+                                                </span>
                                             </div>
                                         </div>
                                     </template>
@@ -194,13 +207,12 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">                                
                                         <div class="customer-input">
-                                            {{
-                                                msgDetail?.company_info?.established_time
-                                                    ? $Util.timeFilter(
-                                                          msgDetail?.company_info?.established_time, 3
-                                                      )
-                                                    : ""
-                                            }}
+                                            <span v-if="msgDetail?.company_info?.established_time">
+                                                {{ $Util.timeFilter(msgDetail?.company_info?.established_time, 3) }}
+                                            </span>
+                                            <span v-else class="custom-please-enter">
+                                                {{ $t('common.please_enter') }}
+                                            </span>  
                                         </div>
                                     </template>
                                     <template v-else>
@@ -246,11 +258,12 @@
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">
                                         <div class="customer-input">
-                                            {{
-                                                Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t
-                                                    ? $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t)
-                                                    : "-"
-                                            }}
+                                            <span v-if="Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t">                                            
+                                                {{ $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t) }}
+                                            </span>
+                                            <span v-else class="custom-please-enter">
+                                                {{ $t('common.please_enter') }}
+                                            </span>                                            
                                         </div>
                                     </template>
                                     <template v-else>
@@ -459,14 +472,14 @@
                                             {{
                                                 msgDetail?.agent_info?.agent_effective_begin_time
                                                     ? $Util.timeFilter(
-                                                        msgDetail?.agent_info?.agent_effective_begin_time
+                                                        msgDetail?.agent_info?.agent_effective_begin_time,3
                                                     )
                                                     : ""
                                             }}
                                             -
                                             {{
                                                 msgDetail?.agent_info?.agent_effective_end_time
-                                                    ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time)
+                                                    ? $Util.timeFilter(msgDetail?.agent_info?.agent_effective_end_time, 3)
                                                     : ""
                                             }}
                                         </div>
@@ -1018,6 +1031,7 @@
                                                     class="w-100"
                                                     v-model:value="record.begin_cooperation_time"
                                                     @change="(event) => handleTimeSearch(event, 'begin_cooperation_time')"
+                                                    :disabled="!isEdit"
                                                 />  
                                             </template>
                                             <!-- 操作 -->
@@ -1056,10 +1070,13 @@
                                 <div class="key w-130 t-a-r text-color">
                                     {{ $t('supply-chain.technical_service') }}
                                 </div>
-                                <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.technical_services || "-" }}
-                                    </div>
+                                <div class="value m-l-8">                                    
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.technical_services"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                             <!-- 质量服务 -->
@@ -1068,9 +1085,12 @@
                                     {{ $t('supply-chain.quality_service') }}
                                 </div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.quality_service || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.quality_service"
+                                        :placeholder="$t('common.please_enter')" 
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1081,9 +1101,12 @@
                                     {{ $t('supply-chain.supply_of_services') }}
                                 </div>
                                 <div class="value m-l-8">
-                                    <div class="customer-input">
-                                        {{ msgDetail.service_info?.supply_services || "-" }}
-                                    </div>
+                                    <a-input
+                                        :class="{ 'customer-input': !isEdit }"
+                                        v-model:value="parameters.service_info.supply_services"
+                                        :placeholder="$t('common.please_enter')"
+                                        :disabled="!isEdit"
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -1158,7 +1181,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.product_design?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.product_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1186,7 +1209,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.process_design?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1214,7 +1237,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn v-if="!msgDetail.technical_info?.process_validation?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_validation?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1863,7 +1886,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2033,7 +2056,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2042,6 +2065,44 @@
                                             name="quality_system_certificate"
                                             :tip="$t('supply-chain.please_upload')"
                                             v-model:value="parameters.confirmatory_material.quality_system_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <div 
+                            class="level-search-row"
+                            v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+                        >
+                            <!-- 代理证书 -->
+                            <div class="search-col align-flex-start">
+                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.proxy_certificate') }}</div>
+                                <div class="value m-l-8">                                   
+                                    <template v-if="!isEdit">
+                                        <template
+                                            v-for="(item, index) in msgDetail.confirmatory_material?.proxy_certificate"
+                                            :key="index"
+                                        >
+                                            <img
+                                                class="materials-img"
+                                                :class="{ 'm-l-16': index > 0 }"
+                                                :src="Core.Const.NET.FILE_URL_PREFIX + item"
+                                                @click="handlePreview(Core.Const.NET.FILE_URL_PREFIX + item)"
+                                                alt=""
+                                            />
+                                        </template>
+                                        <sapn v-if="!msgDetail.confirmatory_material?.proxy_certificate?.length">
+                                            {{ $t('supply-chain.not_uploaded') }}
+                                        </sapn>
+                                    </template>
+                                    <template v-else>
+                                        <MyUpload
+                                            name="proxy_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="parameters.confirmatory_material.proxy_certificate"
                                             showTip
                                             :limit="9"
                                             :limitSize="2"
@@ -2077,7 +2138,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2112,7 +2173,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2147,7 +2208,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
+                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2512,7 +2573,7 @@ function getDetail(params = {}) {
                         // 开始合作时间
                         parameters.value[key].forEach((el) => {
                             // 标准格式
-                            el.begin_cooperation_time = dayjs.unix(el.begin_cooperation_time)
+                            el.begin_cooperation_time = el.begin_cooperation_time ? dayjs.unix(el.begin_cooperation_time) : null
                         })
                     }
 
@@ -2527,7 +2588,8 @@ function getDetail(params = {}) {
 
                     if (key === 'company_info') {
                         // 成立日期(过滤一下)
-                        parameters.value[key].established_time = dayjs.unix(parameters.value[key].established_time)
+                        // console.log("parameters.value[key].established_time", parameters.value[key].established_time);
+                        parameters.value[key].established_time = parameters.value[key].established_time ? dayjs.unix(parameters.value[key].established_time) : null
                     }
 
                 } else if (typeof keys === "string" || typeof keys === "number" || typeof keys === "boolean") {
@@ -2539,6 +2601,7 @@ function getDetail(params = {}) {
 
             let businessLicensePhoto = msgDetail.value.confirmatory_material?.business_license_photo
             let qualitySystemCertificate = msgDetail.value.confirmatory_material?.quality_system_certificate
+            let proxyCertificate = msgDetail.value.confirmatory_material?.proxy_certificate
             let accountOpeningBankLicense = msgDetail.value.confirmatory_material?.account_opening_bank_license
             let eiaCertificate = msgDetail.value.confirmatory_material?.eia_certificate
             let environmentalReport = msgDetail.value.confirmatory_material?.environmental_report
@@ -2550,6 +2613,11 @@ function getDetail(params = {}) {
             // 质量体系证书
             if (qualitySystemCertificate) {
                 msgDetail.value.confirmatory_material.quality_system_certificate = qualitySystemCertificate.split(",")
+            }
+            // 代理证书
+            if (proxyCertificate) {
+                msgDetail.value.confirmatory_material.proxy_certificate = proxyCertificate.split(",")
+                // console.log("代理证书", msgDetail.value.confirmatory_material.proxy_certificate);
             }
             // 开户行许可证
             if (accountOpeningBankLicense) {
@@ -2913,8 +2981,10 @@ const onBack = () => {
     .base-message {
         // 供应类型
         .supply-type {
-            height: 112px;
+            min-height: 112px;
             position: relative;
+            display: flex;
+            align-items: center;
 
             .position-t-56 {
                 position: absolute;
@@ -2938,6 +3008,7 @@ const onBack = () => {
 
             .edit-type {
                 display: flex;
+                flex-wrap: wrap;
                 .edit-type-item {
                     padding: 0 10px;
                     min-width: 15%;
@@ -2964,10 +3035,12 @@ const onBack = () => {
                         color: #FFF;
                     }
 
-                    // &:hover {
-                    //     border: 1px solid #0061FF;
-                    //     color: #0061FF,
-                    // }
+                    &:hover {
+                        border: 1px solid #0061FF;
+                        .black-font {
+                            color: #0061FF;
+                        }
+                    }
                 }
 
             }
@@ -3216,5 +3289,13 @@ const onBack = () => {
         display: flex;
         justify-content: center;
     }
+}
+
+.custom-please-enter {
+    color: #c7bfbf;
+    margin-left: 4px;
+}
+.custom-not_uploaded {
+    color: #c7bfbf;
 }
 </style>
