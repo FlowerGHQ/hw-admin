@@ -96,7 +96,7 @@
                                             :key="item.key"
                                             @click="routerChange(item.redirect)"
                                         >
-                                            <a class="menu_text">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}{{ item.redirect }}</a>
+                                            <a class="menu_text">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</a>
                                             <a-menu-divider class="menu_divider" v-if="index < menuList.length - 1" />
                                         </a-menu-item>
                                     </template>
