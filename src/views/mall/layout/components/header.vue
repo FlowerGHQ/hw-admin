@@ -154,7 +154,7 @@
                     <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text">{{ $t('mall.spareparts') }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShowShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                         </div>
                         <!-- <template #overlay>
                             <a-menu style="text-align: center;">
