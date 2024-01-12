@@ -60,7 +60,7 @@
                                         style="width: 100%"
                                         :open="false"
                                         :placeholder="$t('def.select')"
-                                        @deselect="handleDeleteItem"
+                                        @deselect.stop="handleDeleteItem"
                                         @focus.stop="handleOpenModal">
                                         <template #clearIcon>
                                             1231231
