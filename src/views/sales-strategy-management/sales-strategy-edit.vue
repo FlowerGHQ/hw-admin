@@ -518,13 +518,18 @@ const getDetail = ()=>{
         Core.Data.setSalesData(JSON.stringify(arr));
     })
 }
+const handleCancel = ()=>{
+    $router.push({
+        path:'/sales-strategy-management/sales-strategy-list'
+    })
+}
 
 onMounted(() => {
-    // 存储到localStorage
-    // Core.Data.setSalesData(JSON.stringify(tableData.value));
     Core.Data.setSalesData(JSON.stringify([]));
-    if(type.value == 'edit'){
+    if(type.value == 'edit' || type.value == 'detail'){
         getDetail()
+    }else if(type.value == 'add'){
+        tableData.value = []
     }
 });
 </script>
