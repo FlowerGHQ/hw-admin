@@ -83,7 +83,7 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.news') }}</div>
                     <div class="news-list">
-                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index">
+                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index" @click="routerChange('/mall/detail', { id: item.id })">
                             <div class="img-body">
                                 <div class="img">
                                     <img class="news-img" :src="item.img">
@@ -96,7 +96,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="btn">
+                    <div class="btn" @click="routerChange('/mall/all-articles')">
                         <my-button showRightIcon>
                             {{ $t('purchase.check_more') }}
                         </my-button>

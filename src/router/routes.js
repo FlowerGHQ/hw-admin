@@ -113,6 +113,22 @@ const routes = [
             //         title_en: 'Favorites',
             //     }
             // },
+            {
+                path: 'all-articles',
+                component: () => import('@/views/mall/purchase/all-articles.vue'),
+                meta: {
+                    title: '文章列表',
+                    title_en: 'All Articles',
+                }
+            },
+            {
+                path: 'detail',
+                component: () => import('@/views/mall/purchase/detail.vue'),
+                meta: {
+                    title: '文章详情',
+                    title_en: 'Articles Detail',
+                }
+            },
         ]
     },
     { // 看板
