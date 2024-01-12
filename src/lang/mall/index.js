@@ -35,6 +35,9 @@ export default {
         switch_identity: '切换身份',
         favorites: '收藏',
         collected: '已收藏',
+        more_login: '更多登录方式',
+        user_name_login: '用户名/密码登录',
+        phone_login: '手机号码/验证码登录',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -70,6 +73,9 @@ export default {
         switch_identity: 'Switch Identity',
         favorites: 'Favorites',
         collected: 'Collected',
+        more_login: 'More Login Methods',
+        user_name_login: 'User Name / Password Log In',
+        phone_login: 'Phone Number / Verification Code Log In',
     }
 }
 

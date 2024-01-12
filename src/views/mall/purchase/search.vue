@@ -155,7 +155,7 @@ const getCarList = () => {
     searchForm.search_for = searchKey
     const params = searchForm
     // 如果有正在执行的搜索 则先添加搜索队列
-    if (spinning.value) return fetchList.push({
+    if (spinning.value) return fetchList.unshift({
         fn: searchListFetch,
         params: { ...params }
     });
@@ -164,9 +164,6 @@ const getCarList = () => {
         list.value = res?.merge_maps.list
         listNews.value = res?.post_list.list
         back2Top()
-        if (fetchList.length > 0) {
-            executeFetchList()
-        }
         // listNews.value = [
         //     {
         //         img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
@@ -178,20 +175,19 @@ const getCarList = () => {
         // ]
     }).finally(() => {
         spinning.value = false
+        if (fetchList.length > 0) {
+            executeFetchList()
+        }
     })
 }
 // 执行搜索接口队列
 const executeFetchList = () => {
-    let arr = []
     function fn(fetch, params) {
         return fetch(params)
     }
-    fetchList.forEach(item => {
-        arr.push(fn(item.fn, item.params))
-    })
-    Promise.all(arr).then((result) => {
-        // 赋值最后一个接口
-        const res = result[result.length - 1]
+    // 执行最新的一个接口
+    fn(fetchList[0].fn, fetchList[0].params).then((result) => {
+        const res = result
         list.value = res?.merge_maps.list
         listNews.value = res?.post_list.list
         // 清空 fetchList 队列

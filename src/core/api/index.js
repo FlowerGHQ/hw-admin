@@ -18,6 +18,7 @@ const apiList = {
         checkAccount: ['PostJson', 'system/login/check-account'], // 校验登录账号
         selectUser: ['PostJson', 'system/login/select-user'], // 选择用户登录
         switchUser: ['PostJson', 'system/switch-user'], // 切换用户
+        loginByTempUser: ['PostJson', 'system/login-by-temp-user'],// 临时用户登录-供应商
 
         emailCode: ['Post', 'common/email-verification-code-send'], // 发送邮箱验证码
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码

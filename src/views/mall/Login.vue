@@ -45,7 +45,7 @@
                     </div>
                 </template>
                 <template v-else>
-                    <div class="login-type">
+                    <!-- <div class="login-type">
                         <div class="type-item" v-for="item of loginMethodsList" :key="item.id"
                             :class="login_methods === item.id ? 'active' : ''"
                             @click="login_methods = item.id">
@@ -53,9 +53,9 @@
                             <svg-icon :icon-class="item.icon_black" :class-name="item.icon_black" />
                             {{ $t(`mall.${item.name_lang}`) }}
                         </div>
-                    </div>
+                    </div> -->
                     <!-- 手机号登录 -->
-                    <template v-if="login_methods === 1">
+                    <template v-if="login_methods === 2">
                         <!-- 手机号 -->
                         <FormModel 
                             key="phone" 
@@ -109,6 +109,18 @@
                         </my-button>
                     </div>
                 </template>
+                <div class="more-login">
+                    <span class="more-login-text">
+                        {{ $t('mall.more_login') }}
+                    </span>
+                </div>
+                <div class="select-login" @click="changeMethods">
+                    <svg-icon icon-class="phone-black-icon" class-name="phone-black-icon" v-if="login_methods === 1" />
+                    <svg-icon icon-class="phone-icon" class-name="phone-icon" v-if="login_methods === 1" />
+                    <svg-icon icon-class="user-black-icon" class-name="user-black-icon" v-if="login_methods === 2" />
+                    <svg-icon icon-class="user-icon" class-name="user-icon" v-if="login_methods === 2" />
+                    <span>{{ login_methods === 2 ? $t('mall.user_name_login') : $t('mall.phone_login') }}</span>
+                </div>
             </div>
         </div>
         <div class="login-footer">
@@ -176,7 +188,7 @@ export default {
                 username: '',
                 password: '',
             },
-            login_methods: 2,
+            login_methods: 1,
             user: {},
             currentAreaType: '',
             langShow: false,
@@ -255,39 +267,41 @@ export default {
         checkInput(form, type) {
             let allValid = true;
             if (type === 1) {
+                this.unUserNameValid = !form.username;
+                this.unPassWordValid = !form.password;
+                allValid = form.username && form.password
+            } else if (type === 2) {
                 this.unPhoneValid = !form.phone;
                 this.unValidCode = !form.code;
                 this.codeInputStatus = form.code ? 'entered' : 'err-enter';
                 allValid = form.phone && form.code
-            } else if (type === 2) {
-                this.unUserNameValid = !form.username;
-                this.unPassWordValid = !form.password;
-                allValid = form.username && form.password
             }
             return allValid;
         },
+        // 登录点击事件
         handleAccount() {
             let type = this.login_methods
+            let obj = {}
+            let form = {}
             if (type === 1) {
-                let form = Core.Util.deepCopy(this.loginPhoneForm)
+                form = Core.Util.deepCopy(this.loginForm)
                 if (!this.checkInput(form, type)) return;
-                let obj = {
-                    ...form,
-                    type: Core.Const.COMMON.LOGIN_TYPE.CODE,
-                    // platform: Core.Const.COMMON.PLATFORM.SUPPLY,
-                }
-                this.checkAccountFetch(obj, 1)
-            } else if (type === 2) {
-                let form = Core.Util.deepCopy(this.loginForm)
-                if (!this.checkInput(form, type)) return;
-                let obj = {
+                obj = {
                     ...form,
                     type: Core.Const.COMMON.LOGIN_TYPE.PWD,
-                    // platform: Core.Const.COMMON.PLATFORM.SUPPLY,
                 }
-                this.checkAccountFetch(obj, 2)
+            } else if (type === 2) {
+                form = Core.Util.deepCopy(this.loginPhoneForm)
+                if (!this.checkInput(form, type)) return;
+                obj = {
+                    ...form,
+                    type: Core.Const.COMMON.LOGIN_TYPE.CODE,
+                    temp_user_type: 10, //临时用户类型：10.供应商 
+                }
             }
+            this.checkAccountFetch(obj, type)
         },
+        // 类型选择事件
         async handleLogin(user_type) {
             let token = Core.Data.getToken();
             if (token) {
@@ -299,19 +313,34 @@ export default {
             }
         },
         // 校验登录账号接口
-        checkAccountFetch(params = {}) {
+        checkAccountFetch(params = {}, type) {
             let obj = {
                 ...params
             }
+            if (type === 2) { // 手机号临时用户-供应商
+                Core.Api.Common.loginByTempUser(obj).then(res => {
+                    console.log('handleLogins apiName res', res)
 
-            Core.Api.Common.checkAccount(obj).then(res => {
-                Core.Data.setLoginMes(obj);
-                Core.Data.setUserTypeList(res?.user_type_list);
-                this.user_type_list = res?.user_type_list
-                if (this.user_type_list.length === 1) {// 如果类型只有一种则跳过选择直接登录
-                    this.handleLogin(this.user_type_list[0])
-                }
-            })
+                    Core.Data.setToken(res.token);
+                    // Core.Data.setUser(res.user.account);
+
+                    Core.Data.setLoginType(TYPE.SUPPLIER);  // 设置登录方的数字
+                    let loginType = TYPE_MAP[TYPE.SUPPLIER]
+                    Core.Data.setUserType(loginType); // 设置登录方的文字
+
+                    // 手机登录跳转供应链页面
+                    this.$router.push('/supply-home')
+                })
+            } else if (type === 1) {// 其他用户
+                Core.Api.Common.checkAccount(obj).then(res => {
+                    Core.Data.setLoginMes(obj);
+                    Core.Data.setUserTypeList(res?.user_type_list);
+                    this.user_type_list = res?.user_type_list
+                    if (this.user_type_list.length === 1) {// 如果类型只有一种则跳过选择直接登录
+                        this.handleLogin(this.user_type_list[0])
+                    }
+                })
+            }
         },
         // 登录接口
         loginFetch(params = {}, type) {
@@ -470,6 +499,14 @@ export default {
         handleCodeFocus() {
             this.codeInputStatus = 'be-entering'
         },
+        // 切换登录方法
+        changeMethods() {
+            if (this.login_methods === 1) {
+                this.login_methods = 2
+            } else if (this.login_methods === 2) {
+                this.login_methods = 1
+            }
+        },
     }
 };
 </script>
@@ -578,7 +615,7 @@ export default {
     .login-container {
         padding: 48px 40px;
         width: 453px;
-        min-height: 465px;
+        min-height: 544px;
         background: @BG_panel;
         border: 1px solid @BC_login_box;
         overflow: hidden;
@@ -589,7 +626,7 @@ export default {
         .form-title {
             font-size: 24px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 44px;
             font-family: Montserrat;
             color: #333;
         }
@@ -615,7 +652,7 @@ export default {
                 line-height: 24px;
                 padding: 10px 0;
                 transition: color 0.3s ease;
-                .phone-icon, .phone-black-icon, .pwd-icon, .pwd-black-icon {
+                .phone-icon, .phone-icon-black, .pwd-icon, .pwd-black-icon {
                     width: 20px;
                     height: 20px;
                     margin-right: 4px;
@@ -623,7 +660,7 @@ export default {
                 .phone-icon, .pwd-icon {
                     display: none;
                 }
-                .phone-black-icon, .pwd-black-icon {
+                .phone-icon-black, .pwd-black-icon {
                     display: inline-block;
                 }
             }
@@ -740,6 +777,67 @@ export default {
                 }
                 &:last-child {
                     margin-bottom: 0;
+                }
+            }
+        }
+        .more-login {
+            .fcc();
+            margin: 40px 0 24px 0;
+            position: relative;
+            &::before {
+                content: "";
+                position: absolute;
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                display: inline-block;
+                height: 1px;
+                width: 100%;
+                background: #EEEEEE;
+                z-index: 0;
+            }
+            .more-login-text {
+                padding: 0 8px;
+                position: relative;
+                color: #999;
+                text-align: center;
+                font-family: Montserrat;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 22px; /* 183.333% */
+                z-index: 1;
+                background: #FFF;
+            }
+        }
+        .select-login {
+            .fcc();
+            height: 46px;
+            border: 1px solid #999;
+            cursor: pointer;
+            
+            .phone-icon, .phone-black-icon, .user-icon, .user-black-icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 4px;
+            }
+            .phone-icon, .user-icon {
+                display: none;
+            }
+            .phone-black-icon, .user-black-icon {
+                display: inline-block;
+            }
+            &:hover {
+                border: 1px solid #C6F;
+                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                .phone-icon, .user-icon {
+                    display: inline-block;
+                }
+                .phone-black-icon, .user-black-icon {
+                    display: none;
                 }
             }
         }
