@@ -953,6 +953,15 @@ const apiList = {
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
 
+    },
+    SALES_STRATEGY:{
+        list: ['PostJson', 'sales-strategy/list'],
+        add: ['PostJson', 'ssales-strategy/create'],
+        disable: ['PostJson', '/sales-strategy/disable'],
+        enable: ['PostJson', '/sales-strategy/enable'],
+        delete: ['PostJson', '/sales-strategy/delete'],
+        update: ['PostJson', '/sales-strategy/update'],
+        detail: ['PostJson', '/sales-strategy/detail'],
     }
 }; 
 

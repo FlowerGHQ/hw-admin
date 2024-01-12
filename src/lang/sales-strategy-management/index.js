@@ -28,6 +28,10 @@ export default {
 		not_yet: '未生效',
 		// 已生效
 		already_in_effect: '已生效',
+		// 适用地区
+		applicable_area: '适用地区',
+		// 赠品
+		gift: '赠品',
     },
     en: {
 		//序号
@@ -58,5 +62,10 @@ export default {
 		not_yet: 'Not Yet',
 		// 已生效
 		already_in_effect: 'Already in Effect',
+		// 适用地区
+		applicable_area: 'Applicable Area',
+		// 赠品
+		gift: 'Gift',
+		
     }
 }

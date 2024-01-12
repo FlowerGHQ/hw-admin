@@ -153,44 +153,7 @@ const $router = useRouter();
 const $t = useI18n().t;
 const $i18n = useI18n();
 // hooks
-const request = () =>
-    new Promise((resolve, reject) => {
-        let arr = [];
-        for (let i = 0; i < 10; i++) {
-            arr.push({
-                id: 1,
-                strategy_name:"SK1系列说明书、充电线配置",
-                gift_rule: "【每满送】起送门槛10，每满10送1",
-                area_and_gift:[
-                    {
-                        area: "美国",
-                        gift: "说明书（45435435454）",
-                    },
-                    {
-                        area: "英国",
-                        gift: "说明书（45435435454）",
-                    },
-                    {
-                        area: "中国",
-                        gift: "说明书（45435435454）",
-                    },
-                    {
-                        area: "俄罗斯",
-                        gift: "说明书（45435435454）",
-                    },
-                   
-                ],
-                creation_time: "2023.11.12 15:00:00",
-                effective_status: i % 2 == 0 ? 1 : 0,
-            });
-        }
-        setTimeout(() => {
-            resolve({
-                count: 10,
-                list: arr,
-            });
-        }, 1000);
-    });
+const request = Core.Api.SALES_STRATEGY.list;
 const {
     loading,
     tableData,
@@ -258,7 +221,7 @@ const searchList = ref([
         id: 0,
         type: "input",
         value: "",
-        searchParmas: "strategy_name",
+        searchParmas: "name",
         key: "sales-strategy.strategy_name",
     }, // 名称
     {
@@ -266,7 +229,7 @@ const searchList = ref([
         type: "select-search-multiple", // 类型
         key: "sales-strategy.area", // 名称
         value: undefined, // 绑定值
-        searchParmas: "area", // 返回的搜索名称
+        region: "area", // 返回的搜索名称
         multiple:true, // 是否多选
         selectMap: [
             {
