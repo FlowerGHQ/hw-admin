@@ -28,6 +28,9 @@ class ApiBase {
             case LOGIN_TYPE.STORE:
                 mark = 'store/1'
                 break;
+            case LOGIN_TYPE.SUPPLIER:
+                mark = 'supplier/1'
+                break;
         }
         return mark
     }

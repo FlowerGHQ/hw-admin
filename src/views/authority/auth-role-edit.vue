@@ -105,6 +105,7 @@ export default {
             this.getAuthRoleDetail();
         }
         this.getAuthOptions()
+        console.log("解决", this.authItems);
     },
     methods: {
         routerChange(type, item) {

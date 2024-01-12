@@ -15,6 +15,10 @@ const apiList = {
         logout: ['Post', 'system/logout'], // 账号登出
         updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改
 
+        checkAccount: ['PostJson', 'system/login/check-account'], // 校验登录账号
+        selectUser: ['PostJson', 'system/login/select-user'], // 选择用户登录
+        switchUser: ['PostJson', 'system/switch-user'], // 切换用户
+
         emailCode: ['Post', 'common/email-verification-code-send'], // 发送邮箱验证码
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码
         userInfo: ['Get', 'system/info'], // 获取当前登录账号的账户信息
@@ -952,6 +956,12 @@ const apiList = {
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+    },
+    // 供应商接口
+    SUPPLY: {
+        adminList: ['PostJson','supplier-application/list'],  // 平台方供应商管理list
+        adminDetail: ['PostJson','supplier-application/detail'],  // 平台方供应商管理详情
+        add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
 
     },
     SALES_STRATEGY:{
@@ -962,6 +972,9 @@ const apiList = {
         delete: ['PostJson', '/sales-strategy/delete'],
         update: ['PostJson', '/sales-strategy/update'],
         detail: ['PostJson', '/sales-strategy/detail'],
+    },
+    DISTRIBUTOR_HOME: {
+        searchList: ['PostJson', 'new/list'], // 分销商首页搜索
     }
 }; 
 

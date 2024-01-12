@@ -31,7 +31,7 @@
                 </div>
                 <div class="header-right">
                     <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
-                    <a-button class="lang-switch" type="link" @click="handleLangSwitch">
+                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
                     <a-divider type="vertical" />
@@ -86,6 +86,10 @@
                                         </template>
                                     </a-modal>
                                 </a-menu-item>
+                                <a-menu-item @click="$router.push('/login')">
+                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity') }}</a-button>
+                                </a-menu-item>
+                                <a-menu-divider class="menu_divider" />
                                 <a-menu-item @click="handleLogout">
                                     <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
                                 </a-menu-item>
@@ -107,7 +111,7 @@
                                 @click="handleLink(item.path)"
                             >
                                 <i class='icon' :class="item.meta.icon"/>
-                                <span :class="{ 'collapsed-title': collapsed }">{{ item.meta.title }}</span>
+                                <span :class="{ 'collapsed-title': collapsed }">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</span>
                             </a-menu-item>
                             <!-- 有二级导航栏的 -->
                             <a-sub-menu v-else-if="$auth(...item.auth)" :key="item.path">
@@ -390,9 +394,9 @@ export default {
         },
 
         // 中英文切换
-        handleLangSwitch() {
+        handleLangSwitch(lang) {
             console.log('handleLangSwitch')
-            this.$store.commit('switchLang')
+            this.$store.commit('switchLang', lang)
             this.$i18n.locale = this.$store.state.lang
             console.log('this.$i18n.locale', this.$i18n.locale)
         },
@@ -589,7 +593,7 @@ export default {
     }
 
     .layout-container {
-        height: calc(~'100% - 50px');
+        height: calc(~'100% - 64px');
     }
 
     .layout-sider {

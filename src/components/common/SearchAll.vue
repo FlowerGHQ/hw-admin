@@ -5,8 +5,15 @@
         使用例子
         * 代表必填字段
         options: [
+            { 
+                id: 1, // 输入框
+                type: "input", 
+                value: "", 
+                searchParmas: "name",  
+                key: 'supply-chain.company_name' 
+            },
             {
-                id: 2, // 随意
+                id: 2, // 下拉框
               * type: "select", // 类型
               * key: 'n.type', // 名称
               * value: undefined, // 绑定值
@@ -15,25 +22,27 @@
                     select中的数据(里面字段必须这样)
                     数组 
                     [{
-                        * zh: '整车', 
-                        * en: 'Vehicle', 
+                        * zh: '整车',
+                        * en: 'Vehicle',
                         * value: 1  // a-select-option 中的 :value="item.value"  // 固定的
                     }]
                     对象
                     {
-                    '1': { key: 1, zh: '整车', en: 'Vehicle', value: 1 }, 
+                        '1': { vlaue: 1, zh: '整车', en: 'Vehicle', key: 1 }, 
                     }            
               * placeholder: "def.select",
             }
         ]
-        isShowMore  // 是否需要-展开收起
-        isShowButton  // 是否需要-搜索重置按钮
-        @search  // 搜索事件  返回了数据
+        isShowMore  // 是否需要-展开收起(默认true)
+        isShowButton  // 是否需要-搜索重置按钮(默认true)
+        @search=fn(data)  // 搜索事件  返回了数据
         @reset  // 重置事件
 
 
-        <test 
+        <SearchAll 
             :options="options" 
+            :isShowMore="true"
+            :isShowButton="true"
             @search="getSearchFrom" 
             @reset="handleSearchReset"
         >
@@ -53,18 +62,11 @@
                     </div>
                 </a-col>
             </template>
-        </test>
 
-        父组件接收
-
-            //父组件中接收子组件传的data
-            getSearchFrom(data) {
-                for(let key in data){
-                    this.searchForm[key] = data[key];
-                }
-                this.getSearchFrom();
-            },
-
+            按钮扩展例子前后
+            <template #pre_btn></template>
+            <template #after_btn></template>
+        </SearchAll>
      -->
     <div class="search-all search-container-new">
 
