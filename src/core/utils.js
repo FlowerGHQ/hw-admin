@@ -1693,6 +1693,18 @@ const Util = {
         let val = Data.getLang() || 'eur';
         return { ...Const.ORDER.AreaUnit[val] };
     },
+    /**
+    //  点赞数过滤 1000以内  1000=1.0k 
+     * @param {String} time 时间戳
+     * @typeBoolean { Boolean } 七天以上按日期显示
+     * */ 
+    goodNumber( value, dp = 1) {
+        if(value<1000){
+            return value;
+        }else{
+            return parseFloat((value / 1000)).toFixed(dp)+'k'
+        }
+    },
     // 照片逻辑
     Image
 

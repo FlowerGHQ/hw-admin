@@ -967,6 +967,10 @@ const apiList = {
     },
     DISTRIBUTOR_HOME: {
         searchList: ['PostJson', 'new/list'], // 分销商首页搜索
+    },
+    // 官网端接口
+    CLIENT: {
+        communityList:['PostJson','community-post/list'], //动态列表
     }
 }; 
 
