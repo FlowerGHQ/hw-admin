@@ -105,14 +105,14 @@ const routes = [
                     title_en: 'Search',
                 }
             },
-            // {
-            //     path: 'favorites',
-            //     component: () => import('@/views/mall/purchase/favorites.vue'),
-            //     meta: {
-            //         title: '收藏夹',
-            //         title_en: 'Favorites',
-            //     }
-            // },
+            {
+                path: 'favorites',
+                component: () => import('@/views/mall/purchase/favorites.vue'),
+                meta: {
+                    title: '收藏夹',
+                    title_en: 'Favorites',
+                }
+            },
             {
                 path: 'all-articles',
                 component: () => import('@/views/mall/purchase/all-articles.vue'),
@@ -135,6 +135,7 @@ const routes = [
         path: '/dashboard',
         component: Layout,
         name:'Dashboard',
+        redirect: '/dashboard/index',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '商城',

@@ -65,7 +65,7 @@
                         </a-dropdown>
                     </span>
                     <!-- 收藏夹 -->
-                    <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
+                    <span class="header-menu tab-animate" @click="routerChange('/mall/favorites')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
@@ -90,10 +90,16 @@
                             </div>
                             <template #overlay>
                                 <a-menu style="text-align: center;">
-                                        <a-menu-item :key="item.key" v-for="(item, index) in menuList" @click="routerChange(item.path)">
-                                            <a class="menu_text">{{ $t(`router.${item.nameLang}`) }}</a>
+                                    <template v-for="(item, index) in showList">
+                                        <a-menu-item 
+                                            v-if="$auth(...item.auth)" 
+                                            :key="item.key"
+                                            @click="routerChange(item.redirect)"
+                                        >
+                                            <a class="menu_text">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</a>
                                             <a-menu-divider class="menu_divider" v-if="index < menuList.length - 1" />
                                         </a-menu-item>
+                                    </template>
                                 </a-menu>
                             </template>
                         </a-dropdown>
@@ -181,6 +187,7 @@
     
 <script>
 import Core from '@/core';
+import { SIDER } from '@/router/routes';
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import MyButton from '@/components/common/MyButton.vue';
 
@@ -215,12 +222,32 @@ export default {
         };
     },
     computed: {
+        showList() {            
+            let showList = SIDER.DISTRIBUTOR;
+            showList = showList.map(item => {
+                item.auth = item.meta ? (item.meta.auth || []) : [];
+                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? (i.meta.auth || []) : [];
+                        return i
+                    })
+                    if (!item.children.find(i =>item.redirect === `${item.path}/${i.path}`)) {
+                        item.redirect = `${item.path}/${item.children[0].path}`
+                    }
+                }
+                return item
+            })
+            return showList
+        },
         shopCartNum() {
             return this.$store.state.shopCartNum
         },
         mallSearchKey() {
-            
             return this.$store.state.mallSearchKey
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
     watch: {

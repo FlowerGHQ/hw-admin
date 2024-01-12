@@ -4,7 +4,7 @@
      -->
     <div id="products-card">
         <div class="img">
-            <img :src="$Util.imageFilter(record.logo, 2)" alt="">
+            <a-image :src="$Util.imageFilter(record.logo, 2)" />
         </div>
         <div class="mes">
             <div class="mes-left">
@@ -13,8 +13,8 @@
                     <p class="code">{{ record.code ? record.code : '-' }}</p>
                 </div>
                 <p class="favorites" @click="addFavorites(record)">
-                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-if="!record.in_favorite" />
-                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-else />
+                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-if="record.in_favorite || canRemoveFavorites" />
+                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
                     <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                 </p>
             </div>
@@ -45,9 +45,14 @@ const { proxy } = getCurrentInstance();
 
 const store = useStore();
 const props = defineProps({
-    record:{
-        type: Object,        
+    record: {
+        type: [Object, String],
     },
+    // 是否可以取消收藏
+    canRemoveFavorites: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const editCount = ref(1)
@@ -90,8 +95,11 @@ const getShopCartList = () => {
 // 添加收藏
 const addFavorites = async (item) => {
     if (item.in_favorite) {
-        return proxy.$message.warning(proxy.$t("i.item_favorite"));
-        // return removeFavorites(item)
+        if (props.canRemoveFavorites) {
+            return removeFavorites(item)
+        } else {
+            return proxy.$message.warning(proxy.$t("i.item_favorite"));
+        }
     }
     try {
         if(paramPrice.value) {
@@ -127,10 +135,14 @@ const removeFavorites = (item) => {
         width: 180px;
         height: 180px;
         border: 1px solid #D9D9D9;
-        > img {
+        :deep(.ant-image) {
             height: 100%;
             width: 100%;
-            object-fit: cover;
+            .ant-image-img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
         }
     }
     .mes {
