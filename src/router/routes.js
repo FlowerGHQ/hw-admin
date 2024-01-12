@@ -135,6 +135,7 @@ const routes = [
         path: '/dashboard',
         component: Layout,
         name:'Dashboard',
+        redirect: '/dashboard/index',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '商城',
