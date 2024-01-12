@@ -4,7 +4,7 @@
      -->
     <div id="products-card">
         <div class="img">
-            <img :src="$Util.imageFilter(record.logo, 2)" alt="">
+            <a-image :src="$Util.imageFilter(record.logo, 2)" />
         </div>
         <div class="mes">
             <div class="mes-left">
@@ -135,10 +135,14 @@ const removeFavorites = (item) => {
         width: 180px;
         height: 180px;
         border: 1px solid #D9D9D9;
-        > img {
+        :deep(.ant-image) {
             height: 100%;
             width: 100%;
-            object-fit: cover;
+            .ant-image-img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
         }
     }
     .mes {
