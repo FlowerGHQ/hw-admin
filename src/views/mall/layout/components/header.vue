@@ -65,7 +65,7 @@
                         </a-dropdown>
                     </span>
                     <!-- 收藏夹 -->
-                    <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
+                    <span class="header-menu tab-animate" @click="routerChange('/mall/favorites')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>

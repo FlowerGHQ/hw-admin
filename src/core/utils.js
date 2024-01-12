@@ -354,7 +354,7 @@ const Util = {
   },
   imageFilter(item, default_type = 1) {
     if (!item || typeof item !== "string") {
-      // console.warn("imageFilter 没有找到图像")
+      console.warn("imageFilter 没有找到图像")
       let map = Const.DEFULT_IMG
       return map[default_type] || ""
     }

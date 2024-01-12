@@ -13,8 +13,8 @@
                     <p class="code">{{ record.code ? record.code : '-' }}</p>
                 </div>
                 <p class="favorites" @click="addFavorites(record)">
-                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-if="!record.in_favorite" />
-                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-else />
+                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-if="record.in_favorite || canRemoveFavorites" />
+                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
                     <span class="favorites-text">{{ $t('mall.favorites') }}</span>
                 </p>
             </div>
@@ -45,9 +45,14 @@ const { proxy } = getCurrentInstance();
 
 const store = useStore();
 const props = defineProps({
-    record:{
-        type: Object,        
+    record: {
+        type: [Object, String],
     },
+    // 是否可以取消收藏
+    canRemoveFavorites: {
+        type: Boolean,
+        default: false
+    }
 })
 
 const editCount = ref(1)
@@ -90,8 +95,11 @@ const getShopCartList = () => {
 // 添加收藏
 const addFavorites = async (item) => {
     if (item.in_favorite) {
-        return proxy.$message.warning(proxy.$t("i.item_favorite"));
-        // return removeFavorites(item)
+        if (props.canRemoveFavorites) {
+            return removeFavorites(item)
+        } else {
+            return proxy.$message.warning(proxy.$t("i.item_favorite"));
+        }
     }
     try {
         if(paramPrice.value) {
