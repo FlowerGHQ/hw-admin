@@ -244,6 +244,9 @@ const handleOk = () => {
     });
     emits('hanldItemList',selectIdList.value)
     emits('hanldAdd',strategy_detail)
+    console.log('销售策略明细',strategy_detail)
+    console.log('销售策略商品Id',selectIdList.value)
+
     handleCancle();
 };
 // 搜索

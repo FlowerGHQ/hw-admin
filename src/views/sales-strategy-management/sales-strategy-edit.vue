@@ -474,7 +474,9 @@ const hanldItemList = (data) => {
 };
 const handleSubmit = ()=>{
     let form = _.cloneDeep(formState)
+    console.log('form',form)
     form.rule = JSON.stringify(form.rule)
+    console.log('需要上传的数据',form)
     Core.Api.SALES_STRATEGY.add(form).then((res)=>{
         message.success('添加成功')
         // 获取存储的数据
@@ -497,6 +499,7 @@ const getDetail = ()=>{
         selectData.value.forEach((item)=>{
             item.name = item?.item?.name || ''
             item.code = item?.item?.code || ''
+            item.item_id = item?.item?.id || ''
         })
         console.log('formState',formState)
         // 处理成表格数据
@@ -510,13 +513,16 @@ const getDetail = ()=>{
             obj.item_list = formState.item_list
             return obj
         })
-        console.log('tableData',tableData.value)
+        let arr = JSON.parse(Core.Data.getSalesData());
+        arr.push(...tableData.value);
+        Core.Data.setSalesData(JSON.stringify(arr));
     })
 }
 
 onMounted(() => {
     // 存储到localStorage
-    Core.Data.setSalesData(JSON.stringify(tableData.value));
+    // Core.Data.setSalesData(JSON.stringify(tableData.value));
+    Core.Data.setSalesData(JSON.stringify([]));
     if(type.value == 'edit'){
         getDetail()
     }
