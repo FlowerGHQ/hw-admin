@@ -32,6 +32,12 @@ export default {
 		applicable_area: '适用地区',
 		// 赠品
 		gift: '赠品',
+		// 商品名称
+		commodity_name: '商品名称',
+		// 商品分类
+		commodity_classification: '商品分类',
+		//商品编码
+		commodity_code: '商品编码', 
     },
     en: {
 		//序号
@@ -66,6 +72,12 @@ export default {
 		applicable_area: 'Applicable Area',
 		// 赠品
 		gift: 'Gift',
+		// 商品名称
+		commodity_name: 'Commodity Name',
+		// 商品分类
+		commodity_classification: 'Commodity Classification',
+		//商品编码
+		commodity_code: 'Commodity Code',
 		
     }
 }

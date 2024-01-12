@@ -1,10 +1,9 @@
 <template>
-    <div class="sales-strategy-list">
+    <div class="sales-strategy-list" ref="salesStrategyRef">
         <div class="list-container">
             <div class="title-container">
                 <div class="title-area">销售策略</div>
             </div>
-            
             <div class="search-container">
                 <SearchAll
                     :options="searchList"
@@ -14,7 +13,6 @@
             </div>
             <div class="operate-container">
                 <a-button type="primary" @click="addStrategy">
-                
                     新增策略
                 </a-button>
             </div>
@@ -38,11 +36,11 @@
                             }}
                         </template>
                         <!-- 策略名称 -->
-                        <template v-if="column.dataIndex === 'strategy_name'">
+                        <template v-if="column.dataIndex === 'name'">
                             <!-- 超过5个字符 -->
                             <div
                                 class="strategy_name-cell"
-                                v-if="text.length > 8">
+                                v-if="text && text.length > 5">
                                 <a-tooltip placement="topLeft" :title="text">
                                     {{ text }}
                                 </a-tooltip>
@@ -51,68 +49,133 @@
                                 {{ text }}
                             </div>
                         </template>
+                        <!-- 赠送规则 -->
+                        <template v-if="column.dataIndex === 'rule'">
+                            {{
+                                record.type === 1
+                                    ? `起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                                    : record.type === 1
+                                    ? ``
+                                    : "-"
+                            }}
+                        </template>
                         <!-- 地区赠品 -->
                         <template v-if="column.dataIndex === 'area_and_gift'">
+                            <!-- 大于3个 -->
                             <div
                                 class="area-gift-content"
-                                v-if="record.area_and_gift.length >= 3">
-                                <a-tooltip 
-                                    placement="topLeft" 
-                                    :getPopupContainer="trigger => trigger.parentNode"
-                                >
-                                   <template #title>
+                                v-if="
+                                    record.strategy_detail &&
+                                    record.strategy_detail.length >= 3
+                                ">
+                                <a-tooltip
+                                    placement="topLeft"
+                                    :getPopupContainer="
+                                        getPopupContainer
+                                    ">
+                                    <template #title>
                                         <div>
-                                            <div v-for="(item, index) in record.area_and_gift" :key="index">
-                                                <span class="area">{{ item.area }}</span>
-                                                <span class="gift">{{ item.gift }}</span>
+                                            <div
+                                                v-for="(
+                                                    item, index
+                                                ) in record.strategy_detail"
+                                                :key="index">
+                                                <span class="area">{{
+                                                    item.country
+                                                }}</span>
+                                                &nbsp;&nbsp;
+                                                <span class="gift">
+                                                    {{
+                                                        item?.item
+                                                            ? $i18n.locale
+                                                                  .value == "zh"
+                                                                ? item?.item
+                                                                      ?.name
+                                                                : item?.item
+                                                                      ?.name_en
+                                                            : ""
+                                                    }}
+                                                </span>
                                             </div>
                                         </div>
-                                   </template>
+                                    </template>
                                     <div
                                         class="area-gift-content-item"
-                                        v-for="(item, index) in getAreaAndGift(record.area_and_gift)"
+                                        v-for="(item, index) in getAreaAndGift(
+                                            record.strategy_detail
+                                        )"
                                         :key="item">
-                                        <span class="area">{{ item.area }}</span>
-                                        <span class="gift">{{ item.gift }}</span>
+                                        <span class="area">{{
+                                            item.country
+                                        }}</span>
+                                        <span class="gift">
+                                            {{
+                                                item?.item
+                                                    ? $i18n.locale.value == "zh"
+                                                        ? index == 2 ? item?.item?.name +'...': item?.item?.name
+                                                        : index === 2 ? item?.item?.name_en+'...': item?.item?.name_en
+                                                    : ""
+                                                   
+                                            }}
+                                        </span>
                                     </div>
                                 </a-tooltip>
                             </div>
                             <div class="area-gift-content-common" v-else>
                                 <div
                                     class="area-gift-content-common-item"
-                                    v-for="(item, index) in record.area_and_gift"
+                                    v-for="(
+                                        item, index
+                                    ) in record.area_and_gift"
                                     :key="index">
-                                    <span  class="area">{{ item.area }}</span>
-                                    <span class="gift">{{ item.gift }}</span>
+                                    <span class="area">{{ item.area }}</span>
+                                    <span class="gift">{{
+                                        item?.item
+                                            ? $i18n.locale.value == "zh"
+                                                ? item?.item?.name
+                                                : item?.item?.name_en
+                                            : ""
+                                    }}</span>
                                 </div>
                             </div>
                         </template>
+                        <!-- 创建时间 -->
+                        <template v-if="column.dataIndex === 'create_time'">
+                            {{ $Util.timeFilter(text) }}
+                        </template>
                         <!-- 生效状态 -->
-                        <template v-if="column.dataIndex === 'effective_status'">
-                             <!--switch  -->
+                        <template v-if="column.dataIndex === 'status'">
+                            <!--switch  -->
                             <a-switch
                                 :checked="text == 1"
                                 :loading="switchLoading"
-                                @change="onSwitchChange(record)"
-                            />
+                                @change="onSwitchChange(record)" />
                         </template>
                         <!-- 操作 -->
                         <template v-if="column.dataIndex === 'operation'">
-                            <!-- 删除 -->
-                            <a-button type="link" >
-                                <i class="icon i_delete"/>
-                                {{ $t('def.delete') }}
-                            </a-button>
-                            <!-- 查看 -->
-                            <a-button type="link" >
-                                <i class="icon i_eyes"/>
-                                {{ $t('def.see') }}
-                            </a-button>
-                            <!-- 编辑 -->
-                            <a-button type="link" >
-                                <i class="icon i_edit"/>
-                                {{ $t('def.edit') }}
-                            </a-button>
+                            <div class="operation">
+                                <!-- 查看 -->
+                                <a-button
+                                    type="link"
+                                    @click="handleDetails(record)">
+                                    <MySvgIcon icon-class="sales-see" />
+                                    {{ $t("def.see") }}
+                                </a-button>
+                                <!-- 编辑 -->
+                                <a-button
+                                    type="link"
+                                    @click="hanleEdit(record)">
+                                    <MySvgIcon icon-class="sales-edit" />
+                                    {{ $t("def.edit") }}
+                                </a-button>
+                                <!-- 删除 -->
+                                <a-button
+                                    type="link"
+                                    @click="handleDelete(record)">
+                                    <MySvgIcon icon-class="sales-delete" />
+                                    {{ $t("def.delete") }}
+                                </a-button>
+                            </div>
                         </template>
                     </template>
                 </a-table>
@@ -142,18 +205,36 @@
 
 <script setup>
 import SearchAll from "@/components/common/SearchAll.vue";
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "../../core";
-import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed } from "vue";
 // 使用useTable
 import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 import _ from "lodash";
 const $router = useRouter();
 const $t = useI18n().t;
 const $i18n = useI18n();
+// VITE 引入json数据
+import COUNTYR from "@/assets/js/address/countries.json";
+
+const salesStrategyRef = ref(null);
+
 // hooks
 const request = Core.Api.SALES_STRATEGY.list;
+const dataCallBack = (res) => {
+    let data = res.list;
+    data.forEach((item) => {
+        if (item.rule && typeof item.rule == "string") {
+            item.rule = JSON.parse(item.rule);
+        }
+        return item;
+    });
+    console.log(data);
+    return data;
+};
+
 const {
     loading,
     tableData,
@@ -163,7 +244,7 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request ,isPageAble:false});
+} = useTable({ request, dataCallBack });
 
 // data
 const tableColumns = computed(() => {
@@ -178,14 +259,14 @@ const tableColumns = computed(() => {
         {
             // 策略名称
             title: $t("sales-strategy-management.strategy_name"),
-            dataIndex: "strategy_name",
-            key: "strategy_name",
+            dataIndex: "name",
+            key: "name",
         },
         // 赠送规则
         {
             title: $t("sales-strategy-management.gift_rule"),
-            dataIndex: "gift_rule",
-            key: "gift_rule",
+            dataIndex: "rule",
+            key: "rule",
         },
         // 地区与赠品
         {
@@ -196,14 +277,14 @@ const tableColumns = computed(() => {
         // 创建时间
         {
             title: $t("sales-strategy-management.creation_time"),
-            dataIndex: "creation_time",
-            key: "creation_time",
+            dataIndex: "create_time",
+            key: "create_time",
         },
         // 生效状态
         {
             title: $t("sales-strategy-management.effective_status"),
-            dataIndex: "effective_status",
-            key: "effective_status",
+            dataIndex: "status",
+            key: "status",
         },
         {
             title: $t("sales-strategy-management.operation"),
@@ -214,6 +295,19 @@ const tableColumns = computed(() => {
         },
     ];
     return columns;
+});
+const getPopupContainer = ()=>{
+    return salesStrategyRef.value
+}
+const CountryData = computed(() => {
+    let arr = [];
+    COUNTYR.forEach((item) => {
+        arr.push({
+            label: $i18n.locale.value == "zh" ? item.name : item.name_en,
+            value: item.code,
+        });
+    });
+    return arr;
 });
 
 const searchList = ref([
@@ -229,32 +323,13 @@ const searchList = ref([
         type: "select-search-multiple", // 类型
         key: "sales-strategy.area", // 名称
         value: undefined, // 绑定值
-        region: "area", // 返回的搜索名称
-        multiple:true, // 是否多选
-        selectMap: [
-            {
-                label: $i18n.locale.value == "zh" ? "美国" : "US",
-                value: 1, // a-select-option 中的 :value="item.value"  // 固定的
-            },
-            {
-                label: $i18n.locale.value == "zh" ? "英国" : "UK",
-                value: 2, // a-select-option 中的 :value="item.value"  // 固定的
-            },
-            {
-                label: $i18n.locale.value == "zh" ? "中国" : "China",
-                value: 3, // a-select-option 中的 :value="item.value"  // 固定的
-            },
-            {
-                label: $i18n.locale.value == "zh" ? "俄罗斯" : "Russia",
-                value: 4, // a-select-option 中的 :value="item.value"  // 固定的
-            },
-        ],
+        searchParmas: "country_list", // 返回的搜索名称
+        multiple: true, // 是否多选
+        selectMap: CountryData,
         placeholder: "def.select",
     },
 ]);
 const switchLoading = ref(false);
-
-
 
 // methods
 
@@ -264,20 +339,82 @@ const getAreaAndGift = (data) => {
     let returnArr = [];
     if (arr.length >= 3) {
         returnArr = arr.splice(0, 3);
-    }else{
+    } else {
         returnArr = arr;
     }
     return returnArr;
 };
-
 const getSearchFrom = (data) => {
-    console.log(data);
+    searchParam.value = data;
+    search();
 };
 const onSwitchChange = (record) => {
+    // 0 停用   1 启用
+    let request =
+        record.status == 1
+            ? Core.Api.SALES_STRATEGY.disable
+            : Core.Api.SALES_STRATEGY.enable;
     console.log(record);
+    request({
+        id: record.id,
+    })
+        .then((res) => {
+            refreshTable();
+        })
+        .catch((err) => {
+            console.log(err);
+        });
 };
+const handleSearchReset = () => {
+    refreshTable();
+};
+// 查看
+const handleDetails = (record) => {
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-detail",
+        query: {
+            id: record.id,
+        },
+    });
+};
+// 编辑
+const hanleEdit = (record) => {
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-edit",
+        query: {
+            id: record.id,
+            type:'edit'
+        },
+    });
+};
+// 删除
+const handleDelete = (record) => {
+    this.$confirm({
+        title: "确定要删除该策略吗？",
+        okText: "确定",
+        okType: "danger",
+        cancelText: "取消",
+        onOk() {
+            Core.Api.SALES_STRATEGY.delete({
+                id: record.id,
+            })
+                .then((res) => {
+                    refreshTable();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+    });
+};
+
 const addStrategy = () => {
-    $router.push('/sales-strategy-management/sales-strategy-edit')
+    $router.push({
+        path:"/sales-strategy-management/sales-strategy-edit",
+        query: {
+            type:'add'
+        },
+    });
 };
 </script>
 
@@ -288,7 +425,7 @@ const addStrategy = () => {
     }
 }
 :deep(.ant-table-cell) {
-    color: #1D2129;
+    color: #1d2129;
 
     .strategy_name-cell {
         width: 100px;
@@ -298,58 +435,65 @@ const addStrategy = () => {
         white-space: nowrap;
         cursor: pointer;
     }
-    .area-gift-content-common{
+    .area-gift-content-common {
         display: flex;
         align-items: center;
-        .area-gift-content-common-item{
+        .area-gift-content-common-item {
             margin-right: 8px;
             display: flex;
             align-items: center;
-            .area{
+            .area {
                 display: flex;
                 height: 24px;
                 padding: 2px 4px;
                 justify-content: center;
                 align-items: center;
                 border-radius: 4px;
-                background: #F2F3F5;
+                background: #f2f3f5;
                 margin-right: 8px;
             }
-            &:last-child{
+            &:last-child {
                 margin-right: 0;
             }
-           
-        }    
+        }
     }
-    .area-gift-content{
+    .area-gift-content {
         cursor: pointer;
-        > span{
+        > span {
             display: flex;
-            .area-gift-content-item{
+            .area-gift-content-item {
                 margin-right: 8px;
                 vertical-align: middle;
-                .area{
+                .area {
                     display: flex;
                     height: 24px;
                     padding: 2px 4px;
                     justify-content: center;
                     align-items: center;
                     border-radius: 4px;
-                    background: #F2F3F5;
+                    background: #f2f3f5;
                     margin-right: 8px;
                     float: left;
                 }
-                .gift{
+                .gift {
                     line-height: 24px;
                 }
-                &:last-child{
+                &:last-child {
                     margin-right: 0;
-                    width: 100px;
-                    // 超出隐藏
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                    white-space: nowrap;
                 }
+            }
+        }
+    }
+    .operation {
+        display: flex;
+        align-items: center;
+        .ant-btn {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            .svg-icon {
+                font-size: 16px;
+                margin-right: 8px;
             }
         }
     }
