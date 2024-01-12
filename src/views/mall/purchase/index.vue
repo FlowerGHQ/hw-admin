@@ -44,7 +44,7 @@
                             <svg-icon :icon-class="item.icon" class-name="services-icon" />
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
-                                <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
+                                <!-- <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p> -->
                             </div>
                         </div>
                     </div>
