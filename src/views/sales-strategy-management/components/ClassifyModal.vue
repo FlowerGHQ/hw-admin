@@ -111,7 +111,7 @@ import COUNTYR from "@/assets/js/address/countries.json";
 import { useI18n } from "vue-i18n";
 const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
-const emits = defineEmits(["update:visibility", "refresh"]);
+const emits = defineEmits(["update:visibility",'hanldAdd' ]);
 const props = defineProps({
     visibility: {
         type: Boolean,
@@ -137,6 +137,7 @@ const initialObject = {
 const searchForm = ref({
     // 商品编码
     codeList: [],
+    area:[]
 });
 // 分类列表
 // 搜索列表组件
@@ -217,13 +218,33 @@ const handleSearch = () => {
 const handleCancle = () => {
     emits("update:visibility", false);
 };
+// addTableData
+const addTableData = () => {
+    let arr = JSON.parse(Core.Data.getSalesData());
+    arr.forEach((item) => {
+        item.number = item.number + 1;
+    });
+    arr.push(...selectIdList.value);
+    Core.Data.setSalesData(JSON.stringify(arr));
+};
 const handleOk = () => {
-    // 整合数据
-    let obj  = {
-        item_list: selectIdList.value,
-        
-    }
+    // 从本地取出数据
+    let arr = JSON.parse(Core.Data.getSalesData());
+    let number = arr.length + 1;
+    let strategy_detail = []
+    selectIdList.value.forEach((item) => {
+        searchForm.value.area.forEach((item1) => {
+            let obj =  {}
+            obj.number = number;
+            obj.country = item1;
+            obj.bonus_item_id = item;
+            strategy_detail.push(obj);
 
+        });
+    });
+    emits('hanldItemList',selectIdList.value)
+    emits('hanldAdd',strategy_detail)
+    handleCancle();
 };
 // 搜索
 const filterOption = (input, option) => {

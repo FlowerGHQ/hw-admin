@@ -2851,17 +2851,6 @@ const routes = [
                     title: '新增编辑销售策略',
                     title_en: 'Add Or Edit Sales Strategy',
                 }
-            },
-            // 查看详情
-            {
-                path: 'sales-strategy-detail',
-                name: 'SalesStrategyDetail',
-                component: () => import('@/views/sales-strategy-management/sales-strategy-detail.vue'),
-                meta: {
-                    hidden: true,
-                    title: '销售策略详情',
-                    title_en: 'Sales Strategy Detail',
-                }
             }
         ]
     },

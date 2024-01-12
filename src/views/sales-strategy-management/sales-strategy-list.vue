@@ -52,10 +52,10 @@
                         <!-- 赠送规则 -->
                         <template v-if="column.dataIndex === 'rule'">
                             {{
-                                record.type === 1
+                                record.type == 1
                                     ? `起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                                    : record.type === 1
-                                    ? ``
+                                    : record.type == 1
+                                    ? `起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
                                     : "-"
                             }}
                         </template>
@@ -371,9 +371,10 @@ const handleSearchReset = () => {
 // 查看
 const handleDetails = (record) => {
     $router.push({
-        path: "/sales-strategy-management/sales-strategy-detail",
+        path: "/sales-strategy-management/sales-strategy-edit",
         query: {
             id: record.id,
+            type:'details'
         },
     });
 };

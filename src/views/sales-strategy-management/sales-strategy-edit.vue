@@ -3,7 +3,7 @@
         <div class="list-container">
             <div class="main-content">
                 <div class="title-container">
-                    <div class="title-area">新建销售策略</div>
+                    <div class="title-area">{{type === 'add'?'新建销售策略':type === 'edit'?'编辑销售策略':''}}</div>
                 </div>
                 <div class="search-container">
                     <a-form
@@ -81,9 +81,9 @@
                                 :xxxl="12">
                                 <a-form-item
                                     label="销售类型"
-                                    name="strategyType">
+                                    name="type">
                                     <a-select
-                                        v-model:value="formState.strategyType"
+                                        v-model:value="formState.type"
                                         :placeholder="$t('def.select')"
                                         :options="strategyTypeOptions" 
                                         @change="handleClearVaild"
@@ -94,7 +94,7 @@
                         <!-- 赠送规则 -->
                         <a-row 
                             :gutter="18" 
-                            v-if="formState.strategyType"
+                            v-if="formState.type"
                         >
                             <a-col
                                 :xs="24"
@@ -111,7 +111,7 @@
                                 >
                                     <div
                                         class="gift-rules-first"
-                                        v-if=" formState.strategyType == 1">
+                                        v-if=" formState.type == 1">
                                         <div class="label-gift">赠送规则</div>
                                         <div class="threshold">
                                             <span>起送门槛</span>
@@ -149,7 +149,7 @@
                                     </div>
                                     <div
                                         class="gift-rules-first"
-                                        v-else-if=" formState.strategyType == 2">
+                                        v-else-if=" formState.type == 2">
                                         <div class="label-gift">赠送规则</div>
                                         <div class="threshold">
                                             <span>起送门槛</span>
@@ -181,7 +181,7 @@
                 <div class="title-label">
                     <span class="label">方案明细</span>
                     <div class="add-btn" v-if="tableData.length > 0">
-                        <a-button type="primary" @click="handleOpenModal"
+                        <a-button type="primary" @click="handleVaild"
                             >添加明细</a-button
                         >
                     </div>
@@ -195,21 +195,24 @@
                         :row-key="(record) => record.id"
                         :pagination="false">
                         <template #bodyCell="{ column, text, record, index }">
-                            <!-- 
-                            序号的计算方式:当前的页数-1*每页的条数+当前的索引+1
-                         -->
-                            <template
-                                v-if="column.dataIndex === 'serial_number'">
-                                {{
-                                    (pagination.current - 1) * pagination.size +
-                                    index +
-                                    1
-                                }}
-                            </template>
                             <!-- 适用地区 -->
                             <template
                                 v-if="column.dataIndex === 'applicable_area'">
                                 {{ record.applicable_area.join("、") }}
+                            </template>
+                            <!-- 赠品 -->
+                            <template v-if="column.dataIndex === 'item_list'">
+                                {{ record.item_list.map((item) => item.name).join("、") }}
+                            </template>
+                            <!-- 赠送规则 -->
+                            <template v-if="column.dataIndex === 'rule'">
+                                {{
+                                record.type == 1
+                                    ? `起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                                    : record.type == 1
+                                    ? `起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
+                                    : "-"
+                            }}
                             </template>
                             <!-- 操作 -->
                             <template v-if="column.dataIndex === 'operation'">
@@ -243,7 +246,7 @@
                     {{ $t("def.cancel") }}
                 </a-button>
                 <!-- 确定 -->
-                <a-button type="primary" @click="handleOk">
+                <a-button type="primary" @click="handleSubmit">
                     {{ $t("def.ok") }}
                 </a-button>
             </div>
@@ -251,7 +254,8 @@
     </div>
     <ClassifyModal
             v-model:visibility="classifyModalShow"
-            @refresh="refresh"
+            @hanldAdd="handleAddStrategyDetail"
+            @hanldItemList="hanldItemList"
     >
     </ClassifyModal>
 </template>
@@ -261,19 +265,26 @@ import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import ClassifyModal from "./components/ClassifyModal.vue";
+import { message } from "ant-design-vue";
+import _ from "lodash";
 // 使用useTable
 import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
+import { useRouter,useRoute } from "vue-router";
+import Core from "../../core";
+const $router = useRouter();
+const $route = useRoute();
 const $t = useI18n().t;
 // data
 const formState = reactive({
-    number: null,
-    strategyType: null,
+    type: null,
     rule: {
         quantity_min: null,
         quantity_every: null,
         quantity_bonus: null,
     },
+    strategy_detail:[],
+    item_list:[]
 });
 const strategyTypeOptions = ref([
     {
@@ -287,7 +298,7 @@ const strategyTypeOptions = ref([
 ]);
 const formRef = ref(null);
 const giftRulesVaild = (rule, value) =>{
-    if(formState.strategyType == 1){
+    if(formState.type == 1){
         if (
             !formState.rule.quantity_min ||
             !formState.rule.quantity_every ||
@@ -297,7 +308,7 @@ const giftRulesVaild = (rule, value) =>{
         } else {
             return Promise.resolve();
         }
-    }else if(formState.strategyType == 2){
+    }else if(formState.type == 2){
         if (
             !formState.rule.quantity_min ||
             !formState.rule.quantity_bonus
@@ -308,8 +319,7 @@ const giftRulesVaild = (rule, value) =>{
         }
     }
 }
-
-
+const type = computed(() => $route.query.type);
 const rules = computed(()=>{
     let rule = {
         name: [
@@ -334,7 +344,7 @@ const rules = computed(()=>{
                 trigger: ["blur", "change"],
             },
         ],
-        strategyType: [
+        type: [
             {
                 required: true,
                 message: "请选择策略类型",
@@ -349,7 +359,7 @@ const rules = computed(()=>{
             },
         ]
     }
-    if(!formState.strategyType){
+    if(!formState.type){
         delete rule.giftRules
     }
     return rule
@@ -367,18 +377,18 @@ const tableColumns = computed(() => {
         },
         {
             title: $t("sales-strategy-management.applicable_area"),
-            dataIndex: "applicable_area",
-            key: "applicable_area",
+            dataIndex: "country",
+            key: "country",
         },
         {
             title: $t("sales-strategy-management.gift"),
-            dataIndex: "gift",
-            key: "gift",
+            dataIndex: "item_list",
+            key: "item_list",
         },
         {
             title: $t("sales-strategy-management.gift_rule"),
-            dataIndex: "gift_rule",
-            key: "gift_rule",
+            dataIndex: "rule",
+            key: "rule",
         },
         {
             title: $t("sales-strategy-management.operation"),
@@ -404,26 +414,11 @@ const showSelectData = computed(() => {
     return arr;
 });
 const classifyModalShow = ref(false);
-// hooks
-const request = () =>
-    new Promise((resolve, reject) => {
-        let arr = [];
-        // for (let i = 0; i < 10; i++) {
-        //     arr.push({
-        //         id: i,
-        //         serial_number: i,
-        //         applicable_area: ["北京", "上海"],
-        //         gift: "赠送商品",
-        //         gift_rule: "每满1辆送1辆",
-        //     });
-        // }
-        setTimeout(() => {
-            resolve({
-                count: 10,
-                list: arr,
-            });
-        }, 1000);
-});
+// 适用商品的选项
+const selectDataOption = ref([]);
+
+
+
 
 const {
     loading,
@@ -434,7 +429,7 @@ const {
     refreshTable,
     onPageChange,
     searchParam,
-} = useTable({ request });
+} = useTable({ isPageAble:false});
 // methods
 const handleAddFailItem = (ids, items) => {
     for (let i = 0; i < items.length; i++) {
@@ -456,10 +451,14 @@ const handleDeleteItem = (value) => {
 };
 // 校验添加
 const handleVaild = () => {
+    formRef.value&&formRef.value.clearValidate();
     // 校验表单
     formRef.value&&formRef.value.validate().then((res) => {
         classifyModalShow.value = true;
     });
+};
+const handleAddStrategyDetail = (data) => {
+    formState.strategy_detail = data;
 };
 // 清除校验
 const handleClearVaild = () => {
@@ -470,6 +469,58 @@ const handleClearVaild = () => {
     // 重新校验
     formRef.value&&formRef.value.validate();
 };
+const hanldItemList = (data) => {
+    formState.item_list = data;
+};
+const handleSubmit = ()=>{
+    let form = _.cloneDeep(formState)
+    form.rule = JSON.stringify(form.rule)
+    Core.Api.SALES_STRATEGY.add(form).then((res)=>{
+        message.success('添加成功')
+        // 获取存储的数据
+        let arr = JSON.parse(Core.Data.getSalesData());
+        arr.push(form);
+        Core.Data.setSalesData(JSON.stringify(arr));
+    })
+}
+// 查询详情
+const getDetail = ()=>{
+    Core.Api.SALES_STRATEGY.detail({id:$route.query.id}).then((res)=>{
+        if(!res.detail) return
+        formState.name = res.detail.name
+        // 转化为字符串
+        formState.type = res.detail.type.toString() 
+        formState.rule = JSON.parse(res.detail.rule)
+        formState.strategy_detail = res.detail.strategy_detail
+        formState.item_list = res.detail.item_list
+        selectData.value = res.detail.item_list
+        selectData.value.forEach((item)=>{
+            item.name = item?.item?.name || ''
+            item.code = item?.item?.code || ''
+        })
+        console.log('formState',formState)
+        // 处理成表格数据
+        tableData.value = res.detail.strategy_detail.map((item,index)=>{
+            let obj = {
+                ...item,
+            }
+            obj.serial_number = index + 1
+            obj.rule = formState.rule
+            obj.type = formState.type
+            obj.item_list = formState.item_list
+            return obj
+        })
+        console.log('tableData',tableData.value)
+    })
+}
+
+onMounted(() => {
+    // 存储到localStorage
+    Core.Data.setSalesData(JSON.stringify(tableData.value));
+    if(type.value == 'edit'){
+        getDetail()
+    }
+});
 </script>
 
 <style lang="less" scoped>

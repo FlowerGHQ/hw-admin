@@ -966,7 +966,7 @@ const apiList = {
     },
     SALES_STRATEGY:{
         list: ['PostJson', 'sales-strategy/list'],
-        add: ['PostJson', 'ssales-strategy/create'],
+        add: ['PostJson', 'sales-strategy/create'],
         disable: ['PostJson', '/sales-strategy/disable'],
         enable: ['PostJson', '/sales-strategy/enable'],
         delete: ['PostJson', '/sales-strategy/delete'],

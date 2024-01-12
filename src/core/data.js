@@ -259,6 +259,15 @@ class StorageHandler {
         console.log(123);
         this.removeItem(Const.DATA.LOGIN_MES);
     }
+    setSalesData(value) {
+        return this.setItem(Const.DATA.SALES_DATA, value);
+    }
+    getSalesData() {
+        return this.getItem(Const.DATA.SALES_DATA) || [];
+    }
+    clearSalesData() {
+        this.removeItem(Const.DATA.SALES_DATA);
+    }
 }
 
 export default new StorageHandler();
