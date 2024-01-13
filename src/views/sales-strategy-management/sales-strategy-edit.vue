@@ -214,7 +214,7 @@
                                 {{
                                 record.type == 1
                                     ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                                    : record.type == 1
+                                    : record.type == 2
                                     ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
                                     : "-"
                             }}
@@ -555,7 +555,7 @@ const handleEdit = ()=>{
 
 
 
-
+// 重构数据
 const viewData = (arr)=>{
     console.log('arr',arr)
     // 处理成表格数据
@@ -649,7 +649,7 @@ const handleDelete = (item)=>{
     updateObj.item_list = updateObj.item_list.map((i)=>{
         return i.item_id
     })
-    console.log('updateObj',updateObj)
+    console.log('updateObj----------------------------------------',updateObj)
      $confirm({
         title: "确定要删除该方案吗？",
         okText: "确定",
