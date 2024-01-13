@@ -1,5 +1,5 @@
 <template>
-  <div class="sales-strategy-list" >
+  <div class="sales-strategy-list">
     <div class="list-container">
       <div class="title-container">
         <div class="title-area">销售策略</div>
@@ -53,37 +53,34 @@
             <!-- 地区赠品 -->
             <template v-if="column.dataIndex === 'area_and_gift'">
               <div class="area-gift-content">
-                <a-tooltip  placement="topLeft">
+                <a-tooltip placement="topLeft">
                   <template #title>
                     <div
                       v-for="(item, index) in record.strategy_detail"
                       :key="item.id"
                     >
-                      <span 
-                        class="area" 
+                      <span
+                        class="area"
                         :style="{
                           'margin-right': '8px',
                         }"
-                      >{{ item.country }}</span>
+                        >{{ item.country }}</span
+                      >
                       <span class="gift">
-                      {{
-                          reFormartGift(item.item)
-                      }}
+                        {{ reFormartGift(item.item) }}
                       </span>
                     </div>
                   </template>
-                  <div
+                  <span
                     class="area-gift-content-item"
                     v-for="(item, index) in record.strategy_detail"
                     :key="item.id"
                   >
                     <span class="area">{{ item.country }}</span>
                     <span class="gift">
-                      {{
-                          reFormartGift(item.item)
-                      }}
+                      {{ reFormartGift(item.item) }}
                     </span>
-                  </div>
+                  </span>
                 </a-tooltip>
               </div>
             </template>
@@ -164,7 +161,6 @@ const $confirm = Modal.confirm
 // VITE 引入json数据
 import COUNTYR from "@/assets/js/address/countries.json"
 
-
 // hooks
 const request = Core.Api.SALES_STRATEGY.list
 // 重构数据
@@ -202,9 +198,11 @@ const viewData = (arr, type) => {
   return newArr
 }
 // 重构展示地区与赠品
-const reFormartGift = (arr)=>{
+const reFormartGift = (arr) => {
   console.log(arr)
-  return $i18n.locale.value == "zh" ? arr.map((i) => i.name || '-').join("、") : arr.map((i) => i.name_en || '-').join("、")
+  return $i18n.locale.value == "zh"
+    ? arr.map((i) => i.name || "-").join("、")
+    : arr.map((i) => i.name_en || "-").join("、")
 }
 const dataCallBack = (res) => {
   let data = res.list
@@ -414,9 +412,17 @@ onMounted(() => {
   }
   .area-gift-content {
     cursor: pointer;
+    // 下面的span
+     > span {
+      display: inline-block;
+      width: 300px;
+      // 超出隐藏
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       .area-gift-content-item {
+        display: inline-flex;
         margin-right: 8px;
-        margin-bottom: 8px;
         .area {
           display: flex;
           height: 24px;
@@ -435,6 +441,7 @@ onMounted(() => {
           margin-right: 0;
         }
       }
+    }
   }
   .operation {
     display: flex;

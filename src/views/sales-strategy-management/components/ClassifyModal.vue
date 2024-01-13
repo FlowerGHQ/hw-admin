@@ -108,9 +108,11 @@ import Core from "@/core";
 import SearchAll from "@/components/common/SearchAll.vue";
 import TableSelect from "@/components/table/ItemTable.vue";
 import COUNTYR from "@/assets/js/address/countries.json";
+import {message} from "ant-design-vue";
 import { useI18n } from "vue-i18n";
 const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
+const $t = $i18n.t;
 const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList']);
 const props = defineProps({
     visibility: {
@@ -227,6 +229,15 @@ const addTableData = () => {
     Core.Data.setSalesData(JSON.stringify(arr));
 };
 const handleOk = () => {
+    // 判断是否选择了地区和商品
+    if (searchForm.value.area.length === 0) {
+        message.warning($t("sales-strategy-management.please_select_the_gift_area"))
+        return;
+    }
+    if (selectIdList.value.length === 0) {
+        message.warning($t("sales-strategy-management.please_select_the_gift_item"))
+        return;
+    }
     // 从本地取出数据
     let arr = JSON.parse(Core.Data.getSalesData());
     let maxNo;
