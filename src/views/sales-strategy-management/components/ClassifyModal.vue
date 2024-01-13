@@ -1,6 +1,6 @@
 <template>
     <a-modal
-        destroyOnClose
+        :destroyOnClose="true"
         v-model:visible="visibility"
         :width="860"
         title="添加明细"
@@ -111,7 +111,7 @@ import COUNTYR from "@/assets/js/address/countries.json";
 import { useI18n } from "vue-i18n";
 const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
-const emits = defineEmits(["update:visibility",'hanldAdd' ]);
+const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList']);
 const props = defineProps({
     visibility: {
         type: Boolean,
@@ -131,6 +131,7 @@ const CountryData = computed(() => {
 const initialObject = {
     // 商品编码
     codeList: [],
+    area:[]
 };
 // 当前分组对象
 // const classValue =  ref();
@@ -202,8 +203,6 @@ const removeChildrenFromData = (data) => {
 };
 // 重置按钮
 const handleSearchReset = () => {
-    // 重置搜索
-    codeStr.value = "";
     Object.assign(searchForm.value, initialObject);
     handleSearch();
 };
@@ -230,12 +229,20 @@ const addTableData = () => {
 const handleOk = () => {
     // 从本地取出数据
     let arr = JSON.parse(Core.Data.getSalesData());
-    let number = arr.length + 1;
+    let maxNo;
+    if (arr.length === 0) {
+        maxNo = 0;
+    } else {
+       maxNo = arr.reduce((prev, cur) => {
+        // 迭代器，找出最大的no
+            return prev.no > cur.no ? prev.no : cur.no;
+        });
+    }
     let strategy_detail = []
     selectIdList.value.forEach((item) => {
         searchForm.value.area.forEach((item1) => {
             let obj =  {}
-            obj.number = number;
+            obj.no = maxNo + 1 ;
             obj.country = item1;
             obj.bonus_item_id = item;
             strategy_detail.push(obj);
@@ -244,9 +251,6 @@ const handleOk = () => {
     });
     emits('hanldItemList',selectIdList.value)
     emits('hanldAdd',strategy_detail)
-    console.log('销售策略明细',strategy_detail)
-    console.log('销售策略商品Id',selectIdList.value)
-
     handleCancle();
 };
 // 搜索
@@ -289,6 +293,11 @@ watch(
         }
     }
 );
+
+onMounted(() => {
+    // 初始化数据
+    Object.assign(searchForm.value, initialObject);
+});
 </script>
 
 <style lang="less" scoped>
@@ -306,14 +315,12 @@ watch(
     position: absolute;
     z-index: 20;
 }
-
 .tip {
     height: 30px;
     line-height: 30px;
     margin-left: 10px;
     font-size: 12px;
 }
-
 .fixed {
     background-color: #ffffff;
     height: 140px;

@@ -38,6 +38,8 @@ export default {
 		commodity_classification: '商品分类',
 		//商品编码
 		commodity_code: '商品编码', 
+		// 编辑资料
+		edit_data: '编辑资料',
     },
     en: {
 		//序号
@@ -78,6 +80,7 @@ export default {
 		commodity_classification: 'Commodity Classification',
 		//商品编码
 		commodity_code: 'Commodity Code',
-		
+		// 编辑资料
+		edit_data: 'Edit Data',
     }
 }

@@ -212,10 +212,13 @@ import { ref, computed } from "vue";
 import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
+import { message,Modal } from "ant-design-vue";
 import _ from "lodash";
 const $router = useRouter();
 const $t = useI18n().t;
 const $i18n = useI18n();
+const $message = message;
+const $confirm = Modal.confirm;
 // VITE 引入json数据
 import COUNTYR from "@/assets/js/address/countries.json";
 
@@ -390,7 +393,7 @@ const hanleEdit = (record) => {
 };
 // 删除
 const handleDelete = (record) => {
-    this.$confirm({
+   $confirm({
         title: "确定要删除该策略吗？",
         okText: "确定",
         okType: "danger",
