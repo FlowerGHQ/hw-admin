@@ -572,10 +572,12 @@ const viewData = (arr)=>{
             newArr.forEach((i)=>{
                 if(i.no == item.no && i.country == item.country){
                     i.item = [...i.item,item.item]
+                    i.id = [i.id,item.id].join(',')
                 }
             })
         }else{
             obj.type = item.type
+            obj.id = item.id.toString()
             obj.no = item.no
             obj.country = item.country
             obj.item = [item.item]
@@ -639,7 +641,9 @@ const handleCancel = ()=>{
 // 删除方案
 const handleDelete = (item)=>{
     let updateObj = _.cloneDeep(formState)
-    updateObj.strategy_detail = updateObj.strategy_detail.filter((i)=>i.id != item.id)
+    updateObj.strategy_detail = updateObj.strategy_detail.filter((i)=>
+        !item.id.split(',').includes(i.id.toString())
+    )
     updateObj.id = $route.query.id
     updateObj.rule = JSON.stringify(updateObj.rule)
     updateObj.item_list = updateObj.item_list.map((i)=>{
