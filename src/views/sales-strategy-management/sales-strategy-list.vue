@@ -42,13 +42,13 @@
             </template>
             <!-- 赠送规则 -->
             <template v-if="column.dataIndex === 'rule'">
-              {{
-                record.type == 1
-                  ? `起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
-                  : record.type == 2
-                  ? `起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
-                  : "-"
-              }}
+               {{
+                  record.type == 1
+                    ? `【每满送】 起送门槛【${record.rule.quantity_min}】 每满${record.rule.quantity_every}送${record.rule.quantity_bonus}`
+                    : record.type == 2
+                    ? `【整单送】 起送门槛【${record.rule.quantity_min}】 达到起送门槛后,赠送${record.rule.quantity_bonus}`
+                    : "-"
+                }}
             </template>
             <!-- 地区赠品 -->
             <template v-if="column.dataIndex === 'area_and_gift'">
