@@ -550,10 +550,10 @@ const handleSubmit = () => {
     // 整合到上传的数据中
     form.strategy_detail = [...arrObjArr, ...formObjArr]
     if (type.value === "add") {
-        addData(form)
+      addData(form)
     } else if (type.value === "edit") {
-        form.id = $route.query.id
-        editData(form)
+      form.id = $route.query.id
+      editData(form)
     }
   }
   //   }
@@ -605,8 +605,10 @@ const getDetail = () => {
     id:
       type.value === "edit"
         ? $route.query.id
-        : type.value  === "add"
+        : type.value === "add"
         ? strategyId.value
+        : type.value === "details"
+        ? $route.query.id
         : "",
   }).then((res) => {
     if (!res.detail) return
