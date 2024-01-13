@@ -199,7 +199,7 @@ const viewData = (arr, type) => {
 }
 // 重构展示地区与赠品
 const reFormartGift = (arr) => {
-  console.log(arr)
+  
   return $i18n.locale.value == "zh"
     ? arr.map((i) => i.name || "-").join("、")
     : arr.map((i) => i.name_en || "-").join("、")

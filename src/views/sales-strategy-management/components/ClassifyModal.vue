@@ -110,9 +110,12 @@ import TableSelect from "@/components/table/ItemTable.vue";
 import COUNTYR from "@/assets/js/address/countries.json";
 import {message} from "ant-design-vue";
 import { useI18n } from "vue-i18n";
+import {useRoute} from "vue-router"; 
+import _ from "lodash";
 const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
 const $t = $i18n.t;
+const $route = useRoute();
 const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList']);
 const props = defineProps({
     visibility: {
@@ -155,6 +158,8 @@ const options = ref({
 const codeStr = ref();
 // 所选id列表
 const selectIdList = ref([]);
+// 所选item列表
+const selectItemList = ref([]);
 const tableData = ref([]);
 const pageSize = ref(10);
 const current = ref(1);
@@ -256,6 +261,11 @@ const handleOk = () => {
             obj.no = maxNo + 1 ;
             obj.country = item1;
             obj.bonus_item_id = item;
+            obj.item = selectItemList.value.filter((item2) => item2.id === item)[0];
+            if($route.query.type === 'add'){
+            //    赋值唯一id
+                obj.id = _.uniqueId();  
+            }
             strategy_detail.push(obj);
 
         });
@@ -292,8 +302,9 @@ const getTableDataFetch = (parmas = {}) => {
         });
 };
 // 接收选择id的数组
-const getSelectIdList = (data) => {
-    selectIdList.value = Core.Util.deepCopy(data);
+const getSelectIdList = (kesArr,itemsArr) => {
+    selectIdList.value = Core.Util.deepCopy(kesArr);
+    selectItemList.value = Core.Util.deepCopy(itemsArr);
 };
 
 watch(
