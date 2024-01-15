@@ -1,5 +1,5 @@
 <template>
-    <div id="LoginMall">
+    <div id="LoginMall" :class="lang">
         <div class="login-header">
             <div class="content">
                 <div class="text">
@@ -10,12 +10,12 @@
                     <!-- <a-button class="lang-switch" type="link"  @click="handleLangSwitch">
                         <i class="icon" :class="lang =='zh' ? 'i_zh-en' : 'i_en-zh'"/>
                     </a-button> -->
-                    <span class="tab-animate">
+                    <span>
                         <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
                             <div class="mt-user-switch" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
                                 <!-- 当前语言 -->
-                                <span class="mt-header-lang-text">{{ currentAreaType }}</span>
+                                <span class="mt-header-lang-text tab-animate">{{ currentAreaType }}</span>
                                 <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                             </div>
                             <template #overlay>
@@ -540,7 +540,6 @@ export default {
             .text {
                 > span {
                     color: rgba(255, 255, 255, 0.7);
-                    font-family: Montserrat;
                     font-size: 18px;
                     font-style: normal;
                     line-height: 120%; /* 21.6px */
@@ -567,7 +566,6 @@ export default {
                     }
                     .fcc();
                     color: #fff;
-                    font-family: Montserrat;
                     font-size: 16px;
                     font-style: normal;
                     font-weight: 400;
@@ -575,14 +573,13 @@ export default {
                     // letter-spacing: 0.64px;
                     position: relative;
                     .mt-user-icon {
-                        width: 24px;
-                        height: 24px;
+                        width: 18px;
+                        height: 18px;
                         margin-right: 8px;
                     }
                     .mt-header-lang-text {
                         color: #FFF;
-                        font-family: Montserrat;
-                        font-size: 16px;
+                        font-size: 12px;
                         font-style: normal;
                         font-weight: 400;
                         line-height: 150%; /* 18px */
@@ -590,7 +587,7 @@ export default {
                         margin-right: 2px;
                     }
                     .mt-triangle-icon {
-                        font-size: 24px;
+                        font-size: 18px;
                         transition: transform 0.3s ease, top 0.3s ease;
                         fill: #FFF;
                         &.expand {
@@ -629,7 +626,6 @@ export default {
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 44px;
-            font-family: Montserrat;
             color: #333;
         }
         .form-content {
@@ -692,7 +688,6 @@ export default {
             input::-webkit-input-placeholder {
                 /* 修改placeholder颜色  */
                 font-size: 14px;
-                font-family: Montserrat;
                 font-style: normal;
                 font-weight: 400;
                 line-height: 150%; /* 21px */
@@ -709,7 +704,6 @@ export default {
                 box-sizing: border-box;
                 font-weight: 400;
                 font-style: normal;
-                font-family: Montserrat;
                 // letter-spacing: 0.56px;
                 &.not-enter {
                     border-bottom: 1px solid #DFDFDF;
@@ -736,7 +730,6 @@ export default {
                 }
             }
             .web-verification {
-                font-family: Montserrat;
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 400;
@@ -761,7 +754,6 @@ export default {
             .user-item {
                 .flex(initial, center, row);
                 color: #333;
-                font-family: Montserrat;
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 400;
@@ -803,7 +795,6 @@ export default {
                 position: relative;
                 color: #999;
                 text-align: center;
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -816,6 +807,14 @@ export default {
             .fcc();
             height: 46px;
             border: 1px solid #999;
+            > span {
+                color: #333;
+                text-align: center;
+                font-size: 12px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: 22px; /* 183.333% */
+            }
             cursor: pointer;
             
             .phone-icon, .phone-black-icon, .user-icon, .user-black-icon {
@@ -831,7 +830,9 @@ export default {
             }
             &:hover {
                 border: 1px solid #C6F;
+                background: transparent;
                 background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
                 background-clip: text;
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -883,6 +884,11 @@ input.ant-input {
 }
 </style>
 <style lang="less">
+#LoginMall {
+    &.en * {
+        font-family: Montserrat !important;
+    }
+}
 // dropdown start
 .action-menu {
     position: absolute;
@@ -924,7 +930,6 @@ input.ant-input {
     }
     .menu_text {
         color: #000;
-        font-family: Montserrat;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;

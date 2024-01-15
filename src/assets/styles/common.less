@@ -380,8 +380,6 @@
 // tab栏hover效果
 .tab-animate {
     position: relative;
-    padding-top: 10px;
-    padding-bottom: 10px;
     &::before {
         content: "";
         position: absolute;
@@ -389,12 +387,24 @@
         bottom: 0;
         display: inline-block;
         width: 0%;
-        height: 2px;
+        height: 1px;
         background: #FFF;
         border-radius: 1px;
         transition: width 0.3s;
     }
     &:hover::before {
         width: 100%;
+    }
+    &.active {
+        &::before {
+            width: 100%;
+        }
+    }
+    &:active {
+        color: rgba(255, 255, 255, 0.7) !important;
+        &::before {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7) !important;
+        }
     }
 }
