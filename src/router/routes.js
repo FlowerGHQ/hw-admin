@@ -2896,7 +2896,7 @@ const routes = [
         meta: {
             title: '销售策略管理',
             title_en: 'System Management',
-            icon: 'i_menu_xitongguanli',
+            icon: 'i_a-iconmenu_xiaoshoucelue',
         },
         children:[
             // 销售策略列表

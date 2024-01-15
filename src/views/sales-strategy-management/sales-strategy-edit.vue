@@ -3,7 +3,11 @@
         <div class="list-container">
             <div class="main-content">
                 <div class="title-container">
+
                     <div class="title-area">
+                        <div class="back" @click="handleBack">
+                            <MySvgIcon icon-class="sales-back"/>
+                        </div>
                         {{
                             type === "add"
                                 ? "新建销售策略"
@@ -76,6 +80,11 @@
                                         :placeholder="$t('def.select')"
                                         @deselect="handleDeleteItem"
                                         @focus.stop="handleOpenModal">
+                                        <!-- removeIcon -->
+                                        <template #removeIcon>
+                                            <MySvgIcon icon-class="sales-circle-delete" />
+                                        </template>
+                                        
                                     </a-select>
                                 </a-form-item>
                             </a-col>
@@ -486,6 +495,11 @@ const tableData = ref([]);
 // 新增后端返回的策略id
 const strategyId = ref(null);
 // methods
+const handleBack = () => {
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-list",
+    });
+};
 // 添加适用商品
 const handleAddFailItem = (ids, items) => {
     for (let i = 0; i < items.length; i++) {
@@ -807,6 +821,16 @@ onMounted(() => {
             position: absolute;
             bottom: 0;
             width: 100%;
+        }
+        .title-container{
+            .title-area{
+                display: flex;
+                .back{
+                    font-size: 17px;
+                    margin-right: 4px;
+                    cursor: pointer;
+                }
+            }
         }
     }
 }
