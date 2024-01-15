@@ -245,6 +245,7 @@ const tableColumns = computed(() => {
       dataIndex: "name",
       key: "name",
     },
+    
     // 赠送规则
     {
       title: $t("sales-strategy-management.gift_rule"),
