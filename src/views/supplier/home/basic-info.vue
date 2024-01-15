@@ -12,9 +12,10 @@
                         <div class="top-type-box">
                             <div
                                 v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
-                                class="type-parts"
+                                class="type-parts m-t-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
+                                    'type-parts-change': item.value !== formState.type,
                                     'border-type':  item.value !== formState.type
                                 }"
                             >
@@ -800,7 +801,7 @@
                           </div>
                       </a-col>
                       <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 21 : 0">
-                            
+                        
                         <div class="form-content-item-table" >
                             <a-table
                                 :columns="competitor_analysis_column"
@@ -3134,10 +3135,12 @@ onMounted(() => {
             color: #FFF;
         }
 
-        &:hover { 
-            border: 1px solid #0061FF;
-            .black-font {
-                color: #0061FF;
+        &.type-parts-change {
+            &:hover { 
+                border: 1px solid #0061FF;
+                .black-font {
+                    color: #0061FF;
+                }
             }
         }
     }
@@ -3188,11 +3191,12 @@ onMounted(() => {
 @media (max-width: 1550px) {
 
     .flex-1 {
-          padding: 8px 0% 0 6% !important;
+          padding: 8px 0 0 6% !important;
       }
 }
 
 .form-content-item-table {
+    margin-left: 140px;
     :deep(.ant-form-item) {
         margin-bottom: 0px;
     }

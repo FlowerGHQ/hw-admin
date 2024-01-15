@@ -717,7 +717,7 @@ onBeforeUnmount(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px;
+            padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;

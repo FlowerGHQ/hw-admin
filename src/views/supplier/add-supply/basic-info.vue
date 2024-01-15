@@ -11,9 +11,10 @@
                         <div class="top-type-box">
                             <div
                                 v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
-                                class="type-parts"
+                                class="type-parts m-t-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
+                                    'type-parts-change': item.value !== formState.type,
                                     'border-type':  item.value !== formState.type
                                 }"
                             >
@@ -4185,12 +4186,13 @@ onMounted(() => {
             color: #1d2129;
             font-size: 16px;
             font-weight: 400;
+            white-space: nowrap;
         }
     }
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 0 0 5%;
             .align-center {
                 .fac();
             }
@@ -4287,10 +4289,12 @@ onMounted(() => {
             color: #FFF;
         }
 
-        &:hover {
-            border: 1px solid #0061FF;
-            .black-font {
-                color: #0061FF;
+        &.type-parts-change {
+            &:hover { 
+                border: 1px solid #0061FF;
+                .black-font {
+                    color: #0061FF;
+                }
             }
         }
     }
@@ -4341,6 +4345,7 @@ onMounted(() => {
 }
 
 .form-content-item-table {
+    margin-left: 140px;
     :deep(.ant-form-item) {
         margin-bottom: 0px;
     }
