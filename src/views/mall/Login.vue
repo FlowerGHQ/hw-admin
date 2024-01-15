@@ -199,6 +199,7 @@ export default {
             codeInputStatus: 'not-enter',
             countdown: null, // 倒计时
             countdownTime: null, // 定时器记录
+            user_type: '',
             user_type_list: []
         };
     },
@@ -220,6 +221,7 @@ export default {
         }
     },
     created() {
+        this.user_type = Number(this.$route.query?.user_type)
         const lang = Core.Data.getLang()
         if (lang === "" || lang === null){
             Core.Data.setLang("zh")
@@ -296,7 +298,7 @@ export default {
                 obj = {
                     ...form,
                     type: Core.Const.COMMON.LOGIN_TYPE.CODE,
-                    temp_user_type: 10, //临时用户类型：10.供应商 
+                    
                 }
             }
             this.checkAccountFetch(obj, type)
@@ -317,8 +319,8 @@ export default {
             let obj = {
                 ...params
             }
-            if (type === 2) { // 手机号临时用户-供应商
-                Core.Api.Common.loginByTempUser(obj).then(res => {
+            if (this.user_type === TYPE.SUPPLIER) { // 手机号临时用户-供应商
+                Core.Api.Common.loginByTempUser({ ...obj, temp_user_type: 10, /* 临时用户类型：10.供应商 */  }).then(res => {
                     console.log('handleLogins apiName res', res)
 
                     Core.Data.setToken(res.token);
@@ -331,7 +333,7 @@ export default {
                     // 手机登录跳转供应链页面
                     this.$router.push('/supply-home')
                 })
-            } else if (type === 1) {// 其他用户
+            } else { // 其他用户
                 Core.Api.Common.checkAccount(obj).then(res => {
                     Core.Data.setLoginMes(obj);
                     Core.Data.setUserTypeList(res?.user_type_list);
