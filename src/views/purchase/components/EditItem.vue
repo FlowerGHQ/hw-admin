@@ -100,7 +100,7 @@ export default {
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
                 { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                 { title: this.$t('i.total_price'),dataIndex: 'total_price', key: 'money'},
-                { title: this.$t('def.operate'), key: 'operate'},
+                { title: this.$t('def.operate'), key: 'operate' ,fixed: 'right', width: 100},
             ]
             if(this.type === 'GIVE_ORDER') {
                 columns = columns.filter(i => i.key !== 'operate')
