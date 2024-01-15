@@ -981,6 +981,15 @@ const apiList = {
         add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
 
     },
+    SALES_STRATEGY:{
+        list: ['PostJson', 'sales-strategy/list'],
+        add: ['PostJson', 'sales-strategy/create'],
+        disable: ['PostJson', '/sales-strategy/disable'],
+        enable: ['PostJson', '/sales-strategy/enable'],
+        delete: ['PostJson', '/sales-strategy/delete'],
+        update: ['PostJson', '/sales-strategy/update'],
+        detail: ['PostJson', '/sales-strategy/detail'],
+    },
     DISTRIBUTOR_HOME: {
         searchList: ['PostJson', 'new/list'], // 分销商首页搜索
     },

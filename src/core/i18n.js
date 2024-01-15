@@ -1192,6 +1192,8 @@ const messages = {
             detail: '消息详情',
         },
         def: {
+            // 请设置
+            p_set: '请设置',
             search: '查询',
             reset: '重置',
             export: '导出',
@@ -3976,6 +3978,7 @@ const messages = {
             detail: 'Message Details',
         },
         def: {
+            p_set: 'Product Setting',
             search: 'Search',
             reset: 'Reset',
             export: 'Export',

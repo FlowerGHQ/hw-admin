@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
+    <a-button class="ItemSelectBtn" v-if="isShowBtn"  @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
@@ -98,6 +98,10 @@ export default {
     },
     emits: ['select', 'option'],
     props: {
+        isShowBtn:{
+            type:Boolean,
+            default:true
+        },
         btnText: {
             type: String,
             default: '添加商品'
