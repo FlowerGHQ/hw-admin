@@ -12,9 +12,10 @@
                         <div class="top-type-box">
                             <div
                                 v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
-                                class="type-parts"
+                                class="type-parts m-t-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
+                                    'type-parts-change': item.value !== formState.type,
                                     'border-type':  item.value !== formState.type
                                 }"
                             >
@@ -3057,10 +3058,12 @@ onMounted(() => {
             color: #FFF;
         }
 
-        &:hover { 
-            border: 1px solid #0061FF;
-            .black-font {
-                color: #0061FF;
+        &.type-parts-change {
+            &:hover { 
+                border: 1px solid #0061FF;
+                .black-font {
+                    color: #0061FF;
+                }
             }
         }
     }

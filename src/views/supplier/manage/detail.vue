@@ -38,6 +38,7 @@
                                                 class="edit-type-item cursor m-t-16"
                                                 :class="{
                                                     'edit-type-item-select': Number(item.value) === Number(parameters.type),
+                                                    'edit-type-item-change': Number(item.value) !== Number(parameters.type),
                                                     'm-l-20': index !== 0
                                                 }"
                                                 @click="onSelectType(item.value)"
@@ -3003,7 +3004,7 @@ const onBack = () => {
                 text-align: center;
                 color: #fff;
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .edit-type {
@@ -3017,7 +3018,7 @@ const onBack = () => {
                     text-align: center;
                     color: #666;
                     font-size: 16px;
-                    font-weight: 600;
+                    font-weight: 500;
                     border-radius: 4px;
                     border: 1px solid #EAECF1;
                     background: #FFF;
@@ -3035,10 +3036,12 @@ const onBack = () => {
                         color: #FFF;
                     }
 
-                    &:hover {
-                        border: 1px solid #0061FF;
-                        .black-font {
-                            color: #0061FF;
+                    &.edit-type-item-change {
+                        &:hover {
+                            border: 1px solid #0061FF;
+                            .black-font {
+                                color: #0061FF;
+                            }
                         }
                     }
                 }
