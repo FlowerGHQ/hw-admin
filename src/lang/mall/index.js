@@ -53,6 +53,7 @@ export default {
         more_features: 'More Features',
         vehicle_models: 'Vehicle Models',
         spareparts: 'Spareparts',
+        accessories: 'Accessories',
         shop_equipment: 'Shop Equipment',
         peripheral_products: 'Peripheral Products',
         promotional_products: 'Promotional Products',

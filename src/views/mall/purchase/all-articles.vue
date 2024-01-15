@@ -194,7 +194,6 @@ export default {
             .flex(initial, center,column);
             .title {
                 color: #333;
-                font-family: Montserrat;
                 font-size: 26px;
                 margin: 0;
                 padding: 48px 0 0 0;
@@ -223,7 +222,6 @@ export default {
                                 color: #FFF;
                                 font-size: 32px;
                                 text-align: left;
-                                font-family: Montserrat;
                                 margin-bottom: 16px;
                                 font-weight: 700;
                             }
@@ -232,7 +230,6 @@ export default {
                                 text-align: left;
                                 font-size: 16px;
                                 width: 570px;
-                                font-family: Montserrat;
                                 margin-bottom: 0;
                             }
                         }
@@ -278,7 +275,6 @@ export default {
                         background: rgba(146, 146, 146, 0.5);
                         color: #FFF;
                         font-size: 14px;
-                        font-family: Montserrat;
                     }
                     .orange {
                         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
@@ -307,7 +303,6 @@ export default {
                             color: #333-sub;
                             margin-bottom: 16px;
                             .time {
-                                font-family: Montserrat;
                                 font-size: 14px;
                                 .ellipsis(1);
                             }
@@ -323,11 +318,9 @@ export default {
                                     display: inline-block;
                                     width: 36px;
                                     margin-right: 6px;
-                                    font-family: Montserrat;
                                     font-size: 14px;
                                 }
                                 .like-num {
-                                    font-family: Montserrat;
                                     font-size: 14px;
                                 }
                             }
@@ -335,7 +328,6 @@ export default {
                         .content {
                             color: #333;
                             font-size: 18px;
-                            font-family: Montserrat;
                             .ellipsis(3);
                         }
                     }
@@ -446,7 +438,6 @@ export default {
                 padding: 0;
                 .title {
                     color: #333;
-                    font-family: Montserrat;
                     font-size: 13px;
                     margin: 0;
                     padding: 17px 20px 0 20px;

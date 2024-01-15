@@ -64,7 +64,6 @@ export default {
     .fcc();
     cursor: pointer;
     transition: 0.1s;
-    font-family: Montserrat;
     font-size: 16px;
     .right-icon {
         height: 20px;
@@ -85,6 +84,12 @@ export default {
 }
 .default {
     border: 1px solid #C6F;
+    background: transparent;
+    background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+    border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
     .my-button-text {
         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
         background-clip: text;
@@ -118,7 +123,7 @@ export default {
     .my-button-text {
         color: #fff;
     }
-    &:hover {
+    &:active {
         background: linear-gradient(100deg, #E0A1FF 0%, #8B8BFF 100%);
         border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
     }

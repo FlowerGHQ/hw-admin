@@ -79,7 +79,6 @@ const getCarList = () => {
         width: 75%;
         .title {
             color: #000;
-            font-family: Montserrat;
             font-size: 24px;
             font-style: normal;
             font-weight: 500;
@@ -91,7 +90,6 @@ const getCarList = () => {
                 margin-bottom: 40px;
                 .list-body-title {
                     color: #000;
-                    font-family: Montserrat;
                     font-size: 16px;
                     font-style: normal;
                     font-weight: 400;
