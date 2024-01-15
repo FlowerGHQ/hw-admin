@@ -20,12 +20,6 @@
                         <a-input v-model:value="form.name_en" :placeholder="$t('def.input')"/>
                     </div>
                 </div>
-                <!-- <div class="form-item required">
-                    <div class="key">{{ $t('n.area') }}:</div>
-                    <div class="value">
-                        <CountryCascader v-model:value="areaList" :def-area='defArea'/>
-                    </div>
-                </div> -->
                 <div class="form-item required">
                     <div class="key">{{ $t('n.area') }}:</div>
                     <div class="value">
