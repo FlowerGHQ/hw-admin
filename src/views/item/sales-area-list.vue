@@ -111,8 +111,8 @@ export default {
                 {title: this.$t('def.operate'), key: 'operation', fixed: 'right'},
             ]
             if (this.$i18n.locale === 'en' ) {
-                columns.splice(2, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
-                columns.splice(3, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
+                // columns.splice(2, 1, {title: this.$t('n.continent'), dataIndex: 'continent_en', key: 'country'})
+                columns.splice(2, 1, {title: this.$t('n.country'), dataIndex: 'country_en', key: 'country'})
             }
             return columns
         },
