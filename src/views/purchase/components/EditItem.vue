@@ -5,14 +5,22 @@
             <div class="title-area2">{{title}}</div>
             <div class="btns-area">     
                 <div class="collapse-title-right">
-                    <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
-                    <a-divider type="vertical" />
-                    <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
-                    <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>                    
+                    <div class="give-order" v-if="type === 'GIVE_ORDER'">
+                        <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
+                        <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleCancel()">{{ $t('def.cancel') }}</a-button> 
+                        <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleSave()">{{ $t('def.sure') }}</a-button>
+                    </div>
+                    <div class="production-order" v-if="type === 'PURCHASE_ORDER'"> 
+                        <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
+                        <a-divider type="vertical" />
+                        <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
+                        <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>         
+                    </div>
+                            
                 </div>          
             </div>
         </div>
-        <div style="padding: 0 20px;">
+        <div class="table-container">
             <div class="panel-content table-container no-mg">
                 <a-table 
                     :columns="tableColumns" 
@@ -33,7 +41,8 @@
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
+                            <span v-if="type === 'GIVE_ORDER'">{{ text }}</span>
+                            <a-input-number v-else v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
@@ -55,12 +64,9 @@
 
 <script>
 import Core from '../../../core';
-
 const USER_TYPE = Core.Const.USER.TYPE;
 const PURCHASE_TYPE = Core.Const.PURCHASE.TYPE;
-
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
-
 export default {
     name: "EditPurchaseItem",
     components: {
@@ -73,13 +79,15 @@ export default {
         },
         type: {
             type: String,
-        }
+        },
+
     },
     data() {
         return {
             title: '',
             loading: false,        
             tableData: [],
+            isShowBtn:false,
         };
     },
     computed: {
@@ -92,8 +100,11 @@ export default {
                 { title: this.$t('i.total_quantity'), dataIndex: 'amount'},
                 { title: this.$t('i.unit_price'), dataIndex: 'unit_price', key: 'money'},
                 { title: this.$t('i.total_price'),dataIndex: 'total_price', key: 'money'},
-                { title: this.$t('def.operate'), key: 'operate'},
+                { title: this.$t('def.operate'), key: 'operate' ,fixed: 'right', width: 100},
             ]
+            if(this.type === 'GIVE_ORDER') {
+                columns = columns.filter(i => i.key !== 'operate')
+            }
             return columns
         },
         disabledChecked() {
@@ -101,8 +112,6 @@ export default {
         }
     },
     mounted() {
-
-        console.log(this.type)
         switch (this.type) {
             case 'PURCHASE_ORDER':        // 详情
                 this.getPurchaseItemList()
@@ -110,6 +119,7 @@ export default {
                 break;
             case 'GIVE_ORDER':        // 详情
                 this.title = this.$t('p.give_order')
+                this.getGiveawayList()
                 break;
         }
     },
@@ -146,6 +156,29 @@ export default {
                 this.loading = false;
             });
         },
+        // 获取 采购单 赠品列表
+        getGiveawayList() {
+            this.loading = true;
+            Core.Api.Purchase.giveawayList({
+                order_id: this.orderId
+            }).then(res => {
+                this.tableData = res.list.map(i => {
+                    let item = i.item || {}
+                    item.amount = i.amount
+                    item.unit_price = i.unit_price
+                    item.total_price = i.price
+                    return item
+                })
+                if(this.tableData.length>0) {
+                    this.isShowBtn = true
+                }
+            }).catch(err => {
+                console.log('getGiveawayList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         // 添加商品
         handleAddItem(ids, items) {
             console.log('handleAddItem ids, items:', ids, items)
@@ -159,12 +192,12 @@ export default {
                 return item
             })
             this.tableData.push(...items)
+            this.isShowBtn = true
         },
         // 添加商品
         handleRemoveItem(index) {
             this.tableData.splice(index, 1)
         },
-
         handleSave() {
             let item_list = this.tableData.map(item => ({
                 amount: item.amount,
@@ -177,8 +210,6 @@ export default {
                 type: item.type,
                 unit_price: item.unit_price,
             }))
-            console.log('handleSave item_list:', item_list)
-
             switch (this.type) {
                 case 'PURCHASE_ORDER':        // 详情
                     Core.Api.Purchase.revise({
@@ -202,6 +233,8 @@ export default {
                         receive_info_id: this.detail.receive_info_id,
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.save_success'))
+                        // 重新获取数据
+                        this.getGiveawayList()
                         this.$emit('submit')
                     }).catch(err => {
                         console.log('handleSave err:', err)
@@ -211,7 +244,11 @@ export default {
 
         },
         handleCancel() {
-            console.log('handleCancel:')
+            if(this.type === "GIVE_ORDER") {
+                // 重新获取数据
+                this.getGiveawayList()
+                return
+            }
             this.$emit('cancel')
         }
     },

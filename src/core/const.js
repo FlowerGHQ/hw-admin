@@ -868,10 +868,10 @@ let Const = {
             NO: 0,
         },
         TYPE: {
-            PRE_SALES: 10,
-            AFTER_SALES: 20,
-            MIX: 30,
-            GIVEAWAY: 40,
+            PRE_SALES: 10, // 售前订单 - 整车
+            AFTER_SALES: 20, // 售后订单 - 零部件 - 物料
+            MIX: 30, // 混合订单 - 整车 + 零部件 - 物料
+            GIVEAWAY: 40, //赠品单
         },
         PARENT_TYPE: {
             BREAK: 10,     // 拆分订单

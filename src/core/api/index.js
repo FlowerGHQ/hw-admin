@@ -357,6 +357,7 @@ const apiList = {
         update: ['PostJson', 'purchase-order/update'], // 采购订单修改
         detailBySn: ['PostJson', 'purchase-order/detail-sn'],
         itemList: ['PostJson', 'purchase-order-item/list'], // 采购订单明细列表
+        giveawayList: ['PostJson', 'purchase-order-item/giveaway-list'], // 采购订单赠品明细列表
         payList: ['PostJson', 'purchase-order-pay/list'], // 采购订单收款明细列表
         payAudit: ['PostJson', 'purchase-order-pay/audit'], // 采购订单收款明细列表
         createAudit: ['PostJson', 'purchase-order/create-audit'], // 售后采购单创建审核
@@ -378,7 +379,6 @@ const apiList = {
 
         createGiveaway: ['PostJson', 'purchase-order/create-giveaway'], // 已下单的订单-编辑商品-审核
         updatePI: ['PostJson', 'purchase-order/update-pi'], // 修改pi
-
         // 平台方增加功能请求-手动同步u8--同步erp
         erpPush: ['PostJson', 'erp/purchase-order/push'], // 同步erp  待生产-》生产中
 
