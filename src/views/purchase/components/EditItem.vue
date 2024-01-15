@@ -7,8 +7,8 @@
                 <div class="collapse-title-right">
                     <div class="give-order" v-if="type === 'GIVE_ORDER'">
                         <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
-                        <a-button type="primary" ghost @click.stop="handleCancel()">{{ $t('def.cancel') }}</a-button> 
-                        <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.sure') }}</a-button>
+                        <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleCancel()">{{ $t('def.cancel') }}</a-button> 
+                        <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleSave()">{{ $t('def.sure') }}</a-button>
                     </div>
                     <div class="production-order" v-if="type === 'PURCHASE_ORDER'"> 
                         <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
@@ -20,7 +20,7 @@
                 </div>          
             </div>
         </div>
-        <div style="padding: 0 20px;">
+        <div class="table-container">
             <div class="panel-content table-container no-mg">
                 <a-table 
                     :columns="tableColumns" 
@@ -41,7 +41,8 @@
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            <a-input-number v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
+                            <span v-if="type === 'GIVE_ORDER'">{{ text }}</span>
+                            <a-input-number v-else v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
@@ -63,12 +64,9 @@
 
 <script>
 import Core from '../../../core';
-
 const USER_TYPE = Core.Const.USER.TYPE;
 const PURCHASE_TYPE = Core.Const.PURCHASE.TYPE;
-
 import ItemSelect from '@/components/popup-btn/ItemSelect.vue';
-
 export default {
     name: "EditPurchaseItem",
     components: {
@@ -81,13 +79,15 @@ export default {
         },
         type: {
             type: String,
-        }
+        },
+
     },
     data() {
         return {
             title: '',
             loading: false,        
             tableData: [],
+            isShowBtn:false,
         };
     },
     computed: {
@@ -102,6 +102,9 @@ export default {
                 { title: this.$t('i.total_price'),dataIndex: 'total_price', key: 'money'},
                 { title: this.$t('def.operate'), key: 'operate'},
             ]
+            if(this.type === 'GIVE_ORDER') {
+                columns = columns.filter(i => i.key !== 'operate')
+            }
             return columns
         },
         disabledChecked() {
@@ -109,8 +112,6 @@ export default {
         }
     },
     mounted() {
-
-        console.log(this.type)
         switch (this.type) {
             case 'PURCHASE_ORDER':        // 详情
                 this.getPurchaseItemList()
@@ -168,6 +169,9 @@ export default {
                     item.total_price = i.price
                     return item
                 })
+                if(this.tableData.length>0) {
+                    this.isShowBtn = true
+                }
             }).catch(err => {
                 console.log('getGiveawayList err', err)
             }).finally(() => {
@@ -188,6 +192,7 @@ export default {
                 return item
             })
             this.tableData.push(...items)
+            this.isShowBtn = true
         },
         // 添加商品
         handleRemoveItem(index) {

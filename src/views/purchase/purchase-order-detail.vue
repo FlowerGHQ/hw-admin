@@ -263,7 +263,8 @@
         <div class="gift-order" style="margin-bottom: 20px;">
             <EditItem 
                     v-if="giveOrderShow" 
-                    :order-id='id' 
+                    :order-id='id'
+                    :is-first='firstEnter' 
                     :detail='detail' 
                     type='GIVE_ORDER' 
                     @submit="getList"
@@ -694,7 +695,6 @@ export default {
             selectedRowItems: [],
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
-            
             createAuditShow: false, // 订单审核 model 显隐  
             PIShow: false,  // 修改pi model 显隐
             activeValue: 'payment_detail', // nameList的value
@@ -817,10 +817,10 @@ export default {
             return arr.includes(Core.Data.getLoginType())
         },
     },
-   async mounted() {
-        this.getList(); // 获取列表
-        this.getWarehouseList(); // 获取仓库列表
-        this.getGiveawayList(); // 获取赠品列表
+    mounted() {
+         this.getList(); // 获取列表
+         this.getWarehouseList(); // 获取仓库列表
+         this.getGiveawayList(); // 获取赠品列表
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
