@@ -222,7 +222,7 @@
                                   <!-- 成立日期 -->
                                   <a-form-item :label="$t('supply-chain.date_establishment')" name="date_establishment">
                                     <span name="date_establishment">
-                                        <a-date-picker  valueFormat="X"  v-model:value="formState.company_info.established_time" />
+                                        <a-date-picker  :placeholder="$t('def.select')"  valueFormat="X"  v-model:value="formState.company_info.established_time" />
                                     </span>
                                   </a-form-item>
                               </a-col>
@@ -400,7 +400,7 @@
                                               'supply-chain.agency_relationship'
                                           )
                                       " >
-                                          <a-date-picker  valueFormat="X"  v-model:value="formState.agent_info.agent_relationship" />
+                                          <a-date-picker  :placeholder="$t('def.select')"  valueFormat="X"  v-model:value="formState.agent_info.agent_relationship" />
                                   </a-form-item>
                               </a-col>
                               
@@ -846,7 +846,7 @@
                                       <template
                                           v-else-if="column.type === 'time'"
                                       >
-                                          <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
+                                          <a-date-picker  :placeholder="$t('def.select')" valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                       </template>
                                       <template
                                           v-else-if="column.dataIndex === 'operation'"
@@ -939,7 +939,10 @@
                                         >
                                             <a-form-item :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
-                                                    <a-date-picker valueFormat="X" picker="year"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker  :placeholder="$t('def.select')" 
+                                                        valueFormat="X" 
+                                                        picker="year"
+                                                        v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                         </template>
@@ -1166,6 +1169,23 @@
                                       <a-form-item
                                           :label="$t('supply-chain.environmental_system_certification')" >
                                           <a-input v-model:value="formState.quality_info.environmental_system_certification" :placeholder="$t('supply-chain.please_enter')" />
+                                      </a-form-item>
+                                  </a-col>
+                            </a-row>
+                            <a-row :gutter="24">
+                                  <a-col :span="12">
+                                    <!-- 质量合作机构 -->
+                                      <a-form-item
+                                          :label="$t('supply-chain.quality_cooperation_agency')" >
+                                          <a-input v-model:value="formState.quality_info.partners" :placeholder="$t('supply-chain.please_enter')" />
+                                      </a-form-item>
+                                  </a-col>
+                                  <a-col :span="12">
+                                    
+                                      <!-- 认可实验室 -->
+                                      <a-form-item
+                                          :label="$t('supply-chain.accredited_laboratory')" >
+                                          <a-input v-model:value="formState.quality_info.accredited_laboratory" :placeholder="$t('supply-chain.please_enter')" />
                                       </a-form-item>
                                   </a-col>
                             </a-row>
@@ -1487,7 +1507,7 @@
                                       >
                                            <a-form-item :name="`production_${column.dataIndex}`">
                                                 <span :name="`production_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker  :placeholder="$t('def.select')" valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                           </a-form-item>
                                       </template>
@@ -1592,7 +1612,7 @@
                                       >
                                             <a-form-item :name="`detection_${column.dataIndex}`">
                                                 <span :name="`detection_${column.dataIndex}`">
-                                                    <a-date-picker valueFormat="X"  v-model:value="record[column.dataIndex]" />
+                                                    <a-date-picker  :placeholder="$t('def.select')" valueFormat="X"  v-model:value="record[column.dataIndex]" />
                                                 </span>
                                             </a-form-item>
                                       </template>
@@ -2000,6 +2020,25 @@ const formState = reactive({
     // 补充信息
     additional_info: "",
 });
+
+// 查询当前校验的字段的父级,直到找到class为ant-form-item-control的元素的递归函数
+const findParent = (el) => {
+    // 查找到父级
+    let parent = el.parentNode;
+    let classNameArr = parent.className.split(" ");
+    if(parent && !classNameArr.includes("ant-form-item")){
+        return findParent(parent);
+    }else if (!parent && parent.parentNode) {
+        return findParent(parent.parentNode);
+    }else if(!parent && !parent.parentNode){
+        return '';
+    } 
+    else {
+        return  parent.querySelector('.ant-form-item-label > label').innerText;
+    }
+
+};
+
 let PositionVaild = async (_rule, value) => {
     if (formState.position.length == 0) {
         return Promise.reject(
@@ -2012,6 +2051,11 @@ let contactInfoVaild = (_rule, value)=>{
     // 如果只有一个数据,并且position为4,就不用校验
     if(formState.contact_info.length == 1 && formState.contact_info[0].position == 4){
         return Promise.resolve();
+    }
+    else if(formState.contact_info.length == 1 && formState.contact_info[0].position != 4){
+        if (!formState.contact_info[0].name || !formState.contact_info[0].phone || !formState.contact_info[0].email) {
+            return Promise.reject(false);
+        }
     }
     else if(formState.contact_info.length > 1){
        let arr = formState.contact_info.filter(item=>item.position != 4)
@@ -2102,15 +2146,25 @@ let companyVaild = async (_rule, value) => {
         case 'load':        // 智能自动化线
             dataBoo = findObjIsNoneFromList('produce_capacity' , 'load');
             break;
-
-
-
             
     }
-    if(dataBoo) return Promise.reject(
-        $t("supply-chain.please_enter")
-    );
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            let el = document.querySelector(`[name="${_rule.fullField}"]`);
+            if(el){
+                let parent = findParent(el);
+                console.log(parent);
+                if(dataBoo)  reject(
+                    $t("supply-chain.please_enter") + parent
+                );
+                resolve();
+            }
+        },0)
+    });
+
+    
+    
+    
 };
 // 是否-法律纠纷
 let flagLegalDisputeValid =  async (_rule, value) => {
@@ -2153,10 +2207,23 @@ let flagLegalDisputeValid =  async (_rule, value) => {
             break;
             
     }
-    if(dataBoo) return Promise.reject(
-        $t("supply-chain.please_select") //请选择
-    );
-    return Promise.resolve();
+    // if(dataBoo) return Promise.reject(
+    //     $t("supply-chain.please_select") //请选择
+    // );
+    // return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            let el = document.querySelector(`[name="${_rule.fullField}"]`);
+            if(el){
+                let parent = findParent(el);
+                console.log(parent);
+                if(dataBoo)  reject(
+                    $t("supply-chain.please_select") + parent
+                );
+                resolve();
+            }
+        },0)
+    });
 };
 
 // 辅助表格校验方法1 table
@@ -2187,6 +2254,7 @@ let tableVaild = async (_rule, value) => {
     if(!_rule.required) {
         return Promise.resolve();
     }
+    // _rule.fullField : 是当前校验的字段
     switch(_rule.fullField){
 
         case 'customer_name': // 客户名称
@@ -2238,10 +2306,19 @@ let tableVaild = async (_rule, value) => {
             break;
             
     }
-    if(dataBoo) return Promise.reject(
-        $t("supply-chain.please_fill_form") //请填写表单
-    );
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        setTimeout(()=>{
+            let el = document.querySelector(`[name="${_rule.fullField}"]`);
+            if(el){
+                let parent = findParent(el);
+                console.log(parent);
+                if(dataBoo)  reject(
+                    $t("supply-chain.please_enter") + parent
+                );
+                resolve();
+            }
+        },0)
+    });
 };
 // 当前类的校验
 const rules = ref({})

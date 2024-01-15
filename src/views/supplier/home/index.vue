@@ -13,7 +13,7 @@
                     <a-button
                         class="lang-switch"
                         type="link"
-                        @click="handleLangSwitch">
+                        @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
                         <i
                             class="icon"
                             :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
@@ -513,9 +513,10 @@ const handleOpen = () => {
     visible.value = true;
 };
 // 中英文切换
-const handleLangSwitch = () => {
-    $store.commit("switchLang");
+const handleLangSwitch = (lang) => {
+    $store.commit("switchLang",lang);
     $i18n.locale.value = $store.state.lang;
+    console.log("lang:", lang);
 };
 const handleEditShow = () => {
     passShow.value = true;
