@@ -5,10 +5,18 @@
             <div class="title-area2">{{title}}</div>
             <div class="btns-area">     
                 <div class="collapse-title-right">
-                    <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
-                    <a-divider type="vertical" />
-                    <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
-                    <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>                    
+                    <div class="give-order" v-if="type === 'GIVE_ORDER'">
+                        <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
+                        <a-button type="primary" ghost @click.stop="handleCancel()">{{ $t('def.cancel') }}</a-button> 
+                        <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.sure') }}</a-button>
+                    </div>
+                    <div class="production-order" v-if="type === 'PURCHASE_ORDER'"> 
+                        <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
+                        <a-divider type="vertical" />
+                        <a-button type="primary" ghost @click.stop="handleSave()">{{ $t('def.changes') }}</a-button>
+                        <a-button ghost danger @click.stop="handleCancel()">{{ $t('def.cancel_changes') }}</a-button>         
+                    </div>
+                            
                 </div>          
             </div>
         </div>
@@ -110,6 +118,7 @@ export default {
                 break;
             case 'GIVE_ORDER':        // 详情
                 this.title = this.$t('p.give_order')
+                this.getGiveawayList()
                 break;
         }
     },
@@ -146,6 +155,26 @@ export default {
                 this.loading = false;
             });
         },
+        // 获取 采购单 赠品列表
+        getGiveawayList() {
+            this.loading = true;
+            Core.Api.Purchase.giveawayList({
+                order_id: this.orderId
+            }).then(res => {
+                this.tableData = res.list.map(i => {
+                    let item = i.item || {}
+                    item.amount = i.amount
+                    item.unit_price = i.unit_price
+                    item.total_price = i.price
+                    return item
+                })
+            }).catch(err => {
+                console.log('getGiveawayList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
+
         // 添加商品
         handleAddItem(ids, items) {
             console.log('handleAddItem ids, items:', ids, items)
@@ -164,7 +193,6 @@ export default {
         handleRemoveItem(index) {
             this.tableData.splice(index, 1)
         },
-
         handleSave() {
             let item_list = this.tableData.map(item => ({
                 amount: item.amount,
@@ -177,8 +205,6 @@ export default {
                 type: item.type,
                 unit_price: item.unit_price,
             }))
-            console.log('handleSave item_list:', item_list)
-
             switch (this.type) {
                 case 'PURCHASE_ORDER':        // 详情
                     Core.Api.Purchase.revise({
@@ -202,6 +228,8 @@ export default {
                         receive_info_id: this.detail.receive_info_id,
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.save_success'))
+                        // 重新获取数据
+                        this.getGiveawayList()
                         this.$emit('submit')
                     }).catch(err => {
                         console.log('handleSave err:', err)
@@ -211,7 +239,11 @@ export default {
 
         },
         handleCancel() {
-            console.log('handleCancel:')
+            if(this.type === "GIVE_ORDER") {
+                // 重新获取数据
+                this.getGiveawayList()
+                return
+            }
             this.$emit('cancel')
         }
     },

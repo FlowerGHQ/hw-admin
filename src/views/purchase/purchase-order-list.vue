@@ -87,7 +87,7 @@
             <a-button class="right-f" v-if="searchForm.status === '150' && $auth('ADMIN')"  :disabled="!isShowErpDisabled" @click="sendErp">{{/* 同步至ERP */ $t('p.synchronization_to_erp') }}</a-button>
         </div>
         <div class="table-container">
-            <a-table :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
+            <a-table :loading="loading" :columns="tableColumns" :data-source="tableData" :scroll="{ x: true }"
                 :row-selection="searchForm.status === '150' && $auth('ADMIN')? rowSelection : null"
                 :row-key="record => record.id" :pagination='false'>
                 <template #bodyCell="{ column, text , record}">
@@ -96,6 +96,16 @@
                             <a-button type="link" @click="routerChange('detail', record)" v-if="text !== ''">{{text }}</a-button>
                             <a-button type="link" disabled v-else>-</a-button>
                         </a-tooltip>
+                    </template>
+                    <!-- 销售bom -->
+                    <template v-if="column.key === 'accessory_list'">
+                        {{ 
+                            record.accessory_list&&record.accessory_list.length>0?
+                            record.accessory_list.map(
+                                item=> $i18n.locale === 'zh'? item.name : item.name_en
+                            ).join(','):
+                            '-'
+                        }}
                     </template>
                     <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -284,6 +294,8 @@ export default {
         tableColumns() {
             let columns = [
                 { title: this.$t('p.number'), dataIndex: 'sn', },
+                // 销售BOM
+                { title:this.$t('i.sale_bom'),dataIndex: 'accessory_list', key: 'accessory_list'},
                 { title: this.$t('p.parent_sn'), dataIndex: 'parent_sn', },
                 { title: this.$t('p.order_type'), dataIndex: 'type', key: 'type' },
                 { title: this.$t('p.payment_method'), dataIndex: 'pay_type', key: 'pay_type' },                                
@@ -495,6 +507,7 @@ export default {
             }).then(res => {
                 this.total = res.count;
                 this.tableData = res.list;
+                this.loading = false;
                 // this.tableData.forEach(item=>{
                 //     item['total_price'] = (item['price'] || 0) + (item['freight'] || 0);
                 // })
@@ -505,7 +518,6 @@ export default {
             });
         },
         getStatusStat() {  // 获取 状态统计 数据
-            this.loading = true;
 
             Core.Api.Purchase.statusList({
                 search_type: this.search_type
@@ -526,9 +538,7 @@ export default {
                 this.statusList[0].value = total
             }).catch(err => {
                 console.log('getStatusStat err:', err)
-            }).finally(() => {
-                this.loading = false;
-            });
+            })
         },
         getDistributorListAll() {
             Core.Api.Distributor.listAll().then(res => {

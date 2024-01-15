@@ -79,7 +79,7 @@
                                 <i class="icon i_deliver" />{{ $t('p.out_stock') }}
                             </a-button>
                         </template>
-                        <!-- 赠送订单 -->
+                        <!-- 赠送订单 订单的类型不为赠品单，不为混合订单 并且 赠送订单按钮消失 并且有权限查看 -->
                         <a-button type="primary" ghost
                             v-if="detail.type !== TYPE.GIVEAWAY && detail.type !== TYPE.MIX && !giveOrderShow && $auth('purchase-order.give')"
                             @click="handleGiveOrder">
@@ -260,9 +260,15 @@
         </div>
 
         <!-- 赠送订单 -->
-        <div class="giftOrder" style="margin-bottom: 20px;">
-            <EditItem v-if="giveOrderShow" :order-id='id' :detail='detail' type='GIVE_ORDER' @submit="getList"
-                @cancel='giveOrderShow = false'>
+        <div class="gift-order" style="margin-bottom: 20px;">
+            <EditItem 
+                    v-if="giveOrderShow" 
+                    :order-id='id' 
+                    :detail='detail' 
+                    type='GIVE_ORDER' 
+                    @submit="getList"
+                    @cancel='giveOrderShow = true'>
+                >
             </EditItem>
         </div>
 
@@ -688,6 +694,7 @@ export default {
             selectedRowItems: [],
             itemEditShow: true, // 是否开启商品编辑
             giveOrderShow: false, // 赠送订单按钮 显隐
+            
             createAuditShow: false, // 订单审核 model 显隐  
             PIShow: false,  // 修改pi model 显隐
             activeValue: 'payment_detail', // nameList的value
@@ -810,9 +817,10 @@ export default {
             return arr.includes(Core.Data.getLoginType())
         },
     },
-    mounted() {
-        this.getList();
-        this.getWarehouseList();
+   async mounted() {
+        this.getList(); // 获取列表
+        this.getWarehouseList(); // 获取仓库列表
+        this.getGiveawayList(); // 获取赠品列表
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
@@ -857,12 +865,30 @@ export default {
                 this.warehouseList = res.list
             })
         },
+        // 获取赠品信息列表
+
+        // 获取 采购单 赠品列表 控制按钮的显示隐藏
+        getGiveawayList() {
+            this.loading = true;
+            Core.Api.Purchase.giveawayList({
+                order_id: this.$route.query.id,
+            }).then(res => {
+                if(res?.list && res.list.length > 0){
+                    this.giveOrderShow = true
+                }
+                
+            }).catch(err => {
+                console.log('getGiveawayList err', err)
+            }).finally(() => {
+                this.loading = false;
+            });
+        },
 
         getList() {
             this.itemEditShow = false
-            this.giveOrderShow = false
-            this.getPurchaseItemList();
-            this.getPurchaseInfo();
+            // this.giveOrderShow = false
+            this.getPurchaseItemList(); // 获取商品列表
+            this.getPurchaseInfo(); // 获取订单信息
             this.$refs.payment.getPurchasePayList()
         },
 

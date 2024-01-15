@@ -209,6 +209,7 @@ export default {
         },
 
         getTableData() {
+            this.loading = true;
             //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
                 arr = arr.map(item=>item.trim());
