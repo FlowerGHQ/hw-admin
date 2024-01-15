@@ -291,6 +291,7 @@ export default {
     mask_tips2: "填写的资料尚未提交，确定退出当前页面吗",
     continue_fill: "继续填写", 
     submit_exit: "提交并退出",
+    no_content: "无内容",
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -579,5 +580,6 @@ export default {
     mask_tips2: "The information filled in has not been submitted yet. Are you sure to exit the current page",
     continue_fill: "Continue to fill in", 
     submit_exit: "Submit and exit",
+    no_content: "No Content",
   },
 }
