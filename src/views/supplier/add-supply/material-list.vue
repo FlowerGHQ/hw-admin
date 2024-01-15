@@ -51,20 +51,7 @@
                                             )
                                         "
                                         name="registered_capital">
-                                        <div class="registered-capital—area">
-                                            <!-- <a-input
-                                                :maxlength="15"
-                                                :placeholder="
-                                                    $t(
-                                                        'supply-chain.please_enter'
-                                                    )
-                                                "
-                                                name="registered_capital"
-                                                v-model:value="
-                                                    formState.registered_capital
-                                                ">
-                                            </a-input>
-                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span> -->
+                                        <div class="registered-capital—area">    
                                             <a-input-number
                                                 v-model:value="
                                                     formState.registered_capital
@@ -89,29 +76,6 @@
                                         </div>
                                     </a-form-item>
                                 </div>
-                                <!-- <div class="col-area-item"> -->
-                                <!-- 法定代表人 -->
-                                <!-- <a-form-item
-                      :label="
-                          $t(
-                              'supply-chain.legal_representative'
-                          )
-                      "
-                      name="legal_person">
-                      <a-input
-                          
-                          :maxlength="5"
-                          
-                          :placeholder="
-                              $t('supply-chain.please_enter')
-                          "
-                          name="legal_person"
-                          v-model:value="
-                              formState.legal_person
-                          ">
-                      </a-input>
-                  </a-form-item> -->
-                                <!-- </div> -->
                             </div>
                             <div class="col-area business-term-col-area">
                                 <div class="col-all-area">
@@ -735,8 +699,7 @@ onMounted(() => {
     margin-bottom: 16px;
 }
 :deep(.ant-form-item-label > label) {
-    color: #8090a6;
-    height: auto;
+    color: #8090a6;    
 }
 :deep(.ant-form-item-label > label::after) {
     display: none;
@@ -766,6 +729,7 @@ onMounted(() => {
 .business-term {
     display: flex;
     align-items: center;
+
     :deep(.ant-picker-range) {
         min-width: 236px;
         height: 32px;

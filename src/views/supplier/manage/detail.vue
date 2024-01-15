@@ -113,7 +113,7 @@
                                             <!-- 职位身份 -->
                                             <template v-if="column.key === 'position'">
                                                 <div class="information-customer-name w-100">
-                                                    <span class="information-customer-name-required">*</span>
+                                                    <span v-if="text !== Core.Const.SUPPLAY.POSITION_MAP_STATUS.GENERAL_MANAGER" class="information-customer-name-required">*</span>
                                                     <span class="m-l-4">
                                                         {{
                                                             Core.Const.SUPPLAY.POSITION_MAP[text]?.t
@@ -295,7 +295,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchasing_radius') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.purchasing_radius"
                                         :placeholder="$t('common.please_enter')" 
@@ -314,7 +314,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_space') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.floor_area"
                                         :placeholder="$t('common.please_enter')" 
@@ -335,7 +335,7 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_area') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.building_area"
                                         :placeholder="$t('common.please_enter')"
@@ -786,7 +786,7 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.sales"
                                                         :placeholder="$t('common.please_enter')" 
@@ -810,7 +810,7 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.taxes_paid"
                                                         :placeholder="$t('common.please_enter')" 
@@ -834,7 +834,7 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.profit_margin"
                                                         :placeholder="$t('common.please_enter')" 
@@ -858,7 +858,7 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.asset_liability_ratio"
                                                         :placeholder="$t('common.please_enter')" 
@@ -882,7 +882,7 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.cash_flow_ratio"
                                                         :placeholder="$t('common.please_enter')" 
@@ -1005,7 +1005,7 @@
                                             </template>
                                             <template v-if="column.key === 'sales_share'">
                                                 <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="record.sales_share"
                                                         :placeholder="$t('common.please_enter')"
@@ -1285,7 +1285,7 @@
                                     <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_weight') }}</div>
                                     <div class="value m-l-8">
                                         <a-input-number
-                                            class="w-100"
+                                            class="w-100 customer-input-number-change"
                                             :class="{ 'customer-input-number': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_weight"
                                             :placeholder="$t('common.please_enter')" 
@@ -2366,7 +2366,7 @@ const customerInfoColumns = computed(() => {
 const TimeBusinessTerm = ref(null) // 营业期限
 const TimeDurationOfAgency = ref(null) // 代理有效期间
 const isClose = ref(false) // MyMask 显影
-const isEdit = ref(false)
+const isEdit = ref(route.query?.flag_edit)
 const parameters = ref({
     type: "",
     // 联系方式
@@ -2963,13 +2963,16 @@ const onBack = () => {
             :deep(.ant-input-number-input-wrap > .ant-input-number-input) {
                 cursor: initial;
             }
+        }
+        .customer-input-number-change {
+
             :deep(.ant-input-number-group-addon) {
                 min-width: 36px;
-                background-color: #f2f2f2;
+                background-color: #F2F2F2;
                 color: #808fa6;
                 font-size: 14px;
                 font-weight: 400;
-                border-left: 1px solid #eaecf1;
+                border-left: 1px solid #F2F2F2;
             }
         }
     }
@@ -3238,7 +3241,10 @@ const onBack = () => {
 
 :deep(.ant-table-wrapper) {
     border: 1px solid #EAECF2; 
+    border-bottom: 0px;
+
 }
+
 
 .information-customer-name {
     padding: 0 10px;
@@ -3299,6 +3305,6 @@ const onBack = () => {
     margin-left: 4px;
 }
 .custom-not_uploaded {
-    color: #c7bfbf;
+    color: #666;
 }
 </style>
