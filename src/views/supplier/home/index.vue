@@ -110,13 +110,14 @@
                                     </a-modal>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" />
-                                <a-menu-item @click="$router.push('/login')">
+                                <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
                                     <a-button
                                         type="link"
                                         class="menu-item-btn"
                                         >{{ $t("mall.switch_identity") }}</a-button
                                     >
                                 </a-menu-item>
+                                <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
                                     <a-button
                                         type="link"
@@ -277,6 +278,7 @@ const lang = computed(() => $store.state.lang);
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
+const user_type_list = ref(Core.Data.getUserTypeList());
 //步数样式
 const setpCount = computed(() => {
     return $store.getters["SUPPLY_CHAIN/SETP"];

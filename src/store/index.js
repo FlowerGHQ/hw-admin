@@ -27,6 +27,9 @@ const store = createStore({
                 state.mallSearchKey = props
             }
         },
+        clearMallKey(state) {
+            state.mallSearchKey = ''
+        },
         setShopCartNum(state, props) {
             if (props || props === '') {
                 state.shopCartNum = props

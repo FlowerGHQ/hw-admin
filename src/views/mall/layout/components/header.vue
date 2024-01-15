@@ -53,10 +53,10 @@
                                         </a-modal>
                                     </a-menu-item>
                                     <a-menu-divider class="menu_divider" />
-                                    <a-menu-item @click="routerChange('/login')">
+                                    <a-menu-item @click="routerChange('/login')" v-if="user_type_list.length > 1">
                                         <a class="menu_text">{{ $t('mall.switch_identity') }}</a>
                                     </a-menu-item>
-                                    <a-menu-divider class="menu_divider" />
+                                    <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                     <a-menu-item @click="handleLogout">
                                         <a class="menu_text">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
@@ -65,7 +65,7 @@
                         </a-dropdown>
                     </span>
                     <!-- 收藏夹 -->
-                    <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
+                    <span class="header-menu tab-animate" @click="routerChange('/mall/favorites')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
@@ -90,10 +90,16 @@
                             </div>
                             <template #overlay>
                                 <a-menu style="text-align: center;">
-                                        <a-menu-item :key="item.key" v-for="(item, index) in menuList" @click="routerChange(item.path)">
-                                            <a class="menu_text">{{ $t(`router.${item.nameLang}`) }}</a>
+                                    <template v-for="(item, index) in showList">
+                                        <a-menu-item 
+                                            v-if="$auth(...item.auth)" 
+                                            :key="item.key"
+                                            @click="routerChange(item.redirect)"
+                                        >
+                                            <a class="menu_text">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</a>
                                             <a-menu-divider class="menu_divider" v-if="index < menuList.length - 1" />
                                         </a-menu-item>
+                                    </template>
                                 </a-menu>
                             </template>
                         </a-dropdown>
@@ -139,7 +145,7 @@
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
                         <svg-icon icon-class="car-icon" class-name="car-icon" />
                     </a-badge>
-                    <span>{{ $t('mall.bag') }}</span>
+                    <span class="bag-text">{{ $t('mall.bag') }}</span>
                 </div>
             </div>
         </div>
@@ -154,7 +160,7 @@
                     <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text">{{ $t('mall.spareparts') }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShowShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                         </div>
                         <!-- <template #overlay>
                             <a-menu style="text-align: center;">
@@ -181,6 +187,7 @@
     
 <script>
 import Core from '@/core';
+import { SIDER } from '@/router/routes';
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import MyButton from '@/components/common/MyButton.vue';
 
@@ -210,25 +217,54 @@ export default {
             menuList: Core.Const.LOGINMALL.HEADERMENU,
             accessoriesMenuList: Core.Const.LOGINMALL.HEADERACCESMENU,
             searchKey: '',
-            searchLoading: false
+            searchLoading: false,
+            user_type_list: []
         };
     },
     computed: {
+        showList() {            
+            let showList = SIDER.DISTRIBUTOR;
+            showList = showList.map(item => {
+                item.auth = item.meta ? (item.meta.auth || []) : [];
+                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? (i.meta.auth || []) : [];
+                        return i
+                    })
+                    if (!item.children.find(i =>item.redirect === `${item.path}/${i.path}`)) {
+                        item.redirect = `${item.path}/${item.children[0].path}`
+                    }
+                }
+                return item
+            })
+            return showList
+        },
         shopCartNum() {
             return this.$store.state.shopCartNum
+        },
+        mallSearchKey() {
+            return this.$store.state.mallSearchKey
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
-    watch: {},
+    watch: {
+        mallSearchKey(newV) {
+            this.searchKey = newV
+        }
+    },
     created() {
         const lang = Core.Data.getLang()
         if (lang === "" || lang === null){
             Core.Data.setLang("zh")
         }
         this.handleLangSwitch(Core.Data.getLang())
+        this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
         this.getShopCartList()
-        this.searchKey = this.$store.state.mallSearchKey
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
@@ -485,7 +521,7 @@ export default {
             }
             &:hover {
                 border: 1px solid #C6F;
-                > span {
+                > .bag-text {
                     background: linear-gradient(100deg, #C6F 0%, #66F 100%);
                     background-clip: text;
                     -webkit-background-clip: text;

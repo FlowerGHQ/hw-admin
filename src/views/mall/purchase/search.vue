@@ -12,7 +12,7 @@
                             {{ $t('mall.vehicle_models') }}({{ vehicleList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in vehicleList" :key="item.id">
-                            <ProductsCard :record="item" />
+                            <ProductsCard :record="item" @handlechange="getCarList" />
                         </div>
                     </div>
                     <!-- 零配件 -->
@@ -21,7 +21,7 @@
                             {{ $t('mall.spareparts') }}({{ sparepartsList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in sparepartsList" :key="item.id">
-                            <ProductsCard :record="item" />
+                            <ProductsCard :record="item" @handlechange="getCarList" />
                         </div>
                     </div>
                     <!-- 周边件 -->
@@ -30,7 +30,7 @@
                             {{ $t('mall.peripheral_products') }}({{ peripheralList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in peripheralList" :key="item.id">
-                            <ProductsCard :record="item" />
+                            <ProductsCard :record="item" @handlechange="getCarList" />
                         </div>
                     </div>
                     <!-- 广宣品 -->
@@ -39,7 +39,7 @@
                             {{ $t('mall.promotional_products') }}({{ promotionalList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in promotionalList" :key="item.id">
-                            <ProductsCard :record="item" />
+                            <ProductsCard :record="item" @handlechange="getCarList" />
                         </div>
                     </div>
                     <!-- 新闻 -->
@@ -77,11 +77,12 @@
 import DownLoading from '../components/DownLoading.vue';
 import ProductsCard from '../components/ProductsCard.vue';
 import Core from '@/core';
-import { ref, reactive, onMounted, computed, watch, getCurrentInstance } from 'vue';
+import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 const { proxy } = getCurrentInstance();
 const route = useRoute();
+const router = useRouter();
 const store = useStore();
 const key = route.query?.key;
 store.commit('setMallKey', key);
@@ -131,6 +132,9 @@ watch(searchKey, (newVal, oldVal) => {
 onMounted(() => {
     getData()
 })
+onBeforeUnmount(() => {
+    store.commit('clearMallKey')
+})
 
 /* methods start */
 // 获取数据
@@ -138,6 +142,12 @@ const getData = () => {
     getCarList()
 }
 const searchListFetch = Core.Api.DISTRIBUTOR_HOME.searchList
+// 回到顶部
+const back2Top = () => {
+    setTimeout(() => {
+        window.scrollTo(0,0)
+    }, 0);
+}
 /* methods end */
 
 /* fetch start */
@@ -145,7 +155,7 @@ const getCarList = () => {
     searchForm.search_for = searchKey
     const params = searchForm
     // 如果有正在执行的搜索 则先添加搜索队列
-    if (spinning.value) return fetchList.push({
+    if (spinning.value) return fetchList.unshift({
         fn: searchListFetch,
         params: { ...params }
     });
@@ -153,9 +163,7 @@ const getCarList = () => {
     searchListFetch({ ...params }).then(res => {
         list.value = res?.merge_maps.list
         listNews.value = res?.post_list.list
-        if (fetchList.length > 0) {
-            executeFetchList()
-        }
+        back2Top()
         // listNews.value = [
         //     {
         //         img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
@@ -167,24 +175,24 @@ const getCarList = () => {
         // ]
     }).finally(() => {
         spinning.value = false
+        if (fetchList.length > 0) {
+            executeFetchList()
+        }
     })
 }
 // 执行搜索接口队列
 const executeFetchList = () => {
-    let arr = []
     function fn(fetch, params) {
         return fetch(params)
     }
-    fetchList.forEach(item => {
-        arr.push(fn(item.fn, item.params))
-    })
-    Promise.all(arr).then((result) => {
-        // 赋值最后一个接口
-        const res = result[result.length - 1]
+    // 执行最新的一个接口
+    fn(fetchList[0].fn, fetchList[0].params).then((result) => {
+        const res = result
         list.value = res?.merge_maps.list
         listNews.value = res?.post_list.list
         // 清空 fetchList 队列
         fetchList = []
+        back2Top()
     }).catch((error) => {
         console.log(error)
     })
