@@ -801,7 +801,7 @@
                           </div>
                       </a-col>
                       <a-col :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 21 : 0">
-                            
+                        
                         <div class="form-content-item-table" >
                             <a-table
                                 :columns="competitor_analysis_column"
@@ -3114,11 +3114,12 @@ onMounted(() => {
 @media (max-width: 1550px) {
 
     .flex-1 {
-          padding: 8px 0% 0 6% !important;
+          padding: 8px 0 0 6% !important;
       }
 }
 
 .form-content-item-table {
+    margin-left: 140px;
     :deep(.ant-form-item) {
         margin-bottom: 0px;
     }

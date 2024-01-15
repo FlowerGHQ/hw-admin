@@ -4186,12 +4186,13 @@ onMounted(() => {
             color: #1d2129;
             font-size: 16px;
             font-weight: 400;
+            white-space: nowrap;
         }
     }
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 0 0 5%;
             .align-center {
                 .fac();
             }
@@ -4344,6 +4345,7 @@ onMounted(() => {
 }
 
 .form-content-item-table {
+    margin-left: 140px;
     :deep(.ant-form-item) {
         margin-bottom: 0px;
     }
