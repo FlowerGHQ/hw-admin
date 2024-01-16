@@ -13,7 +13,7 @@ const showMessage = (msg) => {
 
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (message.includes('登录状态已过期，请重新登录')) {
-        window.location.href = window.location.href.split('#')[0] + '#/login'
+        window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${ Core.Data.getLoginType() }`
         localStorage.clear()
         return showMessage(i18n.global.t('error_code.expire'));
     }
@@ -31,31 +31,9 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
         }
         return showMessage(i18n.global.t('error_code.' + status, message))
     }
-    if (!message.includes('登录状态已过期，请重新登录')) {
-        // return showMessage(i18n.global.t('error_code.expire'));
+    if (!message.includes('登录状态已过期，请重新登录')) {        
         showMessage(message);
-    } else {
-        window.location.href = window.location.href.split('#')[0] + '#/login'
     }
-    // if (status >= 1000) {
-    //     try {
-    //         message = JSON.parse(message)
-    //     } catch (err) {
-    //         message = {}
-    //     }
-    //     const errorMessageKey = i18n.global.t('error_code.' + status, message);
-    //     if (shownErrorMessages.includes(errorMessageKey)) {
-    //         return;
-    //     }
-    //     shownErrorMessages.push(errorMessageKey);
-    //     return showMessage(errorMessageKey);
-    // }
-    // const errorMessageKey = message;
-    // if (shownErrorMessages.includes(errorMessageKey)) {
-    //     return;
-    // }
-    // shownErrorMessages.push(errorMessageKey);
-    // showMessage(message);
 };
 
 var instance = axios.create({ timeout: 1000 * 15 });

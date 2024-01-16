@@ -1,5 +1,6 @@
 <template>
     <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
+        <!-- 头部布局 -->
         <a-layout id="Layout" :class="lang">
             <a-layout-header class="layout-header">
                 <div class="header-left" :class="{ 'collapsed': collapsed }">
@@ -29,8 +30,7 @@
                         </a-radio-button>
                     </a-radio-group>
                 </div>
-                <div class="header-right">
-                    <!-- <a-button type="link" @click="routerChange('shop_cart')"><i class="icon i_cart"/></a-button>-->
+                <div class="header-right">                    
                     <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang =='zh' ? 'en' : 'zh')">
                         <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
@@ -41,8 +41,7 @@
                         </a-badge>
                     </a-button>
                     <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>
-                    <!-- <a-divider type="vertical"/>-->
+                    <a-tag class="PC" color="blue" style="font-size: 12px;">{{ USER_TYPE[loginType][$i18n.locale] }}</a-tag>                    
                     <a-dropdown :trigger="['click']" overlay-class-name='account-action-menu'>
                         <a-button class="user-info" type="link">
                             <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size='30'>
@@ -50,54 +49,25 @@
                             </a-avatar>
                             <span class="user-name">{{ user.name }}</span>
                         </a-button>
+
                         <template #overlay>
                             <a-menu style="text-align: center;">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password') }}</a-button>
-                                    <a-modal v-model:visible="passShow" :title="$t('n.password')"
-                                        class="password-edit-modal" :after-close="handleEditClose">
-                                        <div class="form-title">
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t('n.old') }}:</div>
-                                                <div class="value">
-                                                    <a-input-password :placeholder="$t('def.input')"
-                                                        v-model:value="form.old_password" />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t('n.new') }}:</div>
-                                                <div class="value">
-                                                    <a-input-password v-model:value="form.password"
-                                                        :placeholder="$t('def.input')" />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t('n.double') }}:</div>
-                                                <div class="value">
-                                                    <a-input-password v-model:value="form.new_password"
-                                                        :placeholder="$t('n.double')" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <template #footer>
-                                            <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure')
-                                            }}</a-button>
-                                            <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
-                                        </template>
-                                    </a-modal>
+                                    <a-button type="link" class="menu-item-btn">{{ $t('n.password')/*修改密码*/ }}</a-button>                                    
                                 </a-menu-item>
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity') }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">{{ $t('mall.switch_identity')/*切换身份*/ }}</a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
-                                    <a-button type="link" class="menu-item-btn">{{ $t('n.exit') }}</a-button>
+                                    <a-button type="link" class="menu-item-btn">{{ $t('n.exit') /*退出*/ }}</a-button>
                                 </a-menu-item>
                             </a-menu>
                         </template>
                     </a-dropdown>
                 </div>
             </a-layout-header>
+            <!-- 内容区域 -->
             <a-layout class="layout-container">
                 <a-layout-sider class="layout-sider" v-model:collapsed="collapsed" :width="200" :collapsedWidth='64'
                     theme='light'>
@@ -146,6 +116,40 @@
                 </a-layout>
             </a-layout>
         </a-layout>
+
+        <!-- 修改密码弹窗 -->
+        <a-modal v-model:visible="passShow" :title="$t('n.password')"
+            class="password-edit-modal" :after-close="handleEditClose">
+            <div class="form-title">
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.old') }}:</div>
+                    <div class="value">
+                        <a-input-password :placeholder="$t('def.input')"
+                            v-model:value="form.old_password" />
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.new') }}:</div>
+                    <div class="value">
+                        <a-input-password v-model:value="form.password"
+                            :placeholder="$t('def.input')" />
+                    </div>
+                </div>
+                <div class="form-item required">
+                    <div class="key">{{ $t('n.double') }}:</div>
+                    <div class="value">
+                        <a-input-password v-model:value="form.new_password"
+                            :placeholder="$t('n.double')" />
+                    </div>
+                </div>
+            </div>
+            <template #footer>
+                <a-button key="back" @click="handleEditSubmit" type="primary">{{ $t('def.sure')
+                }}</a-button>
+                <a-button @click="passShow = false">{{ $t('def.cancel') }}</a-button>
+            </template>
+        </a-modal>
+        
     </a-config-provider>
 </template>
     
@@ -354,10 +358,11 @@ export default {
             this.$router.push(path);
         },
 
-        handleLogout() {           
-            this.$router.replace('/login');
-            localStorage.clear()
-            Core.Api.Common.logout()
+        handleLogout() {
+            this.$router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
+            Core.Api.Common.logout().finally(() => {
+                localStorage.clear()
+            })
         },
 
         handleEditShow() {

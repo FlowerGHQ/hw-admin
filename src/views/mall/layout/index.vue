@@ -65,8 +65,7 @@ export default {
             }
         }
     },
-    created() {
-    },
+    created() {},
     mounted() {
         this.loginType = Core.Data.getLoginType()
         if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {

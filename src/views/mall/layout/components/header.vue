@@ -152,7 +152,7 @@
         <div id="menu">
             <div class="menu-content content">
                 <!-- 整车 -->
-                <span class="menu-item" @click="carMenu(0)">
+                <span class="menu-item">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
@@ -173,11 +173,11 @@
                     </a-dropdown>
                 </span>
                 <!-- 周边产品 -->
-                <span class="menu-item" @click="carMenu(2)">
+                <span class="menu-item">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 2 ? 'active' : ''">{{ $t('mall.peripheral_products') }}</span>
                 </span>
                 <!-- 广宣品 -->
-                <span class="menu-item" @click="carMenu(3)">
+                <span class="menu-item">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 3 ? 'active' : ''">{{ $t('mall.promotional_products') }}</span>
                 </span>
             </div>
