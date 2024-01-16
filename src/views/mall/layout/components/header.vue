@@ -547,7 +547,7 @@ export default {
                 border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
                 background-clip: text;
                 -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
+                // -webkit-text-fill-color: transparent;
                 > .bag-text {
                     background: linear-gradient(100deg, #C6F 0%, #66F 100%);
                     background-clip: text;
