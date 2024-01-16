@@ -2638,18 +2638,18 @@ let tableVaild = async (_rule, value) => {
         return Promise.resolve();
     }
     switch (_rule.fullField) {
-        case "customer_name": // 客户名称
-            dataBoo = findItemIsNoneWrite("customer_info", "customer_name");
-            break;
-        case "sales_share": // 销售占比
-            dataBoo = findItemIsNoneWrite("customer_info", "sales_share");
-            break;
-        case "main_supply_part": // 主供零件
-            dataBoo = findItemIsNoneWrite("customer_info", "main_supply_part");
-            break;
-        case "begin_cooperation_time": // 开始合作时间
-            dataBoo = findItemIsNoneWrite("customer_info", "begin_cooperation_time");
-            break;
+        // case "customer_name": // 客户名称
+        //     dataBoo = findItemIsNoneWrite("customer_info", "customer_name");
+        //     break;
+        // case "sales_share": // 销售占比
+        //     dataBoo = findItemIsNoneWrite("customer_info", "sales_share");
+        //     break;
+        // case "main_supply_part": // 主供零件
+        //     dataBoo = findItemIsNoneWrite("customer_info", "main_supply_part");
+        //     break;
+        // case "begin_cooperation_time": // 开始合作时间
+        //     dataBoo = findItemIsNoneWrite("customer_info", "begin_cooperation_time");
+        //     break;
 
         // 关键生产设备
         case "production_name": // 生产设备名称
@@ -2695,6 +2695,36 @@ let tableVaild = async (_rule, value) => {
         }
     });
 };
+
+let tableDataVaild = async (_rule, value) => {
+    let dataBoo = false;
+    if (!_rule.required) {
+        return Promise.resolve();
+    }
+    // _rule.fullField : 是当前校验的字段
+    switch (_rule.fullField) {
+        case "customer_name": // 客户名称
+            dataBoo = findItemIsNoneWrite("customer_info", "customer_name");
+            break;
+        case "sales_share": // 销售占比
+            dataBoo = findItemIsNoneWrite("customer_info", "sales_share");
+            break;
+        case "main_supply_part": // 主供零件
+            dataBoo = findItemIsNoneWrite("customer_info", "main_supply_part");
+            break;
+        case "begin_cooperation_time": // 开始合作时间
+            dataBoo = findItemIsNoneFromList(
+                "business_info",
+                "cash_flow_ratio"
+            );
+            break;
+    }
+    return new Promise((resolve, reject) => {
+        if (dataBoo) reject($t("supply-chain.please_fill_form"));
+        resolve();
+    });
+};
+
 // 当前类的校验
 const rules = ref({});
 // 五个类共有的校验集合
@@ -2847,7 +2877,7 @@ const rulesOther = ref({
         /* 客户名称 */
         {
             required: false,
-            validator: tableVaild,
+            validator: tableDataVaild,
             trigger: ["change", "blur"],
         },
     ],
@@ -2855,7 +2885,7 @@ const rulesOther = ref({
         /* 销售占比 */
         {
             required: false,
-            validator: tableVaild,
+            validator: tableDataVaild,
             trigger: ["change", "blur"],
         },
     ],
@@ -2863,7 +2893,7 @@ const rulesOther = ref({
         /* 主供零件 */
         {
             required: false,
-            validator: tableVaild,
+            validator: tableDataVaild,
             trigger: ["change", "blur"],
         },
     ],
@@ -2871,7 +2901,7 @@ const rulesOther = ref({
         /* 开始合作时间 */
         {
             required: false,
-            validator: tableVaild,
+            validator: tableDataVaild,
             trigger: ["change", "blur"],
         },
     ],
