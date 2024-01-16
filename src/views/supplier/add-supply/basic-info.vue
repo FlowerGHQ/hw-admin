@@ -3583,42 +3583,44 @@ onMounted(() => {
         }
     }
 }
-:deep(.ant-table-tbody) {
-    .no-require {
-        .ant-table-cell {
-            #custom-validation_contact_info {
-                border: 1px solid #eaecf2 !important;
-                // 清除所有的失败的样式,border box-shadow
-                &:focus,
-                &:hover {
+:deep(.specific-table-position){
+    .ant-table-tbody {
+        .no-require {
+            .ant-table-cell {
+                #custom-validation_contact_info {
                     border: 1px solid #eaecf2 !important;
-                    box-shadow: none !important;
+                    // 清除所有的失败的样式,border box-shadow
+                    &:focus,
+                    &:hover {
+                        border: 1px solid #eaecf2 !important;
+                        box-shadow: none !important;
+                    }
                 }
             }
         }
-    }
-    .require {
-        .ant-table-cell {
-            .require {
-                border: 1px solid #ff4d4f !important;
-                // 清除所有的失败的样式,border box-shadow
-                &:focus,
-                &:hover {
+        .require {
+            .ant-table-cell {
+                .require {
                     border: 1px solid #ff4d4f !important;
-                    box-shadow: none !important;
+                    // 清除所有的失败的样式,border box-shadow
+                    &:focus,
+                    &:hover {
+                        border: 1px solid #ff4d4f !important;
+                        box-shadow: none !important;
+                    }
                 }
             }
         }
-    }
-    .ant-table-row {
-        .ant-table-cell {
-            input {
-                border: 1px solid #eaecf2;
-                // 清除所有的失败的样式,border box-shadow
-                &:focus,
-                &:hover {
+        .ant-table-row {
+            .ant-table-cell {
+                input {
                     border: 1px solid #eaecf2;
-                    box-shadow: none;
+                    // 清除所有的失败的样式,border box-shadow
+                    &:focus,
+                    &:hover {
+                        border: 1px solid #eaecf2;
+                        box-shadow: none;
+                    }
                 }
             }
         }
