@@ -1088,6 +1088,7 @@ let Const = {
         // 新加入2023/10/9
         { list: [], select: [], key: 'coc', name: 'COC证书管理' },
         { list: [], select: [], key: 'supplier-application', name: '供应商管理' },
+        { list: [], select: [], key: 'sales-strategy', name: '销售策略管理' },
     ],
 
     ATTACHMENT: {
