@@ -88,6 +88,7 @@ export default {
             loading: false,        
             tableData: [],
             isShowBtn:false,
+            addData:[],
         };
     },
     computed: {
@@ -191,6 +192,7 @@ export default {
                 item.total_price = item.unit_price
                 return item
             })
+            this.addData.push(...items)
             this.tableData.push(...items)
             this.isShowBtn = true
         },
@@ -199,19 +201,20 @@ export default {
             this.tableData.splice(index, 1)
         },
         handleSave() {
-            let item_list = this.tableData.map(item => ({
-                amount: item.amount,
-                // charge: 0,
-                // deliver_amount: 0,
-                item_code: item.code,
-                item_id: item.id,
-                price: parseInt(item.unit_price * item.amount),
-                // residue_quantity: 0,
-                type: item.type,
-                unit_price: item.unit_price,
-            }))
+            let item_list = []
             switch (this.type) {
-                case 'PURCHASE_ORDER':        // 详情
+                case 'PURCHASE_ORDER':  // 详情
+                     item_list = this.tableData.map(item => ({
+                        amount: item.amount,
+                        // charge: 0,
+                        // deliver_amount: 0,
+                        item_code: item.code,
+                        item_id: item.id,
+                        price: parseInt(item.unit_price * item.amount),
+                        // residue_quantity: 0,
+                        type: item.type,
+                        unit_price: item.unit_price,
+                    }))
                     Core.Api.Purchase.revise({
                         id: this.orderId,
                         item_list,
@@ -223,6 +226,17 @@ export default {
                     })
                     break;
                 case 'GIVE_ORDER':        // 详情
+                     item_list = this.addData.map(item => ({
+                        amount: item.amount,
+                        // charge: 0,
+                        // deliver_amount: 0,
+                        item_code: item.code,
+                        item_id: item.id,
+                        price: parseInt(item.unit_price * item.amount),
+                        // residue_quantity: 0,
+                        type: item.type,
+                        unit_price: item.unit_price,
+                    }))
                     Core.Api.Purchase.createGiveaway({
                         id: this.orderId,
                         item_list,
@@ -233,6 +247,7 @@ export default {
                         receive_info_id: this.detail.receive_info_id,
                     }).then(() => {
                         this.$message.success(this.$t('pop_up.save_success'))
+                        this.addData = []
                         // 重新获取数据
                         this.getGiveawayList()
                         this.$emit('submit')
