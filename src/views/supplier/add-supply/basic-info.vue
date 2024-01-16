@@ -11,42 +11,32 @@
                     <a-col :span="22">
                         <div class="top-type-box">
                             <div
-                                v-for="(item, index) in Core.Const.SUPPLAY
-                                    .SUPPLAY_TYPE"
+                                v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"
                                 @click="formState.type = item.value"
                                 class="type-parts m-t-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
-                                    'type-parts-change':
-                                        item.value !== formState.type,
-                                    'border-type':
-                                        item.value !== formState.type,
-                                }">
+                                    'type-parts-change': item.value !== formState.type,
+                                    'border-type': item.value !== formState.type,
+                                }"
+                            >
                                 <MySvgIcon
                                     :icon-class="`white-${item.icon}`"
                                     :class="{
-                                        'white-font':
-                                            item.value === formState.type,
-                                        'black-font':
-                                            item.value !== formState.type,
-                                    }" />
+                                        'white-font': item.value === formState.type,
+                                        'black-font': item.value !== formState.type,
+                                    }"
+                                />
                                 <span
                                     class="m-l-4 type-font"
                                     :class="{
-                                        'color-w':
-                                            item.value === formState.type,
-                                        'black-font':
-                                            item.value !== formState.type,
-                                    }">
+                                        'color-w': item.value === formState.type,
+                                        'black-font': item.value !== formState.type,
+                                    }"
+                                >
                                     {{
-                                        Core.Const.SUPPLAY.SUPPLAY_TYPE[
-                                            item.value
-                                        ]
-                                            ? $t(
-                                                  Core.Const.SUPPLAY
-                                                      .SUPPLAY_TYPE[item.value]
-                                                      .t
-                                              )
+                                        Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value]
+                                            ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t)
                                             : "-"
                                     }}
                                 </span>
@@ -60,12 +50,7 @@
         <div class="base-info content-area margin-t-20">
             <div class="title">{{ $t("supply-chain.contact") }}</div>
             <div class="base-info-form">
-                <a-form
-                    ref="formRef1"
-                    name="custom-validation"
-                    :model="formState"
-                    :rules="rules"
-                    labelAlign="right">
+                <a-form ref="formRef1" name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
                             <div class="title-two"></div>
@@ -74,146 +59,76 @@
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 职业 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.Position')"
-                                        name="positon">
+                                    <a-form-item :label="$t('supply-chain.Position')" name="positon">
                                         <a-checkbox-group
                                             @change="handleCheckBox"
                                             v-model:value="formState.position"
                                             name="positon"
-                                            :options="plainOptions" />
+                                            :options="plainOptions"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <!-- 姓名 联系人邮箱  联系方式 同步微信-->
                             <a-row :gutter="24">
                                 <a-col :span="24">
-                                    <a-form-item
-                                        :label="' '"
-                                        name="contact_info"
-                                        class="form-content-item">
-                                        <div
-                                            class="form-content-item-table"
-                                            name="contact_info">
+                                    <a-form-item :label="' '" name="contact_info" class="form-content-item">
+                                        <div class="form-content-item-table" name="contact_info">
                                             <a-table
                                                 :columns="contact_info_column"
-                                                :dataSource="
-                                                    formState.contact_info
-                                                "
+                                                :dataSource="formState.contact_info"
                                                 :row-key="(record) => record.id"
                                                 :pagination="false"
                                                 class="specific-table-position"
                                             >
-                                                <template
-                                                    #bodyCell="{
-                                                        column,
-                                                        record,
-                                                        index,
-                                                    }">
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'position'
-                                                        ">
+                                                <template #bodyCell="{ column, record, index }">
+                                                    <template v-if="column.dataIndex === 'position'">
                                                         <div
                                                             :class="{
                                                                 'position-label': true,
-                                                                'no-require':
-                                                                    record.position ===
-                                                                    4,
-                                                            }">
-                                                            {{
-                                                                $t(
-                                                                    Core.Const
-                                                                        .SUPPLAY
-                                                                        .POSITION_MAP[
-                                                                        record
-                                                                            .position
-                                                                    ].t
-                                                                )
-                                                            }}
+                                                                'no-require': record.position === 4,
+                                                            }"
+                                                        >
+                                                            {{ $t(Core.Const.SUPPLAY.POSITION_MAP[record.position].t) }}
                                                         </div>
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'name'
-                                                        ">
+                                                    <template v-if="column.dataIndex === 'name'">
                                                         <a-input
                                                             name="name"
                                                             :class="{
-                                                                require:
-                                                                    record.position !==
-                                                                        4 &&
-                                                                    !record.name,
+                                                                require: record.position !== 4 && !record.name,
                                                             }"
-                                                            v-model:value="
-                                                                record.name
-                                                            "
-                                                            :placeholder="
-                                                                $t(
-                                                                    'supply-chain.please_enter'
-                                                                )
-                                                            " />
+                                                            v-model:value="record.name"
+                                                            :placeholder="$t('supply-chain.please_enter')"
+                                                        />
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'phone'
-                                                        ">
-                                                        <div
-                                                            class="phone-and-wechart">
+                                                    <template v-if="column.dataIndex === 'phone'">
+                                                        <div class="phone-and-wechart">
                                                             <a-input
                                                                 name="phone"
                                                                 class="phone-area"
                                                                 :class="{
-                                                                    require:
-                                                                        record.position !==
-                                                                            4 &&
-                                                                        !record.phone,
+                                                                    require: record.position !== 4 && !record.phone,
                                                                 }"
-                                                                v-model:value="
-                                                                    record.phone
-                                                                "
-                                                                :placeholder="
-                                                                    $t(
-                                                                        'supply-chain.please_enter'
-                                                                    )
-                                                                " />
+                                                                v-model:value="record.phone"
+                                                                :placeholder="$t('supply-chain.please_enter')"
+                                                            />
                                                             <a-checkbox
                                                                 class="flag-wechat-area"
-                                                                v-model:checked="
-                                                                    record.flag_wechat
-                                                                "
-                                                                >{{
-                                                                    $t(
-                                                                        "supply-chain.wechat_same_number"
-                                                                    )
-                                                                }}</a-checkbox
+                                                                v-model:checked="record.flag_wechat"
+                                                                >{{ $t("supply-chain.wechat_same_number") }}</a-checkbox
                                                             >
                                                         </div>
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'email'
-                                                        ">
+                                                    <template v-if="column.dataIndex === 'email'">
                                                         <a-input
                                                             name="email"
                                                             :class="{
-                                                                require:
-                                                                    record.position !==
-                                                                        4 &&
-                                                                    !record.email,
+                                                                require: record.position !== 4 && !record.email,
                                                             }"
-                                                            v-model:value="
-                                                                record.email
-                                                            "
-                                                            :placeholder="
-                                                                $t(
-                                                                    'supply-chain.please_enter'
-                                                                )
-                                                            " />
+                                                            v-model:value="record.email"
+                                                            :placeholder="$t('supply-chain.please_enter')"
+                                                        />
                                                     </template>
                                                 </template>
                                             </a-table>
@@ -245,12 +160,7 @@
         <div class="base-info content-area margin-t-20">
             <div class="title">{{ $t("supply-chain.basic_info") }}</div>
             <div class="base-info-form">
-                <a-form
-                    ref="formRef2"
-                    name="custom-validation"
-                    :model="formState"
-                    :rules="rules"
-                    labelAlign="right">
+                <a-form ref="formRef2" name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
                     <!-- 公司概况 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
@@ -263,35 +173,22 @@
                             <a-row :gutter="24">
                                 <!-- 公司名称 -->
                                 <a-col :span="12">
-                                    <a-form-item
-                                        :label="$t('supply-chain.company_name')"
-                                        name="company_name_name">
+                                    <a-form-item :label="$t('supply-chain.company_name')" name="company_name_name">
                                         <a-input
                                             name="company_name_name"
-                                            v-model:value="
-                                                formState.company_info.name
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.name"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <!-- 公司网址 -->
                                 <a-col :span="12">
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.company_website')
-                                        "
-                                        name="company_website">
+                                    <a-form-item :label="$t('supply-chain.company_website')" name="company_website">
                                         <a-input
                                             name="company_website"
-                                            v-model:value="
-                                                formState.company_info
-                                                    .website_address
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.website_address"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -299,20 +196,15 @@
                                 <a-col :span="12">
                                     <!-- 成立日期 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.date_establishment'
-                                            )
-                                        "
-                                        name="date_establishment">
+                                        :label="$t('supply-chain.date_establishment')"
+                                        name="date_establishment"
+                                    >
                                         <span name="date_establishment">
                                             <a-date-picker
                                                 :placeholder="$t('def.select')"
                                                 valueFormat="X"
-                                                v-model:value="
-                                                    formState.company_info
-                                                        .established_time
-                                                " />
+                                                v-model:value="formState.company_info.established_time"
+                                            />
                                         </span>
                                     </a-form-item>
                                 </a-col>
@@ -329,103 +221,67 @@
                                 <a-col :span="12">
                                     <!-- 固定资产 -->
 
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.fixed_assets')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.fixed_assets')">
                                         <a-input
-                                            v-model:value="
-                                                formState.company_info
-                                                    .fixed_assets
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.fixed_assets"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <!-- 法人代表 -->
                                 <a-col :span="12">
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.legal_representative'
-                                            )
-                                        "
-                                        name="legal_representative">
+                                        :label="$t('supply-chain.legal_representative')"
+                                        name="legal_representative"
+                                    >
                                         <a-input
                                             name="legal_representative"
-                                            v-model:value="
-                                                formState.company_info
-                                                    .legal_person
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.legal_person"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 详细地址 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.detailed_address')
-                                        "
-                                        name="company_address">
+                                    <a-form-item :label="$t('supply-chain.detailed_address')" name="company_address">
                                         <a-input
                                             name="company_address"
-                                            v-model:value="
-                                                formState.company_info.address
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.address"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 公司性质 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.nature_of_company')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.nature_of_company')">
                                         <a-select
-                                            v-model:value="
-                                                formState.company_info.nature
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_select')
-                                            ">
+                                            v-model:value="formState.company_info.nature"
+                                            :placeholder="$t('supply-chain.please_select')"
+                                        >
                                             <a-select-option
                                                 :value="item.value"
-                                                v-for="item in Core.Const
-                                                    .SUPPLAY.NATURE">
-                                                {{
-                                                    $t(item.t)
-                                                }}</a-select-option
+                                                v-for="item in Core.Const.SUPPLAY.NATURE"
+                                            >
+                                                {{ $t(item.t) }}</a-select-option
                                             >
                                         </a-select>
                                     </a-form-item>
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 采购半径 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.purchasing_radius')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.purchasing_radius')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.company_info
-                                                    .purchasing_radius
-                                            "
+                                            v-model:value="formState.company_info.purchasing_radius"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >KM</span
-                                                >
+                                                <span class="l-w-h-style">KM</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -436,29 +292,23 @@
                                 <a-col
                                     :span="
                                         returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 占地面积 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.floor_space')">
+                                    <a-form-item :label="$t('supply-chain.floor_space')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.company_info
-                                                    .floor_area
-                                            "
+                                            v-model:value="formState.company_info.floor_area"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >m²</span
-                                                >
+                                                <span class="l-w-h-style">m²</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -466,29 +316,23 @@
                                 <a-col
                                     :span="
                                         returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 建筑面积 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.floor_area')">
+                                    <a-form-item :label="$t('supply-chain.floor_area')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.company_info
-                                                    .building_area
-                                            "
+                                            v-model:value="formState.company_info.building_area"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >m²</span
-                                                >
+                                                <span class="l-w-h-style">m²</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -498,26 +342,19 @@
                                 <a-col
                                     :span="
                                         !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Outsourcing,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                         ])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 经营场所 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.establishments')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.establishments')">
                                         <a-input
-                                            v-model:value="
-                                                formState.company_info.premises
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.premises"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -525,57 +362,37 @@
                                 <a-col
                                     :span="
                                         returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 母公司名称 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.parent_company_name'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.parent_company_name')">
                                         <a-input
-                                            v-model:value="
-                                                formState.company_info
-                                                    .parent_company_name
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.parent_company_name"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <a-col
                                     :span="
                                         returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 母公司地址 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.Parent_company_address'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.Parent_company_address')">
                                         <a-input
-                                            v-model:value="
-                                                formState.company_info
-                                                    .parent_company_address
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.company_info.parent_company_address"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -585,14 +402,9 @@
                     <!-- 代理公司概况 -->
                     <a-row :gutter="24">
                         <a-col
-                            :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 3
-                                    : 0
-                            "
-                            class="title-area">
+                            :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0"
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 <!-- 代理信息 -->
                                 {{ $t("supply-chain.agent_information") }}
@@ -600,81 +412,54 @@
                         </a-col>
                         <a-col
                             :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 21
-                                    : 0
-                            ">
+                                returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0
+                            "
+                        >
                             <a-row :gutter="24">
                                 <!-- 被代理公司 -->
                                 <a-col :span="12">
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.agent_company')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.agent_company')">
                                         <a-input
-                                            v-model:value="
-                                                formState.agent_info
-                                                    .agent_company
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.agent_info.agent_company"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <!-- 被代理地址 -->
                                 <a-col :span="12">
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.proxy_address')
-                                        "
-                                        name="company_website">
+                                    <a-form-item :label="$t('supply-chain.proxy_address')" name="company_website">
                                         <a-input
                                             name="company_website"
-                                            v-model:value="
-                                                formState.agent_info
-                                                    .agent_address
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.agent_info.agent_address"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 被代理关系 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.agency_relationship'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.agency_relationship')">
                                         <a-date-picker
                                             :placeholder="$t('def.select')"
                                             valueFormat="X"
-                                            v-model:value="
-                                                formState.agent_info
-                                                    .agent_relationship
-                                            " />
+                                            v-model:value="formState.agent_info.agent_relationship"
+                                        />
                                     </a-form-item>
                                 </a-col>
 
                                 <a-col :span="12">
                                     <!-- 代理有效期间 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.duration_of_agency'
-                                            )
-                                        "
-                                        name="duration_of_agency">
+                                        :label="$t('supply-chain.duration_of_agency')"
+                                        name="duration_of_agency"
+                                    >
                                         <span name="duration_of_agency">
                                             <TimeSearch
                                                 ref="TimeSearchRef"
                                                 @search="handleTimeSearch"
-                                                :defaultTime="false" />
+                                                :defaultTime="false"
+                                            />
                                         </span>
                                     </a-form-item>
                                 </a-col>
@@ -682,22 +467,16 @@
                             <a-row :gutter="24">
                                 <!-- 是否有代理权证 代理权证 -->
                                 <a-col :span="24">
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.proxy_warrant')
-                                        "
-                                        name="proxy_warrant">
+                                    <a-form-item :label="$t('supply-chain.proxy_warrant')" name="proxy_warrant">
                                         <a-radio-group
                                             name="proxy_warrant"
-                                            v-model:value="
-                                                formState.agent_info
-                                                    .flag_agent_warrant
-                                            ">
+                                            v-model:value="formState.agent_info.flag_agent_warrant"
+                                        >
                                             <a-radio
                                                 :value="radio.value"
-                                                v-for="radio in Core.Const
-                                                    .SUPPLAY.Legal_Dispute"
-                                                :key="radio.value">
+                                                v-for="radio in Core.Const.SUPPLAY.Legal_Dispute"
+                                                :key="radio.value"
+                                            >
                                                 {{ $t(radio.t) }}
                                             </a-radio>
                                         </a-radio-group>
@@ -707,18 +486,11 @@
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 代理产品 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.agent_product')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.agent_product')">
                                         <a-input
-                                            v-model:value="
-                                                formState.agent_info
-                                                    .agent_product
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.agent_info.agent_product"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -728,61 +500,41 @@
                     <a-row :gutter="24">
                         <a-col
                             :span="
-                                !returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 3
-                                    : 0
+                                !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.human_resources") }}
                             </div>
                         </a-col>
                         <a-col
                             :span="
-                                !returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 21
-                                    : 0
-                            ">
+                                !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 员工总数 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.total_number_of_employees'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.total_number_of_employees')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.human_resource
-                                                    .total_employees
-                                            "
+                                            v-model:value="formState.human_resource.total_employees"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 管理人数 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.number_of_managers'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.number_of_managers')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.human_resource
-                                                    .manager_number
-                                            "
+                                            v-model:value="formState.human_resource.manager_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -790,33 +542,25 @@
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 质量人数 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.mass_number')">
+                                    <a-form-item :label="$t('supply-chain.mass_number')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.human_resource
-                                                    .mass_number
-                                            "
+                                            v-model:value="formState.human_resource.mass_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 技术人数 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.skilled_personnel')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.skilled_personnel')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.human_resource
-                                                    .technician_number
-                                            "
+                                            v-model:value="formState.human_resource.technician_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -824,20 +568,13 @@
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 技术工龄 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.technical_seniority'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.technical_seniority')">
                                         <a-input-number
-                                            v-model:value="
-                                                formState.human_resource
-                                                    .technical_seniority
-                                            "
+                                            v-model:value="formState.human_resource.technical_seniority"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -855,22 +592,16 @@
                             <a-row :gutter="24" :span="21">
                                 <a-col :span="24">
                                     <!-- 法律纠纷 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.legal_dispute')
-                                        "
-                                        name="flag_legal_dispute">
+                                    <a-form-item :label="$t('supply-chain.legal_dispute')" name="flag_legal_dispute">
                                         <a-radio-group
                                             name="flag_legal_dispute"
-                                            v-model:value="
-                                                formState.financial_info
-                                                    .flag_legal_dispute
-                                            ">
+                                            v-model:value="formState.financial_info.flag_legal_dispute"
+                                        >
                                             <a-radio
                                                 :value="radio.value"
-                                                v-for="radio in Core.Const
-                                                    .SUPPLAY.Legal_Dispute"
-                                                :key="radio.value">
+                                                v-for="radio in Core.Const.SUPPLAY.Legal_Dispute"
+                                                :key="radio.value"
+                                            >
                                                 {{ $t(radio.t) }}
                                             </a-radio>
                                         </a-radio-group>
@@ -880,46 +611,37 @@
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Broker,
-                                        ])
+                                        !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 操作工人月平均工资 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.average')">
+                                    <a-form-item :label="$t('supply-chain.average')">
                                         <a-input
                                             v-model:value="
-                                                formState.financial_info
-                                                    .average_monthly_wage_of_operating_workers
+                                                formState.financial_info.average_monthly_wage_of_operating_workers
                                             "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <a-col
                                     :span="
-                                        !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Broker,
-                                        ])
+                                        !returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 管理职员人均年产值 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.per')">
+                                    <a-form-item :label="$t('supply-chain.per')">
                                         <a-input
                                             v-model:value="
                                                 formState.financial_info
                                                     .per_capita_annual_output_value_of_management_staff
                                             "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -927,32 +649,19 @@
                                 <a-col :span="24">
                                     <!-- 账期要求 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.period_requirement'
-                                            )
-                                        "
-                                        name="period_requirement">
+                                        :label="$t('supply-chain.period_requirement')"
+                                        name="period_requirement"
+                                    >
                                         <a-radio-group
                                             name="period_requirement"
-                                            v-model:value="
-                                                formState.financial_info
-                                                    .account_period_requirement
-                                            ">
+                                            v-model:value="formState.financial_info.account_period_requirement"
+                                        >
                                             <a-radio
                                                 :value="radio.value"
-                                                v-for="radio in Core.Const
-                                                    .SUPPLAY
-                                                    .ACCOUNt_PERIOD_REQUIREMENT_LIST"
-                                                :key="radio.value">
-                                                {{
-                                                    `${
-                                                        radio.value
-                                                            ? radio.value +
-                                                              $t(radio.unit)
-                                                            : $t(radio.t)
-                                                    }`
-                                                }}
+                                                v-for="radio in Core.Const.SUPPLAY.ACCOUNt_PERIOD_REQUIREMENT_LIST"
+                                                :key="radio.value"
+                                            >
+                                                {{ `${radio.value ? radio.value + $t(radio.unit) : $t(radio.t)}` }}
                                             </a-radio>
                                         </a-radio-group>
                                     </a-form-item>
@@ -961,37 +670,28 @@
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 发票类型 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.Invoice_type')"
-                                        name="Invoice_type">
+                                    <a-form-item :label="$t('supply-chain.Invoice_type')" name="Invoice_type">
                                         <a-radio-group
                                             name="Invoice_type"
-                                            v-model:value="
-                                                formState.financial_info
-                                                    .invoice_type
-                                            ">
+                                            v-model:value="formState.financial_info.invoice_type"
+                                        >
                                             <a-radio
                                                 :value="radio.value"
-                                                v-for="radio in Core.Const
-                                                    .SUPPLAY.INVOICE_TYPE"
-                                                :key="radio.value">
+                                                v-for="radio in Core.Const.SUPPLAY.INVOICE_TYPE"
+                                                :key="radio.value"
+                                            >
                                                 <span
                                                     :class="{
-                                                        'middle-radio':
-                                                            radio.value === 1,
-                                                    }">
+                                                        'middle-radio': radio.value === 1,
+                                                    }"
+                                                >
                                                     {{ $t(radio.t) }}
                                                     <a-input
                                                         :maxlength="50"
-                                                        v-model:value="
-                                                            formState
-                                                                .financial_info
-                                                                .invoice_range_value
-                                                        "
+                                                        v-model:value="formState.financial_info.invoice_range_value"
                                                         placeholder="范围值"
-                                                        v-if="
-                                                            radio.value === 1
-                                                        " />
+                                                        v-if="radio.value === 1"
+                                                    />
                                                 </span>
                                             </a-radio>
                                         </a-radio-group>
@@ -1013,21 +713,14 @@
                                 <a-col :span="12">
                                     <!-- 业务比重 -->
                                     <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.proportion_of_business'
-                                            )
-                                        "
-                                        name="proportion_of_business">
+                                        :label="$t('supply-chain.proportion_of_business')"
+                                        name="proportion_of_business"
+                                    >
                                         <a-input
                                             name="proportion_of_business"
-                                            v-model:value="
-                                                formState.business_info
-                                                    .proportion_of_business
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.business_info.proportion_of_business"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -1046,23 +739,17 @@
                             <a-row :gutter="24">
                                 <a-col :span="8" v-for="(item, index) in 3">
                                     <!-- 销售额 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.sales_volume')"
-                                        name="sales">
+                                    <a-form-item :label="$t('supply-chain.sales_volume')" name="sales">
                                         <span name="sales">
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.business_info
-                                                        .list[index].sales
-                                                "
+                                                v-model:value="formState.business_info.list[index].sales"
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000">
+                                                :max="1000000000"
+                                            >
                                                 <template #addonAfter>
                                                     <span class="l-w-h-style">{{
-                                                        $t(
-                                                            "supply-chain.ten_thousand_yuan"
-                                                        )
+                                                        $t("supply-chain.ten_thousand_yuan")
                                                     }}</span>
                                                 </template>
                                             </a-input-number>
@@ -1074,32 +761,25 @@
                                 <a-col
                                     :span="
                                         !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 8
                                             : 0
                                     "
-                                    v-for="(item, index) in 3">
+                                    v-for="(item, index) in 3"
+                                >
                                     <!-- 纳税额 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.tax_amount')"
-                                        name="taxes_paid">
+                                    <a-form-item :label="$t('supply-chain.tax_amount')" name="taxes_paid">
                                         <a-input-number
                                             name="taxes_paid"
-                                            v-model:value="
-                                                formState.business_info.list[
-                                                    index
-                                                ].taxes_paid
-                                            "
+                                            v-model:value="formState.business_info.list[index].taxes_paid"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">{{
-                                                    $t(
-                                                        "supply-chain.ten_thousand_yuan"
-                                                    )
+                                                    $t("supply-chain.ten_thousand_yuan")
                                                 }}</span>
                                             </template>
                                         </a-input-number>
@@ -1110,31 +790,24 @@
                                 <a-col
                                     :span="
                                         !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 8
                                             : 0
                                     "
-                                    v-for="(item, index) in 3">
+                                    v-for="(item, index) in 3"
+                                >
                                     <!-- 利润率 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.profit_rate')"
-                                        name="profit_margin">
+                                    <a-form-item :label="$t('supply-chain.profit_rate')" name="profit_margin">
                                         <a-input-number
                                             name="profit_margin"
-                                            v-model:value="
-                                                formState.business_info.list[
-                                                    index
-                                                ].profit_margin
-                                            "
+                                            v-model:value="formState.business_info.list[index].profit_margin"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >%</span
-                                                >
+                                                <span class="l-w-h-style">%</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -1144,35 +817,27 @@
                                 <a-col
                                     :span="
                                         !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 8
                                             : 0
                                     "
-                                    v-for="(item, index) in 3">
+                                    v-for="(item, index) in 3"
+                                >
                                     <!-- 资产负债率 -->
                                     <a-form-item
                                         name="asset_liability_ratio"
-                                        :label="
-                                            $t(
-                                                'supply-chain.asset_liability_ratio'
-                                            )
-                                        ">
+                                        :label="$t('supply-chain.asset_liability_ratio')"
+                                    >
                                         <a-input-number
                                             name="asset_liability_ratio"
-                                            v-model:value="
-                                                formState.business_info.list[
-                                                    index
-                                                ].asset_liability_ratio
-                                            "
+                                            v-model:value="formState.business_info.list[index].asset_liability_ratio"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >%</span
-                                                >
+                                                <span class="l-w-h-style">%</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -1182,33 +847,24 @@
                                 <a-col
                                     :span="
                                         !returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .CustomerRefers,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                         ])
                                             ? 8
                                             : 0
                                     "
-                                    v-for="(item, index) in 3">
+                                    v-for="(item, index) in 3"
+                                >
                                     <!-- 现金流量比率 -->
-                                    <a-form-item
-                                        name="cash_flow_ratio"
-                                        :label="
-                                            $t('supply-chain.cash_flow_ratio')
-                                        ">
+                                    <a-form-item name="cash_flow_ratio" :label="$t('supply-chain.cash_flow_ratio')">
                                         <a-input-number
                                             name="cash_flow_ratio"
-                                            v-model:value="
-                                                formState.business_info.list[
-                                                    index
-                                                ].cash_flow_ratio
-                                            "
+                                            v-model:value="formState.business_info.list[index].cash_flow_ratio"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            :max="1000000000"
+                                        >
                                             <template #addonAfter>
-                                                <span class="l-w-h-style"
-                                                    >%</span
-                                                >
+                                                <span class="l-w-h-style">%</span>
                                             </template>
                                         </a-input-number>
                                     </a-form-item>
@@ -1220,26 +876,16 @@
                     <!-- 竞争对手 -->
                     <a-row :gutter="24">
                         <a-col
-                            :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                ])
-                                    ? 3
-                                    : 0
-                            "
-                            class="title-area">
+                            :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 3 : 0"
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.competitor") }}
                             </div>
                         </a-col>
                         <a-col
-                            :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                ])
-                                    ? 21
-                                    : 0
-                            ">
+                            :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part]) ? 21 : 0"
+                        >
                             <div class="form-content-item-table">
                                 <a-table
                                     :columns="competitor_analysis_column"
@@ -1247,63 +893,42 @@
                                     :scroll="{ x: true }"
                                     :row-key="(record) => record.id"
                                     :pagination="false"
-                                    class="specific-table">
+                                    class="specific-table"
+                                >
                                     <template #headerCell="{ title }">
                                         {{ $t(title) }}
                                     </template>
-                                    <template
-                                        #bodyCell="{ column, record, index }">
+                                    <template #bodyCell="{ column, record, index }">
                                         <!-- 竞争对手序号 -->
-                                        <template
-                                            v-if="
-                                                column.dataIndex ===
-                                                'company_order'
-                                            ">
+                                        <template v-if="column.dataIndex === 'company_order'">
                                             {{ record.company_order }}
                                         </template>
-                                        <template
-                                            v-if="column.type === 'input'">
+                                        <template v-if="column.type === 'input'">
                                             <a-input
-                                                v-model:value="
-                                                    record[column.dataIndex]
-                                                "
-                                                :placeholder="
-                                                    $t('def.input')
-                                                " />
+                                                v-model:value="record[column.dataIndex]"
+                                                :placeholder="$t('def.input')"
+                                            />
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.type === 'input-num'
-                                            ">
+                                        <template v-else-if="column.type === 'input-num'">
                                             <a-input-number
-                                                v-model:value="
-                                                    record[column.dataIndex]
-                                                "
+                                                v-model:value="record[column.dataIndex]"
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000">
-                                                <template
-                                                    #addonAfter
-                                                    v-if="column.unit">
-                                                    <span class="l-w-h-style">{{
-                                                        column.unit
-                                                    }}</span>
+                                                :max="1000000000"
+                                            >
+                                                <template #addonAfter v-if="column.unit">
+                                                    <span class="l-w-h-style">{{ column.unit }}</span>
                                                 </template>
                                             </a-input-number>
                                         </template>
-                                        <template
-                                            v-else-if="column.type === 'time'">
+                                        <template v-else-if="column.type === 'time'">
                                             <a-date-picker
                                                 :placeholder="$t('def.select')"
                                                 valueFormat="X"
-                                                v-model:value="
-                                                    record[column.dataIndex]
-                                                " />
+                                                v-model:value="record[column.dataIndex]"
+                                            />
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.dataIndex === 'operation'
-                                            ">
+                                        <template v-else-if="column.dataIndex === 'operation'">
                                             <a-button
                                                 type="link"
                                                 v-if="index"
@@ -1314,7 +939,8 @@
                                                         '竞争对手',
                                                         'company_order'
                                                     )
-                                                ">
+                                                "
+                                            >
                                                 <i class="icon i_delete" />
                                                 {{ $t("def.delete") }}
                                             </a-button>
@@ -1332,7 +958,8 @@
                                             '竞争对手',
                                             'company_order'
                                         )
-                                    ">
+                                    "
+                                >
                                     {{ $t("supply-chain.add_opponents") }}
                                 </a-button>
                             </div>
@@ -1355,85 +982,56 @@
                                     :scroll="{ x: true }"
                                     :row-key="(record) => record.id"
                                     :pagination="false"
-                                    class="specific-table">
+                                    class="specific-table"
+                                >
                                     <template #headerCell="{ title }">
                                         {{ $t(title) }}
                                     </template>
-                                    <template
-                                        #bodyCell="{ column, record, index }">
+                                    <template #bodyCell="{ column, record, index }">
                                         <!-- 客户序号 -->
                                         <!-- <template
                                             v-if="column.dataIndex === 'customer_order'"
                                         >
                                             {{ record.customer_order }}
                                         </template>  -->
-                                        <template
-                                            v-if="column.type === 'input'">
+                                        <template v-if="column.type === 'input'">
                                             <!-- `${column.dataIndex}+${index}` -->
-                                            <a-form-item
-                                                :name="column.dataIndex">
+                                            <a-form-item :name="column.dataIndex">
                                                 <a-input
                                                     :name="column.dataIndex"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    " />
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.type === 'input-num'
-                                            ">
-                                            <a-form-item
-                                                :name="column.dataIndex">
+                                        <template v-else-if="column.type === 'input-num'">
+                                            <a-form-item :name="column.dataIndex">
                                                 <a-input-number
                                                     :name="column.dataIndex"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    "
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000">
-                                                    <template
-                                                        #addonAfter
-                                                        v-if="column.unit">
-                                                        <span
-                                                            class="l-w-h-style"
-                                                            >{{
-                                                                column.unit
-                                                            }}</span
-                                                        >
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
                                                     </template>
                                                 </a-input-number>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="column.type === 'time'">
-                                            <a-form-item
-                                                :name="column.dataIndex">
+                                        <template v-else-if="column.type === 'time'">
+                                            <a-form-item :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
                                                     <a-date-picker
-                                                        :placeholder="
-                                                            $t('def.select')
-                                                        "
+                                                        :placeholder="$t('def.select')"
                                                         valueFormat="X"
                                                         picker="year"
-                                                        v-model:value="
-                                                            record[
-                                                                column.dataIndex
-                                                            ]
-                                                        " />
+                                                        v-model:value="record[column.dataIndex]"
+                                                    />
                                                 </span>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.dataIndex === 'operation'
-                                            ">
+                                        <template v-else-if="column.dataIndex === 'operation'">
                                             <a-button
                                                 type="link"
                                                 v-if="index"
@@ -1444,7 +1042,8 @@
                                                         '主要客户',
                                                         'customer_order'
                                                     )
-                                                ">
+                                                "
+                                            >
                                                 <i class="icon i_delete" />
                                                 {{ $t("def.delete") }}
                                             </a-button>
@@ -1462,7 +1061,8 @@
                                             '主要客户',
                                             'customer_order'
                                         )
-                                    ">
+                                    "
+                                >
                                     {{ $t("supply-chain.add_customers") }}
                                 </a-button>
                             </div>
@@ -1475,13 +1075,13 @@
                             :span="
                                 !returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .CustomerRefers,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                 ])
                                     ? 3
                                     : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.Technical_information") }}
                             </div>
@@ -1490,76 +1090,52 @@
                             :span="
                                 !returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .CustomerRefers,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                                 ])
                                     ? 21
                                     : 0
-                            ">
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 相关专利 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.related_patent')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.related_patent')">
                                         <a-input
-                                            v-model:value="
-                                                formState.technical_info.patent
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.technical_info.patent"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 12
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 研发中心 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.research_and_development_center'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.research_and_development_center')">
                                         <a-input
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .RD_center
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.technical_info.RD_center"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 研发合作机构 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.r_d_partner')">
+                                    <a-form-item :label="$t('supply-chain.r_d_partner')">
                                         <a-input
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .RD_partners
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.technical_info.RD_partners"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -1567,306 +1143,209 @@
                                 <a-col
                                     :span="
                                         returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
+                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                                         ])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 设计规范 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.design_specifications'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.design_specifications')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .design_guides
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.design_guides"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Part,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 产品设计 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.product_design')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.product_design')">
                                         <a-checkbox-group
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .product_design
-                                            "
-                                            :options="TECHNICAL_INFORMATION" />
+                                            v-model:value="formState.technical_info.product_design"
+                                            :options="TECHNICAL_INFORMATION"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 过程设计 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.process_design')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.process_design')">
                                         <a-checkbox-group
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .process_design
-                                            "
-                                            :options="PROCESS_DESIGN" />
+                                            v-model:value="formState.technical_info.process_design"
+                                            :options="PROCESS_DESIGN"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 过程验证 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.process_verification'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.process_verification')">
                                         <a-checkbox-group
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .process_validation
-                                            "
-                                            :options="PROCESS_VALIDATION" />
+                                            v-model:value="formState.technical_info.process_validation"
+                                            :options="PROCESS_VALIDATION"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具轮廓 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.mold_profile')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.mold_profile')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_profile
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_profile"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具重量 -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.mold_weight')">
+                                    <a-form-item :label="$t('supply-chain.mold_weight')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_weight
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_weight"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具品类 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.mold_category')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.mold_category')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_category
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_category"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具设计 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.mould_design')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.mould_design')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_design
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_design"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具制造 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.mold_manufacturing'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.mold_manufacturing')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_manufacture
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_manufacture"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col
                                     :span="
-                                        returnTypeBool(formState.type, [
-                                            Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                                .Mold,
-                                        ])
+                                        returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold])
                                             ? 24
                                             : 0
-                                    ">
+                                    "
+                                >
                                     <!-- 模具验收 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.mold_acceptance')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.mold_acceptance')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .mold_acceptance
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.mold_acceptance"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 设计软件 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.design_software')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.design_software')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .design_software
-                                            "
+                                            v-model:value="formState.technical_info.design_software"
                                             placeholder="请输入"
-                                            autocomplete="off" />
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 开发流程 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.development_process'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.development_process')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.technical_info
-                                                    .dev_process
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.technical_info.dev_process"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -1884,7 +1363,8 @@
                                     ? 3
                                     : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.quality_information") }}
                             </div>
@@ -1897,98 +1377,59 @@
                                 ])
                                     ? 21
                                     : 0
-                            ">
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 质量体系认证 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.quality_system_certification'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.quality_system_certification')">
                                         <a-input
-                                            v-model:value="
-                                                formState.quality_info
-                                                    .certification
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.quality_info.certification"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 环境体系认证 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.environmental_system_certification'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.environmental_system_certification')">
                                         <a-input
-                                            v-model:value="
-                                                formState.quality_info
-                                                    .environmental_system_certification
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.quality_info.environmental_system_certification"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="12">
                                     <!-- 质控工具软件 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.quality_control_tool_software'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.quality_control_tool_software')">
                                         <a-input
-                                            v-model:value="
-                                                formState.quality_info
-                                                    .tool_software
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.quality_info.tool_software"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                                 <a-col :span="12">
                                     <!-- 计划体系认证 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.planning_system_certification'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.planning_system_certification')">
                                         <a-input
-                                            v-model:value="
-                                                formState.quality_info
-                                                    .system_certification
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            " />
+                                            v-model:value="formState.quality_info.system_certification"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 市场PPM -->
-                                    <a-form-item
-                                        :label="$t('supply-chain.market_PPM')">
+                                    <a-form-item :label="$t('supply-chain.market_PPM')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.quality_info.PPM
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.quality_info.PPM"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2001,13 +1442,13 @@
                             :span="
                                 returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .Outsourcing,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                 ])
                                     ? 3
                                     : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.capacity_line") }}
                             </div>
@@ -2016,32 +1457,24 @@
                             :span="
                                 returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .Outsourcing,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                 ])
                                     ? 21
                                     : 0
-                            ">
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 关键自有工序 -->
-                                    <a-form-item
-                                        name="processes"
-                                        :label="
-                                            $t('supply-chain.key_owned_process')
-                                        ">
+                                    <a-form-item name="processes" :label="$t('supply-chain.key_owned_process')">
                                         <a-textarea
                                             name="processes"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.produce_capacity
-                                                    .processes
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.produce_capacity.processes"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2050,47 +1483,31 @@
                                     <!-- 智能自动化线 -->
                                     <a-form-item
                                         name="automation_line"
-                                        :label="
-                                            $t(
-                                                'supply-chain.intelligent_automation_line'
-                                            )
-                                        ">
+                                        :label="$t('supply-chain.intelligent_automation_line')"
+                                    >
                                         <a-textarea
                                             name="automation_line"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.produce_capacity
-                                                    .automation_line
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.produce_capacity.automation_line"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 生产产能负荷 -->
-                                    <a-form-item
-                                        name="load"
-                                        :label="
-                                            $t(
-                                                'supply-chain.production_capacity_load'
-                                            )
-                                        ">
+                                    <a-form-item name="load" :label="$t('supply-chain.production_capacity_load')">
                                         <a-textarea
                                             name="load"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.produce_capacity.load
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.produce_capacity.load"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2103,13 +1520,13 @@
                             :span="
                                 returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .Outsourcing,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                 ])
                                     ? 3
                                     : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.qutsourcing_management") }}
                             </div>
@@ -2118,53 +1535,37 @@
                             :span="
                                 returnTypeBool(formState.type, [
                                     Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part,
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .Outsourcing,
+                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                                 ])
                                     ? 21
                                     : 0
-                            ">
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 外购工艺 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.qutsourced_technology'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.qutsourced_technology')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.outsourcing.technology
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.outsourcing.technology"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 外购备件 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.qutsourced_spare_parts'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.qutsourced_spare_parts')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.outsourcing.parts
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.outsourcing.parts"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2172,44 +1573,28 @@
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 外购原料 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.purchased_raw_materials'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.purchased_raw_materials')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.outsourcing.material
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.outsourcing.material"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 外购制度 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.qutsourcing_system'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.qutsourcing_system')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.outsourcing.system
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.outsourcing.system"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2220,68 +1605,50 @@
                     <a-row :gutter="24">
                         <a-col
                             :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .CustomerRefers,
-                                ])
+                                returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])
                                     ? 3
                                     : 0
                             "
-                            class="title-area">
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.specify_information") }}
                             </div>
                         </a-col>
                         <a-col
                             :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP
-                                        .CustomerRefers,
-                                ])
+                                returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])
                                     ? 21
                                     : 0
-                            ">
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 指定理由 -->
-                                    <a-form-item
-                                        name="reason"
-                                        :label="
-                                            $t('supply-chain.specify_reason')
-                                        ">
+                                    <a-form-item name="reason" :label="$t('supply-chain.specify_reason')">
                                         <a-textarea
                                             name="reason"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.specify_info.reason
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.specify_info.reason"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 指定零件 -->
-                                    <a-form-item
-                                        name="parts"
-                                        :label="
-                                            $t('supply-chain.specify_part')
-                                        ">
+                                    <a-form-item name="parts" :label="$t('supply-chain.specify_part')">
                                         <a-textarea
                                             name="parts"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.specify_info.parts
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.specify_info.parts"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2289,46 +1656,30 @@
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 指定协议 -->
-                                    <a-form-item
-                                        name="protocol"
-                                        :label="
-                                            $t(
-                                                'supply-chain.specified_protocol'
-                                            )
-                                        ">
+                                    <a-form-item name="protocol" :label="$t('supply-chain.specified_protocol')">
                                         <a-textarea
                                             name="protocol"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.specify_info.protocol
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.specify_info.protocol"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 指定服务 -->
-                                    <a-form-item
-                                        name="service"
-                                        :label="
-                                            $t('supply-chain.specify_service')
-                                        ">
+                                    <a-form-item name="service" :label="$t('supply-chain.specify_service')">
                                         <a-textarea
                                             name="service"
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.specify_info.service
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.specify_info.service"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2338,88 +1689,57 @@
                     <!-- 服务信息 -->
                     <a-row :gutter="24">
                         <a-col
-                            :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 3
-                                    : 0
-                            "
-                            class="title-area">
+                            :span="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 3 : 0"
+                            class="title-area"
+                        >
                             <div class="title-two">
                                 {{ $t("supply-chain.service_information") }}
                             </div>
                         </a-col>
                         <a-col
                             :span="
-                                returnTypeBool(formState.type, [
-                                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                                ])
-                                    ? 21
-                                    : 0
-                            ">
+                                returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) ? 21 : 0
+                            "
+                        >
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 技术服务 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.technical_service')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.technical_service')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.service_info
-                                                    .technical_services
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.service_info.technical_services"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 质量服务 -->
-                                    <a-form-item
-                                        :label="
-                                            $t('supply-chain.quality_service')
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.quality_service')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.service_info
-                                                    .quality_service
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.service_info.quality_service"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
                                 <a-col :span="24">
                                     <!-- 供应服务 -->
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.supply_of_services'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.supply_of_services')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.specify_info
-                                                    .supply_services
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.specify_info.supply_services"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2432,30 +1752,25 @@
         <!-- 设备信息 -->
         <div
             class="base-info content-area margin-t-20"
-            v-if="
-                !returnTypeBool(formState.type, [
-                    Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
-                ])
-            ">
+            v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])"
+        >
             <div class="title">
                 {{ $t("supply-chain.device_information") }}
             </div>
             <!-- 关键生产设备 -->
             <div class="base-info-form">
-                <a-form
-                    ref="formRef3"
-                    :rules="rules"
-                    :model="formState"
-                    labelAlign="right">
+                <a-form ref="formRef3" :rules="rules" :model="formState" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div 
+                            <div
                                 class="title-two"
-                                :class="{ 'title-two-required': returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                                :class="{
+                                    'title-two-required': returnTypeBool(formState.type, [
+                                        Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
+                                    ]),
+                                }"
                             >
-                                {{
-                                    $t("supply-chain.key_production_equipment")
-                                }}
+                                {{ $t("supply-chain.key_production_equipment") }}
                             </div>
                         </a-col>
                         <a-col :span="21">
@@ -2466,87 +1781,53 @@
                                     :scroll="{ x: true }"
                                     :row-key="(record) => record.id"
                                     :pagination="false"
-                                    class="specific-table">
+                                    class="specific-table"
+                                >
                                     <template #headerCell="{ title }">
                                         {{ $t(title) }}
                                     </template>
-                                    <template
-                                        #bodyCell="{ column, record, index }">
-                                        <template
-                                            v-if="column.type === 'input'">
-                                            <a-form-item
-                                                :name="`production_${column.dataIndex}`">
+                                    <template #bodyCell="{ column, record, index }">
+                                        <template v-if="column.type === 'input'">
+                                            <a-form-item :name="`production_${column.dataIndex}`">
                                                 <a-input
                                                     :name="`production_${column.dataIndex}`"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    " />
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.type === 'input-num'
-                                            ">
-                                            <a-form-item
-                                                :name="`production_${column.dataIndex}`">
+                                        <template v-else-if="column.type === 'input-num'">
+                                            <a-form-item :name="`production_${column.dataIndex}`">
                                                 <a-input-number
                                                     :name="`production_${column.dataIndex}`"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    "
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000">
-                                                    <template
-                                                        #addonAfter
-                                                        v-if="column.unit">
-                                                        <span
-                                                            class="l-w-h-style"
-                                                            >{{
-                                                                column.unit
-                                                            }}</span
-                                                        >
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
                                                     </template>
                                                 </a-input-number>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="column.type === 'time'">
-                                            <a-form-item
-                                                :name="`production_${column.dataIndex}`">
-                                                <span
-                                                    :name="`production_${column.dataIndex}`">
+                                        <template v-else-if="column.type === 'time'">
+                                            <a-form-item :name="`production_${column.dataIndex}`">
+                                                <span :name="`production_${column.dataIndex}`">
                                                     <a-date-picker
-                                                        :placeholder="
-                                                            $t('def.select')
-                                                        "
+                                                        :placeholder="$t('def.select')"
                                                         valueFormat="X"
-                                                        v-model:value="
-                                                            record[
-                                                                column.dataIndex
-                                                            ]
-                                                        " />
+                                                        v-model:value="record[column.dataIndex]"
+                                                    />
                                                 </span>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.dataIndex === 'operation'
-                                            ">
+                                        <template v-else-if="column.dataIndex === 'operation'">
                                             <a-button
                                                 type="link"
                                                 v-if="index"
-                                                @click="
-                                                    handleDelete(
-                                                        formState.production_equipment,
-                                                        record
-                                                    )
-                                                ">
+                                                @click="handleDelete(formState.production_equipment, record)"
+                                            >
                                                 <i class="icon i_delete" />
                                                 {{ $t("def.delete") }}
                                             </a-button>
@@ -2557,17 +1838,9 @@
                                     class="spec-add"
                                     type="primary"
                                     ghost
-                                    @click="
-                                        handleAddSpecItem(
-                                            formState.production_equipment,
-                                            production_equipment_obj
-                                        )
-                                    ">
-                                    {{
-                                        $t(
-                                            "supply-chain.add_production_equipment"
-                                        )
-                                    }}
+                                    @click="handleAddSpecItem(formState.production_equipment, production_equipment_obj)"
+                                >
+                                    {{ $t("supply-chain.add_production_equipment") }}
                                 </a-button>
                             </div>
                         </a-col>
@@ -2576,23 +1849,18 @@
             </div>
             <!-- 关键检测设备 -->
             <div class="base-info-form">
-                <a-form
-                    name="custom-validation"
-                    :rules="rules"
-                    ref="formRef4"
-                    :model="formState"
-                    labelAlign="right">
+                <a-form name="custom-validation" :rules="rules" ref="formRef4" :model="formState" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div 
+                            <div
                                 class="title-two"
-                                :class="{ 'title-two-required': returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                                :class="{
+                                    'title-two-required': returnTypeBool(formState.type, [
+                                        Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
+                                    ]),
+                                }"
                             >
-                                {{
-                                    $t(
-                                        "supply-chain.critical_detection_equipment"
-                                    )
-                                }}
+                                {{ $t("supply-chain.critical_detection_equipment") }}
                             </div>
                         </a-col>
                         <a-col :span="21">
@@ -2603,93 +1871,59 @@
                                     :scroll="{ x: true }"
                                     :row-key="(record) => record.id"
                                     :pagination="false"
-                                    class="specific-table">
+                                    class="specific-table"
+                                >
                                     <template #headerCell="{ title }">
                                         {{ $t(title) }}
                                     </template>
-                                    <template
-                                        #bodyCell="{ column, record, index }">
+                                    <template #bodyCell="{ column, record, index }">
                                         <!-- 客户序号 -->
                                         <!-- <template
                                           v-if="column.dataIndex === 'customer_order'"
                                       >
                                           {{ record.customer_order }}
                                       </template>  -->
-                                        <template
-                                            v-if="column.type === 'input'">
-                                            <a-form-item
-                                                :name="`detection_${column.dataIndex}`">
+                                        <template v-if="column.type === 'input'">
+                                            <a-form-item :name="`detection_${column.dataIndex}`">
                                                 <a-input
                                                     :name="`detection_${column.dataIndex}`"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    " />
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
+                                                />
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.type === 'input-num'
-                                            ">
-                                            <a-form-item
-                                                :name="`detection_${column.dataIndex}`">
+                                        <template v-else-if="column.type === 'input-num'">
+                                            <a-form-item :name="`detection_${column.dataIndex}`">
                                                 <a-input-number
                                                     :name="`detection_${column.dataIndex}`"
-                                                    v-model:value="
-                                                        record[column.dataIndex]
-                                                    "
-                                                    :placeholder="
-                                                        $t('def.input')
-                                                    "
+                                                    v-model:value="record[column.dataIndex]"
+                                                    :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000">
-                                                    <template
-                                                        #addonAfter
-                                                        v-if="column.unit">
-                                                        <span
-                                                            class="l-w-h-style"
-                                                            >{{
-                                                                column.unit
-                                                            }}</span
-                                                        >
+                                                    :max="1000000000"
+                                                >
+                                                    <template #addonAfter v-if="column.unit">
+                                                        <span class="l-w-h-style">{{ column.unit }}</span>
                                                     </template>
                                                 </a-input-number>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="column.type === 'time'">
-                                            <a-form-item
-                                                :name="`detection_${column.dataIndex}`">
-                                                <span
-                                                    :name="`detection_${column.dataIndex}`">
+                                        <template v-else-if="column.type === 'time'">
+                                            <a-form-item :name="`detection_${column.dataIndex}`">
+                                                <span :name="`detection_${column.dataIndex}`">
                                                     <a-date-picker
-                                                        :placeholder="
-                                                            $t('def.select')
-                                                        "
+                                                        :placeholder="$t('def.select')"
                                                         valueFormat="X"
-                                                        v-model:value="
-                                                            record[
-                                                                column.dataIndex
-                                                            ]
-                                                        " />
+                                                        v-model:value="record[column.dataIndex]"
+                                                    />
                                                 </span>
                                             </a-form-item>
                                         </template>
-                                        <template
-                                            v-else-if="
-                                                column.dataIndex === 'operation'
-                                            ">
+                                        <template v-else-if="column.dataIndex === 'operation'">
                                             <a-button
                                                 type="link"
                                                 v-if="index"
-                                                @click="
-                                                    handleDelete(
-                                                        formState.detection_equipment,
-                                                        record
-                                                    )
-                                                ">
+                                                @click="handleDelete(formState.detection_equipment, record)"
+                                            >
                                                 <i class="icon i_delete" />
                                                 {{ $t("def.delete") }}
                                             </a-button>
@@ -2700,17 +1934,9 @@
                                     class="spec-add"
                                     type="primary"
                                     ghost
-                                    @click="
-                                        handleAddSpecItem(
-                                            formState.detection_equipment,
-                                            detection_equipment_obj
-                                        )
-                                    ">
-                                    {{
-                                        $t(
-                                            "supply-chain.add_detection_equipment"
-                                        )
-                                    }}
+                                    @click="handleAddSpecItem(formState.detection_equipment, detection_equipment_obj)"
+                                >
+                                    {{ $t("supply-chain.add_detection_equipment") }}
                                 </a-button>
                             </div>
                         </a-col>
@@ -2724,41 +1950,25 @@
                 {{ $t("supply-chain.supplementary_information") }}
             </div>
             <div class="base-info-form">
-                <a-form
-                    name="custom-validation"
-                    :model="formState"
-                    :rules="rules"
-                    labelAlign="right">
+                <a-form name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
                             <div class="title-two">
                                 <!-- 其他优势说明 -->
-                                {{
-                                    $t(
-                                        "supply-chain.other_advantages_description"
-                                    )
-                                }}
+                                {{ $t("supply-chain.other_advantages_description") }}
                             </div>
                         </a-col>
                         <a-col :span="21">
                             <a-row :gutter="24">
                                 <a-col :span="24">
-                                    <a-form-item
-                                        :label="
-                                            $t(
-                                                'supply-chain.other_advantages_description'
-                                            )
-                                        ">
+                                    <a-form-item :label="$t('supply-chain.other_advantages_description')">
                                         <a-textarea
                                             :row="6"
                                             :maxlength="2000"
-                                            v-model:value="
-                                                formState.additional_info
-                                            "
-                                            :placeholder="
-                                                $t('supply-chain.please_enter')
-                                            "
-                                            autocomplete="off" />
+                                            v-model:value="formState.additional_info"
+                                            :placeholder="$t('supply-chain.please_enter')"
+                                            autocomplete="off"
+                                        />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2901,9 +2111,7 @@ const handleCheckBox = (checkedValue) => {
     checkedValue.forEach((item) => {
         // 如果formState.contact_info里面有这个职位,就将这个职位的信息push到arr里面
         if (formState.contact_info.some((item2) => item2.position == item)) {
-            arr.push(
-                formState.contact_info.find((item2) => item2.position == item)
-            );
+            arr.push(formState.contact_info.find((item2) => item2.position == item));
         } else {
             arr.push({
                 position: item,
@@ -3244,20 +2452,10 @@ let PositionVaild = async (_rule, value) => {
 };
 let contactInfoVaild = (_rule, value) => {
     // 如果只有一个数据,并且position为4,就不用校验
-    if (
-        formState.contact_info.length == 1 &&
-        formState.contact_info[0].position == 4
-    ) {
+    if (formState.contact_info.length == 1 && formState.contact_info[0].position == 4) {
         return Promise.resolve();
-    } else if (
-        formState.contact_info.length == 1 &&
-        formState.contact_info[0].position != 4
-    ) {
-        if (
-            !formState.contact_info[0].name ||
-            !formState.contact_info[0].phone ||
-            !formState.contact_info[0].email
-        ) {
+    } else if (formState.contact_info.length == 1 && formState.contact_info[0].position != 4) {
+        if (!formState.contact_info[0].name || !formState.contact_info[0].phone || !formState.contact_info[0].email) {
             return Promise.reject(false);
         }
     } else if (formState.contact_info.length > 1) {
@@ -3316,16 +2514,10 @@ let companyVaild = async (_rule, value) => {
             dataBoo = findItemIsNoneFromList("business_info", "profit_margin");
             break;
         case "asset_liability_ratio": // 资产负债率
-            dataBoo = findItemIsNoneFromList(
-                "business_info",
-                "asset_liability_ratio"
-            );
+            dataBoo = findItemIsNoneFromList("business_info", "asset_liability_ratio");
             break;
         case "cash_flow_ratio": // 现金流量比率
-            dataBoo = findItemIsNoneFromList(
-                "business_info",
-                "cash_flow_ratio"
-            );
+            dataBoo = findItemIsNoneFromList("business_info", "cash_flow_ratio");
             break;
 
         // 指定信息
@@ -3347,10 +2539,7 @@ let companyVaild = async (_rule, value) => {
             dataBoo = findObjIsNoneFromList("produce_capacity", "processes");
             break;
         case "automation_line": // 智能自动化线
-            dataBoo = findObjIsNoneFromList(
-                "produce_capacity",
-                "automation_line"
-            );
+            dataBoo = findObjIsNoneFromList("produce_capacity", "automation_line");
             break;
         case "load": // 智能自动化线
             dataBoo = findObjIsNoneFromList("produce_capacity", "load");
@@ -3395,10 +2584,7 @@ let flagLegalDisputeValid = async (_rule, value) => {
             }
             break;
         case "proxy_warrant": // 代理权证
-            if (
-                !formState.agent_info?.flag_agent_warrant &&
-                formState.type === 2
-            ) {
+            if (!formState.agent_info?.flag_agent_warrant && formState.type === 2) {
                 dataBoo = true;
             }
             break;
@@ -3462,10 +2648,7 @@ let tableVaild = async (_rule, value) => {
             dataBoo = findItemIsNoneWrite("customer_info", "main_supply_part");
             break;
         case "begin_cooperation_time": // 开始合作时间
-            dataBoo = findItemIsNoneWrite(
-                "customer_info",
-                "begin_cooperation_time"
-            );
+            dataBoo = findItemIsNoneWrite("customer_info", "begin_cooperation_time");
             break;
 
         // 关键生产设备
@@ -3479,16 +2662,10 @@ let tableVaild = async (_rule, value) => {
             dataBoo = findItemIsNoneWrite("production_equipment", "quantity");
             break;
         case "production_manufacturer": // 设备制造商
-            dataBoo = findItemIsNoneWrite(
-                "production_equipment",
-                "manufacturer"
-            );
+            dataBoo = findItemIsNoneWrite("production_equipment", "manufacturer");
             break;
         case "production_purchase_period": // 购置年限
-            dataBoo = findItemIsNoneWrite(
-                "production_equipment",
-                "purchase_period"
-            );
+            dataBoo = findItemIsNoneWrite("production_equipment", "purchase_period");
             break;
 
         // 关键检测设备
@@ -3502,16 +2679,10 @@ let tableVaild = async (_rule, value) => {
             dataBoo = findItemIsNoneWrite("detection_equipment", "quantity");
             break;
         case "detection_manufacturer": // 设备制造商
-            dataBoo = findItemIsNoneWrite(
-                "detection_equipment",
-                "manufacturer"
-            );
+            dataBoo = findItemIsNoneWrite("detection_equipment", "manufacturer");
             break;
         case "detection_accuracy_level": // 精度等级
-            dataBoo = findItemIsNoneWrite(
-                "detection_equipment",
-                "accuracy_level"
-            );
+            dataBoo = findItemIsNoneWrite("detection_equipment", "accuracy_level");
             break;
     }
     return new Promise((resolve, reject) => {
@@ -4173,7 +3344,7 @@ onMounted(() => {
             &.title-two-required {
                 &::before {
                     content: "*";
-                    color: #EB4141;
+                    color: #eb4141;
                     vertical-align: middle;
                 }
             }
