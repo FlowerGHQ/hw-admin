@@ -3,33 +3,41 @@ import Util from "../core/utils"
 import Data from "../core/data"
 
 import Layout from '../views/layout/index.vue';
+import MallLayout from '../views/mall/layout/index.vue';
+
+// 供应商路由
+import { supplyManage, supplyRouters } from './supply-router'
 
 const LOGIN_TYPE = Const.LOGIN.TYPE
 const ROUTER_TYPE = Const.LOGIN.ROUTER_TYPE
 const PURCHASE_SEARCH_TYPE = Const.PURCHASE.SEARCH_TYPE
 const REFUND_QUERY_TYPE = Const.AFTERSALES.QUERY_TYPE
-const NOW_LOGIN_TYPE = Data.getLoginType()
+const NOW_LOGIN_TYPE =  Data.getLoginType()
+
+// 重定向
 let indexPath = ''
 switch (NOW_LOGIN_TYPE) {
     case LOGIN_TYPE.ADMIN:
         indexPath = '/distributor'
         break;
     case LOGIN_TYPE.DISTRIBUTOR:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
     case LOGIN_TYPE.AGENT:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
     case LOGIN_TYPE.STORE:
-        indexPath = '/dashboard/index'
+        indexPath = '/mall/index'
         break;
-
+    case LOGIN_TYPE.SUPPLIER:
+        indexPath = '/supply-home'
+        break;
     default:
         break;
 }
 /** 
 * @params type 这个权限是 销售/售后/生产/CRM 路口的权限 整个模块
-* @params meta.roles 这个权限是 在管理员 / 分销商 / 零售商 / 门店 下显示的权限
+* @params meta.roles 这个权限是 在平台方 / 分销商 / 零售商 / 门店 下显示的权限
 * @params meta.auth 这个权限是在系统那边配置每一个用户或者角色的权限显示与否
 * @params meta.parent 类似于list里面有添加编辑需要给个上一级的地址让其显示
 * @params meta.hideen判断是否显示到侧边栏上 true为不显示
@@ -53,17 +61,81 @@ const routes = [
     },
     { // 登录
         path: '/login',
-        component: () => import ('@/views/Login.vue'),
+        component: () => import ('@/views/mall/Login.vue'),
         meta: {
             hidden: true,
             title: '登录',
 	        title_en: 'Login',
         }
     },
+    // { // 分销商登录
+    //     path: '/loginMall',
+    //     component: () => import ('@/views/mall/Login.vue'),
+    //     meta: {
+    //         hidden: true,
+    //         title: '登录',
+	//         title_en: 'Login',
+    //     }
+    // },
+    { // 看板
+        path: '/mall',
+        component: MallLayout,
+        name:'Mall',
+        meta: {
+            title: '商城',
+            title_en: 'Store',
+            icon: 'i_s_dashboard', 
+            roles: [LOGIN_TYPE.DISTRIBUTOR],  
+            hidden: true
+        },
+        children: [
+            {
+                path: 'index',
+                component: () => import('@/views/mall/purchase/index.vue'),
+                meta: {
+                    title: '首页',
+                    title_en: 'Index',
+                }
+            },
+            {
+                path: 'search',
+                component: () => import('@/views/mall/purchase/search.vue'),
+                meta: {
+                    title: '搜索',
+                    title_en: 'Search',
+                }
+            },
+            {
+                path: 'favorites',
+                component: () => import('@/views/mall/purchase/favorites.vue'),
+                meta: {
+                    title: '收藏夹',
+                    title_en: 'Favorites',
+                }
+            },
+            {
+                path: 'all-articles',
+                component: () => import('@/views/mall/purchase/all-articles.vue'),
+                meta: {
+                    title: '文章列表',
+                    title_en: 'All Articles',
+                }
+            },
+            {
+                path: 'detail',
+                component: () => import('@/views/mall/purchase/detail.vue'),
+                meta: {
+                    title: '文章详情',
+                    title_en: 'Articles Detail',
+                }
+            },
+        ]
+    },
     { // 看板
         path: '/dashboard',
         component: Layout,
         name:'Dashboard',
+        redirect: '/dashboard/index',
         type: [ROUTER_TYPE.SALES, ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION],
         meta: {
             title: '商城',
@@ -103,7 +175,7 @@ const routes = [
     //     meta: {
     //         title: '测试报告',
     //         title_en: 'Test Report',
-    //         icon: 'i_s_dashboard',    
+    //         icon: 'i_s_dashboard',
     //     },
     //     children: [
     //         {
@@ -1688,6 +1760,8 @@ const routes = [
             }
         ]
     },
+    // 供应商管理
+    supplyManage,
     { // 数据
         path: '/crm-dashboard',
         component: Layout,
@@ -2762,6 +2836,7 @@ const routes = [
 
         ]
     },
+
     // 测试用例
     {
         path:'/test',
@@ -2772,7 +2847,8 @@ const routes = [
             not_sub_menu: true,
             hidden: true,
         },          
-    }
+    },
+    ...supplyRouters,    
 ];
 
 export default routes;
