@@ -385,7 +385,9 @@ const handleNext = () => {
         BasicInfoRef.value.step1Vaild().then(() => {
             // 下一步
             $store.dispatch("SUPPLY_CHAIN/nextStep");
-        });
+        }).catch((err) => {
+            console.log("err:", err);
+        })
 };
 // 保存草稿
 const handleSave = () => {

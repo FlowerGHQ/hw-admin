@@ -2840,7 +2840,6 @@ import { useStore } from "vuex";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
-
 const TECHNICAL_INFORMATION = computed(() => {
     let arr = [];
     Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item) => {
@@ -2851,7 +2850,6 @@ const TECHNICAL_INFORMATION = computed(() => {
     });
     return arr;
 });
-
 const PROCESS_DESIGN = computed(() => {
     let arr = [];
     Core.Const.SUPPLAY.PROCESS_DESIGN.forEach((item) => {
@@ -2862,7 +2860,6 @@ const PROCESS_DESIGN = computed(() => {
     });
     return arr;
 });
-
 const PROCESS_VALIDATION = computed(() => {
     let arr = [];
     Core.Const.SUPPLAY.PROCESS_VALIDATION.forEach((item) => {
@@ -2873,7 +2870,6 @@ const PROCESS_VALIDATION = computed(() => {
     });
     return arr;
 });
-
 // 表格添加对象 - 客户名称
 const customer_info_list_obj = ref({
     customer_order: "",
@@ -3480,15 +3476,12 @@ let flagLegalDisputeValid = async (_rule, value) => {
 const findItemIsNoneWrite = (parObjkey, key) => {
     let boo = false;
     formState[parObjkey].forEach((item, index) => {
-        console.log(item[key]);
         if (!item[key]) boo = true;
     });
     return boo;
 };
 // 辅助表格校验方法2 list
 const findItemIsNoneFromList = (parObjkey, key) => {
-    console.log(formState[parObjkey]["list"])
-    console.log(key)
     let boo = false;
     formState[parObjkey]["list"].forEach((item, index) => {
         if (!item[key]) boo = true;
@@ -3507,24 +3500,7 @@ let tableVaild = async (_rule, value) => {
     if (!_rule.required) {
         return Promise.resolve();
     }
-    // _rule.fullField : 是当前校验的字段
     switch (_rule.fullField) {
-        // case "customer_name": // 客户名称
-        //     dataBoo = findItemIsNoneWrite("customer_info", "customer_name");
-        //     break;
-        // case "sales_share": // 销售占比
-        //     dataBoo = findItemIsNoneWrite("customer_info", "sales_share");
-        //     break;
-        // case "main_supply_part": // 主供零件
-        //     dataBoo = findItemIsNoneWrite("customer_info", "main_supply_part");
-        //     break;
-        // case "begin_cooperation_time": // 开始合作时间
-        //     dataBoo = findItemIsNoneWrite(
-        //         "customer_info",
-        //         "begin_cooperation_time"
-        //     );
-        //     break;
-
         // 关键生产设备
         case "production_name": // 生产设备名称
             dataBoo = findItemIsNoneWrite("production_equipment", "name");
@@ -3631,30 +3607,6 @@ const rulesAll = ref({
             trigger: ["change", "blur"],
         },
     ],
-    //   contact_name: [// 姓名
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
-    //   contact_email: [// 邮箱
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
-    //   contact_flag_phone: [// 手机号
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
     // 公司名称
     company_name_name: [
         {
@@ -4071,10 +4023,8 @@ const step1Vaild = () => {
                 // 校验失败
                 message.warning($t("supply-chain.please_complete_info"));
                 const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
-                console.log("errorName111", errorName, err);
                 if (!errorName) return;
                 const errorDom = document.querySelector(`[name=${errorName}]`);
-                console.log(errorDom);
                 // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
                 errorDom.scrollIntoView({
                     behavior: "smooth",
@@ -4141,11 +4091,9 @@ const handleAddSpecItem = (list, obj, title, key) => {
 const setRules = () => {
     let broker_v_list = [
         /* 代理类 */
-
         // 代理产权
         "proxy_warrant" /* 代理权证 */,
         "duration_of_agency" /* 代理有效期间 */,
-
         // 营业信息 business_info
         "proportion_of_business" /* 业务比重 */,
         "sales" /* 销售额 */,
@@ -4153,14 +4101,12 @@ const setRules = () => {
         "profit_margin" /* 利润率 */,
         "asset_liability_ratio" /* 资产负债率 */,
         "cash_flow_ratio" /* 现金流量比率 */,
-
         // 客户信息 customer_info
         "customer_name" /* 客户名称 */,
         "sales_share" /* 销售占比 */,
         "main_supply_part" /* 主供零件 */,
         "begin_cooperation_time" /* 开始合作时间 */,
     ];
-
     let outsourcing_v_list = [
         /* 外协类 */
 
@@ -4192,17 +4138,14 @@ const setRules = () => {
         "detection_manufacturer" /* 设备制造商 */,
         "detection_accuracy_level" /* 精度等级 */,
     ];
-
     let mold_v_list = [
         /* 模具类 */
-
         // 关键生产设备 production_equipment
         "production_name" /* 生产设备名称 */,
         "production_spec" /* 规格型号（含吨位） */,
         "production_quantity" /* 数量 */,
         "production_manufacturer" /* 设备制造商 */,
         "production_purchase_period" /* 购置年限 */,
-
         // 关键检测设备 detection_equipment
         "detection_name" /* 生产设备名称 */,
         "detection_spec" /* 规格型号（含吨位） */,
@@ -4210,29 +4153,21 @@ const setRules = () => {
         "detection_manufacturer" /* 设备制造商 */,
         "detection_accuracy_level" /* 精度等级 */,
     ];
-
     let customer_refers_v_list = [
         /* 客指类 */
-
         // 营业信息 business_info
         "sales" /* 销售额 */,
-
         // 客户信息 customer_info
         "customer_name" /* 客户名称 */,
         "sales_share" /* 销售占比 */,
         "main_supply_part" /* 主供零件 */,
         "begin_cooperation_time" /* 开始合作时间 */,
-
         // 指定信息 specify_info
         "reason" /* 指定理由 */,
         "parts" /* 指定零件 */,
         "protocol" /* 指定协议 */,
         "service" /* 指定服务 */,
     ];
-    /* rules.value = {
-        ...rulesAll.value, ...rulesOther.value 
-    } */
-
     let obj = {};
     let otherR = Object.keys(rulesOther.value);
     switch (formState.type) {
@@ -4275,9 +4210,11 @@ watch(
     () => $i18n.locale.value,
     (val) => {
         // 重新校验
-        if (formRef1.value) {
-            formRef1.value.clearValidate();
-        }
+        formRef1.value && formRef1.value.clearValidate();
+        formRef2.value && formRef2.value.clearValidate();
+        formRef3.value && formRef3.value.clearValidate();
+        formRef4.value && formRef4.value.clearValidate();
+        setRules();
     }
 );
 // );
@@ -4285,12 +4222,12 @@ watch(
 watch(
     () => formState.type,
     (newval, oldval) => {
-        // 重置校验规则
-        setRules();
         formRef1.value && formRef1.value.clearValidate();
         formRef2.value && formRef2.value.clearValidate();
         formRef3.value && formRef3.value.clearValidate();
         formRef4.value && formRef4.value.clearValidate();
+        // 重置校验规则
+        setRules();
     }
 );
 defineExpose({
