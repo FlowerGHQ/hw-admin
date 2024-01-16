@@ -1,6 +1,6 @@
 <template>
 <div id="PurchaseList">
-    <div class="list-container">
+    <div class="list-container" ref="container">
         <div class="title-container">
             <div class="title-area">{{ $t('p.list')}}</div>  
         </div>
@@ -99,13 +99,14 @@
                     </template>
                     <!-- 销售bom -->
                     <template v-if="column.key === 'accessory_list'">
-                        {{ 
-                            record.accessory_list&&record.accessory_list.length>0?
-                            record.accessory_list.map(
-                                item=> $i18n.locale === 'zh'? item.name : item.name_en
-                            ).join(','):
-                            '-'
-                        }}
+                        <span  class="accessory_list" @click="openBomModal(record)">
+                            {{ 
+                                record.item_list.map((item,index)=>{
+                                    return $i18n.locale === 'zh' ? item.item.name : item.item.name_en
+                                }).join(',') || '-'
+                            }}
+                        </span>
+                        
                     </template>
                     <template v-else-if="column.dataIndex === 'parent_sn' && $auth('purchase-order.detail')">
                         <a-tooltip placement="top" :title='text'>
@@ -208,6 +209,34 @@
                 @showSizeChange="pageSizeChange"
             />
         </div>
+        <a-modal 
+            v-model:visible="visible" 
+            :title="$t('i.sale_bom')" 
+            :getContainer="getContainer"
+            :footer="null"
+            :width="540"
+            class="sale-bom-modal"
+        >
+            <div class="bom-item-list" v-for="item in bomModalData" :key="item.id">
+                <div class="shop">
+                    {{ $i18n.locale === 'zh' ? item.item.name : item.item.name_en  }}
+                    <!-- 修改按钮 -->
+                    <a-button @click="routerChange('editBom',item)">{{$t('def.edit')}}</a-button>
+                </div>
+                <div class="bom">
+                    <div class="bom-item" v-for="item in item.accessory_list" :key="item.id" v-if="item?.accessory_list &&item.accessory_list.length>0 ">   
+                        <div class="bom-item-name">
+                            {{ $i18n.locale === 'zh' ? item.target_name : item.target_name_en  }}
+                        </div>
+                        <div class="bom-item-num">
+                            x{{ item.amount }}
+                        </div>
+                    </div>
+                    <a-empty v-else/>
+                </div>
+            </div>
+           
+        </a-modal>
     </div>
 </div>
 </template>
@@ -235,6 +264,8 @@ export default {
     props: {},
     data() {
         return {
+            visible: false,
+            bomModalData: [],
             LOGIN_TYPE,
             SEARCH_TYPE,
             STATUS,
@@ -392,8 +423,15 @@ export default {
     beforeUnmount(){
         clearInterval(this.timer)
     },
-    methods: {
-
+    methods: {  
+        // 打开销售bom弹窗
+        openBomModal(record) {
+            this.visible = true;
+            this.bomModalData = record.item_list;
+        },
+        getContainer() {
+            return this.$refs.container
+        },
         // 点击推送按钮（erp)
         sendErp() {
             
@@ -458,6 +496,18 @@ export default {
                         path: "/purchase/item-collect",
                         query: { id: item.id }
                     })
+                    window.open(routeUrl.href, '_self')
+                    break;
+                case 'editBom':
+                    routeUrl = this.$router.resolve(
+                        {
+                            path:'/item/item-detail',
+                            query: {
+                                id: item.item_id,
+                                tab:3
+                            }
+                        }
+                    )
                     window.open(routeUrl.href, '_self')
                     break;
             }
@@ -680,5 +730,84 @@ export default {
 
 .right-f {
     float: right;
+}
+:deep(.ant-table-cell){
+    .accessory_list{
+        display: inline-block;
+        width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #006EF9;
+        cursor: pointer;
+    }
+}
+:deep(.sale-bom-modal){
+    .ant-modal-content{
+        border-radius: 4px;
+       .ant-modal-header{
+            padding: 16px 16px 16px 24px;
+            min-height: auto;
+            .ant-modal-title{
+                height: auto;
+                line-height: 1;
+            }
+       } 
+       .ant-modal-body{
+        padding: 16px 24px;
+        min-height: 444px;
+        overflow-y: auto;
+        // 滚动条样式
+        &::-webkit-scrollbar {
+            width: 8px; /* 滚动条宽度 */
+        }
+        
+        /* 滚动条背景 */
+        &::-webkit-scrollbar-track {
+            background-color: #FFF;
+        }
+        
+        /* 滚动条滑块 */
+        &::-webkit-scrollbar-thumb {
+            background-color: #E5E6EB;
+            border-radius: 20px; /* 滑块圆角 */
+        }
+        .bom-item-list{
+                border-radius: 4px;
+                border: 1px solid #EAECF2;
+                background: #FFF;
+                color: #1D2129;
+                font-size: 14px;
+                font-weight: 500;
+                margin-bottom: 16px;
+                &:last-child{
+                    margin-bottom: 0px;
+                }
+
+            .shop{
+                height: 48px;
+                border-radius: 4px 4px 0px 0px;
+                border: 1px solid #EAECF2;
+                background: #F5F7F9;
+                font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 16px;
+            }
+            .bom{
+                padding: 18px 16px 16px 16px;
+                .bom-item{
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 16px;
+                    &:last-child{
+                        margin-bottom: 0px;
+                    }
+                }
+            }
+        }
+       }
+    }
 }
 </style>
