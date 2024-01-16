@@ -528,10 +528,14 @@ const handleEditShow = () => {
     passShow.value = true;
 };
 const handleLogout = () => {
+    if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+        $router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
+    } else {
+        $router.replace(`/login`);
+    }
     Core.Api.Common.logout().then(() => {
         localStorage.clear();
-        $store.dispatch("SUPPLY_CHAIN/clearAll");
-        $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
+        $store.dispatch("SUPPLY_CHAIN/clearAll");        
     });
 };
 const handleEditSubmit = () => {
