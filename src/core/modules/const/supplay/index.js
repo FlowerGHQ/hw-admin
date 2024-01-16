@@ -27,6 +27,12 @@ const SUPPLAY = {
         3: { value: 3, t: 'supply-chain.technology', },
         4: { value: 4, t: 'supply-chain.general_manager', },
     },
+    POSITION_MAP_STATUS: {
+        SALES: 1,
+        QUALITY: 2,
+        TECHNOLOGY: 3,
+        GENERAL_MANAGER: 4,
+    },
     // 职位
     POSITION: [
         { value: 4, t: 'supply-chain.general_manager', label:'supply-chain.general_manager'},

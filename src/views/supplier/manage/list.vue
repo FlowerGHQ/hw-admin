@@ -59,8 +59,15 @@
                     </template>
                     <!-- 操作 -->
                     <template v-if="column.key === 'operations'">
-                        <a-button type="link" @click="onView(record)">{{ $t('supply-chain.view') }}</a-button>
-                    </template>                 
+                        <a-button type="link" @click="onView('add', record)">
+                            <MySvgIcon icon-class="supply-view"/>
+                            <span class="m-l-10">{{ $t('supply-chain.view') }}</span>
+                        </a-button>
+                        <a-button type="link" @click="onView('edit', record)">       
+                            <MySvgIcon icon-class="supply-edit"/>
+                            <span class="m-l-10">{{ $t('common.edit') }}</span>
+                        </a-button>
+                    </template>
                 </template>
             </a-table>
         </div>
@@ -90,6 +97,7 @@ import { useTable } from '@/hooks/useTable'
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 import { useStore } from "vuex";
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 const $store = useStore();
 const router = useRouter()
 const $t = useI18n().t;
@@ -145,15 +153,30 @@ const onReset = () => {
     refreshTable()
 }
 // 点击查看
-const onView = (record) => {
-    console.log("点击查看了");
-    let routeUrl = router.resolve({
-        path: '/supply-manage/detail',
-        query: {
-            id: record.id            
-        }
-    })
-    window.open(routeUrl.href, '_blank')
+const onView = (type, record) => {
+    let routeUrl = null
+    switch(type) {
+        case 'add':        
+            routeUrl = router.resolve({
+                path: '/supply-manage/detail',
+                query: {
+                    id: record.id            
+                }
+            })
+            window.open(routeUrl.href, '_blank')
+
+        break;
+        case 'edit':
+            routeUrl = router.resolve({
+                path: '/supply-manage/detail',
+                query: {
+                    id: record.id,
+                    flag_edit: true
+                }
+            })
+            window.open(routeUrl.href, '_blank')
+        break;
+    }   
 }
 const onBtn = () => {
     router.push({
@@ -166,4 +189,5 @@ const onBtn = () => {
 /* methods end*/
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+</style>
