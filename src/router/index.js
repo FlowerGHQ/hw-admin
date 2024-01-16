@@ -28,6 +28,7 @@ function inWhiteList(toPath) {
 }
 
 router.beforeEach((to, from, next) => {	
+    window.scrollTo(0, 0);// 跳转页面后 滚动条默认置顶
     const token = Core.Data.getToken();
     const loginType = Core.Data.getLoginType()
 

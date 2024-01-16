@@ -2,44 +2,73 @@
     <div id="favorites">
         <div class="content">
             <div class="title">
-                {{ $t('purchase.my_favorites') }}
+                {{ $t('mall.Favorites') }}
             </div>
-            <div>
-                <ProductsCard />
-            </div>
+            <a-spin tip="Loading..." :spinning="spinning">
+                <div class="body" v-if="list.length > 0">
+                    <div class="list-body">
+                        <div class="list-item" v-for="(child, index) in listRender" :key="child.item_id">
+                            <ProductsCard canRemoveFavorites :record="child" @handlechange="getCarList" />
+                        </div>
+                    </div>
+                </div>
+                <a-empty :description="null" v-else />
+            </a-spin>
         </div>
-        <DownLoading class="loading" :show="loading"/>
     </div>
 </template>
 
 <script setup>
-import DownLoading from '../components/DownLoading.vue';
 import ProductsCard from '../components/ProductsCard.vue';
 import Core from '@/core';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, computed, watch } from 'vue';
 
-const footerHeight = ref(0)
-const loading = ref(false)
-const pagination = reactive({
-    page_size: 32,
-    page: 1,
-    total: 0,
-    total_page: 0
-})
+/* state start */
+const spinning = ref(false)
+const list = ref([])
+/* state end */
 
 onMounted(() => {
-    initScrollData()
+    getData()
 })
+
+/* computed start */
+const listRender = computed(() => {
+    return list.value.map(item => {
+        delete item['item'].id
+        return {
+            ...item,
+            ...item['item'],
+        }
+    })
+})
+/* computed end */
+
+/* methods start */
 // 获取数据
 const getData = () => {
-    console.log('getData')
+    getCarList()
 }
-// 触发下拉滚动
-const initScrollData = () => {
-    footerHeight.value = document.querySelector('#mall-footer').clientHeight
-    const html = document.documentElement
-    Core.Util.handleScrollFn(html, getData, pagination, loading.value, footerHeight.value)
+const favoriteListFetch = Core.Api.Favorite.list
+// 回到顶部
+const back2Top = () => {
+    setTimeout(() => {
+        window.scrollTo(0,0)
+    }, 0);
 }
+/* methods end */
+
+/* fetch start */
+const getCarList = () => {
+    spinning.value = true
+    favoriteListFetch().then(res => {
+        list.value = res?.list
+        back2Top()
+    }).finally(() => {
+        spinning.value = false
+    })
+}
+/* fetch end */
 </script>
 
 <style lang="less" scoped>
@@ -50,11 +79,27 @@ const initScrollData = () => {
         width: 75%;
         .title {
             color: #000;
-            font-family: Montserrat;
             font-size: 24px;
             font-style: normal;
             font-weight: 500;
             line-height: normal;
+            margin-bottom: 40px;
+        }
+        .body {
+            .list-body {
+                margin-bottom: 40px;
+                .list-body-title {
+                    color: #000;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: normal;
+                    margin-bottom: 16px;
+                }
+                .list-item {
+                    margin-bottom: 24px;
+                }
+            }
         }
     }
 }

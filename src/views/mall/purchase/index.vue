@@ -16,12 +16,12 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.products') }}</div>
                     <div class="products-list">
-                        <div class="products-item hover" v-for="(item, index) in productsList" :key="index" @click="routerChange(item.path, { tabId: item.tabId })">
+                        <div class="products-item hover" v-for="(item, index) in productsList.slice(0, 3)" :key="index" @click="routerChange(item.path, { tabId: item.id })">
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
                                 <div class="btn">
-                                    <my-button showRightIcon>
+                                    <my-button showRightIcon padding="12px 32px" font="14px">
                                         {{ $t('purchase.order') }}
                                     </my-button>
                                 </div>
@@ -44,7 +44,7 @@
                             <svg-icon :icon-class="item.icon" class-name="services-icon" />
                             <div class="text">
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
-                                <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
+                                <!-- <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p> -->
                             </div>
                         </div>
                     </div>
@@ -83,21 +83,21 @@
                 <div class="content">
                     <div class="title">{{ $t('purchase.news') }}</div>
                     <div class="news-list">
-                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index">
+                        <div class="news-item hover" v-for="(item, index) in newsList" :key="index" @click="routerChange('/mall/detail', { id: item.id })">
                             <div class="img-body">
                                 <div class="img">
                                     <img class="news-img" :src="item.img">
                                 </div>
                             </div>
                             <div class="text">
-                                <p class="text-title" :title="item.title">{{ item.topic }}</p>
+                                <p class="text-title" :title="item.topic">{{ item.topic }}</p>
                                 <p class="mes" v-if="lang === 'zh'">{{ $Util.timeFilter(item.create_time, 3) }}</p>
                                 <p class="mes" v-else>{{ $Util.timeFilter(item.create_time, 6) }}</p>
                             </div>
                         </div>
                     </div>
-                    <div class="btn">
-                        <my-button showRightIcon>
+                    <div class="btn" @click="routerChange('/mall/all-articles')">
+                        <my-button showRightIcon padding="12px 32px" font="14px">
                             {{ $t('purchase.check_more') }}
                         </my-button>
                     </div>
@@ -132,29 +132,7 @@ export default {
                 { img: 'banner' },
                 { img: 'banner' },
             ],
-            productsList: [
-                {
-                    nameLang: 'products_name1',
-                    mesLang: 'products_mes1',
-                    img: 'products-img1',
-                    path: '/purchase/item-list',
-                    tabId: 1
-                },
-                {
-                    nameLang: 'products_name2',
-                    mesLang: 'products_mes2',
-                    img: 'products-img2',
-                    path: '/purchase/item-list',
-                    tabId: 2
-                },
-                {
-                    nameLang: 'products_name3',
-                    mesLang: 'products_mes3',
-                    img: 'products-img3',
-                    path: '/purchase/item-list',
-                    tabId: 53
-                },
-            ],
+            productsList: Object.values(Core.Const.ITEM.TYPE_MAP),
             servicesList: [
                 {
                     nameLang: 'admin_backend',
@@ -236,7 +214,9 @@ export default {
         // 回到顶部
         back2Top() {
             const dom = document.getElementById('mall-header')
-            dom.scrollIntoView();
+            dom.scrollIntoView({
+                behavior: 'smooth'
+            });
         },
         // 回到顶部按钮定位
         scrollFn() {
@@ -285,12 +265,18 @@ export default {
                 width: 75%;
                 .title {
                     color: #333;
-                    font-family: Montserrat;
                     font-size: 32px;
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
                     margin-bottom: 40px;
+                }
+                > .btn {
+                    .fcc();
+                    margin-top: 40px;
+                    #my-button {
+                        padding: 12px 32px;
+                    }
                 }
             }
         }
@@ -318,7 +304,6 @@ export default {
                             .name {
                             color: #333;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 32px;
                             font-style: normal;
                             font-weight: 500;
@@ -327,7 +312,6 @@ export default {
                         }
                         .mes {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
@@ -392,7 +376,6 @@ export default {
                         .name {
                             color: #333;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 500;
@@ -402,7 +385,6 @@ export default {
                         .mes {
                             color: #999;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -451,7 +433,6 @@ export default {
                         .text-title {
                             .ellipsis(1);
                             color: #333;
-                            font-family: Montserrat;
                             font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
@@ -460,7 +441,6 @@ export default {
                         .text-subtitle {
                             .ellipsis(2);
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -469,7 +449,6 @@ export default {
                         }
                         .time {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -519,7 +498,6 @@ export default {
                         .text-title {
                             .ellipsis(2);
                             color: #333;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 500;
@@ -528,7 +506,6 @@ export default {
                         }
                         .mes {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -536,13 +513,6 @@ export default {
                         }
                     }
                 }
-            }
-        }
-        .btn {
-            .fcc();
-            margin-top: 40px;
-            #my-button {
-                padding: 12px 32px;
             }
         }
     }
@@ -566,7 +536,6 @@ export default {
         }
         .back-top-text {
             color: #666;
-            font-family: Montserrat;
             font-size: 12px;
             font-style: normal;
             font-weight: 500;

@@ -42,7 +42,7 @@ export default {
         deals: 'Local Deals',
         news: 'HORWIN Official News',
         products_name1: 'Vehicle Models',
-        products_name2: 'Spareparts',
+        products_name2: 'Accessories',
         products_name3: 'Peripheral Products',
         products_mes1: 'We have 13 vehicle models to choose from',
         products_mes2: 'To choose spareparts for different types of models',
@@ -57,7 +57,7 @@ export default {
         back_top: 'Back Top',
         search: 'Search',
         searching: 'Searching',
-        check_more: '查看更多',
+        check_more: 'Check More',
         my_favorites: 'My Favorites',
         search_results: 'Search Results',
     }

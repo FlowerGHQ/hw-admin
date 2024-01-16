@@ -33,6 +33,11 @@ export default {
         sented: '已发送',
         choose_identity: '请选择要登录的身份',
         switch_identity: '切换身份',
+        favorites: '收藏',
+        collected: '已收藏',
+        more_login: '更多登录方式',
+        user_name_login: '用户名/密码登录',
+        phone_login: '手机号码/验证码登录',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -48,6 +53,7 @@ export default {
         more_features: 'More Features',
         vehicle_models: 'Vehicle Models',
         spareparts: 'Spareparts',
+        accessories: 'Accessories',
         shop_equipment: 'Shop Equipment',
         peripheral_products: 'Peripheral Products',
         promotional_products: 'Promotional Products',
@@ -66,6 +72,11 @@ export default {
         sented: 'Sented',
         choose_identity: 'Please Choose An Identity To Enter',
         switch_identity: 'Switch Identity',
+        favorites: 'Favorites',
+        collected: 'Collected',
+        more_login: 'More Login Methods',
+        user_name_login: 'User Name / Password Log In',
+        phone_login: 'Phone Number / Verification Code Log In',
     }
 }
 
