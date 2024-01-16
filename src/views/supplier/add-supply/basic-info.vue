@@ -1,5 +1,6 @@
 <template>
     <div class="material-list">
+        <!-- 供应类型 -->
         <div class="base-info content-area top-box">
             <div class="title">{{ $t("supply-chain.type_supply") }}</div>
             <div class="base-info-form flex-1">
@@ -55,6 +56,7 @@
                 </a-row>
             </div>
         </div>
+        <!-- 联系方式 -->
         <div class="base-info content-area margin-t-20">
             <div class="title">{{ $t("supply-chain.contact") }}</div>
             <div class="base-info-form">
@@ -85,19 +87,6 @@
                             </a-row>
                             <!-- 姓名 联系人邮箱  联系方式 同步微信-->
                             <a-row :gutter="24">
-                                <!-- <a-col :span="12">
-                                  <a-form-item :label="$t('supply-chain.name')" name="contact_name">
-                                      <a-input :maxlength="7" name="contact_name" v-model:value="formState.contact_info.name" :placeholder="$t('supply-chain.please_enter')" />
-                                  </a-form-item>
-                              </a-col>
-                              <a-col :span="12">
-                                  <a-form-item
-                                      :label="$t('supply-chain.mailbox')"
-                                      name="contact_email">
-                                      
-                                      <a-input name="contact_email" v-model:value="formState.contact_info.email" :placeholder="$t('supply-chain.please_enter')" />
-                                  </a-form-item>
-                              </a-col> -->
                                 <a-col :span="24">
                                     <a-form-item
                                         :label="' '"
@@ -114,18 +103,7 @@
                                                 :row-key="(record) => record.id"
                                                 :pagination="false"
                                                 class="specific-table-position"
-                                                :rowClassName="
-                                                    (record, index) =>
-                                                        record.position === 4
-                                                            ? 'no-require'
-                                                            : record.position !==
-                                                                  4 &&
-                                                              (!record.name ||
-                                                                  !record.email ||
-                                                                  !record.phone)
-                                                            ? 'require'
-                                                            : ''
-                                                ">
+                                            >
                                                 <template
                                                     #bodyCell="{
                                                         column,
@@ -2465,13 +2443,16 @@
             <!-- 关键生产设备 -->
             <div class="base-info-form">
                 <a-form
-                    :rules="rules"
                     ref="formRef3"
+                    :rules="rules"
                     :model="formState"
                     labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div 
+                                class="title-two"
+                                :class="{ 'title-two-required': returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                            >
                                 {{
                                     $t("supply-chain.key_production_equipment")
                                 }}
@@ -2603,7 +2584,10 @@
                     labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div 
+                                class="title-two"
+                                :class="{ 'title-two-required': returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                            >
                                 {{
                                     $t(
                                         "supply-chain.critical_detection_equipment"
@@ -3547,7 +3531,7 @@ const rulesAll = ref({
     positon: [
         //职业
         {
-            required: true,
+            required: false,
             validator: PositionVaild,
             trigger: ["change", "blur"],
         },
@@ -3555,39 +3539,15 @@ const rulesAll = ref({
     contact_info: [
         // 联系方式
         {
-            required: true,
+            required: false,
             validator: contactInfoVaild,
             trigger: ["change", "blur"],
         },
     ],
-    //   contact_name: [// 姓名
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
-    //   contact_email: [// 邮箱
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
-    //   contact_flag_phone: [// 手机号
-
-    //       {
-    //           required: true,
-    //           validator: NameVaild,
-    //           trigger: ["change", "blur"],
-    //       },
-    //   ],
     // 公司名称
     company_name_name: [
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3595,7 +3555,7 @@ const rulesAll = ref({
     // 公司-详细地址
     company_address: [
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3603,7 +3563,7 @@ const rulesAll = ref({
     // 公司-成立日期
     date_establishment: [
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3611,7 +3571,7 @@ const rulesAll = ref({
     // 公司-法人代表
     legal_representative: [
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3619,7 +3579,7 @@ const rulesAll = ref({
     // 法律纠纷
     flag_legal_dispute: [
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3627,7 +3587,7 @@ const rulesAll = ref({
     // 账期要求
     period_requirement: [
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3635,7 +3595,7 @@ const rulesAll = ref({
     // 开具发票
     Invoice_type: [
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3647,7 +3607,7 @@ const rulesOther = ref({
     proxy_warrant: [
         /* 代理权证 */
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3655,7 +3615,7 @@ const rulesOther = ref({
     duration_of_agency: [
         /* 代理有效期间 */
         {
-            required: true,
+            required: false,
             validator: flagLegalDisputeValid,
             trigger: ["change", "blur"],
         },
@@ -3665,7 +3625,7 @@ const rulesOther = ref({
     proportion_of_business: [
         /* 业务比重 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3673,7 +3633,7 @@ const rulesOther = ref({
     sales: [
         /* 销售额 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3681,7 +3641,7 @@ const rulesOther = ref({
     taxes_paid: [
         /* 纳税额 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3689,7 +3649,7 @@ const rulesOther = ref({
     profit_margin: [
         /* 利润率 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3697,7 +3657,7 @@ const rulesOther = ref({
     asset_liability_ratio: [
         /* 资产负债率 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3705,7 +3665,7 @@ const rulesOther = ref({
     cash_flow_ratio: [
         /* 现金流量比率 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3715,7 +3675,7 @@ const rulesOther = ref({
     customer_name: [
         /* 客户名称 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3723,7 +3683,7 @@ const rulesOther = ref({
     sales_share: [
         /* 销售占比 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3731,7 +3691,7 @@ const rulesOther = ref({
     main_supply_part: [
         /* 主供零件 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3739,7 +3699,7 @@ const rulesOther = ref({
     begin_cooperation_time: [
         /* 开始合作时间 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3749,7 +3709,7 @@ const rulesOther = ref({
     production_name: [
         /* 生产设备名称 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3757,7 +3717,7 @@ const rulesOther = ref({
     production_spec: [
         /* 规格型号（含吨位） */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3765,7 +3725,7 @@ const rulesOther = ref({
     production_quantity: [
         /* 数量 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3773,7 +3733,7 @@ const rulesOther = ref({
     production_manufacturer: [
         /* 设备制造商 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3781,7 +3741,7 @@ const rulesOther = ref({
     production_purchase_period: [
         /* 购置年限 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3791,7 +3751,7 @@ const rulesOther = ref({
     detection_name: [
         /* 检测设备名称 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3799,7 +3759,7 @@ const rulesOther = ref({
     detection_spec: [
         /* 规格型号 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3807,7 +3767,7 @@ const rulesOther = ref({
     detection_quantity: [
         /* 数量 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3815,7 +3775,7 @@ const rulesOther = ref({
     detection_manufacturer: [
         /* 设备制造商 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3823,7 +3783,7 @@ const rulesOther = ref({
     detection_accuracy_level: [
         /* 精度等级 */
         {
-            required: true,
+            required: false,
             validator: tableVaild,
             trigger: ["change", "blur"],
         },
@@ -3833,7 +3793,7 @@ const rulesOther = ref({
     reason: [
         /* 指定理由 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3841,7 +3801,7 @@ const rulesOther = ref({
     parts: [
         /* 指定零件 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3849,7 +3809,7 @@ const rulesOther = ref({
     protocol: [
         /* 指定协议 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3857,7 +3817,7 @@ const rulesOther = ref({
     service: [
         /* 指定服务 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3866,7 +3826,7 @@ const rulesOther = ref({
     processes: [
         /* 关键自有工序 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3874,7 +3834,7 @@ const rulesOther = ref({
     automation_line: [
         /* 智能自动化线 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3882,7 +3842,7 @@ const rulesOther = ref({
     load: [
         /* 智能自动化线 */
         {
-            required: true,
+            required: false,
             validator: companyVaild,
             trigger: ["change", "blur"],
         },
@@ -3937,41 +3897,6 @@ const handleTimeSearch = (params) => {
 };
 // 校验
 const step1Vaild = async () => {
-    //   return new Promise(async (resolve,reject)=>{
-    //       formRef1.value && formRef1.value.clearValidate();
-    //       formRef2.value && formRef2.value.clearValidate();
-    //       formRef3.value && formRef3.value.clearValidate();
-    //       formRef4.value && formRef4.value.clearValidate();
-    //       const form1Promise = formRef1.value && formRef1.value.validate(); // 获取表单1的验证 Promise
-    //       const form2Promise = formRef2.value && formRef2.value.validate(); // 获取表单2的验证 Promise
-    //       const form3Promise = formRef3.value && formRef3.value.validate(); // 获取表单3的验证 Promise
-    //       const form4Promise = formRef4.value && formRef4.value.validate(); // 获取表单4的验证 Promise
-    //       Promise.all([form1Promise, form2Promise, form3Promise, form4Promise]).then(([res1, res2, res3, res4]) => {
-    //             // 所有 Promise 都成功完成
-    //             // 处理结果...
-    //             if (res1 && res2 && res3 && res4) {
-
-    //                   resolve(true)
-    //             }
-    //         }).catch(err => {
-    //             // 至少有一个 Promise 失败
-    //             // 处理错误...
-    //               // 校验失败
-    //               message.warning($t("supply-chain.please_complete_info"));
-    //               const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
-    //               console.log('errorName111',errorName,err);
-    //               if (!errorName) return;
-    //               const errorDom = document.querySelector(`[name=${errorName}]`);
-    //               console.log(errorDom)
-    //               // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-    //               errorDom.scrollIntoView({
-    //                   behavior: "smooth",
-    //                   block: "center",
-    //                   inline: "nearest",
-    //               });
-    //               reject(false)
-    //         });
-    //   })
     let data = $store.state.SUPPLY_CHAIN.supplyChain;
     // 判断是否为空对象
     if (Object.keys(data).length === 0) {
@@ -4145,9 +4070,6 @@ const setRules = () => {
         "protocol" /* 指定协议 */,
         "service" /* 指定服务 */,
     ];
-    /* rules.value = {
-        ...rulesAll.value, ...rulesOther.value 
-    } */
 
     let obj = {};
     let otherR = Object.keys(rulesOther.value);
@@ -4247,6 +4169,14 @@ onMounted(() => {
             font-size: 16px;
             font-weight: 400;
             white-space: nowrap;
+
+            &.title-two-required {
+                &::before {
+                    content: "*";
+                    color: #EB4141;
+                    vertical-align: middle;
+                }
+            }
         }
     }
     .base-info {

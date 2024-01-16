@@ -1685,7 +1685,12 @@
                 <div class="title">{{ $t('supply-chain.device_information') }}</div>
                 <!-- 关键生产设备 -->
                 <div class="information-container-form">
-                    <div class="sub-title">{{ $t('supply-chain.key_production_equipment') }}</div>
+                    <div 
+                        class="sub-title"
+                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                    >
+                        {{ $t('supply-chain.key_production_equipment') }}
+                    </div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -1762,7 +1767,12 @@
                 </div>
                 <!-- 关键检测设备 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">{{ $t('supply-chain.critical_detection_equipment') }}</div>
+                    <div 
+                        class="sub-title"
+                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                    >
+                        {{ $t('supply-chain.critical_detection_equipment') }}
+                    </div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -3119,6 +3129,14 @@ const onBack = () => {
                     color: #1d2129;
                     font-size: 16px;
                     font-weight: 400;
+
+                    &.sub-title-required {
+                       &::before {
+                            content: "*";
+                            color: #EB4141;                        
+                            vertical-align: middle;
+                       }
+                    }
                 }
                 .information-form {
                     margin-left: 50px;
@@ -3163,6 +3181,14 @@ const onBack = () => {
                     color: #1d2129;
                     font-size: 16px;
                     font-weight: 400;
+
+                    &.sub-title-required {
+                        &::before {
+                            content: "*";
+                            color: #EB4141;
+                            vertical-align: middle;
+                        }
+                    }
                 }
                 .information-form {
                     margin-left: 50px;
