@@ -1901,6 +1901,7 @@ const messages = {
                 // 新加入2023/10/9
                 'coc': 'COC证书管理',
                 'supplier-application': '供应商管理',
+                'sales-strategy': '销售策略管理',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2242,7 +2243,10 @@ const messages = {
             },
             'supplier-application': {
                 'list': '申请资料列表'
-            }
+            },
+            'sales-strategy': {
+                'list': '销售策略列表'
+            },
         },
         error_code: {
             expire: '登录状态已过期，请重新登录',
@@ -4596,6 +4600,7 @@ const messages = {
                 'coc': 'Coc Certificate Management',
                 'aftermarket-bom': 'BOM Management',
                 'supplier-application': 'Supplier Application',
+                'sales-strategy': 'Sales Strategy',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4936,7 +4941,10 @@ const messages = {
             },
             'supplier-application': {
                 'list': 'Application List'
-            }
+            },
+            'sales-strategy': {
+                'list': 'Sales Strategy List'
+            },
         },
         error_code: {
             expire: 'The Login Status Has Expired, Please Log In Again',
