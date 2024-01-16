@@ -713,7 +713,6 @@ onMounted(() => {
 }
 :deep(.ant-form-item-label > label) {
     color: #8090a6;
-    height: auto;
 }
 :deep(.ant-form-item-label > label::after) {
     display: none;

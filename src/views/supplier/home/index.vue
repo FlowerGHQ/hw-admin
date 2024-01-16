@@ -13,7 +13,7 @@
                     <a-button
                         class="lang-switch"
                         type="link"
-                        @click="handleLangSwitch">
+                        @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
                         <i
                             class="icon"
                             :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
@@ -110,14 +110,20 @@
                                     </a-modal>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" />
-                                <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
+                                <a-menu-item
+                                    @click="$router.push('/login')"
+                                    v-if="user_type_list.length > 1">
                                     <a-button
                                         type="link"
                                         class="menu-item-btn"
-                                        >{{ $t("mall.switch_identity") }}</a-button
+                                        >{{
+                                            $t("mall.switch_identity")
+                                        }}</a-button
                                     >
                                 </a-menu-item>
-                                <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
+                                <a-menu-divider
+                                    class="menu_divider"
+                                    v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
                                     <a-button
                                         type="link"
@@ -251,7 +257,7 @@ import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -260,9 +266,9 @@ import MaterialList from "./material-list.vue";
 // 成功页
 import Successful from "./successful.vue";
 // 廉洁承诺书
-import HonestPage from './components/honest-page.vue';
+import HonestPage from "./components/honest-page.vue";
 // 保密和不竞争
-import SecrecyNotCompete from './components/secrecy-not-compete.vue';
+import SecrecyNotCompete from "./components/secrecy-not-compete.vue";
 
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
@@ -379,7 +385,7 @@ const handleNext = () => {
         BasicInfoRef.value.step1Vaild().then(() => {
             // 下一步
             $store.dispatch("SUPPLY_CHAIN/nextStep");
-        })
+        });
 };
 // 保存草稿
 const handleSave = () => {
@@ -397,7 +403,7 @@ const handleSubmit = () => {
     } else {
         MaterialListRef.value.step2Vaild().then(() => {
             handleSubmitData();
-        })
+        });
     }
 };
 // 提交申请
@@ -415,7 +421,7 @@ const handleSubmitOk = () => {
         );
         // 跳转到注册按钮
         handleSubmitData();
-    })
+    });
 };
 // 提交数据
 const handleSubmitData = () => {
@@ -513,18 +519,24 @@ const handleOpen = () => {
     visible.value = true;
 };
 // 中英文切换
-const handleLangSwitch = () => {
-    $store.commit("switchLang");
+const handleLangSwitch = (lang) => {
+    $store.commit("switchLang", lang);
     $i18n.locale.value = $store.state.lang;
+    console.log("lang:", lang);
 };
 const handleEditShow = () => {
     passShow.value = true;
 };
 const handleLogout = () => {
-    $router.replace("/login");
-    localStorage.clear();
-    $store.dispatch("SUPPLY_CHAIN/clearAll");
-    Core.Api.Common.logout();
+    if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+        $router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
+    } else {
+        $router.replace(`/login`);
+    }
+    Core.Api.Common.logout().then(() => {
+        localStorage.clear();
+        $store.dispatch("SUPPLY_CHAIN/clearAll");        
+    });
 };
 const handleEditSubmit = () => {
     let form = Core.Util.deepCopy(form);
@@ -716,7 +728,7 @@ onBeforeUnmount(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px;
+            padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;

@@ -38,6 +38,7 @@
                                                 class="edit-type-item cursor m-t-16"
                                                 :class="{
                                                     'edit-type-item-select': Number(item.value) === Number(parameters.type),
+                                                    'edit-type-item-change': Number(item.value) !== Number(parameters.type),
                                                     'm-l-20': index !== 0
                                                 }"
                                                 @click="onSelectType(item.value)"
@@ -112,7 +113,7 @@
                                             <!-- 职位身份 -->
                                             <template v-if="column.key === 'position'">
                                                 <div class="information-customer-name w-100">
-                                                    <span class="information-customer-name-required">*</span>
+                                                    <span v-if="text !== Core.Const.SUPPLAY.POSITION_MAP_STATUS.GENERAL_MANAGER" class="information-customer-name-required">*</span>
                                                     <span class="m-l-4">
                                                         {{
                                                             Core.Const.SUPPLAY.POSITION_MAP[text]?.t
@@ -127,7 +128,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.name"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </template>
@@ -137,7 +138,7 @@
                                                     <a-input
                                                         :class="{ 'customer-input': !isEdit }"
                                                         v-model:value="record.phone"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                     />
                                                     <a-checkbox 
@@ -154,7 +155,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.email"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </template>                                            
@@ -182,7 +183,7 @@
                                      <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.name"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         />
                                 </div>
@@ -194,7 +195,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.website_address"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         />
                                 </div>
@@ -231,7 +232,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.fixed_assets"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -245,7 +246,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.address"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         />
                                 </div>
@@ -262,12 +263,16 @@
                                                 {{ $t(Core.Const.SUPPLAY.NATURE[msgDetail?.company_info?.nature]?.t) }}
                                             </span>
                                             <span v-else class="custom-please-enter">
-                                                {{ $t('common.please_enter') }}
+                                                {{ $t('supply-chain.no_content') }}
                                             </span>                                            
                                         </div>
                                     </template>
                                     <template v-else>
-                                        <a-select class="w-100" v-model:value="parameters.company_info.nature" :placeholder="$t('supply-chain.please_select')">
+                                        <a-select 
+                                            class="w-100" 
+                                            v-model:value="parameters.company_info.nature" 
+                                            :placeholder="$t('supply-chain.please_select')"
+                                        >
                                             <a-select-option :value="item.value" v-for="item in Core.Const.SUPPLAY.NATURE"> 
                                                 {{ $t(item.t) }}
                                             </a-select-option>
@@ -282,7 +287,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.legal_person"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         />
                                 </div>
@@ -294,10 +299,10 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.purchasing_radius') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.purchasing_radius"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         :min="0"
                                         :max="1000000000"
@@ -313,10 +318,10 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_space') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.floor_area"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                         :min="0"
                                         :max="1000000000"
@@ -334,10 +339,10 @@
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.floor_area') }}</div>
                                 <div class="value m-l-8">
                                     <a-input-number
-                                        class="w-100"
+                                        class="w-100 customer-input-number-change"
                                         :class="{ 'customer-input-number': !isEdit }"
                                         v-model:value="parameters.company_info.building_area"
-                                        :placeholder="$t('common.please_enter')"
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                         :disabled="!isEdit"
                                         :min="0"
                                         :max="1000000000"
@@ -356,7 +361,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.premises"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -370,7 +375,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.parent_company_name"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -382,7 +387,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.company_info.parent_company_address"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -405,7 +410,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.agent_info.agent_company"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -417,7 +422,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.agent_info.agent_address"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                </div>
@@ -431,7 +436,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.agent_info.agent_relationship"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                </div>
@@ -506,7 +511,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.agent_info.agent_product"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                </div>
@@ -530,7 +535,7 @@
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.total_employees"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -543,7 +548,7 @@
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.manager_number"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -558,7 +563,7 @@
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.mass_number"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -571,7 +576,7 @@
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technician_number"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -586,7 +591,7 @@
                                         class="w-100 p-l-0"
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.human_resource.technical_seniority"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -633,7 +638,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.financial_info.average_monthly_wage_of_operating_workers"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -645,7 +650,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.financial_info.per_capita_annual_output_value_of_management_staff"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -712,7 +717,7 @@
                                                 <a-input
                                                     class="invoice-range"
                                                     v-model:value="parameters.financial_info.invoice_range_value"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </div>
@@ -732,7 +737,7 @@
                                                         </span>
                                                         <a-input
                                                             v-model:value="parameters.financial_info.invoice_range_value"
-                                                            :placeholder="$t('common.please_enter')" 
+                                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                             :disabled="!isEdit"
                                                         />
                                                     </div>
@@ -760,7 +765,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.business_info.proportion_of_business"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -785,10 +790,10 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.sales"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -809,10 +814,10 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.taxes_paid"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -833,10 +838,10 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.profit_margin"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -857,10 +862,10 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.asset_liability_ratio"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -881,10 +886,10 @@
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
                                                 <div class="value m-l-8">
                                                     <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="item.cash_flow_ratio"
-                                                        :placeholder="$t('common.please_enter')" 
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -929,7 +934,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.company_name"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </template>
@@ -938,7 +943,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.market_share"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </template>
@@ -947,7 +952,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.understand_evaluation"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />
                                             </template>
@@ -998,16 +1003,16 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.customer_name"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />                                             
                                             </template>
                                             <template v-if="column.key === 'sales_share'">
                                                 <a-input-number
-                                                        class="w-100"
+                                                        class="w-100 customer-input-number-change"
                                                         :class="{ 'customer-input-number': !isEdit }"
                                                         v-model:value="record.sales_share"
-                                                        :placeholder="$t('common.please_enter')"
+                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                                         :disabled="!isEdit"
                                                         :min="0"
                                                         :max="1000000000"
@@ -1021,7 +1026,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.main_supply_part"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
@@ -1074,7 +1079,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.service_info.technical_services"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1088,7 +1093,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.service_info.quality_service"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1104,7 +1109,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.service_info.supply_services"
-                                        :placeholder="$t('common.please_enter')"
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1130,7 +1135,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.technical_info.RD_center"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1144,7 +1149,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.technical_info.patent"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1161,7 +1166,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.technical_info.RD_partners"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1260,7 +1265,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.design_software"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1274,7 +1279,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_profile"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1284,10 +1289,10 @@
                                     <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.mold_weight') }}</div>
                                     <div class="value m-l-8">
                                         <a-input-number
-                                            class="w-100"
+                                            class="w-100 customer-input-number-change"
                                             :class="{ 'customer-input-number': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_weight"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                             :min="0"
                                             :max="1000000000"
@@ -1307,7 +1312,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_category"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1319,7 +1324,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_design"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1333,7 +1338,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_manufacture"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1345,7 +1350,7 @@
                                         <a-input
                                             :class="{ 'customer-input': !isEdit }"
                                             v-model:value="parameters.technical_info.mold_acceptance"
-                                            :placeholder="$t('common.please_enter')" 
+                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                             :disabled="!isEdit"
                                         />
                                     </div>
@@ -1360,7 +1365,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.technical_info.design_software"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1374,7 +1379,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.technical_info.dev_process"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1397,7 +1402,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.certification"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1409,7 +1414,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.env_certification"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1423,7 +1428,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.partners"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1435,7 +1440,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.accredited_laboratory"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1449,7 +1454,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.tool_software"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1461,7 +1466,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.quality_info.system_certification"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1475,7 +1480,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.quality_info.PPM"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1498,7 +1503,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.specify_info.protocol"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1510,7 +1515,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.specify_info.parts"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1524,7 +1529,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.specify_info.service"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1538,7 +1543,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.specify_info.reason"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1564,7 +1569,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.produce_capacity.processes"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1581,7 +1586,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.produce_capacity.automation_line"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1598,7 +1603,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.produce_capacity.load"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1621,7 +1626,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.outsourcing.technology"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1635,7 +1640,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.outsourcing.parts"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1649,7 +1654,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.outsourcing.material"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1663,7 +1668,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.outsourcing.system"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1680,7 +1685,12 @@
                 <div class="title">{{ $t('supply-chain.device_information') }}</div>
                 <!-- 关键生产设备 -->
                 <div class="information-container-form">
-                    <div class="sub-title">{{ $t('supply-chain.key_production_equipment') }}</div>
+                    <div 
+                        class="sub-title"
+                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                    >
+                        {{ $t('supply-chain.key_production_equipment') }}
+                    </div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -1696,7 +1706,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.name"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />   
                                             </template>
@@ -1704,7 +1714,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.spec"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
@@ -1712,7 +1722,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.quantity"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
@@ -1720,7 +1730,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.manufacturer"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
@@ -1728,7 +1738,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.purchase_period"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />  
                                             </template>
@@ -1757,7 +1767,12 @@
                 </div>
                 <!-- 关键检测设备 -->
                 <div class="information-container-form m-t-40">
-                    <div class="sub-title">{{ $t('supply-chain.critical_detection_equipment') }}</div>
+                    <div 
+                        class="sub-title"
+                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                    >
+                        {{ $t('supply-chain.critical_detection_equipment') }}
+                    </div>
                     <div class="information-form">
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
@@ -1773,7 +1788,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.name"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />                                               
                                             </template>
@@ -1781,7 +1796,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.spec"
-                                                    :placeholder="$t('common.please_enter')" 
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                                     :disabled="!isEdit"
                                                 />                                               
                                             </template>
@@ -1789,7 +1804,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.quantity"
-                                                    :placeholder="$t('common.please_enter')"
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                                     :disabled="!isEdit"
                                                 /> 
                                             </template>
@@ -1797,7 +1812,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.manufacturer"
-                                                    :placeholder="$t('common.please_enter')"
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                                     :disabled="!isEdit"
                                                 /> 
                                             </template>
@@ -1805,7 +1820,7 @@
                                                 <a-input
                                                     :class="{ 'customer-input': !isEdit }"
                                                     v-model:value="record.accuracy_level"
-                                                    :placeholder="$t('common.please_enter')"
+                                                    :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                                     :disabled="!isEdit"
                                                 /> 
                                             </template>
@@ -1912,7 +1927,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.confirmatory_material.registered_capital"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1989,7 +2004,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.confirmatory_material.account_name"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -2001,7 +2016,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.confirmatory_material.account_with_bank"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -2015,7 +2030,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.confirmatory_material.account_with_bank_number"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -2027,7 +2042,7 @@
                                     <a-input
                                         :class="{ 'customer-input': !isEdit }"
                                         v-model:value="parameters.confirmatory_material.bank_account"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -2365,7 +2380,7 @@ const customerInfoColumns = computed(() => {
 const TimeBusinessTerm = ref(null) // 营业期限
 const TimeDurationOfAgency = ref(null) // 代理有效期间
 const isClose = ref(false) // MyMask 显影
-const isEdit = ref(false)
+const isEdit = ref(route.query?.flag_edit)
 const parameters = ref({
     type: "",
     // 联系方式
@@ -2962,13 +2977,16 @@ const onBack = () => {
             :deep(.ant-input-number-input-wrap > .ant-input-number-input) {
                 cursor: initial;
             }
+        }
+        .customer-input-number-change {
+
             :deep(.ant-input-number-group-addon) {
                 min-width: 36px;
-                background-color: #f2f2f2;
+                background-color: #F2F2F2;
                 color: #808fa6;
                 font-size: 14px;
                 font-weight: 400;
-                border-left: 1px solid #eaecf1;
+                border-left: 1px solid #F2F2F2;
             }
         }
     }
@@ -3003,7 +3021,7 @@ const onBack = () => {
                 text-align: center;
                 color: #fff;
                 font-size: 16px;
-                font-weight: 600;
+                font-weight: 500;
             }
 
             .edit-type {
@@ -3017,7 +3035,7 @@ const onBack = () => {
                     text-align: center;
                     color: #666;
                     font-size: 16px;
-                    font-weight: 600;
+                    font-weight: 500;
                     border-radius: 4px;
                     border: 1px solid #EAECF1;
                     background: #FFF;
@@ -3035,10 +3053,12 @@ const onBack = () => {
                         color: #FFF;
                     }
 
-                    &:hover {
-                        border: 1px solid #0061FF;
-                        .black-font {
-                            color: #0061FF;
+                    &.edit-type-item-change {
+                        &:hover {
+                            border: 1px solid #0061FF;
+                            .black-font {
+                                color: #0061FF;
+                            }
                         }
                     }
                 }
@@ -3109,6 +3129,14 @@ const onBack = () => {
                     color: #1d2129;
                     font-size: 16px;
                     font-weight: 400;
+
+                    &.sub-title-required {
+                       &::before {
+                            content: "*";
+                            color: #EB4141;                        
+                            vertical-align: middle;
+                       }
+                    }
                 }
                 .information-form {
                     margin-left: 50px;
@@ -3153,6 +3181,14 @@ const onBack = () => {
                     color: #1d2129;
                     font-size: 16px;
                     font-weight: 400;
+
+                    &.sub-title-required {
+                        &::before {
+                            content: "*";
+                            color: #EB4141;
+                            vertical-align: middle;
+                        }
+                    }
                 }
                 .information-form {
                     margin-left: 50px;
@@ -3235,7 +3271,10 @@ const onBack = () => {
 
 :deep(.ant-table-wrapper) {
     border: 1px solid #EAECF2; 
+    border-bottom: 0px;
+
 }
+
 
 .information-customer-name {
     padding: 0 10px;
@@ -3296,6 +3335,6 @@ const onBack = () => {
     margin-left: 4px;
 }
 .custom-not_uploaded {
-    color: #c7bfbf;
+    color: #666;
 }
 </style>
