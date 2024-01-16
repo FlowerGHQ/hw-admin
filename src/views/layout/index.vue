@@ -359,8 +359,12 @@ export default {
         },
 
         handleLogout() {
-            this.$router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
-            Core.Api.Common.logout().finally(() => {
+            if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+                this.$router.replace(`/login?user_type=${ Core.Data.getLoginType() }`);
+            } else {
+                this.$router.replace(`/login`);
+            }
+            Core.Api.Common.logout().then(() => {
                 localStorage.clear()
             })
         },
