@@ -443,7 +443,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >KM</span
@@ -476,7 +476,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >m²</span
@@ -506,7 +506,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >m²</span
@@ -785,7 +785,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -804,7 +804,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -821,7 +821,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -838,7 +838,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -859,7 +859,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                         </a-input-number>
                                     </a-form-item>
                                 </a-col>
@@ -1056,13 +1056,13 @@
                             <!-- 近一年 二 三 -->
                             <a-row :gutter="24">
                                 <a-col :span="8">
-                                    <a-form-item label="近1年"> </a-form-item>
+                                    <a-form-item label="近一年"> </a-form-item>
                                 </a-col>
                                 <a-col :span="8">
-                                    <a-form-item label="近2年"> </a-form-item>
+                                    <a-form-item label="近二年"> </a-form-item>
                                 </a-col>
                                 <a-col :span="8">
-                                    <a-form-item label="近3年"> </a-form-item>
+                                    <a-form-item label="近三年"> </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
@@ -1079,7 +1079,7 @@
                                                 "
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000">
+                                                >
                                                 <template #addonAfter>
                                                     <span class="l-w-h-style">{{
                                                         $t(
@@ -1116,7 +1116,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">{{
                                                     $t(
@@ -1152,7 +1152,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >%</span
@@ -1190,7 +1190,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >%</span
@@ -1226,7 +1226,7 @@
                                             "
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000">
+                                            >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style"
                                                     >%</span
@@ -1303,7 +1303,7 @@
                                                 "
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000">
+                                                >
                                                 <template
                                                     #addonAfter
                                                     v-if="column.unit">
@@ -1419,7 +1419,7 @@
                                                         $t('def.input')
                                                     "
                                                     :min="0"
-                                                    :max="1000000000">
+                                                    >
                                                     <template
                                                         #addonAfter
                                                         v-if="column.unit">
@@ -2557,7 +2557,7 @@
                                                         $t('def.input')
                                                     "
                                                     :min="0"
-                                                    :max="1000000000">
+                                                    >
                                                     <template
                                                         #addonAfter
                                                         v-if="column.unit">
@@ -2697,7 +2697,7 @@
                                                         $t('def.input')
                                                     "
                                                     :min="0"
-                                                    :max="1000000000">
+                                                    >
                                                     <template
                                                         #addonAfter
                                                         v-if="column.unit">
@@ -3357,12 +3357,6 @@ let companyVaild = async (_rule, value) => {
             break;
 
         case "sales": // 销售额
-            /* formState.business_info?.list.forEach((item)=>{
-                if (!item.sales) {
-                    dataBoo = true;
-                    return;
-                }
-            }) */
             dataBoo = findItemIsNoneFromList("business_info", "sales");
             break;
         case "taxes_paid": // 纳税额
@@ -3412,15 +3406,15 @@ let companyVaild = async (_rule, value) => {
             dataBoo = findObjIsNoneFromList("produce_capacity", "load");
             break;
     }
-    return new Promise((resolve, reject) => {
+        return new Promise((resolve, reject) => {
         let el = document.querySelector(`[name="${_rule.fullField}"]`);
         if (el) {
             let parent = findParent(el);
-            console.log(parent);
             if (dataBoo) reject($t("supply-chain.please_enter") + parent);
             resolve();
         }
     });
+    
 };
 // 是否-法律纠纷
 let flagLegalDisputeValid = async (_rule, value) => {
@@ -3476,7 +3470,6 @@ let flagLegalDisputeValid = async (_rule, value) => {
         let el = document.querySelector(`[name="${_rule.fullField}"]`);
         if (el) {
             let parent = findParent(el);
-            console.log(parent);
             if (dataBoo) reject($t("supply-chain.please_select") + parent);
             resolve();
         }
@@ -3487,12 +3480,15 @@ let flagLegalDisputeValid = async (_rule, value) => {
 const findItemIsNoneWrite = (parObjkey, key) => {
     let boo = false;
     formState[parObjkey].forEach((item, index) => {
+        console.log(item[key]);
         if (!item[key]) boo = true;
     });
     return boo;
 };
 // 辅助表格校验方法2 list
 const findItemIsNoneFromList = (parObjkey, key) => {
+    console.log(formState[parObjkey]["list"])
+    console.log(key)
     let boo = false;
     formState[parObjkey]["list"].forEach((item, index) => {
         if (!item[key]) boo = true;
@@ -3579,7 +3575,6 @@ let tableVaild = async (_rule, value) => {
         let el = document.querySelector(`[name="${_rule.fullField}"]`);
         if (el) {
             let parent = findParent(el);
-            console.log(parent);
             if (dataBoo) reject($t("supply-chain.please_enter") + parent);
             resolve();
         }

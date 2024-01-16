@@ -278,7 +278,7 @@
                                             v-model:value="formState.company_info.purchasing_radius"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">KM</span>
@@ -305,7 +305,7 @@
                                             v-model:value="formState.company_info.floor_area"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">m²</span>
@@ -329,7 +329,7 @@
                                             v-model:value="formState.company_info.building_area"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">m²</span>
@@ -521,7 +521,7 @@
                                             v-model:value="formState.human_resource.total_employees"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                         </a-input-number>
                                     </a-form-item>
@@ -533,7 +533,7 @@
                                             v-model:value="formState.human_resource.manager_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                         </a-input-number>
                                     </a-form-item>
@@ -547,7 +547,7 @@
                                             v-model:value="formState.human_resource.mass_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                         </a-input-number>
                                     </a-form-item>
@@ -559,7 +559,7 @@
                                             v-model:value="formState.human_resource.technician_number"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                         </a-input-number>
                                     </a-form-item>
@@ -573,7 +573,7 @@
                                             v-model:value="formState.human_resource.technical_seniority"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                         </a-input-number>
                                     </a-form-item>
@@ -727,13 +727,13 @@
                             <!-- 近一年 二 三 -->
                             <a-row :gutter="24">
                                 <a-col :span="8">
-                                    <a-form-item label="近1年"> </a-form-item>
+                                    <a-form-item label="近一年"> </a-form-item>
                                 </a-col>
                                 <a-col :span="8">
-                                    <a-form-item label="近2年"> </a-form-item>
+                                    <a-form-item label="近二年"> </a-form-item>
                                 </a-col>
                                 <a-col :span="8">
-                                    <a-form-item label="近3年"> </a-form-item>
+                                    <a-form-item label="近三年"> </a-form-item>
                                 </a-col>
                             </a-row>
                             <a-row :gutter="24">
@@ -745,7 +745,7 @@
                                                 v-model:value="formState.business_info.list[index].sales"
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000"
+                                                
                                             >
                                                 <template #addonAfter>
                                                     <span class="l-w-h-style">{{
@@ -775,7 +775,7 @@
                                             v-model:value="formState.business_info.list[index].taxes_paid"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">{{
@@ -804,7 +804,7 @@
                                             v-model:value="formState.business_info.list[index].profit_margin"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">%</span>
@@ -834,7 +834,7 @@
                                             v-model:value="formState.business_info.list[index].asset_liability_ratio"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">%</span>
@@ -861,7 +861,7 @@
                                             v-model:value="formState.business_info.list[index].cash_flow_ratio"
                                             :placeholder="$t('def.input')"
                                             :min="0"
-                                            :max="1000000000"
+                                            
                                         >
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">%</span>
@@ -914,7 +914,7 @@
                                                 v-model:value="record[column.dataIndex]"
                                                 :placeholder="$t('def.input')"
                                                 :min="0"
-                                                :max="1000000000"
+                                                
                                             >
                                                 <template #addonAfter v-if="column.unit">
                                                     <span class="l-w-h-style">{{ column.unit }}</span>
@@ -1011,7 +1011,7 @@
                                                     v-model:value="record[column.dataIndex]"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000"
+                                                    
                                                 >
                                                     <template #addonAfter v-if="column.unit">
                                                         <span class="l-w-h-style">{{ column.unit }}</span>
@@ -1803,7 +1803,7 @@
                                                     v-model:value="record[column.dataIndex]"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000"
+                                                    
                                                 >
                                                     <template #addonAfter v-if="column.unit">
                                                         <span class="l-w-h-style">{{ column.unit }}</span>
@@ -1899,7 +1899,7 @@
                                                     v-model:value="record[column.dataIndex]"
                                                     :placeholder="$t('def.input')"
                                                     :min="0"
-                                                    :max="1000000000"
+                                                    
                                                 >
                                                     <template #addonAfter v-if="column.unit">
                                                         <span class="l-w-h-style">{{ column.unit }}</span>
