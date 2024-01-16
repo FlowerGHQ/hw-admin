@@ -649,6 +649,10 @@ const messages = {
             spec_pic: '图片',
             item_code_tip: '商品编码: 多规格商品的父规格对应商品编码;',
             sku_code_tip: 'SKU编码: 单规格、多规格商品的子规格对应SKU编码',
+            save_draft: '保存草稿',
+            save_draft_success: '保存草稿成功',
+            // 销售地区
+            sales_area: '销售地区',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -3380,7 +3384,9 @@ const messages = {
             spec_of_goods: 'specifications of goods',
             sku_code: 'SKU Code',
             spec_pic: 'picture',
-
+            save_draft: 'Save Draft',
+            save_draft_success: 'Save Draft Successfully',
+            sales_area: 'Sales Area',
         },
         fe: {
             feedback: 'Feedback',

@@ -87,6 +87,7 @@ let Const = {
         SUPPLY_SUBMITED: 'supply-submited',
         USER_TYPE_LIST: 'user-type-list',
         LOGIN_MES: 'login-mes',
+        GOODS_DRAFT: 'goods-draft',
     },
     DEFULT_IMG: {
         1: defult_img,
