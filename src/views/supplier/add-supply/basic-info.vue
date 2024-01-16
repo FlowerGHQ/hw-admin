@@ -10,29 +10,44 @@
                     <a-col :span="22">
                         <div class="top-type-box">
                             <div
-                                v-for="(item,index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"   @click="formState.type = item.value"
+                                v-for="(item, index) in Core.Const.SUPPLAY
+                                    .SUPPLAY_TYPE"
+                                @click="formState.type = item.value"
                                 class="type-parts m-t-16"
                                 :class="{
                                     'click-type': item.value === formState.type,
-                                    'type-parts-change': item.value !== formState.type,
-                                    'border-type':  item.value !== formState.type
-                                }"
-                            >
+                                    'type-parts-change':
+                                        item.value !== formState.type,
+                                    'border-type':
+                                        item.value !== formState.type,
+                                }">
                                 <MySvgIcon
                                     :icon-class="`white-${item.icon}`"
-                                    :class= "{
-                                        'white-font':item.value === formState.type,
-                                        'black-font':item.value !== formState.type
-                                    }"
-                                />
-                                <span 
-                                    class="m-l-4 type-font" 
-                                    :class="{ 
-                                        'color-w' : item.value === formState.type,
-                                        'black-font':item.value !== formState.type
-                                    }"
-                                >
-                                    {{ Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value] ? $t(Core.Const.SUPPLAY.SUPPLAY_TYPE[item.value].t) : "-" }}
+                                    :class="{
+                                        'white-font':
+                                            item.value === formState.type,
+                                        'black-font':
+                                            item.value !== formState.type,
+                                    }" />
+                                <span
+                                    class="m-l-4 type-font"
+                                    :class="{
+                                        'color-w':
+                                            item.value === formState.type,
+                                        'black-font':
+                                            item.value !== formState.type,
+                                    }">
+                                    {{
+                                        Core.Const.SUPPLAY.SUPPLAY_TYPE[
+                                            item.value
+                                        ]
+                                            ? $t(
+                                                  Core.Const.SUPPLAY
+                                                      .SUPPLAY_TYPE[item.value]
+                                                      .t
+                                              )
+                                            : "-"
+                                    }}
                                 </span>
                             </div>
                         </div>
@@ -314,6 +329,7 @@
                                         name="date_establishment">
                                         <span name="date_establishment">
                                             <a-date-picker
+                                                :placeholder="$t('def.select')"
                                                 valueFormat="X"
                                                 v-model:value="
                                                     formState.company_info
@@ -658,6 +674,7 @@
                                             )
                                         ">
                                         <a-date-picker
+                                            :placeholder="$t('def.select')"
                                             valueFormat="X"
                                             v-model:value="
                                                 formState.agent_info
@@ -1299,6 +1316,7 @@
                                         <template
                                             v-else-if="column.type === 'time'">
                                             <a-date-picker
+                                                :placeholder="$t('def.select')"
                                                 valueFormat="X"
                                                 v-model:value="
                                                     record[column.dataIndex]
@@ -1421,6 +1439,9 @@
                                                 :name="column.dataIndex">
                                                 <span :name="column.dataIndex">
                                                     <a-date-picker
+                                                        :placeholder="
+                                                            $t('def.select')
+                                                        "
                                                         valueFormat="X"
                                                         picker="year"
                                                         v-model:value="
@@ -1617,9 +1638,7 @@
                                                 formState.technical_info
                                                     .product_design
                                             "
-                                            :options="
-                                               TECHNICAL_INFORMATION
-                                            " />
+                                            :options="TECHNICAL_INFORMATION" />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -1635,9 +1654,7 @@
                                                 formState.technical_info
                                                     .process_design
                                             "
-                                            :options="
-                                               PROCESS_DESIGN
-                                            " />
+                                            :options="PROCESS_DESIGN" />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -1655,9 +1672,7 @@
                                                 formState.technical_info
                                                     .process_validation
                                             "
-                                            :options="
-                                                PROCESS_VALIDATION
-                                            " />
+                                            :options="PROCESS_VALIDATION" />
                                     </a-form-item>
                                 </a-col>
                             </a-row>
@@ -2526,6 +2541,9 @@
                                                 <span
                                                     :name="`production_${column.dataIndex}`">
                                                     <a-date-picker
+                                                        :placeholder="
+                                                            $t('def.select')
+                                                        "
                                                         valueFormat="X"
                                                         v-model:value="
                                                             record[
@@ -2663,6 +2681,9 @@
                                                 <span
                                                     :name="`detection_${column.dataIndex}`">
                                                     <a-date-picker
+                                                        :placeholder="
+                                                            $t('def.select')
+                                                        "
                                                         valueFormat="X"
                                                         v-model:value="
                                                             record[
@@ -2783,40 +2804,53 @@ const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
 
-
-const TECHNICAL_INFORMATION =  computed(()=>{
-    let  arr = []
-    Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item)=>{
+const TECHNICAL_INFORMATION = computed(() => {
+    let arr = [];
+    Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item) => {
         arr.push({
-            label:$t(item.t),
-            value:item.value
-        })
-    })
-    return arr
-})
+            label: $t(item.t),
+            value: item.value,
+        });
+    });
+    return arr;
+});
 
-const PROCESS_DESIGN = computed(()=>{
-    let arr = []
-    Core.Const.SUPPLAY.PROCESS_DESIGN.forEach((item)=>{
+const PROCESS_DESIGN = computed(() => {
+    let arr = [];
+    Core.Const.SUPPLAY.PROCESS_DESIGN.forEach((item) => {
         arr.push({
-            label:$t(item.t),
-            value:item.value
-        })
-    })
-    return arr
-})
+            label: $t(item.t),
+            value: item.value,
+        });
+    });
+    return arr;
+});
 
-const PROCESS_VALIDATION = computed(()=>{
-    let arr = []
-    Core.Const.SUPPLAY.PROCESS_VALIDATION.forEach((item)=>{
+const PROCESS_VALIDATION = computed(() => {
+    let arr = [];
+    Core.Const.SUPPLAY.PROCESS_VALIDATION.forEach((item) => {
         arr.push({
-            label:$t(item.t),
-            value:item.value
-        })
-    })
-    return arr
-})
-
+            label: $t(item.t),
+            value: item.value,
+        });
+    });
+    return arr;
+});
+// 查询当前校验的字段的父级,直到找到class为ant-form-item-control的元素的递归函数
+const findParent = (el) => {
+    // 查找到父级
+    let parent = el.parentNode;
+    let classNameArr = parent.className.split(" ");
+    if (parent && !classNameArr.includes("ant-form-item")) {
+        return findParent(parent);
+    } else if (!parent && parent.parentNode) {
+        return findParent(parent.parentNode);
+    } else if (!parent && !parent.parentNode) {
+        return "";
+    } else {
+        return parent.querySelector(".ant-form-item-label > label").innerText;
+    }
+};
 
 // 表格添加对象 - 客户名称
 const customer_info_list_obj = ref({
@@ -3231,6 +3265,17 @@ let contactInfoVaild = (_rule, value) => {
         formState.contact_info[0].position == 4
     ) {
         return Promise.resolve();
+    } else if (
+        formState.contact_info.length == 1 &&
+        formState.contact_info[0].position != 4
+    ) {
+        if (
+            !formState.contact_info[0].name ||
+            !formState.contact_info[0].phone ||
+            !formState.contact_info[0].email
+        ) {
+            return Promise.reject(false);
+        }
     } else if (formState.contact_info.length > 1) {
         let arr = formState.contact_info.filter((item) => item.position != 4);
         for (let i = 0; i < arr.length; i++) {
@@ -3327,8 +3372,15 @@ let companyVaild = async (_rule, value) => {
             dataBoo = findObjIsNoneFromList("produce_capacity", "load");
             break;
     }
-    if (dataBoo) return Promise.reject($t("supply-chain.please_enter"));
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        let el = document.querySelector(`[name="${_rule.fullField}"]`);
+        if (el) {
+            let parent = findParent(el);
+            console.log(parent);
+            if (dataBoo) reject($t("supply-chain.please_enter") + parent);
+            resolve();
+        }
+    });
 };
 // 是否-法律纠纷
 let flagLegalDisputeValid = async (_rule, value) => {
@@ -3376,11 +3428,15 @@ let flagLegalDisputeValid = async (_rule, value) => {
             }
             break;
     }
-    if (dataBoo)
-        return Promise.reject(
-            $t("supply-chain.please_select") //请选择
-        );
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        let el = document.querySelector(`[name="${_rule.fullField}"]`);
+        if (el) {
+            let parent = findParent(el);
+            console.log(parent);
+            if (dataBoo) reject($t("supply-chain.please_select") + parent);
+            resolve();
+        }
+    });
 };
 
 // 辅助表格校验方法1 table
@@ -3474,11 +3530,15 @@ let tableVaild = async (_rule, value) => {
             );
             break;
     }
-    if (dataBoo)
-        return Promise.reject(
-            $t("supply-chain.please_fill_form") //请填写表单
-        );
-    return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        let el = document.querySelector(`[name="${_rule.fullField}"]`);
+        if (el) {
+            let parent = findParent(el);
+            console.log(parent);
+            if (dataBoo) reject($t("supply-chain.please_enter") + parent);
+            resolve();
+        }
+    });
 };
 // 当前类的校验
 const rules = ref({});
@@ -4286,14 +4346,14 @@ onMounted(() => {
         }
         .white-font {
             font-size: 16px;
-            color: #FFF;
+            color: #fff;
         }
 
         &.type-parts-change {
-            &:hover { 
-                border: 1px solid #0061FF;
+            &:hover {
+                border: 1px solid #0061ff;
                 .black-font {
-                    color: #0061FF;
+                    color: #0061ff;
                 }
             }
         }
