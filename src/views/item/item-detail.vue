@@ -208,6 +208,7 @@ export default {
             return column
         }
     },
+    // 路由离开时，验证附件数量
     beforeRouteLeave(to, from, next) {
         if (this.tabKey === 3) {
             this.$refs.AttachmentFile.validateAmount(next)
@@ -217,6 +218,8 @@ export default {
     },
     created() {
         this.id = Number(this.$route.query.id) || 0
+        this.tabKey = Number(this.$route.query.tab) || 0
+        console.log('tabKey-------------------------', this.tabKey);
         console.log('id', this.id);
     },
     mounted() {
@@ -470,7 +473,8 @@ export default {
             if (typeof (next) === 'function') {
                 if (this.tabKey === 3) {
                     this.$refs.AttachmentFile.validateAmount(next)
-                } else {
+                }
+                else {
                     next()
                 }
             }
