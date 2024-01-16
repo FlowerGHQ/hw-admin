@@ -1,6 +1,6 @@
 <template>
     <a-config-provider :locale="zhCN" :autoInsertSpaceInButton='false'>
-        <div id="mall-layout">
+        <div id="mall-layout" :class="lang">
             <Header v-if="headAuth"></Header>
             <div class="mall-container">
                 <router-view></router-view>
@@ -65,8 +65,7 @@ export default {
             }
         }
     },
-    created() {
-    },
+    created() {},
     mounted() {
         this.loginType = Core.Data.getLoginType()
         if (Core.Data.getLang() === "" || Core.Data.getLang() === null) {
@@ -104,5 +103,15 @@ export default {
 }
 input.ant-input {
     font-size: 14px;
+}
+.mall-layout-en {
+    font-family: Montserrat;
+}
+</style>
+<style lang="less">
+#mall-layout {
+    &.en * {
+        font-family: Montserrat !important;
+    }
 }
 </style>

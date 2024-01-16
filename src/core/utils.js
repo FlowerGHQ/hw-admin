@@ -354,7 +354,7 @@ const Util = {
   },
   imageFilter(item, default_type = 1) {
     if (!item || typeof item !== "string") {
-      // console.warn("imageFilter 没有找到图像")
+      console.warn("imageFilter 没有找到图像")
       let map = Const.DEFULT_IMG
       return map[default_type] || ""
     }
@@ -1692,6 +1692,18 @@ const Util = {
     regionalUnitMoney() {
         let val = Data.getLang() || 'eur';
         return { ...Const.ORDER.AreaUnit[val] };
+    },
+    /**
+    //  点赞数过滤 1000以内  1000=1.0k 
+     * @param {String} time 时间戳
+     * @typeBoolean { Boolean } 七天以上按日期显示
+     * */ 
+    goodNumber( value, dp = 1) {
+        if(value<1000){
+            return value;
+        }else{
+            return parseFloat((value / 1000)).toFixed(dp)+'k'
+        }
     },
     // 照片逻辑
     Image

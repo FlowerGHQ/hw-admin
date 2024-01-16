@@ -168,7 +168,6 @@ export default {
             margin-left: 0;
             color: #333333;
             font-size: 14px;
-            font-family: Montserrat;
             font-style: normal;
             font-weight: 400;
             // letter-spacing: 0.72px;
@@ -236,7 +235,6 @@ export default {
             margin-left: 0;
             color: #333333;
             font-size: 14px;
-            font-family: Montserrat;
             font-style: normal;
             font-weight: 400;
             // line-height: 36px;
@@ -275,7 +273,6 @@ export default {
 
     .web-key {
         color: #333;
-        font-family: Montserrat;
         font-size: 18px;
         font-style: normal;
         font-weight: 400;
@@ -298,7 +295,6 @@ export default {
         input::-webkit-input-placeholder {
             /* 修改placeholder颜色  */
             font-size: 14px;
-            font-family: Montserrat;
             font-style: normal;
             font-weight: 400;
             line-height: 150%; /* 21px */
@@ -317,7 +313,6 @@ export default {
             box-sizing: border-box;
             font-weight: 400;
             font-style: normal;
-            font-family: Montserrat;
             // letter-spacing: 0.56px;
 
             &.not-enter {
@@ -408,7 +403,6 @@ export default {
                 margin-left: 0;
                 color: #333333;
                 font-size: 12px;
-                font-family: Montserrat;
                 font-style: normal;
                 font-weight: 400;
                 // letter-spacing: 0.72px;

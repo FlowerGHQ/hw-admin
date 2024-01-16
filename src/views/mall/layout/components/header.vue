@@ -7,19 +7,19 @@
                 </div>
                 <div class="header-right">
                     <!-- 头像 -->
-                    <span class="header-menu tab-animate">
+                    <span class="header-menu">
                         <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="avatarDropDownChange">
                             <span class="menu-item-dropdown">
                                 <span class="header-menu-img">
                                     <a-avatar :src="$Util.imageFilter(user.avatar, 3)" :size="18" alt="user" />
                                 </span>
-                                <span class="header-menu-text">{{ user.name }}</span>
+                                <span class="header-menu-text tab-animate" :class="menuIndex === 0 ? 'active' : ''">{{ user.name }}</span>
                                 <svg-icon icon-class="header-expand-icon" :class-name="avatarShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                             </span>
                             <template #overlay>
                                 <a-menu style="text-align: center;">
                                     <a-menu-item @click="handleEditShow">
-                                        <a class="menu_text">{{ $t('n.password') }}</a>
+                                        <a class="menu_text" :class="lang">{{ $t('n.password') }}</a>
                                         <a-modal v-model:visible="passShow" :title="$t('n.password')"
                                             class="password-edit-modal" :after-close="handleEditClose">
                                             <div class="form-title">
@@ -53,67 +53,73 @@
                                         </a-modal>
                                     </a-menu-item>
                                     <a-menu-divider class="menu_divider" />
-                                    <a-menu-item @click="routerChange('/login')">
-                                        <a class="menu_text">{{ $t('mall.switch_identity') }}</a>
+                                    <a-menu-item @click="routerChange('/login')" v-if="user_type_list.length > 1">
+                                        <a class="menu_text" :class="lang">{{ $t('mall.switch_identity') }}</a>
                                     </a-menu-item>
-                                    <a-menu-divider class="menu_divider" />
+                                    <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                     <a-menu-item @click="handleLogout">
-                                        <a class="menu_text">{{ $t('n.exit') }}</a>
+                                        <a class="menu_text" :class="lang">{{ $t('n.exit') }}</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
                         </a-dropdown>
                     </span>
                     <!-- 收藏夹 -->
-                    <span class="header-menu tab-animate" @click="routerChange('/purchase/item-collect')">
+                    <span class="header-menu" @click="changeMenu(1, '/mall/favorites')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('favorites', 'png')" :size="18" alt="user" />
                         </span>
-                        <span class="header-menu-text">{{ $t('mall.Favorites') }}</span>
+                        <span class="header-menu-text tab-animate" :class="menuIndex === 1 ? 'active' : ''">{{ $t('mall.Favorites') }}</span>
                     </span>
                     <!-- 订单 -->
-                    <span class="header-menu tab-animate" @click="routerChange('/purchase/purchase-order-self')">
+                    <span class="header-menu" @click="changeMenu(2, '/purchase/purchase-order-self')">
                         <span class="header-menu-img">
                             <a-avatar :src="getHeaderSrc('orders', 'png')" :size="18" alt="user" />
                         </span>
-                        <span class="header-menu-text">{{ $t('mall.Orders') }}</span>
+                        <span class="header-menu-text tab-animate" :class="menuIndex === 2 ? 'active' : ''">{{ $t('mall.Orders') }}</span>
                     </span>
                     <!-- 更多 -->
-                    <span class="header-menu tab-animate">
+                    <span class="header-menu">
                         <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="moreDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <span class="header-menu-img">
                                     <a-avatar :src="getHeaderSrc('more', 'png')" :size="18" alt="user" />
                                 </span>
-                                <span class="header-menu-text">{{ $t('mall.more_features') }}</span>
+                                <span class="header-menu-text tab-animate" :class="menuIndex === 3 ? 'active' : ''">{{ $t('mall.more_features') }}</span>
                                 <svg-icon icon-class="header-expand-icon" :class-name="moreShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                             </div>
                             <template #overlay>
                                 <a-menu style="text-align: center;">
-                                        <a-menu-item :key="item.key" v-for="(item, index) in menuList" @click="routerChange(item.path)">
-                                            <a class="menu_text">{{ $t(`router.${item.nameLang}`) }}</a>
-                                            <a-menu-divider class="menu_divider" v-if="index < menuList.length - 1" />
+                                    <template v-for="(item, index) in showList">
+                                        <a-menu-item 
+                                            v-if="$auth(...item.auth)" 
+                                            :key="item.key"
+                                            @click="routerChange(item.redirect)"
+                                        >
+                                            <a class="menu_text" :class="lang">{{ lang == 'zh' ? item.meta.title : item.meta.title_en }}</a>
+                                            <a-menu-divider class="menu_divider" v-if="index < showList.length - 1" />
                                         </a-menu-item>
+                                    </template>
                                 </a-menu>
                             </template>
                         </a-dropdown>
                     </span>
                     <!-- 语言切换 -->
-                    <span class="header-menu tab-animate">
+                    <span class="header-menu">
                         <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="langDropDownChange">
                             <div class="menu-item-dropdown" @click.prevent>
                                 <svg-icon icon-class="header-lang-icon" class-name="mt-user-icon" />
-                                <span class="mt-header-lang-text">{{ currentAreaType }}</span>
+                                <span class="mt-header-lang-text tab-animate" :class="menuIndex === 4 ? 'active' : ''">{{ currentAreaType }}</span>
                                 <svg-icon icon-class="header-expand-icon" :class-name="langShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
                             </div>
                             <template #overlay>
                                 <a-menu style="bottom: 0px; position: relative;">
                                     <a-menu-item key="0" @click="handleLangSwitch('en')">
-                                        <a class="menu_text">EN</a>
+                                        <a class="menu_text" :class="lang">EN</a>
                                     </a-menu-item>
                                     <a-menu-divider class="menu_divider" />
                                     <a-menu-item key="1" @click="handleLangSwitch('zh')">
-                                        <a class="menu_text">中文</a>
+                                        <a class="menu_text" :class="lang">中文</a>
                                     </a-menu-item>
                                 </a-menu>
                             </template>
@@ -139,22 +145,22 @@
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
                         <svg-icon icon-class="car-icon" class-name="car-icon" />
                     </a-badge>
-                    <span>{{ $t('mall.bag') }}</span>
+                    <span class="bag-text">{{ $t('mall.bag') }}</span>
                 </div>
             </div>
         </div>
         <div id="menu">
             <div class="menu-content content">
                 <!-- 整车 -->
-                <span class="menu-item tab-animate">
-                    <span class="menu-item-text">{{ $t('mall.vehicle_models') }}</span>
+                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 1 })">
+                    <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
-                <span class="menu-item tab-animate">
+                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 2 })">
                     <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
-                            <span class="menu-item-text">{{ $t('mall.spareparts') }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShowShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            <span class="menu-item-text tab-animate" :class="car_type_index === 1 ? 'active' : ''">{{ $t('mall.accessories') }}</span>
+                            <!-- <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" /> -->
                         </div>
                         <!-- <template #overlay>
                             <a-menu style="text-align: center;">
@@ -167,12 +173,12 @@
                     </a-dropdown>
                 </span>
                 <!-- 周边产品 -->
-                <span class="menu-item tab-animate">
-                    <span class="menu-item-text">{{ $t('mall.peripheral_products') }}</span>
+                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 53 })">
+                    <span class="menu-item-text tab-animate" :class="car_type_index === 2 ? 'active' : ''">{{ $t('mall.peripheral_products') }}</span>
                 </span>
                 <!-- 广宣品 -->
-                <span class="menu-item tab-animate">
-                    <span class="menu-item-text">{{ $t('mall.promotional_products') }}</span>
+                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 59 })">
+                    <span class="menu-item-text tab-animate" :class="car_type_index === 3 ? 'active' : ''">{{ $t('mall.promotional_products') }}</span>
                 </span>
             </div>
         </div>
@@ -181,6 +187,7 @@
     
 <script>
 import Core from '@/core';
+import { SIDER } from '@/router/routes';
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import MyButton from '@/components/common/MyButton.vue';
 
@@ -210,25 +217,71 @@ export default {
             menuList: Core.Const.LOGINMALL.HEADERMENU,
             accessoriesMenuList: Core.Const.LOGINMALL.HEADERACCESMENU,
             searchKey: '',
-            searchLoading: false
+            searchLoading: false,
+            user_type_list: [],
+            menuIndex: '',
+            car_type_index: '',
         };
     },
     computed: {
+        showList() {            
+            let showList = SIDER.DISTRIBUTOR;
+            showList = showList.map(item => {
+                item.auth = item.meta ? (item.meta.auth || []) : [];
+                item.not_sub_menu = item.meta ? (item.meta.not_sub_menu || false) : false;
+                if (item.children) {
+                    item.children = item.children.map(i => {
+                        i.auth = i.meta ? (i.meta.auth || []) : [];
+                        return i
+                    })
+                    if (!item.children.find(i =>item.redirect === `${item.path}/${i.path}`)) {
+                        item.redirect = `${item.path}/${item.children[0].path}`
+                    }
+                }
+                return item
+            })
+            return showList
+        },
         shopCartNum() {
             return this.$store.state.shopCartNum
+        },
+        mallSearchKey() {
+            return this.$store.state.mallSearchKey
+        },
+        lang() {
+            return this.$store.state.lang
         }
     },
-    watch: {},
+    watch: {
+        mallSearchKey(newV) {
+            this.searchKey = newV
+        },
+        $route: {
+            deep: true,
+            immediate: true,
+            handler(newV) {
+                switch (newV.path) {
+                    case "/mall/favorites":
+                        this.menuIndex = 1
+                        break;
+                
+                    default:
+                        this.menuIndex = ''
+                        break;
+                }
+            },
+        },
+    },
     created() {
         const lang = Core.Data.getLang()
         if (lang === "" || lang === null){
             Core.Data.setLang("zh")
         }
         this.handleLangSwitch(Core.Data.getLang())
+        this.user_type_list = Core.Data.getUserTypeList();
     },
     mounted() {
         this.getShopCartList()
-        this.searchKey = this.$store.state.mallSearchKey
     },
     methods: {
         getHeaderSrc(name, type = 'png') {
@@ -320,6 +373,15 @@ export default {
             this.$store.commit('setMallKey', key);
             this.routerChange('/mall/search', { key })
         },
+        changeMenu(index, path = '') {
+            this.menuIndex = index;
+            if (index === 1 || index === 2) {
+                this.routerChange(path)
+            }
+        },
+        carMenu(index) {
+            this.car_type_index = index;
+        },
         // 路由跳转
         routerChange(routeUrl, item = {}, type = 1) {
             switch (type) {
@@ -365,7 +427,6 @@ export default {
         .text {
             > span {
                 color: rgba(255, 255, 255, 0.7);
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -389,7 +450,6 @@ export default {
                 .header-menu-text {
                     color: #FFF;
                     text-align: right;
-                    font-family: Montserrat;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 500;
@@ -421,7 +481,6 @@ export default {
                 border: 1px solid #EEE;
                 background: #F5F5F5;
                 color: #333;
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -429,7 +488,6 @@ export default {
                 caret-color: #CC66FF;
                 &::-webkit-input-placeholder {
                     color: #999;
-                    font-family: Montserrat;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
@@ -466,7 +524,6 @@ export default {
             }
             > span {
                 color: #333;
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 500;
@@ -485,7 +542,13 @@ export default {
             }
             &:hover {
                 border: 1px solid #C6F;
-                > span {
+                background: transparent;
+                background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+                border-image: linear-gradient(100deg, #C6F 0%, #66F 100%) 1;
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                > .bag-text {
                     background: linear-gradient(100deg, #C6F 0%, #66F 100%);
                     background-clip: text;
                     -webkit-background-clip: text;
@@ -510,19 +573,32 @@ export default {
             }
             .menu-item-text {
                 color: #333;
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: 150%; /* 18px */
+                &::before {
+                    background: #333;
+                }
+                &.active {
+                    &::before {
+                        background: #333;
+                    }
+                }
+                &:active {
+                    color: #333 !important;
+                    opacity: 0.7;
+                    &::before {
+                        width: 100%;
+                        opacity: 0.7;
+                        background: #333 !important;
+                    }
+                }
             }
             .menu-item-dropdown {
                 .mt-triangle-icon {
                     fill: #333;
                 }
-            }
-            &::before {
-                background: #333;
             }
         }
     }
@@ -535,7 +611,6 @@ export default {
             margin-right: 8px;
         }
         color: #fff;
-        font-family: Montserrat;
         font-size: 16px;
         font-style: normal;
         font-weight: 400;
@@ -559,7 +634,6 @@ export default {
         .mt-header-lang-text {
             color: #FFF;
             text-align: right;
-            font-family: Montserrat;
             font-size: 12px;
             font-style: normal;
             font-weight: 500;
@@ -621,14 +695,18 @@ export default {
         }
     }
     .menu_text {
+        display: inline-block;
+        width: 100%;
         color: #000;
-        font-family: Montserrat;
         font-size: 14px;
         font-style: normal;
         font-weight: 400;
         line-height: 150%;
-        text-align: center;
+        text-align: left;
         padding: 0 10px;
+        &.zh {
+            text-align: center;
+        }
     }
 }
 // dropdown end
