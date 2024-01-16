@@ -208,7 +208,6 @@ const executeFetchList = () => {
         width: 75%;
         .title {
             color: #000;
-            font-family: Montserrat;
             font-size: 24px;
             font-style: normal;
             font-weight: 500;
@@ -220,7 +219,6 @@ const executeFetchList = () => {
                 margin-bottom: 40px;
                 .list-body-title {
                     color: #000;
-                    font-family: Montserrat;
                     font-size: 16px;
                     font-style: normal;
                     font-weight: 400;
@@ -253,7 +251,6 @@ const executeFetchList = () => {
                             .title {
                                 .ellipsis(1);
                                 color: #000;
-                                font-family: Montserrat;
                                 font-size: 16px;
                                 font-style: normal;
                                 font-weight: 500;
@@ -263,7 +260,6 @@ const executeFetchList = () => {
                             .code {
                                 .ellipsis(2);
                                 color: #333;
-                                font-family: Montserrat;
                                 font-size: 12px;
                                 font-style: normal;
                                 font-weight: 400;
@@ -272,7 +268,6 @@ const executeFetchList = () => {
                             .time {
                                 .flex(initial, center, row);
                                 color: #999;
-                                font-family: Montserrat;
                                 font-size: 12px;
                                 font-style: normal;
                                 font-weight: 400;

@@ -154,7 +154,6 @@ const removeFavorites = (item) => {
             .title {
                 .ellipsis(1);
                 color: #000;
-                font-family: Montserrat;
                 font-size: 16px;
                 font-style: normal;
                 font-weight: 500;
@@ -164,7 +163,6 @@ const removeFavorites = (item) => {
             .code {
                 .ellipsis(2);
                 color: #333;
-                font-family: Montserrat;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
@@ -180,7 +178,6 @@ const removeFavorites = (item) => {
                 }
                 .favorites-text {
                     color: #000;
-                    font-family: Montserrat;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 500;
@@ -193,12 +190,12 @@ const removeFavorites = (item) => {
             .flex(space-between, initial);
             .text > p {
                 color: #000;
-                font-family: Montserrat;
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
                 margin-bottom: 8px;
+                text-align: right;
                 &:last-child {
                     margin-bottom: 0;
                 }

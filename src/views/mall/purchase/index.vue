@@ -21,7 +21,7 @@
                                 <p class="name">{{ $t(`purchase.${item.nameLang}`) }}</p>
                                 <p class="mes">{{ $t(`purchase.${item.mesLang}`) }}</p>
                                 <div class="btn">
-                                    <my-button showRightIcon>
+                                    <my-button showRightIcon padding="12px 32px" font="14px">
                                         {{ $t('purchase.order') }}
                                     </my-button>
                                 </div>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <div class="btn" @click="routerChange('/mall/all-articles')">
-                        <my-button showRightIcon>
+                        <my-button showRightIcon padding="12px 32px" font="14px">
                             {{ $t('purchase.check_more') }}
                         </my-button>
                     </div>
@@ -214,7 +214,9 @@ export default {
         // 回到顶部
         back2Top() {
             const dom = document.getElementById('mall-header')
-            dom.scrollIntoView();
+            dom.scrollIntoView({
+                behavior: 'smooth'
+            });
         },
         // 回到顶部按钮定位
         scrollFn() {
@@ -263,12 +265,18 @@ export default {
                 width: 75%;
                 .title {
                     color: #333;
-                    font-family: Montserrat;
                     font-size: 32px;
                     font-style: normal;
                     font-weight: 500;
                     line-height: normal;
                     margin-bottom: 40px;
+                }
+                > .btn {
+                    .fcc();
+                    margin-top: 40px;
+                    #my-button {
+                        padding: 12px 32px;
+                    }
                 }
             }
         }
@@ -296,7 +304,6 @@ export default {
                             .name {
                             color: #333;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 32px;
                             font-style: normal;
                             font-weight: 500;
@@ -305,7 +312,6 @@ export default {
                         }
                         .mes {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 400;
@@ -370,7 +376,6 @@ export default {
                         .name {
                             color: #333;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 500;
@@ -380,7 +385,6 @@ export default {
                         .mes {
                             color: #999;
                             text-align: center;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -429,7 +433,6 @@ export default {
                         .text-title {
                             .ellipsis(1);
                             color: #333;
-                            font-family: Montserrat;
                             font-size: 18px;
                             font-style: normal;
                             font-weight: 500;
@@ -438,7 +441,6 @@ export default {
                         .text-subtitle {
                             .ellipsis(2);
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -447,7 +449,6 @@ export default {
                         }
                         .time {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -497,7 +498,6 @@ export default {
                         .text-title {
                             .ellipsis(2);
                             color: #333;
-                            font-family: Montserrat;
                             font-size: 14px;
                             font-style: normal;
                             font-weight: 500;
@@ -506,7 +506,6 @@ export default {
                         }
                         .mes {
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 12px;
                             font-style: normal;
                             font-weight: 400;
@@ -514,13 +513,6 @@ export default {
                         }
                     }
                 }
-            }
-        }
-        .btn {
-            .fcc();
-            margin-top: 40px;
-            #my-button {
-                padding: 12px 32px;
             }
         }
     }
@@ -544,7 +536,6 @@ export default {
         }
         .back-top-text {
             color: #666;
-            font-family: Montserrat;
             font-size: 12px;
             font-style: normal;
             font-weight: 500;

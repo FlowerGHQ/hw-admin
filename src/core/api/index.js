@@ -11,12 +11,12 @@ let baseUrl = Const.NET.URL_POINT
 
 const apiList = {
     Common: { // 公共        
-        login: ['PostJson', 'system/login'], // 账号登录
+        // login: ['PostJson', 'system/login'], // 账号登录
         logout: ['Post', 'system/logout'], // 账号登出
         updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改
 
         checkAccount: ['PostJson', 'system/login/check-account'], // 校验登录账号
-        selectUser: ['PostJson', 'system/login/select-user'], // 选择用户登录
+        selectUser: ['PostJson', 'system/login'], // 选择用户登录
         switchUser: ['PostJson', 'system/switch-user'], // 切换用户
         loginByTempUser: ['PostJson', 'system/login-by-temp-user'],// 临时用户登录-供应商
 

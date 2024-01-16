@@ -118,7 +118,6 @@ export default {
                     .num-box {
                         color:  #333;
                         text-align: center;
-                        font-family: Montserrat;
                         font-size: 16px;
                         font-weight: 400;
                         // letter-spacing: 0.8px;
@@ -130,7 +129,6 @@ export default {
 
                 color: #666;
                 margin-top:24px;
-                font-family: Montserrat;
                 font-size: 20px;
                 font-weight: 400;
                 line-height: 150%;
@@ -191,7 +189,6 @@ export default {
                 
                 color: #000;
                 text-align: justify;
-                font-family: Montserrat;
                 font-size: 28px;
                 font-weight: 700;
                 line-height: 150%; /* 36px */
@@ -223,7 +220,6 @@ export default {
                 &-text {
                     color:  #333;
                     /* 社区/文章详情/正文 */
-                    font-family: Montserrat;
                     font-size: 20px;
                     font-weight: 400;
                     line-height: 150%; /* 30px */
@@ -238,7 +234,6 @@ export default {
                         .flex(@j: space-between,@direction: column);
                         span:nth-child(1){
                             color:  #666;
-                            font-family: Montserrat;
                             font-size: 22px;
                             font-weight: 500;
                             line-height: 150%; 
@@ -248,7 +243,6 @@ export default {
                         }
                         span:nth-child(2){
                             color: #999;
-                            font-family: Montserrat;
                             font-size: 20px;
                             font-weight: 400;
                             line-height: 150%; /* 30px */
@@ -283,7 +277,6 @@ export default {
                     &-text {
                         color:  #333;
                         /* 社区/文章详情/正文 */
-                        font-family: Montserrat;
                         font-size: 20px;
                         font-weight: 400;
                         line-height: 150%; /* 30px */
@@ -314,7 +307,6 @@ export default {
             margin-right: 8px;
             font-size: 20px;
             color:  #333;
-            font-family: Montserrat;
         } 
         .ant-input {
             padding: 16px 48px;
@@ -322,7 +314,6 @@ export default {
             color: #333;
             text-align: justify;
             /* 社区/文章详情/正文 */
-            font-family: Montserrat;
             font-size: 20px;
             font-style: normal;
             font-weight: 400;
@@ -365,7 +356,6 @@ export default {
             .place {
                 color: #333;
                 text-align: justify;
-                font-family: Montserrat;
                 font-size: 24px;
                 font-weight: 700;
                 line-height: 150%; /* 36px */
