@@ -2,6 +2,7 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
+import Const from '../const'
 
 // const shownErrorMessages = [];
 const showMessage = (msg) => {
@@ -13,7 +14,12 @@ const showMessage = (msg) => {
 
 const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     if (message.includes('登录状态已过期，请重新登录')) {
-        window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${ Core.Data.getLoginType() }`
+        if (Number(Data.getLoginType()) === Const.USER.TYPE.SUPPLIER) {
+            window.location.href = window.location.href.split('#')[0] + `#/login?user_type=${ Data.getLoginType() }`
+        } else {
+            window.location.href = window.location.href.split('#')[0] + `#/login`            
+        }
+
         localStorage.clear()
         return showMessage(i18n.global.t('error_code.expire'));
     }
