@@ -1360,6 +1360,7 @@
             <!-- 保存草稿 -->
             <a-button
                 @click="handleSubmit('draft')"
+                v-if="saveDarftShow"
             >
                 {{ $t("i.save_draft") }}
             </a-button>
@@ -1668,6 +1669,14 @@ export default {
         configSetTitle() {
             return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name)}${this.$t("i.value")}`;
         },
+        saveDarftShow() {
+            if(this.$route.query.edit){
+                return  true
+            }else{
+                return Object.keys(this.goodsDraftData).length ==  0 && !this.$route.query.edit;
+            }
+        }
+
     },
     created() {
         this.goodsDraftData = Core.Data.getGoodsDraft() ? JSON.parse(Core.Data.getGoodsDraft()) : {};
@@ -1679,8 +1688,8 @@ export default {
         if (this.form.id) {
             this.getItemDetail();
         }
-        if(Object.keys(this.goodsDraftData).length > 0){
-          this.setFormData(this.goodsDraftData);
+        if(Object.keys(this.goodsDraftData).length > 0 && !this.$route.query.edit){
+          this.setFormDartData(this.goodsDraftData);
         }
         this.getSalesAreaList();
     },
@@ -1800,7 +1809,6 @@ export default {
         },
         // 根据详情-赋值规格等信息
         setFormData(res) {
-            console.log("setFormData", res);
             this.loading = true;
             this.detail = res;
             let config = [];
@@ -1902,6 +1910,28 @@ export default {
                 });
             }
             this.loading = false;
+        },
+        setFormDartData(res){
+            this.form = res.form;
+            this.upload.coverList =  res.form.logo.split(',').map((item, index) => ({
+                uid: index + 1,
+                name: item,
+                url: Core.Const.NET.FILE_URL_PREFIX + item,
+                short_path: item,
+                status: "done",
+            }));
+            this.upload.detailList = res.form.imgs.split(',').map((item, index) => ({
+                uid: index + 1,
+                name: item,
+                url: Core.Const.NET.FILE_URL_PREFIX + item,
+                short_path: item,
+                status: "done",
+            }));
+            this.form.sales_area_ids = res.form.sales_area_ids.split(',').map((item) => Number(item));
+            this.attrDef = res.attrDef;
+            this.specData = res.specData;
+            this.specific = res.specific;
+           
         },
         // 获取商品规格列表
         setSpecificData(itemList) {
@@ -2034,6 +2064,7 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+            let specific = Core.Util.deepCopy(this.specific);
             // 校验检查
             this.isValidate = true;
 
@@ -2132,8 +2163,15 @@ export default {
                 });
             }
             if (type === 'draft') {
-                Core.Data.setGoodsDraft(JSON.stringify(form))
-                console.log(form,'form-----------------------------------------------------')
+                if (form.id ) delete form.id
+                let saveData = {
+                    form,
+                    specData,
+                    attrDef,
+                    specific
+                }
+                console.log(saveData,'form-----------------------------------------------------')
+                Core.Data.setGoodsDraft(JSON.stringify(saveData))
                 this.$message.success(this.$t("i.save_draft_success"));
             }else{
                 Core.Api.Item[apiName](Core.Util.searchFilter(form))
