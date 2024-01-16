@@ -98,9 +98,7 @@ export default {
         text-align: center;
     }
     &:hover {
-        border: 1px solid transparent;
         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
-        border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
         .my-button-text {
             -webkit-text-fill-color: #fff;
         }
