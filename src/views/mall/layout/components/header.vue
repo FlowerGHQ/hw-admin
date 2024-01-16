@@ -156,22 +156,22 @@
                     <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
-                <!-- <span class="menu-item">
+                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 2 })">
                     <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text tab-animate" :class="car_type_index === 1 ? 'active' : ''">{{ $t('mall.accessories') }}</span>
-                            <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" />
+                            <!-- <svg-icon icon-class="header-expand-icon" :class-name="accessoriesShow ? 'mt-triangle-icon expand' : 'mt-triangle-icon'" /> -->
                         </div>
-                        <template #overlay>
+                        <!-- <template #overlay>
                             <a-menu style="text-align: center;">
                                 <a-menu-item :key="item.key" v-for="(item, index) in accessoriesMenuList" @click="routerChange(item.path)">
                                     <a class="menu_text">{{ $t(`router.${item.nameLang}`) }}</a>
                                     <a-menu-divider class="menu_divider" />
                                 </a-menu-item>
                             </a-menu>
-                        </template>
+                        </template> -->
                     </a-dropdown>
-                </span> -->
+                </span>
                 <!-- 周边产品 -->
                 <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 53 })">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 2 ? 'active' : ''">{{ $t('mall.peripheral_products') }}</span>
