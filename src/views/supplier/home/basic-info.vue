@@ -3,12 +3,12 @@
         <!-- 供应类型 -->
         <div class="base-info content-area top-box">
             <div class="title">{{ $t("supply-chain.type_supply") }}</div>
-            <div class="base-info-form flex-1">
-                <a-row :gutter="24" style="flex: 1">
-                    <a-col :span="2" class="title-area align-center">
+            <div class="base-info-form" style="flex: 1">
+                <a-row :gutter="24">
+                    <a-col :span="3" class="title-area align-center">
                         <div class="title-two"></div>
                     </a-col>
-                    <a-col :span="22">
+                    <a-col :span="21">
                         <div class="top-type-box">
                             <div
                                 v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE"
@@ -75,11 +75,11 @@
                                 </a-col>
                             </a-row>
                             <!-- 姓名 联系人邮箱  联系方式 同步微信-->
-                            <a-row :gutter="24">
+                            <a-row v-if="formState.contact_info.length" :gutter="24">
                                 <a-col :span="24">
                                     <a-form-item class="form-content-item">
                                         <div class="form-content-item-table">
-                                            <a-table
+                                            <a-table                                                
                                                 :columns="contact_info_column"
                                                 :dataSource="formState.contact_info"
                                                 :row-key="(record) => record.id"
@@ -2956,8 +2956,7 @@ onMounted(() => {
     justify-content: flex-start;
     .content-area {
         background: #f8fafc;
-        padding: 20px;
-        padding-bottom: 4px;
+        padding: 20px;        
         .title {
             color: #1d2129;
             font-size: 18px;
@@ -3018,6 +3017,7 @@ onMounted(() => {
     width: 100%;
     box-sizing: border-box;
     flex-wrap: wrap;
+    margin-left: 80px;
 
     .type-parts {
         min-width: 176px;
@@ -3080,8 +3080,7 @@ onMounted(() => {
 
 .top-box {
     display: flex;
-    align-items: center;
-    padding: 0px 20px;
+    align-items: center;    
 }
 :deep(.ant-input-number-group-wrapper) {
     width: 100%;
@@ -3113,6 +3112,9 @@ onMounted(() => {
 
 .form-content-item-table {
     margin-left: 140px;
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
     .specific-table-position {
         color: #1d2129;
         .position-label {

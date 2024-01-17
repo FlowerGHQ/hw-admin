@@ -18,6 +18,7 @@
                         <div class="content-area">
                             <div class="col-area">
                                 <div class="col-all-area">
+                                    <!-- 营业执照照片 -->
                                     <a-form-item
                                         :label="
                                             $t(
@@ -27,6 +28,7 @@
                                         name="business_license_photo"
                                         class="img-area">
                                         <MyUpload
+                                            class="c-upload"
                                             name="business_license_photo"
                                             :tip="
                                                 $t('supply-chain.upload_photos')
@@ -237,12 +239,7 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="col-area"
-                        v-if="
-                            supplyType ==
-                            Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value
-                        ">
+                    <div class="col-area" v-if="supplyType == Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value">
                         <div class="title-area">
                             <div class="title">
                                 {{ $t("supply-chain.proxy_certificate") }}
@@ -282,6 +279,7 @@
             <div class="title">
                 {{ $t("supply-chain.other_proving_materials") }}
             </div>
+            <!-- 其他证实性材料 -->
             <div class="other-material-form">
                 <a-form
                     ref="formRef2"
@@ -290,68 +288,76 @@
                     :rules="rules"
                     labelAlign="right">
                     <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="$t('supply-chain.bank_account_license')"
-                                name="account_opening_bank_license"
-                                class="img-area">
-                                <MyUpload
-                                    name="account_opening_bank_license"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="
-                                        formState.account_opening_bank_license
-                                    "
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
+                        <div class="title-area">
+                            <div class="title">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="
-                                    $t(
-                                        'supply-chain.environmental_assessment_certificate'
-                                    )
-                                "
-                                name="eia_certificate"
-                                class="img-area">
-                                <MyUpload
-                                    name="eia_certificate"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="formState.eia_certificate"
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
+                        <div class="content-area">
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="$t('supply-chain.bank_account_license')"
+                                        name="account_opening_bank_license"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="account_opening_bank_license"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="
+                                                formState.account_opening_bank_license
+                                            "
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="
+                                            $t(
+                                                'supply-chain.environmental_assessment_certificate'
+                                            )
+                                        "
+                                        name="eia_certificate"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="eia_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="formState.eia_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="
+                                            $t(
+                                                'supply-chain.environmental_protection_report'
+                                            )
+                                        "
+                                        name="environmental_report"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="environmental_report"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="
+                                                formState.environmental_report
+                                            "
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>  
                         </div>
-                    </div>
-                    <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="
-                                    $t(
-                                        'supply-chain.environmental_protection_report'
-                                    )
-                                "
-                                name="environmental_report"
-                                class="img-area">
-                                <MyUpload
-                                    name="environmental_report"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="
-                                        formState.environmental_report
-                                    "
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
-                        </div>
-                    </div>
+                    </div>                    
                 </a-form>
             </div>
         </div>
@@ -669,7 +675,7 @@ onMounted(() => {
             font-weight: 500;
         }
         .base-info-form {
-            width:60.5%;
+            padding: 0 9%;
             margin: 0 auto;
             .ant-form{
                 .col-area{
@@ -678,7 +684,7 @@ onMounted(() => {
                     }
                     .content-area{
                         padding: 0;
-                        margin-left: 88px;
+                        margin-left: 10.5%;
                         .col-area{
                             margin-left: 0 !important;
                         }
@@ -696,9 +702,22 @@ onMounted(() => {
             font-weight: 500;
         }
         .other-material-form {
-            width: 60.5%;
+            padding: 0 9%;
             margin: 0 auto;
-            padding-left: 200px;
+            .ant-form{
+                .col-area{
+                    .title-area{
+                        min-width: 96px;
+                    }
+                    .content-area{
+                        padding: 0;
+                        margin-left: 10.5%;
+                        .col-area{
+                            margin-left: 0 !important;
+                        }
+                    }
+                }
+            }            
         }
     }
 }
@@ -802,6 +821,12 @@ onMounted(() => {
                 }
             }
         }
+    }
+}
+
+.c-upload {    
+    :deep(.tip) {
+        width: 300px;
     }
 }
 </style>
