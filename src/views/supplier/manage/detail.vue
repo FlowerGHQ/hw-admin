@@ -785,7 +785,7 @@
                                             <!-- 销售额 -->
                                             <div 
                                                 class="search-col"
-                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing]) }"
+                                                :class="{ 'required': !returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
                                             >
                                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.sales_volume') }}</div>
                                                 <div class="value m-l-8">
@@ -805,104 +805,106 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="level-search-row">
-                                            <!-- 纳税额 -->
-                                            <div 
-                                                class="search-col"
-                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
-                                            >
-                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
-                                                <div class="value m-l-8">
-                                                    <a-input-number
-                                                        class="w-100 customer-input-number-change"
-                                                        :class="{ 'customer-input-number': !isEdit }"
-                                                        v-model:value="item.taxes_paid"
-                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
-                                                        :disabled="!isEdit"
-                                                        :min="0"
-                                                        :max="1000000000"
-                                                    >
-                                                        <template #addonAfter>
-                                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
-                                                        </template>
-                                                    </a-input-number>
+                                        <template v-if="!returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])">
+                                            <div class="level-search-row">
+                                                <!-- 纳税额 -->
+                                                <div 
+                                                    class="search-col"
+                                                    :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                                >
+                                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.tax_amount') }}</div>
+                                                    <div class="value m-l-8">
+                                                        <a-input-number
+                                                            class="w-100 customer-input-number-change"
+                                                            :class="{ 'customer-input-number': !isEdit }"
+                                                            v-model:value="item.taxes_paid"
+                                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
+                                                            :disabled="!isEdit"
+                                                            :min="0"
+                                                            :max="1000000000"
+                                                        >
+                                                            <template #addonAfter>
+                                                                <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span>
+                                                            </template>
+                                                        </a-input-number>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="level-search-row">
-                                            <!-- 利润率 -->
-                                            <div 
-                                                class="search-col"
-                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
-                                            >
-                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
-                                                <div class="value m-l-8">
-                                                    <a-input-number
-                                                        class="w-100 customer-input-number-change"
-                                                        :class="{ 'customer-input-number': !isEdit }"
-                                                        v-model:value="item.profit_margin"
-                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
-                                                        :disabled="!isEdit"
-                                                        :min="0"
-                                                        :max="1000000000"
-                                                    >
-                                                        <template #addonAfter>
-                                                            <span class="unit">%</span>
-                                                        </template>
-                                                    </a-input-number>
+                                            <div class="level-search-row">
+                                                <!-- 利润率 -->
+                                                <div 
+                                                    class="search-col"
+                                                    :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                                >
+                                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.profit_rate') }}</div>
+                                                    <div class="value m-l-8">
+                                                        <a-input-number
+                                                            class="w-100 customer-input-number-change"
+                                                            :class="{ 'customer-input-number': !isEdit }"
+                                                            v-model:value="item.profit_margin"
+                                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
+                                                            :disabled="!isEdit"
+                                                            :min="0"
+                                                            :max="1000000000"
+                                                        >
+                                                            <template #addonAfter>
+                                                                <span class="unit">%</span>
+                                                            </template>
+                                                        </a-input-number>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="level-search-row">
-                                            <!-- 资产负债率 -->
-                                            <div 
-                                                class="search-col"
-                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
-                                            >
-                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
-                                                <div class="value m-l-8">
-                                                    <a-input-number
-                                                        class="w-100 customer-input-number-change"
-                                                        :class="{ 'customer-input-number': !isEdit }"
-                                                        v-model:value="item.asset_liability_ratio"
-                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
-                                                        :disabled="!isEdit"
-                                                        :min="0"
-                                                        :max="1000000000"
-                                                    >
-                                                        <template #addonAfter>
-                                                            <span class="unit">%</span>
-                                                        </template>
-                                                    </a-input-number>
+                                            <div class="level-search-row">
+                                                <!-- 资产负债率 -->
+                                                <div 
+                                                    class="search-col"
+                                                    :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                                >
+                                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.asset_liability_ratio') }}</div>
+                                                    <div class="value m-l-8">
+                                                        <a-input-number
+                                                            class="w-100 customer-input-number-change"
+                                                            :class="{ 'customer-input-number': !isEdit }"
+                                                            v-model:value="item.asset_liability_ratio"
+                                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
+                                                            :disabled="!isEdit"
+                                                            :min="0"
+                                                            :max="1000000000"
+                                                        >
+                                                            <template #addonAfter>
+                                                                <span class="unit">%</span>
+                                                            </template>
+                                                        </a-input-number>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="level-search-row">
-                                            <!-- 现金流量比率 -->
-                                            <div 
-                                                class="search-col"
-                                                :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
-                                            >
-                                                <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
-                                                <div class="value m-l-8">
-                                                    <a-input-number
-                                                        class="w-100 customer-input-number-change"
-                                                        :class="{ 'customer-input-number': !isEdit }"
-                                                        v-model:value="item.cash_flow_ratio"
-                                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
-                                                        :disabled="!isEdit"
-                                                        :min="0"
-                                                        :max="1000000000"
-                                                    >
-                                                        <template #addonAfter>
-                                                            <span class="unit">%</span>
-                                                        </template>
-                                                    </a-input-number>
+                                            <div class="level-search-row">
+                                                <!-- 现金流量比率 -->
+                                                <div 
+                                                    class="search-col"
+                                                    :class="{ 'required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker]) }"
+                                                >
+                                                    <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.cash_flow_ratio') }}</div>
+                                                    <div class="value m-l-8">
+                                                        <a-input-number
+                                                            class="w-100 customer-input-number-change"
+                                                            :class="{ 'customer-input-number': !isEdit }"
+                                                            v-model:value="item.cash_flow_ratio"
+                                                            :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')" 
+                                                            :disabled="!isEdit"
+                                                            :min="0"
+                                                            :max="1000000000"
+                                                        >
+                                                            <template #addonAfter>
+                                                                <span class="unit">%</span>
+                                                            </template>
+                                                        </a-input-number>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </template>
                                     </div>
-                            </template>                            
+                            </template>                           
                         </div>
                     </div>
                 </div>
@@ -995,7 +997,7 @@
                                         <template #bodyCell="{ column, text, record, index }">                                            
                                             <template v-if="column.key === 'customer_order'">
                                                 <div class="information-customer-name m-l-4">
-                                                    <span v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" class="information-customer-name-required">*</span>
+                                                    <span v-if="returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])" class="information-customer-name-required">*</span>
                                                     {{ $t('supply-chain.major_customer') }}{{ index + 1  }}
                                                 </div>
                                             </template>
@@ -1687,7 +1689,7 @@
                 <div class="information-container-form">
                     <div 
                         class="sub-title"
-                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
+                        :class="{ 'sub-title-required': returnTypeBool(parameters.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold]) }"
                     >
                         {{ $t('supply-chain.key_production_equipment') }}
                     </div>
