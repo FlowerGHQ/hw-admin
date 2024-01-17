@@ -434,7 +434,11 @@ const handleLogout = () => {
     }
     Core.Api.Common.logout().then(() => {
         localStorage.clear();
-        $store.dispatch("SUPPLY_CHAIN/clearAll");
+        //  commit("setSupplyChain", {})
+    //   commit("setSupplyDraftChain", {})
+    //   commit("setStep", 0)
+    //   commit("setRead", false)
+    //   commit("setSubmitEd", false)
     });
 };
 const handleEditSubmit = () => {
