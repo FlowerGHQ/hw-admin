@@ -182,8 +182,10 @@ const onBtn = () => {
     router.push({
         path: '/supply-manage/add',
     })
-    // 清空所有缓存
-    $store.dispatch("SUPPLY_CHAIN/clearAll");
+    $store.commit("SUPPLY_CHAIN/setSupplyChain", {})
+    $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", {})
+    $store.commit("SUPPLY_CHAIN/setStep", 0)
+    $store.commit("SUPPLY_CHAIN/setSubmitEd", false)
     
 }
 /* methods end*/
