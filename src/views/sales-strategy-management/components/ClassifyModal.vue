@@ -127,8 +127,8 @@ const CountryData = computed(() => {
     let arr = [];
     COUNTYR.forEach((item) => {
         arr.push({
-            label: $i18n.locale.value == "zh" ? item.name : item.name_en,
-            value: item.code,
+            label: item.name,
+            value: item.name,
         });
     });
     return arr;
@@ -245,15 +245,20 @@ const handleOk = () => {
     }
     // 从本地取出数据
     let arr = JSON.parse(Core.Data.getSalesData());
-    let maxNo;
+    let maxNo = 0;
     if (arr.length === 0) {
         maxNo = 0;
-    } else {
+    } 
+    else if (arr.length === 1) {
+        maxNo = arr[0].no;
+    }
+    else {
        maxNo = arr.reduce((prev, cur) => {
         // 迭代器，找出最大的no
             return prev.no > cur.no ? prev.no : cur.no;
         });
     }
+    console.log('maxNo',maxNo)
     let strategy_detail = []
     selectIdList.value.forEach((item) => {
         searchForm.value.area.forEach((item1) => {
@@ -287,6 +292,7 @@ const getTableDataFetch = (parmas = {}) => {
         flag_spread: 1,
         page: current.value,
         page_size: pageSize.value,
+        status:0,
         ...parmas,
     };
     Core.Api.Item.list(obj)
