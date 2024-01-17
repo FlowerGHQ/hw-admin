@@ -45,7 +45,7 @@
         </div>
         <!-- 联系方式 -->
         <div class="base-info content-area margin-t-20">
-            <div class="title" name="contact_info">{{ $t("supply-chain.contact") }}</div>
+            <div class="title" id="contact_info">{{ $t("supply-chain.contact") }}</div>
             <div class="base-info-form">
                 <a-form  labelAlign="right">
                     <a-row :gutter="24">
@@ -58,7 +58,7 @@
                                     <!-- 职业 -->
                                     <a-form-item >
                                         <template #label>
-                                            <span class="require-icon" name="positon">{{ $t('supply-chain.Position') }}</span>
+                                            <span class="require-icon">{{ $t('supply-chain.Position') }}</span>
                                         </template>
                                         <a-checkbox-group
                                             @change="handleCheckBox"
@@ -155,7 +155,7 @@
                     <!-- 公司概况 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" name="company_info">
+                            <div class="title-two" id="company_info">
                                 <!-- 公司概况 -->
                                 {{ $t("supply-chain.company_profile") }}
                             </div>
@@ -390,7 +390,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="agent_info">
+                            <div class="title-two" id="agent_info">
                                 <!-- 代理信息 -->
                                 {{ $t("supply-chain.agent_information") }}
                             </div>
@@ -493,7 +493,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="human_resource">
+                            <div class="title-two" id="human_resource">
                                 {{ $t("supply-chain.human_resources") }}
                             </div>
                         </a-col>
@@ -559,7 +559,7 @@
                     <!-- 财务信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" name="financial_info">
+                            <div class="title-two" id="financial_info">
                                 {{ $t("supply-chain.financial_information") }}
                             </div>
                         </a-col>
@@ -685,7 +685,7 @@
                     <!-- 营业信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" name="business_info">
+                            <div class="title-two" id="business_info">
                                 {{ $t("supply-chain.business_information") }}
                             </div>
                         </a-col>
@@ -906,7 +906,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="competitor_analysis">
+                            <div class="title-two" id="competitor_analysis">
                                 {{ $t("supply-chain.competitor") }}
                             </div>
                         </a-col>
@@ -988,7 +988,7 @@
                     <!-- 客户信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" name="customer_info">
+                            <div class="title-two" id="customer_info">
                                 {{ $t("supply-chain.customer_information") }}
                             </div>
                         </a-col>
@@ -1110,7 +1110,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="technical_info">
+                            <div class="title-two" id="technical_info">
                                 {{ $t("supply-chain.Technical_information") }}
                             </div>
                         </a-col>
@@ -1357,7 +1357,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="quality_info">
+                            <div class="title-two" id="quality_info">
                                 {{ $t("supply-chain.quality_information") }}
                             </div>
                         </a-col>
@@ -1435,7 +1435,7 @@
                     <!-- 产能产线 -->
                     <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])" :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" name="produce_capacity">
+                            <div class="title-two" id="produce_capacity">
                                 {{ $t("supply-chain.capacity_line") }}
                             </div>
                         </a-col>
@@ -1548,7 +1548,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="outsourcing">
+                            <div class="title-two" id="outsourcing">
                                 {{ $t("supply-chain.qutsourcing_management") }}
                             </div>
                         </a-col>
@@ -1614,7 +1614,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="specify_info">
+                            <div class="title-two" id="specify_info">
                                 {{ $t("supply-chain.specify_information") }}
                             </div>
                         </a-col>
@@ -1745,7 +1745,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two" name="service_info">
+                            <div class="title-two" id="service_info">
                                 {{ $t("supply-chain.service_information") }}
                             </div>
                         </a-col>
@@ -1799,7 +1799,7 @@
         <div
             class="base-info content-area margin-t-20"
             v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])">
-            <div class="title" name="production_equipment">
+            <div class="title" id="production_equipment">
                 {{ $t("supply-chain.device_information") }}
             </div>
             <!-- 关键生产设备 -->
@@ -1989,7 +1989,7 @@
         </div>
         <!-- 补充信息 -->
         <div class="base-info content-area margin-t-20">
-            <div class="title" name="additional_info">
+            <div class="title" id="additional_info">
                 {{ $t("supply-chain.supplementary_information") }}
             </div>
             <div class="base-info-form">
@@ -2024,18 +2024,17 @@
 
 <script setup>
 import { ref, reactive, watch, onMounted, toRef, computed } from "vue";
-import MyUpload from "@/components/MyUpload/index.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import { message } from "ant-design-vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
-const TimeSearchRef = ref(null);
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 const $t = useI18n().t;
 const $i18n = useI18n();
 const $store = useStore();
 
+const TimeSearchRef = ref(null);
 const TECHNICAL_INFORMATION = computed(() => {
     let arr = [];
     Core.Const.SUPPLAY.TECHNICAL_INFORMATION.forEach((item) => {
@@ -2125,26 +2124,6 @@ const contact_info_column = computed(() => {
 
     return columns;
 });
-const handleCheckBox = (checkedValue) => {
-    // 清除
-    formState.position = checkedValue;
-    let arr = [];
-    checkedValue.forEach((item) => {
-        // 如果formState.contact_info里面有这个职位,就将这个职位的信息push到arr里面
-        if (formState.contact_info.some((item2) => item2.position == item)) {
-            arr.push(formState.contact_info.find((item2) => item2.position == item));
-        } else {
-            arr.push({
-                position: item,
-                name: "",
-                phone: "",
-                email: "",
-                flag_wechat: false,
-            });
-        }
-    });
-    formState.contact_info = arr;
-};
 // 客户信息
 const customer_info_list_column = ref([
     {
@@ -2494,20 +2473,42 @@ const formState = reactive({
 });
 const isFormStateRequired = ref(false)
 
+
+/* methods start */
 // 查询当前校验的字段的父级,直到找到class为ant-form-item-control的元素的递归函数
-const findParent = (el) => {
-    // 查找到父级
-    let parent = el.parentNode;
-    let classNameArr = parent.className.split(" ");
-    if (parent && !classNameArr.includes("ant-form-item")) {
-        return findParent(parent);
-    } else if (!parent && parent.parentNode) {
-        return findParent(parent.parentNode);
-    } else if (!parent && !parent.parentNode) {
-        return "";
-    } else {
-        return parent.querySelector(".ant-form-item-label > label").innerText;
-    }
+// const findParent = (el) => {
+//     // 查找到父级
+//     let parent = el.parentNode;
+//     let classNameArr = parent.className.split(" ");
+//     if (parent && !classNameArr.includes("ant-form-item")) {
+//         return findParent(parent);
+//     } else if (!parent && parent.parentNode) {
+//         return findParent(parent.parentNode);
+//     } else if (!parent && !parent.parentNode) {
+//         return "";
+//     } else {
+//         return parent.querySelector(".ant-form-item-label > label").innerText;
+//     }
+// };
+const handleCheckBox = (checkedValue) => {
+    // 清除
+    formState.position = checkedValue;
+    let arr = [];
+    checkedValue.forEach((item) => {
+        // 如果formState.contact_info里面有这个职位,就将这个职位的信息push到arr里面
+        if (formState.contact_info.some((item2) => item2.position == item)) {
+            arr.push(formState.contact_info.find((item2) => item2.position == item));
+        } else {
+            arr.push({
+                position: item,
+                name: "",
+                phone: "",
+                email: "",
+                flag_wechat: false,
+            });
+        }
+    });
+    formState.contact_info = arr;
 };
 
 // 草稿回显
@@ -2637,21 +2638,12 @@ const step1Vaild = () => {
                 if(name === 'position') {
                     name = 'contact_info'
                 }
-                let errorDom = document.querySelector(`[name=${name}]`) 
-                console.log(errorDom)
-                // 提示信息
-                // 至少有一个 Promise 失败
-                // 处理错误...
-                // 校验失败
-                // const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
-                // if (!errorName) return;
-                // const errorDom = document.querySelector(`[name=${errorName}]`);
-                // // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-                // errorDom.scrollIntoView({
-                //     behavior: "smooth",
-                //     block: "center",
-                //     inline: "nearest",
-                // });
+                let errorDom = document.querySelector(`[id=${name}]`)
+                errorDom.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "nearest",
+                });
                 reject(false);
         }
     })
@@ -2824,7 +2816,12 @@ const paramsRequiredFilter = () => {
             if (key === 'position') {
                 formState[key].length ? null: result.push(`${key}`)
             } else {
-                formState[key].forEach(el => {
+                for (const el of formState[key]) {
+                    if (Number(el.position) === Core.Const.SUPPLAY.POSITION_MAP_STATUS.GENERAL_MANAGER) {
+                        // 职位总经理不需要校验
+                        // console.log("职位总经理不需要校验");
+                        continue
+                    }
                     // 这里是必填项的参数循环 判断数据里面哪些参数是必填的
                     for (const arrItem in keys[0]) {
                         if(!el[arrItem]) {
@@ -2835,7 +2832,7 @@ const paramsRequiredFilter = () => {
                             }
                         }
                     }
-                })
+                }            
             }
             // 判断 数组
         } else if (keys instanceof Object) {
@@ -2933,17 +2930,7 @@ const onTypeChange = (item) => {
     isFormStateRequired.value = false
 }
 
-watch(
-    () => $i18n.locale.value,
-    (val) => {                       
-    }
-);
-// 监听类别变动
-watch(
-    () => formState.type,
-    (newval, oldval) => {
-    }
-);
+/* methods end */
 defineExpose({
     step1Vaild,
     saveDraft1,
