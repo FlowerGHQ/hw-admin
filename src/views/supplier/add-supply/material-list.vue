@@ -671,7 +671,6 @@ onMounted(() => {
         .base-info-form {
             width:60.5%;
             margin: 0 auto;
-            border: 1px solid red;
             .ant-form{
                 .col-area{
                     .title-area{
@@ -679,6 +678,10 @@ onMounted(() => {
                     }
                     .content-area{
                         padding: 0;
+                        margin-left: 88px;
+                        .col-area{
+                            margin-left: 0 !important;
+                        }
                     }
                 }
             }
