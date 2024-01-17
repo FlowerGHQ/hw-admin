@@ -45,28 +45,27 @@
         </div>
         <!-- 联系方式 -->
         <div class="base-info content-area margin-t-20">
-            <div class="title">{{ $t("supply-chain.contact") }}</div>
+            <div class="title" name="contact_info">{{ $t("supply-chain.contact") }}</div>
             <div class="base-info-form">
                 <a-form  labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
                             <div class="title-two"></div>
                         </a-col>
-                        <a-col :span="21">
+                        <a-col :span="21" >
                             <a-row :gutter="24">
-                                <a-col :span="24">
+                                <a-col :span="24" >
                                     <!-- 职业 -->
-                                    <a-form-item name="positon">
+                                    <a-form-item >
                                         <template #label>
-                                            <span class="require-icon">{{ $t('supply-chain.Position') }}</span>
+                                            <span class="require-icon" name="positon">{{ $t('supply-chain.Position') }}</span>
                                         </template>
-
                                         <a-checkbox-group
                                             @change="handleCheckBox"
                                             v-model:value="formState.position"
                                             name="positon"
-                                            :options="plainOptions" />
-
+                                            :options="plainOptions" 
+                                        />
                                         <template v-if="isFormStateRequired && !formState.position.length" #extra>
                                             <span class="tips">
                                                 {{ $t('common.please_select') }}{{ $t('supply-chain.Position') }}
@@ -156,7 +155,7 @@
                     <!-- 公司概况 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="company_info">
                                 <!-- 公司概况 -->
                                 {{ $t("supply-chain.company_profile") }}
                             </div>
@@ -391,7 +390,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="agent_info">
                                 <!-- 代理信息 -->
                                 {{ $t("supply-chain.agent_information") }}
                             </div>
@@ -494,7 +493,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="human_resource">
                                 {{ $t("supply-chain.human_resources") }}
                             </div>
                         </a-col>
@@ -560,7 +559,7 @@
                     <!-- 财务信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="financial_info">
                                 {{ $t("supply-chain.financial_information") }}
                             </div>
                         </a-col>
@@ -686,7 +685,7 @@
                     <!-- 营业信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="business_info">
                                 {{ $t("supply-chain.business_information") }}
                             </div>
                         </a-col>
@@ -907,7 +906,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="competitor_analysis">
                                 {{ $t("supply-chain.competitor") }}
                             </div>
                         </a-col>
@@ -989,7 +988,7 @@
                     <!-- 客户信息 -->
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two" id="customer_information">
+                            <div class="title-two" name="customer_info">
                                 {{ $t("supply-chain.customer_information") }}
                             </div>
                         </a-col>
@@ -1111,7 +1110,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="technical_info">
                                 {{ $t("supply-chain.Technical_information") }}
                             </div>
                         </a-col>
@@ -1358,7 +1357,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="quality_info">
                                 {{ $t("supply-chain.quality_information") }}
                             </div>
                         </a-col>
@@ -1436,7 +1435,7 @@
                     <!-- 产能产线 -->
                     <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])" :gutter="24">
                         <a-col :span="3" class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="produce_capacity">
                                 {{ $t("supply-chain.capacity_line") }}
                             </div>
                         </a-col>
@@ -1549,7 +1548,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="outsourcing">
                                 {{ $t("supply-chain.qutsourcing_management") }}
                             </div>
                         </a-col>
@@ -1615,7 +1614,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="specify_info">
                                 {{ $t("supply-chain.specify_information") }}
                             </div>
                         </a-col>
@@ -1746,7 +1745,7 @@
                         <a-col
                             :span="3"
                             class="title-area">
-                            <div class="title-two">
+                            <div class="title-two" name="service_info">
                                 {{ $t("supply-chain.service_information") }}
                             </div>
                         </a-col>
@@ -1800,7 +1799,7 @@
         <div
             class="base-info content-area margin-t-20"
             v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])">
-            <div class="title">
+            <div class="title" name="production_equipment">
                 {{ $t("supply-chain.device_information") }}
             </div>
             <!-- 关键生产设备 -->
@@ -1990,7 +1989,7 @@
         </div>
         <!-- 补充信息 -->
         <div class="base-info content-area margin-t-20">
-            <div class="title">
+            <div class="title" name="additional_info">
                 {{ $t("supply-chain.supplementary_information") }}
             </div>
             <div class="base-info-form">
@@ -2566,7 +2565,6 @@ const step1Vaild = () => {
     return new Promise((resolve, reject) => {
         if (!paramsRequired.length) {
             isFormStateRequired.value = false
-
             let data = $store.state.SUPPLY_CHAIN.supplyChain;
             // 判断是否为空对象
             if (Object.keys(data).length === 0) {
@@ -2591,69 +2589,72 @@ const step1Vaild = () => {
                     },
                 };
             }
-
             // 保存数据
             $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
             $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", data);
             resolve(true);
-    }  else {
-        isFormStateRequired.value = true
-        
-        let tips = null
-        // console.log("tips msg", paramsRequired[0].split('.'));
-        switch (paramsRequired[0].split('.')[0]) {
-            case 'position':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.Position') + ')'
-                break;
-            case 'contact_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.contact') + ')'
-                break;
-            case 'company_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.company_profile') + ')'
-                break;
-            case 'financial_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.financial_information') + ')'
-                break;
-            case 'business_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.business_information') + ')'
-                break;
-            case 'agent_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.agent_information') + ')'
-                break;
-            case 'customer_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.customer_information') + ')'
-                break;
-            case 'produce_capacity':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.capacity_line') + ')'
-                break;
-            case 'production_equipment':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.key_production_equipment') + ')'
-                break;
-            case 'specify_info':
-                tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.specify_information') + ')'
-                break;
-            default:
-                break;
+        }  else {
+                isFormStateRequired.value = true
+                let tips = null
+                // console.log("tips msg", paramsRequired[0].split('.'));
+                switch (paramsRequired[0].split('.')[0]) {
+                    case 'position':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.Position') + ')'
+                        break;
+                    case 'contact_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.contact') + ')'
+                        break;
+                    case 'company_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.company_profile') + ')'
+                        break;
+                    case 'financial_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.financial_information') + ')'
+                        break;
+                    case 'business_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.business_information') + ')'
+                        break;
+                    case 'agent_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.agent_information') + ')'
+                        break;
+                    case 'customer_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.customer_information') + ')'
+                        break;
+                    case 'produce_capacity':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.capacity_line') + ')'
+                        break;
+                    case 'production_equipment':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.key_production_equipment') + ')'
+                        break;
+                    case 'specify_info':
+                        tips = $t('supply-chain.please_complete_info') + '(' + $t('supply-chain.specify_information') + ')'
+                        break;
+                    default:
+                        break;
+                }
+                console.log(paramsRequired[0].split('.')[0])
+                message.warning(tips);
+                let name = paramsRequired[0].split('.')[0]
+                if(name === 'position') {
+                    name = 'contact_info'
+                }
+                let errorDom = document.querySelector(`[name=${name}]`) 
+                console.log(errorDom)
+                // 提示信息
+                // 至少有一个 Promise 失败
+                // 处理错误...
+                // 校验失败
+                // const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
+                // if (!errorName) return;
+                // const errorDom = document.querySelector(`[name=${errorName}]`);
+                // // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
+                // errorDom.scrollIntoView({
+                //     behavior: "smooth",
+                //     block: "center",
+                //     inline: "nearest",
+                // });
+                reject(false);
         }
-
-        message.warning(tips);
-
-        // 提示信息
-        // 至少有一个 Promise 失败
-        // 处理错误...
-        // 校验失败
-        // const errorName = err?.errorFields?.[0]?.name?.[0] ?? undefined;
-        // if (!errorName) return;
-        // const errorDom = document.querySelector(`[name=${errorName}]`);
-        // // errorDom 为null 找不到对应的a-form-item的原因是：a-form-item的name属性值必须和a-input的name属性值一致
-        // errorDom.scrollIntoView({
-        //     behavior: "smooth",
-        //     block: "center",
-        //     inline: "nearest",
-        // });
-        reject(false);
-    }
-    });
+    })
 };
 // 判断哪些参数是必填的
 const paramsRequiredFilter = () => {
