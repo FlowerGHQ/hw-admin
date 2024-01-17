@@ -663,26 +663,36 @@ onMounted(() => {
     }
     .base-info {
         width: 100%;
-        .title {
-            color: #1d2129;
+        .title{
+            color: #1D2129;
             font-size: 18px;
             font-weight: 500;
         }
         .base-info-form {
-            width: 60.5%;
+            width:60.5%;
             margin: 0 auto;
+            .ant-form{
+                .col-area{
+                    .title-area{
+                        min-width: 96px;
+                    }
+                    .content-area{
+                        padding: 0;
+                    }
+                }
+            }
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
-        .title {
-            color: #1d2129;
+        .title{
+            color: #1D2129;
             font-size: 18px;
             font-weight: 500;
         }
         .other-material-form {
-            width: calc(60.5% - 96px - 88px - 96px - 80px);
+            width: calc(60.5%  - 96px - 116px - 96px - 88px) ;
             margin: 0 auto;
         }
     }

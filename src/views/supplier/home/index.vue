@@ -131,6 +131,8 @@
         </a-layout>
         <a-modal
             v-model:visible="visible"
+            :keyboard="false"
+            :maskClosable="false"
             class="promise-book-modal"
             width="860px"
             :getContainer="
