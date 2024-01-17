@@ -1,6 +1,7 @@
 <template>
     <a-modal
         v-model:visible="visibility"
+        :getContainer="handleGetContainer"
         :width="860"
         title="添加明细"
         @ok="handleOk"
@@ -17,6 +18,9 @@
                         show-search
                         :filter-option="filterOption"
                         :placeholder="$t('def.select')">
+                        <template #removeIcon>
+                            <MySvgIcon icon-class="sales-circle-delete" />
+                        </template>
                     </a-select>
                 </div>
             </div>
@@ -105,7 +109,8 @@
 import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
 import SearchAll from "@/components/common/SearchAll.vue";
-import TableSelect from "@/components/table/ItemTable.vue";
+import TableSelect from './ItemTale.vue';
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import COUNTYR from "@/assets/js/address/countries.json";
 import {message} from "ant-design-vue";
 import { useI18n } from "vue-i18n";
@@ -178,7 +183,9 @@ const onShowSizeChange = (current, pageSize) => {
 const pageChange = () => {
     getTableDataFetch();
 };
-
+const handleGetContainer = () => {
+    return document.querySelector(".sales-strategy-edit")
+};
 const loading = ref(false);
 const tableColumns = computed(() => {
     const result = [
@@ -372,9 +379,9 @@ onMounted(() => {
     z-index: 20;
 }
 .top-box {
-    width: 415px;
     position: absolute;
     z-index: 20;
+    min-width: 810px;
 }
 .tip {
     height: 30px;

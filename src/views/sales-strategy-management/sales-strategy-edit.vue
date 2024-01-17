@@ -53,7 +53,6 @@
                                         :placeholder="$t('def.select')"
                                         @deselect="handleDeleteItem"
                                         @focus.stop="handleOpenModal">
-                                        <!-- removeIcon -->
                                         <template #removeIcon>
                                             <MySvgIcon icon-class="sales-circle-delete" />
                                         </template>
