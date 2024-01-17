@@ -21,6 +21,7 @@
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList ref="MaterialListRef" v-else-if="setp === 1" />
                     <Successful v-else-if="setp === 2" />
+                    <div :style="{ height: setp === 0 ? '70px' : '116px' }"></div>
                 </div>
                 <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
@@ -253,7 +254,8 @@ const handleSubmitData = () => {
             delete data.confirmatory_material.proxy_certificate;
         }
     }
-    Core.Api.SUPPLY.add(data)
+        
+    Core.Api.SUPPLY.adminAdd(data)
         .then((res) => {
             visible.value = false;
             // 获取详情数据
@@ -263,7 +265,8 @@ const handleSubmitData = () => {
             $router.push('/supply-manage/list')
         })
         .catch((err) => {
-            $message.error($t("supply-chain.supply_submit_failed"));
+            console.log("输出的数据", err);
+            // $message.error(err.message);
         });
 };
 // 获取详情
@@ -498,7 +501,7 @@ onBeforeUnmount(() => {
                 position: fixed;
                 bottom: 0;
                 right: 16px;
-                border-top: 1px solid #EAECF1;
+                // border-top: 1px solid #EAECF1;
                 background: #FFF;
                 text-align: center;
                 box-sizing: border-box;
@@ -512,7 +515,7 @@ onBeforeUnmount(() => {
                 }
                 .promise-book {
                     background-color: #fff;
-                    padding: 20px;
+                    padding: 8px 0;
                     text-align: center;
                     color: #1d2129;
                     .promise-text {

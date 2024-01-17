@@ -18,7 +18,7 @@
                         <div class="level-search-row">
                             <div class="search-col m-t-0">
                                 <div class="key w-130 t-a-r text-color"></div>
-                                <div class="value m-l-8">
+                                <div class="value">
                                     <template v-if="!isEdit">                                    
                                         <div class="btn-type-parts">
                                             <MySvgIcon icon-class="parts-icon" />
@@ -35,11 +35,10 @@
                                             <div 
                                                 v-for="(item, index) in Core.Const.SUPPLAY.SUPPLAY_TYPE" 
                                                 :key="index"
-                                                class="edit-type-item cursor m-t-16"
+                                                class="edit-type-item cursor m-t-16 m-r-20"
                                                 :class="{
                                                     'edit-type-item-select': Number(item.value) === Number(parameters.type),
-                                                    'edit-type-item-change': Number(item.value) !== Number(parameters.type),
-                                                    'm-l-20': index !== 0
+                                                    'edit-type-item-change': Number(item.value) !== Number(parameters.type),                                                    
                                                 }"
                                                 @click="onSelectType(item.value)"
                                             >
@@ -85,7 +84,7 @@
                                 </div>
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">
-                                        <div class="d-fl m-t-4">
+                                        <div class="d-fl" :class="{ 'm-t-4': msgDetail.position?.length }">
                                             <a-checkbox v-for="item in msgDetail.position" :checked="true">
                                                 {{
                                                     Core.Const.SUPPLAY.POSITION_MAP[item]?.t
@@ -93,6 +92,9 @@
                                                         : "-"
                                                 }}
                                             </a-checkbox>
+                                            <span v-if="!msgDetail.position?.length" class="custom-not-uploaded">
+                                                {{ $t('supply-chain.no_content') }}
+                                            </span>
                                         </div>
                                     </template>
                                     <template v-else>
@@ -104,6 +106,7 @@
                                         />
                                     </template>
                                     <a-table
+                                        v-if="parameters.contact_info.length"
                                         class="m-t-8"
                                         :columns="contactInformation"
                                         :data-source="parameters.contact_info || []" 
@@ -1188,7 +1191,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.product_design?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.technical_info?.product_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1216,7 +1219,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_design?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.technical_info?.process_design?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1244,7 +1247,7 @@
                                                 }}
                                             </a-checkbox>
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.technical_info?.process_validation?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.technical_info?.process_validation?.length">
                                             {{ $t('supply-chain.not_selected') }}
                                         </sapn>
                                     </template>
@@ -1903,7 +1906,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.confirmatory_material?.business_license_photo?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2073,7 +2076,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.confirmatory_material?.quality_system_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2155,7 +2158,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.confirmatory_material?.account_opening_bank_license?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2190,7 +2193,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.confirmatory_material?.eia_certificate?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -2225,7 +2228,7 @@
                                                 alt=""
                                             />
                                         </template>
-                                        <sapn class="custom-not_uploaded" v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
+                                        <sapn class="custom-not-uploaded" v-if="!msgDetail.confirmatory_material?.environmental_report?.length">
                                             {{ $t('supply-chain.not_uploaded') }}
                                         </sapn>
                                     </template>
@@ -3030,8 +3033,7 @@ const onBack = () => {
                 display: flex;
                 flex-wrap: wrap;
                 .edit-type-item {
-                    padding: 0 10px;
-                    min-width: 15%;
+                    width: 176px;
                     height: 52px;
                     line-height: 52px;
                     text-align: center;
@@ -3336,7 +3338,7 @@ const onBack = () => {
     color: #c7bfbf;
     margin-left: 4px;
 }
-.custom-not_uploaded {
+.custom-not-uploaded {
     color: #666;
 }
 </style>
