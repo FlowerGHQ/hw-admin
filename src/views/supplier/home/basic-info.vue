@@ -2638,7 +2638,13 @@ const step1Vaild = () => {
                     name = 'contact_info'
                 }
                 let errorDom = document.querySelector(`[name=${name}]`) 
-                console.log(errorDom)
+                console.log(errorDom,'错误的锚点位置')
+                if(!errorDom) return
+                  errorDom.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                    inline: "nearest",
+                });
                 // 提示信息
                 // 至少有一个 Promise 失败
                 // 处理错误...
