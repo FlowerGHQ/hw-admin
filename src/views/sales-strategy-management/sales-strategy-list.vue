@@ -96,6 +96,9 @@
                 :loading="switchLoading"
                 @change="onSwitchChange(record)"
               />
+              <span>
+                &nbsp;{{ text == 1 ? '已生效' : '未生效' }}
+              </span>
             </template>
             <!-- 操作 -->
             <template v-if="column.dataIndex === 'operation'">
@@ -257,6 +260,7 @@ const tableColumns = computed(() => {
       title: $t("sales-strategy-management.area_and_gift"),
       dataIndex: "area_and_gift",
       key: "area_and_gift",
+      width: 620,
     },
     // 创建时间
     {
@@ -416,7 +420,7 @@ onMounted(() => {
     // 下面的span
      > span {
       display: inline-block;
-      width: 300px;
+      width: 600px;
       // 超出隐藏
       overflow: hidden;
       text-overflow: ellipsis;

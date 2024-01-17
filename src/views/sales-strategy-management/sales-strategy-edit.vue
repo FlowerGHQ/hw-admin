@@ -19,7 +19,7 @@
                         :rules="rules">
                         <!-- 策略名称 -->
                         <a-row :gutter="18">
-                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
                                 <a-form-item label="策略名称" name="name">
                                     <a-input
                                         v-model:value="formState.name"
@@ -33,7 +33,7 @@
                         </a-row>
                         <!-- 适用商品 -->
                         <a-row :gutter="18">
-                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
                                 <a-form-item label="适用商品" name="shops">
                                     <ItemSelect
                                         @select="handleAddFailItem"
@@ -63,7 +63,7 @@
                         </a-row>
                         <!-- 策略类型 -->
                         <a-row :gutter="18">
-                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
                                 <a-form-item label="销售类型" name="type">
                                     <a-select
                                         v-model:value="formState.type"
@@ -76,7 +76,7 @@
                         </a-row>
                         <!-- 赠送规则 -->
                         <a-row :gutter="18" v-if="formState.type">
-                            <a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19" :xxl="19" :xxxl="19">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="22" :xl="18" :xxl="12" :xxxl="12">
                                 <a-form-item :label="' '" name="giftRules" class="gift-rules">
                                     <div class="gift-rules-first" v-if="formState.type == 1">
                                         <div class="label-gift">赠送规则</div>
@@ -110,6 +110,7 @@
                                                 v-model:value="formState.rule.quantity_bonus"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
+                                                style="max-width: 300px;flex: 1;"
                                                 :min="1" />
                                         </div>
                                     </div>
@@ -803,9 +804,14 @@ onMounted(() => {
                         display: flex;
                         align-items: center;
                         margin-right: 20px;
+                        flex: 1;
                         > span {
+                            white-space: nowrap;
                             margin-right: 8px;
                         }
+                    }
+                    .number {
+                        margin-right: 0;
                     }
                 }
             }
