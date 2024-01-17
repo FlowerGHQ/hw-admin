@@ -38,7 +38,6 @@ const onBtn = async () => {
     justify-content: center;
     align-items: center;
     text-align: center;
-    width: calc(100% - 80px);
     height: calc(100% - 40px);
     .container {
         .icon {

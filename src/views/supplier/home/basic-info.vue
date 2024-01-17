@@ -3113,6 +3113,9 @@ onMounted(() => {
 
 .form-content-item-table {
     margin-left: 140px;
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
     .specific-table-position {
         color: #1d2129;
         .position-label {
