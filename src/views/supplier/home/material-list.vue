@@ -691,6 +691,9 @@ onMounted(() => {
                     .content-area{
                         padding: 0;
                         margin-left: 88px;
+                        .col-area{
+                            margin-left: 0 !important;
+                        }
                     }
                 }
             }
