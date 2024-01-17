@@ -447,7 +447,6 @@ onBeforeUnmount(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -495,8 +494,14 @@ onBeforeUnmount(() => {
             }
 
             .supply-chain-footer {
-                min-height: 68px;
-                width: calc(100%);
+                width: calc(100% - 232px);
+                position: fixed;
+                bottom: 0;
+                right: 16px;
+                border-top: 1px solid #EAECF1;
+                background: #FFF;
+                text-align: center;
+                box-sizing: border-box;
                 .btn-area {
                     display: flex;
                     padding: 18px 0px;
