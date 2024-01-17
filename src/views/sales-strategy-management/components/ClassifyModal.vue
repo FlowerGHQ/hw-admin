@@ -1,6 +1,5 @@
 <template>
     <a-modal
-        :destroyOnClose="true"
         v-model:visible="visibility"
         :width="860"
         title="添加明细"
@@ -116,11 +115,15 @@ const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
 const $t = $i18n.t;
 const $route = useRoute();
-const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList']);
+const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList','handleEdit']);
 const props = defineProps({
     visibility: {
         type: Boolean,
         default: false,
+    },
+    reviewData: {
+        type: Object,
+        default: () => {},
     },
 });
 const CountryData = computed(() => {
@@ -138,6 +141,7 @@ const initialObject = {
     codeList: [],
     area:[]
 };
+const childRef = ref(null);
 // 当前分组对象
 // const classValue =  ref();
 const searchForm = ref({
@@ -156,6 +160,7 @@ const options = ref({
 });
 // 商品编码-字符串
 const codeStr = ref();
+const isEdit = ref(false);
 // 所选id列表
 const selectIdList = ref([]);
 // 所选item列表
@@ -164,6 +169,7 @@ const tableData = ref([]);
 const pageSize = ref(10);
 const current = ref(1);
 const total = ref(0);
+const disabledChecked = ref([]);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
     pageChange();
@@ -260,6 +266,7 @@ const handleOk = () => {
     }
     console.log('maxNo',maxNo)
     let strategy_detail = []
+
     selectIdList.value.forEach((item) => {
         searchForm.value.area.forEach((item1) => {
             let obj =  {}
@@ -267,16 +274,24 @@ const handleOk = () => {
             obj.country = item1;
             obj.bonus_item_id = item;
             obj.item = selectItemList.value.filter((item2) => item2.id === item)[0];
-            if($route.query.type === 'add'){
+            if($route.query.type === 'add' ){
             //    赋值唯一id
                 obj.id = _.uniqueId();  
+            }
+            if(isEdit.value){
+                obj.isEdit = true;
             }
             strategy_detail.push(obj);
 
         });
     });
-    emits('hanldItemList',selectIdList.value)
-    emits('hanldAdd',strategy_detail)
+    if(isEdit.value){
+        emits('handleEdit',strategy_detail)
+        isEdit.value = false;
+    }else{
+        emits('hanldItemList',selectIdList.value)
+        emits('hanldAdd',strategy_detail)
+    }
     handleCancle();
 };
 // 搜索
@@ -318,9 +333,27 @@ watch(
     (newValue, oldValue) => {
         if (newValue) {
             getTableDataFetch();
+        }else{
+            // 清空数据
+            selectIdList.value = [];
         }
     }
 );
+watch(()=>props.reviewData,
+    (newValue,oldValue)=>{
+    if(newValue){
+       console.log('newValue',newValue)
+       searchForm.value.area = [newValue.country ]
+       searchForm.value.codeList = newValue.item.map((item)=>item.code)
+       codeStr.value = newValue.item.map((item)=>item.code).join(',')
+       selectIdList.value = newValue.item.map((item)=>item.id)
+       isEdit.value = true;
+       handleSearch();
+       setTimeout(() => {
+        childRef.value.selectedRowKeys = newValue.item.map((item)=>item.id)
+       }, 1000);
+    }
+})
 
 onMounted(() => {
     // 初始化数据

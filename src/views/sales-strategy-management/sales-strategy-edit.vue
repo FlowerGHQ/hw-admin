@@ -3,18 +3,11 @@
         <div class="list-container">
             <div class="main-content">
                 <div class="title-container">
-
                     <div class="title-area">
                         <div class="back" @click="handleBack">
-                            <MySvgIcon icon-class="sales-back"/>
+                            <MySvgIcon icon-class="sales-back" />
                         </div>
-                        {{
-                            type === "add"
-                                ? "新建销售策略"
-                                : type === "edit"
-                                ? "编辑销售策略"
-                                : ""
-                        }}
+                        {{ type === "add" ? "新建销售策略" : type === "edit" ? "编辑销售策略" : "" }}
                     </div>
                 </div>
                 <div class="search-container">
@@ -26,20 +19,11 @@
                         :rules="rules">
                         <!-- 策略名称 -->
                         <a-row :gutter="18">
-                            <a-col
-                                :xs="12"
-                                :sm="12"
-                                :md="12"
-                                :lg="12"
-                                :xl="12"
-                                :xxl="12"
-                                :xxxl="12">
+                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
                                 <a-form-item label="策略名称" name="name">
                                     <a-input
                                         v-model:value="formState.name"
-                                        :disabled="
-                                            type === 'details' ? true : false
-                                        "
+                                        :disabled="type === 'details' ? true : false"
                                         allowClear
                                         showCount
                                         :placeholder="$t('def.input')"
@@ -49,30 +33,19 @@
                         </a-row>
                         <!-- 适用商品 -->
                         <a-row :gutter="18">
-                            <a-col
-                                :xs="12"
-                                :sm="12"
-                                :md="12"
-                                :lg="12"
-                                :xl="12"
-                                :xxl="12"
-                                :xxxl="12">
+                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
                                 <a-form-item label="适用商品" name="shops">
                                     <ItemSelect
                                         @select="handleAddFailItem"
                                         btnText="选择商品"
                                         :isShowBtn="false"
                                         ref="itemSelectRef"
-                                        :disabled-checked="
-                                            selectData.map((i) => i.item_id)
-                                        "
+                                        :disabled-checked="selectData.map((i) => i.item_id)"
                                         btn-type="primary"
                                         :btn-text="$t('i.add')"
                                         btn-class="fault-btn" />
                                     <a-select
-                                        :disabled="
-                                            type === 'details' ? true : false
-                                        "
+                                        :disabled="type === 'details' ? true : false"
                                         v-model:value="showSelectData"
                                         mode="multiple"
                                         style="width: 100%"
@@ -84,27 +57,17 @@
                                         <template #removeIcon>
                                             <MySvgIcon icon-class="sales-circle-delete" />
                                         </template>
-                                        
                                     </a-select>
                                 </a-form-item>
                             </a-col>
                         </a-row>
                         <!-- 策略类型 -->
                         <a-row :gutter="18">
-                            <a-col
-                                :xs="12"
-                                :sm="12"
-                                :md="12"
-                                :lg="12"
-                                :xl="12"
-                                :xxl="12"
-                                :xxxl="12">
+                            <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12" :xxl="12" :xxxl="12">
                                 <a-form-item label="销售类型" name="type">
                                     <a-select
                                         v-model:value="formState.type"
-                                        :disabled="
-                                            type === 'details' ? true : false
-                                        "
+                                        :disabled="type === 'details' ? true : false"
                                         :placeholder="$t('def.select')"
                                         :options="strategyTypeOptions"
                                         @change="handleClearVaild" />
@@ -113,115 +76,62 @@
                         </a-row>
                         <!-- 赠送规则 -->
                         <a-row :gutter="18" v-if="formState.type">
-                            <a-col
-                                :xs="24"
-                                :sm="24"
-                                :md="24"
-                                :lg="19"
-                                :xl="19"
-                                :xxl="19"
-                                :xxxl="19">
-                                <a-form-item
-                                    :label="' '"
-                                    name="giftRules"
-                                    class="gift-rules">
-                                    <div
-                                        class="gift-rules-first"
-                                        v-if="formState.type == 1">
+                            <a-col :xs="24" :sm="24" :md="24" :lg="19" :xl="19" :xxl="19" :xxxl="19">
+                                <a-form-item :label="' '" name="giftRules" class="gift-rules">
+                                    <div class="gift-rules-first" v-if="formState.type == 1">
                                         <div class="label-gift">赠送规则</div>
                                         <div class="threshold">
                                             <span>起送门槛</span>
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.rule.quantity_min
-                                                "
-                                                :disabled="
-                                                    type === 'details'
-                                                        ? true
-                                                        : false
-                                                "
+                                                v-model:value="formState.rule.quantity_min"
+                                                :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1">
                                                 <template #addonAfter>
-                                                    <span class="unit">
-                                                        辆
-                                                    </span>
+                                                    <span class="unit"> 辆 </span>
                                                 </template>
                                             </a-input-number>
                                         </div>
                                         <div class="per">
                                             <span> 每满 </span>
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.rule
-                                                        .quantity_every
-                                                "
-                                                :disabled="
-                                                    type === 'details'
-                                                        ? true
-                                                        : false
-                                                "
+                                                v-model:value="formState.rule.quantity_every"
+                                                :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1">
                                                 <template #addonAfter>
-                                                    <span class="unit">
-                                                        辆
-                                                    </span>
+                                                    <span class="unit"> 辆 </span>
                                                 </template>
                                             </a-input-number>
                                         </div>
                                         <div class="number">
                                             <span> 送 </span>
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.rule
-                                                        .quantity_bonus
-                                                "
-                                                :disabled="
-                                                    type === 'details'
-                                                        ? true
-                                                        : false
-                                                "
+                                                v-model:value="formState.rule.quantity_bonus"
+                                                :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1" />
                                         </div>
                                     </div>
-                                    <div
-                                        class="gift-rules-first"
-                                        v-else-if="formState.type == 2">
+                                    <div class="gift-rules-first" v-else-if="formState.type == 2">
                                         <div class="label-gift">赠送规则</div>
                                         <div class="threshold">
                                             <span>起送门槛</span>
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.rule.quantity_min
-                                                "
-                                                :disabled="
-                                                    type === 'details'
-                                                        ? true
-                                                        : false
-                                                "
+                                                v-model:value="formState.rule.quantity_min"
+                                                :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1">
                                                 <template #addonAfter>
-                                                    <span class="unit">
-                                                        辆
-                                                    </span>
+                                                    <span class="unit"> 辆 </span>
                                                 </template>
                                             </a-input-number>
                                         </div>
                                         <div class="per">
                                             <span> 达到起送门槛后 , 赠送</span>
                                             <a-input-number
-                                                v-model:value="
-                                                    formState.rule
-                                                        .quantity_bonus
-                                                "
-                                                :disabled="
-                                                    type === 'details'
-                                                        ? true
-                                                        : false
-                                                "
+                                                v-model:value="formState.rule.quantity_bonus"
+                                                :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
                                                 :min="1">
                                             </a-input-number>
@@ -234,12 +144,8 @@
                 </div>
                 <div class="title-label">
                     <span class="label">方案明细</span>
-                    <div
-                        class="add-btn"
-                        v-if="tableData.length > 0 && type !== 'details'">
-                        <a-button type="primary" @click="handleVaild"
-                            >添加明细</a-button
-                        >
+                    <div class="add-btn" v-if="tableData.length > 0 && type !== 'details'">
+                        <a-button type="primary" @click="handleVaild">添加明细</a-button>
                     </div>
                 </div>
                 <div class="table-container" v-if="tableData.length > 0">
@@ -252,8 +158,7 @@
                         :pagination="false">
                         <template #bodyCell="{ column, text, record, index }">
                             <!-- 适用地区 -->
-                            <template
-                                v-if="column.dataIndex === 'applicable_area'">
+                            <template v-if="column.dataIndex === 'applicable_area'">
                                 {{ record.country }}
                             </template>
                             <!-- 赠品 -->
@@ -274,17 +179,11 @@
                             <template v-if="column.dataIndex === 'operation'">
                                 <div class="operation">
                                     <!-- 修改 -->
-                                    <a-button
-                                        type="link"
-                                        @click="handleEdit(record)">
-                                        <MySvgIcon icon-class="sales-edit" />{{
-                                            $t("n.amend")
-                                        }}</a-button
+                                    <a-button type="link" @click="handleEdit(record,index)">
+                                        <MySvgIcon icon-class="sales-edit" />{{ $t("n.amend") }}</a-button
                                     >
                                     <!-- 删除 -->
-                                    <a-button
-                                        type="link"
-                                        @click="handleDelete(record)">
+                                    <a-button type="link" @click="handleDelete(record, index)">
                                         <MySvgIcon icon-class="sales-delete" />
                                         {{ $t("def.delete") }}</a-button
                                     >
@@ -293,31 +192,21 @@
                         </template>
                     </a-table>
                 </div>
-                <div
-                    class="empty-area"
-                    v-else-if="tableData.length <= 0 && type !== 'details'">
+                <div class="empty-area" v-else-if="tableData.length <= 0 && type !== 'details'">
                     <div class="add-details" @click="handleVaild">
                         <MySvgIcon icon-class="sales-add" />
                         <span>添加明细</span>
                     </div>
-                    <span class="tips">
-                        为销售策略配置对应的地区与赠送的商品
-                    </span>
+                    <span class="tips"> 为销售策略配置对应的地区与赠送的商品 </span>
                 </div>
             </div>
             <div class="sales-footer">
                 <!-- 取消 -->
-                <a-button
-                    type="default"
-                    @click="handleCancel"
-                    v-if="type !== 'details'">
+                <a-button type="default" @click="handleCancel" v-if="type !== 'details'">
                     {{ $t("def.cancel") }}
                 </a-button>
                 <!-- 确定 -->
-                <a-button
-                    type="primary"
-                    @click="handleSubmit"
-                    v-if="type !== 'details'">
+                <a-button type="primary" @click="handleSubmit" v-if="type !== 'details'">
                     {{ $t("def.ok") }}
                 </a-button>
                 <!-- 编辑资料 -->
@@ -329,23 +218,27 @@
     </div>
     <ClassifyModal
         v-model:visibility="classifyModalShow"
+        :reviewData="reviewData"
         @hanldAdd="handleAddStrategyDetail"
-        @hanldItemList="hanldItemList">
+        @hanldItemList="hanldItemList"
+        @handleEdit="handleModalEdit"
+        >
     </ClassifyModal>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
-import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
+import ItemSelect from "./components/ItemSelect.vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import ClassifyModal from "./components/ClassifyModal.vue";
-import { message, Modal } from "ant-design-vue";
+import { Form, message, Modal } from "ant-design-vue";
 import _ from "lodash";
 // 使用useTable
 import { useTable } from "@/hooks/useTable";
 import { useI18n } from "vue-i18n";
 import { useRouter, useRoute } from "vue-router";
 import Core from "../../core";
+import { Item } from "ant-design-vue/lib/menu";
 const $router = useRouter();
 const $route = useRoute();
 const $t = useI18n().t;
@@ -361,6 +254,7 @@ const formState = reactive({
     strategy_detail: [],
     item_list: [],
 });
+const reviewData = ref([]); 
 const strategyTypeOptions = ref([
     {
         label: "每满送",
@@ -374,11 +268,7 @@ const strategyTypeOptions = ref([
 const formRef = ref(null);
 const giftRulesVaild = (rule, value) => {
     if (formState.type == 1) {
-        if (
-            !formState.rule.quantity_min ||
-            !formState.rule.quantity_every ||
-            !formState.rule.quantity_bonus
-        ) {
+        if (!formState.rule.quantity_min || !formState.rule.quantity_every || !formState.rule.quantity_bonus) {
             return Promise.reject("请填写完整的赠送规则");
         } else {
             return Promise.resolve();
@@ -475,6 +365,7 @@ const tableColumns = computed(() => {
     }
     return columns;
 });
+// 展示的使用商品
 const showSelectData = computed(() => {
     let arr = [];
     if (selectData.value.length > 0) {
@@ -488,9 +379,9 @@ const showSelectData = computed(() => {
     }
     return arr;
 });
+// 添加明细的弹窗
 const classifyModalShow = ref(false);
-// 适用商品的选项
-const selectDataOption = ref([]);
+// tableData
 const tableData = ref([]);
 // 新增后端返回的策略id
 const strategyId = ref(null);
@@ -530,10 +421,6 @@ const handleVaild = () => {
             classifyModalShow.value = true;
         });
 };
-// 添加方案明细
-const handleAddStrategyDetail = (data) => {
-    formState.strategy_detail = data;
-};
 // 清除校验
 const handleClearVaild = () => {
     formRef.value && formRef.value.clearValidate();
@@ -547,24 +434,7 @@ const handleClearVaild = () => {
 const hanldItemList = (data) => {
     formState.item_list = data;
 };
-
-// 添加方案明细：只有在type为add的时候才会触发
-const addData = (data) => {
-    Core.Api.SALES_STRATEGY.add(data).then(async (res) => {
-        message.success("添加成功");
-        strategyId.value = res?.detail?.id;
-        await getDetail();
-    });
-};
-// 修改方案明细：只有在type为edit的时候才会触发
-const editData = (data) => {
-    Core.Api.SALES_STRATEGY.update(data).then((res) => {
-        message.success("修改成功");
-        // 重新获取详情
-        getDetail();
-    });
-};
-// handleEditData
+// 编辑资料
 const handleEditData = () => {
     $router.push({
         path: "/sales-strategy-management/sales-strategy-edit",
@@ -575,56 +445,118 @@ const handleEditData = () => {
     });
 };
 
+// 添加方案的相关代码
+
+// 添加方案明细
+const handleAddStrategyDetail = (data) => {
+    let copyData = _.cloneDeep(data);
+    copyData.forEach((item) => {
+        item.add = true;
+
+    });
+    formState.strategy_detail = [...formState.strategy_detail, ...copyData];
+    let arr = [];
+    // 处理成表格数据
+    arr = formState.strategy_detail.map((item, index) => {
+        let obj = {
+            ...item,
+        };
+        obj.serial_number = index + 1;
+        obj.no = item.no;
+        obj.rule = formState.rule;
+        obj.type = formState.type;
+        // 赠品列表
+        obj.item_list = item.item;
+        return obj;
+    });
+    // 查询详情的时候，存储数据，讲原来的数据删除，再添加
+    tableData.value = viewData(arr);
+};
+// 添加方案明细：只有在type为add的时候才会触发
+const addData = (data) => {
+    Core.Api.SALES_STRATEGY.add(data).then(async (res) => {
+        message.success("添加成功");
+        strategyId.value = res?.detail?.id;
+        await getDetail();
+        await $router.push({
+            path: "/sales-strategy-management/sales-strategy-list",
+        });
+    });
+};
+// 修改方案明细：只有在type为edit的时候才会触发
+const editData = (data) => {
+    Core.Api.SALES_STRATEGY.update(data).then(async (res) => {
+        message.success("修改成功");
+        await getDetail();
+        await $router.push({
+            path: "/sales-strategy-management/sales-strategy-list",
+        });
+    });
+};
 // 提交上传
 const handleSubmit = () => {
+    // 拷贝一份数据,formState的数据
     let form = _.cloneDeep(formState);
     form.rule = JSON.stringify(form.rule);
     form.item_list = showSelectData.value.map((item) => {
         return item.value;
     });
-    // 获取本地数据
-    let arr = JSON.parse(Core.Data.getSalesData());
-    let arrDataId = arr.map((item) => item.id);
-    let formStateDataId = formState.strategy_detail.map((item) => item.id);
-    console.log("formStateDataId", formStateDataId);
-    // 比较两个数组是否相同:此刻点击确定是否修改了数据
-    let isSame = _.isEqual(arrDataId, formStateDataId);
-    console.log("isSame", isSame);
-    if (!isSame) {
-        let formObjArr = []; //抽取出来的form的数据、
-        let arrObjArr = []; //抽取出来的arr的数据
-        formObjArr = formState.strategy_detail.map((item) => {
-            let obj = {};
-            obj.no = item.no;
-            obj.country = item.country;
-            obj.bonus_item_id = item.bonus_item_id;
-            return obj;
-        });
-        arrObjArr = arr.map((item) => {
-            let obj = {};
-            obj.no = item.no;
-            obj.country = item.country;
-            obj.bonus_item_id = item.bonus_item_id;
-            return obj;
-        });
-        // 整合到上传的数据中
-        form.strategy_detail = [...arrObjArr, ...formObjArr];
-        if (type.value === "add") {
-            addData(form);
-        } else if (type.value === "edit") {
-            form.id = $route.query.id;
-            editData(form);
-        }
+    // 整合到上传的数据中
+    if (type.value === "add") {
+        addData(form);
+    } else if (type.value === "edit") {
+        form.id = $route.query.id;
+        editData(form);
     }
-    //   }
+    // }
 };
 
 // 修改
-const handleEdit = () => {};
+const handleEdit = (record,index) => {
+    console.log("修改",record,index);
+    classifyModalShow.value = true;
+    reviewData.value = {
+        item: record.item,
+        country: record.country,
+    };
+
+};
+// 修改返回值
+const handleModalEdit = (data)=>{
+    console.log(data);
+    console.log(formState.strategy_detail)
+    console.log(tableData.value)
+    let country  = data[0].country
+    let countryArr = formState.strategy_detail.filter(item=>item.country == country)
+    let no = countryArr[0].no
+    // 重新构建数据
+    let newData = data.map(item=>{
+        return {
+            bonus_item_id:item.bonus_item_id,
+            no,
+            country:item.country,
+            item:item.item,
+        }
+    })
+    formState.strategy_detail = formState.strategy_detail.filter(item=>item.country !== country)
+    formState.strategy_detail = [...formState.strategy_detail,...newData]
+    console.log(viewData(formState.strategy_detail))
+    tableData.value = viewData(formState.strategy_detail)
+     // 拷贝一份数据,formState的数据
+    let form = _.cloneDeep(formState);
+    form.rule = JSON.stringify(form.rule);
+    form.item_list = showSelectData.value.map((item) => {
+        return item.value;
+    });
+    form.id = $route.query.id;
+    Core.Api.SALES_STRATEGY.update(form).then(async (res) => {
+        message.success("修改成功");
+        await getDetail();
+    });
+}
 
 // 重构数据
 const viewData = (arr) => {
-    console.log("arr", arr);
     // 处理成表格数据
     // 相同no 并且 相同country的数据的 item数据合并
     let newArr = [];
@@ -644,11 +576,12 @@ const viewData = (arr) => {
             });
         } else {
             obj.type = item.type;
-            obj.id = item.id.toString();
+            obj.id = item?.id ? item.id.toString() : "";
             obj.no = item.no;
             obj.country = item.country;
             obj.item = [item.item];
             obj.rule = item.rule;
+            obj.add = item.add;
             newArr.push(obj);
         }
     });
@@ -672,20 +605,20 @@ const getDetail = () => {
                 : "",
     }).then((res) => {
         if (!res.detail) return;
-        console.log("res detail ===================", res.detail);
+        console.log("详情数据 ===================", res.detail);
         formState.name = res.detail.name;
         // 转化为字符串
         formState.type = res.detail.type.toString();
         formState.rule = JSON.parse(res.detail.rule);
         formState.strategy_detail = res.detail.strategy_detail;
         formState.item_list = res.detail.item_list;
+        // 适用商品
         selectData.value = res.detail.item_list;
         selectData.value.forEach((item) => {
             item.name = item?.item?.name || "";
             item.code = item?.item?.code || "";
             item.item_id = item?.item?.id || "";
         });
-        console.log("formState", formState.strategy_detail);
 
         let arr = [];
         // 处理成表格数据
@@ -697,15 +630,17 @@ const getDetail = () => {
             obj.no = item.no;
             obj.rule = formState.rule;
             obj.type = formState.type;
+            // 赠品列表
             obj.item_list = item.item;
             return obj;
         });
-        console.log(viewData(tableData.value));
+
         // 查询详情的时候，存储数据，讲原来的数据删除，再添加
         tableData.value = viewData(arr);
         Core.Data.setSalesData(JSON.stringify(arr));
     });
 };
+
 // 取消
 const handleCancel = () => {
     $router.push({
@@ -713,37 +648,26 @@ const handleCancel = () => {
     });
 };
 // 删除方案
-const handleDelete = (item) => {
-    let updateObj = _.cloneDeep(formState);
-    updateObj.strategy_detail = updateObj.strategy_detail.filter(
-        (i) => !item.id.split(",").includes(i.id.toString())
-    );
-    updateObj.id = type.value === "edit" ? $route.query.id : strategyId.value;
-    updateObj.rule = JSON.stringify(updateObj.rule);
-    updateObj.item_list = updateObj.item_list.map((i) => {
-        return i.item_id;
-    });
-    console.log("updateObj----------------------------------------", updateObj);
-    $confirm({
-        title: "确定要删除该方案吗？",
-        okText: "确定",
-        okType: "danger",
-        cancelText: "取消",
-        onOk() {
-            Core.Api.SALES_STRATEGY.update(updateObj).then((res) => {
-                message.success("删除成功");
-                getDetail();
-            });
-        },
+const handleDelete = (item, index) => {
+    // 删除index位置的数据
+    tableData.value.splice(index, 1);
+    // 删除formState.strategy_detail中的数据
+    formState.strategy_detail = formState.strategy_detail.filter((i) => {
+        // 过滤不是统一no 和 country的数据,i.item.id 不包含在item.item.join(",")的数据
+        return (
+            (i.no != item.no || i.country != item.country) &&
+            !item.item.join(",").includes(i.item.id.toString())
+        );
     });
 };
 
 onMounted(() => {
+    // 将本地缓存制空
     Core.Data.setSalesData(JSON.stringify([]));
     if (type.value == "edit" || type.value == "details") {
-        getDetail();
+        getDetail(); //获取详情并存储表格数据
     } else if (type.value == "add") {
-        tableData.value = [];
+        tableData.value = []; //表格数据为空
     }
 });
 </script>
@@ -822,10 +746,10 @@ onMounted(() => {
             bottom: 0;
             width: 100%;
         }
-        .title-container{
-            .title-area{
+        .title-container {
+            .title-area {
                 display: flex;
-                .back{
+                .back {
                     font-size: 17px;
                     margin-right: 4px;
                     cursor: pointer;
