@@ -1,6 +1,5 @@
 <template>
     <a-modal
-        :destroyOnClose="true"
         v-model:visible="visibility"
         :width="860"
         title="添加明细"
@@ -116,19 +115,23 @@ const { proxy } = getCurrentInstance();
 const $i18n = useI18n();
 const $t = $i18n.t;
 const $route = useRoute();
-const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList']);
+const emits = defineEmits(["update:visibility",'hanldAdd','hanldItemList','handleEdit']);
 const props = defineProps({
     visibility: {
         type: Boolean,
         default: false,
+    },
+    reviewData: {
+        type: Object,
+        default: () => {},
     },
 });
 const CountryData = computed(() => {
     let arr = [];
     COUNTYR.forEach((item) => {
         arr.push({
-            label: $i18n.locale.value == "zh" ? item.name : item.name_en,
-            value: item.code,
+            label: item.name,
+            value: item.name,
         });
     });
     return arr;
@@ -138,6 +141,7 @@ const initialObject = {
     codeList: [],
     area:[]
 };
+const childRef = ref(null);
 // 当前分组对象
 // const classValue =  ref();
 const searchForm = ref({
@@ -156,6 +160,7 @@ const options = ref({
 });
 // 商品编码-字符串
 const codeStr = ref();
+const isEdit = ref(false);
 // 所选id列表
 const selectIdList = ref([]);
 // 所选item列表
@@ -164,6 +169,7 @@ const tableData = ref([]);
 const pageSize = ref(10);
 const current = ref(1);
 const total = ref(0);
+const disabledChecked = ref([]);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
     pageChange();
@@ -245,16 +251,22 @@ const handleOk = () => {
     }
     // 从本地取出数据
     let arr = JSON.parse(Core.Data.getSalesData());
-    let maxNo;
+    let maxNo = 0;
     if (arr.length === 0) {
         maxNo = 0;
-    } else {
+    } 
+    else if (arr.length === 1) {
+        maxNo = arr[0].no;
+    }
+    else {
        maxNo = arr.reduce((prev, cur) => {
         // 迭代器，找出最大的no
             return prev.no > cur.no ? prev.no : cur.no;
         });
     }
+    console.log('maxNo',maxNo)
     let strategy_detail = []
+
     selectIdList.value.forEach((item) => {
         searchForm.value.area.forEach((item1) => {
             let obj =  {}
@@ -262,16 +274,24 @@ const handleOk = () => {
             obj.country = item1;
             obj.bonus_item_id = item;
             obj.item = selectItemList.value.filter((item2) => item2.id === item)[0];
-            if($route.query.type === 'add'){
+            if($route.query.type === 'add' ){
             //    赋值唯一id
                 obj.id = _.uniqueId();  
+            }
+            if(isEdit.value){
+                obj.isEdit = true;
             }
             strategy_detail.push(obj);
 
         });
     });
-    emits('hanldItemList',selectIdList.value)
-    emits('hanldAdd',strategy_detail)
+    if(isEdit.value){
+        emits('handleEdit',strategy_detail)
+        isEdit.value = false;
+    }else{
+        emits('hanldItemList',selectIdList.value)
+        emits('hanldAdd',strategy_detail)
+    }
     handleCancle();
 };
 // 搜索
@@ -287,6 +307,7 @@ const getTableDataFetch = (parmas = {}) => {
         flag_spread: 1,
         page: current.value,
         page_size: pageSize.value,
+        status:0,
         ...parmas,
     };
     Core.Api.Item.list(obj)
@@ -312,9 +333,27 @@ watch(
     (newValue, oldValue) => {
         if (newValue) {
             getTableDataFetch();
+        }else{
+            // 清空数据
+            selectIdList.value = [];
         }
     }
 );
+watch(()=>props.reviewData,
+    (newValue,oldValue)=>{
+    if(newValue){
+       console.log('newValue',newValue)
+       searchForm.value.area = [newValue.country ]
+       searchForm.value.codeList = newValue.item.map((item)=>item.code)
+       codeStr.value = newValue.item.map((item)=>item.code).join(',')
+       selectIdList.value = newValue.item.map((item)=>item.id)
+       isEdit.value = true;
+       handleSearch();
+       setTimeout(() => {
+        childRef.value.selectedRowKeys = newValue.item.map((item)=>item.id)
+       }, 1000);
+    }
+})
 
 onMounted(() => {
     // 初始化数据
