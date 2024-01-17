@@ -708,7 +708,7 @@ onMounted(() => {
         .other-material-form {
             width: 60.5%;
             margin: 0 auto;
-            padding-left: calc(96px + 16px + 88px);
+            padding-left: 200px;
         }
     }
 }
