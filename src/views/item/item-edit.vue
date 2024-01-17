@@ -2060,14 +2060,28 @@ export default {
         },
         // 保存、新建 商品
         handleSubmit(type) {
-
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let specific = Core.Util.deepCopy(this.specific);
+            form.sales_area_ids = form.sales_area_ids.join(",");
+            // form.man_hour = Math.round(form.man_hour * 100)
+            form.config = JSON.stringify(form.config);
+            if (type === 'draft') {
+                if (form.id ) delete form.id
+                let saveData = {
+                    form,
+                    specData,
+                    attrDef,
+                    specific
+                }
+                console.log(saveData,'form-----------------------------------------------------')
+                Core.Data.setGoodsDraft(JSON.stringify(saveData))
+                this.$message.success(this.$t("i.save_draft_success"));
+                return
+            }
             // 校验检查
             this.isValidate = true;
-
             if (
                 typeof this.checkFormInput(form, specData, attrDef) ===
                 "function"
@@ -2101,9 +2115,9 @@ export default {
                 ]);
             }
 
-            form.sales_area_ids = form.sales_area_ids.join(",");
-            // form.man_hour = Math.round(form.man_hour * 100)
-            form.config = JSON.stringify(form.config);
+            // form.sales_area_ids = form.sales_area_ids.join(",");
+            // // form.man_hour = Math.round(form.man_hour * 100)
+            // form.config = JSON.stringify(form.config);
 
             let apiName = "save";
 
@@ -2162,29 +2176,17 @@ export default {
                     };
                 });
             }
-            if (type === 'draft') {
-                if (form.id ) delete form.id
-                let saveData = {
-                    form,
-                    specData,
-                    attrDef,
-                    specific
-                }
-                console.log(saveData,'form-----------------------------------------------------')
-                Core.Data.setGoodsDraft(JSON.stringify(saveData))
-                this.$message.success(this.$t("i.save_draft_success"));
-            }else{
-                Core.Api.Item[apiName](Core.Util.searchFilter(form))
-                .then(() => {
+            Core.Api.Item[apiName](Core.Util.searchFilter(form))
+            .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
                     // 清除草稿数据
                     Core.Data.clearGoodsDraft()
                     this.routerChange("back");
-                })
-                .catch((err) => {
+            })
+            .catch((err) => {
                     console.log("handleSubmit err:", err);
-                });
-            } 
+            });
+            
 
         },
         // 保存时检查表单输入
