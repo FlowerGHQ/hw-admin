@@ -684,6 +684,17 @@ onMounted(() => {
         .base-info-form {
             width:60.5%;
             margin: 0 auto;
+            .ant-form{
+                .col-area{
+                    .title-area{
+                        min-width: 96px;
+                    }
+                    .content-area{
+                        padding: 0;
+                        margin-left: 88px;
+                    }
+                }
+            }
         }
     }
     .other-material {
@@ -695,8 +706,9 @@ onMounted(() => {
             font-weight: 500;
         }
         .other-material-form {
-            width: calc(60.5%  - 96px - 88px - 96px - 80px) ;
+            width: 60.5%;
             margin: 0 auto;
+            padding-left: calc(96px + 16px + 88px);
         }
     }
 }
