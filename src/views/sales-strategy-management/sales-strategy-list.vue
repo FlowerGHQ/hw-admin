@@ -96,6 +96,9 @@
                 :loading="switchLoading"
                 @change="onSwitchChange(record)"
               />
+              <span>
+                &nbsp;{{ text == 1 ? '已生效' : '未生效' }}
+              </span>
             </template>
             <!-- 操作 -->
             <template v-if="column.dataIndex === 'operation'">
@@ -143,91 +146,84 @@
 </template>
 
 <script setup>
-import SearchAll from "@/components/common/SearchAll.vue"
-import MySvgIcon from "@/components/MySvgIcon/index.vue"
-import Core from "../../core"
-import { ref, computed, onMounted } from "vue"
+import SearchAll from "@/components/common/SearchAll.vue";
+import MySvgIcon from "@/components/MySvgIcon/index.vue";
+import Core from "../../core";
+import { ref, computed, onMounted } from "vue";
 // 使用useTable
-import { useTable } from "@/hooks/useTable"
-import { useI18n } from "vue-i18n"
-import { useRouter } from "vue-router"
-import { message, Modal } from "ant-design-vue"
-import _ from "lodash"
-const $router = useRouter()
-const $t = useI18n().t
-const $i18n = useI18n()
-const $message = message
-const $confirm = Modal.confirm
+import { useTable } from "@/hooks/useTable";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+import { message, Modal } from "ant-design-vue";
+import _ from "lodash";
+const $router = useRouter();
+const $t = useI18n().t;
+const $i18n = useI18n();
+const $message = message;
+const $confirm = Modal.confirm;
 // VITE 引入json数据
-import COUNTYR from "@/assets/js/address/countries.json"
+import COUNTYR from "@/assets/js/address/countries.json";
 
 // hooks
-const request = Core.Api.SALES_STRATEGY.list
+const request = Core.Api.SALES_STRATEGY.list;
 // 重构数据
 const viewData = (arr, type) => {
-  // 处理成表格数据
-  // 相同no 并且 相同country的数据的 item数据合并
-  let newArr = []
-  arr.forEach((item) => {
-    let obj = {}
-    // 是否有相同的no和country
-    let isSame = newArr.some((i) => {
-      return i.no == item.no && i.country == item.country
-    })
-    // 如果有相同的no和country，就把item合并
-    if (isSame) {
-      newArr.forEach((i) => {
-        if (i.no == item.no && i.country == item.country) {
-          i.item = [...i.item, item.item]
-          i.id = [i.id, item.id].join(",")
+    // 处理成表格数据
+    // 相同no 并且 相同country的数据的 item数据合并
+    let newArr = [];
+    arr.forEach((item) => {
+        let obj = {};
+        // 是否有相同的no和country
+        let isSame = newArr.some((i) => {
+            return i.no == item.no && i.country == item.country;
+        });
+        // 如果有相同的no和country，就把item合并
+        if (isSame) {
+            newArr.forEach((i) => {
+                if (i.no == item.no && i.country == item.country) {
+                    i.item = [...i.item, item.item];
+                    i.id = [i.id, item.id].join(",");
+                }
+            });
+        } else {
+            obj.type = type;
+            obj.id = item.id.toString();
+            obj.no = item.no;
+            obj.country = item.country;
+            obj.item = [item.item];
+            obj.rule = item.rule;
+            newArr.push(obj);
         }
-      })
-    } else {
-      obj.type = type
-      obj.id = item.id.toString()
-      obj.no = item.no
-      obj.country = item.country
-      obj.item = [item.item]
-      obj.rule = item.rule
-      newArr.push(obj)
-    }
-  })
-  newArr.forEach((item, index) => {
-    item.serial_number = index + 1
-  })
-  return newArr
-}
+    });
+    newArr.forEach((item, index) => {
+        item.serial_number = index + 1;
+    });
+    return newArr;
+};
 // 重构展示地区与赠品
 const reFormartGift = (arr) => {
-  
-  return $i18n.locale.value == "zh"
-    ? arr.map((i) => i.name || "-").join("、")
-    : arr.map((i) => i.name_en || "-").join("、")
-}
+    return $i18n.locale.value == "zh"
+        ? arr.map((i) => i.name || "-").join("、")
+        : arr.map((i) => i.name_en || "-").join("、");
+};
 const dataCallBack = (res) => {
-  let data = res.list
-  console.log("处理前的数据", data)
-  data.forEach((item) => {
-    item.strategy_detail = viewData(item.strategy_detail, item.type)
-    if (item.rule && typeof item.rule == "string") {
-      item.rule = JSON.parse(item.rule)
-    }
-    return item
-  })
-  console.log("处理后的数据", data)
-  return data
-}
+    let data = res.list;
+    console.log("处理前的数据", data);
+    data.forEach((item) => {
+        item.strategy_detail = viewData(item.strategy_detail, item.type);
+        if (item.rule && typeof item.rule == "string") {
+            item.rule = JSON.parse(item.rule);
+        }
+        return item;
+    });
+    console.log("处理后的数据", data);
+    return data;
+};
 
-const {
-  loading,
-  tableData,
-  pagination,
-  search,
-  onSizeChange,
-  refreshTable,
-  onPageChange,
-  searchParam,
-} = useTable({ request, dataCallBack })
+const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
+    request,
+    dataCallBack,
+});
 
 // data
 const tableColumns = computed(() => {
@@ -257,6 +253,7 @@ const tableColumns = computed(() => {
       title: $t("sales-strategy-management.area_and_gift"),
       dataIndex: "area_and_gift",
       key: "area_and_gift",
+      width: 620,
     },
     // 创建时间
     {
@@ -282,126 +279,123 @@ const tableColumns = computed(() => {
 })
 
 const CountryData = computed(() => {
-  let arr = []
-  COUNTYR.forEach((item) => {
-    arr.push({
-      label: $i18n.locale.value == "zh" ? item.name : item.name_en,
-      value: item.code,
-    })
-  })
-  return arr
-})
+    let arr = [];
+    COUNTYR.forEach((item) => {
+        arr.push({
+            label: $i18n.locale.value == "zh" ? item.name : item.name_en,
+            value: item.code,
+        });
+    });
+    return arr;
+});
 
 const searchList = ref([
-  {
-    id: 0,
-    type: "input",
-    value: "",
-    searchParmas: "name",
-    key: "sales-strategy.strategy_name",
-  }, // 名称
-  {
-    id: 2, // 随意
-    type: "select-search-multiple", // 类型
-    key: "sales-strategy.area", // 名称
-    value: undefined, // 绑定值
-    searchParmas: "country_list", // 返回的搜索名称
-    multiple: true, // 是否多选
-    selectMap: CountryData,
-    placeholder: "def.select",
-  },
-])
-const switchLoading = ref(false)
+    {
+        id: 0,
+        type: "input",
+        value: "",
+        searchParmas: "name",
+        key: "sales-strategy.strategy_name",
+    }, // 名称
+    {
+        id: 2, // 随意
+        type: "select-search-multiple", // 类型
+        key: "sales-strategy.area", // 名称
+        value: undefined, // 绑定值
+        searchParmas: "country_list", // 返回的搜索名称
+        multiple: true, // 是否多选
+        selectMap: CountryData,
+        placeholder: "def.select",
+    },
+]);
+const switchLoading = ref(false);
 
 // methods
 const getSearchFrom = (data) => {
-  searchParam.value = data
-  search()
-}
+    searchParam.value = data;
+    search();
+};
 const onSwitchChange = (record) => {
-  // 0 停用   1 启用
-  let request =
-    record.status == 1
-      ? Core.Api.SALES_STRATEGY.disable
-      : Core.Api.SALES_STRATEGY.enable
-  console.log(record)
-  request({
-    id: record.id,
-  })
-    .then((res) => {
-      refreshTable()
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-}
-const handleSearchReset = () => {
-  refreshTable()
-}
-// 查看
-const handleDetails = (record) => {
-  $router.push({
-    path: "/sales-strategy-management/sales-strategy-edit",
-    query: {
-      id: record.id,
-      type: "details",
-    },
-  })
-}
-// 编辑
-const hanleEdit = (record) => {
-  $router.push({
-    path: "/sales-strategy-management/sales-strategy-edit",
-    query: {
-      id: record.id,
-      type: "edit",
-    },
-  })
-}
-// 删除
-const handleDelete = (record) => {
-  $confirm({
-    title: "确定要删除该策略吗？",
-    okText: "确定",
-    okType: "danger",
-    cancelText: "取消",
-    onOk() {
-      Core.Api.SALES_STRATEGY.delete({
+    // 0 停用   1 启用
+    let request = record.status == 1 ? Core.Api.SALES_STRATEGY.disable : Core.Api.SALES_STRATEGY.enable;
+    console.log(record);
+    request({
         id: record.id,
-      })
+    })
         .then((res) => {
-          refreshTable()
+            refreshTable();
         })
         .catch((err) => {
-          console.log(err)
-        })
-    },
-  })
-}
+            console.log(err);
+        });
+};
+const handleSearchReset = () => {
+    refreshTable();
+};
+// 查看
+const handleDetails = (record) => {
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-edit",
+        query: {
+            id: record.id,
+            type: "details",
+        },
+    });
+};
+// 编辑
+const hanleEdit = (record) => {
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-edit",
+        query: {
+            id: record.id,
+            type: "edit",
+        },
+    });
+};
+// 删除
+const handleDelete = (record) => {
+    $confirm({
+        title: "确定要删除该策略吗？",
+        okText: "确定",
+        okType: "danger",
+        cancelText: "取消",
+        onOk() {
+            Core.Api.SALES_STRATEGY.delete({
+                id: record.id,
+            })
+                .then((res) => {
+                    refreshTable();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+    });
+};
 
 const addStrategy = () => {
-  $router.push({
-    path: "/sales-strategy-management/sales-strategy-edit",
-    query: {
-      type: "add",
-    },
-  })
-}
+    $router.push({
+        path: "/sales-strategy-management/sales-strategy-edit",
+        query: {
+            type: "add",
+        },
+    });
+};
 
 // onMounted
 onMounted(() => {
-  Core.Data.clearSalesData()
-})
+    Core.Data.clearSalesData();
+});
 </script>
 
 <style lang="less" scoped>
 .sales-strategy-list {
-  .search-container {
-    padding: 0;
-  }
+    .search-container {
+        padding: 0;
+    }
 }
 :deep(.ant-table-cell) {
-  color: #1d2129;
+    color: #1d2129;
 
   .strategy_name-cell {
     width: 100px;
@@ -416,7 +410,7 @@ onMounted(() => {
     // 下面的span
      > span {
       display: inline-block;
-      width: 300px;
+      width: 600px;
       // 超出隐藏
       overflow: hidden;
       text-overflow: ellipsis;
@@ -443,19 +437,68 @@ onMounted(() => {
         }
       }
     }
-  }
-  .operation {
-    display: flex;
-    align-items: center;
-    .ant-btn {
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      .svg-icon {
-        font-size: 16px;
-        margin-right: 8px;
-      }
+    .area-gift-content {
+        cursor: pointer;
+        // 下面的span
+        > span {
+            display: inline-block;
+            width: 400px;
+            // 超出隐藏
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            .area-gift-content-item {
+                display: inline-flex;
+                margin-right: 8px;
+                .area {
+                    display: flex;
+                    height: 24px;
+                    padding: 2px 4px;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 4px;
+                    background: #f2f3f5;
+                    margin-right: 8px;
+                    float: left;
+                }
+                .gift {
+                    line-height: 24px;
+                }
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    .operation {
+        display: flex;
+        align-items: center;
+        .ant-btn {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            .svg-icon {
+                font-size: 16px;
+                margin-right: 8px;
+            }
+        }
+    }
+    .status{
+        .none,.active{
+            font-size: 14px;
+            line-height: 22px; /* 157.143% */
+            margin-left: 4px;
+        }
+        .none{
+          color: #8E8E8E;
+        }
+        .active{
+          color:#0061FF;
+        }
     }
   }
+}
+:deep(.ant-switch-checked){
+  background-color: #0061FF;
 }
 </style>
