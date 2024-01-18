@@ -744,6 +744,7 @@ onMounted(() => {
                                 .ant-form-item-control-input-content{
                                     .ant-input-affix-wrapper-disabled{
                                         background-color: #F3F6F9;
+                                        border: 1px solid #E2E2EA;
                                         .ant-input-disabled{
                                             color: #1D2129;
                                             font-size: 14px;
@@ -752,6 +753,7 @@ onMounted(() => {
                                     .ant-select-disabled{
                                         .ant-select-selector{
                                             background-color: #F3F6F9;
+                                            border: 1px solid #E2E2EA;
                                             .ant-select-selection-overflow{
                                                 .ant-select-selection-overflow-item{
                                                     .ant-select-selection-item{
@@ -767,9 +769,16 @@ onMounted(() => {
                                         .ant-input-number-input-wrap{
                                             .ant-input-number-input{
                                                 background-color: #F3F6F9;
+                                                border: 1px solid #E2E2EA;
                                             }
                                         }
+                                        &+.ant-input-number-group-addon{
+                                            background-color: #F3F6F9;
+                                            border: 1px solid #E2E2EA;
+                                            border-left: none;
+                                        }
                                     }
+                                    
                                     // input select input-number
                                     .ant-select , .ant-input , .ant-input-number{
                                         .ant-select-selector{
