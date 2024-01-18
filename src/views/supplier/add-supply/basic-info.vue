@@ -2148,6 +2148,7 @@ const customer_info_list_column = ref([
         dataIndex: "sales_share",
         unit: "%",
         type: "input-num",
+        width: 120,
     }, // 销售占比
     {
         title: "supply-chain.Main_supply_part",
@@ -2975,7 +2976,7 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 2% 0 5%;
             .align-center {
                 .fac();
             }
@@ -3116,6 +3117,11 @@ onMounted(() => {
 
 .form-content-item-table {
     margin-left: 140px;
+
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
+
     .specific-table-position {
         color: #1d2129;
         .position-label {

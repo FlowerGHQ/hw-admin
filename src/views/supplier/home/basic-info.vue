@@ -2974,7 +2974,7 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 2% 0 5%;
             .align-center {
                 .fac();
             }

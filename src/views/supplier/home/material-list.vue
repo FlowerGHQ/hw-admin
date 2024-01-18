@@ -572,7 +572,7 @@ onMounted(() => {
             font-weight: 500;
         }
         .base-info-form {
-            padding: 0 9%;
+            padding: 0 3%;
             margin: 0 auto;
             .ant-form {
                 .col-area {
@@ -599,7 +599,7 @@ onMounted(() => {
             font-weight: 500;
         }
         .other-material-form {
-            padding: 0 9%;
+            padding: 0 3%;
             margin: 0 auto;
             .ant-form {
                 .col-area {
