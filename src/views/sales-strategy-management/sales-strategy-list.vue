@@ -95,9 +95,12 @@
                 :checked="text == 1"
                 :loading="switchLoading"
                 @change="onSwitchChange(record)"
+                class="status"
               />
-              <span>
-                &nbsp;{{ text == 1 ? '已生效' : '未生效' }}
+              <span :class="
+                text == 1 ? 'active' : 'none'
+              ">
+                {{ text == 1 ? '已生效' : '未生效' }}
               </span>
             </template>
             <!-- 操作 -->
@@ -483,7 +486,8 @@ onMounted(() => {
             }
         }
     }
-    .status{
+
+  }
         .none,.active{
             font-size: 14px;
             line-height: 22px; /* 157.143% */
@@ -495,8 +499,6 @@ onMounted(() => {
         .active{
           color:#0061FF;
         }
-    }
-  }
 }
 :deep(.ant-switch-checked){
   background-color: #0061FF;
