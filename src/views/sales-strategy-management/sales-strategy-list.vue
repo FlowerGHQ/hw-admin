@@ -405,76 +405,42 @@ onMounted(() => {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            .area-gift-content-item {
-                display: inline-flex;
+        }
+        .area-gift-content-item {
+            display: inline-flex;
+            margin-right: 8px;
+            .area {
+                display: flex;
+                height: 24px;
+                padding: 2px 4px;
+                justify-content: center;
+                align-items: center;
+                border-radius: 4px;
+                background: #f2f3f5;
                 margin-right: 8px;
-                .area {
-                    display: flex;
-                    height: 24px;
-                    padding: 2px 4px;
-                    justify-content: center;
-                    align-items: center;
-                    border-radius: 4px;
-                    background: #f2f3f5;
-                    margin-right: 8px;
-                    float: left;
-                }
-                .gift {
-                    line-height: 24px;
-                }
-                &:last-child {
-                    margin-right: 0;
-                }
+                float: left;
+            }
+            .gift {
+                line-height: 24px;
+            }
+            &:last-child {
+                margin-right: 0;
             }
         }
-        .area-gift-content {
-            cursor: pointer;
-            // 下面的span
-            > span {
-                display: inline-block;
-                width: 400px;
-                // 超出隐藏
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                .area-gift-content-item {
-                    display: inline-flex;
-                    margin-right: 8px;
-                    .area {
-                        display: flex;
-                        height: 24px;
-                        padding: 2px 4px;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 4px;
-                        background: #f2f3f5;
-                        margin-right: 8px;
-                        float: left;
-                    }
-                    .gift {
-                        line-height: 24px;
-                    }
-                    &:last-child {
-                        margin-right: 0;
-                    }
-                }
-            }
-        }
-
     }
     .operation {
+        display: flex;
+        align-items: center;
+        .ant-btn {
             display: flex;
             align-items: center;
-            .ant-btn {
-                display: flex;
-                align-items: center;
-                font-size: 14px;
-                .svg-icon {
-                    font-size: 16px !important;
-                    margin-right: 4px;
-                }
+            font-size: 14px;
+            .svg-icon {
+                font-size: 16px !important;
+                margin-right: 4px;
             }
         }
+    }
     .none,
     .active {
         font-size: 14px;

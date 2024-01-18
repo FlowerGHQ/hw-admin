@@ -543,12 +543,10 @@ const handleSubmit = () => {
         form.id = $route.query.id;
         editData(form);
     }
-    // }
 };
 
 // 修改
 const handleEdit = (record,index) => {
-    console.log("修改",record,index);
     classifyModalShow.value = true;
     reviewData.value = {
         item: record.item,
@@ -571,6 +569,7 @@ const handleModalEdit = (data)=>{
             no,
             country:item.country,
             item:item.item,
+            rule:formState.rule,
         }
     })
     formState.strategy_detail = formState.strategy_detail.filter(item=>item.country !== country)
@@ -583,11 +582,8 @@ const handleModalEdit = (data)=>{
     form.item_list = showSelectData.value.map((item) => {
         return item.value;
     });
-    form.id = $route.query.id;
-    Core.Api.SALES_STRATEGY.update(form).then(async (res) => {
-        message.success("修改成功");
-        await getDetail();
-    });
+    message.success("修改成功");
+   
 }
 
 // 重构数据
