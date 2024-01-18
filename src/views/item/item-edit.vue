@@ -2164,6 +2164,7 @@ export default {
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
+                    Core.Data.clearGoodsDraft();
                     this.routerChange("back");
                 })
                 .catch((err) => {
