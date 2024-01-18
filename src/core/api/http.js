@@ -3,6 +3,7 @@ import { message } from 'ant-design-vue';
 import i18n from '../i18n';
 import Data from '../data';
 import Const from '../const'
+import messages from '../../lang';
 
 // const shownErrorMessages = [];
 const showMessage = (msg) => {
@@ -31,11 +32,13 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
     }
     if (status >= 1000) {
         try {
-            message = JSON.parse(message)
+            if (message instanceof Object) {
+                message = JSON.parse(message)
+            }
         } catch (err) {
             message = {}
         }
-        return showMessage(i18n.global.t('error_code.' + status, message))
+        return showMessage(i18n.global.t(message))
     }
     if (!message.includes('登录状态已过期，请重新登录')) {        
         showMessage(message);
