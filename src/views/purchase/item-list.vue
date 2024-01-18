@@ -176,7 +176,7 @@ export default {
 
     mounted() {
         this.currency = Core.Data.getCurrency();
-        this.getTableData();
+        // this.getTableData();
         this.getCategoryList();
     },
 

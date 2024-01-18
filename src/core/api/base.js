@@ -11,6 +11,7 @@ class ApiBase {
         const LOGIN_TYPE = Const.LOGIN.TYPE
         const loginType = Data.getLoginType();
         const RETAILModule = ['RETAIL'] // 这个走的是 crm/1/.... 前缀
+        const CLIENTModule = ['CLIENT'] // 这个走的是 client/1/.... 前缀
         let mark = 'admin/1'
         switch (loginType) {
             case LOGIN_TYPE.ADMIN:
@@ -21,12 +22,19 @@ class ApiBase {
                 break;
             case LOGIN_TYPE.DISTRIBUTOR:
                 mark = 'distributor/1'
+                console.log(moduleName)
+                if (CLIENTModule.includes(moduleName)) {
+                    mark = 'client/1'
+                }
                 break;
             case LOGIN_TYPE.AGENT:
                 mark = 'agent/1'
                 break;
             case LOGIN_TYPE.STORE:
                 mark = 'store/1'
+                break;
+            case LOGIN_TYPE.SUPPLIER:
+                mark = 'supplier/1'
                 break;
         }
         return mark

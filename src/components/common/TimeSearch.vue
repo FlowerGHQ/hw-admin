@@ -11,22 +11,31 @@ export default {
     name: 'TimeSearch',
     components: {},
     props: {
+        value: {
+            type: Array,
+            default: []
+        },
         keys: {
             type: Array,
             default: ['begin_time', 'end_time']
+        },
+        defaultTime: {
+            type: Array,
+            default: () => Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B
         }
     },
     emits: ['search'],
     data() {
         return {
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
-            createTime: [],
+            // defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            createTime: this.value,
         }
     },
     watch: {},
     computed: {},
     created() {},
-    mounted() {},
+    mounted() {
+    },
     methods: {
         handleSearch() {
             let obj = {}
