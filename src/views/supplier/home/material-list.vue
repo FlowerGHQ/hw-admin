@@ -35,19 +35,6 @@
                                         :label="$t('supply-chain.registered_capital')"
                                         name="registered_capital">
                                         <div class="registered-capital—area">
-                                            <!-- <a-input
-                                                :maxlength="15"
-                                                :placeholder="
-                                                    $t(
-                                                        'supply-chain.please_enter'
-                                                    )
-                                                "
-                                                name="registered_capital"
-                                                v-model:value="
-                                                    formState.registered_capital
-                                                ">
-                                            </a-input>
-                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span> -->
                                             <a-input-number
                                                 v-model:value="formState.registered_capital"
                                                 :placeholder="$t('supply-chain.please_enter')"
@@ -62,29 +49,6 @@
                                         </div>
                                     </a-form-item>
                                 </div>
-                                <!-- <div class="col-area-content"> -->
-                                <!-- 法定代表人 -->
-                                <!-- <a-form-item
-                      :label="
-                          $t(
-                              'supply-chain.legal_representative'
-                          )
-                      "
-                      name="legal_person">
-                      <a-input
-                          
-                          :maxlength="5"
-                          
-                          :placeholder="
-                              $t('supply-chain.please_enter')
-                          "
-                          name="legal_person"
-                          v-model:value="
-                              formState.legal_person
-                          ">
-                      </a-input>
-                  </a-form-item> -->
-                                <!-- </div> -->
                             </div>
                             <div class="col-area business-term-col-area">
                                 <div class="col-all-area">
@@ -233,7 +197,7 @@
                 {{ $t("supply-chain.other_proving_materials") }}
             </div>
             <div class="other-material-form">
-                <a-form ref="formRef2" name="custom-validation" :model="formState" :rules="rules" labelAlign="right">
+                <a-form  :model="formState"  labelAlign="right">
                     <div class="col-area">
                         <div class="title-area">
                             <div class="title"></div>
@@ -305,7 +269,6 @@ import TimeSearch from "@/components/common/TimeSearch.vue";
 import { message } from "ant-design-vue";
 import Core from "@/core";
 const formRef1 = ref(null);
-const formRef2 = ref(null);
 const TimeSearchRef = ref(null);
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
