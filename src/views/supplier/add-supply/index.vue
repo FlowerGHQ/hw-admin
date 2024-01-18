@@ -265,7 +265,11 @@ const handleSubmitData = () => {
             $router.push('/supply-manage/list')
         })
         .catch((err) => {
-            console.log("输出的数据", err);
+            // console.log("提交数据失败", err.data);
+            if (Number(err.data.code) === 41001) {                
+                // 出现这个问题回归到 第一步骤
+                $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+            }
             // $message.error(err.message);
         });
 };
