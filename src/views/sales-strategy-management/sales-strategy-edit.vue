@@ -1,5 +1,5 @@
 <template>
-    <div class="sales-strategy-edit">
+    <div class="sales-strategy-edit" ref="salesRef">
         <div class="list-container">
             <div class="main-content">
                 <div class="title-container">
@@ -224,6 +224,39 @@
         @handleEdit="handleModalEdit"
         >
     </ClassifyModal>
+    <!-- 取消的modal -->
+    <a-modal
+        :title="null"
+        :closable="false"
+        class="cancel-modal"
+        v-model:visible="cancelModalShow"
+        ok-text="退出创建"
+        width="320px"
+        cancel-text="继续填写"
+        centered
+        :getContainer="() => salesRef"
+        @ok="handleCancelOk">
+        <div class="title">
+            确定退出吗？
+        </div>
+        <div class="content">
+            <div class="tips">
+                <span>销售策略尚未创建成功，确定退出吗</span>
+            </div>
+        </div>
+        <template #footer> 
+            <div class="footer">
+                <a-button 
+                    @click="()=> {
+                        cancelModalShow = false;
+                    }"
+                >继续填写</a-button>
+                <a-button 
+                    type="primary"
+                    @click="handleCancelOk">退出创建</a-button>
+            </div>
+        </template>
+    </a-modal>
 </template>
 
 <script setup>
@@ -244,6 +277,8 @@ const $route = useRoute();
 const $t = useI18n().t;
 const $confirm = Modal.confirm;
 // data
+const cancelModalShow = ref(false);
+const salesRef = ref(null);
 const formState = reactive({
     type: null,
     rule: {
@@ -643,6 +678,12 @@ const getDetail = () => {
 
 // 取消
 const handleCancel = () => {
+    // $router.push({
+    //     path: "/sales-strategy-management/sales-strategy-list",
+    // });
+    cancelModalShow.value = true;
+};
+const handleCancelOk = () => {
     $router.push({
         path: "/sales-strategy-management/sales-strategy-list",
     });
@@ -875,6 +916,35 @@ onMounted(() => {
     > .ant-form-item-label {
         .ant-form-item-required {
             display: none;
+        }
+    }
+}
+:deep(.cancel-modal){
+    .ant-modal-content{
+        border-radius: 4px;
+        .ant-modal-body{
+            padding: 24px;
+            padding-bottom: 34px;
+            color:  #1D2129;
+            .title{
+                text-align: center;
+                font-size: 18px;
+                font-weight: 600;
+            }
+            .content{
+                margin-top: 34px;
+                text-align: center;
+            }
+        }
+        .ant-modal-footer{
+            padding: 18px 0;
+            height: auto;
+            text-align: center;
+            .ant-btn{
+                border-radius: 4px;
+                font-size: 14px;
+            }
+
         }
     }
 }
