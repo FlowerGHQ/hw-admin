@@ -284,7 +284,6 @@ const getTableDataFetch = (parmas = {}) => {
     loading.value = true;
     let obj = {
         code_list: searchForm.value.codeList, //同步编号
-        flag_spread: 1,
         flag_set:1,
         page: current.value,
         page_size: pageSize.value,
