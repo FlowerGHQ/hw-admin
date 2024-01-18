@@ -2663,8 +2663,7 @@ const paramsRequiredFilter = () => {
             "position": null, // 职务：1.销售；2.质量；3.技术；4.总经理
             "name": null, // 姓名
             "email": null, // 邮箱
-            "phone": null, // 手机号
-            "flag_wechat": null, // 是否同微信号
+            "phone": null, // 手机号            
         }],
         'company_info': {
             'name': null,
