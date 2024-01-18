@@ -2051,14 +2051,18 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-            // 校验检查
-            this.isValidate = true;
-            if (
-                typeof this.checkFormInput(form, specData, attrDef) ===
-                "function" && type !== "draft"
-            ) {
-                return;
+            if(!type){
+                // 校验检查
+                this.isValidate = true;
+                if (
+                    typeof this.checkFormInput(form, specData, attrDef) ===
+                    "function" 
+                ) {
+                    console.log("checkFormInput err");
+                    return;
+                }
             }
+            
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
