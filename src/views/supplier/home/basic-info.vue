@@ -489,7 +489,7 @@
                         </a-col>
                     </a-row>
                     <!-- 人力资源 -->
-                    <a-row v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24">
+                    <a-row v-if="!returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24" class="m-t-40">
                         <a-col
                             :span="3"
                             class="title-area">
@@ -557,7 +557,7 @@
                         </a-col>
                     </a-row>
                     <!-- 财务信息 -->
-                    <a-row :gutter="24">
+                    <a-row :gutter="24" class="m-t-40">
                         <a-col :span="3" class="title-area">
                             <div class="title-two" id="financial_info">
                                 {{ $t("supply-chain.financial_information") }}
@@ -683,7 +683,7 @@
                     </a-row>
 
                     <!-- 营业信息 -->
-                    <a-row :gutter="24">
+                    <a-row :gutter="24" class="m-t-40">
                         <a-col :span="3" class="title-area">
                             <div class="title-two" id="business_info">
                                 {{ $t("supply-chain.business_information") }}
@@ -902,7 +902,7 @@
                     </a-row>
 
                     <!-- 竞争对手 -->
-                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])" :gutter="24">
+                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part])" :gutter="24" class="m-t-40">
                         <a-col
                             :span="3"
                             class="title-area">
@@ -986,7 +986,7 @@
                     </a-row>
 
                     <!-- 客户信息 -->
-                    <a-row :gutter="24">
+                    <a-row :gutter="24" class="m-t-40">
                         <a-col :span="3" class="title-area">
                             <div class="title-two" id="customer_info">
                                 {{ $t("supply-chain.customer_information") }}
@@ -1106,6 +1106,7 @@
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers,
                         ])" 
                         :gutter="24"
+                        class="m-t-40"
                     >
                         <a-col
                             :span="3"
@@ -1353,7 +1354,9 @@
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                         ])"
-                        :gutter="24">
+                        :gutter="24"
+                        class="m-t-40"
+                    >
                         <a-col
                             :span="3"
                             class="title-area">
@@ -1433,7 +1436,7 @@
                     </a-row>
 
                     <!-- 产能产线 -->
-                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])" :gutter="24">
+                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Part, Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing])" :gutter="24" class="m-t-40">
                         <a-col :span="3" class="title-area">
                             <div class="title-two" id="produce_capacity">
                                 {{ $t("supply-chain.capacity_line") }}
@@ -1544,6 +1547,7 @@
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Outsourcing,
                         ])" 
                         :gutter="24"
+                        class="m-t-40"
                     >
                         <a-col
                             :span="3"
@@ -1610,7 +1614,7 @@
                     </a-row>
 
                     <!-- 指定信息 -->
-                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])" :gutter="24">
+                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.CustomerRefers])" :gutter="24" class="m-t-40">
                         <a-col
                             :span="3"
                             class="title-area">
@@ -1741,7 +1745,7 @@
                     </a-row>
 
                     <!-- 服务信息 -->
-                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24">
+                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24" class="m-t-40">
                         <a-col
                             :span="3"
                             class="title-area">
@@ -1896,7 +1900,7 @@
                 </a-form>
             </div>
             <!-- 关键检测设备 -->
-            <div class="base-info-form">
+            <div class="base-info-form m-t-40">
                 <a-form name="custom-validation" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
@@ -2970,7 +2974,7 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 2% 0 5%;
             .align-center {
                 .fac();
             }
@@ -3203,7 +3207,7 @@ onMounted(() => {
 }
 
 .spec-add {
-    margin: 16px auto 40px;
+    margin-top: 16px;
 }
 
 .specific-table {

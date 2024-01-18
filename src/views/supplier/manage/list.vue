@@ -42,7 +42,7 @@
                             <div
                                 class="one-spils cursor"
                                 :style="{
-                                    width: text?.length > 6 ? 7 * 12 + 'px' : '',
+                                    width: text?.length > 15 ? 7 * 12 + 'px' : '',
                                 }"
                             >
                                 {{ text }}

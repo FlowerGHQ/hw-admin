@@ -38,7 +38,7 @@ const errorHandle = (status, message = i18n.global.t('error_code.unknown')) => {
         } catch (err) {
             message = {}
         }
-        return showMessage(i18n.global.t('error_code.' + status + '' + message))
+        return showMessage(i18n.global.t(message))
     }
     if (!message.includes('登录状态已过期，请重新登录')) {        
         showMessage(message);

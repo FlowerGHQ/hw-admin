@@ -1354,7 +1354,9 @@
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                         ])"
-                        :gutter="24">
+                        :gutter="24"
+                        class="m-t-40"
+                    >
                         <a-col
                             :span="3"
                             class="title-area">
@@ -1898,7 +1900,7 @@
                 </a-form>
             </div>
             <!-- 关键检测设备 -->
-            <div class="base-info-form">
+            <div class="base-info-form m-t-40">
                 <a-form name="custom-validation" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
@@ -2146,6 +2148,7 @@ const customer_info_list_column = ref([
         dataIndex: "sales_share",
         unit: "%",
         type: "input-num",
+        width: 120,
     }, // 销售占比
     {
         title: "supply-chain.Main_supply_part",
@@ -2973,7 +2976,7 @@ onMounted(() => {
     .base-info {
         width: 100%;
         .base-info-form {
-            padding: 8px 10% 0 10%;
+            padding: 8px 2% 0 5%;
             .align-center {
                 .fac();
             }
@@ -3114,6 +3117,11 @@ onMounted(() => {
 
 .form-content-item-table {
     margin-left: 140px;
+
+    :deep(.ant-form-item) {
+        margin-bottom: 0px;
+    }
+
     .specific-table-position {
         color: #1d2129;
         .position-label {
@@ -3203,7 +3211,7 @@ onMounted(() => {
 }
 
 .spec-add {
-    margin: 16px auto 40px;
+    margin-top: 16px;
 }
 
 .specific-table {

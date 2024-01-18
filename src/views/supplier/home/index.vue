@@ -99,7 +99,7 @@
                         </div>
                     </template>
                 </div>
-                <div class="content-main">
+                <div class="content-main" ref="contentMain">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList ref="MaterialListRef" v-else-if="setp === 1" />
                     <Successful v-else-if="setp === 2" />
@@ -207,6 +207,7 @@ const lang = computed(() => $store.state.lang);
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
+const contentMain = ref(null);
 const user_type_list = ref(Core.Data.getUserTypeList());
 //步数样式
 const setpCount = computed(() => {
@@ -315,7 +316,10 @@ const handleSubmit = () => {
         // 打开弹框
         visible.value = true;
     } else {
-        MaterialListRef.value.step2Vaild().then(() => {
+        MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
+            let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
+            let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
+            $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
             handleSubmitData();
         });
     }
@@ -326,7 +330,7 @@ const handleSubmitOk = () => {
     $store.dispatch("SUPPLY_CHAIN/setRead", true);
     // 关闭弹框
     visible.value = false;
-    MaterialListRef.value.step2Vaild().then(() => {
+    MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
         $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
@@ -435,12 +439,7 @@ const handleLogout = () => {
         $router.replace(`/login`);
     }
     Core.Api.Common.logout().then(() => {
-        localStorage.clear();
-        //  commit("setSupplyChain", {})
-    //   commit("setSupplyDraftChain", {})
-    //   commit("setStep", 0)
-    //   commit("setRead", false)
-    //   commit("setSubmitEd", false)
+        $store.dispatch("SUPPLY_CHAIN/clearAll");
     });
 };
 const handleEditSubmit = () => {
@@ -493,6 +492,9 @@ watch(
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
             });
         }
+        contentMain.value && (contentMain.value.scrollTop = 0);
+
+        
     }
 );
 
