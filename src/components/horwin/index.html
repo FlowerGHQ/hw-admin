@@ -3,9 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horwin</title>
+    <title>Horwin</title>    
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }        
+
+        /* 头部 */
+        header {
+            width: 100%;
+            height: 70px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #006EF9;
+        }
+
+        .horwin {
+            width: 100%;
+            min-height: calc(100vh - 70px);
+            display: flex;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 400px;
+            /* background-color: red; */
+        }
+        .sidebar-item {
+            width: 100%;
+            height: 88px;
+            border: 1px solid black;      
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .sidebar-item-change {
+            width: 100%;
+            height: 88px;                        
+            background-color: rgba(0, 110, 249, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+
+        /* 内容区域 */
+        .content {
+            width: calc(100% - 400px);
+            /* background-color: blue; */
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .description {}
+        .description-title {}
+        .img-box {
+            img {
+                width: 80%;
+            }
+        }
+
+        .m-t-10 {
+            margin-top: 10px;
+        }
+    </style>    
 </head>
 <body>
-    
+    <header>HORWIN自定义组件库</header>
+    <div class="horwin">
+        <div class="sidebar" id="sidebar">
+            <!-- <div class="sidebar-item">
+                <span>based-on-dom (MyMask)</span>
+            </div> -->
+        </div>
+        <div class="content">
+            <div class="description">
+                <div class="description-title">描述文本</div>
+            </div>
+            <div class="img-box">
+                <img id="img" src="" alt="">
+            </div>
+        </div>
+    </div>
+
+    <script src="./index.js"></script>
 </body>
 </html>

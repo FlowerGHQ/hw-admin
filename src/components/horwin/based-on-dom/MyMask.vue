@@ -6,7 +6,7 @@
 </template>
 
 <script>
-    // vue需要 2.7.0 以上的版本
+    // vue 需要 2.7.0 以上的版本
     export default {
         props: {
             isClose: {
