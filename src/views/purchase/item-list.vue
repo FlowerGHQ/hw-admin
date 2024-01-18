@@ -217,7 +217,7 @@ export default {
         handleCartAdd(item) {
             // 添加到购物车
             let _this = this;
-            if (item.set_id && item.attr_list.length > 1) {
+            if (item.set_id > 0 && item.flag_default === 1) {
                 this.routerChange("detail", item);
                 return;
             }
