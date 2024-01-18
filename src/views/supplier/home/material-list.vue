@@ -694,6 +694,11 @@ onMounted(() => {
             font-weight: 500;
         }
     }
+    .content-area{
+        .col-area{
+            flex-wrap: wrap;
+        }
+    }
 }
 :deep(.business-term-col-area) {
     align-items: flex-start;
