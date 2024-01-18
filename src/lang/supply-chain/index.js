@@ -293,6 +293,7 @@ export default {
     continue_fill: "继续填写", 
     submit_exit: "提交并退出",
     no_content: "无内容",
+    please_upload_business_license_photos: "请上传营业执照照片",
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -582,5 +583,6 @@ export default {
     continue_fill: "Continue to fill in", 
     submit_exit: "Submit and exit",
     no_content: "No Content",
+    please_upload_business_license_photos: "Please upload business license photos",
   },
 }
