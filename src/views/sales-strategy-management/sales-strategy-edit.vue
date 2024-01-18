@@ -548,7 +548,6 @@ const handleSubmit = () => {
 
 // 修改
 const handleEdit = (record,index) => {
-    console.log("修改",record,index);
     classifyModalShow.value = true;
     reviewData.value = {
         item: record.item,
@@ -583,11 +582,14 @@ const handleModalEdit = (data)=>{
     form.item_list = showSelectData.value.map((item) => {
         return item.value;
     });
-    form.id = $route.query.id;
-    Core.Api.SALES_STRATEGY.update(form).then(async (res) => {
-        message.success("修改成功");
-        await getDetail();
-    });
+    if($route.query.id){
+        form.id = $route.query.id;
+        Core.Api.SALES_STRATEGY.update(form).then(async (res) => {
+            message.success("修改成功");
+            await getDetail();
+        });
+    }
+   
 }
 
 // 重构数据
