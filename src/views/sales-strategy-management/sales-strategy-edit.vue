@@ -698,6 +698,52 @@ onMounted(() => {
                                 }
                             }
                         }
+                        :deep(.ant-form-item-control){
+                            .ant-form-item-control-input{
+                                .ant-form-item-control-input-content{
+                                    .ant-input-affix-wrapper-disabled{
+                                        background-color: #F3F6F9;
+                                        .ant-input-disabled{
+                                            color: #1D2129;
+                                            font-size: 14px;
+                                        }
+                                    }
+                                    .ant-select-disabled{
+                                        .ant-select-selector{
+                                            background-color: #F3F6F9;
+                                            .ant-select-selection-overflow{
+                                                .ant-select-selection-overflow-item{
+                                                    .ant-select-selection-item{
+                                                        color: #1D2129;
+                                                        background-color: #fff;
+                                                        border-radius: 4px;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .ant-input-number-disabled{
+                                        .ant-input-number-input-wrap{
+                                            .ant-input-number-input{
+                                                background-color: #F3F6F9;
+                                            }
+                                        }
+                                    }
+                                    // input select input-number
+                                    .ant-select , .ant-input , .ant-input-number{
+                                        .ant-select-selector{
+                                            color: #1D2129;
+                                            font-size: 14px;
+                                        }
+                                        color: #1D2129;
+                                        font-size: 14px;
+                                    }
+                                }
+                            }
+                            .ant-input{
+                                font-size: 14px;
+                            }
+                        }
                     }
                 }
             }
@@ -796,6 +842,16 @@ onMounted(() => {
                         align-items: center;
                         border-right: 1px solid #eaecf1;
                         margin-right: 10px;
+                        position: relative;
+                        &::before{
+                            display: inline-block;
+                            margin-right: 4px;
+                            color: #ff4d4f;
+                            font-size: 14px;
+                            font-family: SimSun, sans-serif;
+                            line-height: 1;
+                            content: '*';
+                        }
                     }
                     .threshold,
                     .per,
@@ -822,4 +878,5 @@ onMounted(() => {
         }
     }
 }
+
 </style>
