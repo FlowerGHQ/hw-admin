@@ -316,6 +316,9 @@ const handleSubmit = () => {
         visible.value = true;
     } else {
         MaterialListRef.value.step2Vaild().then(() => {
+            let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
+            let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
+            $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
             handleSubmitData();
         });
     }
