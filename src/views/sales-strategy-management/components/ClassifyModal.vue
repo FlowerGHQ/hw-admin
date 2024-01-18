@@ -288,7 +288,6 @@ const getTableDataFetch = (parmas = {}) => {
         flag_set:1,
         page: current.value,
         page_size: pageSize.value,
-        status: 0,
         ...parmas,
     };
     Core.Api.Item.list(obj)
