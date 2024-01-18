@@ -1354,7 +1354,9 @@
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker,
                             Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Mold,
                         ])"
-                        :gutter="24">
+                        :gutter="24"
+                        class="m-t-40"
+                    >
                         <a-col
                             :span="3"
                             class="title-area">
@@ -1898,7 +1900,7 @@
                 </a-form>
             </div>
             <!-- 关键检测设备 -->
-            <div class="base-info-form">
+            <div class="base-info-form m-t-40">
                 <a-form name="custom-validation" labelAlign="right">
                     <a-row :gutter="24">
                         <a-col :span="3" class="title-area">
@@ -3203,7 +3205,7 @@ onMounted(() => {
 }
 
 .spec-add {
-    margin: 16px auto 40px;
+    margin-top: 16px;
 }
 
 .specific-table {

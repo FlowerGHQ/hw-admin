@@ -1867,7 +1867,7 @@
                                     <a-textarea
                                         :class="{ 'customer-input': !isEdit, 'h-64': true }"
                                         v-model:value="parameters.additional_info"
-                                        :placeholder="$t('common.please_enter')" 
+                                        :placeholder="isEdit ? $t('common.please_enter') : $t('supply-chain.no_content')"
                                         :disabled="!isEdit"
                                     />
                                 </div>
@@ -1890,7 +1890,7 @@
                     <div class="information-form">
                         <div class="level-search-row">
                             <!-- 营业执照照片 -->
-                            <div class="search-col m-t-0 align-flex-start">
+                            <div class="search-col m-t-0 align-flex-start required">
                                 <div class="key w-130 t-a-r text-color">{{ $t('supply-chain.business_license_photos') }}</div>
                                 <div class="value m-l-8">
                                     <template v-if="!isEdit">
