@@ -331,6 +331,15 @@ let bank_accountVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
+const business_license_photoVaild = async (_rule, value) => {
+    console.log("value", value);
+    if (!value) {
+        return Promise.reject(
+            $t("supply-chain.please_upload_business_license_photos")
+        );
+    }
+    return Promise.resolve();
+};
 const rules = {
     // 注册资本
     registered_capital: [
@@ -373,6 +382,13 @@ const rules = {
         {
             required: true,
             validator: bank_accountVaild,
+            trigger: ["change", "blur"],
+        },
+    ],
+    business_license_photo: [
+        {
+            required: true,
+            validator: business_license_photoVaild,
             trigger: ["change", "blur"],
         },
     ],
