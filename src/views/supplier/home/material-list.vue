@@ -605,8 +605,14 @@ const handlePrev = () => {
             },
         };
     } else {
-        // 不为空对象
-        data.form.confirmatory_material = formState;
+        // console.log("判断类型", typeof data.form);
+        if (typeof data.form === 'string') {
+            data.form = JSON.parse(data.form)
+            data.form.confirmatory_material = formState;        
+        } else {
+            // 不为空对象
+            data.form.confirmatory_material = formState;
+        }
     }
     $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
     $store.commit('SUPPLY_CHAIN/setSupplyDraftChain',data);

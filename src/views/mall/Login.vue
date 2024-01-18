@@ -188,7 +188,7 @@ export default {
                 username: '',
                 password: '',
             },
-            login_methods: 1,
+            login_methods: 1, // 1账号登录  2 手机号登录
             user: {},
             currentAreaType: '',
             langShow: false,
@@ -232,6 +232,10 @@ export default {
     },
     mounted() {
         this.fsLogin()
+        if (Number(this.$route.query?.user_type) === Core.Const.USER.TYPE.SUPPLIER) {
+            // 供应链的时候自动切换到手机中
+            this.login_methods = 2
+        }
     },
     unmounted() {
         clearInterval(this.countdownTime)
