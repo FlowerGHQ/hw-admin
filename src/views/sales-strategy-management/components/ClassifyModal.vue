@@ -310,11 +310,19 @@ const getSelectIdList = (kesArr, itemsArr) => {
 watch(
     () => props.visibility,
     (newValue, oldValue) => {
+        console.log("newValue", newValue);
+        console.log("oldValue", oldValue);
         if (newValue) {
             getTableDataFetch();
         } else {
             // 清空数据
             selectIdList.value = [];
+            selectItemList.value = [];
+            searchForm.value.area = [];
+            searchForm.value.codeList = [];
+            codeStr.value = "";
+            isEdit.value = false;
+            childRef.value.selectedRowKeys = [];
         }
     }
 );
