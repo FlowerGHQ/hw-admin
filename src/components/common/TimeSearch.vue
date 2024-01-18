@@ -14,12 +14,16 @@ export default {
         keys: {
             type: Array,
             default: ['begin_time', 'end_time']
+        },
+        defaultTime: {
+            type: Array,
+            default: () => Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B
         }
     },
     emits: ['search'],
     data() {
         return {
-            defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
+            // defaultTime: Core.Const.TIME_PICKER_DEFAULT_VALUE.B_TO_B,
             createTime: [],
         }
     },
