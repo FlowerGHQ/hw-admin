@@ -352,6 +352,7 @@
             </div>
         </div>
         <!-- 规格信息 -->
+        <!-- 多规格 并且不 为编辑-->
         <div class="form-block" v-if="!indep_flag && specific.mode === 2">
             <div class="form-title">
                 <div class="title">{{ $t("i.information") }}</div>
@@ -433,7 +434,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="form-item specific-category">
+                    <div class="form-item specific-category" v-if="form.type === itemTypeMap['1']?.key">
                         <div class="key">
                             {{ $t("item-edit.spec_category") }}
                         </div>
@@ -444,8 +445,8 @@
                             }}</span>
                         </div>
                     </div>
-                    <div class="form-item specific-category-select required">
-                        <div class="key">
+                    <div class="form-item specific-category-select required" v-if="form.type === itemTypeMap['1']?.key">
+                        <div class="key" :class="category_index ||  !descriptionVaild(categoryMessage) && isValidate ? 'error' : ''">
                             {{ $t("item-edit.spec_category_select") }}
                         </div>
                         <div class="value">
@@ -454,6 +455,8 @@
                                 <a-select
                                     v-model:value="category_index"
                                     :placeholder="$t('def.select')"
+                                    :disabled="categoryDisabled"
+                                    
                                 >
                                     <a-select-option
                                         v-for="(val, index) in specific.list"
@@ -463,17 +466,20 @@
                                         >{{ $i18n.locale === "zh" ? val.name : val.name_en }}</a-select-option
                                     >
                                 </a-select>
+                                <div class="tips" v-if="categoryDisabled">
+                                    {{ $t("item-edit.spec_category_select_tips") }}
+                                </div>
                             </div>
                             <div class="item-rich-area">
                                 <div class="rich-item">
                                     <div class="rich-item-content" v-for="item in categoryMessage">
-                                        <div class="rich-title">{{item.zh || '-'}}（中文）</div>
+                                        <div class="rich-title">{{item.zh || '-'}}（{{$t('item-edit.chinese')}}）</div>
                                         <div class="rich-item-area">
                                             <MyEditor
                                                 v-model="item.desc"
                                                 :placeholder="$t('item-edit.description')" />
                                         </div>
-                                        <div class="rich-title">{{item.en || '-'}}（英文）</div>
+                                        <div class="rich-title">{{item.en || '-'}}（{{$t('item-edit.english')}}）</div>
                                         <div class="rich-item-area">
                                             <MyEditor 
                                                 v-model="item.desc_en" 
@@ -841,8 +847,9 @@ export default {
     data() {
         return {
             // 判断选择哪个分类的数据
-            category_index:0,
-            openCategory: true,
+            category_index:null,
+            openCategory: true, //暂时留作switch开关的逻辑
+            categoryDisabled: true, //默认禁用switch开关
             previewImage: "",
             previewVisible: false,
             Core,
@@ -977,17 +984,23 @@ export default {
                 imgs: [],
             },
             // 分类信息
-            // categoryMessage: [
-
-            // ],
+            categoryMessage: [],
         };
     },
     watch: {
-        categoryMessage: {
+        specific: {
             handler: function (val, oldVal) {
                 console.log(val, oldVal);
+                if (val?.list && val?.list?.length > 0) {
+                    this.categoryDisabled = false;
+                    this.category_index = val.list[0].id;
+                    this.categoryMessage = val.list[0]?.option || [];
+                } else {
+                    this.categoryDisabled = true;
+                }
             },
             deep: true,
+            immediate: true,
         },
     },
     computed: {
@@ -1050,14 +1063,7 @@ export default {
                 this.$i18n.locale === "en" ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name
             }${this.$t("i.value")}`;
         },
-        categoryMessage() {
-            console.log(this.category_index,'--------------------------')
-            console.log(this.specific,'-----------------------')
-            if(this.category_index === null) return []
-            let categoryMessage = this.specific.list[this.category_index]?.option;
-            console.log(categoryMessage,'-----------------------111')
-            return categoryMessage;
-        },
+     
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1264,7 +1270,6 @@ export default {
             this.specific.mode = 2;
             Core.Api.AttrDef.listBySet({ set_id: this.set_id }).then((res) => {
                 console.log(res,'规格列表信息---------------------');
-                this.category_index = res?.list[0].id
                 let list = res.list.map((item) => ({
                     id: item.id,
                     key: item.key,
@@ -1377,11 +1382,11 @@ export default {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
+            let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
 
             // 校验检查
             this.isValidate = true;
-
-            if (typeof this.checkFormInput(form, specData, attrDef) === "function") {
+            if (typeof this.checkFormInput(form, specData, attrDef,categoryMessage) === "function") {
                 return;
             }
 
@@ -1469,8 +1474,29 @@ export default {
                     console.log("handleSubmit err:", err);
                 });
         },
+        // 检查分类的中英文是否全部填写
+        descriptionVaild(arr) {
+            let flag = true;
+            for (let i = 0; i < arr.length; i++) {
+                const item = arr[i];
+                if (!item.desc || !item.desc_en) {
+                    flag = false;
+                    break;
+                }
+            }
+            return flag;
+        },
         // 保存时检查表单输入
-        checkFormInput(form, specData, attrDef) {
+        checkFormInput(form, specData, attrDef,categoryMessage) {
+            // 查看
+            if(categoryMessage && categoryMessage.length > 0){
+                for(let i = 0; i < categoryMessage.length; i++){
+                    if(!categoryMessage[i].desc || !categoryMessage[i].desc_en){
+                        return this.$message.warning(`${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`);
+                    }
+                   
+                }
+            }
             // 名称
             if (!form.name) {
                 return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.name")})`);
@@ -2175,6 +2201,11 @@ export default {
             .select-area {
                 .ant-select {
                     width: 269px;
+                }
+                .tips{
+                    // 红色
+                    color: #FF4D4F;
+                    margin-top: 5px;
                 }
             }
             .item-rich-area {
