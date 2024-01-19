@@ -1263,7 +1263,8 @@ export default {
             this.loading = true;
             this.specific.mode = 2;
             Core.Api.AttrDef.listBySet({ set_id: this.set_id }).then((res) => {
-                console.log(res);
+                console.log(res,'规格列表信息---------------------');
+                this.category_index = res?.list[0].id
                 let list = res.list.map((item) => ({
                     id: item.id,
                     key: item.key,
