@@ -41,7 +41,7 @@
                             </div>
                         </template>
                         <template v-if="column.dataIndex === 'amount'">
-                            <span v-if="type === 'GIVE_ORDER'">{{ text }}</span>
+                            <span v-if="!$auth('ADMIN')">{{ text }}</span>
                             <a-input-number v-else v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
@@ -103,7 +103,7 @@ export default {
                 { title: this.$t('i.total_price'),dataIndex: 'total_price', key: 'money'},
                 { title: this.$t('def.operate'), key: 'operate' ,fixed: 'right', width: 100},
             ]
-            if(this.type === 'GIVE_ORDER') {
+            if( !this.$auth('ADMIN') ) {
                 columns = columns.filter(i => i.key !== 'operate')
             }
             return columns
