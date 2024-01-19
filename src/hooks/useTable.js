@@ -149,7 +149,7 @@ export function useTable ({ request, initParam, isPageAble = true, immediate = t
                     :row-key="(record) => record.id"
                     :pagination="false"
                 >
-                    <template #bodyCell="{ column, text, record }">                    
+                    <template #bodyCell="{ column, text, record }">
                     </template>
                 </a-table>
             </div>

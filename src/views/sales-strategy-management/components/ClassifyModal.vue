@@ -85,7 +85,7 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
-import SearchAll from "@/components/common/SearchAll.vue";
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import TableSelect from "./ItemTale.vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import COUNTYR from "@/assets/js/address/countries.json";

@@ -136,7 +136,7 @@
 </template>
 
 <script setup>
-import SearchAll from "@/components/common/SearchAll.vue";
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import Core from "../../core";
 import { ref, computed, onMounted } from "vue";
