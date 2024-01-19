@@ -343,6 +343,10 @@ const apiList = {
         delete: ['PostJson', 'receive-info/delete'],
     },
     Purchase: { // 采购订单
+        // 修改赠品单
+        updateGiveaway: ['PostJson', 'purchase-order-item/update-giveaway'],
+        // 删除赠品单
+        deleteGiveaway: ['PostJson', 'purchase-order-item/delete-giveaway'],
         list: ['PostJson', 'purchase-order/list'], // 采购订单列表
         cancel: ['PostJson', 'purchase-order/cancel'], // 取消采购订单
         create: ['PostJson', 'purchase-order/create'], // 创建采购订单

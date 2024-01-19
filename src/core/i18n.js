@@ -1150,6 +1150,7 @@ const messages = {
             detail: '消息详情',
         },
         def: {
+            delete_content: '确定要删除吗？',
             search: '查询',
             reset: '重置',
             export: '导出',
@@ -3873,6 +3874,7 @@ const messages = {
             detail: 'Message Details',
         },
         def: {
+            delete_content: 'Are You Sure To Delete It?',
             search: 'Search',
             reset: 'Reset',
             export: 'Export',
