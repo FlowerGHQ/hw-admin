@@ -254,6 +254,7 @@ export default {
     .btn-area-box {
         display: flex;
         justify-content: flex-end;
+        margin-left: 10px;
     }
 }
 .m-l-5 {
