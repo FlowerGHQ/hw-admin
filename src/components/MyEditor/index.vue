@@ -1,114 +1,65 @@
 <template>
-    <div id="border">
-        <div class="editor-area">
-            <!-- 工具栏 -->
-            <Toolbar class="tool-bar-area" :editor="editor" :defaultConfig="toolbarConfig" />
-            <!-- 编辑器 -->
-            <Editor
-                class="editor-content-area"
-                :defaultConfig="editorConfig"
-                v-model:html="html"
-                @onChange="onChange"
-                @onCreated="onCreated" />
-        </div>
-    </div>
+    <QuillEditor
+        class="editor-area"
+        ref="quillRef"
+        v-model:content="content"
+        :readOnly="readOnly"
+        :options="myOptions"
+        contentType="html"
+        @update:content="setValue()" />
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
-import { Boot, Editor, Toolbar } from "@wangeditor/editor-for-vue";
-import formulaModule from "@wangeditor/plugin-formula";
-import axios from "axios";
-
-Boot.registerModule(formulaModule);
-
+import { QuillEditor } from "@vueup/vue-quill";
+import "@vueup/vue-quill/dist/vue-quill.snow.css";
+import { defineProps, defineEmits, ref, watch, reactive, toRaw } from "vue";
+//withDefaults 是一个辅助函数，用于将默认值与传递的值合并
 const props = defineProps({
-    editorContent: {
+    modelValue: {
         type: String,
-        required: true,
+        default: null,
+    }, // 双向绑定值的默认值
+    readOnly: {
+        type: Boolean,
+        default: false,
+    },
+    placeholder: {
+        type: String,
+        default: "请输入内容...",
     },
 });
-
-const { editorContent } = props;
-
-const editor = ref(null);
-const html = ref(editorContent);
-const toolbarConfig = ref({});
-
-const editorConfig = ref({
-    placeholder: "请输入内容...",
-    MENU_CONF: {
-        uploadImage: {
-            customUpload: (file) => {
-                uploadFile(file, 1);
-            },
-        },
-        uploadVideo: {
-            customUpload: (file) => {
-                uploadFile(file, 2);
-            },
-        },
-    },
-    hoverbarKeys: {
-        formula: {
-            menuKeys: ["editFormula"],
-        },
-    },
+const emit = defineEmits({
+    "update:modelValue": null,
 });
 
-async function uploadFile(file, type) {
-    // 模拟上传文件，实际情况下这里应该是一个上传到OSS或接口的函数
-    const response = await axios.post("/upload", { file, type });
-    const data = response.data;
 
-    if (type === 1) {
-        // 图片上传
-        html.value += `<img src="${data.imgUrl}" />`;
-    } else if (type === 2) {
-        // 视频上传
-        html.value += `<div data-w-e-type="video" data-w-e-is-void><video controls="true" poster="${data.imgUrl}"><source src="${data.videoUrl}" type="video/mp4"/></video></div>`;
+const {placeholder} = props
+const content = ref("");
+const quillRef = ref(null);
+const myOptions = reactive({
+    modules: {
+        toolbar: [
+            ["bold", "underline", "italic"], // toggled buttons
+            [{ list: "bullet" }],
+        ],
+    },
+    placeholder,
+});
+
+const setValue = () => {
+    const text = toRaw(quillRef.value).getHTML();
+    emit("update:modelValue", text);
+};
+watch(
+    () => props.modelValue,
+    (val) => {
+        if (val != null) {
+            content.value = val;
+        } else {
+            toRaw(quillRef.value).setContents("");
+        }
     }
-}
-
-function onCreated(editorInstance) {
-    editor.value = editorInstance;
-}
-
-function onChange(editorInstance) {
-    const newHtml = editorInstance.getHtml();
-    emit("update:html", newHtml);
-}
-
-onMounted(() => {
-    // 如果需要模拟异步渲染编辑器，可以在这里使用setTimeout
-});
-
-onBeforeUnmount(() => {
-    if (editor.value) {
-        editor.value.destroy();
-    }
-});
+);
 </script>
 
-<style>
-/* 导入WangEditor的CSS样式，注意路径可能需要调整 */
-@import "@wangeditor/editor/dist/css/style.css";
-
-#border {
-    position: relative;
-    z-index: 999;
-    .editor-area {
-        border: 1px solid #ccc;
-        margin-top: 10px;
-        .tool-bar-area {
-            border-bottom: 1px solid #ccc;
-        }
-        .editor-content-area {
-            height: 400px;
-            overflow-y: hidden;
-            position: relative;
-            z-index: 0;
-        }
-    }
-}
-</style>
+<style lang="less" scoped></style>
