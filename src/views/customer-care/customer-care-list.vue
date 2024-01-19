@@ -63,15 +63,15 @@
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <MySvgIcon icon-class="supply-view" />
-                                <span class="m-l-10">{{ $t("common.view") }}</span>
+                                <span class="m-l-4">{{ $t("common.view") }}</span>
                             </a-button>
                             <a-button type="link" @click="routerChange('edit', record)">
                                 <MySvgIcon icon-class="supply-edit" />
-                                <span class="m-l-10">{{ $t("common.edit") }}</span>
+                                <span class="m-l-4">{{ $t("common.edit") }}</span>
                             </a-button>
                             <a-button type="link" @click="routerChange('msg', record)">
                                 <MySvgIcon icon-class="supply-edit" />
-                                <span class="m-l-10">{{ $t("customer-care.leave_message") }}</span>
+                                <span class="m-l-4">{{ $t("customer-care.leave_message") }}</span>
                             </a-button>
                         </template>
                     </template>
@@ -300,14 +300,13 @@ const routerChange = (type, record) => {
     switch (type) {
         case "add": // 添加
             routeUrl = router.resolve({
-                path: "/customer-care/list",
-                query: { id: record.id },
+                path: "/customer-care/edit",                
             });
             window.open(routeUrl.href, "_blank");
             break;
         case "edit": // 编辑
             routeUrl = router.resolve({
-                path: "/customer-care/list",
+                path: "/customer-care/edit",
                 query: { id: record.id },
             });
             window.open(routeUrl.href, "_blank");

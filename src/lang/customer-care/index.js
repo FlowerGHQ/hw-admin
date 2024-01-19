@@ -18,7 +18,8 @@ export default {
         submitter: "提交人",
         model_number_mileage: "车型号、公里数",
         last_modification_time: "最近一次修改时间",
-        leave_message: "留言",
+        leave_message: "留言",        
+        modify_inquiry_form: "修改问询单",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -38,6 +39,7 @@ export default {
         submitter: "Submitter",
         model_number_mileage: "Model Number And Mileage",
         last_modification_time: "Last Modification Time",
-        leave_message: "Leave a message",
+        leave_message: "Leave a message",        
+        modify_inquiry_form: "Modify Inquiry Form",
     }
 }
