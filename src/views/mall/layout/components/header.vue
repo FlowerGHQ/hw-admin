@@ -152,7 +152,7 @@
         <div id="menu">
             <div class="menu-content content">
                 <!-- 整车 -->
-                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 1 })">
+                <span class="menu-item" @click="routerChange('/mall/vehicle-list')">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->

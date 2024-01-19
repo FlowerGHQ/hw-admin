@@ -29,6 +29,10 @@ export default {
         check_more: '查看更多',
         my_favorites: '我的收藏',
         search_results: '搜索结果',
+        all_vehicle_models: '全部车辆',
+        order_now: '立即订购',
+        product_details: '产品详情',
+        same_series_of_products: '同一系列产品',
     },
     en: {
         system: "HORWIN Business Operating System",
@@ -60,6 +64,10 @@ export default {
         check_more: 'Check More',
         my_favorites: 'My Favorites',
         search_results: 'Search Results',
+        all_vehicle_models: 'All Vehicle Models',
+        order_now: 'Order Now',
+        product_details: 'Product Details',
+        same_series_of_products: 'Same Series Of Products',
     }
 }
 

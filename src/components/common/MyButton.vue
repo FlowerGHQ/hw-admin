@@ -54,7 +54,7 @@ export default {
     mounted() {},
     methods: {
         clickFn() {
-            this.$emit('click')
+            this.$emit('clickFn')
         }
     },
 }

@@ -13,6 +13,7 @@
     "axios": "0.26.1",
     "dayjs": "1.11.1",
     "docx-preview": "^0.1.18",
+    "echarts": "^5.4.3",
     "file-saver": "^2.0.5",
     "jsbarcode": "^3.11.5",
     "less": "4.1.2",
@@ -20,16 +21,15 @@
     "moment": "^2.29.4",
     "nprogress": "0.2.0",
     "qrcode.vue": "^3.4.1",
-    "swiper": "^6.8.4",
     "terser": "^5.20.0",
     "vconsole": "^3.15.1",
     "vite-plugin-svg-icons": "^2.0.1",
     "vue": "3.2.33",
+    "vue-awesome-swiper": "^5.0.1",
     "vue-draggable-next": "^2.2.1",
     "vue-i18n": "9.1.9",
     "vue-router": "4.0.14",
-    "vuex": "4.0.2",
-    "echarts": "^5.4.3"
+    "vuex": "4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "2.3.1",
