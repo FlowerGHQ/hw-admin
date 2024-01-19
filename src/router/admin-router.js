@@ -12,6 +12,7 @@ const inquiryManagement = {
     component: Layout,
     name: "InquiryManagement",
     redirect: "/inquiry-management/list",    
+    type: [ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
     meta: {
         title: '问询单管理',
         title_en: 'Inquiry Management',
@@ -25,7 +26,7 @@ const inquiryManagement = {
             name: 'InquiryManagementList',
             component: () => import('@/views/customer-care/customer-care-list.vue'),
             meta: {
-                title: '客服问询单',
+                title: '问询单列表',
                 title_en: 'Customer Service Inquiry',
             }
         },
@@ -35,7 +36,7 @@ const inquiryManagement = {
             component: () => import('@/views/customer-care/customer-care-edit.vue'),
             meta: {
                 hidden: true,
-                title: '客服问询单编辑',
+                title: '问询单编辑',
                 title_en: 'Customer Service Inquiry Edit',
             }
         },
@@ -45,7 +46,7 @@ const inquiryManagement = {
             component: () => import('@/views/customer-care/customer-care-detail.vue'),
             meta: {
                 hidden: true,
-                title: '客服问询单详情',
+                title: '问询单详情',
                 title_en: 'Customer Service Inquiry Detail',
             }
         },

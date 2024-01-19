@@ -14,6 +14,7 @@ export default {
         country: '国家',
         type: '类型',
         export: '导出',
+        delete: '删除',
     },
     en: {
         operations: "Operations",
@@ -30,5 +31,6 @@ export default {
         country: 'Country',
         type: 'Type',
         export: 'Export',
+        delete: 'Delete',
     }
 }

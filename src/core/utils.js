@@ -6,6 +6,8 @@ import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
 import Image from './modules/units/image'
+import Common from './modules/units/common'
+
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
@@ -1705,6 +1707,8 @@ const Util = {
             return parseFloat((value / 1000)).toFixed(dp)+'k'
         }
     },
+    // 公共样式
+    Common,
     // 照片逻辑
     Image
 

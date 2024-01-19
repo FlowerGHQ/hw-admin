@@ -117,7 +117,7 @@ const searchForm = ref({
     status: undefined,
 });
 
-const isDistributerAdmin = ref(false)  // 根据路由判断其是用在分销商(false) 供应商(true)
+const isDistributerAdmin = ref(false)  // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
 
 watch(
@@ -136,7 +136,7 @@ watch(
         deep: true,
         immediate: true,
     }
-    );
+);
     
 /* computed start */
 // 筛选条件
