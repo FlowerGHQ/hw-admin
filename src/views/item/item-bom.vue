@@ -81,7 +81,7 @@ import {
     onBeforeUnmount,
     getCurrentInstance,
 } from "vue";
-import SearchAll from "../../components/common/SearchAll.vue";
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import fittings from "./components/item-bom/Fittings.vue";
 import FittingsTwo from "./components/item-bom/FittingsTwo.vue";
 import FittingsThree from "./components/item-bom/FittingsThree.vue";

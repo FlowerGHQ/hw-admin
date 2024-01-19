@@ -84,7 +84,7 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed, watch, onUnmounted, nextTick } from 'vue';
 import Core from "@/core";
-import SearchAll from "@/components/common/SearchAll.vue"
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import TableSelectV3 from '@/components/table/TableSelectV3.vue'
 const initialObject = { 
     // 商品编码

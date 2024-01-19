@@ -92,7 +92,7 @@
 <script setup>
 import { onMounted, ref, getCurrentInstance, computed, watch } from "vue";
 import Core from "@/core";
-import SearchAll from "@/components/common/SearchAll.vue";
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import { useTable } from '@/hooks/useTable'
 import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
