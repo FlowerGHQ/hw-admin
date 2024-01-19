@@ -169,10 +169,13 @@ export default {
                 order_id: this.orderId
             }).then(res => {
                 this.tableData = res.list.map(i => {
+                    console.log(i)
                     let item = i.item || {}
                     item.amount = i.amount
                     item.unit_price = i.unit_price
                     item.total_price = i.price
+                    item.item_id = i.item_id
+                    item.order_id = i.order_id
                     return item
                 })
                 if(this.tableData.length>0) {
@@ -187,12 +190,17 @@ export default {
         // 修改赠品单
         handleUpdate(record) {
             console.log(record)
-            Core.Api.Purchase.updateGiveaway({
-                item_id: record.id,
-                order_id: this.orderId,
-                amount: record.amount,
-            }).then(() => {
-                this.$message.success(this.$t('pop_up.save_success'))
+            Core.Api.Purchase.updateGiveaway(
+                {
+                    item_list:[
+                        {
+                            item_id: record.item_id,
+                            order_id: record.order_id,
+                            amount: record.amount,
+                        }
+                    ]
+                }
+            ).then(() => {
                 this.getGiveawayList()
             }).catch(err => {
                 console.log('handleUpdate err:', err)
@@ -217,7 +225,8 @@ export default {
         },
         // 添加商品
         handleRemoveItem(record,index) {
-            if(this.type === 'GIVE_ORDER' && record.id){
+            console.log('handleRemoveItem record:', record)
+            if(this.type === 'GIVE_ORDER'){
                 this.$confirm({
                     type: 'danger',
                     title: this.$t('def.delete'),
@@ -226,8 +235,8 @@ export default {
                     cancelText: this.$t('def.cancel'),
                     onOk: () => {
                        Core.Api.Purchase.deleteGiveaway({
-                            item_id: record.id,
-                            order_id: this.orderId,
+                            item_id: record.item_id,
+                            order_id: record.order_id,
                         }).then(() => {
                             this.$message.success(this.$t('pop_up.delete_success'))
                             this.getGiveawayList()
