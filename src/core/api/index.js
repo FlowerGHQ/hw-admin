@@ -11,9 +11,14 @@ let baseUrl = Const.NET.URL_POINT
 
 const apiList = {
     Common: { // 公共        
-        login: ['PostJson', 'system/login'], // 账号登录
+        // login: ['PostJson', 'system/login'], // 账号登录
         logout: ['Post', 'system/logout'], // 账号登出
         updatePwd: ['PostJson', 'system/updatePwd'], // 密码修改
+
+        checkAccount: ['PostJson', 'system/login/check-account'], // 校验登录账号
+        selectUser: ['PostJson', 'system/login'], // 选择用户登录
+        switchUser: ['PostJson', 'system/switch-user'], // 切换用户
+        loginByTempUser: ['PostJson', 'system/login-by-temp-user'],// 临时用户登录-供应商
 
         emailCode: ['Post', 'common/email-verification-code-send'], // 发送邮箱验证码
         phoneCode: ['Post', 'common/phone-verification-code-send'], // 发送手机验证码
@@ -952,7 +957,21 @@ const apiList = {
         addBindCategory: ['PostJson', 'aftermarket/bom/add-bind-category'], // 给Bom商品添加（不覆盖）-绑定分类 
         parsingImportFile: ['PostJson', 'aftermarket/bom/parsing-import-file'], // 二级页面解析导入表格情况返回
         importBindBomItem: ['PostJson', 'aftermarket/bom/import-bind-bom-item'], // 保存导入成功表格情况返回
+    },
+    // 供应商接口
+    SUPPLY: {
+        adminList: ['PostJson','supplier-application/list'],  // 平台方供应商管理list
+        adminDetail: ['PostJson','supplier-application/detail'],  // 平台方供应商管理详情
+        adminAdd: ['PostJson','supplier-application/save'],  // 平台方供应商管理添加
+        add: ['PostJson', 'supplier-application/save'], // 供应商前缀 /supplier
 
+    },
+    DISTRIBUTOR_HOME: {
+        searchList: ['PostJson', 'new/list'], // 分销商首页搜索
+    },
+    // 官网端接口
+    CLIENT: {
+        communityList:['PostJson','community-post/list'], //动态列表
     }
 }; 
 

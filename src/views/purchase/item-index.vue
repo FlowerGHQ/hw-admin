@@ -10,7 +10,7 @@
           <a-tab-pane
             v-for="item of categoryList"
             :key="item.id"
-            :tab="$i18n.locale == 'zh' ? item.name : item.name_en"></a-tab-pane>
+            :tab="$i18n.locale == 'zh' ? item.zh : item.en"></a-tab-pane>
           <template #rightExtra>
             <a-input-group compact>
               <a-select v-model:value="searchType" class="search_select">
@@ -125,14 +125,14 @@
             <div class="category-title">
               {{
                 $i18n.locale == "zh"
-                  ? firstLevelName.name
-                  : firstLevelName.name_en
+                  ? firstLevelName.zh
+                  : firstLevelName.en
               }}
             </div>
           </a-button>
           <div class="category-content">
             <CategoryTree
-              :parentId="firstLevelId"
+              :parentId="searchForm.category_id"
               @change="handleCategoryChange"
               @clickCurrent="clickTab"
               ref="CategoryTree" />
@@ -189,11 +189,11 @@ export default {
       tableData: [],
 
       // 搜索
-      categoryList: [],
+      categoryList: Core.Const.ITEM.TYPE_MAP,
       firstLevelId: 0,
       firstLevelName: {
-        name: "",
-        name_en: "",
+        zh: "",
+        en: "",
       },
       searchForm: {
         name: "",
@@ -217,6 +217,7 @@ export default {
       currency: "",
       flag_display: false,
       item_id: 0,
+      key: '',
       firstLevel_key: "",
     };
   },
@@ -231,11 +232,14 @@ export default {
   },
 
   mounted() {
+    this.searchForm.name = this.$route.query.key || ''
+    this.firstLevelId = Number(this.$route.query.tabId) || 0
     this.currency = Core.Data.getCurrency();
     this.firstLevel_key = this.$route.query.first_level_id;
     // this.getTableData();
-    this.getCategoryList();
+    // this.getCategoryList();
     this.getShopCartData();
+    this.handleSearch();
   },
 
   methods: {
@@ -293,20 +297,21 @@ export default {
       this.flag_display = false;
       this.isBomShow(category);
       this.bomShow = false;
-      if (this.firstLevel_key !== "") {
-        this.firstLevelName = this.categoryList.find(
-          (i) => i.index_key === this.firstLevel_key
-        );
-        if (this.firstLevelName !== undefined) {
-          this.searchForm.category_id = this.firstLevelName.id;
-          this.firstLevelId = this.firstLevelName.id;
-        }
+      // 定死数据不需要一下逻辑
+      // if (this.firstLevel_key !== "") {
+      //   this.firstLevelName = this.categoryList.find(
+      //     (i) => i.index_key === this.firstLevel_key
+      //   );
+      //   if (this.firstLevelName !== undefined) {
+      //     this.searchForm.category_id = this.firstLevelName.id;
+      //     this.firstLevelId = this.firstLevelName.id;
+      //   }
 
-        this.firstLevel_key = "";
-      }
+      //   this.firstLevel_key = "";
+      // }
 
       if (this.firstLevelId && category === this.firstLevelId) {
-        this.firstLevelName = this.categoryList.find((i) => i.id === category);
+        this.firstLevelName = this.categoryList.find(i => i.id === category);
 
         this.$nextTick(() => {
           this.$refs.CategoryTree.handleReset();

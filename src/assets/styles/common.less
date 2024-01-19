@@ -76,9 +76,315 @@
     }
 }
 
+// 水平的form
+.level-search-row {
+    display: flex;
+    .search-col {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 400;
+        margin-top: 16px;
+
+        .key {
+            color: #1d2129;
+            // white-space: nowrap;
+        }
+        .key-default-w {
+            width: 80px; // 默认宽度
+        }
+        .value {
+            width: 100%;
+            color: #1d2129;
+        }
+        // 必选图标
+        &.required {
+            .key::before {
+                content: "*";
+                color: #EB4141;
+                // margin-right: 4px;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
 /* 自定义 model 想修改里面的样式 在外面先给个class */
 .custom-ant-modal {
     .ant-modal-header {
         border-bottom: 0px !important;
+    }
+}
+
+
+/* 首页编辑样式 */
+.edit-container-new-edit {
+
+    // 编辑页
+    background: @BG_N;
+    box-sizing: border-box;
+    border-radius: 6px;
+    position: relative;
+
+    .form-block-box {
+
+    // 新增页 分块
+    margin: 0 20px 20px;
+    background: #F8FAFC;
+    border-radius: 6px;
+    overflow: hidden;
+    padding-top: 58px;
+
+    .form-block {
+        // 新增页 分块
+        // margin: 0 20px 20px;
+        background: #F8FAFC;
+        // border-radius: 6px;
+        box-sizing: border-box;
+        padding: 0px 0 8px 0;
+        display: flex;
+
+        .form-title {
+            width: 174px;
+            text-align: right;
+            box-sizing: border-box;
+            font-weight: 500;
+            font-size: 16px;
+            line-height: 20px;
+            color: #363D42;
+        }
+
+        .form-content {
+            width: 78%;
+            margin-left: 78px;
+
+        }
+
+        .form-item {
+            margin-bottom: 16px;
+            position: relative;
+
+            .key {
+                min-width: 126px;
+                color: #8090A6;
+                text-align: right;
+                padding-right: 8px;
+            }
+
+            .value {
+                width: calc(~'100% - 86px');
+                max-width: 650px;
+            }
+
+            .sp {
+                position: relative;
+                font-size: 12px;
+                margin-left: 14px;
+
+                .ant-btn {
+                    font-size: 12px;
+                }
+            }
+
+            &.rich_text {
+                .value {
+                    max-width: calc(100% - 100px);
+                }
+            }
+        }
+    }
+
+    }
+    // 子列样式
+    .form-content-item-column {
+
+        display: flex;
+        width: calc(100% + 86px);
+
+        .item-column-block-box {
+
+            box-sizing: border-box;
+            padding: 0px 0 8px 0;
+            flex:1;
+
+            .item-column-title-box {
+                .title {
+                    color: #8090A6;
+                    font-size: 16px;
+                    font-weight: 500;
+                    width: 126px;
+                    text-align: right;
+                    padding-right: 8px;
+                }
+            }
+            .item-column-title {
+
+                min-width: 126px;
+                color: #8090A6;
+                text-align: right;
+                padding-right: 8px;
+            }
+
+            .item-column-value {
+                width: calc(~'100% - 86px');
+                max-width: 650px;
+            }
+
+            .item-column-block {
+                margin-bottom: 16px;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    // 子列表格样式
+    .form-content-item-table {
+
+    }
+}
+
+// padding 样式
+.p-t-0 {
+    padding-top: 0px !important;
+}
+.p-l-0 {
+    padding-left: 0px !important;
+}
+.p-r-0 {
+    padding-right: 0px !important;
+}
+
+// margin 样式
+.m-t-0 {
+    margin-top: 0px !important;
+}
+.m-t-4 {
+    margin-top: 4px;
+}
+.m-t-8 {
+    margin-top: 8px;
+}
+.m-t-10 {
+    margin-top: 10px;
+}
+.m-t-16 {
+    margin-top: 16px;
+}
+.m-t-20 {
+    margin-top: 20px;
+}
+.m-t-30 {
+    margin-top: 30px;
+}
+.m-t-40 {
+    margin-top: 40px;
+}
+
+.m-l-0 {
+    margin-left: 0px !important;
+}
+.m-l-4 {
+    margin-left: 4px;
+}
+.m-l-8 {
+    margin-left: 8px;
+}
+.m-l-10 {
+    margin-left: 10px;
+}
+.m-l-16 {
+    margin-left: 16px;
+}
+.m-l-20 {
+    margin-left: 20px;
+}
+.m-l-30 {
+    margin-left: 30px;
+}
+.m-l-40 {
+    margin-left: 40px;
+}
+
+.m-r-0 {
+    margin-right: 0px !important;
+}
+.m-r-4 {
+    margin-right: 4px;
+}
+.m-r-8 {
+    margin-right: 8px;
+}
+.m-r-10 {
+    margin-right: 10px;
+}
+.m-r-16 {
+    margin-right: 16px;
+}
+.m-r-20 {
+    margin-right: 20px;
+}
+.m-r-30 {
+    margin-right: 30px;
+}
+.m-r-40 {
+    margin-right: 40px;
+}
+
+.m-b-0 {
+    margin-bottom: 0px !important;
+}
+.m-b-4 {
+    margin-bottom: 4px;
+}
+.m-b-8 {
+    margin-bottom: 8px;
+}
+.m-b-10 {
+    margin-bottom: 10px;
+}
+.m-b-16 {
+    margin-bottom: 16px;
+}
+.m-b-20 {
+    margin-bottom: 20px;
+}
+.m-b-30 {
+    margin-bottom: 30px;
+}
+.m-b-40 {
+    margin-bottom: 40px;
+}
+
+// tab栏hover效果
+.tab-animate {
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: inline-block;
+        width: 0%;
+        height: 1px;
+        background: #FFF;
+        border-radius: 1px;
+        transition: width 0.3s;
+    }
+    &:hover::before {
+        width: 100%;
+    }
+    &.active {
+        &::before {
+            width: 100%;
+        }
+    }
+    &:active {
+        color: rgba(255, 255, 255, 0.7) !important;
+        &::before {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7) !important;
+        }
     }
 }
