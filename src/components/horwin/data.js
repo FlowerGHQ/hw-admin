@@ -8,5 +8,5 @@ const arr = [
         text: "MyMask",
         img: "https://horwin.oss-cn-hangzhou.aliyuncs.com/img/483dd93e32fef016644e55aa4c0b8ddda84e8ae5cfb501037434fd2614454428.png",
         description: "based-on-dom下  全页面遮罩层",
-    },
+    },   
 ]

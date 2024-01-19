@@ -25,18 +25,18 @@
 
         .horwin {
             width: 100%;
-            min-height: calc(100vh - 70px);
-            display: flex;
-            padding-bottom: 100px;
+            height: calc(100vh - 88px);
+            display: flex;            
         }
 
         /* 侧边栏 */
         .sidebar {
             width: 400px;
-            /* background-color: red; */
+            height: 100%;
+            overflow-y: auto;          
         }
-        .sidebar-item {
-            width: 100%;
+        
+        .sidebar-item {            
             height: 88px;
             border: 1px solid black;
             display: flex;
@@ -67,6 +67,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            height: 100%;
+            overflow-y: auto;
         }
 
         .description {
@@ -92,19 +94,32 @@
         
         /* 照片内容 */
         .img-box {
-            width: 80%;            
+            width: 80%;
             margin-top: 10px;
             border: 1px solid black;
             font-size: 0;
 
             img {
-                width: 100%;
-                object-fit: cover;
+                width: 100%;               
             }
         }
 
         .m-t-10 {
             margin-top: 10px;
+        }
+
+
+        .sidebar::-webkit-scrollbar, .content::-webkit-scrollbar {
+            width: 0px;            
+
+        }
+        .sidebar::-webkit-scrollbar-thumb, .content::-webkit-scrollbar-thumb {
+            border-radius: 3px;
+            background-color: #ccc;
+            transition: background-color 0.3s;
+        }
+        .sidebar::-webkit-scrollbar-track, .content::-webkit-scrollbar-track {            
+            background: #ccc;
         }
     </style>    
 </head>
