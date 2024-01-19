@@ -301,7 +301,7 @@
 <script>
 import Core from "../../core";
 import { InfoCircleOutlined } from '@ant-design/icons-vue';
-import SearchAll from "@/components/common/SearchAll.vue"
+import SearchAll from "@/components/horwin/based-on-ant/SearchAll.vue";
 import TimeSearch from "@/components/common/TimeSearch.vue";
 import CategoryTreeSelect from "@/components/popup-btn/CategoryTreeSelect.vue";
 import CategoryTree from './components/TreeSelect.vue'
