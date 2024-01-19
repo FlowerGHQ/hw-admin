@@ -40,6 +40,16 @@ const supplyManage = {
                 hidden: true,
             }
         },
+        {
+            path: 'add',
+            name: 'SupplyAdd',
+            component: () => import('@/views/supplier/add-supply/index.vue'),
+            meta: {
+                title: '创建资料',
+                title_en: 'Create Data',
+                hidden: true,
+            }
+        },
     ]
 }
 

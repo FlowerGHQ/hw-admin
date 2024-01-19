@@ -130,7 +130,6 @@ export default {
             Core,
             carouselList: [
                 { img: 'banner' },
-                { img: 'banner' },
             ],
             productsList: Object.values(Core.Const.ITEM.TYPE_MAP),
             servicesList: [

@@ -1,88 +1,6 @@
 <template>
     <div class="home" ref="suppluChain">
         <a-layout>
-            <a-layout-header>
-                <div class="header-left">
-                    <img src="@images/header-logo2.png" class="logo" alt="浩万" />
-                </div>
-                <div class="header-right">
-                    <!-- 中英文的转换 -->
-                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
-                        <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
-                    </a-button>
-                    <a-divider class="PC" type="vertical" />
-                    <a-tag class="PC" color="blue" style="font-size: 12px">{{
-                        USER_TYPE[loginType][$i18n.locale]
-                    }}</a-tag>
-                    <a-dropdown :trigger="['click']" overlay-class-name="account-action-menu">
-                        <a-button class="user-info" type="link">
-                            <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size="30">
-                                <template #icon><i class="icon i_user" /></template>
-                            </a-avatar>
-                            <span class="user-name">{{ user.name }}</span>
-                        </a-button>
-                        <template #overlay>
-                            <a-menu style="text-align: center">
-                                <a-menu-item @click="handleEditShow">
-                                    <a-button type="link" class="menu-item-btn">{{ $t("n.password") }}</a-button>
-                                    <a-modal
-                                        v-model:visible="passShow"
-                                        :title="$t('n.password')"
-                                        class="password-edit-modal"
-                                        :after-close="handleEditClose"
-                                    >
-                                        <div class="form-title">
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t("n.old") }}:</div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        :placeholder="$t('def.input')"
-                                                        v-model:value="form.old_password"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t("n.new") }}:</div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="form.password"
-                                                        :placeholder="$t('def.input')"
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div class="form-item required">
-                                                <div class="key">{{ $t("n.double") }}:</div>
-                                                <div class="value">
-                                                    <a-input-password
-                                                        v-model:value="form.new_password"
-                                                        :placeholder="$t('n.double')"
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <template #footer>
-                                            <a-button key="back" @click="handleEditSubmit" type="primary">{{
-                                                $t("def.sure")
-                                            }}</a-button>
-                                            <a-button @click="passShow = false">{{ $t("def.cancel") }}</a-button>
-                                        </template>
-                                    </a-modal>
-                                </a-menu-item>
-                                <a-menu-divider class="menu_divider" />
-                                <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button type="link" class="menu-item-btn">{{
-                                        $t("mall.switch_identity")
-                                    }}</a-button>
-                                </a-menu-item>
-                                <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
-                                <a-menu-item @click="handleLogout">
-                                    <a-button type="link" class="menu-item-btn">{{ $t("n.exit") }}</a-button>
-                                </a-menu-item>
-                            </a-menu>
-                        </template>
-                    </a-dropdown>
-                </div>
-            </a-layout-header>
             <a-layout-content>
                 <!-- 已经上传并且没走到成功那一步 -->
                 <div class="setp-bar" v-if="setp !== 2">
@@ -99,10 +17,11 @@
                         </div>
                     </template>
                 </div>
-                <div class="content-main" ref="contentMain">
+                <div class="content-main">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
                     <MaterialList ref="MaterialListRef" v-else-if="setp === 1" />
                     <Successful v-else-if="setp === 2" />
+                    <div :style="{ height: setp === 0 ? '70px' : '116px' }"></div>
                 </div>
                 <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
@@ -193,22 +112,16 @@ import HonestPage from "./components/honest-page.vue";
 // 保密和不竞争
 import SecrecyNotCompete from "./components/secrecy-not-compete.vue";
 
-const USER_TYPE = Core.Const.USER.TYPE_MAP;
-const loginType = Core.Data.getLoginType();
-const user = Core.Data.getUser() || {};
 const $i18n = useI18n();
 const $store = useStore();
 const $router = useRouter();
 const $route = useRoute();
 const $message = message;
 const $t = $i18n.t;
-const lang = computed(() => $store.state.lang);
 // ref
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
-const contentMain = ref(null);
-const user_type_list = ref(Core.Data.getUserTypeList());
 //步数样式
 const setpCount = computed(() => {
     return $store.getters["SUPPLY_CHAIN/SETP"];
@@ -251,11 +164,6 @@ const setpObject = computed(() => {
 
     return result;
 });
-// 是否已经提交
-const isSubmited = computed(() => {
-    return $store.getters["SUPPLY_CHAIN/isSubmitEd"];
-});
-
 // 廉洁承诺书
 const visible = ref(false);
 // 定时
@@ -316,10 +224,7 @@ const handleSubmit = () => {
         // 打开弹框
         visible.value = true;
     } else {
-        MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
-            let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
-            let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-            $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
+        MaterialListRef.value.step2Vaild().then(() => {
             handleSubmitData();
         });
     }
@@ -330,7 +235,7 @@ const handleSubmitOk = () => {
     $store.dispatch("SUPPLY_CHAIN/setRead", true);
     // 关闭弹框
     visible.value = false;
-    MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
+    MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
         $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
@@ -349,16 +254,23 @@ const handleSubmitData = () => {
             delete data.confirmatory_material.proxy_certificate;
         }
     }
-    Core.Api.SUPPLY.add(data)
+        
+    Core.Api.SUPPLY.adminAdd(data)
         .then((res) => {
             visible.value = false;
             // 获取详情数据
-            getDetail().then(() => {
-                $store.dispatch("SUPPLY_CHAIN/nextStep");
-            });
+            // getDetail().then(() => {
+            //     $store.dispatch("SUPPLY_CHAIN/nextStep");
+            // });
+            $router.push('/supply-manage/list')
         })
         .catch((err) => {
-            $message.error($t("supply-chain.supply_submit_failed"));
+            // console.log("提交数据失败", err.data);
+            if (Number(err.data.code) === 41001) {                
+                // 出现这个问题回归到 第一步骤
+                $store.dispatch("SUPPLY_CHAIN/setStep", 0);
+            }
+            // $message.error(err.message);
         });
 };
 // 获取详情
@@ -423,51 +335,6 @@ const handleOpen = () => {
     }
     visible.value = true;
 };
-// 中英文切换
-const handleLangSwitch = (lang) => {
-    $store.commit("switchLang", lang);
-    $i18n.locale.value = $store.state.lang;
-    console.log("lang:", lang);
-};
-const handleEditShow = () => {
-    passShow.value = true;
-};
-const handleLogout = () => {
-    if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
-        $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
-    } else {
-        $router.replace(`/login`);
-    }
-    Core.Api.Common.logout().then(() => {
-        $store.dispatch("SUPPLY_CHAIN/clearAll");
-    });
-};
-const handleEditSubmit = () => {
-    let form = Core.Util.deepCopy(form);
-    if (!form.old_password) {
-        return $message.warning($t("u.old_password"));
-    }
-    if (!form.password) {
-        return $message.warning($t("u.new_password"));
-    }
-    if (!form.new_password) {
-        return $message.warning($t("u.again"));
-    }
-    if (form.new_password !== form.password) {
-        $message.warning($t("u.not"));
-        return;
-    }
-
-    loading = true;
-    Core.Api.Common.updatePwd(form)
-        .then(() => {
-            $message.success($t("pop_up.save_success"));
-            handleEditClose();
-        })
-        .catch((err) => {
-            console.log("handleSubmit err:", err);
-        });
-};
 
 // 监听 弹框打开，开始倒计时
 watch(
@@ -488,25 +355,22 @@ watch(
     () => setp.value,
     (val) => {
         if (val == 0) {
-            getDetail().then(() => {
-                BasicInfoRef.value && BasicInfoRef.value.reviewData();
-            });
+            // getDetail().then(() => {
+            //     BasicInfoRef.value && BasicInfoRef.value.reviewData();
+            // });
         }
-        contentMain.value && (contentMain.value.scrollTop = 0);
-
-        
     }
 );
 
 const timer1 = ref(null);
 onMounted(() => {
-    getDetail().then(() => {
-        BasicInfoRef.value && BasicInfoRef.value.reviewData();
-        // // 如果已经提交了
-        if (isSubmited.value) {
-            $store.dispatch("SUPPLY_CHAIN/setStep", 2);
-        }
-    });
+    // getDetail().then(() => {
+    //     BasicInfoRef.value && BasicInfoRef.value.reviewData();
+    //     // // 如果已经提交了
+    //     if (isSubmited.value) {
+    //         $store.dispatch("SUPPLY_CHAIN/setStep", 2);
+    //     }
+    // });
 });
 // beforeDestroy
 onBeforeUnmount(() => {
@@ -521,8 +385,7 @@ onBeforeUnmount(() => {
 
 <style lang="less" scoped>
 .home {
-    position: relative;
-    height: 100vh;
+    position: relative;    
     display: flex;
     flex-direction: column;
     :deep(.ant-layout) {
@@ -548,50 +411,6 @@ onBeforeUnmount(() => {
                     cursor: pointer;
                 }
             }
-
-            .header-center {
-                .fcc();
-
-                .header-button {
-                    height: 40px;
-                    border: 0px;
-                    padding: 0 10px;
-                    text-align: center;
-                    align-items: center;
-
-                    .ant-radio-button-wrapper {
-                        display: none;
-                    }
-                }
-
-                .router-type {
-                    height: 100%;
-                    width: 100%;
-                    .fcc();
-
-                    img {
-                        width: 30px;
-                        height: 30px;
-                        margin-right: 10px;
-                    }
-                }
-
-                .ant-radio-button-wrapper:focus {
-                    border: 0px;
-                }
-
-                .ant-radio-button-wrapper:not(:first-child)::before {
-                    border: 0px solid #d9d9d9;
-                    border-radius: 2px 0 0 2px;
-                    background: #fff;
-                }
-
-                .ant-radio-button-wrapper-checked {
-                    background-color: #f3f6f8;
-                    border: 0px;
-                }
-            }
-
             .header-right {
                 .fcc();
 
@@ -635,7 +454,6 @@ onBeforeUnmount(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -683,8 +501,14 @@ onBeforeUnmount(() => {
             }
 
             .supply-chain-footer {
-                min-height: 68px;
-                width: calc(100%);
+                width: calc(100% - 232px);
+                position: fixed;
+                bottom: 0;
+                right: 16px;
+                // border-top: 1px solid #EAECF1;
+                background: #FFF;
+                text-align: center;
+                box-sizing: border-box;
                 .btn-area {
                     display: flex;
                     padding: 18px 0px;
@@ -695,7 +519,7 @@ onBeforeUnmount(() => {
                 }
                 .promise-book {
                     background-color: #fff;
-                    padding: 20px;
+                    padding: 8px 0;
                     text-align: center;
                     color: #1d2129;
                     .promise-text {

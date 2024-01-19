@@ -4,7 +4,7 @@
         <div class="base-info content-area top-box">
             <div class="title">{{ $t("supply-chain.type_supply") }}</div>
             <div class="base-info-form" style="flex: 1">
-                <a-row :gutter="24">
+                <a-row :gutter="24" >
                     <a-col :span="3" class="title-area align-center">
                         <div class="title-two"></div>
                     </a-col>
@@ -386,7 +386,7 @@
                     </a-row>
 
                     <!-- 代理信息 -->
-                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24">
+                    <a-row v-if="returnTypeBool(formState.type, [Core.Const.SUPPLAY.SUPPLAY_TYPE_MAP.Broker])" :gutter="24" class="m-t-40">
                         <a-col
                             :span="3"
                             class="title-area">
@@ -2148,6 +2148,7 @@ const customer_info_list_column = ref([
         dataIndex: "sales_share",
         unit: "%",
         type: "input-num",
+        width: 120,
     }, // 销售占比
     {
         title: "supply-chain.Main_supply_part",
@@ -2568,7 +2569,8 @@ const step1Vaild = () => {
 
     let paramsRequired = paramsRequiredFilter()
     return new Promise((resolve, reject) => {
-        if (!paramsRequired.length) {
+        // !paramsRequired.length 去掉校验
+        if (true) {
             isFormStateRequired.value = false
             let data = $store.state.SUPPLY_CHAIN.supplyChain;
             // 判断是否为空对象
@@ -2959,7 +2961,7 @@ onMounted(() => {
     justify-content: flex-start;
     .content-area {
         background: #f8fafc;
-        padding: 20px;        
+        padding: 20px;
         .title {
             color: #1d2129;
             font-size: 18px;
@@ -3115,9 +3117,11 @@ onMounted(() => {
 
 .form-content-item-table {
     margin-left: 140px;
+
     :deep(.ant-form-item) {
         margin-bottom: 0px;
     }
+
     .specific-table-position {
         color: #1d2129;
         .position-label {
