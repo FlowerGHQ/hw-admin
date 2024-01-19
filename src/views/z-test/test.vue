@@ -1,141 +1,146 @@
-<!-- <template>
-    <a-form
-      ref="formRef"
-      name="custom-validation"
-      :model="formState"
-      :rules="rules"
-      v-bind="layout"
-      @finish="handleFinish"
-      @validate="handleValidate"
-      @finishFailed="handleFinishFailed"
-    >
-      <a-form-item has-feedback label="Password" name="pass">
-        <a-input v-model:value="formState.pass" type="password" autocomplete="off" />
-      </a-form-item>
-      <a-form-item has-feedback label="Confirm" name="checkPass">
-        <a-input v-model:value="formState.checkPass" type="password" autocomplete="off" />
-      </a-form-item>
-      <a-form-item has-feedback label="Age" name="age">
-        <a-input-number v-model:value="formState.age" />
-      </a-form-item>
-      <a-form-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" html-type="submit">Submit</a-button>
-        <a-button style="margin-left: 10px" @click="resetForm">Reset</a-button>
-      </a-form-item>
-    </a-form>
-  </template>
-  <script>
-  import { defineComponent, reactive, ref } from 'vue';
-  export default defineComponent({
-    setup() {
-      const formRef = ref();
-      const formState = reactive({
-        pass: '',
-        checkPass: '',
-        age: undefined,
-      });
-      let checkAge = async (_rule, value) => {
-        if (!value) {
-          return Promise.reject('Please input the age');
-        }
-        if (!Number.isInteger(value)) {
-          return Promise.reject('Please input digits');
-        } else {
-          if (value < 18) {
-            return Promise.reject('Age must be greater than 18');
-          } else {
-            return Promise.resolve();
-          }
-        }
-      };
-      let validatePass = async (_rule, value) => {
-        console.log('_rule, value',_rule, value);
-        if (value === '') {
-          return Promise.reject('Please input the password');
-        } else {
-          if (formState.checkPass !== '') {
-            formRef.value.validateFields('checkPass');
-          }
-          return Promise.resolve();
-        }
-      };
-      let validatePass2 = async (_rule, value) => {
-        if (value === '') {
-          return Promise.reject('Please input the password again');
-        } else if (value !== formState.pass) {
-          return Promise.reject("Two inputs don't match!");
-        } else {
-          return Promise.resolve();
-        }
-      };
-      const rules = {
-        pass: [{
-          required: true,
-          validator: validatePass,
-          trigger: 'change',
-        }],
-        checkPass: [{
-          validator: validatePass2,
-          trigger: 'change',
-        }],
-        age: [{
-          validator: checkAge,
-          trigger: 'change',
-        }],
-      };
-      const layout = {
-        labelCol: {
-          span: 4,
-        },
-        wrapperCol: {
-          span: 14,
-        },
-      };
-      const handleFinish = values => {
-        console.log(values, formState);
-      };
-      const handleFinishFailed = errors => {
-        console.log(errors);
-      };
-      const resetForm = () => {
-        formRef.value.resetFields();
-      };
-      const handleValidate = (...args) => {
-        console.log(args);
-      };
-      return {
-        formState,
-        formRef,
-        rules,
-        layout,
-        handleFinishFailed,
-        handleFinish,
-        resetForm,
-        handleValidate,
-      };
-    },
-  });
-  </script> -->
-  <template>
-    <a-space direction="vertical" :size="12">
-      <a-date-picker v-model:value="value1"  format="YYYY-MM-DD"/>{{ value1 }}
-      <a-date-picker v-model:value="value2" picker="week" />
-      <a-date-picker v-model:value="value3" picker="month" />
-      <a-date-picker v-model:value="value4" picker="quarter" />
-      <a-date-picker v-model:value="value5" picker="year" />
-    </a-space>
-  </template>
-  <script>
-  import { defineComponent, ref } from 'vue';
-  export default defineComponent({
-    setup() {
-      return {
-        value1: ref(),
-        value2: ref(),
-        value3: ref(),
-        value4: ref(),
-        value5: ref(),
-      };
-    },
-  });
-  </script>
+<template>
+    <div id="SalesAreaList">
+        <div class="list-container">
+            <div class="title-container">
+                <div class="title-area">{{ $t("ar.list") }}</div>
+            </div>
+            <div class="search-container">
+                <a-row class="search-area">
+                    <a-col
+                        :xs="24"
+                        :sm="24"
+                        :xl="8"
+                        :xxl="6"
+                        class="search-item">
+                        <div class="key">{{ $t("n.name") }}:</div>
+                        <div class="value">
+                            <a-input
+                                :placeholder="$t('def.input')"
+                                v-model:value="searchParam.name"
+                                @keydown.enter="search" />
+                        </div>
+                    </a-col>
+                </a-row>
+                <div class="btn-area">
+                    <a-button @click="search" type="primary">{{
+                        $t("def.search")
+                    }}</a-button>
+                    <a-button @click="refreshTable">{{
+                        $t("def.reset")
+                    }}</a-button>
+                </div>
+            </div>
+            <div class="table-container">
+                <a-table
+                    :columns="tableColumns"
+                    :data-source="tableData"
+                    :scroll="{ x: true }"
+                    :loading="loading"
+                    :row-key="(record) => record.id"
+                    :pagination="false">
+                    <template #bodyCell="{ column, text, record }">
+                        <template
+                            v-if="
+                                column.dataIndex === 'name' &&
+                                $auth('sales-area.detail')
+                            ">
+                            <a-tooltip placement="top" :title="text">
+                                <a-button
+                                    type="link"
+                                    @click="routerChange('detail', record)"
+                                    >{{ text }}</a-button
+                                >
+                            </a-tooltip>
+                        </template>
+                        <template v-if="column.key === 'country'">
+                            {{ text || "-" }}
+                        </template>
+                        <template v-if="column.key === 'name_en'">
+                            {{ text || "-" }}
+                        </template>
+                        <template v-if="column.key === 'operation'">
+                            <a-button
+                                type="link"
+                                @click="routerChange('edit', record)"
+                                v-if="$auth('sales-area.save')"
+                                ><i class="icon i_edit" />{{
+                                    $t("def.edit")
+                                }}</a-button
+                            >
+                            <a-button
+                                type="link"
+                                @click="handleDelete(record.id)"
+                                class="danger"
+                                v-if="$auth('sales-area.delete')"
+                                ><i class="icon i_delete" />{{
+                                    $t("def.delete")
+                                }}</a-button
+                            >
+                        </template>
+                    </template>
+                </a-table>
+            </div>
+            <div class="paging-container">
+                <a-pagination
+                    v-model:current="pagination.current"
+                    :page-size="pagination.size"
+                    :total="pagination.total"
+                    show-quick-jumper
+                    show-size-changer
+                    show-less-items
+                    :show-total="
+                        (total) =>
+                            $t('n.all_total') + ` ${pagination.total} ` + $t('in.total')
+                    "
+                    :hide-on-single-page="false"
+                    :pageSizeOptions="['10', '20', '30', '40']"
+                    @change="onPageChange"
+                    @showSizeChange="onSizeChange" />
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import Core from "../../core";
+import { ref, reactive, computed, onMounted, onBeforeUnmount } from "vue";
+// 使用useTable
+import { useTable } from "@/hooks/useTable";
+import { useI18n } from "vue-i18n";
+const $t = useI18n().t;
+const $i18n = useI18n();
+const request = Core.Api.SalesArea.list;
+const {
+    loading,
+    tableData,
+    pagination,
+    search,
+    onSizeChange,
+    refreshTable,
+    onPageChange,
+    searchParam,
+} = useTable({ request });
+
+const tableColumns = computed(() => {
+    let columns = [
+        { title: $t("n.name"), dataIndex: "name" },
+        { title: $t("n.name_en"), dataIndex: "name_en", key: "name_en" },
+        { title: $t("n.continent"), dataIndex: "continent", key: "" },
+        { title: $t("n.country"), dataIndex: "country", key: "country" },
+        { title: $t("def.operate"), key: "operation", fixed: "right" },
+    ];
+    if ($i18n.locale === "en") {
+        columns.splice(2, 1, {
+            title: $t("n.continent"),
+            dataIndex: "continent_en",
+            key: "country",
+        });
+        columns.splice(3, 1, {
+            title: $t("n.country"),
+            dataIndex: "country_en",
+            key: "country",
+        });
+    }
+    return columns;
+});
+</script>

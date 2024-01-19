@@ -40,7 +40,7 @@ export function useTable ({ request, initParam, isPageAble = true, immediate = t
     //这里传入后台需要的页码数据 字段名自行定义即可
     const pageParam = computed(() => ({
         page: state.pagination.current, 
-        pageSize: state.pagination.size
+        page_size: state.pagination.size
     }))
     //是否展示分页器
     const isPaginationVisible = computed(() => {
@@ -148,7 +148,7 @@ export function useTable ({ request, initParam, isPageAble = true, immediate = t
                     :row-key="(record) => record.id"
                     :pagination="false"
                 >
-                    <template #bodyCell="{ column, text, record }">                    
+                    <template #bodyCell="{ column, text, record }">
                     </template>
                 </a-table>
             </div>

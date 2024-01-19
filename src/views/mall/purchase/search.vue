@@ -104,6 +104,9 @@ let fetchList = []
 /* state end */
 
 /* computed start */
+const lang = computed(() => {
+    return store.state.lang
+})
 const searchKey = computed(() => {
     return store.state.mallSearchKey
 })
@@ -212,18 +215,22 @@ const executeFetchList = () => {
             font-style: normal;
             font-weight: 500;
             line-height: normal;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
         .body {
             .list-body {
-                margin-bottom: 40px;
+                margin-bottom: 24px;
                 .list-body-title {
                     color: #000;
                     font-size: 16px;
                     font-style: normal;
                     font-weight: 400;
                     line-height: normal;
-                    margin-bottom: 16px;
+                    padding: 16px 0;
+                    position: sticky;
+                    top: -1px;
+                    background: #F8F8F8;
+                    z-index: 9;
                 }
                 .list-item {
                     margin-bottom: 24px;
