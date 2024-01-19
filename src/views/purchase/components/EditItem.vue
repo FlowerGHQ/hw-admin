@@ -40,9 +40,13 @@
                                 </a-tooltip>
                             </div>
                         </template>
-                        <template v-if="column.dataIndex === 'amount'">
-                            <span v-if="type === 'GIVE_ORDER'">{{ text }}</span>
-                            <a-input-number v-else v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
+                        <!-- <span v-if="!$auth('ADMIN') && type === ''">{{ text }}</span> -->
+                        <template v-if="column.dataIndex === 'amount' && type !== 'GIVE_ORDER'">
+                            <a-input-number  v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
+                        </template>
+                         <!-- <span v-if="!$auth('ADMIN') && type === ''">{{ text }}</span> -->
+                         <template v-if="column.dataIndex === 'amount' && type === 'GIVE_ORDER' && $auth('ADMIN')">
+                            <a-input-number @blur="handleUpdate(record)"  v-model:value="record.amount" style="width: 120px;" :min="0" :precision="0"/>
                         </template>
                         <template v-if="column.key === 'money'">
                             <span v-if="text >= 0">{{$Util.priceUnitFilter(record.currency)}}</span>
@@ -52,7 +56,7 @@
                             {{$Util.itemSpecFilter(text, $i18n.locale)}}
                         </template>
                         <template v-if="column.key === 'operate'">
-                            <a-button type="link" danger @click="handleRemoveItem(index)"><i class="icon i_delete"/>{{$t('def.remove')}}</a-button>
+                            <a-button type="link" danger @click="handleRemoveItem(record,index)"><i class="icon i_delete"/>{{$t('def.remove')}}</a-button>
                         </template>
                     </template>
                 </a-table>
@@ -103,7 +107,8 @@ export default {
                 { title: this.$t('i.total_price'),dataIndex: 'total_price', key: 'money'},
                 { title: this.$t('def.operate'), key: 'operate' ,fixed: 'right', width: 100},
             ]
-            if(this.type === 'GIVE_ORDER') {
+            // 数据操作隔离 不是管理员并且是赠品单
+            if( !this.$auth('ADMIN') && this.type === 'GIVE_ORDER') {
                 columns = columns.filter(i => i.key !== 'operate')
             }
             return columns
@@ -179,6 +184,20 @@ export default {
                 this.loading = false;
             });
         },
+        // 修改赠品单
+        handleUpdate(record) {
+            console.log(record)
+            Core.Api.Purchase.updateGiveaway({
+                item_id: record.id,
+                order_id: this.orderId,
+                amount: record.amount,
+            }).then(() => {
+                this.$message.success(this.$t('pop_up.save_success'))
+                this.getGiveawayList()
+            }).catch(err => {
+                console.log('handleUpdate err:', err)
+            })
+        },
 
         // 添加商品
         handleAddItem(ids, items) {
@@ -197,8 +216,33 @@ export default {
             this.isShowBtn = true
         },
         // 添加商品
-        handleRemoveItem(index) {
-            this.tableData.splice(index, 1)
+        handleRemoveItem(record,index) {
+            if(this.type === 'GIVE_ORDER' && record.id){
+                this.$confirm({
+                    type: 'danger',
+                    title: this.$t('def.delete'),
+                    content: this.$t('def.delete_content'),
+                    okText: this.$t('def.sure'),
+                    cancelText: this.$t('def.cancel'),
+                    onOk: () => {
+                       Core.Api.Purchase.deleteGiveaway({
+                            item_id: record.id,
+                            order_id: this.orderId,
+                        }).then(() => {
+                            this.$message.success(this.$t('pop_up.delete_success'))
+                            this.getGiveawayList()
+                        }).catch(err => {
+                            console.log('handleRemoveItem err:', err)
+                        })
+                    },
+                    onCancel: () => {
+                        console.log('Cancel');
+                    },
+                });
+            }
+            else{
+                this.tableData.splice(index, 1)
+            }
         },
         handleSave() {
             let item_list = []

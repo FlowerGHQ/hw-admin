@@ -1198,6 +1198,7 @@ const messages = {
         def: {
             // 请设置
             p_set: '请设置',
+            delete_content: '确定要删除吗？',
             search: '查询',
             reset: '重置',
             export: '导出',
@@ -3989,6 +3990,7 @@ const messages = {
         },
         def: {
             p_set: 'Product Setting',
+            delete_content: 'Are You Sure To Delete It?',
             search: 'Search',
             reset: 'Reset',
             export: 'Export',
