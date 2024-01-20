@@ -18,6 +18,7 @@
                         <div class="content-area">
                             <div class="col-area">
                                 <div class="col-all-area">
+                                    <!-- 营业执照照片 -->
                                     <a-form-item
                                         :label="
                                             $t(
@@ -27,6 +28,7 @@
                                         name="business_license_photo"
                                         class="img-area">
                                         <MyUpload
+                                            class="c-upload"
                                             name="business_license_photo"
                                             :tip="
                                                 $t('supply-chain.upload_photos')
@@ -51,20 +53,7 @@
                                             )
                                         "
                                         name="registered_capital">
-                                        <div class="registered-capital—area">
-                                            <!-- <a-input
-                                                :maxlength="15"
-                                                :placeholder="
-                                                    $t(
-                                                        'supply-chain.please_enter'
-                                                    )
-                                                "
-                                                name="registered_capital"
-                                                v-model:value="
-                                                    formState.registered_capital
-                                                ">
-                                            </a-input>
-                                            <span class="unit">{{ $t('supply-chain.ten_thousand_yuan') }}</span> -->
+                                        <div class="registered-capital—area">    
                                             <a-input-number
                                                 v-model:value="
                                                     formState.registered_capital
@@ -89,29 +78,6 @@
                                         </div>
                                     </a-form-item>
                                 </div>
-                                <!-- <div class="col-area-item"> -->
-                                <!-- 法定代表人 -->
-                                <!-- <a-form-item
-                      :label="
-                          $t(
-                              'supply-chain.legal_representative'
-                          )
-                      "
-                      name="legal_person">
-                      <a-input
-                          
-                          :maxlength="5"
-                          
-                          :placeholder="
-                              $t('supply-chain.please_enter')
-                          "
-                          name="legal_person"
-                          v-model:value="
-                              formState.legal_person
-                          ">
-                      </a-input>
-                  </a-form-item> -->
-                                <!-- </div> -->
                             </div>
                             <div class="col-area business-term-col-area">
                                 <div class="col-all-area">
@@ -273,12 +239,7 @@
                             </div>
                         </div>
                     </div>
-                    <div
-                        class="col-area"
-                        v-if="
-                            supplyType ==
-                            Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value
-                        ">
+                    <div class="col-area" v-if="supplyType == Core.Const.SUPPLAY.SUPPLAY_TYPE['2'].value">
                         <div class="title-area">
                             <div class="title">
                                 {{ $t("supply-chain.proxy_certificate") }}
@@ -318,6 +279,7 @@
             <div class="title">
                 {{ $t("supply-chain.other_proving_materials") }}
             </div>
+            <!-- 其他证实性材料 -->
             <div class="other-material-form">
                 <a-form
                     ref="formRef2"
@@ -326,68 +288,76 @@
                     :rules="rules"
                     labelAlign="right">
                     <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="$t('supply-chain.bank_account_license')"
-                                name="account_opening_bank_license"
-                                class="img-area">
-                                <MyUpload
-                                    name="account_opening_bank_license"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="
-                                        formState.account_opening_bank_license
-                                    "
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
+                        <div class="title-area">
+                            <div class="title">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="
-                                    $t(
-                                        'supply-chain.environmental_assessment_certificate'
-                                    )
-                                "
-                                name="eia_certificate"
-                                class="img-area">
-                                <MyUpload
-                                    name="eia_certificate"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="formState.eia_certificate"
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
+                        <div class="content-area">
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="$t('supply-chain.bank_account_license')"
+                                        name="account_opening_bank_license"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="account_opening_bank_license"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="
+                                                formState.account_opening_bank_license
+                                            "
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="
+                                            $t(
+                                                'supply-chain.environmental_assessment_certificate'
+                                            )
+                                        "
+                                        name="eia_certificate"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="eia_certificate"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="formState.eia_certificate"
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>
+                            <div class="col-area">
+                                <div class="col-all-area">
+                                    <a-form-item
+                                        :label="
+                                            $t(
+                                                'supply-chain.environmental_protection_report'
+                                            )
+                                        "
+                                        name="environmental_report"
+                                        class="img-area">
+                                        <MyUpload
+                                            name="environmental_report"
+                                            :tip="$t('supply-chain.please_upload')"
+                                            v-model:value="
+                                                formState.environmental_report
+                                            "
+                                            showTip
+                                            :limit="9"
+                                            :limitSize="2"
+                                            tipPosition="bottom" />
+                                    </a-form-item>
+                                </div>
+                            </div>  
                         </div>
-                    </div>
-                    <div class="col-area">
-                        <div class="col-all-area">
-                            <a-form-item
-                                :label="
-                                    $t(
-                                        'supply-chain.environmental_protection_report'
-                                    )
-                                "
-                                name="environmental_report"
-                                class="img-area">
-                                <MyUpload
-                                    name="environmental_report"
-                                    :tip="$t('supply-chain.please_upload')"
-                                    v-model:value="
-                                        formState.environmental_report
-                                    "
-                                    showTip
-                                    :limit="9"
-                                    :limitSize="2"
-                                    tipPosition="bottom" />
-                            </a-form-item>
-                        </div>
-                    </div>
+                    </div>                    
                 </a-form>
             </div>
         </div>
@@ -472,6 +442,15 @@ let bank_accountVaild = async (_rule, value) => {
     }
     return Promise.resolve();
 };
+const business_license_photoVaild = async (_rule, value) => {
+    if (!value) {
+        return Promise.reject(
+            $t("supply-chain.please_upload_business_license_photos")
+        );
+    }
+    return Promise.resolve();
+};
+
 const rules = {
     // 注册资本
     registered_capital: [
@@ -517,6 +496,13 @@ const rules = {
             trigger: ["change", "blur"],
         },
     ],
+    business_license_photo:[
+        {
+            required: true,
+            validator: business_license_photoVaild,
+            trigger: ["change", "blur"],
+        },
+    ]
 };
 
 const handleTimeSearch = (params) => {
@@ -629,8 +615,14 @@ const handlePrev = () => {
             },
         };
     } else {
-        // 不为空对象
-        data.form.confirmatory_material = formState;
+        // console.log("判断类型", typeof data.form);
+        if (typeof data.form === 'string') {
+            data.form = JSON.parse(data.form)
+            data.form.confirmatory_material = formState;        
+        } else {
+            // 不为空对象
+            data.form.confirmatory_material = formState;
+        }
     }
     $store.dispatch("SUPPLY_CHAIN/setSupplyChain", data);
     $store.commit("SUPPLY_CHAIN/setSupplyDraftChain", data);
@@ -699,27 +691,55 @@ onMounted(() => {
     }
     .base-info {
         width: 100%;
-        .title {
-            color: #1d2129;
+        .title{
+            color: #1D2129;
             font-size: 18px;
             font-weight: 500;
         }
         .base-info-form {
-            width: 60.5%;
+            padding: 0 3%;
             margin: 0 auto;
+            .ant-form{
+                .col-area{
+                    .title-area{
+                        min-width: 96px;
+                    }
+                    .content-area{
+                        padding: 0;
+                        margin-left: 10.5%;
+                        .col-area{
+                            margin-left: 0 !important;
+                        }
+                    }
+                }
+            }
         }
     }
     .other-material {
         width: 100%;
         margin-top: 21px;
-        .title {
-            color: #1d2129;
+        .title{
+            color: #1D2129;
             font-size: 18px;
             font-weight: 500;
         }
         .other-material-form {
-            width: calc(60.5% - 96px - 88px - 96px - 80px);
+            padding: 0 3%;
             margin: 0 auto;
+            .ant-form{
+                .col-area{
+                    .title-area{
+                        min-width: 96px;
+                    }
+                    .content-area{
+                        padding: 0;
+                        margin-left: 10.5%;
+                        .col-area{
+                            margin-left: 0 !important;
+                        }
+                    }
+                }
+            }            
         }
     }
 }
@@ -735,8 +755,7 @@ onMounted(() => {
     margin-bottom: 16px;
 }
 :deep(.ant-form-item-label > label) {
-    color: #8090a6;
-    height: auto;
+    color: #8090a6;    
 }
 :deep(.ant-form-item-label > label::after) {
     display: none;
@@ -766,6 +785,7 @@ onMounted(() => {
 .business-term {
     display: flex;
     align-items: center;
+
     :deep(.ant-picker-range) {
         min-width: 236px;
         height: 32px;
@@ -823,6 +843,12 @@ onMounted(() => {
                 }
             }
         }
+    }
+}
+
+.c-upload {    
+    :deep(.tip) {
+        width: 300px;
     }
 }
 </style>

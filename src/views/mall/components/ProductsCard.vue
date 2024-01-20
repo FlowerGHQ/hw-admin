@@ -2,7 +2,7 @@
     <!-- 
         activeKey v-model 选中哪个值 示例 v-model:activeKey="activeKey1"
      -->
-    <div id="products-card">
+    <div id="products-card" :class="type">
         <div class="img">
             <a-image :src="$Util.imageFilter(record.logo, 2)" />
         </div>
@@ -20,6 +20,7 @@
             </div>
             <div class="mes-right">
                 <div class="text">
+                    <p>{{ currency }} {{ currency === '€' ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} </p>
                     <p>{{ currency }} {{ currency === '€' ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} </p>
                 </div>
                 <div class="add">
@@ -52,7 +53,12 @@ const props = defineProps({
     canRemoveFavorites: {
         type: Boolean,
         default: false
-    }
+    },
+    //类型
+    type: {
+        type: String,
+        default: 'default'
+    },
 })
 
 const editCount = ref(1)
@@ -132,8 +138,6 @@ const removeFavorites = (item) => {
     padding: 20px;
     background: #FFF;
     .img {
-        width: 180px;
-        height: 180px;
         border: 1px solid #D9D9D9;
         :deep(.ant-image) {
             height: 100%;
@@ -148,7 +152,6 @@ const removeFavorites = (item) => {
     .mes {
         .flex(space-between, initial, row);
         flex: 1;
-        padding: 16px 20px 0px 24px;
         .mes-left {
             .flex(space-between, initial);
             .title {
@@ -158,7 +161,6 @@ const removeFavorites = (item) => {
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
-                margin-bottom: 16px;
             }
             .code {
                 .ellipsis(2);
@@ -170,7 +172,6 @@ const removeFavorites = (item) => {
             }
             .favorites {
                 .flex(initial, center, row);
-                margin-bottom: 31px;
                 cursor: pointer;
                 .favorites-icon {
                     height: 18px;
@@ -194,15 +195,29 @@ const removeFavorites = (item) => {
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
-                margin-bottom: 8px;
                 text-align: right;
                 &:last-child {
                     margin-bottom: 0;
                 }
+                &:first-child {
+                    color: #8F00FF;
+                    text-align: right;
+                    font-size: 16px;
+                    font-style: normal;
+                    font-weight: 700;
+                    line-height: normal;
+                }
+                &:nth-child(2) {
+                    color: #8E8E8E;
+                    text-align: right;
+                    font-size: 12px;
+                    font-style: normal;
+                    font-weight: 400;
+                    line-height: 150%; /* 18px */
+                }
             }
             .add {
                 .fcc();
-                padding-bottom: 25px;
                 .count-edit {
                     /deep/.ant-input-number {
                         width: 136px;
@@ -298,6 +313,60 @@ const removeFavorites = (item) => {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+.default {
+    .img {
+        width: 180px;
+        height: 180px;
+    }
+    .mes {
+        padding: 16px 20px 0px 24px;
+        .mes-left {
+            .text {
+                .title {
+                    margin-bottom: 16px;
+                }
+            }
+            .favorites {
+                margin-bottom: 31px;
+            }
+        }
+        .mes-right {
+            .text > p {
+                margin-bottom: 8px;
+            }
+            .add {
+                padding-bottom: 25px;
+            }
+        }
+    }
+}
+.small {
+    .img {
+        width: 90px;
+        height: 90px;
+    }
+    .mes {
+        padding: 0 0 0 20px;
+        .mes-left {
+            .text {
+                .title {
+                    margin-bottom: 4px;
+                }
+            }
+            .favorites {
+                margin-bottom: 0px;
+            }
+        }
+        .mes-right {
+            .text > p {
+                margin-bottom: 4px;
+            }
+            .add {
+                padding-bottom: 0px;
             }
         }
     }

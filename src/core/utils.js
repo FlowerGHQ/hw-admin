@@ -6,6 +6,7 @@ import dayjs from "dayjs"
 import weekday from "dayjs/plugin/weekday"
 import localeData from "dayjs/plugin/localeData"
 import Image from './modules/units/image'
+import Number from './modules/units/number'
 dayjs.extend(weekday)
 dayjs.extend(localeData)
 
@@ -1769,7 +1770,9 @@ const Util = {
         }
     },
     // 照片逻辑
-    Image
+    Image,
+    // 数字处理
+    Number,
 
 }
 export default Util

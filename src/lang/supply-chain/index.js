@@ -195,8 +195,9 @@ export default {
     development_process: "开发流程",
     quality_information: "质量信息",
     quality_system_certification: "质量体系认证",
-    environmental_system_certification: "环境体系认证",
+    // 质量合作机构
     quality_cooperation_agency: "质量合作机构",
+    environmental_system_certification: "环境体系认证",
     accredited_laboratory: "认可实验室",
     quality_control_tool_software: "质控工具软件",
     planning_system_certification: "计划体系认证",
@@ -291,6 +292,8 @@ export default {
     mask_tips2: "填写的资料尚未提交，确定退出当前页面吗",
     continue_fill: "继续填写", 
     submit_exit: "提交并退出",
+    no_content: "无内容",
+    please_upload_business_license_photos: "请上传营业执照照片",
   },
   en: {
     ten_thousand_yuan:"TEN THOUSAND YUAN",
@@ -482,8 +485,8 @@ export default {
     development_process: "Development process",
     quality_information: "Quality information",
     quality_system_certification: "Quality system certification",
-    environmental_system_certification: "Environmental system certification",
     quality_cooperation_agency: "Quality cooperation agency",
+    environmental_system_certification: "Environmental system certification",
     accredited_laboratory: "Accredited laboratory",
     quality_control_tool_software: "Quality control tool software",
     planning_system_certification: "Planning system certification",
@@ -579,5 +582,7 @@ export default {
     mask_tips2: "The information filled in has not been submitted yet. Are you sure to exit the current page",
     continue_fill: "Continue to fill in", 
     submit_exit: "Submit and exit",
+    no_content: "No Content",
+    please_upload_business_license_photos: "Please upload business license photos",
   },
 }

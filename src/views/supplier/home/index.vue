@@ -3,127 +3,80 @@
         <a-layout>
             <a-layout-header>
                 <div class="header-left">
-                    <img
-                        src="@images/header-logo2.png"
-                        class="logo"
-                        alt="浩万" />
+                    <img src="@images/header-logo2.png" class="logo" alt="浩万" />
                 </div>
                 <div class="header-right">
                     <!-- 中英文的转换 -->
-                    <a-button
-                        class="lang-switch"
-                        type="link"
-                        @click="handleLangSwitch">
-                        <i
-                            class="icon"
-                            :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
+                    <a-button class="lang-switch" type="link" @click="handleLangSwitch(lang == 'zh' ? 'en' : 'zh')">
+                        <i class="icon" :class="lang == 'zh' ? 'i_zh-en' : 'i_en-zh'" />
                     </a-button>
                     <a-divider class="PC" type="vertical" />
                     <a-tag class="PC" color="blue" style="font-size: 12px">{{
                         USER_TYPE[loginType][$i18n.locale]
                     }}</a-tag>
-                    <a-dropdown
-                        :trigger="['click']"
-                        overlay-class-name="account-action-menu">
+                    <a-dropdown :trigger="['click']" overlay-class-name="account-action-menu">
                         <a-button class="user-info" type="link">
-                            <a-avatar
-                                class="user-avatar PC"
-                                :src="$Util.imageFilter(user.avatar, 3)"
-                                :size="30">
-                                <template #icon
-                                    ><i class="icon i_user"
-                                /></template>
+                            <a-avatar class="user-avatar PC" :src="$Util.imageFilter(user.avatar, 3)" :size="30">
+                                <template #icon><i class="icon i_user" /></template>
                             </a-avatar>
                             <span class="user-name">{{ user.name }}</span>
                         </a-button>
                         <template #overlay>
                             <a-menu style="text-align: center">
                                 <a-menu-item @click="handleEditShow">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("n.password") }}</a-button
-                                    >
+                                    <a-button type="link" class="menu-item-btn">{{ $t("n.password") }}</a-button>
                                     <a-modal
                                         v-model:visible="passShow"
                                         :title="$t('n.password')"
                                         class="password-edit-modal"
-                                        :after-close="handleEditClose">
+                                        :after-close="handleEditClose"
+                                    >
                                         <div class="form-title">
                                             <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.old") }}:
-                                                </div>
+                                                <div class="key">{{ $t("n.old") }}:</div>
                                                 <div class="value">
                                                     <a-input-password
-                                                        :placeholder="
-                                                            $t('def.input')
-                                                        "
-                                                        v-model:value="
-                                                            form.old_password
-                                                        " />
+                                                        :placeholder="$t('def.input')"
+                                                        v-model:value="form.old_password"
+                                                    />
                                                 </div>
                                             </div>
                                             <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.new") }}:
-                                                </div>
+                                                <div class="key">{{ $t("n.new") }}:</div>
                                                 <div class="value">
                                                     <a-input-password
-                                                        v-model:value="
-                                                            form.password
-                                                        "
-                                                        :placeholder="
-                                                            $t('def.input')
-                                                        " />
+                                                        v-model:value="form.password"
+                                                        :placeholder="$t('def.input')"
+                                                    />
                                                 </div>
                                             </div>
                                             <div class="form-item required">
-                                                <div class="key">
-                                                    {{ $t("n.double") }}:
-                                                </div>
+                                                <div class="key">{{ $t("n.double") }}:</div>
                                                 <div class="value">
                                                     <a-input-password
-                                                        v-model:value="
-                                                            form.new_password
-                                                        "
-                                                        :placeholder="
-                                                            $t('n.double')
-                                                        " />
+                                                        v-model:value="form.new_password"
+                                                        :placeholder="$t('n.double')"
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
                                         <template #footer>
-                                            <a-button
-                                                key="back"
-                                                @click="handleEditSubmit"
-                                                type="primary"
-                                                >{{ $t("def.sure") }}</a-button
-                                            >
-                                            <a-button
-                                                @click="passShow = false"
-                                                >{{
-                                                    $t("def.cancel")
-                                                }}</a-button
-                                            >
+                                            <a-button key="back" @click="handleEditSubmit" type="primary">{{
+                                                $t("def.sure")
+                                            }}</a-button>
+                                            <a-button @click="passShow = false">{{ $t("def.cancel") }}</a-button>
                                         </template>
                                     </a-modal>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" />
                                 <a-menu-item @click="$router.push('/login')" v-if="user_type_list.length > 1">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("mall.switch_identity") }}</a-button
-                                    >
+                                    <a-button type="link" class="menu-item-btn">{{
+                                        $t("mall.switch_identity")
+                                    }}</a-button>
                                 </a-menu-item>
                                 <a-menu-divider class="menu_divider" v-if="user_type_list.length > 1" />
                                 <a-menu-item @click="handleLogout">
-                                    <a-button
-                                        type="link"
-                                        class="menu-item-btn"
-                                        >{{ $t("n.exit") }}</a-button
-                                    >
+                                    <a-button type="link" class="menu-item-btn">{{ $t("n.exit") }}</a-button>
                                 </a-menu-item>
                             </a-menu>
                         </template>
@@ -139,71 +92,47 @@
                             :style="{
                                 backgroundImage: 'url(' + item.bg + ')',
                                 color: item.text_color,
-                            }">
-                            <SvgIcon
-                                class="icon-style"
-                                :icon-class="item.icon" />
+                            }"
+                        >
+                            <SvgIcon class="icon-style" :icon-class="item.icon" />
                             <span>{{ $t(item.t) }}</span>
                         </div>
                     </template>
                 </div>
-                <div class="content-main">
+                <div class="content-main" ref="contentMain">
                     <BasicInfo ref="BasicInfoRef" v-if="setp === 0" />
-                    <MaterialList
-                        ref="MaterialListRef"
-                        v-else-if="setp === 1" />
+                    <MaterialList ref="MaterialListRef" v-else-if="setp === 1" />
                     <Successful v-else-if="setp === 2" />
                 </div>
                 <div class="supply-chain-footer" v-if="setp !== 2">
                     <!-- 承诺书 -->
-                    <div
-                        class="promise-book"
-                        v-if="setp == 1"
-                        @click="handleOpen">
-                        <span>{{
-                            $t(
-                                "supply-chain.please_read_before_submitting_an_application"
-                            )
-                        }}</span>
+                    <div class="promise-book" v-if="setp == 1" @click="handleOpen">
+                        <span>{{ $t("supply-chain.please_read_before_submitting_an_application") }}</span>
+                        <a class="promise-text">{{ $t("supply-chain.commitment_to_integrity") }}</a>
                         <a class="promise-text">{{
-                            $t("supply-chain.commitment_to_integrity")
-                        }}</a>
-                        <a class="promise-text">{{
-                            $t(
-                                "supply-chain.confidentiality_and_non_competition_agreement"
-                            )
+                            $t("supply-chain.confidentiality_and_non_competition_agreement")
                         }}</a>
                     </div>
                     <div class="btn-area">
                         <!-- 保存草稿 -->
-                        <a-button @click="handleSave">{{
-                            $t("supply-chain.save_draft")
+                        <a-button @click="handleSave">{{ $t("supply-chain.save_draft") }}</a-button>
+                        <a-button type="primary" @click="handleNext" v-if="setp == 0">{{
+                            $t("supply-chain.next_step")
                         }}</a-button>
-                        <a-button
-                            type="primary"
-                            @click="handleNext"
-                            v-if="setp == 0"
-                            >{{ $t("supply-chain.next_step") }}</a-button
-                        >
                         <!-- 上一步 -->
-                        <a-button @click="handlePrev" v-if="setp == 1">{{
-                            $t("supply-chain.previous_step")
-                        }}</a-button>
+                        <a-button @click="handlePrev" v-if="setp == 1">{{ $t("supply-chain.previous_step") }}</a-button>
                         <!-- 提交 -->
-                        <a-button
-                            type="primary"
-                            @click="handleSubmit"
-                            v-if="setp == 1"
-                            >{{
-                                $t("supply-chain.submit_application")
-                            }}</a-button
-                        >
+                        <a-button type="primary" @click="handleSubmit" v-if="setp == 1">{{
+                            $t("supply-chain.submit_application")
+                        }}</a-button>
                     </div>
                 </div>
             </a-layout-content>
         </a-layout>
         <a-modal
             v-model:visible="visible"
+            :keyboard="false"
+            :maskClosable="false"
             class="promise-book-modal"
             width="860px"
             :getContainer="
@@ -211,11 +140,10 @@
                     return suppluChain;
                 }
             "
-            centered>
+            centered
+        >
             <!-- title -->
-            <template #title>
-                请阅读《廉洁承诺书》和《保密和不竞争协议》
-            </template>
+            <template #title> 请阅读《廉洁承诺书》和《保密和不竞争协议》 </template>
             <!-- body -->
             <template #default>
                 <HonestPage />
@@ -231,7 +159,8 @@
                         'btn-disabled': countTime != 0,
                         'read-btn': countTime == 0,
                     }"
-                    @click="handleSubmitOk">
+                    @click="handleSubmitOk"
+                >
                     {{ $t("supply-chain.read_and_send_application") }}
                     <div class="time-area" v-if="countTime != 0">
                         (
@@ -251,7 +180,7 @@ import SvgIcon from "@/components/MySvgIcon/index.vue";
 // import MyStep from "./components/steps.vue";
 import { useStore } from "vuex";
 import { useI18n } from "vue-i18n";
-import { useRouter,useRoute } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 // 基础信息
 import BasicInfo from "./basic-info.vue";
@@ -260,9 +189,9 @@ import MaterialList from "./material-list.vue";
 // 成功页
 import Successful from "./successful.vue";
 // 廉洁承诺书
-import HonestPage from './components/honest-page.vue';
+import HonestPage from "./components/honest-page.vue";
 // 保密和不竞争
-import SecrecyNotCompete from './components/secrecy-not-compete.vue';
+import SecrecyNotCompete from "./components/secrecy-not-compete.vue";
 
 const USER_TYPE = Core.Const.USER.TYPE_MAP;
 const loginType = Core.Data.getLoginType();
@@ -278,6 +207,7 @@ const lang = computed(() => $store.state.lang);
 const suppluChain = ref(null);
 const MaterialListRef = ref(null);
 const BasicInfoRef = ref(null);
+const contentMain = ref(null);
 const user_type_list = ref(Core.Data.getUserTypeList());
 //步数样式
 const setpCount = computed(() => {
@@ -298,10 +228,7 @@ const setpObject = computed(() => {
         1: {
             setp: 1,
             t: "supply-chain.material_list",
-            bg: Core.Util.Image.getImageFile(
-                "supply-chain",
-                "setp-material-default-bg"
-            ),
+            bg: Core.Util.Image.getImageFile("supply-chain", "setp-material-default-bg"),
             icon: "setp-icon-black",
             text_color: "#666",
         },
@@ -309,26 +236,14 @@ const setpObject = computed(() => {
 
     switch (setpCount.value) {
         case 0:
-            result[0].bg = Core.Util.Image.getImageFile(
-                "supply-chain",
-                "setp-base-bg"
-            );
+            result[0].bg = Core.Util.Image.getImageFile("supply-chain", "setp-base-bg");
             result[0].icon = "setp-icon-white";
             result[0].text_color = "#FFF";
-            result[1].bg = Core.Util.Image.getImageFile(
-                "supply-chain",
-                "setp-material-default-bg"
-            );
+            result[1].bg = Core.Util.Image.getImageFile("supply-chain", "setp-material-default-bg");
             break;
         case 1:
-            result[0].bg = Core.Util.Image.getImageFile(
-                "supply-chain",
-                "setp-base-bg"
-            );
-            result[1].bg = Core.Util.Image.getImageFile(
-                "supply-chain",
-                "setp-material-bg"
-            );
+            result[0].bg = Core.Util.Image.getImageFile("supply-chain", "setp-base-bg");
+            result[1].bg = Core.Util.Image.getImageFile("supply-chain", "setp-material-bg");
             result[1].icon = "setp-icon-white";
             result[1].text_color = "#FFF";
             break;
@@ -376,10 +291,16 @@ const handlePrev = () => {
 // 下一步
 const handleNext = () => {
     BasicInfoRef.value &&
-        BasicInfoRef.value.step1Vaild().then(() => {
-            // 下一步
-            $store.dispatch("SUPPLY_CHAIN/nextStep");
-        })
+        BasicInfoRef.value
+            .step1Vaild()
+            .then((res) => {
+                console.log("res-----------------:", res);
+                // 下一步
+                $store.dispatch("SUPPLY_CHAIN/nextStep");
+            })
+            .catch((err) => {
+                console.log("err-------------------:", err);
+            });
 };
 // 保存草稿
 const handleSave = () => {
@@ -395,9 +316,12 @@ const handleSubmit = () => {
         // 打开弹框
         visible.value = true;
     } else {
-        MaterialListRef.value.step2Vaild().then(() => {
+        MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
+            let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
+            let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
+            $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
             handleSubmitData();
-        })
+        });
     }
 };
 // 提交申请
@@ -406,16 +330,13 @@ const handleSubmitOk = () => {
     $store.dispatch("SUPPLY_CHAIN/setRead", true);
     // 关闭弹框
     visible.value = false;
-    MaterialListRef.value.step2Vaild().then(() => {
+    MaterialListRef.value && MaterialListRef.value.step2Vaild().then(() => {
         let supplyChain_data = $store.state.SUPPLY_CHAIN.supplyChain; //拿到上传数据
         let supplyDraftChain_data = $store.state.SUPPLY_CHAIN.supplyDraftChain; //拿到草稿数据
-        $store.dispatch(
-            "SUPPLY_CHAIN/setSupplyDraftChain",
-            Object.assign(supplyDraftChain_data, supplyChain_data)
-        );
+        $store.dispatch("SUPPLY_CHAIN/setSupplyDraftChain", Object.assign(supplyDraftChain_data, supplyChain_data));
         // 跳转到注册按钮
         handleSubmitData();
-    })
+    });
 };
 // 提交数据
 const handleSubmitData = () => {
@@ -423,10 +344,7 @@ const handleSubmitData = () => {
     const data = $store.state.SUPPLY_CHAIN.supplyChain;
     data?.form ? (data.form = JSON.stringify(data.form)) : "{}";
     // 获取类型
-    if (
-        $store.state.SUPPLY_CHAIN.supplyType !=
-        Core.Const.SUPPLAY.SUPPLAY_TYPE["2"].value
-    ) {
+    if ($store.state.SUPPLY_CHAIN.supplyType != Core.Const.SUPPLAY.SUPPLAY_TYPE["2"].value) {
         if (data?.confirmatory_material?.proxy_certificate) {
             delete data.confirmatory_material.proxy_certificate;
         }
@@ -464,15 +382,8 @@ const getDetail = () => {
                         } else {
                             DETAILS.form = {};
                         }
-                        if (
-                            Object.keys(
-                                $store.state.SUPPLY_CHAIN.supplyDraftChain
-                            ).length > 0
-                        ) {
-                            DETAILS = Object.assign(
-                                DETAILS,
-                                $store.state.SUPPLY_CHAIN.supplyDraftChain
-                            );
+                        if (Object.keys($store.state.SUPPLY_CHAIN.supplyDraftChain).length > 0) {
+                            DETAILS = Object.assign(DETAILS, $store.state.SUPPLY_CHAIN.supplyDraftChain);
                         }
                         let data = DETAILS;
                         console.log("data:", data);
@@ -513,18 +424,23 @@ const handleOpen = () => {
     visible.value = true;
 };
 // 中英文切换
-const handleLangSwitch = () => {
-    $store.commit("switchLang");
+const handleLangSwitch = (lang) => {
+    $store.commit("switchLang", lang);
     $i18n.locale.value = $store.state.lang;
+    console.log("lang:", lang);
 };
 const handleEditShow = () => {
     passShow.value = true;
 };
 const handleLogout = () => {
-    $router.replace("/login");
-    localStorage.clear();
-    $store.dispatch("SUPPLY_CHAIN/clearAll");
-    Core.Api.Common.logout();
+    if (Number(Core.Data.getLoginType()) === Core.Const.USER.TYPE.SUPPLIER) {
+        $router.replace(`/login?user_type=${Core.Data.getLoginType()}`);
+    } else {
+        $router.replace(`/login`);
+    }
+    Core.Api.Common.logout().then(() => {
+        $store.dispatch("SUPPLY_CHAIN/clearAll");
+    });
 };
 const handleEditSubmit = () => {
     let form = Core.Util.deepCopy(form);
@@ -576,6 +492,9 @@ watch(
                 BasicInfoRef.value && BasicInfoRef.value.reviewData();
             });
         }
+        contentMain.value && (contentMain.value.scrollTop = 0);
+
+        
     }
 );
 
@@ -716,7 +635,7 @@ onBeforeUnmount(() => {
         }
         .ant-layout-content {
             flex: 1;
-            padding: 20px 40px;
+            padding: 20px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
