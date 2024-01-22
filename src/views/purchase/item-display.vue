@@ -302,7 +302,7 @@ export default {
     // 配件接口
     getAccessoryData(params = {}) {
       Core.Api.ItemAccessory.list({
-        item_id: this.id,
+        item_id: this.detail.id,
         is_authority: 1,
         ...params,
       }).then((res) => {
