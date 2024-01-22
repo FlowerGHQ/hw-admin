@@ -756,16 +756,17 @@ onMounted(() => {
                                                         color: #1D2129;
                                                         background-color: #fff;
                                                         border-radius: 4px;
+                                                        border:none;
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                     .ant-input-number-disabled{
+                                        border: 1px solid #E2E2EA;
+                                        background-color: #F3F6F9;
                                         .ant-input-number-input-wrap{
                                             .ant-input-number-input{
-                                                background-color: #F3F6F9;
-                                                border: 1px solid #E2E2EA;
                                             }
                                         }
                                         &+.ant-input-number-group-addon{
@@ -952,6 +953,9 @@ onMounted(() => {
 
         }
     }
+}
+:deep(.ant-form-item){
+    margin-bottom: 16px !important;
 }
 
 </style>
