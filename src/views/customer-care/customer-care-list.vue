@@ -368,35 +368,69 @@ const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPa
 /* methods start*/
 const routerChange = (type, record) => {
     let routeUrl = "";
-    switch (type) {
-        case "add": // 添加
-            routeUrl = router.resolve({
-                path: "/customer-care/edit",                
-            });
-            window.open(routeUrl.href, "_blank");
+    if (!isDistributerAdmin.value) {
+        // 分销商
+        switch (type) {
+            case "add": // 添加
+                routeUrl = router.resolve({
+                    path: "/customer-care/edit",                
+                });
+                window.open(routeUrl.href, "_blank");
             break;
-        case "edit": // 编辑
-            routeUrl = router.resolve({
-                path: "/customer-care/edit",
-                query: { id: record.id },
-            });
-            window.open(routeUrl.href, "_blank");
+            case "edit": // 编辑
+                routeUrl = router.resolve({
+                    path: "/customer-care/edit",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
             break;
-        case "detail": // 详情
-            routeUrl = router.resolve({
-                path: "/customer-care/detail",
-                query: { id: record.id },
-            });
-            window.open(routeUrl.href, "_blank");
+            case "detail": // 详情
+                routeUrl = router.resolve({
+                    path: "/customer-care/detail",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
             break;
-        case "msg": // 留言
-            routeUrl = router.resolve({
-                path: "/customer-care/detail",
-                query: { id: record.id },
-            });
-            window.open(routeUrl.href, "_blank");
+            case "msg": // 留言
+                routeUrl = router.resolve({
+                    path: "/customer-care/detail",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
             break;
-    }
+        }
+    } else {
+        // 平台方
+        switch (type) {
+            case "add": // 添加
+                routeUrl = router.resolve({
+                    path: "/inquiry-management/edit",                
+                });
+                window.open(routeUrl.href, "_blank");
+            break;
+            case "edit": // 编辑
+                routeUrl = router.resolve({
+                    path: "/inquiry-management/edit",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
+            break;
+            case "detail": // 详情
+                routeUrl = router.resolve({
+                    path: "/inquiry-management/detail",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
+            break;
+            case "msg": // 留言
+                routeUrl = router.resolve({
+                    path: "/inquiry-management/detail",
+                    query: { id: record.id },
+                });
+                window.open(routeUrl.href, "_blank");
+            break;
+        }
+    }    
 };
 const onSearch = (data) => {
     searchParam.value = data;
