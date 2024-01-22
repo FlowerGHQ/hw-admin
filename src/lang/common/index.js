@@ -15,6 +15,10 @@ export default {
         type: '类型',
         export: '导出',
         delete: '删除',
+        file_incorrect: '文件格式不正确',
+        please_upload_less_than: '请上传小于',
+        file: "文件",
+        upload_fail: "上传失败",        
     },
     en: {
         operations: "Operations",
@@ -32,5 +36,9 @@ export default {
         type: 'Type',
         export: 'Export',
         delete: 'Delete',
+        file_incorrect: 'File Incorrect',
+        please_upload_less_than: 'Please Upload Less Than',
+        file: "File",
+        upload_fail: "Upload Fail",       
     }
 }

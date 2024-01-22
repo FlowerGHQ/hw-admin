@@ -57,9 +57,32 @@
                                 </a-tooltip>
                             </div>
                         </template> -->
-                        <!-- <template v-if="column.key === 'time'">
-                            {{ $Util.timeFilter(text) }}
-                        </template>                     -->
+                        <!-- 公共 -->
+                        <!-- 时间类型 -->
+                        <template v-if="column.key === 'time'">
+                            {{ $Util.timeFilter(text, 3) }}
+                        </template>
+                        <!-- 订单-状态 -->
+                        <template v-if="column.key === 'status'">
+                            {{ Core.Const.CUSTOMER_CARE.ORDER_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[text].t) : '-' }}
+                        </template>
+
+                        <!-- 平台方 -->
+                        <!-- 归类 -->
+                        <template v-if="column.key === 'sorting_type'">
+                            {{ Core.Const.CUSTOMER_CARE.SORTING_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE[text].t) : '-' }}
+                        </template>
+                        <!-- 故障类型 -->
+                        <template v-if="column.key === 'fault_type'">
+                            {{ Core.Const.CUSTOMER_CARE.FAULT_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[text].t) : '-' }}
+                        </template>
+
+                        <!-- 分销商 -->
+                        <!-- 反馈类型 -->
+                        <template v-if="column.key === 'type'">
+                            {{ Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text].t) : '-' }}
+                        </template>
+
                         <template v-if="column.key === 'operations'">
                             <a-button type="link" @click="routerChange('detail', record)">
                                 <MySvgIcon icon-class="supply-view" />
@@ -156,7 +179,7 @@ const searchList = computed(() => {
                 // 车架号
                 type: "input",
                 value: "",
-                searchParmas: "sn",
+                searchParmas: "vehicle_uid",
                 key: "common.vehicle_no",
             },
             {
@@ -164,14 +187,24 @@ const searchList = computed(() => {
                 type: "select",
                 value: undefined,
                 searchParmas: "status",
-                key: "common.status",
-                selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+                key: "common.status",                
+                selectMap: (() => {
+                    let result = []
+                    for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
+                        if (key === '-1') {
+                            result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])
+                        } else {
+                            result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])                        
+                        }                    
+                    }                   
+                    return result
+                })(),
             },
         ]
     } else if (isDistributerAdmin.value) {
         result = [
             {
-                // 问询单号
+                // 国家
                 type: "input",
                 value: undefined,
                 searchParmas: "country",
@@ -181,7 +214,7 @@ const searchList = computed(() => {
                 // 车架号
                 type: "input",
                 value: undefined,
-                searchParmas: "sn",
+                searchParmas: "vehicle_uid",
                 key: "common.vehicle_no",
             },
             {
@@ -202,39 +235,75 @@ const searchList = computed(() => {
                 // 问询标签
                 type: "select",
                 value: undefined,
-                searchParmas: "",
+                searchParmas: "sorting_type",
                 key: "customer-care.inquiry_label",
-                selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+                selectMap: (() => {
+                    let result = []                   
+                    for (const key in Core.Const.CUSTOMER_CARE.SORTING_TYPE) {                        
+                        if (key === '-1') {
+                            result.unshift(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key])
+                        } else {
+                            result.push(Core.Const.CUSTOMER_CARE.SORTING_TYPE[key])                        
+                        }                    
+                    }
+                    return result
+                })(),
             },
             {
                 // 处理进度
                 type: "select",
                 value: undefined,
-                searchParmas: "",
+                searchParmas: "status",
                 key: "customer-care.processing_progress",
-                selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+                selectMap: (() => {
+                    let result = []                   
+                    for (const key in Core.Const.CUSTOMER_CARE.ORDER_STATUS) {
+                        if (key === '-1') {
+                            result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])
+                        } else {
+                            result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])                        
+                        }
+                    }
+                    return result
+                })(),
             },            
             {
                 // 故障分类
                 type: "select",
                 value: undefined,
-                searchParmas: "",
-                key: "customer-care.fault_classification",
-                selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+                searchParmas: "fault_type",
+                key: "customer-care.fault_classification",                
+                selectMap: (() => {
+                    let result = []                   
+                    for (const key in Core.Const.CUSTOMER_CARE.FAULT_TYPE) {
+                        if (key === '-1') {
+                            result.unshift(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key])
+                        } else {
+                            result.push(Core.Const.CUSTOMER_CARE.FAULT_TYPE[key])                        
+                        }
+                    }
+                    return result
+                })(),
             },
             {
                 // 类型
                 type: "select",
                 value: undefined,
-                searchParmas: "",
-                key: "common.type",
-                selectMap: Core.Const.SUPPLAY.SUPPLAY_TYPE,
+                searchParmas: "type",
+                key: "common.type",                
+                selectMap: (() => {
+                    let result = []                    
+                    for (const key in Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE) {                        
+                        result.push(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[key])                        
+                    }
+                    return result
+                })(),
             },
             {
                 // 归属客服
                 type: "input",
                 value: undefined,
-                searchParmas: "country",
+                searchParmas: "",
                 key: "customer-care.belonging_customer_service",
             },
         ]
@@ -259,26 +328,26 @@ const tableColumns = computed(() => {
     if (!isDistributerAdmin.value) {
         columns = [
             { title: proxy.$t("customer-care.inquiry_number"), dataIndex: "uid", key: "uid" }, // 问询单号
-            { title: proxy.$t("common.vehicle_no"), dataIndex: "sn", key: "sn" }, // 车架号
+            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_uid", key: "vehicle_uid" }, // 车架号
             { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
-            { title: proxy.$t("common.vehicle_model"), dataIndex: "uid", key: "uid" }, // 车型
+            { title: proxy.$t("common.vehicle_model"), dataIndex: "uid", key: "uid" }, // 车型(未找到)
             { title: proxy.$t("common.status"), dataIndex: "status", key: "status" }, // 状态
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right", width: 200, }, // 操作
         ]
     } else if (isDistributerAdmin.value) {
         columns = [
-            { title: proxy.$t("customer-care.Construction_site_number"), dataIndex: "uid", key: "uid" }, // 工地编号
-            { title: proxy.$t("customer-care.classify"), dataIndex: "uid", key: "uid" }, // 归类
-            { title: proxy.$t("common.type"), dataIndex: "uid", key: "uid" }, // 类型
+            { title: proxy.$t("customer-care.Construction_site_number"), dataIndex: "uid", key: "uid" }, // 工单编号
+            { title: proxy.$t("customer-care.classify"), dataIndex: "sorting_type", key: "sorting_type" }, // 归类
+            { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
             { title: proxy.$t("customer-care.submitter"), dataIndex: "uid", key: "uid" }, // 提交人
             { title: proxy.$t("customer-care.part"), dataIndex: "uid", key: "uid" }, // 零件
-            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "uid", key: "uid" }, // 处理进度
-            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "uid", key: "uid" }, // 车型号、公里数
-            { title: proxy.$t("customer-care.fault_classification"), dataIndex: "uid", key: "uid" }, // 故障分类
+            { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status" }, // 处理进度
+            { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
+            { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
             { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "uid", key: "uid" }, // 归属客服
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
-            { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "uid", key: "time" }, // 最近一次修改时间
+            { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "process_end_time", key: "time" }, // 最近一次修改时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right" }, // 操作
         ]
     }
@@ -287,7 +356,9 @@ const tableColumns = computed(() => {
 /* computed end */
 
 /* fetch start*/
+// 获取表格数据
 const request = Core.Api.Feedback.list;
+
 /* fetch end*/
 
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
