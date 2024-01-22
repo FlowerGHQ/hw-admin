@@ -649,6 +649,7 @@ const messages = {
             spec_pic: '图片',
             item_code_tip: '商品编码: 多规格商品的父规格对应商品编码;',
             sku_code_tip: 'SKU编码: 单规格、多规格商品的子规格对应SKU编码',
+            add_spec_tip: '请添加规格',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -2970,6 +2971,7 @@ const messages = {
             item_code_tip: 'Commodity code: the parent specification of the multi-specification commodity corresponds to the commodity code;',
             sku_code_tip: 'SKU code: The sub-specifications of single-specification and multi-specification goods correspond to the SKU code',
             verification_code: 'Verification Code',
+            add_spec_tip: 'Please Add Specifications!',
         },
         a: {
             new_retailer: 'Create A New Retailer',

@@ -272,7 +272,8 @@
                             <a-row gutter="16">
                                     <!-- 净重 -->
                                     <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
-                                        <a-input
+                                        <a-input-number
+                                            :controls="false"
                                             v-model:value="form.net_weight"
                                             :placeholder="$t('def.input')"
                                         >
@@ -282,11 +283,12 @@
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">KG</span>
                                             </template>
-                                        </a-input>
+                                        </a-input-number>
                                     </a-col>
                                     <a-col :xs="24" :sm="12" :xl="12" :xxl="12">
                                         <!-- 毛重 -->
-                                        <a-input
+                                        <a-input-number
+                                            :controls="false"
                                             v-model:value="form.gross_weight"
                                             :placeholder="$t('def.input')"
                                         >
@@ -296,13 +298,14 @@
                                             <template #addonAfter>
                                                 <span class="l-w-h-style">KG</span>
                                             </template>
-                                        </a-input>
+                                        </a-input-number>
                                     </a-col>
                             </a-row>
                             <a-row gutter="16" class="m-t-16">
                                 <!-- 长 -->
                                 <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
-                                    <a-input
+                                    <a-input-number
+                                        :controls="false"
                                         v-model:value="form.length"
                                         :placeholder="$t('def.input')"
                                     >
@@ -312,11 +315,12 @@
                                         <template #addonAfter>
                                             <span class="l-w-h-style">CM</span>
                                         </template>
-                                    </a-input>
+                                    </a-input-number>
                                 </a-col>
                                 <!-- 宽 -->
                                 <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
-                                    <a-input
+                                    <a-input-number
+                                        :controls="false"
                                         v-model:value="form.width"
                                         :placeholder="$t('def.input')"
                                     >
@@ -326,11 +330,12 @@
                                         <template #addonAfter>
                                             <span class="l-w-h-style">CM</span>
                                         </template>
-                                    </a-input>
+                                    </a-input-number>
                                 </a-col>
                                 <!-- 高 -->
                                 <a-col :xs="24" :sm="8" :xl="8" :xxl="8">
-                                    <a-input
+                                    <a-input-number
+                                        :controls="false"
                                         v-model:value="form.height"
                                         :placeholder="$t('def.input')"
                                     >
@@ -340,7 +345,7 @@
                                         <template #addonAfter>
                                             <span class="l-w-h-style">CM</span>
                                         </template>
-                                    </a-input>
+                                    </a-input-number>
                                 </a-col>
                             </a-row>
                         </div>
@@ -2164,6 +2169,9 @@ export default {
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
+            console.log('form', form);
+            console.log('specData', specData);
+            console.log('attrDef', attrDef);
             // 名称
             if (!form.name) {
                 return this.$message.warning(
@@ -2259,7 +2267,13 @@ export default {
             } else {
                 // 多规格
                 // 规格定义 检查
+                if(!attrDef.length) {
+                    return this.$message.warning(
+                        `${this.$t("i.add_spec_tip")}`
+                    );
+                }
                 for (let i = 0; i < attrDef.length; i++) {
+                    console.log('attrDef', attrDef);
                     const item = attrDef[i];
                     if (!item.name) {
                         return this.$message.warning(
