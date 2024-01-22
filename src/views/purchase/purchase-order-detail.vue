@@ -260,7 +260,7 @@
         </div>
 
         <!-- 赠送订单 -->
-        <div v-if="$auth('ADMIN')" class="gift-order" style="margin-bottom: 20px;">
+        <div  class="gift-order" style="margin-bottom: 20px;">
             <EditItem 
                     v-if="giveOrderShow" 
                     :order-id='id'

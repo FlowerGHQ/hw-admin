@@ -5,7 +5,7 @@
             <div class="title-area2">{{title}}</div>
             <div class="btns-area">     
                 <div class="collapse-title-right">
-                    <div class="give-order" v-if="type === 'GIVE_ORDER'">
+                    <div class="give-order" v-if="type === 'GIVE_ORDER' && this.$auth('ADMIN')">
                         <ItemSelect  @select="handleAddItem" :disabledChecked='disabledChecked' :btn-text="$t('i.add')">{{ $t('i.add') }}</ItemSelect>
                         <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleCancel()">{{ $t('def.cancel') }}</a-button> 
                         <a-button v-if="isShowBtn" type="primary" ghost @click.stop="handleSave()">{{ $t('def.sure') }}</a-button>
