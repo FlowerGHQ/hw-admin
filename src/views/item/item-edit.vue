@@ -434,20 +434,24 @@
                             </span>
                         </div>
                     </div>
+                    <!-- 规格分类 -->
                     <div class="form-item specific-category" v-if="form.type === itemTypeMap['1']?.key">
                         <div class="key">
                             {{ $t("item-edit.spec_category") }}
                         </div>
                         <div class="value">
                             <a-switch v-model:checked="openCategory" />
-                            <span :class="openCategory ? 'open' : 'close'">{{
-                               openCategory ? "开启" : "关闭"
-                            }}</span>
+                            <span :class="openCategory ? 'open' : 'close'">{{ openCategory ? "开启" : "关闭" }}</span>
                         </div>
                     </div>
+                    <!-- 选择分类 -->
                     <div class="form-item specific-category-select required" v-if="form.type === itemTypeMap['1']?.key">
-                        <div class="key" :class="category_index ||  !descriptionVaild(categoryMessage) && isValidate ? 'error' : ''">
-                            {{ $t("item-edit.spec_category_select") }}
+                        <div
+                            class="key"
+                            :class="
+                                (category_index || !isDesEmpty) && isValidate ? 'error' : ''
+                            ">
+                            {{ $t("item-edit.spec_category_select")  }}
                         </div>
                         <div class="value">
                             <div class="select-area">
@@ -456,7 +460,7 @@
                                     v-model:value="category_index"
                                     :placeholder="$t('def.select')"
                                     :disabled="categoryDisabled"
-                                    
+                                    @change="handleCategory"    
                                 >
                                     <a-select-option
                                         v-for="(val, index) in specific.list"
@@ -473,17 +477,19 @@
                             <div class="item-rich-area">
                                 <div class="rich-item">
                                     <div class="rich-item-content" v-for="item in categoryMessage">
-                                        <div class="rich-title">{{item.zh || '-'}}（{{$t('item-edit.chinese')}}）</div>
+                                        <div class="rich-title">
+                                            {{ item.zh || "-" }}（{{ $t("item-edit.chinese") }}）
+                                        </div>
+                                        <div class="rich-item-area">
+                                            <MyEditor v-model:modelValue="item.desc" :placeholder="$t('item-edit.description')" />
+                                        </div>
+                                        <div class="rich-title">
+                                            {{ item.en || "-" }}（{{ $t("item-edit.english") }}）
+                                        </div>
                                         <div class="rich-item-area">
                                             <MyEditor
-                                                v-model="item.desc"
+                                                v-model:modelValue="item.desc_en"
                                                 :placeholder="$t('item-edit.description')" />
-                                        </div>
-                                        <div class="rich-title">{{item.en || '-'}}（{{$t('item-edit.english')}}）</div>
-                                        <div class="rich-item-area">
-                                            <MyEditor 
-                                                v-model="item.desc_en" 
-                                                :placeholder="$t('item-edit.description')"/>
                                         </div>
                                     </div>
                                 </div>
@@ -820,6 +826,7 @@ import Core from "../../core";
 import CategoryTreeSelectMultiple from "@/components/popup-btn/CategoryTreeSelectMultiple.vue";
 import ItemHeader from "./components/ItemHeader.vue";
 import ItemSelect from "@/components/popup-btn/ItemSelect.vue";
+import _ from "lodash";
 // 查重
 function findDuplicates(arr) {
     let set = new Set();
@@ -990,11 +997,9 @@ export default {
     watch: {
         specific: {
             handler: function (val, oldVal) {
-                console.log(val, oldVal);
                 if (val?.list && val?.list?.length > 0) {
                     this.categoryDisabled = false;
-                    this.category_index = val.list[0].id;
-                    this.categoryMessage = val.list[0]?.option || [];
+                   
                 } else {
                     this.categoryDisabled = true;
                 }
@@ -1063,7 +1068,11 @@ export default {
                 this.$i18n.locale === "en" ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name
             }${this.$t("i.value")}`;
         },
-     
+        isDesEmpty(){
+            //every 用于判断数组中的每一项是否都满足条件
+            return this.categoryMessage.every(item=>item.desc === '' && item.desc_en === '')
+        }
+
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1125,6 +1134,20 @@ export default {
                     window.open(routeUrl.href, "_self");
                     break;
             }
+        },
+        // 选择分类的触发
+        handleCategory(val) {
+            console.log(val)
+            this.category_index = val;
+            this.categoryMessage = [];
+            // this.specific.list.forEach((item) => {
+            //     console.log(item)
+            //     if (item.id === val) {
+            //         this.categoryMessage = item.option;
+            //     }
+            // });
+            this.categoryMessage = this.specific.list.filter(item=>item.id === val)[0]?.option || []
+            console.log(this.categoryMessage)
         },
         // 获取商品详情
         getItemDetail() {
@@ -1275,14 +1298,14 @@ export default {
                     key: item.key,
                     name: item.name,
                     name_en: item.key,
-                    flag_category:0,
+                    flag_category:item.flag_category || 0,
                     option: item.value_en.split(",").map((it, index) => ({
                         key: it,
                         zh: item.value.split(",")[index],
                         en: it,
                         disabled: true,
-                        desc:'',
-                        desc_en:'',
+                        desc:item.desc.split(",")[index] || '',
+                        desc_en:item.desc_en.split(",")[index] || ''
                     })),
                     addValue: {
                         key: "",
@@ -1291,7 +1314,11 @@ export default {
                     },
                     addVisible: false,
                 }));
-                itemList.shift();
+                itemList.shift(); // 删除默认的
+                let categoryObj = list.filter((item) => item.flag_category === 1);
+                console.log(categoryObj,'categoryObj---------------------');
+                this.category_index = categoryObj[0]?.id || null;
+                this.categoryMessage = categoryObj[0]?.option || [];
 
                 let data = itemList.map((item) => {
                     let params = {};
@@ -1379,11 +1406,12 @@ export default {
         },
         // 保存、新建 商品
         handleSubmit() {
+            debugger
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-
+            
             // 校验检查
             this.isValidate = true;
             if (typeof this.checkFormInput(form, specData, attrDef,categoryMessage) === "function") {
@@ -1464,7 +1492,7 @@ export default {
                     };
                 });
             }
-
+            this.handleDescripttion()
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -1474,18 +1502,6 @@ export default {
                     console.log("handleSubmit err:", err);
                 });
         },
-        // 检查分类的中英文是否全部填写
-        descriptionVaild(arr) {
-            let flag = true;
-            for (let i = 0; i < arr.length; i++) {
-                const item = arr[i];
-                if (!item.desc || !item.desc_en) {
-                    flag = false;
-                    break;
-                }
-            }
-            return flag;
-        },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef,categoryMessage) {
             // 查看
@@ -1494,8 +1510,11 @@ export default {
                     if(!categoryMessage[i].desc || !categoryMessage[i].desc_en){
                         return this.$message.warning(`${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`);
                     }
-                   
+
                 }
+            }
+            else if(this.isDesEmpty){
+                return this.$message.warning(`${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`);
             }
             // 名称
             if (!form.name) {
@@ -1759,7 +1778,6 @@ export default {
         },
         handleSpecEditBlur(index, type) {
             this.specification.index = index;
-
             let item = this.specific.list[index];
             if (type === "specification_name") {
                 if (!item.name) {
@@ -1810,10 +1828,51 @@ export default {
                 };
                 Core.Api.AttrDef.save(_item)
                     .then((res) => {
+                        console.log('详情--------------------',res.detail);
                         this.specific.list[index].id = res.detail.id;
                         this.perAddSpecItem(index);
                     })
                     .finally(() => {});
+            }
+        },
+        handleDescripttion(){
+            let item = _.cloneDeep(this.specific.list.filter((i)=>i.id === this.category_index)[0]);
+            console.log('目标-------------------------')
+            item.option = _.cloneDeep(this.categoryMessage);
+            if (item.key.trim() && item.name.trim()) {
+                let value = "";
+                let value_en = "";
+                let desc = '';
+                let desc_en = '';
+                item.option.forEach((it) => {
+                    value += it.zh + ",";
+                    value_en += it.en + ",";
+                    desc += it.desc + ','
+                    desc_en += it.desc_en + ','
+                });
+                var reg = /,$/gi;
+                value = value.replace(reg, "");
+                value_en = value_en.replace(reg, "");
+                
+                let _item = {
+                    id: item.id,
+                    key: item.key,
+                    name: item.name,
+                    value: value,
+                    value_en: value_en,
+                    desc : desc,
+                    desc_en : desc_en,
+                    flag_category:1
+                };
+                console.log('_item-------------------------------',_item)
+                Core.Api.AttrDef.save(_item).then(res=>{
+                    console.log('详情--------------------',res.detail);
+                    return
+                    let target = this.specific.list.filter((i)=>i.id === this.category_index)[0];
+                    target.id = res.detail.id;
+                    this.perAddSpecItem(this.category_index);
+                })
+                   
             }
         },
         // 规格值
@@ -2202,9 +2261,9 @@ export default {
                 .ant-select {
                     width: 269px;
                 }
-                .tips{
+                .tips {
                     // 红色
-                    color: #FF4D4F;
+                    color: #ff4d4f;
                     margin-top: 5px;
                 }
             }
@@ -2274,15 +2333,15 @@ export default {
                                 flex: 1;
                                 .ql-editor {
                                     padding: 10px;
-                                    ul{
+                                    ul {
                                         padding-left: 0;
                                     }
-                                    li{
+                                    li {
                                         padding-left: 1em;
                                     }
-                                    &::before{
+                                    &::before {
                                         font-style: normal;
-                                        color:#BFBFBF;
+                                        color: #bfbfbf;
                                     }
                                 }
                             }

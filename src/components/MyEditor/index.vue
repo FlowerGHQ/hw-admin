@@ -28,9 +28,7 @@ const props = defineProps({
         default: "请输入内容...",
     },
 });
-const emit = defineEmits({
-    "update:modelValue": null,
-});
+const emit = defineEmits(['update:modelValue']);
 
 
 const {placeholder} = props
@@ -53,11 +51,14 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        if (val != null) {
+        if (val != null && val != "") {
             content.value = val;
         } else {
             toRaw(quillRef.value).setContents("");
         }
+    },
+    {
+        immediate: true,
     }
 );
 </script>
