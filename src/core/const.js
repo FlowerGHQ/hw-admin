@@ -49,14 +49,10 @@ switch (window.location.hostname) {
         // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
-
-        // http://10.10.12.65:8889 shq
-        // http://10.10.12.194:8889/ wyh
-        // http://10.10.12.75:8889/ cta
-
-        // URL_POINT = 'http://10.10.12.65:8889' // SHQ
-        // URL_POINT = 'http://10.10.12.194:8889' // wyh
-        // URL_POINT = 'http://10.10.12.75:8889' // CTA
+        // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.0.0.170:8889' // my
+        URL_POINT = 'http://10.10.12.75:8889' // zwq
+        // URL_POINT = 'http://10.10.12.194:8889'  // zy
 
         break;
 }
