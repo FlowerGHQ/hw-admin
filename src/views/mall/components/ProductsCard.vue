@@ -28,8 +28,8 @@
                             40QH : {{ currency }}{{ stepPrice['40qh'] }}
                         </p>
                         <p class="price-text-t">
-                            Samples : {{ currency }}{{ stepPrice['20gp'] }}/20GP : {{ currency }}{{
-                                stepPrice['normal'] }}
+                            Samples : {{ currency }}{{ stepPrice['normal'] }}/20GP : {{ currency }}{{
+                                stepPrice['20gp'] }}
                         </p>
                     </template>
                     <template v-else>
