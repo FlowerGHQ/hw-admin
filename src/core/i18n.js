@@ -695,7 +695,7 @@ const messages = {
             save_draft_success: '保存草稿成功',
             // 销售地区
             sales_area: '销售地区',
-            add_spec_tip: '请添加规格',
+            add_spec_tip: '请添加规格商品',
         },
         fe: { // 反馈单
             feedback: '反馈',
