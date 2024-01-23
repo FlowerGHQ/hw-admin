@@ -20,7 +20,7 @@
     
 <script>
 import Core from '@/core';
-import Header from './components/Header.vue';
+import Header from './components/header.vue';
 import Footer from './components/Footer.vue';
 import Breadcrumb from './components/Breadcrumb.vue';
 import SvgIcon from "@/components/SvgIcon/index.vue";
