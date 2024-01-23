@@ -19,6 +19,12 @@ export default {
         please_upload_less_than: '请上传小于',
         file: "文件",
         upload_fail: "上传失败",        
+        within_warranty: "保内",
+        on_bail: "保外",
+        other: "其他",
+        name: "名称",
+        product_code: "商品编码",
+        quantity: "数量",
     },
     en: {
         operations: "Operations",
@@ -39,6 +45,12 @@ export default {
         file_incorrect: 'File Incorrect',
         please_upload_less_than: 'Please Upload Less Than',
         file: "File",
-        upload_fail: "Upload Fail",       
+        upload_fail: "Upload Fail",  
+        within_warranty: "Within Warranty",
+        on_bail: "On Bail",
+        other: "Other",
+        name: "Name",
+        product_code: "Product Code",
+        quantity: "Quantity",  
     }
 }

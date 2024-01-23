@@ -12,7 +12,7 @@ const inquiryManagement = {
     component: Layout,
     name: "InquiryManagement",
     redirect: "/inquiry-management/list",    
-    type: [ROUTER_TYPE.AFTER, ROUTER_TYPE.PRODUCTION, ROUTER_TYPE.CRM],
+    type: [ROUTER_TYPE.AFTER],
     meta: {
         title: '问询单管理',
         title_en: 'Inquiry Management',

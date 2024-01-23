@@ -261,23 +261,23 @@ const formParams = ref({
 });
 
 onMounted(() => {}),
-    watch(
-        () => router.currentRoute.value,
-        (newValue, oldValue) => {
-            console.log("newValue", newValue);
-            if (newValue.matched[0].path === "/customer-care") {
-                // 分销商的客户关怀
-                isDistributerAdmin.value = false;
-            } else if (newValue.matched[0].path === "/inquiry-management") {
-                // 平台方
-                isDistributerAdmin.value = true;
-            }
-        },
-        {
-            deep: true,
-            immediate: true,
+watch(
+    () => router.currentRoute.value,
+    (newValue, oldValue) => {
+        console.log("newValue", newValue);
+        if (newValue.matched[0].path === "/customer-care") {
+            // 分销商的客户关怀
+            isDistributerAdmin.value = false;
+        } else if (newValue.matched[0].path === "/inquiry-management") {
+            // 平台方
+            isDistributerAdmin.value = true;
         }
-    );
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
 
 /* computed start*/
 const vehicle_column = computed(() => {

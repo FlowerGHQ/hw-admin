@@ -14,9 +14,15 @@ export default  {
     // 订单状态
     ORDER_STATUS: {
         '-1': { value: -1, t: 'common.all',  }, // 全部
-        '10': { value: 10, t: 'customer-care.equal_treatment',  }, // 等处理
+        '10': { value: 10, t: 'customer-care.waiting_processing',  }, // 等待处理
         '20': { value: 20, t: 'customer-care.in_process',  }, // 处理中
         '30': { value: 30, t: 'customer-care.resolved',  }, // 已解决
+    },
+    ORDER_STATUS_MAP: {
+        // all: -1,
+        EQUALTREATMENT: 10,
+        INPROCESS: 20,
+        RESOLVED: 30,
     },
     // 故障类型
     FAULT_TYPE: {
@@ -32,8 +38,34 @@ export default  {
         '-1': { value: -1, t: 'common.all',  }, // 全部
         '10': { value: 10, t: 'customer-care.consultation',  }, // 咨询
         '20': { value: 20, t: 'customer-care.complaints',  }, // 投诉
-        '30': { value: 30, t: 'customer-care.claim_a_general_claim',  }, // 索赔-a.普通索赔
-        '40': { value: 40, t: 'customer-care.claim_b_Bona_fide_claim',  }, // 索赔-b.善意索赔
+        '30': { value: 30, t: 'customer-care.general_claim',  }, // 索赔-a.普通索赔
+        '40': { value: 40, t: 'customer-care.bona_fide_claim',  }, // 索赔-b.善意索赔
         '50': { value: 50, t: 'customer-care.unpacking_damage',  }, // 开箱损
+    },
+    SORTING_TYPE_THREE_MAP: {
+        CONSULTATION: 10, // 咨询
+        COMPLAINTS: 20, // 投诉
+        CLAIMCOMPENSATION: 30, // 索赔
+    },
+    SORTING_TYPE_THREE: {
+        '10': { value: 10, t: 'customer-care.consultation',  }, // 咨询
+        '20': { value: 20, t: 'customer-care.complaints',  }, // 投诉
+        '30': { value: 30, t: 'customer-care.claim_compensation',  }, // 索赔
+    },
+    SORTING_TYPE_TWO: { 
+        '30': { value: 30, t: 'customer-care.general_claim',  }, // 普通索赔
+        '40': { value: 40, t: 'customer-care.bona_fide_claim',  }, // 善意索赔
+        '50': { value: 50, t: 'customer-care.unpacking_damage',  }, // 开箱损
+    },
+    SORTING_TYPE_TWO_MAP: {
+        GENERALCLAIM: 30, // 普通索赔
+        BONAFIDECLAIM: 40, // 善意索赔
+        UNPACKINGDAMAGE: 50, // 开箱损
+    },
+    // 保内 保外 其他
+    GOOD_FAITH: {
+        '1': { value: 1, t: 'common.within_warranty',  }, // 保内
+        '2': { value: 2, t: 'common.on_bail',  }, // 保外
+        '3': { value: 3, t: 'common.other',  }, // 其他
     }
 }

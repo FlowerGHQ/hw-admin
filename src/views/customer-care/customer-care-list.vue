@@ -42,6 +42,9 @@
                     :row-key="(record) => record.id"
                     :pagination="false"
                 >
+                    <template #headerCell="{ title }">
+                        <span class="table-title">{{ title }}</span>
+                    </template>
                     <template #bodyCell="{ column, text, record }">
                         <!-- <template v-if="column.key === 'detail'">
                             <a-tooltip placement="top" :title="text">
@@ -444,5 +447,16 @@ const onReset = () => {
 
 <style lang="less" scoped>
 #customer-care {
+    .tabs-title {
+        color:  #4E5969;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+    .table-title {
+        color: #1D2129;
+        font-size: 14px;
+        font-weight: 500;
+    }
 }
 </style>
