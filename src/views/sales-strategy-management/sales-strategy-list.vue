@@ -285,12 +285,12 @@ const searchList = ref([
         type: "input",
         value: "",
         searchParmas: "name",
-        key: "sales-strategy.strategy_name",
+        key: "sales-strategy-management.strategy_name",
     }, // 名称
     {
         id: 2, // 随意
         type: "select-search-multiple", // 类型
-        key: "sales-strategy.area", // 名称
+        key: "sales-strategy-management.area", // 名称
         value: undefined, // 绑定值
         searchParmas: "country_list", // 返回的搜索名称
         multiple: true, // 是否多选

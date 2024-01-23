@@ -58,6 +58,7 @@ export default {
     edit_sales_strategy: "编辑销售策略",
     // 策略详情
     strategy_details: "策略详情",
+    area:"地区",
   },
   en: {
     //序号
@@ -118,5 +119,6 @@ export default {
     edit_sales_strategy: "Edit Sales Strategy",
     // 策略详情
     strategy_details: "Strategy Details",
+    area:"Area",
   },
 }
