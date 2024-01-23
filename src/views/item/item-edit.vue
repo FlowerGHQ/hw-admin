@@ -1750,7 +1750,7 @@ export default {
                 });
             }
             // 是整车并且为多规格
-            if (form.type === itemTypeMap['1']?.key && this.specific.mode === 2) {
+            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 this.handleDescripttion();
             }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
@@ -1766,7 +1766,7 @@ export default {
         checkFormInput(form, specData, attrDef, categoryMessage) {
 
             // 如果是整车并且是多规格校验分类
-            if (form.type === itemTypeMap['1']?.key && this.specific.mode === 2) {
+            if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 // 查看
                 if (categoryMessage && categoryMessage.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
