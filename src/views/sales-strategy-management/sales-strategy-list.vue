@@ -2,7 +2,7 @@
     <div class="sales-strategy-list">
         <div class="list-container">
             <div class="title-container">
-                <div class="title-area">销售策略</div>
+                <div class="title-area">{{ $t('sales-strategy-management.sales_strategy') }}</div>
             </div>
             <div class="search-container">
                 <SearchAll
@@ -12,7 +12,7 @@
                     :isShowMore="false" />
             </div>
             <div class="operate-container">
-                <a-button type="primary" @click="addStrategy"> 新增策略 </a-button>
+                <a-button type="primary" @click="addStrategy"> {{ $t('sales-strategy-management.add_strategy') }} </a-button>
             </div>
             <div class="table-container">
                 <a-table
@@ -91,7 +91,7 @@
                                 @change="onSwitchChange(record)"
                                 class="status" />
                             <span :class="text == 1 ? 'active' : 'none'">
-                                {{ text == 1 ? "已生效" : "未生效" }}
+                                {{ text == 1 ?  $t('sales-strategy-management.already_in_effect')   :  $t('sales-strategy-management.not_yet') }} 
                             </span>
                         </template>
                         <!-- 操作 -->
