@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="test">
         <MyMask 
             :isClose="isClose" 
             :isClickMaskClose="false" 
@@ -27,5 +27,7 @@
 </script>
 
 <style lang="less" scoped>
-
+.test{
+    
+}
 </style>
