@@ -558,12 +558,18 @@ const handleEdit = (record, index) => {
 };
 // 修改返回值
 const handleModalEdit = (data) => {
-    console.log(data);
-    console.log(formState.strategy_detail);
-    console.log(tableData.value);
+    console.log(data,'data------------------------');
+    console.log(formState.strategy_detail,'strategy_detail-----------------');
+    console.log(tableData.value,'tableData-------------------');
+    console.log(formState.rule,'rule-----------------');
     let country = data[0].country;
     let countryArr = formState.strategy_detail.filter((item) => item.country == country);
     let no = countryArr[0].no;
+    formState.strategy_detail.forEach(item=>{
+        item.rule = formState.rule;
+        item.type = formState.type;
+    })
+
     // 重新构建数据
     let newData = data.map((item) => {
         return {
@@ -572,10 +578,14 @@ const handleModalEdit = (data) => {
             country: item.country,
             item: item.item,
             rule: formState.rule,
+            type: formState.type,
         };
     });
+
+    console.log(newData,'newData-------------------');
     formState.strategy_detail = formState.strategy_detail.filter((item) => item.country !== country);
     formState.strategy_detail = [...formState.strategy_detail, ...newData];
+    console.log(formState.strategy_detail,'strategy_detail-----------------');
     console.log(viewData(formState.strategy_detail));
     tableData.value = viewData(formState.strategy_detail);
     // 拷贝一份数据,formState的数据

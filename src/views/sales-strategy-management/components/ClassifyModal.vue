@@ -56,6 +56,7 @@
                 :data-source="tableData"
                 :loading="loading"
                 :check-mode="true"
+                :defaultChecked="defaultChecked"
                 @submit="getSelectIdList">
             </TableSelect>
             <template #footer>
@@ -153,6 +154,7 @@ const pageSize = ref(10);
 const current = ref(1);
 const total = ref(0);
 const disabledChecked = ref([]);
+const defaultChecked = ref([]);
 // 页size改变
 const onShowSizeChange = (current, pageSize) => {
     pageChange();
@@ -247,7 +249,6 @@ const handleOk = () => {
     }
     console.log("maxNo", maxNo);
     let strategy_detail = [];
-
     selectIdList.value.forEach((item) => {
         searchForm.value.area.forEach((item1) => {
             let obj = {};
@@ -303,8 +304,10 @@ const getTableDataFetch = (parmas = {}) => {
 };
 // 接收选择id的数组
 const getSelectIdList = (kesArr, itemsArr) => {
-    selectIdList.value = Core.Util.deepCopy(kesArr);
-    selectItemList.value = Core.Util.deepCopy(itemsArr);
+    console.log("kesArr", kesArr);
+    console.log("itemsArr", itemsArr);
+    selectIdList.value = kesArr;
+    selectItemList.value = itemsArr;
 };
 
 watch(
@@ -317,12 +320,10 @@ watch(
         } else {
             // 清空数据
             selectIdList.value = [];
-            selectItemList.value = [];
             searchForm.value.area = [];
             searchForm.value.codeList = [];
             codeStr.value = "";
             isEdit.value = false;
-            childRef.value.selectedRowKeys = [];
         }
     }
 );
@@ -338,7 +339,7 @@ watch(
             isEdit.value = true;
             handleSearch();
             setTimeout(() => {
-                childRef.value.selectedRowKeys = newValue.item.map((item) => item.id);
+                defaultChecked.value = newValue.item.map((item) => item.id);
             }, 1000);
         }
     }
