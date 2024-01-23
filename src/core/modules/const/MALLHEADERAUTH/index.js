@@ -2,6 +2,7 @@ export default  {
     /*
         页头:
         页尾:
+        回到顶部按钮:
     */
     ROUTERS:[
         {value:'/mall/index'},
@@ -9,6 +10,9 @@ export default  {
         {value:'/mall/search'},
         {value:'/mall/all-articles'},
         {value:'/mall/detail'},
+        {value:'/mall/vehicle-list'},
+        {value:'/mall/vehicle-list/detail'},
+        {value:'/mall/shopping-bag'},
     ],
     FOOTER:[
         {value:'/mall/index'},
@@ -16,5 +20,12 @@ export default  {
         {value:'/mall/search'},
         {value:'/mall/all-articles'},
         {value:'/mall/detail'},
+        {value:'/mall/vehicle-list'},
+        {value:'/mall/vehicle-list/detail'},
+        {value:'/mall/shopping-bag'},
+    ],
+    TOTOP:[
+        {value:'/mall/index'},
+        {value:'/mall/vehicle-list'},
     ],
 }

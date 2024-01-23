@@ -1,5 +1,5 @@
 <template>
-    <div id="my-button" :class="{'disabled':disabled,[type]:true&&!disabled}" :style="{ padding: padding,fontSize: font,margin: margin }" @click="clickFn">
+    <div id="my-button" :class="[disabled ? 'disabled' : '', type]" :style="{ padding: padding,fontSize: font,margin: margin }" @click="clickFn">
         <span class="my-button-text">
             <slot></slot>
         </span>
@@ -54,7 +54,7 @@ export default {
     mounted() {},
     methods: {
         clickFn() {
-            this.$emit('click')
+            this.$emit('clickFn')
         }
     },
 }
@@ -77,10 +77,6 @@ export default {
         }
     }
 
-}
-.disabled {
-    background: rgba(146, 146, 146, 0.10);
-    color: rgba(146, 146, 146, 0.50);
 }
 .default {
     border: 1px solid #C6F;
@@ -125,6 +121,10 @@ export default {
         background: linear-gradient(100deg, #E0A1FF 0%, #8B8BFF 100%);
         border: 1px solid linear-gradient(100deg, #C6F 0%, #66F 100%);
     }
+}
+.disabled {
+    opacity: 0.4;
+    pointer-events: none;
 }
 // APP端
 @media (max-width: 750px) {
