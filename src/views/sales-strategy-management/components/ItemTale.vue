@@ -142,6 +142,11 @@ export default {
         defaultChecked: function (n) {
             console.log("defaultChecked:", n);
             this.selectedRowKeys = Core.Util.deepCopy(this.defaultChecked);
+            console.log(this.dataSource)
+            this.selectedRowItems = this.dataSource.filter((item) => this.selectedRowKeys.includes(item.id));
+            console.log("defaultChecked this.selectedRowKeys:", this.selectedRowKeys);
+            console.log("defaultChecked this.selectedRowItems:", this.selectedRowItems);
+            this.$emit("submit", this.selectedRowKeys, this.selectedRowItems);
         },
     },
     created() {
