@@ -330,6 +330,7 @@ watch(
             searchForm.value.codeList = [];
             codeStr.value = "";
             isEdit.value = false;
+            defaultChecked.value = [];
         }
     }
 );
