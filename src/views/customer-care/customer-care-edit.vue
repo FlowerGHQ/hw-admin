@@ -16,7 +16,7 @@
                     <div class="key t-r">{{ $t("customer-care.distributor_account_number") }}:</div>
                     <div class="value">
                         <a-input
-                            v-model:value="formParams.account"
+                            v-model:value="formParams.org_name"
                             :placeholder="$t('common.please_enter') + $t('customer-care.distributor_account_number')"
                         />
                     </div>
@@ -39,13 +39,16 @@
                 >
                     <div class="key t-r">{{ $t("customer-care.failure_date") }}:</div>
                     <div class="value">
-                        <a-date-picker class="w-370" v-model:value="formParams.time" />
+                        <a-date-picker class="w-370" v-model:value="formParams.fault_time" />
                     </div>
                 </div>
                 <!-- 车型 -->
                 <div class="form-item required">
                     <div class="key t-r">{{ $t("common.vehicle_model") }}:</div>
-                    <div class="value">可能是树状结构</div>
+                    <div class="value">
+                        <a-tree-select v-model:value="formParams.category_id" :placeholder="$t('common.please_enter') + $t('common.vehicle_model')">
+                        </a-tree-select>
+                    </div>
                 </div>
                 <!-- 车架号 -->
                 <div
@@ -56,23 +59,33 @@
                     <div class="value">
                         <a-table
                             :columns="vehicle_column"
-                            :dataSource="formParams.list"
+                            :dataSource="formParams.vehicle_list"
                             :scroll="{ x: true }"
                             :row-key="(record) => record.id"
                             :pagination="false"
                             class="specific-table"
                         >
-                            <template #headerCell="{ title }">
+                            <template #headerCell="{ title, column }">
                                 {{ $t(title) }}
+                                <span v-if="column.key === 'mileage'">({{ $t('customer-care.not_mandatory') }})</span>
                             </template>
                             <template #bodyCell="{ column, record, index }">
                                 <!-- 车架号 -->
-                                <template v-if="column.key === 'no'">
-                                    <a-input v-model:value="record.no" :placeholder="$t('common.please_enter') + $t('common.vehicle_no')" />
+                                <template v-if="column.key === 'vehicle_uid'">
+                                    <a-input v-model:value="record.vehicle_uid" :placeholder="$t('common.please_enter') + $t('common.vehicle_no')" />
                                 </template>
                                 <!-- 公里数 -->
                                 <template v-if="column.key === 'mileage'">
-                                    <a-input v-model:value="record.mileage" :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" />
+                                    <a-input-number 
+                                        v-model:value="record.mileage"
+                                        :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
+                                        :min="0"
+                                        :max="9999999"
+                                    >
+                                        <template #addonAfter>
+                                            <span>KM</span>
+                                        </template>
+                                    </a-input-number>
                                 </template>
                                 <!-- 操作 -->
                                 <template v-if="column.key === 'operations'">
@@ -95,8 +108,17 @@
                     class="form-item required"
                 >
                     <div class="key t-r">{{ $t("customer-care.mileage") }}:</div>
-                    <div class="value">
-                        <a-input v-model:value="formParams.mileage" :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" />
+                    <div class="value">                        
+                        <a-input-number 
+                            v-model:value="formParams.mileage"
+                            :placeholder="$t('common.please_enter') + $t('customer-care.mileage')" 
+                            :min="0"
+                            :max="9999999"
+                        >
+                            <template #addonAfter>
+                                <span>KM</span>
+                            </template>
+                        </a-input-number>
                     </div>
                 </div>
                 <!-- 问题描述 -->
@@ -115,14 +137,14 @@
                 <div class="form-item d-f-s">
                     <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
-
-                        <MyUpload
+                        <MyUpload                           
+                            v-model:fileList = uploadOptions.fileData
                             :videoLimit="uploadOptions.videoLimit"
                             :imageLimit="uploadOptions.imageLimit"
                             @change="handleDetailChange"
                             @preview="handlePreview"
                             @remove="handleRemove"
-                        >                            
+                        >
                         </MyUpload>
 
                         <div class="add-attachment-tip m-l-10">
@@ -140,12 +162,7 @@
         </div>
 
         <!-- 自定义图片预览 -->
-        <MyPreviewImageVideo
-            v-model:isClose="isClose"
-            :type="isVideoImage" 
-            :previewData="uploadOptions.previewImage"
-        >
-        </MyPreviewImageVideo>
+        <MyPreviewImageVideo v-model:isClose="isClose" :type="isVideoImage" :previewData="uploadOptions.previewImage"> </MyPreviewImageVideo>
     </div>
 </template>
 
@@ -154,8 +171,9 @@ import { ref, watch, computed, getCurrentInstance, onMounted } from "vue";
 import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
-import MyPreviewImageVideo from './components/MyPreviewImageVideo.vue'
-import MyUpload from './components/MyUpload.vue'
+import MyPreviewImageVideo from "./components/MyPreviewImageVideo.vue";
+import MyUpload from "./components/MyUpload.vue";
+import dayjs from 'dayjs'
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -163,32 +181,43 @@ const route = useRoute();
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
-const uploadOptions = ref({    
+const uploadOptions = ref({
+    fileData: [], // 提交的数据    
     // previewImage
-    previewImage: ["https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"],
+    // "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"
+    previewImage: [],
     // previewVideo
     previewVideo: undefined,
 });
 
 // 判断是照片还是视频查看
-const isVideoImage = ref('image');
-const isClose = ref(false)
+const isVideoImage = ref("image");
+const isClose = ref(false);
 const formParams = ref({
-    account: undefined,
-    type: 1,
-    time: undefined,
-    description: undefined,
-    file: undefined,
-    mileage: undefined, // 公里数
-    list: [
+    org_name: undefined,
+    type: Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE_MAP.MALFUNCTION,
+    fault_time: undefined, // 故障日期
+    category_id: undefined, // 车型
+    description: undefined, // 问题描述
+    attachment_list: undefined, // 附件列表
+    vehicle_list: [
         {
-            no: "",
+            vehicle_uid: "",
             mileage: "",
         },
-    ], // 车架号、公里数
+    ], // 车架信息
+    mileage: undefined, // 公里数
 });
 
-onMounted(() => {}),
+onMounted(() => {    
+    if (route.query?.id) {
+        getDetailFetch(
+            {
+                id: route.query?.id
+            }
+        )
+    }
+}),
 watch(
     () => router.currentRoute.value,
     (newValue, oldValue) => {
@@ -210,7 +239,7 @@ watch(
 /* computed start*/
 const vehicle_column = computed(() => {
     let result = [
-        { title: proxy.$t("common.vehicle_no"), dataIndex: "no", key: "no" }, // 车架号
+        { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_uid", key: "vehicle_uid" }, // 车架号
         { title: proxy.$t("customer-care.mileage"), dataIndex: "mileage", key: "mileage" }, // 公里数
         {
             title: proxy.$t("common.operations"),
@@ -224,17 +253,106 @@ const vehicle_column = computed(() => {
 });
 /* computed end*/
 
+/* fetch start*/
+// 保存接口
+const saveFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .add(obj)
+        .then((res) => {
+            console.log(res);
+            if (isDistributerAdmin.value) {
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            } else {
+                router.push({
+                    path: "/customer-care/list",                
+                });
+            }
+        })
+        .catch((err) => {
+            console.log("保存接口", err);
+        });
+};
+// 修改接口
+const modifyFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .modify(obj)
+        .then((res) => {
+            console.log(res);
+            if (isDistributerAdmin.value) {
+                router.push({
+                    path: "/inquiry-management/list",                
+                });
+            } else {
+                router.push({
+                    path: "/customer-care/list",                
+                });
+            }
+        })
+        .catch((err) => {
+            console.log("保存接口", err);
+        });
+};
+// 详情接口
+const getDetailFetch = (params = {}) => {
+    const obj = {
+        ...params,
+    };
+    Core.Api.inquiry_sheet
+        .detail(obj)
+        .then((res) => {
+            console.log("详情接口 success", res.detail);
+            for (const key in res.detail) {
+                if (key === 'fault_time') {
+                    formParams.value[key] = res.detail[key] > 0 ? dayjs.unix(res.detail[key]) : undefined                    
+                } else if (key === 'attachment_list') {
+
+                    uploadOptions.value.fileData = []
+
+                    res.detail[key].forEach(el => {
+                        uploadOptions.value.fileData.push({
+                            name: el.name,
+                            percent: 100,
+                            status: 'done',
+                            thumbUrl: Core.Const.NET.FILE_URL_PREFIX + el.path,
+                            url: Core.Const.NET.FILE_URL_PREFIX + el.path,
+                            response: {
+                                data: {
+                                    filename: el.path
+                                }
+                            },
+                            type: el.type,
+                        }) 
+                    })                    
+                } else {
+                    formParams.value[key] = res.detail[key]
+                }
+            }
+        })
+        .catch((err) => {
+            console.log("详情接口 err", err);
+        });
+};
+/* fetch end*/
+
 /* methods start*/
 const onAddBtn = (type, record, index) => {
     switch (type) {
         case "add-data":
-            formParams.value.list.push({
-                no: "",
+            formParams.value.vehicle_list.push({
+                vehicle_uid: "",
                 mileage: "",
             });
             break;
         case "delete":
-            formParams.value.list.splice(index, 1);
+            formParams.value.vehicle_list.splice(index, 1);
             break;
 
         default:
@@ -242,8 +360,30 @@ const onAddBtn = (type, record, index) => {
     }
 };
 // 提交
-const handleSubmit = () => {
-    isClose.value = true
+const handleSubmit = () => {    
+    
+    const submitForm = {
+        ...formParams.value,     
+        fault_time: dayjs().unix(formParams.value.fault_time)   
+    }
+
+    submitForm.attachment_list = []
+    uploadOptions.value.fileData.forEach(el => {
+        submitForm.attachment_list.push({
+            name: el.name, // 附件名称
+            path: el.response?.data?.filename, // 附件url
+            type: el.type, // 附件类型
+        })
+    })
+    console.log('submitForm', submitForm);
+
+    if (route.query.id) {
+        // 修改
+        modifyFetch(Core.Util.searchFilter(submitForm))
+    } else {
+        // 新增    
+        saveFetch(Core.Util.searchFilter(submitForm))
+    }
 };
 
 // 上传组件事件
@@ -251,7 +391,8 @@ const handleDetailChange = ({ file, fileList }) => {
     console.log("输出文件", file, fileList);
     if (file.status === "done") {
         // 上传成功
-        if (file.response.code === 0) {
+        if (file.response.code === 0) {            
+            uploadOptions.value.fileData = fileList;
         } else {
             // 上传失败
             message.error(file.response.msg);
@@ -264,12 +405,12 @@ const handlePreview = ({ file, fileList }) => {
     console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
-        uploadOptions.value.previewVideo = ""
-        isClose.value = true
-        return
+        uploadOptions.value.previewVideo = "";
+        isClose.value = true;
+        return;
     }
 
-    uploadOptions.value.previewImage = [];    
+    uploadOptions.value.previewImage = [];
     fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
@@ -284,17 +425,17 @@ const handlePreview = ({ file, fileList }) => {
         }
     });
     console.log("结果", uploadOptions.value.previewImage);
-    isClose.value = true
+    isClose.value = true;
 };
 const handleRemove = ({ file, fileList }) => {
-    console.log("删除", file);
+    console.log("删除", fileList);     
 };
 /* methods end*/
 </script>
 
 <style lang="less" scoped>
 #customer-care-edit {
-    height: 100%;
+    // height: 100%;
     position: relative;
 
     .d-f-a {
@@ -318,10 +459,10 @@ const handleRemove = ({ file, fileList }) => {
     }
 
     .footer-btn {
-        position: absolute;
-        bottom: 0;
-        width: calc(100% - 200px);
+        width: 100%;
+        background-color: #fff;
         text-align: center;
+        margin-top: 20px;
     }
 
     // upload
@@ -336,7 +477,7 @@ const handleRemove = ({ file, fileList }) => {
             width: 100%;
             height: 100%;
         }
-    }    
+    }
 }
 
 .ant-upload-picture-card-wrapper {
@@ -375,4 +516,21 @@ const handleRemove = ({ file, fileList }) => {
 .t-r {
     text-align: right;
 }
+
+:deep(.ant-input-number-group-addon) {
+    background-color: #f2f2f2;
+    color: #808fa6;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    border-color: #eaecf1;
+    box-sizing: border-box;
+}
+:deep(.ant-input-number-group) {
+    border-radius: 4px;
+    border-color: #eaecf1;
+    background: #fff;
+    overflow: hidden;
+}
+
 </style>

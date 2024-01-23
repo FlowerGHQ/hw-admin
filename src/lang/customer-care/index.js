@@ -48,6 +48,8 @@ export default {
         unpacking_damage: "开箱损",
         communication_process: "沟通过程",
         attachment: "附件",
+        wait: "等",
+        not_mandatory: "非必填",
     },
     en: {
         inquiry_list: "Inquiry list",
@@ -97,5 +99,7 @@ export default {
         unpacking_damage: "Unpacking damage",
         communication_process: "Communication Process",
         attachment: "Attachment",
+        wait: "Wait",
+        not_mandatory: "Not Mandatory",
     }
 }

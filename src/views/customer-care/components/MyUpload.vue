@@ -27,13 +27,18 @@
 
 <script setup>
 import { Upload, message } from "ant-design-vue";
-import { ref, onMounted, getCurrentInstance } from "vue";
+import { ref, onMounted, watch, getCurrentInstance } from "vue";
 import Core from "@/core";
 
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
     options: {
+        type: Object,
+        default: () => {},
+    },
+    // 监听数据
+    fileList: {
         type: Object,
         default: () => {},
     },
@@ -49,13 +54,12 @@ const props = defineProps({
     },
 });
 
-
-const emits = defineEmits(["change", "preview", "remove"]);
+const emits = defineEmits(["update:fileList", "change", "preview", "remove"]);
 
 const uploadOptions = ref({
     name: "file",
     // action: "https://www.mocky.io/v2/5cc8019d300000980a055e76" || Core.Const.NET.FILE_UPLOAD_END_POINT,
-    action:  Core.Const.NET.FILE_UPLOAD_END_POINT,
+    action: Core.Const.NET.FILE_UPLOAD_END_POINT,
     fileList: [],
     headers: {
         ContentType: false,
@@ -74,7 +78,7 @@ const uploadOptions = ref({
         let isLt = true;
         const sizeM = file.size / 1024 / 1024;
 
-        console.log('sizeM', sizeM);
+        console.log("sizeM", sizeM);
 
         if (/^video\/+/.test(file.type)) {
             // 视频 50M
@@ -101,6 +105,20 @@ const uploadOptions = ref({
     ...props.options,
 });
 
+watch(
+    () => props.fileList,
+    (newValue) => {
+        if (newValue) {
+            console.log("watch", newValue);
+            uploadOptions.value.fileList = newValue;
+        }
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
+
 onMounted(() => {
     console.log("uploadOptions", uploadOptions.value);
 });
@@ -115,7 +133,10 @@ const handlePreview = (file) => {
 };
 
 const handleRemove = (file) => {
+    uploadOptions.value.fileList = uploadOptions.value.fileList.filter((item) => item.uid !== file.uid);
+
     emits("remove", { file, fileList: uploadOptions.value.fileList });
+    $emit("update:fileList", uploadOptions.value.fileList)
 };
 /* Methods end */
 </script>
@@ -133,7 +154,7 @@ const handleRemove = (file) => {
             width: 100%;
             height: 100%;
         }
-    } 
+    }
     :deep(.ant-upload.ant-upload-select-picture-card) {
         width: 80px;
         height: 80px;

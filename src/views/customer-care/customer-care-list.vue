@@ -13,7 +13,7 @@
             </div>
             <!-- tabs 切换 -->
             <div v-if="isDistributerAdmin" class="tabs-container colorful">
-                <a-tabs v-model:activeKey="searchForm.status" @change="handleSearch">
+                <a-tabs v-model:activeKey="searchForm.status" @change="onSearch">
                     <a-tab-pane :key="item.key" v-for="item of statusList">
                         <template #tab>
                             <div class="tabs-title">
@@ -46,38 +46,79 @@
                         <span class="table-title">{{ title }}</span>
                     </template>
                     <template #bodyCell="{ column, text, record }">
-                        <!-- <template v-if="column.key === 'detail'">
-                            <a-tooltip placement="top" :title="text">
-                                <a-button type="link" @click="routerChange('detail', record)">{{
-                                    text || "-"
-                                }}</a-button>
-                            </a-tooltip>
-                        </template> -->
-                        <!-- <template v-if="column.dataIndex === 'status'">
-                            <div class="status status-bg status-tag" :class="$Util.feedbackStatusFilter(text, 'color')">
-                                <a-tooltip :title="record.audit_message" placement="topRight" destroyTooltipOnHide>
-                                    {{ $Util.feedbackStatusFilter(text, $i18n.locale) }}
-                                </a-tooltip>
-                            </div>
-                        </template> -->
                         <!-- 公共 -->
+                        <template v-if="column.key === 'uid'">
+                            <div class="new">
+                                <span class="new-msg" v-if="record.new_msg_id">新消息</span>
+                                <div>{{ text || '-' }}</div>
+                            </div>
+                        </template>
                         <!-- 时间类型 -->
                         <template v-if="column.key === 'time'">
                             {{ $Util.timeFilter(text, 3) }}
                         </template>
                         <!-- 订单-状态 -->
                         <template v-if="column.key === 'status'">
-                            {{ Core.Const.CUSTOMER_CARE.ORDER_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[text].t) : '-' }}
+                            <div                                 
+                                :class="{
+                                    'color-FF7D00': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT]),
+                                    'color-0061FF': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS]),
+                                    'color-00B42A': $Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED]),
+                                }"
+                            >
+                                {{ Core.Const.CUSTOMER_CARE.ORDER_STATUS[text] ? $t(Core.Const.CUSTOMER_CARE.ORDER_STATUS[text].t) : '-' }}
+                            </div>
                         </template>
 
                         <!-- 平台方 -->
                         <!-- 归类 -->
                         <template v-if="column.key === 'sorting_type'">
-                            {{ Core.Const.CUSTOMER_CARE.SORTING_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE[text].t) : '-' }}
+                            {{ Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[text] ? $t(Core.Const.CUSTOMER_CARE.SORTING_TYPE_THREE[text].t) : '-' }}
                         </template>
                         <!-- 故障类型 -->
                         <template v-if="column.key === 'fault_type'">
                             {{ Core.Const.CUSTOMER_CARE.FAULT_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.FAULT_TYPE[text].t) : '-' }}
+                        </template>
+                        <!-- 零件 -->
+                        <template v-if="column.key === 'part_list'">
+                            <a-tooltip placement="top">
+                                <template #title>
+                                    <span v-for="(item, index) in record.part_list">
+                                        <span>{{ item?.item?.name }}</span>
+                                        <span v-if="record.part_list.length > 1">,</span>
+                                    </span>
+                                </template>                                
+                                <template v-if="record.part_list.length > 1">
+                                    {{ 
+                                        $i18n.locale === 'en' ? 
+                                        record.part_list[0]?.item?.name_en || '-' : record.part_list[0]?.item?.name + '等' || '-' 
+                                    }}
+                                </template>
+                                <template v-else>
+                                    {{ 
+                                        $i18n.locale === 'en' ? record.part_list[0]?.item?.name_en 
+                                        || '-' : record.part_list[0]?.item?.name || '-' 
+                                    }}
+                                </template>                        
+                            </a-tooltip>
+                        </template>
+                        <!-- 车型号,公里数 -->
+                        <template v-if="column.key === 'mileage'">
+                            <a-tooltip placement="top">
+                                <template #title>
+                                    <span v-for="(item, index) in record.vehicle_list">
+                                        <span>
+                                            {{ item.vehicle_uid + '(' + item.mileage + ')' }}
+                                        </span>
+                                        <span v-if="record.vehicle_list.length > 1">,</span>
+                                    </span>
+                                </template>
+                                {{ 
+                                    record.vehicle_list.length > 1 ? 
+                                    record.vehicle_list[0].vehicle_uid + '(' +record.vehicle_list[0].mileage + ')' + '等' 
+                                    : record.vehicle_list[0].vehicle_uid 
+                                }}
+                            </a-tooltip>
                         </template>
 
                         <!-- 分销商 -->
@@ -109,7 +150,11 @@
                                 <MySvgIcon icon-class="supply-view" />
                                 <span class="m-l-4">{{ $t("common.view") }}</span>
                             </a-button>
-                            <a-button type="link" @click="routerChange('edit', record)">
+                            <a-button 
+                                v-if="!$Util.Common.returnTypeBool(text, [Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED])" 
+                                type="link" 
+                                @click="routerChange('edit', record)"
+                            >
                                 <MySvgIcon icon-class="supply-edit" />
                                 <span class="m-l-4">{{ $t("common.edit") }}</span>
                             </a-button>
@@ -141,7 +186,7 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance, watch } from "vue";
+import { ref, computed, getCurrentInstance, watch, onMounted } from "vue";
 import Core from "@/core";
 import MySvgIcon from "@/components/MySvgIcon/index.vue";
 import { useTable } from "@/hooks/useTable";
@@ -162,25 +207,12 @@ const searchForm = ref({
 });
 
 const isDistributerAdmin = ref(false)  // 根据路由判断其是用在分销商(false) 还是平台方(true)
-
-
-watch(
-    () => router.currentRoute.value,
-    (newValue, oldValue) => {
-        console.log("newValue", newValue);
-        if (newValue.matched[0].path === '/customer-care') {
-            // 分销商的客户关怀
-            isDistributerAdmin.value = false
-        } else if (newValue.matched[0].path === '/inquiry-management') {
-            // 平台方
-            isDistributerAdmin.value = true
-        }
-    },
-    {
-        deep: true,
-        immediate: true,
-    }
-);
+const statusData = ref({
+    "process_total": 0, //处理中总数
+    "resolved_total": 0, //问题解决总数
+    "waiting_total": 0, //等待处理总数
+    "all_total": 0 //所有数量
+})  // 平台方tab数据
     
 /* computed start */
 // 筛选条件
@@ -336,10 +368,10 @@ const searchList = computed(() => {
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
-        { t: "common.all", count: 0, color: "primary", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL },
-        { t: "customer-care.waiting_for_processing", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT },
-        { t: "customer-care.processing", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS },
-        { t: "customer-care.problem_solving", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED },
+        { t: "common.all", count: statusData.value.all_total, color: "primary", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL },
+        { t: "customer-care.waiting_for_processing", count: statusData.value.waiting_total, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT },
+        { t: "customer-care.processing", count: statusData.value.process_total, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS },
+        { t: "customer-care.problem_solving", count: statusData.value.resolved_total, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED },
     ];
 
     return result;
@@ -367,9 +399,9 @@ const tableColumns = computed(() => {
             { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status" }, // 处理进度
             { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
             { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
-            { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "uid", key: "uid" }, // 归属客服
+            { title: proxy.$t("customer-care.belonging_customer_service"), dataIndex: "claimant_user_name", key: "claimant_user_name" }, // 归属客服
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
-            { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "process_end_time", key: "time" }, // 最近一次修改时间
+            { title: proxy.$t("customer-care.last_modification_time"), dataIndex: "update_time", key: "time" }, // 最近一次修改时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right" }, // 操作
         ]
     }
@@ -378,41 +410,56 @@ const tableColumns = computed(() => {
 /* computed end */
 
 /* fetch start*/
-// const Fetch = (params = {}) => {
-//   const obj = {   
-//     ...params
-//   }
+// 获取状态数据
+const getStatusFetch = (params = {}) => {
+  const obj = {
+    ...params
+  }
 
-//   Core.APi.inquiry_sheet.list(obj).then((res) => {
-//     console.log(res)
-//   }).catch((err) => {
-
-//   })
-// }
+  Core.Api.inquiry_sheet.statusList(obj).then((res) => {
+    console.log("获取状态数据 res", res);
+    statusData.value = res
+  }).catch((err) => {
+    console.log("获取状态数据 err", err);
+  })
+}
 
 // 获取询问单列表
 const getInquirySheet = Core.Api.inquiry_sheet.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
-    request: getInquirySheet,
-    dataCallBack(res) {
-        console.log("hsh", res);
-        return [
-            { 
-                uid : 1231241414,  // 订单号
-                vehicle_list: [
-                    { vehicle_uid: "12312414214124", },
-                    { vehicle_uid: "12312414214124", },
-                ], // 车架号
-                type: 1,  // 反馈类型
-                status: 20, // 状态
-                category: { name: "你好啊", name_en: "hello World", },
-                create_time: 1705667814,
-                submit_user_name: "admin1", // 提交人
-                part_list: [], // 零件
-            }
-        ]
-    }
+    request: getInquirySheet,    
+    // dataCallBack(res) {
+    //     console.log("数据 ", res);
+    //     return [
+    //         { 
+    //             new_msg_id: 0, 
+    //             uid : 1231241414,  // 订单号
+    //             vehicle_list: [
+    //                 { vehicle_uid: "12312414214124", mileage: 20 },
+    //                 { vehicle_uid: "12312414214124", mileage: 20 },
+    //             ], // 车架号
+    //             type: 1,  // 反馈类型
+    //             status: 10, // 状态
+    //             category: { name: "你好啊", name_en: "hello World", },
+    //             create_time: 1705667814,
+    //             submit_user_name: "admin1", // 提交人
+    //             part_list: [
+    //                 {
+    //                     item: {
+    //                         name: "零件名称",
+    //                         name_en: "gagag",
+    //                     }
+    //                 }
+    //             ], // 零件
+    //             fault_type: 1, // 故障类型
+    //             sorting_type: 1, // 归类
+    //             update_time: 1705993554, // 最后一次时间
+    //             claimant_user_name: "admin1", // 归属人名称
+    //         }
+    //     ]
+    // }
 });
+
 /* fetch end*/
 
 /* methods start*/
@@ -482,14 +529,39 @@ const routerChange = (type, record) => {
         }
     }    
 };
-const onSearch = (data) => {
-    searchParam.value = data;
+const onSearch = (data) => {    
+    searchParam.value = { ...data, ...searchForm.value };
     search();
 };
 const onReset = () => {
     refreshTable();
 };
+
 /* methods end*/
+
+watch(
+    () => router.currentRoute.value,
+    (newValue, oldValue) => {
+        console.log("newValue", newValue);
+        if (newValue.matched[0].path === '/customer-care') {
+            // 分销商的客户关怀
+            isDistributerAdmin.value = false
+        } else if (newValue.matched[0].path === '/inquiry-management') {
+            // 平台方
+            isDistributerAdmin.value = true
+            getStatusFetch()
+        }
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
+
+onMounted(() => {
+    searchParam.value.status = -1
+    search();
+})
 </script>
 
 <style lang="less" scoped>
@@ -505,5 +577,62 @@ const onReset = () => {
         font-size: 14px;
         font-weight: 500;
     }
+
+    :depp(.ant-table-cell) {
+        position: relative;
+    }
+    .new {        
+        height: 52px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .new-msg {
+            color: #FFF;
+            font-size: 12px;
+            font-weight: 400;
+            background-color: #F53F3F;
+            padding: 2px 10px;
+            border-radius: 4px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+    }
+
+
+    .new {
+
+    }
+}
+
+.color-FF7D00 {
+    border-radius: 4px;
+    background: rgba(255, 125, 0, 0.10);
+    color: #FF7D00;
+    font-size: 14px;
+    font-weight: 400;
+    .flex();
+    padding: 4px 14px;
+    box-sizing: border-box;
+}
+.color-0061FF {
+    border-radius: 4px;
+    background: rgba(0, 97, 255, 0.10);
+    color: #0061FF;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 14px;
+    box-sizing: border-box;
+}
+.color-00B42A {
+    border-radius: 4px;
+    background: rgba(38, 171, 84, 0.10);
+    color: #00B42A;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 4px 14px;
+    box-sizing: border-box;
 }
 </style>

@@ -20,37 +20,37 @@ export default  {
     },
     ORDER_STATUS_MAP: {
         ALL: -1,
-        EQUALTREATMENT: 10,
-        INPROCESS: 20,
-        RESOLVED: 30,
+        EQUALTREATMENT: 10, // 等待处理
+        INPROCESS: 20, // 处理中
+        RESOLVED: 30, // 已解决
     },
     // 故障类型
     FAULT_TYPE: {
         '-1': { value: -1, t: 'common.all',  }, // 全部
-        '10': { value: 10, t: 'customer-care.failure',  }, // 失效
-        '20': { value: 20, t: 'customer-care.abnormal_sound',  }, // 异响
-        '30': { value: 30, t: 'customer-care.scratch',  }, // 划伤
-        '40': { value: 40, t: 'customer-care.burning',  }, // 燃烧
-        '50': { value: 50, t: 'customer-care.accident',  }, // 事故
+        '1': { value: 1, t: 'customer-care.failure',  }, // 失效
+        '2': { value: 2, t: 'customer-care.abnormal_sound',  }, // 异响
+        '3': { value: 3, t: 'customer-care.scratch',  }, // 划伤
+        '4': { value: 4, t: 'customer-care.burning',  }, // 燃烧
+        '5': { value: 5, t: 'customer-care.accident',  }, // 事故
     },
     // 问询标签    
     SORTING_TYPE: {
         '-1': { value: -1, t: 'common.all',  }, // 全部
-        '10': { value: 10, t: 'customer-care.consultation',  }, // 咨询
-        '20': { value: 20, t: 'customer-care.complaints',  }, // 投诉
+        '1': { value: 10, t: 'customer-care.consultation',  }, // 咨询
+        '2': { value: 20, t: 'customer-care.complaints',  }, // 投诉
         '30': { value: 30, t: 'customer-care.general_claim',  }, // 索赔-a.普通索赔
         '40': { value: 40, t: 'customer-care.bona_fide_claim',  }, // 索赔-b.善意索赔
         '50': { value: 50, t: 'customer-care.unpacking_damage',  }, // 开箱损
     },
     SORTING_TYPE_THREE_MAP: {
-        CONSULTATION: 10, // 咨询
-        COMPLAINTS: 20, // 投诉
-        CLAIMCOMPENSATION: 30, // 索赔
+        CONSULTATION: 1, // 咨询
+        COMPLAINTS: 2, // 投诉
+        CLAIMCOMPENSATION: 3, // 索赔
     },
     SORTING_TYPE_THREE: {
-        '10': { value: 10, t: 'customer-care.consultation',  }, // 咨询
-        '20': { value: 20, t: 'customer-care.complaints',  }, // 投诉
-        '30': { value: 30, t: 'customer-care.claim_compensation',  }, // 索赔
+        '1': { value: 1, t: 'customer-care.consultation',  }, // 咨询
+        '2': { value: 2, t: 'customer-care.complaints',  }, // 投诉
+        '3': { value: 3, t: 'customer-care.claim_compensation',  }, // 索赔
     },
     SORTING_TYPE_TWO: { 
         '30': { value: 30, t: 'customer-care.general_claim',  }, // 普通索赔

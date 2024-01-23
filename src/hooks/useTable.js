@@ -52,6 +52,7 @@ export function useTable ({ request, initParam, isPageAble = true, immediate = t
         initParam && (state.searchInitParam = initParam)
         state.loading = true;
         // const [error, res] = await request(state.totalParam)
+        console.log("state.totalParam", state.totalParam);
         try {
             const res = await request(state.totalParam)
             state.tableData = res.list;
