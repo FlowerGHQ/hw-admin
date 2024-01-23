@@ -32,7 +32,7 @@
 import SvgIcon from "@/components/MySvgIcon/index.vue";
 import Magnifier from "./Magnifier.vue";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import 'swiper/css';
+import 'swiper/swiper.min.css';
 import { Navigation } from "swiper";
 import { ref, onMounted, reactive } from 'vue';
 const props = defineProps({
