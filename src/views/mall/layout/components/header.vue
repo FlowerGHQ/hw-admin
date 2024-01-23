@@ -152,11 +152,11 @@
         <div id="menu">
             <div class="menu-content content">
                 <!-- 整车 -->
-                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 1 })">
+                <span class="menu-item" @click="routerChange('/mall/vehicle-list', { type: 1 })">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 0 ? 'active' : ''">{{ $t('mall.vehicle_models') }}</span>
                 </span>
                 <!-- 配件 -->
-                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 2 })">
+                <span class="menu-item" @click="routerChange('/mall/vehicle-list', { type: 2 })">
                     <a-dropdown :trigger="['click']" overlay-class-name='action-menu' placement="bottom" @visibleChange="sparepartsDropDownChange">
                         <div class="menu-item-dropdown" @click.prevent>
                             <span class="menu-item-text tab-animate" :class="car_type_index === 1 ? 'active' : ''">{{ $t('mall.accessories') }}</span>
@@ -173,11 +173,11 @@
                     </a-dropdown>
                 </span>
                 <!-- 周边产品 -->
-                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 53 })">
+                <span class="menu-item" @click="routerChange('/mall/vehicle-list', { type: 3 })">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 2 ? 'active' : ''">{{ $t('mall.peripheral_products') }}</span>
                 </span>
                 <!-- 广宣品 -->
-                <span class="menu-item" @click="routerChange('/purchase/item-list', { tabId: 59 })">
+                <span class="menu-item" @click="routerChange('/mall/vehicle-list', { type: 4 })">
                     <span class="menu-item-text tab-animate" :class="car_type_index === 3 ? 'active' : ''">{{ $t('mall.promotional_products') }}</span>
                 </span>
             </div>
