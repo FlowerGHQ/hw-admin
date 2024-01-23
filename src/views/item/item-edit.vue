@@ -1662,8 +1662,6 @@ export default {
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-            console.log(this.categoryMessage)
-            return
             // 校验检查
             this.isValidate = true;
             if (typeof this.checkFormInput(form, specData, attrDef, categoryMessage) === "function") {
