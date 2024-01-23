@@ -258,7 +258,7 @@ export default {
         })
         .finally(() => {
           this.loading = false;
-          this.getExploreDetail(this.id);
+          this.getExploreDetail(this.detail.id);
         });
     },
     // 获取 同规格商品 列表接口
@@ -276,7 +276,7 @@ export default {
           console.log("specList", this.specList);
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
-            item_id: res.list[this.mountingIndex].id,
+            item_id: this.detail.id,
           });
         })
         .catch((err) => {
