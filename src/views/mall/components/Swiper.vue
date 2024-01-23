@@ -30,7 +30,7 @@
 
 <script setup>
 import SvgIcon from "@/components/MySvgIcon/index.vue";
-import Magnifier from ".//Magnifier.vue";
+import Magnifier from "./Magnifier.vue";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import 'swiper/css';
 import { Navigation } from "swiper";
