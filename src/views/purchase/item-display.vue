@@ -270,13 +270,14 @@ export default {
         flag_spread: 2,
         status: 0,
         ...params,
+        flag_default: 0,
       })
         .then((res) => {
           this.specList = res.list.filter((i) => i.flag_default !== 1);
           console.log("specList", this.specList);
           // 刚进页面初始化 商品规格对应的配件
           this.getAccessoryData({
-            item_id: this.detail.id,
+            item_id: res.list[this.mountingIndex].id,
           });
         })
         .catch((err) => {
