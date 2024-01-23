@@ -1751,8 +1751,10 @@ export default {
             }
             // 是整车并且为多规格
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
+                console.log('进入')
                 this.handleDescripttion();
             }
+            return
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -1770,7 +1772,7 @@ export default {
                 // 查看
                 if (categoryMessage && categoryMessage.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
-                        if (!categoryMessage[i].desc || !categoryMessage[i].desc_en) {
+                        if(categoryMessage[i].desc.split(',')[0] === '<p><br></p>' || categoryMessage[i].desc_en.split(',')[0] === '<p><br></p>'){
                             return this.$message.warning(
                                 `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                             );
