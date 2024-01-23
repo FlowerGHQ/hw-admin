@@ -554,6 +554,7 @@ const handleEdit = (record, index) => {
     reviewData.value = {
         item: record.item,
         country: record.country,
+        index,
     };
 };
 // 修改返回值
@@ -563,8 +564,16 @@ const handleModalEdit = (data) => {
     console.log(tableData.value,'tableData-------------------');
     console.log(formState.rule,'rule-----------------');
     let country = data[0].country;
-    let countryArr = formState.strategy_detail.filter((item) => item.country == country);
-    let no = countryArr[0].no;
+    let no;
+    let countryArr = formState.strategy_detail.filter((item) => item.country == country) || [];
+        // 说明点击了修改,但是修改了国家
+    if(countryArr.length === 0){
+         no = formState.strategy_detail[reviewData.value.index].no;
+        // 删除点击的国家的数据
+        formState.strategy_detail = formState.strategy_detail.filter((item) => item.country != formState.strategy_detail[reviewData.value.index].country);
+    }else{
+         no = countryArr[0].no;
+    }
     formState.strategy_detail.forEach(item=>{
         item.rule = formState.rule;
         item.type = formState.type;
