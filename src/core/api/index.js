@@ -972,6 +972,12 @@ const apiList = {
     // 官网端接口
     CLIENT: {
         communityList:['PostJson','community-post/list'], //动态列表
+    },
+    // 问询单
+    inquiry_sheet: {
+        list: ['PostJson','enquiry-ticket/list'], // 列表
+        add: ['PostJson','enquiry-ticket/create'], // 创建
+        modify: ['PostJson','enquiry-ticket/update'], // 修改
     }
 }; 
 

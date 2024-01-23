@@ -115,28 +115,15 @@
                 <div class="form-item d-f-s">
                     <div class="key t-r">{{ $t("customer-care.add_attachment") }}:</div>
                     <div class="value d-f">
-                        <a-upload
-                            name="file"
-                            list-type="picture-card"
-                            v-model:file-list="uploadOptions.fileList"
-                            :show-upload-list="uploadOptions.showUploadList"
-                            :action="uploadOptions.action"
-                            :headers="uploadOptions.headers"
-                            :data="uploadOptions.data"
-                            :multiple="uploadOptions.multiple"
-                            :maxCount="uploadOptions.maxCount"
-                            :beforeUpload="uploadOptions.handleCheck"
+
+                        <MyUpload
+                            :videoLimit="uploadOptions.videoLimit"
+                            :imageLimit="uploadOptions.imageLimit"
                             @change="handleDetailChange"
                             @preview="handlePreview"
                             @remove="handleRemove"
-                        >
-                            <div class="image-inner" v-if="uploadOptions.fileList.length < uploadOptions.maxCount">
-                                <img src="../../assets/images/upload/add.png" class="upload-add" alt="" />
-                            </div>
-                            <!-- <template #removeIcon>
-                                <img src="../../assets/images/upload/close.png" class="upload-close" alt="" />
-                            </template> -->
-                        </a-upload>
+                        >                            
+                        </MyUpload>
 
                         <div class="add-attachment-tip m-l-10">
                             <div>{{ $t("customer-care.tip1") }}</div>
@@ -153,40 +140,22 @@
         </div>
 
         <!-- 自定义图片预览 -->
-        <MyMask :isClose="isClose" :isClickMaskClose="true">
-            <div v-if="isVideoImage === 'image'" class="preview-image">
-                <a-carousel arrows :dots="false">
-                    <template #prevArrow>
-                        <div class="custom-slick-arrow" style="left: 60px; z-index: 1">
-                            <left-circle-outlined />
-                        </div>
-                    </template>
-                    <template #nextArrow>
-                        <div class="custom-slick-arrow" style="right: 60px">
-                            <right-circle-outlined />
-                        </div>
-                    </template>
-                    <div v-for="(item, index) in uploadOptions.previewImage" :key="index">
-                        <img class="preview-img" :src="item" alt="">
-                    </div>                    
-                </a-carousel>
-            </div>
-            <div v-else-if="isVideoImage === 'video'" class="preview-video">
-                
-            </div>
-            <div class="colos-icon" @click="onAddBtn('close')"><close-outlined /></div>
-        </MyMask>
+        <MyPreviewImageVideo
+            v-model:isClose="isClose"
+            :type="isVideoImage" 
+            :previewData="uploadOptions.previewImage"
+        >
+        </MyPreviewImageVideo>
     </div>
 </template>
 
 <script setup>
 import { ref, watch, computed, getCurrentInstance, onMounted } from "vue";
-import Core from "../../core";
-import dayjs from "dayjs";
+import Core from "@/core";
 import { useRouter, useRoute } from "vue-router";
 import { Upload, message } from "ant-design-vue";
-import MyMask from "@/components/horwin/based-on-dom/MyMask.vue";
-import { LeftCircleOutlined, RightCircleOutlined, CloseOutlined } from "@ant-design/icons-vue";
+import MyPreviewImageVideo from './components/MyPreviewImageVideo.vue'
+import MyUpload from './components/MyUpload.vue'
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -194,48 +163,7 @@ const route = useRoute();
 
 const isDistributerAdmin = ref(false); // 根据路由判断其是用在分销商(false) 还是平台方(true)
 
-const uploadOptions = ref({
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76' || Core.Const.NET.FILE_UPLOAD_END_POINT,
-    // action:  Core.Const.NET.FILE_UPLOAD_END_POINT,
-    fileList: [],
-    headers: {
-        ContentType: false,
-    },
-    data: {
-        token: Core.Data.getToken(),
-        type: "img",
-    },
-    accept: "image/jpeg, image/jpg, image/png, video/*",
-    maxCount: 9,
-    multiple: true,
-    showUploadList: true,
-    // 检查
-    handleCheck: function (file, fileList) {
-        let isLt = true;
-        const sizeM = file.size / 1024 / 1024;
-
-        if (/^video\/+/.test(file.type)) {
-            // 视频 50M
-            if (sizeM > 50) {
-                isLt = false;
-                message.warning(proxy.$t("common.please_upload_less_than") + "50M" + proxy.$t("common.file"));
-                return false || Upload.LIST_IGNORE;
-            }
-        }
-        if (/^image\/+/.test(file.type)) {
-            // 照片 10M
-            if (sizeM > 10) {
-                isLt = false;
-                message.warning(proxy.$t("common.please_upload_less_than") + "10M" + proxy.$t("common.file"));
-                return false || Upload.LIST_IGNORE;
-            }
-        } else {
-            message.warning($t("common.file_incorrect"));
-            return false || Upload.LIST_IGNORE;
-        }
-
-        return isLt;
-    },
+const uploadOptions = ref({    
     // previewImage
     previewImage: ["https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png", "https://horwin.oss-cn-hangzhou.aliyuncs.com//img/ba37a2f6f160d68d31f1a96b4a17f2b068b6cee17e6c7b96db51ba5016ef1df0.png"],
     // previewVideo
@@ -308,9 +236,6 @@ const onAddBtn = (type, record, index) => {
         case "delete":
             formParams.value.list.splice(index, 1);
             break;
-        case "close":
-            isClose.value = false
-            break;
 
         default:
             break;
@@ -318,7 +243,6 @@ const onAddBtn = (type, record, index) => {
 };
 // 提交
 const handleSubmit = () => {
-    console.log("删除", uploadOptions.value.fileList);
     isClose.value = true
 };
 
@@ -336,16 +260,17 @@ const handleDetailChange = ({ file, fileList }) => {
         message.error(proxy.$t("common.upload_fail"));
     }
 };
-const handlePreview = (file) => {
-    console.log("预览", file, uploadOptions.value.fileList);
+const handlePreview = ({ file, fileList }) => {
+    console.log("预览", file, fileList);
 
     if (/^video\/+/.test(file.type)) {
         uploadOptions.value.previewVideo = ""
         isClose.value = true
+        return
     }
 
     uploadOptions.value.previewImage = [];    
-    uploadOptions.value.fileList.forEach((el) => {
+    fileList.forEach((el) => {
         // console.log("输出的东西", el.response);
         if (el.response) {
             if (/^image\/+/.test(el.type)) {
@@ -361,7 +286,7 @@ const handlePreview = (file) => {
     console.log("结果", uploadOptions.value.previewImage);
     isClose.value = true
 };
-const handleRemove = (file) => {
+const handleRemove = ({ file, fileList }) => {
     console.log("删除", file);
 };
 /* methods end*/
@@ -411,70 +336,7 @@ const handleRemove = (file) => {
             width: 100%;
             height: 100%;
         }
-    }
-
-    // Image
-    .preview-image {   
-        height: 100%;     
-
-        .preview-img {
-            min-width: 300px;
-            max-width: 800px;
-        }
-
-        :deep(.ant-carousel) {
-            height: 100%;            
-        }
-        :deep(.slick-slider) {
-            height: 100%;
-        }
-
-        :deep(.slick-list) {            
-            height: 100%;
-        }
-        :deep(.slick-track) {            
-            height: 100%;
-        }
-
-        :deep(.slick-slide) {
-            background-color: initial;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .ant-carousel :deep(.slick-arrow.custom-slick-arrow) { 
-            width: 60px;
-            height: 60px;          
-            font-size: 60px;
-            color: #fff;
-            opacity: 0.5;
-            z-index: 1;
-        }
-        .ant-carousel :deep(.custom-slick-arrow:before) {
-            display: none;
-        }
-        .ant-carousel :deep(.custom-slick-arrow:hover) {
-            opacity: 1;
-        }
-    }
-
-    // video
-    .preview-video {
-
-    }
-    .colos-icon {
-        position: absolute;
-        top: 30px;
-        right: 30px;
-        color: #FFF;
-        width: 30px;
-        font-size: 30px;
-        height: 30px;
-        z-index: 6;
-        opacity: 0.8;
-    }
+    }    
 }
 
 .ant-upload-picture-card-wrapper {

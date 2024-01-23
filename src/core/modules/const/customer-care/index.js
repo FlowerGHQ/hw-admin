@@ -19,7 +19,7 @@ export default  {
         '30': { value: 30, t: 'customer-care.resolved',  }, // 已解决
     },
     ORDER_STATUS_MAP: {
-        // all: -1,
+        ALL: -1,
         EQUALTREATMENT: 10,
         INPROCESS: 20,
         RESOLVED: 30,

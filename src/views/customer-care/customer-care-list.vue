@@ -81,6 +81,24 @@
                         </template>
 
                         <!-- 分销商 -->
+                        <!-- 车架号 -->
+                        <template v-if="column.key === 'vehicle_list'">
+                            <a-tooltip placement="top">
+                                <template #title>
+                                    <span v-for="(item, index) in record.vehicle_list">
+                                        <span>{{ item.vehicle_uid }}</span>
+                                        <span v-if="record.vehicle_list.length > 1">,</span>
+                                    </span>
+                                </template>
+                                {{ 
+                                    record.vehicle_list.length > 1 ? record.vehicle_list[0].vehicle_uid + '等' : record.vehicle_list[0].vehicle_uid
+                                }}
+                            </a-tooltip>
+                        </template>
+                        <!-- 车型 -->
+                        <template v-if="column.key === 'category'">
+                            {{ $i18n.locale === 'en'? record.category.name_en : record.category.name }}
+                        </template>
                         <!-- 反馈类型 -->
                         <template v-if="column.key === 'type'">
                             {{ Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text] ? $t(Core.Const.CUSTOMER_CARE.INQUIRY_SHEET_TYPE[text].t) : '-' }}
@@ -197,7 +215,7 @@ const searchList = computed(() => {
                         if (key === '-1') {
                             result.unshift(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])
                         } else {
-                            result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])                        
+                            result.push(Core.Const.CUSTOMER_CARE.ORDER_STATUS[key])
                         }                    
                     }                   
                     return result
@@ -314,13 +332,14 @@ const searchList = computed(() => {
 
     return result
 })
+
 // tabs 的数据
 const statusList = computed(() => {
     let result = [
-        { t: "common.all", count: 0, color: "primary", key: 1 },
-        { t: "customer-care.waiting_for_processing", count: 0, color: "yellow", key: 2 },
-        { t: "customer-care.processing", count: 0, color: "yellow", key: 3 },
-        { t: "customer-care.problem_solving", count: 0, color: "yellow", key: 4 },
+        { t: "common.all", count: 0, color: "primary", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.ALL },
+        { t: "customer-care.waiting_for_processing", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.EQUALTREATMENT },
+        { t: "customer-care.processing", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.INPROCESS },
+        { t: "customer-care.problem_solving", count: 0, color: "yellow", key: Core.Const.CUSTOMER_CARE.ORDER_STATUS_MAP.RESOLVED },
     ];
 
     return result;
@@ -331,9 +350,9 @@ const tableColumns = computed(() => {
     if (!isDistributerAdmin.value) {
         columns = [
             { title: proxy.$t("customer-care.inquiry_number"), dataIndex: "uid", key: "uid" }, // 问询单号
-            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_uid", key: "vehicle_uid" }, // 车架号
+            { title: proxy.$t("common.vehicle_no"), dataIndex: "vehicle_list", key: "vehicle_list" }, // 车架号
             { title: proxy.$t("customer-care.feedback_type"), dataIndex: "type", key: "type" }, // 反馈类型
-            { title: proxy.$t("common.vehicle_model"), dataIndex: "uid", key: "uid" }, // 车型(未找到)
+            { title: proxy.$t("common.vehicle_model"), dataIndex: "category", key: "category" }, // 车型
             { title: proxy.$t("common.status"), dataIndex: "status", key: "status" }, // 状态
             { title: proxy.$t("common.create_time"), dataIndex: "create_time", key: "time" }, // 创建时间
             { title: proxy.$t("common.operations"), dataIndex: "operations", key: "operations", fixed: "right", width: 200, }, // 操作
@@ -343,8 +362,8 @@ const tableColumns = computed(() => {
             { title: proxy.$t("customer-care.Construction_site_number"), dataIndex: "uid", key: "uid" }, // 工单编号
             { title: proxy.$t("customer-care.classify"), dataIndex: "sorting_type", key: "sorting_type" }, // 归类
             { title: proxy.$t("common.type"), dataIndex: "type", key: "type" }, // 类型
-            { title: proxy.$t("customer-care.submitter"), dataIndex: "uid", key: "uid" }, // 提交人
-            { title: proxy.$t("customer-care.part"), dataIndex: "uid", key: "uid" }, // 零件
+            { title: proxy.$t("customer-care.submitter"), dataIndex: "submit_user_name", key: "submit_user_name" }, // 提交人
+            { title: proxy.$t("customer-care.part"), dataIndex: "part_list", key: "part_list" }, // 零件
             { title: proxy.$t("customer-care.processing_progress"), dataIndex: "status", key: "status" }, // 处理进度
             { title: proxy.$t("customer-care.model_number_mileage"), dataIndex: "mileage", key: "mileage" }, // 车型号、公里数
             { title: proxy.$t("customer-care.fault_classification"), dataIndex: "fault_type", key: "fault_type" }, // 故障分类
@@ -359,14 +378,42 @@ const tableColumns = computed(() => {
 /* computed end */
 
 /* fetch start*/
-// 获取表格数据
-const request = Core.Api.Feedback.list;
+// const Fetch = (params = {}) => {
+//   const obj = {   
+//     ...params
+//   }
 
-/* fetch end*/
+//   Core.APi.inquiry_sheet.list(obj).then((res) => {
+//     console.log(res)
+//   }).catch((err) => {
 
+//   })
+// }
+
+// 获取询问单列表
+const getInquirySheet = Core.Api.inquiry_sheet.list;
 const { loading, tableData, pagination, search, onSizeChange, refreshTable, onPageChange, searchParam } = useTable({
-    request,
+    request: getInquirySheet,
+    dataCallBack(res) {
+        console.log("hsh", res);
+        return [
+            { 
+                uid : 1231241414,  // 订单号
+                vehicle_list: [
+                    { vehicle_uid: "12312414214124", },
+                    { vehicle_uid: "12312414214124", },
+                ], // 车架号
+                type: 1,  // 反馈类型
+                status: 20, // 状态
+                category: { name: "你好啊", name_en: "hello World", },
+                create_time: 1705667814,
+                submit_user_name: "admin1", // 提交人
+                part_list: [], // 零件
+            }
+        ]
+    }
 });
+/* fetch end*/
 
 /* methods start*/
 const routerChange = (type, record) => {
