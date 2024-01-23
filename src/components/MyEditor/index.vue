@@ -51,7 +51,6 @@ const setValue = () => {
 watch(
     () => props.modelValue,
     (val) => {
-        console.log(val != null || val != "")
         if (val != null || val != "") {
             content.value = val;
         } else {

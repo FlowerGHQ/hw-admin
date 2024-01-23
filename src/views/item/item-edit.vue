@@ -1248,6 +1248,7 @@ export default {
                 imgs: []
             },
             goodsDraftData: {},
+
         };
     },
     watch: {
@@ -1315,9 +1316,12 @@ export default {
         },
         isDesEmpty() {
             let flag = false;
+            console.log(this.categoryMessage,'1111---------------------------')
             for (let i = 0; i < this.categoryMessage.length; i++) {
-                if(this.categoryMessage[i].desc.split(',')[0] === '<p><br></p>' || categoryMessage[i].desc_en.split(',')[0] === '<p><br></p>'){
+                const item = this.categoryMessage[i];
+                if (item.desc === "" || item.desc_en === "") {
                     flag = true;
+                    break;
                 }
             }
             //every 用于判断数组中的每一项是否都满足条件
@@ -1825,9 +1829,9 @@ export default {
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 // 查看
-                if (categoryMessage && Objec.length > 0) {
+                if (categoryMessage && categoryMessage.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
-                        if(categoryMessage[i].desc.split(',')[0] === '<p><br></p>' || categoryMessage[i].desc_en.split(',')[0] === '<p><br></p>'){
+                        if(categoryMessage[i].desc === '' || categoryMessage[i].desc_en === ''){
                             return this.$message.warning(
                                 `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
                             );
