@@ -4,6 +4,7 @@
     <a-modal
         :maskClosable="false"
         destroyOnClose
+        tableLayout="fixed"
         :getContainer="getContainer"
         :visible="visibiliy"
         :width="860"
@@ -33,7 +34,7 @@
                     <div class="btn-area">
                         <!-- 取消确定 -->
                         <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
-                        <a-button type="primary" @click="hanleAllVisible">{{ $t("def.sure") }}</a-button>
+                        <a-button type="primary" @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
                     </div>
                 </div>
 
@@ -48,17 +49,58 @@
                             <div v-if="column.dataIndex === 'commodity'">
                                 <span>已选{{ text }}个商品</span>
                             </div>
-                            <div
-                                v-if="
-                                    column.dataIndex === 'fob_40qh_eur' ||
-                                    column.dataIndex === 'fob_20gp_eur' ||
-                                    column.dataIndex === 'fob_eur' ||
-                                    column.dataIndex === 'fob_40qh_usd' ||
-                                    column.dataIndex === 'fob_20gp_usd' ||
-                                    column.dataIndex === 'fob_usd'
-                                ">
-                                <a-input style="width: 100%" v-model:value="record[column.dataIndex]" />
-                            </div>
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="1"
+                                :max="10"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_20gp_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="11"
+                                :max="25"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_40qh_eur'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="26"
+                                :precision="2"
+                                :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="1"
+                                :max="10"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_20gp_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="11"
+                                :max="25"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
+                            <a-input-number
+                                v-if="column.dataIndex === 'fob_40qh_usd'"
+                                v-model:value="record[column.dataIndex]"
+                                :min="26"
+                                :precision="2"
+                                :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                                @change="inputValidateConfig" />
                         </template>
                     </a-table>
                 </div>
@@ -70,7 +112,12 @@
                 :columns="ladderColumns"
                 bordered
                 :dataSource="ladderData"
-                :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+                :row-selection="{
+                    selectedRowKeys: keyAndItem.selectedRowKeys,
+                    onChange: onSelectChange,
+                    onSelectAll: onSelectAll,
+                    type: 'checkbox',
+                }"
                 class="ladder-table"
                 :pagination="false"
                 :rowKey="(record, index) => index">
@@ -78,17 +125,58 @@
                     <div v-if="column.dataIndex === 'name'">
                         <span>{{ text }}</span>
                     </div>
-                    <div
-                        v-if="
-                            column.dataIndex === 'fob_40qh_eur' ||
-                            column.dataIndex === 'fob_20gp_eur' ||
-                            column.dataIndex === 'fob_eur' ||
-                            column.dataIndex === 'fob_40qh_usd' ||
-                            column.dataIndex === 'fob_20gp_usd' ||
-                            column.dataIndex === 'fob_usd'
-                        ">
-                        <a-input style="width: 100%" v-model:value="record[column.dataIndex]" />
-                    </div>
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_eur'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="1"
+                        :max="10"
+                        :precision="2"
+                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_20gp_eur'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="11"
+                        :max="25"
+                        :precision="2"
+                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_40qh_eur'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="26"
+                        :precision="2"
+                        :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_usd'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="1"
+                        :max="10"
+                        :precision="2"
+                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_20gp_usd'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="11"
+                        :max="25"
+                        :precision="2"
+                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
+                    <a-input-number
+                        v-if="column.dataIndex === 'fob_40qh_usd'"
+                        v-model:value="record[column.dataIndex]"
+                        :min="26"
+                        :precision="2"
+                        :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                        :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
+                        @change="inputValidateConfig" />
                 </template>
             </a-table>
         </div>
@@ -96,10 +184,10 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
-const emit = defineEmits(["update:ladderPriceVisible"]);
+const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData"]);
 const props = defineProps({
     // 阶梯价格
     ladderData: {
@@ -114,6 +202,16 @@ const props = defineProps({
     ladderPriceTitle: {
         type: String,
         default: "",
+    },
+    // 高亮的行
+    activeRow: {
+        type: Object,
+        default: () => {},
+    },
+    // 高亮的下标
+    activeIndex: {
+        type: Number,
+        default: null,
     },
 });
 // 弹框的外层实例
@@ -251,7 +349,7 @@ const ladderColumns = computed(() => {
 // 阶梯价格数据
 const dataSource = ref([
     {
-        commodity: 5,
+        commodity: 0,
         fob_40qh_eur: null,
         fob_20gp_eur: null,
         fob_eur: null,
@@ -260,55 +358,33 @@ const dataSource = ref([
         fob_usd: null,
     },
 ]);
-// const ladderData = ref([
-//     {
-//         id: 0,
-//         commodity: "单电版-黑色",
-//         fob_40qh_eur: null,
-//         fob_20gp_eur: null,
-//         fob_eur: null,
-//         fob_40qh_usd: null,
-//         fob_20gp_usd: null,
-//         fob_usd: null,
-//     },
-//     {
-//         id: 1,
-//         commodity: "单电版-白色",
-//         fob_40qh_eur: null,
-//         fob_20gp_eur: null,
-//         fob_eur: null,
-//         fob_40qh_usd: null,
-//         fob_20gp_usd: null,
-//         fob_usd: null,
-//     },
-//     {
-//         id: 2,
-//         commodity: "单电版-黄色",
-//         fob_40qh_eur: null,
-//         fob_20gp_eur: null,
-//         fob_eur: null,
-//         fob_40qh_usd: null,
-//         fob_20gp_usd: null,
-//         fob_usd: null,
-//     },
-//     {
-//         id: 3,
-//         commodity: "单电版-蓝色",
-//         fob_40qh_eur: null,
-//         fob_20gp_eur: null,
-//         fob_eur: null,
-//         fob_40qh_usd: null,
-//         fob_20gp_usd: null,
-//         fob_usd: null,
-//     },
-// ]);
 // 选择的
-const selectedRowKeys = ref([]);
+// const selectedRowKeys = ref([]);
+// const selectedRowItems = ref([]);
+
+const keyAndItem = reactive({
+    selectedRowKeys: [],
+    selectedRowItems: [],
+});
 
 // 触发选择
-const onSelectChange = (selectedRowKeys) => {
-    console.log(selectedRowKeys);
-    selectedRowKeys.value = selectedRowKeys;
+const onSelectChange = (selectedRowKeys, selectedRows) => {
+    console.log("selectedRowKeys changed: ", selectedRowKeys);
+    console.log("selectedRows changed: ", selectedRows);
+    keyAndItem.selectedRowKeys = selectedRowKeys;
+    keyAndItem.selectedRowItems = selectedRows;
+};
+// 全选
+const onSelectAll = (selected, selectedRows, changeRows) => {
+    console.log(selected, selectedRows, changeRows);
+    keyAndItem.selectedRowKeys = selectedRows.map((item) => item.key);
+    keyAndItem.selectedRowItems = selectedRows;
+    if (selected) {
+        batchSetVisible.value = true;
+        dataSource.value[0].commodity = selectedRows.length;
+    } else {
+        batchSetVisible.value = false;
+    }
 };
 // 获取弹框的外层实例
 const getContainer = () => {
@@ -316,17 +392,62 @@ const getContainer = () => {
 };
 // 确定按钮
 const handleComfirmLadderPrice = () => {
+    console.log(props.ladderData);
+    // 传递给父组件，让父组件去处理
+    emit('handleSaveLadderData', props.ladderData);
     emit("update:ladderPriceVisible", false);
 };
 // 取消按钮
 const handleCancelLadderPrice = () => {
     emit("update:ladderPriceVisible", false);
 };
-// hanleBatchSetVisible
-const hanleBatchSetVisible = () => {
-    batchSetVisible.value = !batchSetVisible.value;
-    console.log(batchSetVisible.value);
+const inputValidateConfig = (value) => {
+    console.log(value);
 };
+// 取消按钮（动画）
+const hanleAllVisible = () => {
+    batchSetVisible.value = false;
+    // 数据初始化
+    dataSource.value = [
+        {
+            commodity: 0,
+            fob_40qh_eur: null,
+            fob_20gp_eur: null,
+            fob_eur: null,
+            fob_40qh_usd: null,
+            fob_20gp_usd: null,
+            fob_usd: null,
+        },
+    ];
+};
+// 确定按钮（动画）
+const hanleAllSure = () => {
+    console.log(dataSource.value);
+    keyAndItem.selectedRowItems.forEach((item) => {
+        item.fob_40qh_eur = dataSource.value[0].fob_40qh_eur;
+        item.fob_20gp_eur = dataSource.value[0].fob_20gp_eur;
+        item.fob_eur = dataSource.value[0].fob_eur;
+        item.fob_40qh_usd = dataSource.value[0].fob_40qh_usd;
+        item.fob_20gp_usd = dataSource.value[0].fob_20gp_usd;
+        item.fob_usd = dataSource.value[0].fob_usd;
+    });
+    // 传递给父组件，让父组件去处理
+    emit("handleLastLadderData", keyAndItem.selectedRowItems);
+};
+
+// 监听
+watch(
+    () => props.activeIndex,
+    (newVal) => {
+        console.log(newVal);
+        // 设置选中的行
+        keyAndItem.selectedRowKeys = [newVal];
+    },
+    {
+        deep: true,
+        immediate: true,
+    }
+);
 </script>
 
 <style lang="less" scoped>
@@ -377,7 +498,7 @@ const hanleBatchSetVisible = () => {
             }
             .ant-modal-footer {
                 border-top: 1px solid #e2e2e2;
-                position: relative;
+                height: auto;
                 .confim-footer {
                     width: 100%;
                     display: flex;
@@ -438,8 +559,8 @@ const hanleBatchSetVisible = () => {
                                 margin-right: 4px;
                             }
                         }
-                        .btn-area{
-                            .ant-btn{
+                        .btn-area {
+                            .ant-btn {
                                 height: auto;
                                 min-width: auto;
                                 padding: 4px 16px;
@@ -461,7 +582,6 @@ const hanleBatchSetVisible = () => {
     animation: slideInUp 0.3s ease-in-out forwards;
 }
 :deep(table) {
-    table-layout: fixed !important;
     .ant-table-cell {
         // 文字超出换行
         white-space: normal !important;
@@ -469,6 +589,21 @@ const hanleBatchSetVisible = () => {
         text-align: center !important;
         color: #1d2129;
     }
+    .ant-table-tbody {
+        .ant-table-row {
+            .ant-table-cell-row-hover {
+                background-color: rgba(0, 97, 255, 0.05);
+            }
+        }
+        .ant-table-row-selected {
+            .ant-table-cell {
+                background: rgba(0, 97, 255, 0.05);
+            }
+        }
+    }
+}
+:deep(.ant-input-number) {
+    width: auto;
 }
 
 @keyframes slideInDown {

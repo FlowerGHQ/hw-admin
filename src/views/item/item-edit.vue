@@ -446,12 +446,8 @@
                     </div>
                     <!-- 选择分类 -->
                     <div class="form-item specific-category-select required" v-if="form.type === itemTypeMap['1']?.key">
-                        <div
-                            class="key"
-                            :class="
-                                (category_index || !isDesEmpty) && isValidate ? 'error' : ''
-                            ">
-                            {{ $t("item-edit.spec_category_select")  }}
+                        <div class="key" :class="(category_index || !isDesEmpty) && isValidate ? 'error' : ''">
+                            {{ $t("item-edit.spec_category_select") }}
                         </div>
                         <div class="value">
                             <div class="select-area">
@@ -460,8 +456,7 @@
                                     v-model:value="category_index"
                                     :placeholder="$t('def.select')"
                                     :disabled="categoryDisabled"
-                                    @change="handleCategory"    
-                                >
+                                    @change="handleCategory">
                                     <a-select-option
                                         v-for="(val, index) in specific.list"
                                         :key="key"
@@ -481,7 +476,9 @@
                                             {{ item.zh || "-" }}（{{ $t("item-edit.chinese") }}）
                                         </div>
                                         <div class="rich-item-area">
-                                            <MyEditor v-model:modelValue="item.desc" :placeholder="$t('item-edit.description')" />
+                                            <MyEditor
+                                                v-model:modelValue="item.desc"
+                                                :placeholder="$t('item-edit.description')" />
                                         </div>
                                         <div class="rich-title">
                                             {{ item.en || "-" }}（{{ $t("item-edit.english") }}）
@@ -505,7 +502,7 @@
                                 :columns="specificColumns"
                                 :data-source="specific.data"
                                 :scroll="{ x: true }"
-                                :row-key="(record) => record.title"
+                                :row-key="(record,index) => record.title"
                                 :pagination="false"
                                 class="specific-table">
                                 <template #headerCell="{ title, column }">
@@ -517,7 +514,8 @@
                                         </a-tooltip>
                                         <span>{{ title }}</span>
                                     </template>
-                                    <template v-if="column.dataIndex === 'fob_eur'">
+                                    <template
+                                        v-if="column.dataIndex === 'fob_eur' && form.type !== itemTypeMap['1']?.key">
                                         <div class="title-row">
                                             <span>
                                                 {{ column.title }}
@@ -561,7 +559,8 @@
                                             </a-popover>
                                         </div>
                                     </template>
-                                    <template v-if="column.dataIndex === 'fob_usd'">
+                                    <template
+                                        v-if="column.dataIndex === 'fob_usd' && form.type !== itemTypeMap['1']?.key">
                                         <div class="title-row">
                                             <span>
                                                 {{ column.title }}
@@ -606,7 +605,7 @@
                                         </div>
                                     </template>
                                 </template>
-                                <template #bodyCell="{ column, record }">
+                                <template #bodyCell="{ text, record, index, column}">
                                     <template v-if="column.dataIndex === 'imgs'">
                                         <!--  list-type="picture-card" -->
                                         <div>
@@ -677,7 +676,10 @@
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
-                                        <!-- 不为整车走原来的流程 -->
+                                        <!-- 不为整车走原来的流程 
+                                        
+                                        /\B(?=(\d{3})+(?!\d))/g 正则表达式  三位一分隔
+                                        -->
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_eur"
@@ -685,63 +687,110 @@
                                             :precision="2"
                                             :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                             :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                            @change="inputValidateConfig" 
-                                        />
-                                            <div class="show-ladder" v-else-if="form.type === itemTypeMap['1']?.key && (
-                                                record.fob_eur && record.fob_20gp_eur && record.fob_40qh_eur
-                                            )">
-                                                <div class="show-ladder-item">
-                                                    <div class="show-ladder-item-title">
-                                                        {{ $t("item-edit.sample") }}
-                                                    </div>
-                                                    <div class="show-ladder-item-content">
-                                                        {{ record.fob_eur }}
-                                                    </div>
+                                            @change="inputValidateConfig" />
+                                        <div
+                                            class="show-ladder"
+                                            v-else-if="
+                                                form.type === itemTypeMap['1']?.key &&
+                                                record.fob_eur &&
+                                                record.fob_20gp_eur &&
+                                                record.fob_40qh_eur
+                                            ">
+                                            <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-content">
+                                                    {{ `€ ${record.fob_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
                                                 </div>
-                                                <div class="show-ladder-item">
-                                                    <div class="show-ladder-item-title">
-                                                        {{ $t("item-edit.quantity_20GP") }}
-                                                    </div>
-                                                    <div class="show-ladder-item-content">
-                                                        {{ record.fob_20gp_eur }}
-                                                    </div>
-                                                </div>
-                                                <div class="show-ladder-item">
-                                                    <div class="show-ladder-item-title">
-                                                        {{ $t("item-edit.quantity_40HQ") }}
-                                                    </div>
-                                                    <div class="show-ladder-item-content">
-                                                        {{ record.fob_40qh_eur }}
-                                                    </div>
-                                                </div>
-                                            >
-
                                             </div>
-                                            <!-- 设置阶梯价格按钮 -->
-                                            <a-button
-                                                v-else-if="form.type === itemTypeMap['1']?.key && (!record.fob_eur || !record.fob_20gp_eur || !fob_40qh_eur)"
-                                                type="primary"
-                                                class="ladder-price"
-                                                ghost
-                                                @click="openLadderPrice('EUR')"
-                                                >{{ $t("item-edit.ladder_price") }}</a-button
-                                            >
-
+                                            <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_20GP") }} :
+                                                </div>
+                                                <div class="show-ladder-item-content">
+                                                    {{
+                                                        `€ ${record.fob_20gp_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div class="show-ladder-item" @click="openLadderPrice('EUR',record,index)">
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
+                                                <div class="show-ladder-item-content">
+                                                    {{
+                                                        `€ ${record.fob_40qh_eur}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- 设置阶梯价格按钮 -->
+                                        <a-button
+                                            v-else-if="
+                                                form.type === itemTypeMap['1']?.key &&
+                                                (!record.fob_eur || !record.fob_20gp_eur || !fob_40qh_eur)
+                                            "
+                                            type="primary"
+                                            class="ladder-price"
+                                            ghost
+                                            @click="openLadderPrice('EUR',record,index)"
+                                            >{{ $t("item-edit.ladder_price") }}</a-button
+                                        >
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_usd'">
-                                        <!-- <a-input-number
+                                        <a-input-number
+                                            v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_usd"
                                             :min="0.01"
                                             :precision="2"
                                             :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                             :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                            @change="inputValidateConfig" /> -->
-                                            <a-button
-                                                type="primary"
-                                                ghost
-                                                class="ladder-price"
-                                                @click="openLadderPrice('USD')"
-                                                >{{ $t("item-edit.ladder_price") }}</a-button>
+                                            @change="inputValidateConfig" />
+                                        <div
+                                            class="show-ladder"
+                                            v-else-if="
+                                                form.type === itemTypeMap['1']?.key &&
+                                                record.fob_usd &&
+                                                record.fob_20gp_usd &&
+                                                record.fob_40qh_usd
+                                            ">
+                                            <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
+                                                <div class="show-ladder-item-title">{{ $t("item-edit.sample") }} :</div>
+                                                <div class="show-ladder-item-content">
+                                                    {{ `$ ${record.fob_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") }}
+                                                </div>
+                                            </div>
+                                            <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_20GP") }} :
+                                                </div>
+                                                <div class="show-ladder-item-content">
+                                                    {{
+                                                        `$ ${record.fob_20gp_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                    }}
+                                                </div>
+                                            </div>
+                                            <div class="show-ladder-item" @click="openLadderPrice('USD',record,index)">
+                                                <div class="show-ladder-item-title">
+                                                    {{ $t("item-edit.quantity_40HQ") }} :
+                                                </div>
+                                                <div class="show-ladder-item-content">
+                                                    {{
+                                                        `€ ${record.fob_40qh_usd}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a-button
+                                            v-else-if="
+                                                form.type === itemTypeMap['1']?.key &&
+                                                (!record.fob_usd || !record.fob_20gp_usd || !fob_40qh_usd)
+                                            "
+                                            type="primary"
+                                            ghost
+                                            class="ladder-price"
+                                            @click="openLadderPrice('USD',record,index)"
+                                            >{{ $t("item-edit.ladder_price") }}</a-button
+                                        >
                                     </template>
                                     <template v-if="column.dataIndex === 'operation'">
                                         <a-button type="link" @click="handleDelete(record)">
@@ -861,11 +910,15 @@
             </div>
         </a-modal>
         <!-- 阶梯价格 -->
-        <LadderPrice 
-            v-model:ladderPriceVisible="ladderPriceVisible" 
+        <LadderPrice
+            v-model:ladderPriceVisible="ladderPriceVisible"
             :ladderPriceTitle="ladderPriceTitle"
-            :ladderData="specific.data" 
-            />
+            :ladderData="labberData" 
+            :activeRow="activeRow"
+            :activeIndex="activeIndex"
+            @handleLastLadderData="handleLastLadderData"
+            @handleSaveLadderData="handleSaveLadderData"    
+        />
         <!-- 自定义图片预览 -->
         <div class="image-preview" :class="{ 'preview-wrap': previewVisible }" @click="previewVisible = false">
             <img :src="previewImage" alt="" />
@@ -901,16 +954,19 @@ export default {
         ItemHeader,
         ItemSelect,
         MyEditor,
-        LadderPrice
+        LadderPrice,
     },
     props: {},
     data() {
         return {
             // 阶梯价格
-            ladderPriceVisible:false,
-            ladderPriceTitle:'',
+            labberData: [],
+            ladderPriceVisible: false,
+            ladderPriceTitle: "",
+            activeRow: {},
+            activeIndex : null,
             // 判断选择哪个分类的数据
-            category_index:null,
+            category_index: null,
             openCategory: true, //暂时留作switch开关的逻辑
             categoryDisabled: true, //默认禁用switch开关
             previewImage: "",
@@ -1055,7 +1111,6 @@ export default {
             handler: function (val, oldVal) {
                 if (val?.list && val?.list?.length > 0) {
                     this.categoryDisabled = false;
-                   
                 } else {
                     this.categoryDisabled = true;
                 }
@@ -1124,11 +1179,10 @@ export default {
                 this.$i18n.locale === "en" ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name
             }${this.$t("i.value")}`;
         },
-        isDesEmpty(){
+        isDesEmpty() {
             //every 用于判断数组中的每一项是否都满足条件
-            return this.categoryMessage.every(item=>item.desc === '' && item.desc_en === '')
-        }
-
+            return this.categoryMessage.every((item) => item.desc === "" && item.desc_en === "");
+        },
     },
     created() {
         this.form.id = Number(this.$route.query.id) || 0;
@@ -1157,18 +1211,29 @@ export default {
     },
     methods: {
         // openLadderPrice
-        openLadderPrice(type) {
+        openLadderPrice(type,record,index) {
+            console.log(type,record,index)
             this.ladderPriceVisible = true;
+            this.activeRow = record;
+            this.activeIndex = index;
             switch (type) {
-                case 'EUR':
-                    this.ladderPriceTitle = this.$t("item-edit.EUR_ladder_price") 
+                case "EUR":
+                    this.ladderPriceTitle = this.$t("item-edit.EUR_ladder_price");
                     break;
-                case 'USD':
-                this.ladderPriceTitle = this.$t("item-edit.ESD_ladder_price") 
+                case "USD":
+                    this.ladderPriceTitle = this.$t("item-edit.ESD_ladder_price");
                     break;
                 default:
                     break;
             }
+        },
+        // 处理数据（批量修改）
+        handleLastLadderData(data) {
+            this.labberData = data;
+        },
+        // 提交数据
+        handleSaveLadderData(data){
+            this.specific.data = data;
         },
         /* 监听 */
         handleResize() {
@@ -1207,7 +1272,7 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(val)
+            console.log(val);
             this.category_index = val;
             this.categoryMessage = [];
             // this.specific.list.forEach((item) => {
@@ -1216,8 +1281,8 @@ export default {
             //         this.categoryMessage = item.option;
             //     }
             // });
-            this.categoryMessage = this.specific.list.filter(item=>item.id === val)[0]?.option || []
-            console.log(this.categoryMessage)
+            this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
+            console.log(this.categoryMessage);
         },
         // 获取商品详情
         getItemDetail() {
@@ -1359,24 +1424,24 @@ export default {
         },
         // 获取商品规格列表
         setSpecificData(itemList) {
-            console.log(itemList,'参数值--------------------------')
+            console.log(itemList, "参数值--------------------------");
             this.loading = true;
             this.specific.mode = 2;
             Core.Api.AttrDef.listBySet({ set_id: this.set_id }).then((res) => {
-                console.log(res,'规格列表信息---------------------');
+                console.log(res, "规格列表信息---------------------");
                 let list = res.list.map((item) => ({
                     id: item.id,
                     key: item.key,
                     name: item.name,
                     name_en: item.key,
-                    flag_category:item.flag_category || 0,
+                    flag_category: item.flag_category || 0,
                     option: item.value_en.split(",").map((it, index) => ({
                         key: it,
                         zh: item.value.split(",")[index],
                         en: it,
                         disabled: true,
-                        desc:item.desc.split(",")[index] || '',
-                        desc_en:item.desc_en.split(",")[index] || ''
+                        desc: item.desc.split(",")[index] || "",
+                        desc_en: item.desc_en.split(",")[index] || "",
                     })),
                     addValue: {
                         key: "",
@@ -1387,7 +1452,7 @@ export default {
                 }));
                 itemList.shift(); // 删除默认的
                 let categoryObj = list.filter((item) => item.flag_category === 1);
-                console.log(categoryObj,'categoryObj---------------------');
+                console.log(categoryObj, "categoryObj---------------------");
                 this.category_index = categoryObj[0]?.id || null;
                 this.categoryMessage = categoryObj[0]?.option || [];
 
@@ -1437,7 +1502,8 @@ export default {
                 this.specific.list = list;
                 // 多规格商品列表
                 this.specific.data = data;
-                console.log('多规格商品列表----------------',this.specific.data)
+                this.labberData = data;
+                console.log("多规格商品列表----------------", this.specific.data);
             });
         },
         handleDelete(record) {
@@ -1486,10 +1552,10 @@ export default {
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-            
+
             // 校验检查
             this.isValidate = true;
-            if (typeof this.checkFormInput(form, specData, attrDef,categoryMessage) === "function") {
+            if (typeof this.checkFormInput(form, specData, attrDef, categoryMessage) === "function") {
                 return;
             }
 
@@ -1540,7 +1606,11 @@ export default {
                         name_en: data.name_en,
                         price: Math.round(data.price * 100),
                         fob_eur: Math.round(data.fob_eur * 100),
+                        fob_20gp_eur: Math.round(data.fob_20gp_eur * 100),
+                        fob_40qh_eur: Math.round(data.fob_40qh_eur * 100),
                         fob_usd: Math.round(data.fob_usd * 100),
+                        fob_20gp_usd: Math.round(data.fob_20gp_usd * 100),
+                        fob_40qh_usd: Math.round(data.fob_40qh_usd * 100),
                         // 隐藏成本价格
                         /* original_price: Math.round(data.original_price * 100),
                         original_price_currency: data.original_price_currency, */
@@ -1567,7 +1637,7 @@ export default {
                     };
                 });
             }
-            this.handleDescripttion()
+            this.handleDescripttion();
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -1578,18 +1648,20 @@ export default {
                 });
         },
         // 保存时检查表单输入
-        checkFormInput(form, specData, attrDef,categoryMessage) {
+        checkFormInput(form, specData, attrDef, categoryMessage) {
             // 查看
-            if(categoryMessage && categoryMessage.length > 0){
-                for(let i = 0; i < categoryMessage.length; i++){
-                    if(!categoryMessage[i].desc || !categoryMessage[i].desc_en){
-                        return this.$message.warning(`${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`);
+            if (categoryMessage && categoryMessage.length > 0) {
+                for (let i = 0; i < categoryMessage.length; i++) {
+                    if (!categoryMessage[i].desc || !categoryMessage[i].desc_en) {
+                        return this.$message.warning(
+                            `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
+                        );
                     }
-
                 }
-            }
-            else if(this.isDesEmpty){
-                return this.$message.warning(`${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`);
+            } else if (this.isDesEmpty) {
+                return this.$message.warning(
+                    `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
+                );
             }
             // 名称
             if (!form.name) {
@@ -1677,8 +1749,20 @@ export default {
                     if (!item.fob_eur) {
                         return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
                     }
+                    if(!item.fob_20gp_eur){
+                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                    }
+                    if(!item.fob_40qh_eur){
+                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                    }
                     if (!item.fob_usd) {
                         return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
+                    }
+                    if(!item.fob_20gp_usd){
+                        return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                    }
+                    if(!item.fob_40qh_usd){
+                        return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
                     }
                     let str = "";
                     for (let j = 0; j < this.specific.list.length; j++) {
@@ -1829,7 +1913,7 @@ export default {
                 name: "",
                 key: "",
                 option: [],
-                flag_category:0,
+                flag_category: 0,
                 addVisible: false,
                 addValue: { key: "", zh: "", en: "" },
             });
@@ -1903,51 +1987,50 @@ export default {
                 };
                 Core.Api.AttrDef.save(_item)
                     .then((res) => {
-                        console.log('详情--------------------',res.detail);
+                        console.log("详情--------------------", res.detail);
                         this.specific.list[index].id = res.detail.id;
                         this.perAddSpecItem(index);
                     })
                     .finally(() => {});
             }
         },
-        handleDescripttion(){
-            let item = _.cloneDeep(this.specific.list.filter((i)=>i.id === this.category_index)[0]);
-            console.log('目标-------------------------')
+        handleDescripttion() {
+            let item = _.cloneDeep(this.specific.list.filter((i) => i.id === this.category_index)[0]);
+            console.log("目标-------------------------");
             item.option = _.cloneDeep(this.categoryMessage);
             if (item.key.trim() && item.name.trim()) {
                 let value = "";
                 let value_en = "";
-                let desc = '';
-                let desc_en = '';
+                let desc = "";
+                let desc_en = "";
                 item.option.forEach((it) => {
                     value += it.zh + ",";
                     value_en += it.en + ",";
-                    desc += it.desc + ','
-                    desc_en += it.desc_en + ','
+                    desc += it.desc + ",";
+                    desc_en += it.desc_en + ",";
                 });
                 var reg = /,$/gi;
                 value = value.replace(reg, "");
                 value_en = value_en.replace(reg, "");
-                
+
                 let _item = {
                     id: item.id,
                     key: item.key,
                     name: item.name,
                     value: value,
                     value_en: value_en,
-                    desc : desc,
-                    desc_en : desc_en,
-                    flag_category:1
+                    desc: desc,
+                    desc_en: desc_en,
+                    flag_category: 1,
                 };
-                console.log('_item-------------------------------',_item)
-                Core.Api.AttrDef.save(_item).then(res=>{
-                    console.log('详情--------------------',res.detail);
-                    return
-                    let target = this.specific.list.filter((i)=>i.id === this.category_index)[0];
+                console.log("_item-------------------------------", _item);
+                Core.Api.AttrDef.save(_item).then((res) => {
+                    console.log("详情--------------------", res.detail);
+                    return;
+                    let target = this.specific.list.filter((i) => i.id === this.category_index)[0];
                     target.id = res.detail.id;
                     this.perAddSpecItem(this.category_index);
-                })
-                   
+                });
             }
         },
         // 规格值
@@ -2186,7 +2269,19 @@ export default {
                 if (!item.fob_eur) {
                     return (this.validateConfigFlag = false);
                 }
+                if(!item.fob_20gp_eur){
+                    return (this.validateConfigFlag = false);
+                }
+                if(!item.fob_40qh_eur){
+                    return (this.validateConfigFlag = false);
+                }
                 if (!item.fob_usd) {
+                    return (this.validateConfigFlag = false);
+                }
+                if(!item.fob_20gp_usd){
+                    return (this.validateConfigFlag = false);
+                }
+                if(!item.fob_40qh_usd){
                     return (this.validateConfigFlag = false);
                 }
                 let str = "";
@@ -2223,7 +2318,7 @@ export default {
         },
         // 添加规格值
         addConfig() {
-            let item = Core.Util.deepCopy({ key: "", zh: "", en: "",desc:'',desc_en:'', validate: false });
+            let item = Core.Util.deepCopy({ key: "", zh: "", en: "", desc: "", desc_en: "", validate: false });
             this.specific.list[this.configIndex].option.push(item);
             this.$nextTick(() => {
                 this.configScroll();
@@ -2645,13 +2740,40 @@ export default {
         :deep(.ant-upload-list) {
             display: none;
         }
-        .ant-table-cell{
-            .ladder-price{
-                width:100%;
-                padding:6px 45px;
+        .ant-table-cell {
+            .ladder-price {
+                width: 100%;
+                padding: 6px 45px;
                 height: auto;
-                color:#0061FF;
+                color: #0061ff;
                 font-size: 14px;
+            }
+            .show-ladder {
+                display: flex;
+                align-items: center;
+                .show-ladder-item {
+                    align-items: center;
+                    display: inline-flex;
+                    height: 26px;
+                    padding: 6px 8px;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 6px;
+                    background: #f2f3f5;
+                    margin-left: 4px;
+                    font-size: 14px;
+                    color: #1d2129;
+                    cursor: pointer;
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                    &:hover {
+                        background: rgba(0, 97, 255, 0.1);
+                    }
+                    .show-ladder-item-title {
+                        margin-right: 4px;
+                    }
+                }
             }
         }
 
