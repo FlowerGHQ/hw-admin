@@ -29,6 +29,23 @@ export default {
 		category_description: '分类描述',
 		// 请完善
 		please_complete: '请完善',
+		ladder_price: '设置阶梯价',
+		// EUR阶梯价设置
+		EUR_ladder_price: 'EUR阶梯价设置',
+		//USD阶梯价设置
+		ESD_ladder_price: 'USD阶梯价设置',
+		// 勾选商品可批量设置价格
+		batch_price: '勾选商品可批量设置价格',
+		// 批量设置价格
+		batch_price: '批量设置价格',
+		// 商品
+		commodity: '商品',
+		// 26<=订货量（40QH）
+		quantity_26: '26<=订货量（40QH）',
+		// 11<=订货量<=25（20GP）
+		quantity_11_25: '11<=订货量<=25（20GP）',
+		// 1<=订货量<=10(样品)
+		quantity_1_10: '1<=订货量<=10(样品)',
     },
     en: {
 		// 新增规格
@@ -51,5 +68,21 @@ export default {
 		english: 'English',
 		category_description: 'Category description',
 		please_complete: 'Please complete',
+		ladder_price: 'Set ladder price',
+		// EUR阶梯价设置
+		EUR_ladder_price: 'EUR ladder price setting', 
+		// USD阶梯价设置
+		ESD_ladder_price: 'USD ladder price setting',
+		// 勾选商品可批量设置价格
+		batch_price: 'Check the goods to batch set the price',
+		// 批量设置价格
+		batch_price: 'Batch set price',
+		commodity: 'Commodity',
+		// 26<=订货量（40QH）
+		quantity_26: '26<=Order quantity (40QH)',
+		// 11<=订货量<=25（20GP）
+		quantity_11_25: '11<=Order quantity<=25 (20GP)',
+		// 1<=订货量<=10(样品)
+		quantity_1_10: '1<=Order quantity<=10 (sample)',
 	}
 }

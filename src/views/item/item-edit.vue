@@ -677,22 +677,37 @@
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
-                                        <a-input-number
+                                        <!-- <a-input-number
                                             v-model:value="record.fob_eur"
                                             :min="0.01"
                                             :precision="2"
                                             :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                             :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                            @change="inputValidateConfig" />
+                                            @change="inputValidateConfig" /> -->
+                                            <!-- 设置阶梯价格按钮 -->
+                                            <a-button
+                                                type="primary"
+                                                class="ladder-price"
+                                                ghost
+                                                @click="openLadderPrice('EUR')"
+                                                >{{ $t("item-edit.ladder_price") }}</a-button
+                                            >
+
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_usd'">
-                                        <a-input-number
+                                        <!-- <a-input-number
                                             v-model:value="record.fob_usd"
                                             :min="0.01"
                                             :precision="2"
                                             :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                             :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
-                                            @change="inputValidateConfig" />
+                                            @change="inputValidateConfig" /> -->
+                                            <a-button
+                                                type="primary"
+                                                ghost
+                                                class="ladder-price"
+                                                @click="openLadderPrice('USD')"
+                                                >{{ $t("item-edit.ladder_price") }}</a-button>
                                     </template>
                                     <template v-if="column.dataIndex === 'operation'">
                                         <a-button type="link" @click="handleDelete(record)">
@@ -754,9 +769,7 @@
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
-
             <a-button type="primary" @click="handleSubmit">{{ $t("def.sure_create") }}</a-button>
-
             <!-- 底部障眼法-盒子 -->
             <div class="bottom-box"></div>
         </div>
@@ -813,7 +826,12 @@
                 </div>
             </div>
         </a-modal>
-
+        <!-- 阶梯价格 -->
+        <LadderPrice 
+            v-model:ladderPriceVisible="ladderPriceVisible" 
+            :ladderPriceTitle="ladderPriceTitle"
+            :ladderData="specific.data" 
+            />
         <!-- 自定义图片预览 -->
         <div class="image-preview" :class="{ 'preview-wrap': previewVisible }" @click="previewVisible = false">
             <img :src="previewImage" alt="" />
@@ -841,7 +859,7 @@ function findDuplicates(arr) {
     return duplicates;
 }
 import MyEditor from "@/components/MyEditor/index.vue";
-
+import LadderPrice from "./components/LadderPrice.vue";
 export default {
     name: "ItemEdit",
     components: {
@@ -849,10 +867,14 @@ export default {
         ItemHeader,
         ItemSelect,
         MyEditor,
+        LadderPrice
     },
     props: {},
     data() {
         return {
+            // 阶梯价格
+            ladderPriceVisible:false,
+            ladderPriceTitle:'',
             // 判断选择哪个分类的数据
             category_index:null,
             openCategory: true, //暂时留作switch开关的逻辑
@@ -1100,6 +1122,20 @@ export default {
         next();
     },
     methods: {
+        // openLadderPrice
+        openLadderPrice(type) {
+            this.ladderPriceVisible = true;
+            switch (type) {
+                case 'EUR':
+                    this.ladderPriceTitle = this.$t("item-edit.EUR_ladder_price") 
+                    break;
+                case 'USD':
+                this.ladderPriceTitle = this.$t("item-edit.ESD_ladder_price") 
+                    break;
+                default:
+                    break;
+            }
+        },
         /* 监听 */
         handleResize() {
             const width = this.$refs.bigBox && this.$refs.bigBox.offsetWidth;
@@ -1406,7 +1442,6 @@ export default {
         },
         // 保存、新建 商品
         handleSubmit() {
-            debugger
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
@@ -2167,6 +2202,7 @@ export default {
 <style lang="less" scoped>
 #ItemEdit {
     width: 100%;
+
     .image-preview {
         position: fixed;
         width: 100vw;
@@ -2568,6 +2604,15 @@ export default {
 
         :deep(.ant-upload-list) {
             display: none;
+        }
+        .ant-table-cell{
+            .ladder-price{
+                width:100%;
+                padding:6px 45px;
+                height: auto;
+                color:#0061FF;
+                font-size: 14px;
+            }
         }
 
         .imgList-box {

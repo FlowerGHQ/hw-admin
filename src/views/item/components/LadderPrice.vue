@@ -1,0 +1,492 @@
+<template>
+    <div class="ladder-price" ref="LadderPrice"></div>
+    <!-- 阶梯价格 -->
+    <a-modal
+        :maskClosable="false"
+        destroyOnClose
+        :getContainer="getContainer"
+        :visible="visibiliy"
+        :width="860"
+        ellipsis
+        :title="ladderPriceTitle"
+        wrapClassName="ladder-modal"
+        @ok="handleComfirmLadderPrice"
+        @cancel="handleCancelLadderPrice">
+        <!-- footer -->
+        <template #footer>
+            <div class="confim-footer">
+                <div class="tips">
+                    {{ $t("item-edit.batch_price") }}
+                </div>
+                <div class="btn-area">
+                    <!-- 取消按钮 -->
+                    <a-button @click="handleCancelLadderPrice">{{ $t("def.cancel") }}</a-button>
+                    <!-- 确定按钮 -->
+                    <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t("def.sure") }}</a-button>
+                </div>
+            </div>
+            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': !batchSetVisible }">
+                <div class="title-area">
+                    <div class="title">
+                        {{ $t("item-edit.batch_price") }}
+                    </div>
+                    <div class="btn-area">
+                        <!-- 取消确定 -->
+                        <a-button @click="hanleAllVisible">{{ $t("def.cancel") }}</a-button>
+                        <a-button type="primary" @click="hanleAllVisible">{{ $t("def.sure") }}</a-button>
+                    </div>
+                </div>
+
+                <div class="table-content">
+                    <a-table
+                        :columns="batchLadderColumns"
+                        bordered
+                        :dataSource="dataSource"
+                        :pagination="false"
+                        :rowKey="(record, index) => index">
+                        <template #bodyCell="{ column, record, index, text }">
+                            <div v-if="column.dataIndex === 'commodity'">
+                                <span>已选{{ text }}个商品</span>
+                            </div>
+                            <div
+                                v-if="
+                                    column.dataIndex === 'fob_40qh_eur' ||
+                                    column.dataIndex === 'fob_20gp_eur' ||
+                                    column.dataIndex === 'fob_eur' ||
+                                    column.dataIndex === 'fob_40qh_usd' ||
+                                    column.dataIndex === 'fob_20gp_usd' ||
+                                    column.dataIndex === 'fob_usd'
+                                ">
+                                <a-input style="width: 100%" v-model:value="record[column.dataIndex]" />
+                            </div>
+                        </template>
+                    </a-table>
+                </div>
+            </div>
+        </template>
+        <div class="table-content">
+            <!-- 选择的商品和设置EUR和USD -->
+            <a-table
+                :columns="ladderColumns"
+                bordered
+                :dataSource="ladderData"
+                :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+                class="ladder-table"
+                :pagination="false"
+                :rowKey="(record, index) => index">
+                <template #bodyCell="{ column, record, index, text }">
+                    <div v-if="column.dataIndex === 'commodity'">
+                        <span>{{ text }}</span>
+                    </div>
+                    <div
+                        v-if="
+                            column.dataIndex === 'fob_40qh_eur' ||
+                            column.dataIndex === 'fob_20gp_eur' ||
+                            column.dataIndex === 'fob_eur' ||
+                            column.dataIndex === 'fob_40qh_usd' ||
+                            column.dataIndex === 'fob_20gp_usd' ||
+                            column.dataIndex === 'fob_usd'
+                        ">
+                        <a-input style="width: 100%" v-model:value="record[column.dataIndex]" />
+                    </div>
+                </template>
+            </a-table>
+        </div>
+    </a-modal>
+</template>
+
+<script setup>
+import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { useI18n } from "vue-i18n";
+const $t = useI18n().t;
+const emit = defineEmits(["update:ladderPriceVisible"]);
+const props = defineProps({
+    // 阶梯价格
+    ladderData: {
+        type: Array,
+        default: () => [],
+    },
+    // 是否显示阶梯价格
+    ladderPriceVisible: {
+        type: Boolean,
+        default: false,
+    },
+    ladderPriceTitle: {
+        type: String,
+        default: "",
+    },
+});
+// 弹框的外层实例
+const LadderPrice = ref(null);
+// 动画框显示
+const batchSetVisible = ref(true);
+
+// 是否显示弹框
+const visibiliy = computed(() => {
+    return props.ladderPriceVisible;
+});
+// 批量阶梯价格
+const batchLadderColumns = computed(() => {
+    return [
+        {
+            // 商品
+            title: $t("item-edit.commodity"),
+            dataIndex: "commodity",
+            key: "commodity",
+        },
+        // EUR
+        {
+            title: "EUR",
+            // 下面有子项
+            children: [
+                {
+                    // 26<=订货量（40QH）
+                    title: $t("item-edit.quantity_26"),
+                    dataIndex: "fob_40qh_eur",
+                    key: "fob_40qh_eur",
+                },
+                {
+                    title: $t("item-edit.quantity_11_25"),
+                    dataIndex: "fob_20gp_eur",
+                    key: "fob_20gp_eur",
+                },
+                {
+                    title: $t("item-edit.quantity_1_10"),
+                    dataIndex: "fob_eur",
+                    key: "fob_eur",
+                },
+            ],
+        },
+        {
+            title: "USD",
+            children: [
+                {
+                    title: $t("item-edit.quantity_26"),
+                    dataIndex: "fob_40qh_usd",
+                    key: "fob_40qh_usd",
+                },
+                {
+                    title: $t("item-edit.quantity_11_25"),
+                    dataIndex: "fob_20gp_usd",
+                    key: "fob_20gp_usd",
+                },
+                {
+                    title: $t("item-edit.quantity_1_10"),
+                    dataIndex: "fob_usd",
+                    key: "fob_usd",
+                },
+            ],
+        },
+    ];
+});
+// 阶梯价格
+const ladderColumns = computed(() => {
+    return [
+        {
+            // 商品
+            title: $t("item-edit.commodity"),
+            dataIndex: "commodity",
+            key: "commodity",
+            align: "center",
+            width: 110,
+        },
+        // EUR
+        {
+            title: "EUR",
+            // 下面有子项
+            children: [
+                {
+                    // 26<=订货量（40QH）
+                    title: $t("item-edit.quantity_26"),
+                    dataIndex: "fob_40qh_eur",
+                    key: "fob_40qh_eur",
+                    align: "center",
+                    width: 110,
+                },
+                {
+                    title: $t("item-edit.quantity_11_25"),
+                    dataIndex: "fob_20gp_eur",
+                    key: "fob_20gp_eur",
+                    align: "center",
+                    width: 110,
+                },
+                {
+                    title: $t("item-edit.quantity_1_10"),
+                    dataIndex: "fob_eur",
+                    key: "fob_eur",
+                    align: "center",
+                    width: 110,
+                },
+            ],
+        },
+        {
+            title: "USD",
+            children: [
+                {
+                    title: $t("item-edit.quantity_26"),
+                    dataIndex: "fob_40qh_usd",
+                    key: "fob_40qh_usd",
+                    align: "center",
+                    width: 110,
+                },
+                {
+                    title: $t("item-edit.quantity_11_25"),
+                    dataIndex: "fob_20gp_usd",
+                    key: "fob_20gp_usd",
+                    align: "center",
+                    width: 110,
+                },
+                {
+                    title: $t("item-edit.quantity_1_10"),
+                    dataIndex: "fob_usd",
+                    key: "fob_usd",
+                    align: "center",
+                    width: 110,
+                },
+            ],
+        },
+    ];
+});
+
+// 阶梯价格数据
+const dataSource = ref([
+    {
+        commodity: 5,
+        fob_40qh_eur: null,
+        fob_20gp_eur: null,
+        fob_eur: null,
+        fob_40qh_usd: null,
+        fob_20gp_usd: null,
+        fob_usd: null,
+    },
+]);
+// const ladderData = ref([
+//     {
+//         id: 0,
+//         commodity: "单电版-黑色",
+//         fob_40qh_eur: null,
+//         fob_20gp_eur: null,
+//         fob_eur: null,
+//         fob_40qh_usd: null,
+//         fob_20gp_usd: null,
+//         fob_usd: null,
+//     },
+//     {
+//         id: 1,
+//         commodity: "单电版-白色",
+//         fob_40qh_eur: null,
+//         fob_20gp_eur: null,
+//         fob_eur: null,
+//         fob_40qh_usd: null,
+//         fob_20gp_usd: null,
+//         fob_usd: null,
+//     },
+//     {
+//         id: 2,
+//         commodity: "单电版-黄色",
+//         fob_40qh_eur: null,
+//         fob_20gp_eur: null,
+//         fob_eur: null,
+//         fob_40qh_usd: null,
+//         fob_20gp_usd: null,
+//         fob_usd: null,
+//     },
+//     {
+//         id: 3,
+//         commodity: "单电版-蓝色",
+//         fob_40qh_eur: null,
+//         fob_20gp_eur: null,
+//         fob_eur: null,
+//         fob_40qh_usd: null,
+//         fob_20gp_usd: null,
+//         fob_usd: null,
+//     },
+// ]);
+// 选择的
+const selectedRowKeys = ref([]);
+
+// 触发选择
+const onSelectChange = (selectedRowKeys) => {
+    console.log(selectedRowKeys);
+    selectedRowKeys.value = selectedRowKeys;
+};
+// 获取弹框的外层实例
+const getContainer = () => {
+    return LadderPrice.value;
+};
+// 确定按钮
+const handleComfirmLadderPrice = () => {
+    emit("update:ladderPriceVisible", false);
+};
+// 取消按钮
+const handleCancelLadderPrice = () => {
+    emit("update:ladderPriceVisible", false);
+};
+// hanleBatchSetVisible
+const hanleBatchSetVisible = () => {
+    batchSetVisible.value = !batchSetVisible.value;
+    console.log(batchSetVisible.value);
+};
+</script>
+
+<style lang="less" scoped>
+.ladder-price {
+    width: 100%;
+    height: 100%;
+}
+:deep(.ladder-modal) {
+    .ant-modal {
+        .ant-modal-content {
+            border-radius: 4px;
+            .ant-modal-header {
+                height: auto;
+                padding: 16px 24px;
+                border-bottom: 1px solid #e2e2e2;
+                .ant-modal-title {
+                    height: auto;
+                    color: #1d2129;
+                    font-size: 16px;
+                    font-weight: 600;
+                }
+            }
+            .ant-modal-body {
+                padding: 20px 24px;
+                height: 652px;
+                overflow-y: scroll;
+                // 滚动条样式
+                &::-webkit-scrollbar {
+                    width: 6px;
+                    height: 6px;
+                }
+                &::-webkit-scrollbar-thumb {
+                    border-radius: 3px;
+                    background-color: rgba(0, 0, 0, 0.2);
+                }
+                &::-webkit-scrollbar-track {
+                    border-radius: 3px;
+                    background-color: rgba(0, 0, 0, 0.1);
+                }
+                .table-content {
+                    width: 100%;
+                    height: 100%;
+                    .ladder-table {
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+            .ant-modal-footer {
+                border-top: 1px solid #e2e2e2;
+                position: relative;
+                .confim-footer {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    .tips {
+                        min-width: 170px;
+                        height: 28px;
+                        padding: 6px 10px;
+                        background-color: #f2f3f5;
+                        font-size: 12px;
+                        color: #666;
+                        text-align: center;
+                        border-radius: 4px;
+                    }
+                    .btn-area {
+                        margin-left: 174px;
+                        .ant-btn {
+                            border-radius: 4px;
+                            min-width: auto;
+                            padding: 0 16px;
+                            border-color: #e5e6eb;
+                            color: #1d2129;
+                            font-size: 14px;
+                        }
+                        .ant-btn-primary {
+                            color: #fff;
+                        }
+                    }
+                }
+                .batch-set {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    min-height: 140px;
+                    background-color: #fff;
+                    z-index: 1;
+                    box-shadow: 0px -4px 10px rgba(143, 146, 152, 0.1);
+                    padding: 16px 24px;
+                    .title-area {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 14px;
+                        .title {
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: #1d2129;
+                            display: flex;
+                            align-items: center;
+                            &::before {
+                                content: "";
+                                display: inline-block;
+                                width: 3px;
+                                height: 12px;
+                                background-color: #0061ff;
+                                margin-right: 4px;
+                            }
+                        }
+                        .btn-area{
+                            .ant-btn{
+                                height: auto;
+                                min-width: auto;
+                                padding: 4px 16px;
+                                border-radius: 4px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.slide-in-down {
+    animation: slideInDown 0.3s ease-in-out forwards;
+}
+
+.slide-in-up {
+    animation: slideInUp 0.3s ease-in-out forwards;
+}
+:deep(table) {
+    table-layout: fixed !important;
+    .ant-table-cell {
+        // 文字超出换行
+        white-space: normal !important;
+        // 文字居中
+        text-align: center !important;
+        color: #1d2129;
+    }
+}
+
+@keyframes slideInDown {
+    0% {
+        transform: translateY(100%);
+        visibility: visible; /* 确保元素在开始动画时是可见的，如果需要的话 */
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+@keyframes slideInUp {
+    0% {
+        transform: translateY(0);
+        visibility: visible; /* 确保元素在开始动画时是可见的，如果需要的话 */
+    }
+    100% {
+        transform: translateY(100%);
+    }
+}
+</style>
