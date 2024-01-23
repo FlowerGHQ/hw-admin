@@ -39,13 +39,9 @@
                                                 v-model:value="formState.registered_capital"
                                                 :placeholder="$t('supply-chain.please_enter')"
                                                 :maxlength="15"
-<<<<<<< HEAD
                                                 min="0"
                                                 name="registered_capital"
                                             >
-=======
-                                                name="registered_capital">
->>>>>>> 6890f39fdae8d6654607bd9cec1fa22d73931a31
                                                 <template #addonAfter>
                                                     <span> {{ $t("supply-chain.ten_thousand_yuan") }} </span>
                                                 </template>
@@ -53,32 +49,6 @@
                                         </div>
                                     </a-form-item>
                                 </div>
-<<<<<<< HEAD
-                                <!-- <div class="col-area-content"> -->
-                                <!-- 法定代表人 -->
-                                <!-- <a-form-item
-                      :label="
-                          $t(
-                              'supply-chain.legal_representative'
-                          )
-                      "
-                      name="legal_person">
-                      <a-input
-                          
-                          :maxlength="5"
-                          
-                          :placeholder="
-                              $t('supply-chain.please_enter')
-                          "
-                          name="legal_person"
-                          v-model:value="
-                              formState.legal_person
-                          ">
-                      </a-input>
-                  </a-form-item> -->
-                                <!-- </div> -->
-=======
->>>>>>> 6890f39fdae8d6654607bd9cec1fa22d73931a31
                             </div>
                             <div class="col-area business-term-col-area">
                                 <div class="col-all-area">
@@ -711,7 +681,6 @@ onMounted(() => {
         border-left: none;
     }
 }
-<<<<<<< HEAD
 .col-area{
   display: flex;
   align-items: flex-start;
@@ -735,10 +704,6 @@ onMounted(() => {
   }
 }
 :deep(.business-term-col-area){
-=======
-.col-area {
-    display: flex;
->>>>>>> 6890f39fdae8d6654607bd9cec1fa22d73931a31
     align-items: flex-start;
     .title-area {
         width: 96px;
