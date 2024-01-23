@@ -3,15 +3,28 @@
         <div id="vehicle-list">
             <div class="content">
                 <div class="title">
-                    {{ $t('purchase.all_vehicle_models') }}
+                    <span v-if="vehicle_type === 1">
+                        {{ $t('purchase.all_vehicle_models') }}
+                    </span>
+                    <span v-else-if="vehicle_type === 2">
+                        {{ $t('purchase.all_accessories') }}
+                    </span>
+                    <span v-else-if="vehicle_type === 3">
+                        {{ $t('purchase.all_peripheral_products') }}
+                    </span>
+                    <span v-else-if="vehicle_type === 4">
+                        {{ $t('purchase.all_promotional_products') }}
+                    </span>
                 </div>
-                <a-spin tip="Loading..." :spinning="spinning">
-                    <div class="list">
-                        <div class="item" v-for="item in list" :key="item.id" @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
-                            <VehicleCard :record="item" />
-                        </div>
+                <div class="list">
+                    <div class="item" v-for="item in list" :key="item.id"
+                        @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
+                        <VehicleCard :record="item" />
                     </div>
-                </a-spin>
+                </div>
+                <div class="loading">
+                    <down-loading class="loading" :show="spinning" />
+                </div>
             </div>
         </div>
     </div>
@@ -22,24 +35,34 @@
 
 <script setup>
 import VehicleCard from './components/vehicle-card.vue';
+import DownLoading from '../../components/DownLoading.vue';
 
 import Core from '@/core';
 import { ref, reactive, onMounted, computed, watch, getCurrentInstance, nextTick, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter, onBeforeRouteUpdate } from "vue-router";
 import { useStore } from "vuex";
 const { proxy } = getCurrentInstance();
 const route = useRoute();
 const router = useRouter();
 const store = useStore();
-const key = route.query?.key;
-store.commit('setMallKey', key);
 
 /* state start */
+const vehicle_type = ref(Number(route.query?.type) || 1);
 const spinning = ref(false)
+const pagination = reactive({
+    page_size: 20,
+    page: 1,
+    total: 0,
+    total_page: 0,
+})
 const list = ref([])
-const searchListFetch = Core.Api.DISTRIBUTOR_HOME.searchList
+const itemListFetch = Core.Api.Item.list
 /* state end */
 
+onBeforeRouteUpdate((to) => {
+    vehicle_type.value = Number(to.query?.type) || 1
+    getCarList({}, true);
+});
 /* computed start */
 const lang = computed(() => {
     return store.state.lang
@@ -51,12 +74,21 @@ const lang = computed(() => {
 
 onMounted(() => {
     getData()
+    window.addEventListener('scroll', handleScroll)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('scroll', handleScroll)
 })
 
 /* methods start */
 // 获取数据
 const getData = () => {
     getCarList()
+}
+const handleScroll = () => {
+    const footerHeight = document.querySelector('#mall-footer').clientHeight
+    const html = document.documentElement
+    Core.Util.handleScrollFn(html, getCarList, pagination, spinning.value, footerHeight)
 }
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {
@@ -72,105 +104,31 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
             break;
     }
 }
+const resetFn = () => {
+    list.value = []
+    Object.assign(pagination, {
+        page_size: 20,
+        page: 1,
+        total: 0,
+        total_page: 0,
+    })
+}
 /* methods end */
 
 /* fetch start */
-const getCarList = () => {
+const getCarList = (q, reset = false) => {
+    if (reset) resetFn();
     spinning.value = true
-    searchListFetch().then(res => {
-        list.value = res?.merge_maps.list
-        list.value = [
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 2,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 3,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-            {
-                id: 1,
-                img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                name: 'EK1',
-                name_en: 'EK1',
-                code: 'HW1000T-1C 01N2',
-                price1: 14900,
-                price2: 14910,
-                price3: 15900,
-            },
-        ]
+    const params = {
+        "type": vehicle_type.value, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        "page": pagination.page,
+        "page_size": pagination.page_size,
+    }
+    Object.assign(params, q)
+    itemListFetch({ ...params }).then(res => {
+        list.value = list.value.concat(res?.list)
+        pagination.total = res.count
+        pagination.total_page = Math.ceil(pagination.total / pagination.page_size)
     }).finally(() => {
         spinning.value = false
     })
@@ -185,16 +143,23 @@ const getCarList = () => {
         .list {
             .flex(initial, initial, row);
             flex-wrap: wrap;
+
             .item {
                 width: calc((100% - 120px) / 4);
                 margin-right: 40px;
+
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
+
                 &:nth-child(n + 5) {
                     margin-top: 40px;
                 }
             }
+        }
+
+        .loading {
+            margin-top: 20px;
         }
     }
 }

@@ -2,12 +2,12 @@
     <div id="vehicle-card" class="hover">
         <div class="img-body">
             <div class="img">
-                <img class="news-img" :src="record.img">
+                <img class="news-img" :src="$Util.imageFilter(record.logo, 2)">
             </div>
         </div>
         <div class="text">
             <div>
-                <p class="title">{{ record[$Util.regionalUnitMoney().name_index] }}</p>
+                <p class="title" :title="record[$Util.regionalUnitMoney().name_index]">{{ record[$Util.regionalUnitMoney().name_index] }}</p>
                 <p class="code">{{ record.code ? record.code : '-' }}</p>
             </div>
             <div class="btn">
@@ -48,12 +48,18 @@ const lang = computed(() => {
 })
 
 const minPrice = computed(() => {
-    const arr = [props.record.price1, props.record.price2, props.record.price3]
-    return Core.Util.Number.numFormat(Math.min(...arr))
+    if(!paramPrice.value) {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_eur))//最小离岸价格（欧元）
+    }else {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_usd))//最小离岸价格（美元）
+    }
 })
 const maxPrice = computed(() => {
-    const arr = [props.record.price1, props.record.price2, props.record.price3]
-    return Core.Util.Number.numFormat(Math.max(...arr))
+    if(!paramPrice.value) {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_eur))//最大离岸价格（欧元）
+    }else {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_usd))//最大离岸价格（美元）
+    }
 })
 /* computed end */
 onMounted(() => {

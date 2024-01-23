@@ -56,7 +56,7 @@ switch (window.location.hostname) {
 
         // URL_POINT = 'http://10.10.12.65:8889' // SHQ
         // URL_POINT = 'http://10.10.12.194:8889' // wyh
-        // URL_POINT = 'http://10.10.12.75:8889' // CTA
+        URL_POINT = 'http://10.10.12.75:8888' // CTA
 
         break;
 }

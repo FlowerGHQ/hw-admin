@@ -2,7 +2,7 @@
     <!-- 
         activeKey v-model 选中哪个值 示例 v-model:activeKey="activeKey1"
      -->
-    <div id="products-card" :class="type">
+    <div id="products-card" :class="[type, selected ? 'active' : '']">
         <div class="img">
             <a-image :src="$Util.imageFilter(record.logo, 2)" />
         </div>
@@ -12,26 +12,43 @@
                     <p class="title">{{ record[$Util.regionalUnitMoney().name_index] }}</p>
                     <p class="code">{{ record.code ? record.code : '-' }}</p>
                 </div>
-                <p class="favorites" @click="addFavorites(record)">
-                    <svg-icon icon-class="collected-icon" class-name="favorites-icon" v-if="record.in_favorite || canRemoveFavorites" />
-                    <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
-                    <span class="favorites-text">{{ $t('mall.favorites') }}</span>
-                </p>
+                <template v-if="showOperation">
+                    <p class="favorites" @click="addFavorites(record)">
+                        <svg-icon icon-class="collected-icon" class-name="favorites-icon"
+                            v-if="record.in_favorite || canRemoveFavorites" />
+                        <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
+                        <span class="favorites-text">{{ $t('mall.favorites') }}</span>
+                    </p>
+                </template>
             </div>
             <div class="mes-right">
                 <div class="text">
-                    <p>{{ currency }} {{ currency === '€' ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} </p>
-                    <p>{{ currency }} {{ currency === '€' ? $Util.countFilter(record.fob_eur) : $Util.countFilter(record.fob_usd) }} </p>
+                    <template v-if="record.type === Core.Const.ITEM.TYPE.PRODUCT">
+                        <p class="price-text">
+                            40QH : {{ currency }}{{ stepPrice['40qh'] }}
+                        </p>
+                        <p class="price-text-t">
+                            Samples : {{ currency }}{{ stepPrice['20gp'] }}/20GP : {{ currency }}{{
+                                stepPrice['normal'] }}
+                        </p>
+                    </template>
+                    <template v-else>
+                        <p class="price-text">
+                            {{ currency }}{{ price }}
+                        </p>
+                    </template>
                 </div>
-                <div class="add">
-                    <span class="count-edit">
-                        <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus/>
-                    </span>
-                    <span class="car" @click="addCar(record)">
-                        <svg-icon icon-class="car-icon" class-name="car-icon" />
-                        <svg-icon icon-class="car-white-icon" class-name="car-white-icon" />
-                    </span>
-                </div>
+                <template v-if="showOperation">
+                    <div class="add">
+                        <span class="count-edit">
+                            <a-input-number v-model:value="editCount" :min="1" :precision="0" autofocus />
+                        </span>
+                        <span class="car" @click="addCar(record)">
+                            <svg-icon icon-class="car-icon" class-name="car-icon" />
+                            <svg-icon icon-class="car-white-icon" class-name="car-white-icon" />
+                        </span>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -40,12 +57,16 @@
 <script setup>
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import Core from '@/core';
-import { ref ,onMounted, computed, getCurrentInstance } from 'vue';
+import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import { useStore } from "vuex";
 const { proxy } = getCurrentInstance();
 
 const store = useStore();
 const props = defineProps({
+    selected: {
+        type: Boolean,
+        default: false
+    },
     record: {
         type: [Object, String],
     },
@@ -59,6 +80,11 @@ const props = defineProps({
         type: String,
         default: 'default'
     },
+    // 是否可以取消收藏
+    showOperation: {
+        type: Boolean,
+        default: true
+    },
 })
 
 const editCount = ref(1)
@@ -68,14 +94,24 @@ const paramPrice = ref(false)
 const lang = computed(() => {
     return store.state.lang
 })
+const stepPrice = computed(() => {
+    return {
+        '40qh': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex('40qh')]),
+        '20gp': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex('20gp')]),
+        'normal': proxy.$Util.countFilter(props.record[proxy.$Util.Number.getStepPriceIndex()])
+    }
+})
+const price = computed(() => {
+    return proxy.$Util.countFilter(props.record[proxy.$Util.Number.getPriceIndex()])
+})
 /* computed end */
 const emits = defineEmits(['handlechange'])
 onMounted(() => {
-    if (Core.Data.getCurrency() === 'EUR'){
-        currency.value =  "€"
+    if (Core.Data.getCurrency() === 'EUR') {
+        currency.value = "€"
         paramPrice.value = false
     } else {
-        currency.value =  "$"
+        currency.value = "$"
         paramPrice.value = true
     }
 })
@@ -83,9 +119,9 @@ onMounted(() => {
 // 添加购物车
 const addCar = (item) => {
     const params = {
-          item_id: item.id,
-          amount: editCount.value,
-          price: currency.value === '€' ? item.fob_eur : item.fob_usd,
+        item_id: item.id,
+        amount: editCount.value,
+        price: currency.value === '€' ? item.fob_eur : item.fob_usd,
     }
     Core.Api.ShopCart.save({ ...params }).then(res => {
         proxy.$message.success(proxy.$t("i.add_success"));
@@ -108,13 +144,13 @@ const addFavorites = async (item) => {
         }
     }
     try {
-        if(paramPrice.value) {
+        if (paramPrice.value) {
             await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_eur })
-        }else {
+        } else {
             await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_usd })
         }
         proxy.$message.success(proxy.$t('pop_up.operate'))
-    } catch(err) {
+    } catch (err) {
         console.log('handleMoveToFavorite err:', err)
     } finally {
         // 重新获取列表数据
@@ -137,11 +173,15 @@ const removeFavorites = (item) => {
     .flex(initial, initial, row);
     padding: 20px;
     background: #FFF;
+    border: 2px solid transparent;
+
     .img {
         border: 1px solid #D9D9D9;
+
         :deep(.ant-image) {
             height: 100%;
             width: 100%;
+
             .ant-image-img {
                 height: 100%;
                 width: 100%;
@@ -149,11 +189,14 @@ const removeFavorites = (item) => {
             }
         }
     }
+
     .mes {
         .flex(space-between, initial, row);
         flex: 1;
+
         .mes-left {
             .flex(space-between, initial);
+
             .title {
                 .ellipsis(1);
                 color: #000;
@@ -162,6 +205,7 @@ const removeFavorites = (item) => {
                 font-weight: 500;
                 line-height: normal;
             }
+
             .code {
                 .ellipsis(2);
                 color: #333;
@@ -170,35 +214,43 @@ const removeFavorites = (item) => {
                 font-weight: 400;
                 line-height: normal;
             }
+
             .favorites {
                 .flex(initial, center, row);
                 cursor: pointer;
+
                 .favorites-icon {
                     height: 18px;
                     width: 18px;
                 }
+
                 .favorites-text {
                     color: #000;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 500;
-                    line-height: 150%; /* 18px */
+                    line-height: 150%;
+                    /* 18px */
                     margin-left: 8px;
                 }
             }
         }
+
         .mes-right {
             .flex(space-between, initial);
-            .text > p {
+
+            .text>p {
                 color: #000;
                 font-size: 14px;
                 font-style: normal;
                 font-weight: 500;
                 line-height: normal;
                 text-align: right;
+
                 &:last-child {
                     margin-bottom: 0;
                 }
+
                 &:first-child {
                     color: #8F00FF;
                     text-align: right;
@@ -207,17 +259,21 @@ const removeFavorites = (item) => {
                     font-weight: 700;
                     line-height: normal;
                 }
+
                 &:nth-child(2) {
                     color: #8E8E8E;
                     text-align: right;
                     font-size: 12px;
                     font-style: normal;
                     font-weight: 400;
-                    line-height: 150%; /* 18px */
+                    line-height: 150%;
+                    /* 18px */
                 }
             }
+
             .add {
                 .fcc();
+
                 .count-edit {
                     /deep/.ant-input-number {
                         width: 136px;
@@ -225,8 +281,10 @@ const removeFavorites = (item) => {
                         border: 0;
                         position: relative;
                         text-align: center;
+
                         .ant-input-number-input-wrap {
                             padding: 0 40px;
+
                             .ant-input-number-input {
                                 padding: 0 4px;
                                 display: inline-flex;
@@ -236,15 +294,17 @@ const removeFavorites = (item) => {
                                 height: 32px;
                             }
                         }
+
                         .ant-input-number-handler-wrap {
                             width: 0;
                             height: 0;
                             position: static;
                             opacity: 1;
                             visibility: hidden;
+
                             .ant-input-number-handler {
                                 .fcc();
-                                visibility:visible;
+                                visibility: visible;
                                 height: 32px;
                                 width: 32px;
                                 background: #F5F5F5;
@@ -252,13 +312,19 @@ const removeFavorites = (item) => {
                                 position: absolute;
                                 border: 0;
                                 box-sizing: border-box;
+
                                 &:hover {
                                     height: 32px !important;
                                     opacity: 0.7;
                                 }
-                                .anticon { display: none; }
+
+                                .anticon {
+                                    display: none;
+                                }
+
                                 &.ant-input-number-handler-down {
                                     left: 0;
+
                                     &::before {
                                         border-radius: 20px;
                                         display: inline-block;
@@ -270,19 +336,24 @@ const removeFavorites = (item) => {
                                         opacity: 1;
                                     }
                                 }
+
                                 &.ant-input-number-handler-up {
                                     right: 0;
-                                    &::before, &::after {
+
+                                    &::before,
+                                    &::after {
                                         position: absolute;
                                         display: inline-block;
                                         content: '';
                                         background: #1C1B1F;
                                         border-radius: 20px;
                                     }
+
                                     &::before {
                                         width: 12px;
                                         height: 1px;
                                     }
+
                                     &::after {
                                         height: 12px;
                                         width: 1px;
@@ -292,6 +363,7 @@ const removeFavorites = (item) => {
                         }
                     }
                 }
+
                 .car {
                     .fcc();
                     margin-left: 16px;
@@ -299,15 +371,19 @@ const removeFavorites = (item) => {
                     height: 32px;
                     border: 1px solid #C6F;
                     cursor: pointer;
+
                     .car-white-icon {
                         display: none;
                     }
+
                     &:hover {
                         border: none;
                         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
+
                         .car-icon {
                             display: none;
                         }
+
                         .car-white-icon {
                             display: inline-block;
                         }
@@ -317,58 +393,74 @@ const removeFavorites = (item) => {
         }
     }
 }
+
 .default {
     .img {
         width: 180px;
         height: 180px;
     }
+
     .mes {
         padding: 16px 20px 0px 24px;
+
         .mes-left {
             .text {
                 .title {
                     margin-bottom: 16px;
                 }
             }
+
             .favorites {
                 margin-bottom: 31px;
             }
         }
+
         .mes-right {
-            .text > p {
+            .text>p {
                 margin-bottom: 8px;
             }
+
             .add {
                 padding-bottom: 25px;
             }
         }
     }
 }
+
 .small {
     .img {
         width: 90px;
         height: 90px;
     }
+
     .mes {
         padding: 0 0 0 20px;
+
         .mes-left {
             .text {
                 .title {
                     margin-bottom: 4px;
                 }
             }
+
             .favorites {
                 margin-bottom: 0px;
             }
         }
+
         .mes-right {
-            .text > p {
+            .text>p {
                 margin-bottom: 4px;
             }
+
             .add {
                 padding-bottom: 0px;
             }
         }
     }
+}
+
+.active {
+    border: 2px solid #9167FF !important;
 }
 </style>

@@ -18,7 +18,7 @@
                     <!-- 零配件 -->
                     <div class="list-body" v-if="sparepartsList.length !== 0">
                         <p class="list-body-title">
-                            {{ $t('mall.spareparts') }}({{ sparepartsList.length }})
+                            {{ $t('mall.accessories') }}({{ sparepartsList.length }})
                         </p>
                         <div class="list-item" v-for="(item, index) in sparepartsList" :key="item.id">
                             <ProductsCard :record="item" @handlechange="getCarList" />

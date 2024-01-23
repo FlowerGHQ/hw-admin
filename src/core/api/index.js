@@ -336,6 +336,7 @@ const apiList = {
 
         // 备注
         remark: ['PostJson', 'shopping-cart/remark'],
+        switchItem: ['PostJson', 'shopping-cart/switch-item'],// 切换商品
 
     },
     Favorite: { // 收藏夹

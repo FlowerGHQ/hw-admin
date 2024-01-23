@@ -528,10 +528,10 @@ const Util = {
     }
     if (to === "zh") {
       let attr = attr_list.map((i) => i.value)
-      return attr.join(" ")
+      return attr.join(" / ")
     } else {
       let attr = attr_list.map((i) => i.value_en)
-      return attr.join(" ")
+      return attr.join(" / ")
     }
   },
   itemFlagEntityFilter(val, to = "zh") {

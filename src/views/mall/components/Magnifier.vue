@@ -3,7 +3,7 @@
         <!-- 图片展示区域 -->
         <div id="wapper" class="gallery-pic-wrap" @mouseover="handleZoomMouseover" @mouseout="handleZoomMouseout"
             @mousemove="handleZoomMousemove">
-            <img :src="activePicUrl" :style="activeStyle" />
+            <img :src="activePicUrl" @load="onload" />
             <!-- 放大镜 -->
             <div id="zoom" class="zoom-box" :style="{ width: `${magnifierSize}px`, height: `${magnifierSize}px` }"></div>
         </div>
@@ -26,6 +26,11 @@ const props = defineProps({
     magnifierSize: {
         type: Number,
         default: 160,
+    },
+    // 放大镜大小
+    magnifierSize: {
+        type: Number,
+        default: 160,
     }
 })
 // 图片高度
@@ -35,17 +40,21 @@ const wapperWidth = ref(0)
 // 放大比例：
 const rate = ref(0)
 onMounted(() => {
-    handleWindowResize()
     // 监听页面窗口
     window.addEventListener('resize', handleWindowResize)
 })
 /* methods start */
+// 图片加载后重载数据
+const onload = () => {
+    handleWindowResize()
+}
 // 监听窗口变化
 const handleWindowResize = (e) => {
     const wapper = document.getElementById('wapper')
     wapperHeight.value = wapper.clientHeight
     wapperWidth.value = wapper.clientWidth
-    // 放大比例：
+    console.log(wapperHeight.value)
+    // 放大比例 = 图片整体宽度 / 放大镜宽度
     rate.value = wapperWidth.value / props.magnifierSize
 }
 /** 放大镜：移入商品图片区域 */
@@ -161,7 +170,7 @@ const getViewportOffset = (dom) => {
         box-sizing: border-box;
         border: 2px solid #cccccc;
         top: 0px;
-        right: -20px;
+        right: -40px;
         transform: translateX(100%);
         z-index: 999;
         display: none;

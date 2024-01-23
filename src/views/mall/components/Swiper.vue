@@ -1,25 +1,26 @@
 <template>
     <div id="Swiper">
         <div class="preview">
-            <div class="preview-img" >
-                <Magnifier  :activePicUrl="previewImg"/>
+            <div class="preview-img">
+                <Magnifier :activePicUrl="$Util.imageFilter(previewImg, 2)" />
             </div>
             <!-- <img class="preview-img" :src="previewImg" alt=""> -->
         </div>
-        <div class="swiper-content">
+        <div class="swiper-content" v-if="swiperList.length > 1">
             <div class="swiper-body">
                 <swiper :modules="modules" :slidesPerView="mySwiperOption.slidesPerView"
                     :navigation="mySwiperOption.navigation">
                     <swiper-slide v-for="(item, i) in swiperList" :key="i" @click="selectSwiper(item, i)">
                         <div class="swiper-img">
-                            <img class="img" :class="swiperIndex === i ? 'active' : ''" :src="item.img" alt="">
+                            <img class="img" :class="swiperIndex === i ? 'active' : ''"
+                                :src="$Util.imageFilter(item.path, 2)" alt="">
                         </div>
                     </swiper-slide>
                 </swiper>
-                <div class="swiper-button-prev">
+                <div class="swiper-button-prev" v-if="swiperList.length > mySwiperOption.slidesPerView">
                     <svg-icon icon-class="vehicle-left" class-name="swiper-button-pre" />
                 </div>
-                <div class="swiper-button-next">
+                <div class="swiper-button-next" v-if="swiperList.length > mySwiperOption.slidesPerView">
                     <svg-icon icon-class="vehicle-right" class-name="swiper-button-next" />
                 </div>
             </div>
@@ -54,16 +55,19 @@ const props = defineProps({
     },
 })
 
-const swiperRef = ref(null)
 const modules = [Navigation]
-const previewImg = ref(props.swiperList[0]?.img || '')
+const previewImg = ref(props.swiperList[0]?.path || '')
 const swiperIndex = ref(0)
 
 // 选择图片
 const selectSwiper = (item, i) => {
     swiperIndex.value = i
-    previewImg.value = item.img
+    previewImg.value = item?.path
 }
+// 输出组件的方法，让外部组件可以调用
+defineExpose({
+    selectSwiper,
+})
 </script>
 <style lang="less" scoped>
 #Swiper {

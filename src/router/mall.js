@@ -59,6 +59,14 @@ const mallRouters = { // 看板
             }
         },
         {
+            path: 'shopping-bag',
+            component: () => import('@/views/mall/purchase/shopping-bag.vue'),
+            meta: {
+                title: '购物车',
+                title_en: 'Shopping Bag',
+            }
+        },
+        {
             path: 'vehicle-list',
             component: () => import('@/views/mall/purchase/vehicle/vehicle-list.vue'),
             meta: {

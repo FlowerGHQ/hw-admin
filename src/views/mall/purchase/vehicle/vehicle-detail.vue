@@ -2,48 +2,99 @@
     <div id="vehicle-detail">
         <div class="content">
             <a-spin tip="Loading..." :spinning="spinning">
+                <!-- 车辆信息 -->
                 <div class="vehicle-body">
                     <div class="vehicle-body-swiper">
-                        <Swiper :swiperList="swiperList" />
+                        <Swiper ref="swiperRef" :swiperList="swiperList" />
                     </div>
-                    <div class="vehicle-body-series">
-                        <p class="title">{{ vehicle_mes.name }}</p>
-                        <p class="code">
-                            <span class="code-left">HW1000T-1C 01N2</span>
-                            <span class="code-right">{{ vehicle_mes.series?.length || 0 }} series</span>
-                        </p>
-                        <div class="series-cards">
-                            <div class="series-card" v-for="(item, i) in vehicle_mes.series" :key="item.id"
-                                @click="selectSeries(i)">
-                                <seriesCard :record="item" :selected="seriesIndex === i" />
+                    <template v-if="vehicle_mes.set_id">
+                        <div class="vehicle-body-series">
+                            <p class="title">{{ vehicle_mes.name }}</p>
+                            <p class="code">
+                                <span class="code-left">{{ vehicle_mes.code }}</span>
+                                <span class="code-right">{{ specList?.length || 0 }} series</span>
+                            </p>
+                            <div class="series-cards">
+                                <div class="series-card" :style="{ flex: specList?.length > 2 ? 'none' : '1' }"
+                                    v-for="(item, i) in specList" :key="item.id" @click="selectSeries(i)">
+                                    <seriesCard :record="item" :selected="seriesIndex === i" />
+                                </div>
                             </div>
-                        </div>
-                        <div class="variants">
-                            <p class="nums">{{ vehicle_mes.variants?.length || 0 }} Variants</p>
-                            <div class="variants-body">
-                                <div class="variants-item" v-for="(item, i) in vehicle_mes.variants" :key="item.id">
-                                    <ProductsCard type="small" :record="item" :selected="seriesIndex === i" />
+                            <div class="variants">
+                                <p class="nums">{{ itemList?.length || 0 }} Variants</p>
+                                <div class="variants-body">
+                                    <div class="variants-item" v-for="(item, i) in itemList" :key="item.id">
+                                        <ProductsCard @handlechange="selectSeries(seriesIndex)" type="small"
+                                            :record="item" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </template>
+
+                    <template v-else>
+                        <div class="vehicle-body-series single">
+                            <div class="single-top">
+                                <p class="title">
+                                    {{ vehicle_mes.name }}
+                                    <span class="favorites" @click="addFavorites(vehicle_mes)">
+                                        <svg-icon icon-class="collected-icon" class-name="favorites-icon"
+                                            v-if="vehicle_mes.in_favorite" />
+                                        <svg-icon icon-class="favorites-icon" class-name="favorites-icon" v-else />
+                                        <span class="favorites-text">{{ $t('mall.favorites') }}</span>
+                                    </span>
+                                </p>
+                                <p class="code">{{ vehicle_mes.code }}</p>
+                            </div>
+                            <div class="single-bottom">
+                                <div class="price">
+                                    <div class="price-content">
+                                        <template v-if="vehicle_mes.type === Core.Const.ITEM.TYPE.PRODUCT">
+                                            <p class="price-text">
+                                                40QH : {{ currency }}{{ stepPrice['40qh'] }}
+                                            </p>
+                                            <p class="price-text-t">
+                                                Samples : {{ currency }}{{ stepPrice['20gp'] }}/20GP : {{ currency }}{{
+                                                    stepPrice['normal'] }}
+                                            </p>
+                                        </template>
+                                        <template v-else>
+                                            <p class="price-text">
+                                                {{ currency }}{{ price }}
+                                            </p>
+                                        </template>
+                                    </div>
+                                    <div class="count-edit">
+                                        <a-input-number v-model:value="editCount" :min="1" :precision="0" />
+                                    </div>
+                                </div>
+                                <my-button type="primary" padding="22px 32px" font="16px"
+                                    @click.native="addCar(vehicle_mes)">
+                                    <svg-icon icon-class="add-car-icon" class-name="add-car-icon" />
+                                    {{ $t('i.cart') }}
+                                </my-button>
+                            </div>
+                        </div>
+                    </template>
                 </div>
+                <!-- tab 栏部分 -->
                 <div class="tab">
                     <div class="tab-list">
-                        <div class="tab-item tab-animate" :class="tabIndex === i ? 'active' : ''" v-for="(item, i) in tabList" @click="changeTab(i)">{{ $t(`purchase.${item.nameLang}`) }}</div>
+                        <div class="tab-item tab-animate" :class="tabIndex === i ? 'active' : ''"
+                            v-for="(item, i) in tabList" @click="changeTab(i)">{{ $t(`purchase.${item.nameLang}`) }}</div>
                     </div>
                     <div class="tab-body">
                         <template v-if="tabIndex === 0">
-                            <img class="img"
-                                src="http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg"
-                                alt="">
+                            <img class="img" :src="$Util.imageFilter(vehicle_mes.imgs, 2)" alt="" v-if="vehicle_mes.imgs">
+                            <a-empty :description="null" v-else />
                         </template>
                     </div>
                 </div>
-                <div class="same-series">
+                <!-- 相同系列产品 -->
+                <div class="same-series" v-if="vehicle_mes.set_id" :key="lang">
                     <div class="title">{{ $t('purchase.same_series_of_products') }}</div>
                     <div class="same-series-list">
-                        <div class="same-series-item" v-for="item in vehicle_mes.same_series" :key="item.id"
+                        <div class="same-series-item" v-for="item in itemList.slice(0, 4)" :key="item.id"
                             @click="routerChange('/mall/vehicle-list/detail', { id: item.id })">
                             <VehicleCard :record="item" />
                         </div>
@@ -55,6 +106,8 @@
 </template>
 
 <script setup>
+import MyButton from '@/components/common/MyButton.vue';
+import SvgIcon from "@/components/SvgIcon/index.vue";
 import seriesCard from './components/series-card.vue';
 import ProductsCard from '../../components/ProductsCard.vue';
 import VehicleCard from './components/vehicle-card.vue';
@@ -71,6 +124,9 @@ const store = useStore();
 const vehicle_id = route.query?.id;
 
 /* state start */
+const currency = ref('€')
+const paramPrice = ref(false)
+const swiperRef = ref(null)
 const spinning = ref(false)
 const vehicle_mes = reactive({})
 const seriesIndex = ref(0)
@@ -78,25 +134,28 @@ const tabIndex = ref(0)
 const tabList = ref([{
     nameLang: 'product_details'
 }])
-const swiperList = ref([{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-},{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-},{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-},{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-},{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-},{
-    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-}])
-const searchListFetch = Core.Api.DISTRIBUTOR_HOME.searchList
+const swiperList = ref([])
+const specList = ref([])
+const itemList = ref([])
+const editCount = ref(1)
+const itemDetailFetch = Core.Api.Item.detail
+const listBySetFetch = Core.Api.AttrDef.listBySet
+const itemListFetch = Core.Api.Item.list
 /* state end */
 
 /* computed start */
 const lang = computed(() => {
     return store.state.lang
+})
+const stepPrice = computed(() => {
+    return {
+        '40qh': proxy.$Util.countFilter(vehicle_mes[proxy.$Util.Number.getStepPriceIndex('40qh')]),
+        '20gp': proxy.$Util.countFilter(vehicle_mes[proxy.$Util.Number.getStepPriceIndex('20gp')]),
+        'normal': proxy.$Util.countFilter(vehicle_mes[proxy.$Util.Number.getStepPriceIndex()])
+    }
+})
+const price = computed(() => {
+    return proxy.$Util.countFilter(vehicle_mes[proxy.$Util.Number.getPriceIndex()])
 })
 /* computed end */
 
@@ -104,21 +163,66 @@ const lang = computed(() => {
 /* watch end */
 
 onMounted(() => {
+    if (Core.Data.getCurrency() === 'EUR') {
+        currency.value = "€"
+        paramPrice.value = false
+    } else {
+        currency.value = "$"
+        paramPrice.value = true
+    }
     getData()
 })
 
 /* methods start */
 // 获取数据
 const getData = () => {
-    getCarList()
+    getItemDetail()
 }
 // 选择系列
 const selectSeries = (i) => {
     seriesIndex.value = i
+    const q = {
+        "set_id": vehicle_mes.set_id, //商品组id
+        "attr_def_id": specList.value[i]?.id, //通用规格id
+        "attr_def_value": specList.value[i]?.value, //通用规格值
+    }
+    getCarList(q)
 }
 // 选择tab栏
 const changeTab = (i) => {
     tabIndex.value = i
+}
+// 获取展示图列表
+const getSwiperList = (list) => {
+    swiperList.value = list.map(item => {
+        return {
+            path: item.imgs
+        }
+    })
+    // 刚进页面初始化 第一张 swiper 商品图
+    swiperRef.value.selectSwiper(swiperList.value[0], 0);
+}
+// 获取系列列表
+const getSpecList = (list) => {
+    specList.value = []
+    list.forEach((item, i) => {
+        const valueList = item.value.split(',')
+        const valueEnList = item.value_en.split(',')
+        const descList = item.desc.split(',')
+        const descEnList = item.desc_en.split(',')
+        valueList.forEach((value, valueIndex) => {
+            const price = item.range_of_fob_price_list.find(price => price.value === value)
+            const obj = Object.assign(item, {
+                desc: descList[valueIndex],
+                desc_en: descEnList[valueIndex],
+                value: value,
+                value_en: valueEnList[valueIndex],
+                ...price
+            })
+            specList.value.push(Core.Util.deepCopy(obj))
+        })
+    })
+    console.log(specList.value)
 }
 // 路由跳转
 const routerChange = (routeUrl, item = {}, type = 1) => {
@@ -137,132 +241,85 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 /* methods end */
 
 /* fetch start */
-const getCarList = () => {
+// 获取 商品详情
+const getItemDetail = () => {
     spinning.value = true
-    searchListFetch({ id: vehicle_id }).then(res => {
-        // vehicle_mes = res;
-        Object.assign(vehicle_mes, {
-            id: 1,
-            img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-            name: 'EK1',
-            name_en: 'EK1',
-            code: 'HW1000T-1C 01N2',
-            price1: 14900,
-            price2: 14910,
-            price3: 15900,
-            series: [
-                {
-                    id: 1,
-                    name: 'Standard',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 2,
-                    name: 'Standard',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 3,
-                    name: 'Standard',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 4,
-                    name: 'Standard',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                }
-            ],
-            variants: [
-                {
-                    logo: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'White',
-                    name_en: 'White',
-                    code: 'HW1000T-1C 01N2',
-                    in_favorite: false,
-                    fob_eur: 16992,
-                },
-                {
-                    logo: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'White',
-                    name_en: 'White',
-                    code: 'HW1000T-1C 01N2',
-                    in_favorite: false,
-                    fob_eur: 16992,
-                },
-                {
-                    logo: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'White',
-                    name_en: 'White',
-                    code: 'HW1000T-1C 01N2',
-                    in_favorite: false,
-                    fob_eur: 16992,
-                },
-                {
-                    logo: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'White',
-                    name_en: 'White',
-                    code: 'HW1000T-1C 01N2',
-                    in_favorite: false,
-                    fob_eur: 16992,
-                }
-            ],
-            same_series: [
-                {
-                    id: 1,
-                    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'EK1',
-                    name_en: 'EK1',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 2,
-                    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'EK1',
-                    name_en: 'EK1',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 3,
-                    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'EK1',
-                    name_en: 'EK1',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-                {
-                    id: 4,
-                    img: 'http://horwin-app.oss-cn-hangzhou.aliyuncs.com/jpeg/528d43f9d7e4ba5216ee72ab66106c9eabba9163f1d8ecd6e7497278137a7074.jpeg',
-                    name: 'EK1',
-                    name_en: 'EK1',
-                    code: 'HW1000T-1C 01N2',
-                    price1: 14900,
-                    price2: 14910,
-                    price3: 15900,
-                },
-            ]
-        })
+    itemDetailFetch({ id: vehicle_id }).then(res => {
+        let detail = res.detail || {}
+        detail.sales_area_name = detail.sales_area_list ? detail.sales_area_list.map(i => i.name).join(' , ') : ''
+        Object.assign(vehicle_mes, detail) //logo封面，imgs详情图
+        if (detail.set_id) getListBySet();
     }).finally(() => {
         spinning.value = false
+    })
+}
+// 获取 同规格商品 列表接口
+const getListBySet = (params = {}) => {
+    listBySetFetch({
+        set_id: vehicle_mes.set_id, //商品组id
+        flag_category: 1, //是否为分类（0.否，1.是）
+        ...params,
+    })
+        .then((res) => {
+            getSpecList(res.list);
+            const q = {
+                "set_id": vehicle_mes.set_id, //商品组id
+                "attr_def_id": specList.value[0]?.id, //通用规格id
+                "attr_def_value": specList.value[0]?.value, //通用规格值
+            }
+            getCarList(q)
+        })
+        .catch((err) => {
+            console.log("getSpecList err", err);
+        })
+}
+const getCarList = (q) => {
+    const params = {
+        "type": 1, //1.整车；2.零部件/物料；3.周边；4.广宣品
+        "page": 1,
+        "page_size": 999,
+    }
+    Object.assign(params, q)
+    itemListFetch({ ...params }).then(res => {
+        itemList.value = res?.list
+        getSwiperList(itemList.value)
+    })
+}
+// 添加收藏
+const addFavorites = async (item) => {
+    if (item.in_favorite) {
+        return proxy.$message.warning(proxy.$t("i.item_favorite"));
+    }
+    try {
+        if (paramPrice.value) {
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_eur })
+        } else {
+            await Core.Api.Favorite.add({ item_id: item.id, price: item?.fob_usd })
+        }
+        proxy.$message.success(proxy.$t('pop_up.operate'))
+    } catch (err) {
+        console.log('handleMoveToFavorite err:', err)
+    } finally {
+        // 重新获取数据
+        getItemDetail()
+    }
+}
+// 添加购物车
+const addCar = (item) => {
+    const params = {
+        item_id: item.id,
+        amount: editCount.value,
+        price: item[proxy.$Util.Number.getPriceIndex()],
+    }
+    Core.Api.ShopCart.save({ ...params }).then(res => {
+        proxy.$message.success(proxy.$t("i.add_success"));
+        getShopCartList()
+    })
+}
+// 获取购物车商品数量
+const getShopCartList = () => {
+    Core.Api.ShopCart.list().then(res => {
+        proxy.$store.commit('setShopCartNum', res.count)
     })
 }
 /* fetch end */
@@ -287,6 +344,188 @@ const getCarList = () => {
             .vehicle-body-swiper,
             .vehicle-body-series {
                 width: calc((100% - 40px) / 2);
+
+                &.single {
+                    .flex(space-between, initial, column);
+                    padding: 80px 0;
+                    margin-left: 80px;
+
+                    .single-top {
+                        .title {
+                            color: #1D2129;
+                            font-size: 32px;
+                            font-style: normal;
+                            font-weight: 500;
+                            line-height: normal;
+                            margin-bottom: 16px;
+
+                            .favorites {
+                                .flex(initial, center, row);
+                                float: right;
+                                cursor: pointer;
+
+                                .favorites-icon {
+                                    height: 18px;
+                                    width: 18px;
+                                    margin-right: 8px;
+                                }
+
+                                .favorites-text {
+                                    color: #000;
+                                    text-align: right;
+                                    font-size: 12px;
+                                    font-style: normal;
+                                    font-weight: 500;
+                                    line-height: 150%;
+                                    /* 18px */
+                                }
+                            }
+                        }
+
+                        .code {
+                            color: #999;
+                            font-size: 16px;
+                            font-style: normal;
+                            font-weight: 400;
+                            line-height: 150%;
+                            margin-top: 0;
+                        }
+                    }
+
+                    .single-bottom {
+
+                        .price {
+                            .flex(space-between, flex-end, row);
+
+                            .price-content {
+                                .price-text {
+                                    color: #8F00FF;
+                                    font-size: 24px;
+                                    font-style: normal;
+                                    font-weight: 700;
+                                    line-height: normal;
+                                }
+
+                                .price-text-t {
+                                    margin-top: 8px;
+                                    color: #8E8E8E;
+                                    font-size: 16px;
+                                    font-style: normal;
+                                    font-weight: 400;
+                                    line-height: 150%;
+                                    /* 24px */
+                                }
+                            }
+
+                            .count-edit {
+                                /deep/.ant-input-number {
+                                    width: 207px;
+                                    box-shadow: 0 0 0 0;
+                                    border: 0;
+                                    position: relative;
+                                    text-align: center;
+                                    background-color: #F8F8F8;
+
+                                    .ant-input-number-input-wrap {
+                                        margin: 0 60px;
+                                        background: #FFF;
+
+                                        .ant-input-number-input {
+                                            color: #1D2129;
+                                            text-align: center;
+                                            font-size: 20px;
+                                            font-style: normal;
+                                            font-weight: 500;
+                                            line-height: 27px;
+                                            /* 135% */
+                                            height: 48px;
+                                        }
+                                    }
+
+                                    .ant-input-number-handler-wrap {
+                                        width: 0;
+                                        height: 0;
+                                        position: static;
+                                        opacity: 1;
+                                        visibility: hidden;
+
+                                        .ant-input-number-handler {
+                                            .fcc();
+                                            visibility: visible;
+                                            height: 48px;
+                                            width: 48px;
+                                            background: #FFF;
+                                            border: none;
+                                            position: absolute;
+                                            border: 0;
+                                            box-sizing: border-box;
+
+                                            &:hover {
+                                                height: 48px !important;
+                                                opacity: 0.7;
+                                            }
+
+                                            .anticon {
+                                                display: none;
+                                            }
+
+                                            &.ant-input-number-handler-down {
+                                                left: 0;
+
+                                                &::before {
+                                                    border-radius: 20px;
+                                                    display: inline-block;
+                                                    content: '';
+                                                    width: 12px;
+                                                    height: 1px;
+                                                    background: #1C1B1F;
+                                                    border-radius: 20px 20px 20px 20px;
+                                                    opacity: 1;
+                                                }
+                                            }
+
+                                            &.ant-input-number-handler-up {
+                                                right: 0;
+
+                                                &::before,
+                                                &::after {
+                                                    position: absolute;
+                                                    display: inline-block;
+                                                    content: '';
+                                                    background: #1C1B1F;
+                                                    border-radius: 20px;
+                                                }
+
+                                                &::before {
+                                                    width: 12px;
+                                                    height: 1px;
+                                                }
+
+                                                &::after {
+                                                    height: 12px;
+                                                    width: 1px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        :deep(#my-button) {
+                            margin-top: 40px;
+
+                            .my-button-text {
+                                .flex(initial, center, row);
+                            }
+                        }
+
+                        .add-car-icon {
+                            font-size: 24px;
+                            margin-right: 8px;
+                        }
+                    }
+                }
             }
 
             .vehicle-body-series {
@@ -326,13 +565,15 @@ const getCarList = () => {
                 }
 
                 .series-cards {
-                    .flex(initial, center, row);
+                    .flex(initial, initial, row);
                     overflow-x: auto;
                     margin-top: 24px;
                     padding-bottom: 24px;
 
                     .series-card {
                         flex-shrink: 0;
+                        min-width: calc((100% - 32px) / 3);
+                        width: 207px;
 
                         &:nth-child(n + 2) {
                             margin-left: 16px;
@@ -377,6 +618,7 @@ const getCarList = () => {
 
             .tab-list {
                 .flex(initial, center, row);
+
                 .tab-item {
                     color: #000;
                     font-size: 24px;
@@ -384,6 +626,7 @@ const getCarList = () => {
                     font-weight: 400;
                     line-height: normal;
                     cursor: pointer;
+
                     &:nth-child(n + 2) {
                         margin-left: 64px;
                     }
@@ -393,6 +636,7 @@ const getCarList = () => {
                             background: #8F00FF;
                         }
                     }
+
                     &.active {
                         color: #8F00FF;
                     }
@@ -401,6 +645,7 @@ const getCarList = () => {
 
             .tab-body {
                 margin-top: 40px;
+
                 .img {
                     width: 100%;
                 }
@@ -428,4 +673,5 @@ const getCarList = () => {
             }
         }
     }
-}</style>
+}
+</style>

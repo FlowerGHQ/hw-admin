@@ -1,12 +1,10 @@
 <template>
     <div id="vehicle-card" :class="selected ? 'active' : ''">
         <div class="text">
-            <p class="name">{{ record.name ? record.name : '-' }}</p>
+            <p class="name">{{ langName[lang].seriesName && record[langName[lang].seriesName] ?
+                record[langName[lang].seriesName] : '-' }}</p>
             <div class="dis">
-                <p class="dis-text">{{ record.code ? record.code : '-' }}</p>
-                <p class="dis-text">{{ record.code ? record.code : '-' }}</p>
-                <p class="dis-text">{{ record.code ? record.code : '-' }}</p>
-                <p class="dis-text">{{ record.code ? record.code : '-' }}</p>
+                <p class="dis-text" v-html="record[langName[lang].descName]"></p>
             </div>
             <p class="price">{{ currency }}{{ minPrice }} ~ {{ currency }}{{ maxPrice }}</p>
         </div>
@@ -37,6 +35,7 @@ const props = defineProps({
         }
     },
 })
+const langName = Core.Const.MALL.langName
 /* state start */
 const currency = ref('€')
 const paramPrice = ref(false)
@@ -48,12 +47,18 @@ const lang = computed(() => {
 })
 
 const minPrice = computed(() => {
-    const arr = [props.record.price1, props.record.price2, props.record.price3]
-    return Core.Util.Number.numFormat(Math.min(...arr))
+    if (!paramPrice.value) {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_eur))//最小离岸价格（欧元）
+    } else {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.min_fob_usd))//最小离岸价格（美元）
+    }
 })
 const maxPrice = computed(() => {
-    const arr = [props.record.price1, props.record.price2, props.record.price3]
-    return Core.Util.Number.numFormat(Math.max(...arr))
+    if (!paramPrice.value) {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_eur))//最大离岸价格（欧元）
+    } else {
+        return Core.Util.Number.numFormat(proxy.$Util.countFilter(props.record.max_fob_usd))//最大离岸价格（美元）
+    }
 })
 /* computed end */
 onMounted(() => {
@@ -96,7 +101,7 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
     height: 100%;
     background: #FFF;
     padding: 20px;
-    width: 207px;
+    // width: 207px;
     border: 2px solid transparent;
     cursor: pointer;
 
@@ -124,25 +129,29 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 
         .dis {
             margin-top: 8px;
+
             .dis-text {
                 color: #333;
                 font-size: 12px;
                 font-style: normal;
                 font-weight: 400;
-                line-height: 120%; /* 14.4px */
+                line-height: 120%;
+                /* 14.4px */
                 position: relative;
-                &::before {
-                    content: '';
-                    display: inline-block;
-                    width: 2px;
-                    height: 2px;
-                    background: #333;
-                    border-radius: 50%;
-                    position: absolute;
-                    left: -8px;
-                    top: 50%;
-                    transform: translateY(-50%);
-                }
+
+                // &::before {
+                //     content: '';
+                //     display: inline-block;
+                //     width: 2px;
+                //     height: 2px;
+                //     background: #333;
+                //     border-radius: 50%;
+                //     position: absolute;
+                //     left: -8px;
+                //     top: 50%;
+                //     transform: translateY(-50%);
+                // }
+
                 &:nth-child(n + 2) {
                     margin-top: 10px;
                 }
@@ -162,7 +171,8 @@ const routerChange = (routeUrl, item = {}, type = 1) => {
 }
 
 .active {
-    border: 2px solid #9167FF !important;;
+    border: 2px solid #9167FF !important;
+
     .name {
         background: linear-gradient(100deg, #C6F 0%, #66F 100%);
         background-clip: text;
