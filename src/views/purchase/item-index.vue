@@ -366,6 +366,7 @@ export default {
         page: this.currPage,
         is_authority: 1,
         page_size: this.pageSize,
+        flag_default: 0,
       })
         .then((res) => {
           this.total = res.count;

@@ -2262,6 +2262,7 @@ export default {
                     );
                 }
             } else {
+                console.log('specData', specData);
                 // 多规格
                 for (let i = 0; i < attrDef.length; i++) {
                     console.log('attrDef', attrDef);
