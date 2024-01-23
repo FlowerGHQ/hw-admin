@@ -23,7 +23,7 @@
     "nprogress": "0.2.0",
     "qrcode.vue": "^3.4.1",
     "sortablejs": "^1.14.0",
-    "swiper": "^6.8.4",
+    "swiper": "^7.0.0",
     "terser": "^5.20.0",
     "vconsole": "^3.15.1",
     "vite-plugin-svg-icons": "^2.0.1",
