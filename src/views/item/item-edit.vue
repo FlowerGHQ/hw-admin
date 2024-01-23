@@ -1313,8 +1313,14 @@ export default {
             }${this.$t("i.value")}`;
         },
         isDesEmpty() {
+            let flag = false;
+            for (let i = 0; i < this.categoryMessage.length; i++) {
+                if(this.categoryMessage[i].desc.split(',')[0] === '<p><br></p>' || categoryMessage[i].desc_en.split(',')[0] === '<p><br></p>'){
+                    flag = true;
+                }
+            }
             //every 用于判断数组中的每一项是否都满足条件
-            return this.categoryMessage.every((item) => item.desc === "" && item.desc_en === "");
+            return flag
         },
         saveDarftShow() {
             if(this.$route.query.edit){
@@ -1419,15 +1425,10 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(val);
+            console.log(val,'----------------------------');
             this.category_index = val;
             this.categoryMessage = [];
-            // this.specific.list.forEach((item) => {
-            //     console.log(item)
-            //     if (item.id === val) {
-            //         this.categoryMessage = item.option;
-            //     }
-            // });
+            console.log(this.categoryMessage,'---------------------------');
             this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
             console.log(this.categoryMessage);
         },
@@ -1701,7 +1702,8 @@ export default {
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
             let categoryMessage = Core.Util.deepCopy(this.categoryMessage);
-
+            console.log(this.categoryMessage)
+            return
             // 校验检查
             this.isValidate = true;
             if (typeof this.checkFormInput(form, specData, attrDef, categoryMessage) === "function") {
@@ -1824,7 +1826,7 @@ export default {
             // 如果是整车并且是多规格校验分类
             if (form.type === this.itemTypeMap['1']?.key && this.specific.mode === 2) {
                 // 查看
-                if (categoryMessage && categoryMessage.length > 0) {
+                if (categoryMessage && Objec.length > 0) {
                     for (let i = 0; i < categoryMessage.length; i++) {
                         if(categoryMessage[i].desc.split(',')[0] === '<p><br></p>' || categoryMessage[i].desc_en.split(',')[0] === '<p><br></p>'){
                             return this.$message.warning(
