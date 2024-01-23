@@ -7,7 +7,13 @@
                         <div class="back" @click="handleBack">
                             <MySvgIcon icon-class="sales-back" />
                         </div>
-                        {{ type === "add" ? "新建销售策略" : type === "edit" ? "编辑销售策略" : "" }}
+                        {{
+                            type === "add"
+                                ? $t("sales-strategy-management.new_sales_strategy")
+                                : type === "edit"
+                                ? $t("sales-strategy-management.edit_sales_strategy")
+                                : $t("sales-strategy-management.strategy_details")
+                        }}
                     </div>
                 </div>
                 <div class="search-container">
@@ -109,7 +115,7 @@
                                                 v-model:value="formState.rule.quantity_bonus"
                                                 :disabled="type === 'details' ? true : false"
                                                 :placeholder="$t('def.p_set')"
-                                                style="max-width: 300px;flex: 1;"
+                                                style="max-width: 300px; flex: 1"
                                                 :min="1" />
                                         </div>
                                     </div>
@@ -179,7 +185,7 @@
                             <template v-if="column.dataIndex === 'operation'">
                                 <div class="operation">
                                     <!-- 修改 -->
-                                    <a-button type="link" @click="handleEdit(record,index)">
+                                    <a-button type="link" @click="handleEdit(record, index)">
                                         <MySvgIcon icon-class="sales-edit" />{{ $t("n.amend") }}</a-button
                                     >
                                     <!-- 删除 -->
@@ -221,8 +227,7 @@
         :reviewData="reviewData"
         @hanldAdd="handleAddStrategyDetail"
         @hanldItemList="hanldItemList"
-        @handleEdit="handleModalEdit"
-        >
+        @handleEdit="handleModalEdit">
     </ClassifyModal>
     <!-- 取消的modal -->
     <a-modal
@@ -236,24 +241,23 @@
         centered
         :getContainer="() => salesRef"
         @ok="handleCancelOk">
-        <div class="title">
-            确定退出吗？
-        </div>
+        <div class="title">确定退出吗？</div>
         <div class="content">
             <div class="tips">
                 <span>销售策略尚未创建成功，确定退出吗</span>
             </div>
         </div>
-        <template #footer> 
+        <template #footer>
             <div class="footer">
-                <a-button 
-                    @click="()=> {
-                        cancelModalShow = false;
-                    }"
-                >继续填写</a-button>
-                <a-button 
-                    type="primary"
-                    @click="handleCancelOk">退出创建</a-button>
+                <a-button
+                    @click="
+                        () => {
+                            cancelModalShow = false;
+                        }
+                    "
+                    >继续填写</a-button
+                >
+                <a-button type="primary" @click="handleCancelOk">退出创建</a-button>
             </div>
         </template>
     </a-modal>
@@ -289,7 +293,7 @@ const formState = reactive({
     strategy_detail: [],
     item_list: [],
 });
-const reviewData = ref([]); 
+const reviewData = ref([]);
 const strategyTypeOptions = ref([
     {
         label: "每满送",
@@ -487,7 +491,6 @@ const handleAddStrategyDetail = (data) => {
     let copyData = _.cloneDeep(data);
     copyData.forEach((item) => {
         item.add = true;
-
     });
     formState.strategy_detail = [...formState.strategy_detail, ...copyData];
     let arr = [];
@@ -546,45 +549,43 @@ const handleSubmit = () => {
 };
 
 // 修改
-const handleEdit = (record,index) => {
+const handleEdit = (record, index) => {
     classifyModalShow.value = true;
     reviewData.value = {
         item: record.item,
         country: record.country,
     };
-
 };
 // 修改返回值
-const handleModalEdit = (data)=>{
+const handleModalEdit = (data) => {
     console.log(data);
-    console.log(formState.strategy_detail)
-    console.log(tableData.value)
-    let country  = data[0].country
-    let countryArr = formState.strategy_detail.filter(item=>item.country == country)
-    let no = countryArr[0].no
+    console.log(formState.strategy_detail);
+    console.log(tableData.value);
+    let country = data[0].country;
+    let countryArr = formState.strategy_detail.filter((item) => item.country == country);
+    let no = countryArr[0].no;
     // 重新构建数据
-    let newData = data.map(item=>{
+    let newData = data.map((item) => {
         return {
-            bonus_item_id:item.bonus_item_id,
+            bonus_item_id: item.bonus_item_id,
             no,
-            country:item.country,
-            item:item.item,
-            rule:formState.rule,
-        }
-    })
-    formState.strategy_detail = formState.strategy_detail.filter(item=>item.country !== country)
-    formState.strategy_detail = [...formState.strategy_detail,...newData]
-    console.log(viewData(formState.strategy_detail))
-    tableData.value = viewData(formState.strategy_detail)
-     // 拷贝一份数据,formState的数据
+            country: item.country,
+            item: item.item,
+            rule: formState.rule,
+        };
+    });
+    formState.strategy_detail = formState.strategy_detail.filter((item) => item.country !== country);
+    formState.strategy_detail = [...formState.strategy_detail, ...newData];
+    console.log(viewData(formState.strategy_detail));
+    tableData.value = viewData(formState.strategy_detail);
+    // 拷贝一份数据,formState的数据
     let form = _.cloneDeep(formState);
     form.rule = JSON.stringify(form.rule);
     form.item_list = showSelectData.value.map((item) => {
         return item.value;
     });
     message.success("修改成功");
-   
-}
+};
 
 // 重构数据
 const viewData = (arr) => {
@@ -691,10 +692,7 @@ const handleDelete = (item, index) => {
     // 删除formState.strategy_detail中的数据
     formState.strategy_detail = formState.strategy_detail.filter((i) => {
         // 过滤不是统一no 和 country的数据,i.item.id 不包含在item.item.join(",")的数据
-        return (
-            (i.no != item.no || i.country != item.country) &&
-            !item.item.join(",").includes(i.item.id.toString())
-        );
+        return (i.no != item.no || i.country != item.country) && !item.item.join(",").includes(i.item.id.toString());
     });
 };
 
@@ -735,59 +733,61 @@ onMounted(() => {
                                 }
                             }
                         }
-                        :deep(.ant-form-item-control){
-                            .ant-form-item-control-input{
-                                .ant-form-item-control-input-content{
-                                    .ant-input-affix-wrapper-disabled{
-                                        background-color: #F3F6F9;
-                                        border: 1px solid #E2E2EA;
-                                        .ant-input-disabled{
-                                            color: #1D2129;
+                        :deep(.ant-form-item-control) {
+                            .ant-form-item-control-input {
+                                .ant-form-item-control-input-content {
+                                    .ant-input-affix-wrapper-disabled {
+                                        background-color: #f3f6f9;
+                                        border: 1px solid #e2e2ea;
+                                        .ant-input-disabled {
+                                            color: #1d2129;
                                             font-size: 14px;
                                         }
                                     }
-                                    .ant-select-disabled{
-                                        .ant-select-selector{
-                                            background-color: #F3F6F9;
-                                            border: 1px solid #E2E2EA;
-                                            .ant-select-selection-overflow{
-                                                .ant-select-selection-overflow-item{
-                                                    .ant-select-selection-item{
-                                                        color: #1D2129;
+                                    .ant-select-disabled {
+                                        .ant-select-selector {
+                                            background-color: #f3f6f9;
+                                            border: 1px solid #e2e2ea;
+                                            .ant-select-selection-overflow {
+                                                .ant-select-selection-overflow-item {
+                                                    .ant-select-selection-item {
+                                                        color: #1d2129;
                                                         background-color: #fff;
                                                         border-radius: 4px;
-                                                        border:none;
+                                                        border: none;
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    .ant-input-number-disabled{
-                                        border: 1px solid #E2E2EA;
-                                        background-color: #F3F6F9;
-                                        .ant-input-number-input-wrap{
-                                            .ant-input-number-input{
+                                    .ant-input-number-disabled {
+                                        border: 1px solid #e2e2ea;
+                                        background-color: #f3f6f9;
+                                        .ant-input-number-input-wrap {
+                                            .ant-input-number-input {
                                             }
                                         }
-                                        &+.ant-input-number-group-addon{
-                                            background-color: #F3F6F9;
-                                            border: 1px solid #E2E2EA;
+                                        & + .ant-input-number-group-addon {
+                                            background-color: #f3f6f9;
+                                            border: 1px solid #e2e2ea;
                                             border-left: none;
                                         }
                                     }
-                                    
+
                                     // input select input-number
-                                    .ant-select , .ant-input , .ant-input-number{
-                                        .ant-select-selector{
-                                            color: #1D2129;
+                                    .ant-select,
+                                    .ant-input,
+                                    .ant-input-number {
+                                        .ant-select-selector {
+                                            color: #1d2129;
                                             font-size: 14px;
                                         }
-                                        color: #1D2129;
+                                        color: #1d2129;
                                         font-size: 14px;
                                     }
                                 }
                             }
-                            .ant-input{
+                            .ant-input {
                                 font-size: 14px;
                             }
                         }
@@ -890,14 +890,14 @@ onMounted(() => {
                         border-right: 1px solid #eaecf1;
                         margin-right: 10px;
                         position: relative;
-                        &::before{
+                        &::before {
                             display: inline-block;
                             margin-right: 4px;
                             color: #ff4d4f;
                             font-size: 14px;
                             font-family: SimSun, sans-serif;
                             line-height: 1;
-                            content: '*';
+                            content: "*";
                         }
                     }
                     .threshold,
@@ -925,37 +925,35 @@ onMounted(() => {
         }
     }
 }
-:deep(.cancel-modal){
-    .ant-modal-content{
+:deep(.cancel-modal) {
+    .ant-modal-content {
         border-radius: 4px;
-        .ant-modal-body{
+        .ant-modal-body {
             padding: 24px;
             padding-bottom: 34px;
-            color:  #1D2129;
-            .title{
+            color: #1d2129;
+            .title {
                 text-align: center;
                 font-size: 18px;
                 font-weight: 600;
             }
-            .content{
+            .content {
                 margin-top: 34px;
                 text-align: center;
             }
         }
-        .ant-modal-footer{
+        .ant-modal-footer {
             padding: 18px 0;
             height: auto;
             text-align: center;
-            .ant-btn{
+            .ant-btn {
                 border-radius: 4px;
                 font-size: 14px;
             }
-
         }
     }
 }
-:deep(.ant-form-item){
+:deep(.ant-form-item) {
     margin-bottom: 16px !important;
 }
-
 </style>
