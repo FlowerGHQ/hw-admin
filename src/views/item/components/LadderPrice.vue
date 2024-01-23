@@ -3,7 +3,7 @@
     <!-- 阶梯价格 -->
     <a-modal
         :maskClosable="false"
-        destroyOnClose
+        :destroyOnClose="true"
         tableLayout="fixed"
         :getContainer="getContainer"
         :visible="visibiliy"
@@ -26,7 +26,7 @@
                     <a-button type="primary" @click="handleComfirmLadderPrice">{{ $t("def.sure") }}</a-button>
                 </div>
             </div>
-            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible, 'slide-in-up': !batchSetVisible }">
+            <div :class="{ 'batch-set': true, 'slide-in-down': batchSetVisible ,'slide-in-up':isDown}">
                 <div class="title-area">
                     <div class="title">
                         {{ $t("item-edit.batch_price") }}
@@ -37,7 +37,6 @@
                         <a-button type="primary" @click="hanleAllSure">{{ $t("def.sure") }}</a-button>
                     </div>
                 </div>
-
                 <div class="table-content">
                     <a-table
                         :columns="batchLadderColumns"
@@ -187,7 +186,7 @@
 import { ref, reactive, computed, watch, onMounted, onUnmounted } from "vue";
 import { useI18n } from "vue-i18n";
 const $t = useI18n().t;
-const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData"]);
+const emit = defineEmits(["update:ladderPriceVisible", "handleLastLadderData",'initActiveIndex']);
 const props = defineProps({
     // 阶梯价格
     ladderData: {
@@ -218,6 +217,8 @@ const props = defineProps({
 const LadderPrice = ref(null);
 // 动画框显示
 const batchSetVisible = ref(false);
+// 显示
+const isDown = ref(false);
 
 // 是否显示弹框
 const visibiliy = computed(() => {
@@ -382,8 +383,10 @@ const onSelectAll = (selected, selectedRows, changeRows) => {
     if (selected) {
         batchSetVisible.value = true;
         dataSource.value[0].commodity = selectedRows.length;
+        isDown.value = false;
     } else {
         batchSetVisible.value = false;
+        isDown.value = true;
     }
 };
 // 获取弹框的外层实例
@@ -399,6 +402,23 @@ const handleComfirmLadderPrice = () => {
 };
 // 取消按钮
 const handleCancelLadderPrice = () => {
+    // 初始化数据
+    dataSource.value = [
+        {
+            commodity: 0,
+            fob_40qh_eur: null,
+            fob_20gp_eur: null,
+            fob_eur: null,
+            fob_40qh_usd: null,
+            fob_20gp_usd: null,
+            fob_usd: null,
+        },
+    ];
+    keyAndItem.selectedRowKeys = [];
+    keyAndItem.selectedRowItems = [];
+    batchSetVisible.value = false;
+    isDown.value = false;
+    emit('initActiveIndex', null);
     emit("update:ladderPriceVisible", false);
 };
 const inputValidateConfig = (value) => {
@@ -439,9 +459,10 @@ const hanleAllSure = () => {
 watch(
     () => props.activeIndex,
     (newVal) => {
-        console.log(newVal);
+        console.log(newVal,'----------------');
         // 设置选中的行
         keyAndItem.selectedRowKeys = [newVal];
+        // 设置选中的数据
     },
     {
         deep: true,
@@ -538,6 +559,7 @@ watch(
                     z-index: 1;
                     box-shadow: 0px -4px 10px rgba(143, 146, 152, 0.1);
                     padding: 16px 24px;
+                    transform: translateY(100%);
                     .title-area {
                         display: flex;
                         align-items: center;
@@ -579,7 +601,7 @@ watch(
 }
 
 .slide-in-up {
-    animation: slideInUp 0.3s ease-in-out forwards;
+    animation: slideInUp 0.3s ease-in-out forwards; //forwards表示动画结束后保持最后的状态 
 }
 :deep(table) {
     .ant-table-cell {
@@ -609,18 +631,22 @@ watch(
 @keyframes slideInDown {
     0% {
         transform: translateY(100%);
-        visibility: visible; /* 确保元素在开始动画时是可见的，如果需要的话 */
+        opacity: 0;
+        visibility: hidden; /* 确保元素在开始动画时是可见的，如果需要的话 */
     }
     100% {
         transform: translateY(0);
+        opacity: 1;
     }
 }
 @keyframes slideInUp {
     0% {
         transform: translateY(0);
-        visibility: visible; /* 确保元素在开始动画时是可见的，如果需要的话 */
+        opacity: 1;
+        visibility: visible; //visibility的值在动画开始时设置为hidden，确保元素在动画开始时不可见
     }
     100% {
+        opacity: 0;
         transform: translateY(100%);
     }
 }

@@ -826,8 +826,8 @@
                 </template>
             </div>
         </div>
-        <!-- 单规格时的 价格信息 -->
-        <div class="form-block" v-if="specific.mode === 1 || indep_flag">
+        <!-- 单规格时的不为整车的价格信息 -->
+        <div class="form-block" v-if="(specific.mode === 1 || indep_flag) && form.type !== itemTypeMap['1']?.key">
             <div class="form-title">
                 <div class="title">{{ $t("i.price_information") }}</div>
             </div>
@@ -848,6 +848,120 @@
                 </div>
             </div>
         </div>
+        <!-- 单规格时的整车价格信息 -->
+        <div class="labber-form-block form-block" v-if="(specific.mode === 1 || indep_flag) && form.type === itemTypeMap['1']?.key">
+            <div class="form-title">
+                <div class="title">{{ $t("i.price_information") }}</div>
+            </div>
+            <div class="labber-form-content" >
+                <div class="key-title">
+                    <div class="title"> FOB(EUR)</div>
+                    <div class="labber">
+                        <div class="value input-number">
+                            <div  :class="!form.fob_40qh_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
+                            <a-input-number
+                               v-model:value="form.fob_40qh_eur"
+                               :min="26"
+                               :precision="2"
+                               :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                               :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                           >
+                               <template #addonAfter>
+                                   <span>€</span>
+                               </template>
+                            </a-input-number>
+                           <div class="tips ">{{ $t('item-edit.quantity_26_no') }}</div>
+                        </div>
+                        <div class="value input-number">
+                            <div  :class="!form.fob_20gp_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
+                            <a-input-number
+                                v-model:value="form.fob_20gp_eur"
+                                :min="11"
+                                :max="25"
+                                :precision="2"
+                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                            >
+                                <template #addonAfter>
+                                    <span>€</span>
+                                </template>
+                            </a-input-number>
+                            <div  class="tips">{{ $t('item-edit.quantity_11_25_no') }}</div>
+                        </div>
+                        <div class="value input-number">
+                            <div  :class="!form.fob_eur && isValidate ?' title required error' : 'title required'">{{ $t('item-edit.sample') }}</div>
+                            <a-input-number
+                                v-model:value="form.fob_eur"
+                                :min="1"
+                                :max="10"
+                                :precision="2"
+                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                            >
+                                <template #addonAfter>
+                                    <span>€</span>
+                                </template>
+                            </a-input-number>
+                            <div  class="tips">{{ $t('item-edit.quantity_1_10_no') }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="key-title">
+                    <div class="title"> FOB(USD)</div>
+                    <div class="labber">
+                        <div class="value input-number">
+                            <div  :class="!form.fob_40qh_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
+                            <a-input-number
+                                v-model:value="form.fob_40qh_usd"
+                                :min="26"
+                                :precision="2"
+                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                            >
+                                <template #addonAfter>
+                                    <span>$</span>
+                                </template>
+                            </a-input-number>
+                            <div  class="tips">{{ $t('item-edit.quantity_26_no') }}</div>
+
+                        </div>
+                        <div class="value input-number">
+                            <div  :class="!form.fob_20gp_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
+                            <a-input-number
+                                v-model:value="form.fob_20gp_usd"
+                                :min="11"
+                                :max="25"
+                                :precision="2"
+                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                            >
+                                <template #addonAfter>
+                                    <span>$</span>
+                                </template>
+                            </a-input-number>
+                            <div  class="tips">{{ $t('item-edit.quantity_11_25_no') }}</div>
+                        </div>
+                        <div class="value input-number">
+                            <div :class="!form.fob_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.sample') }}</div>
+                            <a-input-number
+                                v-model:value="form.fob_usd"
+                                :min="1"
+                                :max="10"
+                                :precision="2"
+                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
+                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                            >
+                                <template #addonAfter>
+                                    <span>$</span>
+                                </template>
+                            </a-input-number>
+                            <div  class="tips">{{ $t('item-edit.quantity_1_10_no') }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- 按钮 -->
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
             <!--  type="primary" ghost -->
@@ -917,7 +1031,8 @@
             :activeRow="activeRow"
             :activeIndex="activeIndex"
             @handleLastLadderData="handleLastLadderData"
-            @handleSaveLadderData="handleSaveLadderData"    
+            @handleSaveLadderData="handleSaveLadderData"
+            @initActiveIndex="activeIndex = $event"    
         />
         <!-- 自定义图片预览 -->
         <div class="image-preview" :class="{ 'preview-wrap': previewVisible }" @click="previewVisible = false">
@@ -1323,6 +1438,7 @@ export default {
         },
         // 根据详情-赋值规格等信息
         setFormData(res) {
+            console.log(res, "规格详情--------------------------");
             this.loading = true;
             this.detail = res;
             let config = [];
@@ -1361,14 +1477,14 @@ export default {
             this.form.type = res.type;
             this.form.price = Core.Util.countFilter(res.price);
             this.form.fob_eur = Core.Util.countFilter(res.fob_eur);
+            this.form.fob_20gp_eur = Core.Util.countFilter(res.fob_20gp_eur);
+            this.form.fob_40qh_eur = Core.Util.countFilter(res.fob_40qh_eur);
             this.form.fob_usd = Core.Util.countFilter(res.fob_usd);
-            // this.form.man_hour = Core.Util.countFilter(res.man_hour)
+            this.form.fob_20gp_usd = Core.Util.countFilter(res.fob_20gp_usd);
+            this.form.fob_40qh_usd = Core.Util.countFilter(res.fob_40qh_usd);
             this.form.category_ids = this.detail.category_list
                 ? this.detail.category_list.map((i) => i.category_id)
                 : [];
-            /* this.form.original_price = Core.Util.countFilter(
-                res.original_price
-            ); */
             this.form.sales_area_ids = this.detail.sales_area_list ? this.detail.sales_area_list.map((i) => i.id) : [];
             this.form.color = res.color;
             this.form.color_en = res.color_en;
@@ -1378,14 +1494,6 @@ export default {
             this.form.length = res.length;
             this.form.width = res.width;
             this.form.height = res.height;
-
-            // 定金支付 逻辑回显
-            // if (Number(res.deposit) === 0) {
-            //     this.temporarily_deposit = 0
-            // } else {
-            //     this.temporarily_deposit = 1
-            //     this.form.deposit = Core.Util.countFilter(res.deposit)
-            // }
 
             if (this.form.logo) {
                 let logos = this.form.logo.split(",");
@@ -1591,7 +1699,11 @@ export default {
                 apiName = this.indep_flag ? "update" : "save";
                 form.price = Math.round(form.price * 100);
                 form.fob_eur = Math.round(form.fob_eur * 100);
+                form.fob_20gp_eur = Math.round(form.fob_20gp_eur * 100);
+                form.fob_40qh_eur = Math.round(form.fob_40qh_eur * 100);
                 form.fob_usd = Math.round(form.fob_usd * 100);
+                form.fob_20gp_usd = Math.round(form.fob_20gp_usd * 100);
+                form.fob_40qh_usd = Math.round(form.fob_40qh_usd * 100);
                 // 隐藏成本价格
                 // form.original_price = Math.round(form.original_price * 100);
             } else {
@@ -1637,7 +1749,10 @@ export default {
                     };
                 });
             }
-            this.handleDescripttion();
+            // 是整车并且为多规格
+            if (form.type === itemTypeMap['1']?.key && this.specific.mode === 2) {
+                this.handleDescripttion();
+            }
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
@@ -1649,19 +1764,23 @@ export default {
         },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef, categoryMessage) {
-            // 查看
-            if (categoryMessage && categoryMessage.length > 0) {
-                for (let i = 0; i < categoryMessage.length; i++) {
-                    if (!categoryMessage[i].desc || !categoryMessage[i].desc_en) {
-                        return this.$message.warning(
-                            `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
-                        );
+
+            // 如果是整车并且是多规格校验分类
+            if (form.type === itemTypeMap['1']?.key && this.specific.mode === 2) {
+                // 查看
+                if (categoryMessage && categoryMessage.length > 0) {
+                    for (let i = 0; i < categoryMessage.length; i++) {
+                        if (!categoryMessage[i].desc || !categoryMessage[i].desc_en) {
+                            return this.$message.warning(
+                                `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
+                            );
+                        }
                     }
+                } else if (this.isDesEmpty) {
+                    return this.$message.warning(
+                        `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
+                    );
                 }
-            } else if (this.isDesEmpty) {
-                return this.$message.warning(
-                    `${this.$t("item-edit.please_complete")}(${this.$t("item-edit.category_description")})`
-                );
             }
             // 名称
             if (!form.name) {
@@ -1703,16 +1822,30 @@ export default {
             ) {
                 return this.$message.warning(`${this.$t("def.enter")}(${this.$t("n.detail_pic")})`);
             }
-
+            // 如果为整车
             if (this.specific.mode === 1 || this.indep_flag) {
                 // 单规格
                 if (!form.fob_eur) {
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(EUR))`);
                 }
+                if(!form.fob_20gp_eur){
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                }
+                if(!form.fob_40qh_eur){
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                }
                 if (!form.fob_usd) {
                     return this.$message.warning(`${this.$t("def.enter")}(FOB(USD))`);
                 }
+                if(!form.fob_20gp_usd){
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(20GP))`);
+                }
+                if(!form.fob_40qh_usd){
+                    return this.$message.warning(`${this.$t("def.enter")}(FOB(40QH))`);
+                }
+
             } else {
+
                 // 多规格
                 // 规格定义 检查
                 for (let i = 0; i < attrDef.length; i++) {
@@ -2385,7 +2518,69 @@ export default {
                     }
                 }
             }
+            .labber-item{
+                align-items: flex-start;
+            }
         }
+    }
+    .labber-form-block{
+        padding: 20px;
+        flex-direction: column;
+        .form-title{
+            width: 120px !important;
+            text-align: left;
+        }
+        .labber-form-content{
+            .key-title{
+                display: flex;
+                margin-left: 8px;
+                margin-top: 16px;
+                .title{
+                    color: #1D2129;
+                    font-size: 14px;
+                }
+                .labber{
+                    margin-left:116px;
+                }
+                .value,.input-number{
+                    margin-bottom:16px;
+                    display: flex;
+                    align-items: center;
+                    .title{
+                        color: #8090A6;
+                        font-size: 12px;
+                        line-height: 14px; /* 116.667% */
+                        margin-right:8px;
+                        width: 40px;
+                        margin: 0 5px;
+                        &::before {
+                            content: "*";
+                            color: @TC_required;
+                            margin-right: 4px;
+                            vertical-align: middle;
+                        }
+                    }
+                    .tips{
+                        margin-left: 5px;
+                        color: #666;
+                        font-size: 12px;
+                    }
+                    .error{
+                        // 兄弟 ant-input-number-group-wrapper
+                        & + .ant-input-number-group-wrapper {
+                            :deep(.ant-input-number-wrapper){
+                                .ant-input-number{
+                                    border-color: @TC_required;
+                                }
+                            }
+
+                        }
+
+                    }
+                }
+            }
+        }
+
     }
     .form-item.specific-config,
     .form-item.specific-category,

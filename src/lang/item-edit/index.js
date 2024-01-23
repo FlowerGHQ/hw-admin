@@ -46,6 +46,12 @@ export default {
 		quantity_11_25: '11<=订货量<=25（20GP）',
 		// 1<=订货量<=10(样品)
 		quantity_1_10: '1<=订货量<=10(样品)',
+		// 26<=订货量
+		quantity_26_no: '26<=订货量',
+		// 11<=订货量<=25
+		quantity_11_25_no: '11<=订货量<=25',
+		// 1<=订货量<=10
+		quantity_1_10_no: '1<=订货量<=10',
 		// 样品
 		sample: '样品',
 		// 40HQ
@@ -90,6 +96,12 @@ export default {
 		quantity_11_25: '11<=Order quantity<=25 (20GP)',
 		// 1<=订货量<=10(样品)
 		quantity_1_10: '1<=Order quantity<=10 (sample)',
+		// 26<=订货量
+		quantity_26_no: '26<=Order quantity',
+		// 11<=订货量<=25
+		quantity_11_25_no: '11<=Order quantity<=25',
+		// 1<=订货量<=10
+		quantity_1_10_no: '1<=Order quantity<=10',
 		// 样品
 		sample: 'Sample',
 		// 40HQ
