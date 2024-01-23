@@ -256,7 +256,6 @@ class StorageHandler {
         return this.getItem(Const.DATA.LOGIN_MES) || undefined;
     }
     clearLoginMes() {
-        console.log(123);
         this.removeItem(Const.DATA.LOGIN_MES);
     }
     setSalesData(value) {
@@ -267,6 +266,16 @@ class StorageHandler {
     }
     clearSalesData() {
         this.removeItem(Const.DATA.SALES_DATA);
+    }
+    // 商品管理的草稿信息
+    setGoodsDraft(value) {
+        return this.setItem(Const.DATA.GOODS_DRAFT, value);
+    }
+    getGoodsDraft() {
+        return this.getItem(Const.DATA.GOODS_DRAFT) || undefined;
+    }
+    clearGoodsDraft() {
+        this.removeItem(Const.DATA.GOODS_DRAFT);
     }
 }
 
