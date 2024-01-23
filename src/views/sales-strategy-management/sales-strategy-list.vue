@@ -273,7 +273,7 @@ const CountryData = computed(() => {
     COUNTYR.forEach((item) => {
         arr.push({
             label: $i18n.locale.value == "zh" ? item.name : item.name_en,
-            value: item.code,
+            value: item.name,
         });
     });
     return arr;
