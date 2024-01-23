@@ -1080,6 +1080,7 @@ export default {
             ladderPriceTitle: "",
             activeRow: {},
             activeIndex : null,
+            categoryMessage:[],
             // 判断选择哪个分类的数据
             category_index: null,
             openCategory: true, //暂时留作switch开关的逻辑
