@@ -75,7 +75,7 @@
                 :pagination="false"
                 :rowKey="(record, index) => index">
                 <template #bodyCell="{ column, record, index, text }">
-                    <div v-if="column.dataIndex === 'commodity'">
+                    <div v-if="column.dataIndex === 'name'">
                         <span>{{ text }}</span>
                     </div>
                     <div
@@ -119,7 +119,7 @@ const props = defineProps({
 // 弹框的外层实例
 const LadderPrice = ref(null);
 // 动画框显示
-const batchSetVisible = ref(true);
+const batchSetVisible = ref(false);
 
 // 是否显示弹框
 const visibiliy = computed(() => {
@@ -185,8 +185,8 @@ const ladderColumns = computed(() => {
         {
             // 商品
             title: $t("item-edit.commodity"),
-            dataIndex: "commodity",
-            key: "commodity",
+            dataIndex: "name",
+            key: "name",
             align: "center",
             width: 110,
         },

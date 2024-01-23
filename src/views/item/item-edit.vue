@@ -677,15 +677,49 @@
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
-                                        <!-- <a-input-number
+                                        <!-- 不为整车走原来的流程 -->
+                                        <a-input-number
+                                            v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_eur"
                                             :min="0.01"
                                             :precision="2"
                                             :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                             :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
-                                            @change="inputValidateConfig" /> -->
+                                            @change="inputValidateConfig" 
+                                        />
+                                            <div class="show-ladder" v-else-if="form.type === itemTypeMap['1']?.key && (
+                                                record.fob_eur && record.fob_20gp_eur && record.fob_40qh_eur
+                                            )">
+                                                <div class="show-ladder-item">
+                                                    <div class="show-ladder-item-title">
+                                                        {{ $t("item-edit.sample") }}
+                                                    </div>
+                                                    <div class="show-ladder-item-content">
+                                                        {{ record.fob_eur }}
+                                                    </div>
+                                                </div>
+                                                <div class="show-ladder-item">
+                                                    <div class="show-ladder-item-title">
+                                                        {{ $t("item-edit.quantity_20GP") }}
+                                                    </div>
+                                                    <div class="show-ladder-item-content">
+                                                        {{ record.fob_20gp_eur }}
+                                                    </div>
+                                                </div>
+                                                <div class="show-ladder-item">
+                                                    <div class="show-ladder-item-title">
+                                                        {{ $t("item-edit.quantity_40HQ") }}
+                                                    </div>
+                                                    <div class="show-ladder-item-content">
+                                                        {{ record.fob_40qh_eur }}
+                                                    </div>
+                                                </div>
+                                            >
+
+                                            </div>
                                             <!-- 设置阶梯价格按钮 -->
                                             <a-button
+                                                v-else-if="form.type === itemTypeMap['1']?.key && (!record.fob_eur || !record.fob_20gp_eur || !fob_40qh_eur)"
                                                 type="primary"
                                                 class="ladder-price"
                                                 ghost
@@ -1325,6 +1359,7 @@ export default {
         },
         // 获取商品规格列表
         setSpecificData(itemList) {
+            console.log(itemList,'参数值--------------------------')
             this.loading = true;
             this.specific.mode = 2;
             Core.Api.AttrDef.listBySet({ set_id: this.set_id }).then((res) => {
@@ -1387,7 +1422,11 @@ export default {
                         name_en: item.name_en,
                         price: Core.Util.countFilter(item.price),
                         fob_eur: Core.Util.countFilter(item.fob_eur),
+                        fob_20gp_eur: Core.Util.countFilter(item.fob_20gp_eur),
+                        fob_40qh_eur: Core.Util.countFilter(item.fob_40qh_eur),
                         fob_usd: Core.Util.countFilter(item.fob_usd),
+                        fob_20gp_usd: Core.Util.countFilter(item.fob_20gp_usd),
+                        fob_40qh_usd: Core.Util.countFilter(item.fob_40qh_usd),
                         target_id: item.id,
                         attr_list: item.attr_list,
                         imgsList: item.imgsList,
@@ -1398,6 +1437,7 @@ export default {
                 this.specific.list = list;
                 // 多规格商品列表
                 this.specific.data = data;
+                console.log('多规格商品列表----------------',this.specific.data)
             });
         },
         handleDelete(record) {
