@@ -1357,13 +1357,18 @@
         </div>
         <!-- 按钮 -->
         <div class="form-btns fixed-btns" ref="fixBox" :style="{ width: fixedWidth }">
+            <!-- 保存草稿 -->
+            <a-button
+                @click="handleSubmit('draft')"
+                v-if="saveDarftShow"
+            >
+                {{ $t("i.save_draft") }}
+            </a-button>
             <!--  type="primary" ghost -->
             <a-button @click="routerChange('back')">{{ $t("def.cancel") }}</a-button>
-
             <a-button type="primary" @click="handleSubmit">{{
                 $t("def.sure_create")
             }}</a-button>
-
             <!-- 底部障眼法-盒子 -->
             <div class="bottom-box" >
             </div>
@@ -1611,7 +1616,8 @@ export default {
 
             newChild: {
                 imgs: []
-            }
+            },
+            goodsDraftData: {},
         };
     },
     watch: {},
@@ -1637,12 +1643,6 @@ export default {
                     key: "input",
                     dataIndex: "name_en",
                 },
-                /* {
-                    title: this.$t("i.cost_price"),
-                    key: "money",
-                    dataIndex: "original_price",
-                    width: 160,
-                }, */
                 {
                     title: "FOB(EUR)",
                     key: "money",
@@ -1664,30 +1664,32 @@ export default {
                     fixed: 'right'
                 } // , fixed: 'right'
             );
-            // 判断数组长度是否为1，如果是，则将最后一个数据列配置删除
-            /* if (this.specific.data.length === 1) {
-                column.pop();
-            } */
             return column;
         },
         configSetTitle() {
             return `${this.$t("i.addition")}${ (this.$i18n.locale === 'en' ? ` ${this.configSetMes?.key} ` : this.configSetMes?.name)}${this.$t("i.value")}`;
         },
-        // 是否展示规格定义
-       /*  isShowDelete() {
-            const arr = []
-            for(let key in this.specific.data[0]) {
-                arr.push(key)
+        saveDarftShow() {
+            if(this.$route.query.edit){
+                return  false
+            }else {
+                return true
             }
-            return arr
-        } */
+        }
+
     },
     created() {
+        this.goodsDraftData = Core.Data.getGoodsDraft() ? JSON.parse(Core.Data.getGoodsDraft()) : {};
         this.form.id = Number(this.$route.query.id) || 0;
         this.set_id = Number(this.$route.query.set_id) || 0;
         this.indep_flag = Number(this.$route.query.indep_flag) || 0; // 商品详情里面的编辑按钮参数
+
+        // 获取草稿信息
         if (this.form.id) {
             this.getItemDetail();
+        }
+        if(Object.keys(this.goodsDraftData).length > 0 && !this.$route.query.edit){
+          this.setFormDartData(this.goodsDraftData);
         }
         this.getSalesAreaList();
     },
@@ -1805,10 +1807,8 @@ export default {
                 });
             }
         },
-
         // 根据详情-赋值规格等信息
         setFormData(res) {
-
             this.loading = true;
             this.detail = res;
             let config = [];
@@ -1910,6 +1910,16 @@ export default {
                 });
             }
             this.loading = false;
+        },
+        setFormDartData(res){
+            console.log(res,'草稿信息')
+            this.form = res.form;
+            this.form.sales_area_ids = res.form.sales_area_ids.split(',').map((item) => Number(item));
+            this.attrDef = res.attrDef;
+            this.specData = res.specData;
+            this.specific = res.specific;
+            this.upload = res.upload;
+           
         },
         // 获取商品规格列表
         setSpecificData(itemList) {
@@ -2037,33 +2047,22 @@ export default {
             });
         },
         // 保存、新建 商品
-        handleSubmit() {
-
+        handleSubmit(type) {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
-          /*   console.log('form-handleSubmit111',form);
-            console.log('specData-handleSubmit111',specData);
-            console.log('attrDef-handleSubmit111',attrDef); */
-
-
-            // 校验检查
-            this.isValidate = true;
-
-            if (
-                typeof this.checkFormInput(form, specData, attrDef) ===
-                "function"
-            ) {
-                return;
+            if(!type){
+                // 校验检查
+                this.isValidate = true;
+                if (
+                    typeof this.checkFormInput(form, specData, attrDef) ===
+                    "function" 
+                ) {
+                    console.log("checkFormInput err");
+                    return;
+                }
             }
-
-            // // 定金支付
-            // if (Number(this.temporarily_deposit) === 0) {
-            //     form.deposit = Number(this.temporarily_deposit)
-            // } else {
-            //     form.deposit = Math.round(form.deposit * 100)
-            // }
-
+            
             // 封面上传
             if (this.upload.coverList.length || this.upload.coverList.length === 0) {
                 let coverList = this.upload.coverList.map((item) => {
@@ -2152,16 +2151,30 @@ export default {
                     };
                 });
             }
+            if(type === 'draft'){
+                // 草稿
+                this.goodsDraftData = {
+                    form,
+                    attrDef,
+                    specData,
+                    specific: this.specific,
+                    upload: this.upload
+                }
+                Core.Data.setGoodsDraft(JSON.stringify(this.goodsDraftData));
+                this.$message.success(this.$t("i.save_draft_success"));
+                return
+            }
 
             Core.Api.Item[apiName](Core.Util.searchFilter(form))
                 .then(() => {
                     this.$message.success(this.$t("pop_up.save_success"));
+                    Core.Data.clearGoodsDraft();
                     this.routerChange("back");
                 })
                 .catch((err) => {
                     console.log("handleSubmit err:", err);
-            });
-        },
+                });
+            },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
             // 名称
@@ -2460,33 +2473,7 @@ export default {
         },
         // 商品规格模式改变
         handleSpecificModeChange() {
-           /*  if (this.specific.mode === 2) {
-                this.specific.data = [
-                    {
-                        id: 1,
-                        target_id: this.form.id,
-                        code: this.form.code,
-                        name: this.form.name,
-                        name_en: this.form.name_en,
-                        price: this.form.price,
-                        fob_eur: this.form.fob_eur,
-                        fob_usd: this.form.fob_usd,
-                        original_price: this.form.original_price,
-                        original_price_currency:
-                        this.form.original_price_currency,
-                    },
-                ];
-            } else if (this.specific.mode === 1) {
-                this.form.code = this.specific.data[0].code;
-                // this.form.name = this.specific.data[0].name;
-                // this.form.name_en = this.specific.data[0].name_en;
-                this.form.price = this.specific.data[0].price;
-                this.form.fob_eur = this.specific.data[0].fob_eur;
-                this.form.fob_usd = this.specific.data[0].fob_usd;
-                this.form.original_price = this.specific.data[0].original_price;
-            } */
             if (this.specific.mode === 2 && this.specific.data && this.specific.data.length === 0){
-                
                 this.specific.data = [
                     {
                         id: 1,
@@ -2700,12 +2687,6 @@ export default {
                 });
             }
         },
-        /* handleCloseSpecOption(index) {
-            this.specific.list[index].addValue.zh = "";
-            this.specific.list[index].addValue.en = "";
-            this.specific.list[index].addValue.key = "";
-            this.specific.list[index].addVisible = false;
-        }, */
         // 规格值弹窗-移除规格值
         handleRemoveSpecOption(index, i) {
             let item = this.specific.list[index];
@@ -2858,7 +2839,6 @@ export default {
             }
             this.specific.data = Core.Util.deepCopy(dataList);
         },
-
         // 批量设置
         handleCloseBatchSet() {
             this.batchSet = {
@@ -2891,30 +2871,6 @@ export default {
             let specData = Core.Util.deepCopy(this.specific.data);
             this.validateConfig(specData);
         },
-        // 添加商品
-        /* handleAddItemShow(ids, items) {
-            this.form.accessory_id = items[0].id;
-            this.form.accessory_name = items[0].name;
-            this.form.accessory_name_en = items[0].name_en;
-
-            this.form.accessory_code = items[0].code;
-            this.form.accessory_amount = 0;
-        }, */
-        // 添加商品
-        /* handleDeleteItem() {
-
-            this.form.accessory_id = "";
-            this.form.accessory_name = "";
-            this.form.accessory_name_en = "";
-            this.form.accessory_code = "";
-            this.form.accessory_amount = 0;
-        }, */
-        // // 定金支付
-        // DepositPaymentChange(e) {
-        //     this.form.deposit = undefined
-        //     let target = e.target
-        //     this.temporarily_deposit = target.value
-        // }
         // 输入框校验 规格信息
         inputValidateConfig() {
             let specData = Core.Util.deepCopy(this.specific.data);

@@ -649,6 +649,10 @@ const messages = {
             spec_pic: '图片',
             item_code_tip: '商品编码: 多规格商品的父规格对应商品编码;',
             sku_code_tip: 'SKU编码: 单规格、多规格商品的子规格对应SKU编码',
+            save_draft: '保存草稿',
+            save_draft_success: '保存草稿成功',
+            // 销售地区
+            sales_area: '销售地区',
         },
         fe: { // 反馈单
             feedback: '反馈',
@@ -1150,6 +1154,9 @@ const messages = {
             detail: '消息详情',
         },
         def: {
+            // 请设置
+            p_set: '请设置',
+            delete_content: '确定要删除吗？',
             search: '查询',
             reset: '重置',
             export: '导出',
@@ -1899,6 +1906,7 @@ const messages = {
                 // 新加入2023/10/9
                 'coc': 'COC证书管理',
                 'supplier-application': '供应商管理',
+                'sales-strategy': '销售策略管理',
             },
             'distributor': {
                 'list': '查看分销商列表',
@@ -2240,7 +2248,10 @@ const messages = {
             },
             'supplier-application': {
                 'list': '申请资料列表'
-            }
+            },
+            'sales-strategy': {
+                'list': '销售策略列表'
+            },
         },
         error_code: {
             expire: '登录状态已过期，请重新登录',
@@ -3380,7 +3391,9 @@ const messages = {
             spec_of_goods: 'specifications of goods',
             sku_code: 'SKU Code',
             spec_pic: 'picture',
-
+            save_draft: 'Save Draft',
+            save_draft_success: 'Save Draft Successfully',
+            sales_area: 'Sales Area',
         },
         fe: {
             feedback: 'Feedback',
@@ -3873,6 +3886,8 @@ const messages = {
             detail: 'Message Details',
         },
         def: {
+            p_set: 'Product Setting',
+            delete_content: 'Are You Sure To Delete It?',
             search: 'Search',
             reset: 'Reset',
             export: 'Export',
@@ -4594,6 +4609,7 @@ const messages = {
                 'coc': 'Coc Certificate Management',
                 'aftermarket-bom': 'BOM Management',
                 'supplier-application': 'Supplier Application',
+                'sales-strategy': 'Sales Strategy',
             },
             'distributor': {
                 'list': 'View Distributor List',
@@ -4934,7 +4950,10 @@ const messages = {
             },
             'supplier-application': {
                 'list': 'Application List'
-            }
+            },
+            'sales-strategy': {
+                'list': 'Sales Strategy List'
+            },
         },
         error_code: {
             expire: 'The Login Status Has Expired, Please Log In Again',

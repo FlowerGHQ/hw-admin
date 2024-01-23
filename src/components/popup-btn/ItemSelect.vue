@@ -1,5 +1,5 @@
 <template>
-    <a-button class="ItemSelectBtn" @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
+    <a-button class="ItemSelectBtn" v-if="isShowBtn"  @click.stop="handleModalShow" :ghost='ghost' :type="btnType" :class="btnClass" :disabled="disabled!== ''">
         <slot>{{ btnText }}</slot>
     </a-button>
     <a-modal :title="btnText" v-model:visible="modalShow" :after-close='handleModalClose' width='860px'
@@ -98,6 +98,10 @@ export default {
     },
     emits: ['select', 'option'],
     props: {
+        isShowBtn:{
+            type:Boolean,
+            default:true
+        },
         btnText: {
             type: String,
             default: '添加商品'
@@ -207,48 +211,56 @@ export default {
             this.$emit('select', this.selectItemIds, this.selectItems, this.faultName)
             this.modalShow = false
         },
-
         getTableData() {
+            this.loading = true;
             //更换数组形式传参,字符串逗号分隔输入--编码
             let arr = this.searchForm.code.split(',');
                 arr = arr.map(item=>item.trim());
                 arr = arr.filter(item => item !== "");  
-            if (this.purchaseId) {
-                Core.Api.Purchase.itemList({
-                    order_id: this.purchaseId,
-                    // item_code: this.searchForm.code,
-                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
-                }).then(res => {
-                    this.tableData = res.list.map(item => {
-                        return {
-                            ...item.item,
-                            count: item.amount
-                        }
-                    })
-                    this.$emit('option', this.tableData)
-                }).catch(err => {
-                    console.log('Purchase.itemList err', err)
-                }).finally(() => {
-                    this.loading = false;
-                });
-            } else {
-                Core.Api.Item.list({
-                    // ...this.searchForm,
-                    name: this.searchForm.name,
-                    category_id: this.searchForm.category_id,
-                    warehouse_id: this.warehouseId,
-                    page: this.currPage,
-                    page_size: this.pageSize,
-                    flag_spread: 1,
-                    source_type: this.source_type === 0 ? '' : this.source_type,
-                    code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+                if (this.purchaseId) {
+                    Core.Api.Purchase.itemList({
+                        order_id: this.purchaseId,
+                        // item_code: this.searchForm.code,
+                        code_list: arr, //更换数组形式传参,字符串逗号分隔输入
+                    }).then(res => {
+                        this.tableData = res.list.map(item => {
+                            return {
+                                ...item.item,
+                                count: item.amount
+                            }
+                        })
+                        this.$emit('option', this.tableData)
+                        this.loading = false;
+                    }).catch(err => {
+                        console.log('Purchase.itemList err', err)
+                        this.loading = false;
+                    }).finally(() => {
+                        this.loading = false;
+                    });
+                } else {
+                    Core.Api.Item.list({
+                        // ...this.searchForm,
+                        name: this.searchForm.name,
+                        category_id: this.searchForm.category_id,
+                        warehouse_id: this.warehouseId,
+                        page: this.currPage,
+                        page_size: this.pageSize,
+                        flag_spread: 1,
+                        source_type: this.source_type === 0 ? '' : this.source_type,
+                        code_list: arr, //更换数组形式传参,字符串逗号分隔输入
 
-                }).then(res => {
-                    console.log('Item.list res:', res)
-                    this.tableData = this.removeChildrenFromData(res.list)
-                    this.total = res.count;
-                })
-            }
+                    }).then(res => {
+                        console.log('Item.list res:', res)
+                        this.tableData = this.removeChildrenFromData(res.list)
+                        this.total = res.count;
+                        this.loading = false;
+                    }).catch(err => {
+                        console.log('Item.list err', err)
+                        this.loading = false;
+                    }).finally(() => {
+                        this.loading = false;
+                    });
+                }
         },
         /* 删除加号 */
         removeChildrenFromData(data) {
@@ -258,7 +270,6 @@ export default {
                 return newItem;
             });
         },
-
         pageChange(curr) {  // 页码改变
             this.currPage = curr
             this.getTableData()

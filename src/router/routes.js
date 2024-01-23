@@ -2663,6 +2663,43 @@ const routes = [
 			},
 		]
 	},
+    { // 销售策略管理
+        path: '/sales-strategy-management',
+        component: Layout,
+        redirect: '/sales-strategy-management/sales-strategy-list',
+        name: 'SalesStrategyManagement',
+        type: [ROUTER_TYPE.SALES],
+        meta: {
+            title: '销售策略管理',
+            title_en: 'System Management',
+            icon: 'i_a-iconmenu_xiaoshoucelue',
+            roles: [LOGIN_TYPE.ADMIN],
+            auth: ["sales-strategy.list"],
+        },
+        children:[
+            // 销售策略列表
+            {
+                path: 'sales-strategy-list',
+                name: 'SalesStrategyList',
+                component: () => import('@/views/sales-strategy-management/sales-strategy-list.vue'),
+                meta: {
+                    title: '销售策略列表',
+                    title_en: 'Sales Strategy List',
+                }
+            },
+            // 编辑销售策略
+            {
+                path: 'sales-strategy-edit',
+                name: 'SalesStrategyEdit',
+                component: () => import('@/views/sales-strategy-management/sales-strategy-edit.vue'),
+                meta: {
+                    hidden: true,
+                    title: '新增编辑销售策略',
+                    title_en: 'Add Or Edit Sales Strategy',
+                }
+            }
+        ]
+    },
     { // 系统管理
         path: '/system',
         component: Layout,
@@ -2836,6 +2873,7 @@ const routes = [
 
         ]
     },
+
 
     // 测试用例
     {

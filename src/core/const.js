@@ -28,13 +28,13 @@ switch (window.location.hostname) {
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         break;
     case "10.10.12.83":
-        // URL_POINT = 'http://10.10.12.65:8889'
-        URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
+        URL_POINT = 'http://10.10.12.65:8889'
+        // URL_POINT = 'http://eos-dev-api.horwincloud.com' // 测试服  
         // URL_POINT = 'http://eos-api.horwincloud.com' // 正式服
         // URL_POINT = 'http://10.10.12.75:8889' // zwq
         break;
     case 'eos.hw.innotick.com':
-        URL_POINT = 'https://eos-api.horwincloud.com' // 老正式服
+        URL_POINT = 'https://eos-api.horwincloud.com' // 老正式服   
         break;
     case 'eos-dev.hw.innotick.com':
         URL_POINT = 'https://eos-dev-api.horwincloud.com' // 老测试服
@@ -43,10 +43,10 @@ switch (window.location.hostname) {
         URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
         break;
     default:
-        URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
+        // URL_POINT = 'https://eos-dev-api.horwincloud.com'  //测试服
         // URL_POINT = 'https://eos-api.horwincloud.com' // 新正式服
         // URL_POINT = 'https://eos-api-release.horwincloud.com' // 预发环境
-        // URL_POINT = 'http://10.0.0.170:8889' // my
+        // URL_POINT = 'http://10.10.12.65:8889' // my
         // URL_POINT = 'http://10.0.0.170:8889' // my
         // URL_POINT = 'http://10.10.12.75:8889' // zwq
         // URL_POINT = 'http://10.10.12.194:8889'  // zy
@@ -87,6 +87,9 @@ let Const = {
         SUPPLY_SUBMITED: 'supply-submited',
         USER_TYPE_LIST: 'user-type-list',
         LOGIN_MES: 'login-mes',
+        SALES_DATA: 'sales-data',
+
+        GOODS_DRAFT: 'goods-draft',
     },
     DEFULT_IMG: {
         1: defult_img,
@@ -809,10 +812,10 @@ let Const = {
             NO: 0,
         },
         TYPE: {
-            PRE_SALES: 10,
-            AFTER_SALES: 20,
-            MIX: 30,
-            GIVEAWAY: 40,
+            PRE_SALES: 10, // 售前订单 - 整车
+            AFTER_SALES: 20, // 售后订单 - 零部件 - 物料
+            MIX: 30, // 混合订单 - 整车 + 零部件 - 物料
+            GIVEAWAY: 40, //赠品单
         },
         PARENT_TYPE: {
             BREAK: 10,     // 拆分订单
@@ -1029,6 +1032,7 @@ let Const = {
         // 新加入2023/10/9
         { list: [], select: [], key: 'coc', name: 'COC证书管理' },
         { list: [], select: [], key: 'supplier-application', name: '供应商管理' },
+        { list: [], select: [], key: 'sales-strategy', name: '销售策略管理' },
     ],
 
     ATTACHMENT: {
