@@ -1296,7 +1296,9 @@ export default {
         },
         isDesEmpty() {
             //every 用于判断数组中的每一项是否都满足条件
-            return this.categoryMessage.every((item) => item.desc === "" && item.desc_en === "");
+            return this.categoryMessage.every((item) =>{
+                 item.desc === "<p><br/></p>" && item.desc_en === "<p><br/></p>"
+            });
         },
     },
     created() {
@@ -1387,15 +1389,10 @@ export default {
         },
         // 选择分类的触发
         handleCategory(val) {
-            console.log(val);
+            console.log(val,'----------------------------');
             this.category_index = val;
-            this.categoryMessage = [];
-            // this.specific.list.forEach((item) => {
-            //     console.log(item)
-            //     if (item.id === val) {
-            //         this.categoryMessage = item.option;
-            //     }
-            // });
+            this.categoryMessage = {};
+            console.log(this.categoryMessage,'---------------------------');
             this.categoryMessage = this.specific.list.filter((item) => item.id === val)[0]?.option || [];
             console.log(this.categoryMessage);
         },
