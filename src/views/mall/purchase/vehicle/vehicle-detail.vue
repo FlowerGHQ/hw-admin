@@ -9,7 +9,7 @@
                     </div>
                     <template v-if="vehicle_mes.set_id">
                         <div class="vehicle-body-series">
-                            <p class="title">{{ vehicle_mes.name }}</p>
+                            <p class="title">{{ vehicle_mes[$Util.regionalUnitMoney().name_index] }}</p>
                             <p class="code">
                                 <span class="code-left">{{ vehicle_mes.code }}</span>
                                 <span class="code-right">{{ specList?.length || 0 }} series</span>
@@ -36,7 +36,7 @@
                         <div class="vehicle-body-series single">
                             <div class="single-top">
                                 <p class="title">
-                                    {{ vehicle_mes.name }}
+                                    {{ vehicle_mes[$Util.regionalUnitMoney().name_index] }}
                                     <span class="favorites" @click="addFavorites(vehicle_mes)">
                                         <svg-icon icon-class="collected-icon" class-name="favorites-icon"
                                             v-if="vehicle_mes.in_favorite" />
