@@ -2182,9 +2182,6 @@ export default {
             },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef) {
-            console.log('form', form);
-            console.log('specData', specData);
-            console.log('attrDef', attrDef);
             // 名称
             if (!form.name) {
                 return this.$message.warning(
@@ -2279,12 +2276,6 @@ export default {
                 }
             } else {
                 // 多规格
-                // 规格定义 检查
-                if(!attrDef.length) {
-                    return this.$message.warning(
-                        `${this.$t("i.add_spec_tip")}`
-                    );
-                }
                 for (let i = 0; i < attrDef.length; i++) {
                     console.log('attrDef', attrDef);
                     const item = attrDef[i];
@@ -2305,6 +2296,12 @@ export default {
                 this.validateConfig(specData);
                 // 规格信息 检查
                 let attrs = [];
+                // 多规格商品 检查
+                if(!specData.length) {
+                    return this.$message.warning(
+                        `${this.$t("i.add_spec_tip")}`
+                    );
+                }
                 for (let i = 0; i < specData.length; i++) {
                     const item = specData[i];
                     if (!item.imgsList?.[0]?.filename) {
