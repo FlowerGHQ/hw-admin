@@ -1710,7 +1710,7 @@ export default {
             });
         },
         // 保存、新建 商品
-        handleSubmit() {
+        handleSubmit(type) {
             let form = Core.Util.deepCopy(this.form);
             let specData = Core.Util.deepCopy(this.specific.data);
             let attrDef = Core.Util.deepCopy(this.specific.list);
@@ -1830,7 +1830,7 @@ export default {
                 .catch((err) => {
                     console.log("handleSubmit err:", err);
                 });
-            },
+        },
         // 保存时检查表单输入
         checkFormInput(form, specData, attrDef, categoryMessage) {
 
