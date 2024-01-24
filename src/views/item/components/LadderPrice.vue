@@ -51,8 +51,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_eur'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="1"
-                                :max="10"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -60,8 +59,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_20gp_eur'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="11"
-                                :max="25"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -69,7 +67,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_40qh_eur'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="26"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -77,8 +75,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_usd'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="1"
-                                :max="10"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -86,8 +83,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_20gp_usd'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="11"
-                                :max="25"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -95,7 +91,7 @@
                             <a-input-number
                                 v-if="column.dataIndex === 'fob_40qh_usd'"
                                 v-model:value="record[column.dataIndex]"
-                                :min="26"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -127,8 +123,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_eur'"
                         v-model:value="record[column.dataIndex]"
-                        :min="1"
-                        :max="10"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -136,8 +131,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_20gp_eur'"
                         v-model:value="record[column.dataIndex]"
-                        :min="11"
-                        :max="25"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -145,7 +139,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_40qh_eur'"
                         v-model:value="record[column.dataIndex]"
-                        :min="26"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `€ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
@@ -153,8 +147,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_usd'"
                         v-model:value="record[column.dataIndex]"
-                        :min="1"
-                        :max="10"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -162,8 +155,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_20gp_usd'"
                         v-model:value="record[column.dataIndex]"
-                        :min="11"
-                        :max="25"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -171,7 +163,7 @@
                     <a-input-number
                         v-if="column.dataIndex === 'fob_40qh_usd'"
                         v-model:value="record[column.dataIndex]"
-                        :min="26"
+                        :min="0.1"
                         :precision="2"
                         :formatter="(value) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                         :parser="(value) => value.replace(/\$\s?|(,*)/g, '')"
@@ -367,6 +359,7 @@ const keyAndItem = reactive({
     selectedRowKeys: [],
     selectedRowItems: [],
 });
+
 
 // 触发选择
 const onSelectChange = (selectedRowKeys, selectedRows) => {

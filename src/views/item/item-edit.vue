@@ -696,10 +696,6 @@
                                             @change="inputValidateConfig" />
                                     </template>
                                     <template v-if="column.dataIndex === 'fob_eur'">
-                                        <!-- 不为整车走原来的流程 
-                                        
-                                        /\B(?=(\d{3})+(?!\d))/g 正则表达式  三位一分隔
-                                        -->
                                         <a-input-number
                                             v-if="form.type !== itemTypeMap['1']?.key"
                                             v-model:value="record.fob_eur"
@@ -881,10 +877,11 @@
                             <div  :class="!form.fob_40qh_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
                             <a-input-number
                                v-model:value="form.fob_40qh_eur"
-                               :min="26"
+                               :min="0.1"
                                :precision="2"
                                :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                               @change="inputValidateConfig('EUR')"
                            >
                                <template #addonAfter>
                                    <span>€</span>
@@ -896,11 +893,11 @@
                             <div  :class="!form.fob_20gp_eur && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
                             <a-input-number
                                 v-model:value="form.fob_20gp_eur"
-                                :min="11"
-                                :max="25"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
                                     <span>€</span>
@@ -912,11 +909,11 @@
                             <div  :class="!form.fob_eur && isValidate ?' title required error' : 'title required'">{{ $t('item-edit.sample') }}</div>
                             <a-input-number
                                 v-model:value="form.fob_eur"
-                                :min="1"
-                                :max="10"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/€\s?|(,*)/g, '')"
+                                @change="inputValidateConfig('EUR')"
                             >
                                 <template #addonAfter>
                                     <span>€</span>
@@ -933,10 +930,11 @@
                             <div  :class="!form.fob_40qh_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_40HQ') }}</div>
                             <a-input-number
                                 v-model:value="form.fob_40qh_usd"
-                                :min="26"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
                                     <span>$</span>
@@ -949,11 +947,11 @@
                             <div  :class="!form.fob_20gp_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.quantity_20GP') }}</div>
                             <a-input-number
                                 v-model:value="form.fob_20gp_usd"
-                                :min="11"
-                                :max="25"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
                                     <span>$</span>
@@ -965,11 +963,11 @@
                             <div :class="!form.fob_usd && isValidate ? ' title required error' : 'title required'">{{ $t('item-edit.sample') }}</div>
                             <a-input-number
                                 v-model:value="form.fob_usd"
-                                :min="1"
-                                :max="10"
+                                :min="0.1"
                                 :precision="2"
                                 :formatter="(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')"
                                 :parser="(value) => value.replace(/\s?|(,*)/g, '')"
+                                @change="inputValidateConfig('USD')"
                             >
                                 <template #addonAfter>
                                     <span>$</span>
@@ -1371,6 +1369,16 @@ export default {
         // openLadderPrice
         openLadderPrice(type,record,index) {
             console.log(type,record,index)
+            console.log(this.specific.data,'---------------------------')
+            this.specific.data.forEach((item) => {
+                item.fob_eur = item.fob_eur ? item.fob_eur : "";
+                item.fob_20gp_eur = item.fob_20gp_eur ? item.fob_20gp_eur : "";
+                item.fob_40qh_eur = item.fob_40qh_eur ? item.fob_40qh_eur : "";
+                item.fob_usd = item.fob_usd ? item.fob_usd : "";
+                item.fob_20gp_usd = item.fob_20gp_usd ? item.fob_20gp_usd : "";
+                item.fob_40qh_usd = item.fob_40qh_usd ? item.fob_40qh_usd : "";
+            })
+            this.labberData = this.specific.data;
             this.ladderPriceVisible = true;
             this.activeRow = record;
             this.activeIndex = index;
@@ -2446,8 +2454,8 @@ export default {
         },
         // 输入框校验 规格信息
         inputValidateConfig() {
-            let specData = Core.Util.deepCopy(this.specific.data);
-            this.validateConfig(specData);
+                let specData = Core.Util.deepCopy(this.specific.data);
+                this.validateConfig(specData);
         },
         // 规格信息 检查
         validateConfig(specData) {

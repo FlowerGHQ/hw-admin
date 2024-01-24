@@ -1,6 +1,11 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import Components from 'unplugin-vue-components/vite'
+import viteCompression from 'vite-plugin-compression'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+import {
+  AntDesignVueResolver,
+} from 'unplugin-vue-components/resolvers'
 import * as path from 'path';
 // 正式环境清除console
 // https://vitejs.dev/config/
@@ -18,7 +23,23 @@ export default defineConfig(({ mode }) => {
           drop_console: true,
           drop_debugger: true
         }
-      }
+      },
+      rollupOptions: {
+        // output 定义出口文件夹及文件名
+        output: {
+          chunkFileNames: 'static/js/[name]-[hash].js',
+          entryFileNames: 'static/js/[name]-[hash].js',
+          assetFileNames: 'static/[ext]/[name]-[hash].[ext]',
+        },
+        // manualChunks 自定义分割
+        manualChunks:{
+          // 将vue相关的包单独打包
+          vue: ['vue', 'vue-router', 'vuex', 'vue-i18n'],
+          // 将loadsh相关的包单独打包
+          lodash: ['lodash'],
+        }
+      },
+      chunkSizeWarningLimit: 1024 * 4, //代码分割警告的限制
     },
     plugins: [
       vue(),
@@ -27,7 +48,20 @@ export default defineConfig(({ mode }) => {
         iconDirs: [path.resolve(process.cwd(), 'src/assets/svg')],
         // 指定symbolId格式 :
         symbolId: 'icon-[name]', //实例：#icon-user
-    }),
+      }),
+      viteCompression(
+        {
+          algorithm: 'gzip', // 压缩算法
+          threshold: 5120, // 文件大小大于这个值时启用压缩
+          verbose: false, // 是否在控制台输出压缩结果
+          deleteOriginFile: true // 是否删除原文件
+        }
+      ),//开启gzip
+      Components({
+        dirs: ['src/components'], // 目标文件夹
+        extensions: ['vue'], // 文件类型
+        resolvers: [AntDesignVueResolver()], // ui库解析器，也可以自定义，需要安装相关UI库
+      }),
     ],
     resolve: {
       alias: {
