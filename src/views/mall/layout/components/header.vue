@@ -140,7 +140,7 @@
                         </my-button>
                     </div>
                 </div>
-                <div class="bag" @click="routerChange('/mall/shopping-bag')">
+                <div class="bag" @click="routerChange('/purchase/item-collect')">
                     <a-badge :count="shopCartNum" :overflowCount="999" :offset="[-6, -2]">
                         <svg-icon icon-class="header-bag-icon" class-name="header-bag-icon" />
                         <svg-icon icon-class="car-icon" class-name="car-icon" />
@@ -333,10 +333,11 @@ export default {
             }
         },
         // 退出登录
-        handleLogout() {           
-            this.$router.replace('/login');
-            localStorage.clear()
-            Core.Api.Common.logout()
+        handleLogout() {          
+            Core.Api.Common.logout().then(res => {
+                localStorage.clear() 
+                this.$router.replace('/login');
+            })
         },
         handleEditSubmit() {
             let form = Core.Util.deepCopy(this.form)
