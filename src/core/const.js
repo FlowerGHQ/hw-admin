@@ -95,6 +95,7 @@ let Const = {
         USER_TYPE_LIST: 'user-type-list',
         LOGIN_MES: 'login-mes',
         SALES_DATA: 'sales-data',
+        CART_DATA: 'cart-data'
 
     },
     DEFULT_IMG: {

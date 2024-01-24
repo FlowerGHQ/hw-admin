@@ -59,7 +59,8 @@
         <div class="item-content">
             <div class="price-item" v-for="item of shopCartList" :key="item.id">
                 <p class="name">{{ item.item ? lang =='zh' ? item.item.name : item.item.name_en : '-' }}</p>
-                <span class="price">{{unit}} {{$Util.countFilter(item.item[priceKey] * item.amount)}}
+                <span class="price">{{unit}} {{$Util.Number.numFormat($Util.countFilter(item.amount *
+                    item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))}}
                 </span>
             </div>
             <div class="price-item sum">
@@ -74,7 +75,7 @@
                     <span>{{ $t('p.code') }}：{{item.item ? item.item.code : '-'}}</span>
                     <span v-if="item.item && item.item.attr_str">{{ $t('i.spec') }}：{{item.item ? lang =='zh' ? item.item.attr_str:item.item.attr_str_en : '-'}}</span>
                     <span>{{ $t('i.amount') }}：{{item.amount}}</span>
-                    <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.countFilter(item.item[priceKey])}}</span>
+                    <span>{{ $t('p.unit_price') }}：{{unit}} {{$Util.Number.numFormat($Util.countFilter(item?.item[$Util.Number.getStepPriceIndexByNums(item.amount)]))}}</span>
                     <span>{{ $t('i.remark') }}：{{item.remark}}</span>
                 </div>
             </div>
@@ -131,6 +132,7 @@ export default {
                 "€": { key: '_eur', text: '€ (EUR)', currency: 'EUR'},
                 "$": { key: '_usd', text: '$ (USD)', currency: 'USD'},
             },
+            selectedId: []
         };
     },
     watch: {},
@@ -138,7 +140,7 @@ export default {
         sum_price() {
             let sum = 0
             for (const item of this.shopCartList) {
-                sum += item.item[this.priceKey] * item.amount
+                sum += item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)] * item.amount
             }
             return Core.Util.countFilter(sum)
         },
@@ -147,8 +149,9 @@ export default {
         }
     },
     mounted() {
-        this.unit = this.$route.query.unit || '€'
-        let currency = this.$route.query.currency || '_eur';
+        this.unit = this.$route.params.unit || '€'
+        let currency = this.$route.params.currency || '_eur';
+        this.selectedId = Core.Data.getCartData()
         this.priceKey = (this.$auth('DISTRIBUTOR') ? 'fob' : 'purchase_price') + currency
         this.currency = currency ? currency.slice(1).toUpperCase() : 'CNY'
         if (Core.Data.getCurrency() === 'EUR'){
@@ -193,7 +196,7 @@ export default {
                         element.attr_str_en = str_en
                     }
                 })
-                this.shopCartList = res.list
+                this.shopCartList = res.list.filter(item => this.selectedId.indexOf(item.id) !== -1)
             })
         },
 
@@ -297,9 +300,9 @@ export default {
                     type: item.item.type,
                     amount: item.amount,
                     item_id: item.item_id,
-                    charge: item.amount * item.item[this.priceKey],
-                    price: item.amount * item.item[this.priceKey],
-                    unit_price: item.item[this.priceKey],
+                    charge: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                    price: item.amount * item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
+                    unit_price: item?.item[this.$Util.Number.getStepPriceIndexByNums(item.amount)],
                     remark: item.remark,
                 }))
             }
@@ -311,10 +314,11 @@ export default {
             if (this.loading) return
             this.loading = true
             Core.Api.Purchase.create(parms).then(res => {
-              let _this = this;
+                let _this = this;
                 this.$message.success(_this.$t('i.order_success'));
                 this.routerChange('order');
-                this.handleClearShopCart()
+                Core.Data.clearCartData()
+                // this.handleClearShopCart()
             }).catch(err => {
                 console.log('handleCreateOrder err', err);
             }).finally(() => {
